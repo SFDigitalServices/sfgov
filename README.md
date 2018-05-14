@@ -19,6 +19,18 @@
 5. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
   Note:  Run `lando drush cr` instead of `drush cr` in step 7.
 
+## Pull Request Workflow
+(https://gist.github.com/Chaser324/ce0505fbed06b947d962)  
+(https://www.monarchdigital.com/blog/2015-10-08/understanding-forkpull-request-workflow-git-version-control)  
+(https://www.atlassian.com/git/tutorials/making-a-pull-request)  
+TLDR version:  
+1. Fork the project
+2. Create a branch and make your changes.  Push branch to github.
+3. Open a pull create request
+4. The team reviews, discusses, and update the code.
+5. Code is approved and merged by maintainer into the official repo.
+6. Switch back to master and pull down any changes from official repo.
+
 ## Adding a contrib module
 1. Create a new branch `git clone -b new_branch`
 2. Install module with composer `composer require drupal/paragraphs`
