@@ -20,16 +20,18 @@
   Note:  Run `lando drush cr` instead of `drush cr` in step 7.
 
 ## Pull Request Workflow
+(https://pantheon.io/docs/guides/build-tools/new-pr/)
 (https://gist.github.com/Chaser324/ce0505fbed06b947d962)  
 (https://www.monarchdigital.com/blog/2015-10-08/understanding-forkpull-request-workflow-git-version-control)  
 (https://www.atlassian.com/git/tutorials/making-a-pull-request)  
 TLDR version:  
-1. Fork the project
-2. Create a branch and make your changes.  Push branch to github.
-3. Open a pull create request
-4. The team reviews, discusses, and update the code.
-5. Code is approved and merged by maintainer into the official repo.
-6. Switch back to master and pull down any changes from official repo.
+In order to leverage the CI infrastructure, we focus our changes into branches of the official repo instead of forks.  
+1. Create a branch and make your changes.  Push branch to github.
+2. Open a pull create request
+3. The team reviews, discusses, and update the code
+4. Code is approved and merged in
+5. Switch back to master and pull
+6. Delete the branch
 
 ## Adding a contrib module
 1. Create a new branch `git clone -b new_branch`
