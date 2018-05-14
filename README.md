@@ -28,4 +28,4 @@
 6. Commit and push changes `git commit -m 'installed paragraphs' && git push`
 7. Wait for CircleCI to build and deploy to a multidev.  CircleCI will add comment to the checkin on GitHub with link to the created MultiDev.
 8. Create Pull Request and merge to master
-9. Delete branch `git push --delete new_branch && git branch -d new_branch`
+9. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
