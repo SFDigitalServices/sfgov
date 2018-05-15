@@ -5,7 +5,7 @@
 [![Dev Site sfgov](https://img.shields.io/badge/site-sfgov-blue.svg)](http://dev-sfgov.pantheonsite.io/)
 
 
-## Development with Lando
+## Set up Lando for local development
 1. Prerequisites
   * [Lando](https://docs.devwithlando.io/installation/installing.html)
   * [composer](https://getcomposer.org/download/)
@@ -21,17 +21,15 @@
 
 ## Pull Request Workflow
 (https://pantheon.io/docs/guides/build-tools/new-pr/)
-(https://gist.github.com/Chaser324/ce0505fbed06b947d962)  
-(https://www.monarchdigital.com/blog/2015-10-08/understanding-forkpull-request-workflow-git-version-control)  
+(https://gist.github.com/Chaser324/ce0505fbed06b947d962)   
 (https://www.atlassian.com/git/tutorials/making-a-pull-request)  
 TLDR version:  
 In order to leverage the CI infrastructure, we focus our changes into branches of the official repo instead of forks.  
-1. Create a branch and make your changes.  Push branch to github.
-2. Open a pull create request
-3. The team reviews, discusses, and update the code
-4. Code is approved and merged in
-5. Switch back to master and pull
-6. Delete the branch
+1. Create a branch and make your changes.  Push branch.
+2. Open a pull request.
+3. The team reviews, discusses, and makes change requests to the change
+4. Change is approved and merged
+5. Delete the branch
 
 ## Adding a contrib module
 1. Create a new branch `git clone -b new_branch`
