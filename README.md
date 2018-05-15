@@ -30,6 +30,7 @@ TLDR version:
 3. The team reviews, discusses, and makes change requests to the change
 4. Change is approved and merged
 
+
 ## Adding a contrib module
 1. Create a new branch `git clone -b new_branch`
 2. Install module with composer `composer require drupal/paragraphs`
