@@ -1,0 +1,86 @@
+uuid: f4c668fe-dfcf-41ea-8452-4880cc6c7030
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.location.physical
+    - field.field.location.physical.field_address
+    - field.field.location.physical.field_directions_link
+    - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_text
+  module:
+    - address
+    - link
+    - office_hours
+    - text
+id: location.physical.default
+targetEntityType: location
+bundle: physical
+mode: default
+content:
+  field_address:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_directions_link:
+    weight: 2
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link_separate
+    region: content
+  field_operating_hours:
+    weight: 3
+    label: hidden
+    settings:
+      show_closed: all
+      office_hours_first_day: '0'
+      day_format: two_letter
+      time_format: h
+      compress: '1'
+      grouped: '1'
+      closed_format: Closed
+      separator:
+        days: '<br />'
+        grouped_days: ' - '
+        day_hours: ': '
+        hours_hours: '-'
+        more_hours: ', '
+      current_status:
+        position: before
+        open_text: 'Currently open'
+        closed_text: 'Currently closed'
+      schema:
+        enabled: '1'
+      timezone_field: ''
+    third_party_settings: {  }
+    type: office_hours_table
+    region: content
+  field_text:
+    weight: 4
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  title:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  langcode: true
+  uid: true

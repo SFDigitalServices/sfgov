@@ -1,0 +1,47 @@
+uuid: ca886d92-a8a2-435d-93c6-97790699fca8
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.location.mailing
+    - field.storage.location.field_address
+  module:
+    - address
+id: location.mailing.field_address
+field_name: field_address
+entity_type: location
+bundle: mailing
+label: 'Mailing Address'
+description: 'The address the user can put in their phone to find your office.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries:
+    US: US
+  field_settings:
+    administrativeArea:
+      behavior: optional
+    locality:
+      behavior: optional
+    dependentLocality:
+      behavior: hidden
+    postalCode:
+      behavior: optional
+    sortingCode:
+      behavior: hidden
+    addressLine1:
+      behavior: optional
+    addressLine2:
+      behavior: optional
+    organization:
+      behavior: optional
+    givenName:
+      behavior: hidden
+    additionalName:
+      behavior: hidden
+    familyName:
+      behavior: hidden
+  langcode_override: ''
+field_type: address
