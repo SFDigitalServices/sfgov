@@ -1,0 +1,72 @@
+uuid: 48502761-48a5-41fd-b20f-0221757ad185
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.location.physical
+    - field.field.location.physical.field_address
+    - field.field.location.physical.field_directions_link
+    - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_text
+  module:
+    - address
+    - link
+    - office_hours
+    - text
+id: location.physical.default
+targetEntityType: location
+bundle: physical
+mode: default
+content:
+  field_address:
+    weight: 1
+    settings:
+      default_country: US
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_directions_link:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_operating_hours:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: office_hours_list
+    region: content
+  field_text:
+    weight: 3
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  langcode:
+    type: language_select
+    weight: 5
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

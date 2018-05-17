@@ -1,0 +1,44 @@
+uuid: 730528a8-6b6a-4cc5-9bc2-652ffe772087
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.location.mailing
+    - field.field.location.mailing.field_address
+  module:
+    - address
+id: location.mailing.default
+targetEntityType: location
+bundle: mailing
+mode: default
+content:
+  field_address:
+    weight: 1
+    settings:
+      default_country: US
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true
