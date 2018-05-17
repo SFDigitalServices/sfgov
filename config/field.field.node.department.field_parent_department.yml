@@ -1,0 +1,28 @@
+uuid: 72b1c7e6-7d59-4c9a-b750-f22da75c53f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_parent_department
+    - node.type.department
+id: node.department.field_parent_department
+field_name: field_parent_department
+entity_type: node
+bundle: department
+label: 'Parent Department'
+description: 'Select the parent department, if any.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
