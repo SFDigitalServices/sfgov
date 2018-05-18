@@ -1,0 +1,42 @@
+uuid: 4932e14d-f4f8-42aa-bbc4-6fa4d3ac9fc4
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_location
+  module:
+    - entity_browser_entity_form
+    - views
+name: location_physical
+label: 'Location: In-Person'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add In-Person Location'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  faccfc3c-2c7f-4ab8-82d4-348d06432026:
+    settings:
+      entity_type: location
+      bundle: physical
+      form_mode: default
+      submit_text: 'Save and Attach In-Person Location'
+    uuid: faccfc3c-2c7f-4ab8-82d4-348d06432026
+    weight: 1
+    label: 'New In-Person Location'
+    id: entity_form
+  895efeea-ed3a-4b65-82fa-fc28002a78ed:
+    settings:
+      view: entity_browser_location
+      view_display: entity_browser_physical
+      submit_text: 'Attach In-Person Location'
+      auto_select: false
+    uuid: 895efeea-ed3a-4b65-82fa-fc28002a78ed
+    weight: 2
+    label: 'Existing In-Person Location'
+    id: view
