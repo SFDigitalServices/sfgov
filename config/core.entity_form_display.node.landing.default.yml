@@ -1,38 +1,43 @@
-uuid: ac0fe902-c507-483c-b1d6-36b183f9b469
+uuid: 81377a10-78a8-4570-870c-66599a6b6e90
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.article.body
-    - field.field.node.article.field_description
-    - field.field.node.article.field_image
-    - field.field.node.article.field_tags
-    - node.type.article
+    - field.field.node.landing.field_content
+    - field.field.node.landing.field_description
+    - node.type.landing
   module:
+    - paragraphs
     - path
-    - text
-_core:
-  default_config_hash: vPb_yvhA-xuNoV_yOmOwYxGuHNRIH1CoMK2qi7BSga0
-id: node.article.default
+id: node.landing.default
 targetEntityType: node
-bundle: article
+bundle: landing
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 2
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-    third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 7
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_content:
+    type: paragraphs
+    weight: 2
+    settings:
+      title: Content
+      title_plural: Content
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
   field_description:
     weight: 1
     settings:
@@ -41,24 +46,6 @@ content:
     third_party_settings: {  }
     type: string_textarea
     region: content
-  field_image:
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_tags:
-    type: entity_reference_autocomplete_tags
-    weight: 4
-    region: content
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   langcode:
     type: language_select
     weight: 3
@@ -68,7 +55,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -76,21 +63,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 7
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 10
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 8
     region: content
     third_party_settings: {  }
   title:
@@ -102,17 +89,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 12
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 6
-    region: content
+    weight: 4
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+    region: content
     third_party_settings: {  }
 hidden: {  }
