@@ -5,13 +5,13 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.article.body
+    - field.field.node.article.field_description
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - image.style.medium
     - node.type.article
   module:
     - media
-    - text
     - user
 _core:
   default_config_hash: 4NcL2hSQZBpJbYtNuh5jC6kyQTcAc1m5bQpTegEWEso
@@ -20,14 +20,13 @@ targetEntityType: node
 bundle: article
 mode: teaser
 content:
-  body:
-    type: text_summary_or_trimmed
+  field_description:
+    type: basic_string
     weight: 1
     region: content
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
     label: hidden
+    settings: {  }
+    third_party_settings: {  }
   field_image:
     type: media_thumbnail
     weight: 0
@@ -44,11 +43,8 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    label: above
-  links:
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
+    label: hidden
 hidden:
+  body: true
   langcode: true
+  links: true
