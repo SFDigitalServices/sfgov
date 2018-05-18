@@ -47,6 +47,3 @@ TLDR version:
 7. Wait for CircleCI to build and deploy to a multidev.  CircleCI will add comment to the checkin on GitHub with link to the created MultiDev.
 8. Create Pull Request and merge to master
 9. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
-
-
-test
