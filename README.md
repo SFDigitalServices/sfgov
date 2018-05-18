@@ -25,10 +25,16 @@
 (https://www.atlassian.com/git/tutorials/making-a-pull-request)  
 TLDR version:  
 1. Fork the repo
-1. Create a branch and make changes on your fork.  Push branch.
-2. Open a pull request.
-3. The team reviews, discusses, and makes change requests to the change
-4. Change is approved and merged
+2. Create a branch and make changes on your fork.  Push branch.
+3. Open a pull request.
+4. The team reviews, discusses, and makes change requests to the change
+5. Change is approved and merged
+
+## Keep your fork up to date
+1. Set upstream of fork `git remote add upstream git@github.com:SFDigitalServices/sfgov.git`
+2. Fetch from upstream `git fetch upstream`
+3. Switch to master `git checkout master`
+4. Merge upstream's master into fork master `git merge upstream\master`
 
 
 ## Adding a contrib module
