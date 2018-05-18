@@ -5,7 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.rss
     - field.field.node.article.body
-    - field.field.node.article.comment
+    - field.field.node.article.field_description
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - node.type.article
@@ -18,11 +18,20 @@ targetEntityType: node
 bundle: article
 mode: rss
 content:
-  links:
-    weight: 100
+  field_description:
+    type: basic_string
+    weight: 0
     region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   body: true
-  comment: true
   field_image: true
   field_tags: true
+  langcode: true
