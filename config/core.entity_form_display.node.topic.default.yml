@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
     - node.type.topic
   module:
@@ -18,6 +19,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_departments:
+    weight: 51
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_description:
     weight: 1
     settings:
