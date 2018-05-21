@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.department.field_address
     - field.field.node.department.field_department_code
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
@@ -25,16 +26,25 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_address:
+    weight: 11
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_department_code:
     type: string_textfield
-    weight: 14
+    weight: 15
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   field_go_to_current_url:
-    weight: 12
+    weight: 13
     settings:
       display_label: true
     third_party_settings: {  }
@@ -59,7 +69,7 @@ content:
     region: content
   field_parent_department:
     type: entity_reference_autocomplete
-    weight: 15
+    weight: 16
     region: content
     settings:
       match_operator: CONTAINS
@@ -68,13 +78,13 @@ content:
     third_party_settings: {  }
   field_public_body:
     type: boolean_checkbox
-    weight: 13
+    weight: 14
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_url:
-    weight: 11
+    weight: 12
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -136,5 +146,10 @@ content:
       size: 60
       placeholder: ''
     region: content
+    third_party_settings: {  }
+  url_redirects:
+    weight: 17
+    region: content
+    settings: {  }
     third_party_settings: {  }
 hidden: {  }

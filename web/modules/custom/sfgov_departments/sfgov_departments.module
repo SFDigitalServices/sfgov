@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Contains sfgov_departments.module.
+ */
+
+use Drupal\sfgov_departments\SFgovDepartment;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * Create the related department group entity when the department node
+ * is created.
+ */
+function sfgov_departments_node_insert(\Drupal\node\NodeInterface $entity) {
+  sfgov_departments_node_update($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Update the related department group entity when the department node
+ * is updated.
+ */
+function sfgov_departments_node_update(\Drupal\node\NodeInterface $entity) {
+  if ($entity->bundle() == 'department') {
+    SFgovDepartment::createOrUpdate($entity);
+  }
+  elseif ($entity->hasField('field_departments')) {
+    SFgovDepartment::updateGroupContent($entity);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Delete the related department group entity when the department node is
+ * deleted.
+ */
+function sfgov_departments_node_delete(\Drupal\node\NodeInterface $entity) {
+  if ($entity->bundle() == 'department') {
+    SFgovDepartment::delete($entity);
+  }
+}
