@@ -5,21 +5,21 @@ var config = require('./config.json');
 
 // Include plugins.
 var sass = require('gulp-sass');
-var imagemin = require('gulp-imagemin');
-var pngcrush = require('imagemin-pngcrush');
+// var imagemin = require('gulp-imagemin');
+// var pngcrush = require('imagemin-pngcrush');
 var shell = require('gulp-shell');
 var plumber = require('gulp-plumber');
 var notify = require('gulp-notify');
 var autoprefix = require('gulp-autoprefixer');
 var glob = require('gulp-sass-glob');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
+// var uglify = require('gulp-uglify');
+// var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 var scssLint = require('gulp-scss-lint');
-var jshint = require('gulp-jshint');
+// var jshint = require('gulp-jshint');
 var shell = require('gulp-shell');
-var newer = require('gulp-newer');
+// var newer = require('gulp-newer');
 
 // CSS.
 gulp.task('css', function() {
