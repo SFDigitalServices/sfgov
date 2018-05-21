@@ -9,7 +9,7 @@
  * Implements hook_preprocess_field()
  *
  */
-//function hops_preprocess_field(&$variables) {
+//function sfgovpl_preprocess_field(&$variables) {
 //  $element = $variables['element'];
 //
 //  // Provide bundle and view mode for BEM components classes approach

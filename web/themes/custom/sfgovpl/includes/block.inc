@@ -9,7 +9,7 @@
  * Implements hook_theme_suggestions_block_alter().
  */
 
-//function hops_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+//function sfgovpl_theme_suggestions_block_alter(array &$suggestions, array $variables) {
 //  // Set bare blocks template
 //  $plugin_id = $variables['elements']['#base_plugin_id'];
 //  $bare_blocks = array(
@@ -24,7 +24,7 @@
  * Implements hook_preprocess_block().
  */
 /*
-function hops_preprocess_block(&$variables) {
+function sfgovpl_preprocess_block(&$variables) {
   // Add class for a specific block
   $block_id = $variables['elements']['#id'];
   switch ($block_id) {

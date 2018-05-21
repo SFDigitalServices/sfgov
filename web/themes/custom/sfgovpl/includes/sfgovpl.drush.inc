@@ -2,7 +2,7 @@
 //
 ///**
 // * @file
-// * Drush hooks and include commands for Hops theme.
+// * Drush hooks and include commands for sfgovpl theme.
 // *
 // * @see https://www.drupal.org/project/basic
 // */
@@ -10,10 +10,10 @@
 ///**
 // * Implements hook_drush_command().
 // */
-//function hops_drush_command() {
+//function sfgovpl_drush_command() {
 //
-//  $items['hops-install'] = array(
-//    'description' => dt('Run through the installation process of the Hops theme.'),
+//  $items['sfgovpl-install'] = array(
+//    'description' => dt('Run through the installation process of the sfgovpl theme.'),
 //    'aliases' => array('binstall'),
 //  );
 //
@@ -23,10 +23,10 @@
 ///**
 // * Implements hook_drush_help().
 // */
-//function hops_drush_help($section) {
+//function sfgovpl_drush_help($section) {
 //  switch ($section) {
 //
-//    case 'drush:hops-install':
+//    case 'drush:sfgovpl-install':
 //      return dt('Runs through an automated process for installing and renaming your theme to use as your own.');
 //  }
 //}
@@ -34,12 +34,12 @@
 ///**
 // * Implements drush_hook_COMMAND().
 // */
-//function drush_hops_install() {
+//function drush_sfgovpl_install() {
 //  // Prompt the user what we're doing.
 //  drush_print('-----------------------------');
-//  drush_print(dt('Welcome to the Hops Install!'));
+//  drush_print(dt('Welcome to the sfgovpl Install!'));
 //  drush_print('-----------------------------');
-//  drush_print(dt('We will perform the automated tasks for you to use your new theme. We will create a copy of the Hops theme and store it within the same folder.'));
+//  drush_print(dt('We will perform the automated tasks for you to use your new theme. We will create a copy of the sfgovpl theme and store it within the same folder.'));
 //  drush_confirm(dt('Do you wish to continue?'));
 //
 //  // Rebuild the theme data so that we can safely check for the existence of
@@ -51,19 +51,19 @@
 //  $name = drush_prompt(dt('Please enter the name of that you want for your theme'), 'My Theme');
 //
 //  // Try to generate a machine-readable name. If that fails, prompt for one.
-//  if (!$machine_name = drush_hops_generate_theme_name($name)) {
+//  if (!$machine_name = drush_sfgovpl_generate_theme_name($name)) {
 //    drush_print(dt("Sorry, I couldn't generate a machine-readable name for @name", array(
 //      '@name' => $name,
 //    )));
 //  }
 //  // Prompt for a theme name using the automatically generated default if any.
-//  drush_set_option('machine-name', drush_hops_require_valid_theme_name(dt('Please enter a machine-readable name for your new theme'), $machine_name));
+//  drush_set_option('machine-name', drush_sfgovpl_require_valid_theme_name(dt('Please enter a machine-readable name for your new theme'), $machine_name));
 //
 //  // Set the destination of the new theme.
 //  drush_set_option('destination', 'themes');
 //
 //  // Try to generate a machine-readable name. If that fails, prompt for one.
-//  if (!$machine_name = drush_get_option('machine-name', drush_hops_generate_theme_name($name))) {
+//  if (!$machine_name = drush_get_option('machine-name', drush_sfgovpl_generate_theme_name($name))) {
 //    drush_print(dt("Sorry, I couldn't generate a machine-readable name for @name. Please use the '--machine-name' option to specify it manually.", array(
 //      '@name' => $name,
 //    )));
@@ -73,7 +73,7 @@
 //  // so we don't delete any important data by accident.
 //  $destination = drush_get_option('destination', 'themes') . '/' . $machine_name;
 //  if (file_exists($destination)) {
-//    return drush_set_error('HOPS_COPY_PATH', dt('The path @path already exists.', array('@path' => $destination)));
+//    return drush_set_error('sfgovpl_COPY_PATH', dt('The path @path already exists.', array('@path' => $destination)));
 //  }
 //
 //  $temporary = \Drupal::config('system.file')->get('path.temporary');
@@ -82,28 +82,28 @@
 //  $temp_path = $temporary . '/' . $machine_name;
 //
 //  if(is_dir($temp_path)) {
-//    hops_rm_dir($temp_path);
+//    sfgovpl_rm_dir($temp_path);
 //  }
 //
 //  // Copy into temp directory.
-//  $hops_theme_path = drupal_get_path('theme','hops');
-//  hops_copy_dir($hops_theme_path, $temp_path);
+//  $sfgovpl_theme_path = drupal_get_path('theme','sfgovpl');
+//  sfgovpl_copy_dir($sfgovpl_theme_path, $temp_path);
 //
 //  // Recursively rewrite the file names and contents of all the files that are
 //  // now in the subtheme's directory to represent the human- and
 //  // machine-readable names of the subtheme.
 //  $search = array(
-//    'hops' => $machine_name,
-//    'Hops' => $name,
-//    'HOPS' => strtoupper($machine_name),
+//    'sfgovpl' => $machine_name,
+//    'sfgovpl' => $name,
+//    'sfgovpl' => strtoupper($machine_name),
 //  );
 //
-//  if (!drush_hops_rewrite_recursive($temp_path, array_keys($search), array_values($search))) {
-//    return drush_set_error('HOPS_COPY_GENERATE_THEME', dt('Failed to rewrite files and contents while generating theme.'));
+//  if (!drush_sfgovpl_rewrite_recursive($temp_path, array_keys($search), array_values($search))) {
+//    return drush_set_error('sfgovpl_COPY_GENERATE_THEME', dt('Failed to rewrite files and contents while generating theme.'));
 //  }
 //
 //  // Copy from temp folder into new theme's folder.
-//  hops_copy_dir($temp_path, $destination_path);
+//  sfgovpl_copy_dir($temp_path, $destination_path);
 //
 //  // Remove unwanted files in the new theme
 //  drush_op('unlink', "$destination_path/includes/$machine_name.drush.inc");
@@ -112,7 +112,7 @@
 //
 //  // Notify user of successful installation.
 //  drush_print(dt("------------------------------------------------------------------"));
-//  drush_print(dt("The new theme, @theme, has been successfully derived from Hops.", array('@theme' => $machine_name)));
+//  drush_print(dt("The new theme, @theme, has been successfully derived from sfgovpl.", array('@theme' => $machine_name)));
 //  drush_print(dt("------------------------------------------------------------------"));
 //
 //  return;
@@ -141,12 +141,12 @@
 //  // Write to the new .info.yml file.
 //  $file = $temporary . '/' . $machine_name . '.info.yml';
 //  if (!file_put_contents($file, drush_omega_compose_info_file($info))) {
-//    return drush_set_error('HOPS_COPY_GENERATE_THEME', dt('Failed to generate subtheme.'));
+//    return drush_set_error('sfgovpl_COPY_GENERATE_THEME', dt('Failed to generate subtheme.'));
 //  }
 //
 //  // Move the new subtheme to its destination.
 //  if (!drush_op('drush_mkdir', dirname($destination)) || !drush_op('drush_move_dir', $temporary, $destination)) {
-//    return drush_set_error('HOPS_COPY_GENERATE_THEME', dt('Failed to generate subtheme.'));
+//    return drush_set_error('sfgovpl_COPY_GENERATE_THEME', dt('Failed to generate subtheme.'));
 //  }
 //
 //  // Rebuild the theme caches so that we can do some final tasks.
@@ -179,7 +179,7 @@
 // * @return string
 // *   The generated machine-readable name.
 // */
-//function drush_hops_generate_theme_name($string) {
+//function drush_sfgovpl_generate_theme_name($string) {
 //  // Lowercase to start.
 //  $string = strtolower($string);
 //  // Machine-readable names have to start with a lowercase letter.
@@ -218,7 +218,7 @@
 // * @return string
 // *   A valid, unique machine-readable name.
 // */
-//function drush_hops_require_valid_theme_name($message, $default = NULL) {
+//function drush_sfgovpl_require_valid_theme_name($message, $default = NULL) {
 //  while (TRUE) {
 //    // Keep prompting for a machine-name until we get an acceptable value.
 //    $prompt = drush_prompt($message, $default);
@@ -263,7 +263,7 @@
 // * @see omega_drush_replace_contents()
 // * @see str_replace()
 // */
-//function drush_hops_rewrite_recursive($path, $search, $replace) {
+//function drush_sfgovpl_rewrite_recursive($path, $search, $replace) {
 //  if (!is_dir($path)) {
 //    return drush_set_error('INVALID_PATH', dt('The given path @path is not a directory.', array(
 //      '!path' => $path,
@@ -281,7 +281,7 @@
 //
 //    // Retrieve the path of the current item.
 //    $pathname = $item->getPathname();
-//    if ($item->isDir() && !drush_hops_rewrite_recursive($pathname, $search, $replace)) {
+//    if ($item->isDir() && !drush_sfgovpl_rewrite_recursive($pathname, $search, $replace)) {
 //      return FALSE;
 //    }
 //    elseif ($item->isFile()) {
@@ -329,7 +329,7 @@
 // * @return
 // *   TRUE on success, FALSE on failure.
 // */
-//function hops_copy_dir($src, $dest, $overwrite = FILE_EXISTS_ABORT) {
+//function sfgovpl_copy_dir($src, $dest, $overwrite = FILE_EXISTS_ABORT) {
 //  // Preflight based on $overwrite if $dest exists.
 //  if (file_exists($dest)) {
 //    if ($overwrite === FILE_EXISTS_OVERWRITE) {
@@ -352,7 +352,7 @@
 //    return drush_set_error('DRUSH_DESTINATION_NOT_WRITABLE', dt('Destination directory !dest is not writable.', array('!dest' => dirname($dest))));
 //  }
 //  // Try to do a recursive copy.
-//  if (@drush_op('_hops_recursive_copy', $src, $dest)) {
+//  if (@drush_op('_sfgovpl_recursive_copy', $src, $dest)) {
 //    return TRUE;
 //  }
 //
@@ -360,9 +360,9 @@
 //}
 //
 ///**
-// * Internal function called by hops_copy_dir; do not use directly.
+// * Internal function called by sfgovpl_copy_dir; do not use directly.
 // */
-//function _hops_recursive_copy($src, $destination) {
+//function _sfgovpl_recursive_copy($src, $destination) {
 //  static $machine_name;
 //  if (!isset($machine_name)) {
 //    $machine_name = drush_get_option('machine-name');
@@ -380,7 +380,7 @@
 //    $dir_handle = opendir($src);
 //    while ($file = readdir($dir_handle)) {
 //      if ($file[0] != '.' && !preg_match($no_mask, $file)) {
-//        if (_hops_recursive_copy("$src/$file", "$destination/$file") !== TRUE) {
+//        if (_sfgovpl_recursive_copy("$src/$file", "$destination/$file") !== TRUE) {
 //          return FALSE;
 //        }
 //      }
@@ -394,9 +394,9 @@
 //    return FALSE;
 //  }
 //
-//  // Rename files with hops.
-//  if (strpos($destination, 'hops') !== FALSE) {
-//    $renamed_destination = str_replace('hops', $machine_name, $destination);
+//  // Rename files with sfgovpl.
+//  if (strpos($destination, 'sfgovpl') !== FALSE) {
+//    $renamed_destination = str_replace('sfgovpl', $machine_name, $destination);
 //    rename($destination, $renamed_destination);
 //  }
 //
@@ -425,13 +425,13 @@
 // * @param string $dir
 // *   File path for the directory you want to delete.
 // */
-//function hops_rm_dir($dir) {
+//function sfgovpl_rm_dir($dir) {
 //  if (is_dir($dir)) {
 //    $objects = scandir($dir);
 //    foreach ($objects as $object) {
 //      if ($object != "." && $object != "..") {
 //        if (is_dir($dir . "/" . $object)) {
-//          hops_rm_dir($dir . "/" . $object);
+//          sfgovpl_rm_dir($dir . "/" . $object);
 //        }
 //        else {
 //          unlink($dir . "/" . $object);

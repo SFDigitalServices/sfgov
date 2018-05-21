@@ -8,7 +8,7 @@
 ///**
 // * Implements hook_html_head_alter().
 // */
-//function hops_html_head_alter(&$head_elements) {
+//function sfgovpl_html_head_alter(&$head_elements) {
 //
 //  // HTML5 charset declaration.
 //  $head_elements['system_meta_content_type']['#attributes'] = array(
@@ -31,14 +31,14 @@
 // *
 // * @param $variables
 // */
-//function hops_preprocess_html(&$variables) {
+//function sfgovpl_preprocess_html(&$variables) {
 //  // Add libraries.
-//  hops_get_theme($variables);
+//  sfgovpl_get_theme($variables);
 //
 //  // Less is more favicons package
 //  // @see https://realfavicongenerator.net/blog/new-favicon-package-less-is-more/
 //  // @see http://drupal.stackexchange.com/questions/12834/change-default-favicon-programmatically
-//  $favicon_path = base_path() . drupal_get_path('theme', 'hops') . '/images/favicons/';
+//  $favicon_path = base_path() . drupal_get_path('theme', 'sfgovpl') . '/images/favicons/';
 //
 //  $apple_touch_icon = array(
 //    '#tag' => 'link',
