@@ -1,0 +1,75 @@
+uuid: a273890b-1cc1-4286-849f-170e7e799692
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_step_online
+    - node.type.transaction
+    - paragraphs.paragraphs_type.callout
+    - paragraphs.paragraphs_type.step
+  module:
+    - entity_reference_revisions
+id: node.transaction.field_step_online
+field_name: field_step_online
+entity_type: node
+bundle: transaction
+label: Online
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      step: step
+      callout: callout
+    target_bundles_drag_drop:
+      step:
+        enabled: true
+        weight: -31
+      callout:
+        enabled: true
+        weight: -30
+      button:
+        weight: -29
+        enabled: false
+      cost:
+        weight: -28
+        enabled: false
+      custom_section:
+        weight: -27
+        enabled: false
+      document:
+        weight: -26
+        enabled: false
+      email:
+        weight: -25
+        enabled: false
+      help:
+        weight: -24
+        enabled: false
+      in_person_location:
+        weight: -23
+        enabled: false
+      mailing_address:
+        weight: -22
+        enabled: false
+      phone:
+        weight: -21
+        enabled: false
+      special_case:
+        weight: -20
+        enabled: false
+      text:
+        weight: -19
+        enabled: false
+      thing_to_know:
+        weight: -18
+        enabled: false
+      website:
+        weight: -17
+        enabled: false
+field_type: entity_reference_revisions

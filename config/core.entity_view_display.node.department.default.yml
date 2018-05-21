@@ -4,9 +4,9 @@ status: true
 dependencies:
   config:
     - field.field.node.department.field_department_code
+    - field.field.node.department.field_description
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
-    - field.field.node.department.field_mission
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_public_body
     - field.field.node.department.field_url
@@ -19,6 +19,13 @@ targetEntityType: node
 bundle: department
 mode: default
 content:
+  field_description:
+    weight: 5
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
   field_go_to_current_url:
     weight: 3
     label: hidden
@@ -37,13 +44,6 @@ content:
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
-    region: content
-  field_mission:
-    weight: 1
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
     region: content
   field_url:
     weight: 2
