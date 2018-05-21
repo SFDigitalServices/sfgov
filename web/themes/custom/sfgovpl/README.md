@@ -15,12 +15,10 @@ TODO: check versions of the following:
 
 ## Installation:
 
-### Install Pattern Library:
+### Install Pattern Lab:
 
 `$ cd pattern-lab`
 
 `$ composer install`
-
-
 
 
