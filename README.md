@@ -24,11 +24,11 @@
 (https://gist.github.com/Chaser324/ce0505fbed06b947d962)   
 (https://www.atlassian.com/git/tutorials/making-a-pull-request)  
 TLDR version:  
-1. Fork the repo
-1. Create a branch and make changes on your fork.  Push branch.
-2. Open a pull request.
+1. Create a branch and make changes.  Push branch.
+2. Open a pull request to merge from branch to master.
 3. The team reviews, discusses, and makes change requests to the change
 4. Change is approved and merged
+5. Delete branch
 
 
 ## Adding a contrib module
