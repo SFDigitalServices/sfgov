@@ -3,11 +3,105 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.transaction.field_cost
+    - field.field.node.transaction.field_custom_section
     - field.field.node.transaction.field_departments
     - field.field.node.transaction.field_description
+    - field.field.node.transaction.field_direct_external_url
+    - field.field.node.transaction.field_help
+    - field.field.node.transaction.field_related_transaction
+    - field.field.node.transaction.field_special_cases
+    - field.field.node.transaction.field_step_email
+    - field.field.node.transaction.field_step_fax
+    - field.field.node.transaction.field_step_in_person
+    - field.field.node.transaction.field_step_mail
+    - field.field.node.transaction.field_step_online
+    - field.field.node.transaction.field_step_other
+    - field.field.node.transaction.field_step_other_title
+    - field.field.node.transaction.field_step_phone
+    - field.field.node.transaction.field_things_to_know
+    - field.field.node.transaction.field_transaction_purpose
     - node.type.transaction
   module:
+    - field_group
+    - link
+    - paragraphs
     - path
+third_party_settings:
+  field_group:
+    group_before_you_start:
+      children:
+        - field_cost
+        - field_things_to_know
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      format_settings:
+        label: 'What to Know Before You Start'
+        description: ''
+        required_fields: true
+        id: ''
+        classes: sf-transaction-fieldset
+      label: 'What to Know Before You Start'
+    group_what_to_do:
+      children:
+        - field_step_online
+        - field_step_phone
+        - field_step_email
+        - field_step_in_person
+        - field_step_mail
+        - field_step_fax
+        - group_other
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        id: ''
+        classes: sf-transaction-fieldgroup
+        description: ''
+        required_fields: true
+      label: 'What to Do'
+    group_related_info:
+      children:
+        - field_help
+        - field_related_transaction
+        - field_departments
+        - field_transaction_purpose
+      parent_name: ''
+      weight: 6
+      format_type: fieldset
+      format_settings:
+        id: ''
+        classes: sf-transaction-fieldgroup
+        description: ''
+        required_fields: true
+      label: 'Contact and Related Information'
+    group_supporting_info:
+      children:
+        - field_special_cases
+        - field_custom_section
+      parent_name: ''
+      weight: 5
+      format_type: fieldset
+      format_settings:
+        id: ''
+        classes: sf-transaction-fieldgroup
+        description: ''
+        required_fields: true
+      label: 'Supporting Information'
+    group_other:
+      children:
+        - field_step_other_title
+        - field_step_other
+      parent_name: group_what_to_do
+      weight: 20
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: false
+        required_fields: true
+      label: Other
 id: node.transaction.default
 targetEntityType: node
 bundle: transaction
@@ -15,12 +109,48 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_cost:
+    type: paragraphs
+    weight: 13
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_custom_section:
+    type: paragraphs
+    weight: 23
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
   field_departments:
-    weight: 51
+    weight: 18
     settings:
       match_operator: CONTAINS
       size: 60
@@ -36,16 +166,239 @@ content:
     third_party_settings: {  }
     type: string_textarea
     region: content
+  field_direct_external_url:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_help:
+    type: paragraphs
+    weight: 16
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_related_transaction:
+    weight: 17
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_special_cases:
+    type: paragraphs
+    weight: 22
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_email:
+    type: paragraphs
+    weight: 16
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_fax:
+    type: paragraphs
+    weight: 19
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_in_person:
+    type: paragraphs
+    weight: 17
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_mail:
+    type: paragraphs
+    weight: 18
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_online:
+    type: paragraphs
+    weight: 14
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_other:
+    type: paragraphs
+    weight: 11
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_step_other_title:
+    weight: 10
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_step_phone:
+    type: paragraphs
+    weight: 15
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_things_to_know:
+    type: paragraphs
+    weight: 14
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_transaction_purpose:
+    type: paragraphs
+    weight: 19
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
   langcode:
     type: language_select
-    weight: 2
+    weight: 7
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   path:
     type: path
-    weight: 8
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -53,21 +406,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 6
+    weight: 13
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 16
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 14
     region: content
     third_party_settings: {  }
   title:
@@ -79,13 +432,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 5
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -95,4 +448,7 @@ content:
   url_redirects:
     weight: 50
     region: content
-hidden: {  }
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_related_departments: true
