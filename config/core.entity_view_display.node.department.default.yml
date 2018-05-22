@@ -3,15 +3,18 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.department.field_address
     - field.field.node.department.field_department_code
+    - field.field.node.department.field_description
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
-    - field.field.node.department.field_mission
     - field.field.node.department.field_parent_department
+    - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_public_body
     - field.field.node.department.field_url
     - node.type.department
   module:
+    - entity_reference_revisions
     - link
     - user
 id: node.department.default
@@ -19,18 +22,24 @@ targetEntityType: node
 bundle: department
 mode: default
 content:
-  field_go_to_current_url:
-    weight: 3
+  field_address:
+    weight: 2
     label: hidden
     settings:
-      format: boolean
-      format_custom_true: ''
-      format_custom_false: ''
+      link: true
+      view_mode: default
     third_party_settings: {  }
-    type: boolean
+    type: entity_reference_entity_view
+    region: content
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
   field_image:
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       view_mode: default
@@ -38,32 +47,35 @@ content:
     third_party_settings: {  }
     type: entity_reference_entity_view
     region: content
-  field_mission:
-    weight: 1
-    label: hidden
-    settings: {  }
+  field_phone_numbers:
+    type: entity_reference_revisions_entity_view
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
     third_party_settings: {  }
-    type: basic_string
     region: content
   field_url:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       trim_length: 80
-      url_only: false
+      url_only: true
       url_plain: false
-      rel: ''
-      target: ''
+      rel: '0'
+      target: '0'
     third_party_settings: {  }
-    type: link
+    type: link_separate
     region: content
   links:
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_department_code: true
+  field_go_to_current_url: true
   field_parent_department: true
   field_public_body: true
   langcode: true

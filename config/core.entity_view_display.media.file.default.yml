@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.file.field_department
     - field.field.media.file.field_media_file
     - media.type.file
   module:
@@ -16,13 +17,15 @@ mode: default
 content:
   field_media_file:
     label: visually_hidden
-    settings: {  }
+    settings:
+      use_description_as_link_text: true
     third_party_settings: {  }
     type: file_default
-    weight: 1
+    weight: 0
     region: content
 hidden:
   created: true
+  field_department: true
   langcode: true
   name: true
   thumbnail: true

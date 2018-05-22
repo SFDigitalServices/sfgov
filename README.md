@@ -30,7 +30,6 @@ TLDR version:
 4. Change is approved and merged
 5. Delete branch
 
-
 ## Adding a contrib module
 1. Create a new branch `git clone -b new_branch`
 2. Install module with composer `composer require drupal/paragraphs`
