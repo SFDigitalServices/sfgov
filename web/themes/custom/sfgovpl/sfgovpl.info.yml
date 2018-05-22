@@ -1,0 +1,60 @@
+name: SFGOV PL
+type: theme
+base theme: stable
+description: SFGOV with Pattern Lab.
+package: Core
+core: 8.x
+
+libraries:
+  - sfgovpl/base
+  - sfgovpl/google-fonts
+  - sfgovpl/resize-disable
+
+libraries-override:
+  filter/drupal.filter:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: false
+
+  system/base:
+    css:
+      component:
+        /core/themes/stable/css/system/components/progress.module.css: false
+
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        /core/themes/stable/css/core/vertical-tabs.css: false
+
+  user/drupal.user:
+    css:
+      component:
+        /core/themes/stable/css/user/user.module.css: false
+
+regions:
+  header: 'Site Header'
+  content_top: 'Content top'
+  content: 'Content'
+  content_aside: 'Content aside'
+  content_bottom: 'Content bottom'
+  footer: 'Footer'
+
+# Define custom namespaces with component libraries module
+# for cleaner inclusions in templates
+# It is used by sfgovpl.ui_patterns.yml for UI patterns module
+component-libraries:
+  atoms:
+    paths:
+      - pattern-lab/source/_patterns/01-atoms
+  molecules:
+    paths:
+      - pattern-lab/source/_patterns/02-molecules
+  organisms:
+    paths:
+      - pattern-lab/source/_patterns/03-organisms
+  templates:
+    paths:
+      - pattern-lab/source/_patterns/04-templates
+  pages:
+    paths:
+      - pattern-lab/source/_patterns/05-pages
