@@ -3,16 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
-<<<<<<< HEAD
     - field.field.node.transaction.field_cost
     - field.field.node.transaction.field_custom_section
-=======
     - field.field.node.transaction.field_departments
->>>>>>> 6a28a8f23eb718dc2f811971a3615ba740a5b6fc
     - field.field.node.transaction.field_description
     - field.field.node.transaction.field_direct_external_url
     - field.field.node.transaction.field_help
-    - field.field.node.transaction.field_related_departments
     - field.field.node.transaction.field_related_transaction
     - field.field.node.transaction.field_special_cases
     - field.field.node.transaction.field_step_email
@@ -53,6 +49,14 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
+  field_departments:
+    weight: 16
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_description:
     type: basic_string
     weight: 0
@@ -80,14 +84,6 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    region: content
-  field_related_departments:
-    weight: 16
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
     region: content
   field_related_transaction:
     weight: 15
@@ -196,6 +192,6 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
-  field_departments: true
+  field_related_departments: true
   langcode: true
   links: true
