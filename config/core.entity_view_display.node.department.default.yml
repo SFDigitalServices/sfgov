@@ -9,10 +9,12 @@ dependencies:
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
     - field.field.node.department.field_parent_department
+    - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_public_body
     - field.field.node.department.field_url
     - node.type.department
   module:
+    - entity_reference_revisions
     - link
     - user
 id: node.department.default
@@ -45,6 +47,15 @@ content:
     third_party_settings: {  }
     type: entity_reference_entity_view
     region: content
+  field_phone_numbers:
+    type: entity_reference_revisions_entity_view
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
   field_url:
     weight: 3
     label: hidden
@@ -58,7 +69,7 @@ content:
     type: link_separate
     region: content
   links:
-    weight: 9
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
