@@ -5,10 +5,10 @@ dependencies:
   config:
     - field.field.node.transaction.field_cost
     - field.field.node.transaction.field_custom_section
+    - field.field.node.transaction.field_departments
     - field.field.node.transaction.field_description
     - field.field.node.transaction.field_direct_external_url
     - field.field.node.transaction.field_help
-    - field.field.node.transaction.field_related_departments
     - field.field.node.transaction.field_related_transaction
     - field.field.node.transaction.field_special_cases
     - field.field.node.transaction.field_step_email
@@ -65,7 +65,7 @@ third_party_settings:
       children:
         - field_help
         - field_related_transaction
-        - field_related_departments
+        - field_departments
         - field_transaction_purpose
       parent_name: ''
       weight: 6
@@ -149,6 +149,15 @@ content:
         add_above: '0'
     third_party_settings: {  }
     region: content
+  field_departments:
+    weight: 51
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_description:
     weight: 1
     settings:
@@ -182,15 +191,6 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
-    region: content
-  field_related_departments:
-    weight: 18
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_related_transaction:
     weight: 17
@@ -446,7 +446,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 17
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }

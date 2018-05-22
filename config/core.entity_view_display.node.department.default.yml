@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.department.field_address
     - field.field.node.department.field_department_code
     - field.field.node.department.field_description
     - field.field.node.department.field_go_to_current_url
@@ -19,6 +20,14 @@ targetEntityType: node
 bundle: department
 mode: default
 content:
+  field_address:
+    weight: 2
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_description:
     weight: 5
     label: above
@@ -27,7 +36,7 @@ content:
     type: basic_string
     region: content
   field_go_to_current_url:
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       format: boolean
@@ -37,7 +46,7 @@ content:
     type: boolean
     region: content
   field_image:
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       view_mode: default
@@ -46,19 +55,19 @@ content:
     type: entity_reference_entity_view
     region: content
   field_url:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       trim_length: 80
-      url_only: false
+      url_only: true
       url_plain: false
-      rel: ''
-      target: ''
+      rel: '0'
+      target: '0'
     third_party_settings: {  }
     type: link
     region: content
   links:
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
