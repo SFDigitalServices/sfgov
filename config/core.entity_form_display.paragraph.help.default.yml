@@ -1,0 +1,50 @@
+uuid: 36b165ea-d616-49bb-b490-1fb41f766ebc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.help.field_help
+    - field.field.paragraph.help.field_title
+    - paragraphs.paragraphs_type.help
+  module:
+    - paragraphs
+id: paragraph.help.default
+targetEntityType: paragraph
+bundle: help
+mode: default
+content:
+  field_help:
+    type: paragraphs
+    weight: 12
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 11
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true
