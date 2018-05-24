@@ -1,25 +1,19 @@
 // Include gulp.
-var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
+let gulp = require('gulp');
+let browserSync = require('browser-sync').create();
 var config = require('./config.json');
 
 // Include plugins.
 var sass = require('gulp-sass');
-// var imagemin = require('gulp-imagemin');
-// var pngcrush = require('imagemin-pngcrush');
 var shell = require('gulp-shell');
 var plumber = require('gulp-plumber');
 var notify = require('gulp-notify');
 var autoprefix = require('gulp-autoprefixer');
 var glob = require('gulp-sass-glob');
-// var uglify = require('gulp-uglify');
-// var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 var scssLint = require('gulp-scss-lint');
-// var jshint = require('gulp-jshint');
 var shell = require('gulp-shell');
-// var newer = require('gulp-newer');
 
 // CSS.
 gulp.task('css', function() {
@@ -123,5 +117,17 @@ gulp.task('scss-lint', function() {
     .pipe(scssLint.failOnError());
 });
 
+// Initialize.
+// ------------------------------------------------------------------------------------------------------------------ //
+// this task copies the twig files from the sfgov-pattern-lab pattern library that was installed with `npm install`
+// and place them in the src file, so the components library is able to use those twig files.
+// then copies the pattern-lab css and js file from the sfgov-pattern-library to the dist folder.
+// once the css and js files are in the dist folder it can be commited and used by the site.
+// ------------------------------------------------------------------------------------------------------------------ //
+
+gulp.task('initialize', function() {
+
+});
+
 // Default Task
-gulp.task('default', ['serve']);
+gulp.task('default', ['']);
