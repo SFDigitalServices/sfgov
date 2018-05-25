@@ -21,7 +21,6 @@
  *   linking to the front page. This includes the language domain or prefix.
  *
  * Page content (in order of occurrence in the default page.html.twig):
- * - messages: Status and error messages. Should be displayed prominently.
  * - node: Fully loaded node, if there is an automatically-loaded node
  *   associated with the page and the node ID is the second argument in the
  *   page's path (e.g. node/12345 and node/12345/revisions, but not
@@ -29,39 +28,47 @@
  *
  * Regions:
  * - page.header: Items for the header region.
- * - page.content_top: Some place for highlighted or content that need extra layout properties (width or so)
+ * - page.primary_menu: Items for the primary menu region.
+ * - page.secondary_menu: Items for the secondary menu region.
+ * - page.highlighted: Items for the highlighted content region.
+ * - page.help: Dynamic help text, mostly for admin pages.
  * - page.content: The main content of the current page.
- * - page.content_aside: Related to the main content of the current page.
- * - page.content_bottom top: Some place for related content, typically ("More like this")
- * or content that need extra layout properties (width or so)
+ * - page.sidebar_first: Items for the first sidebar.
+ * - page.sidebar_second: Items for the second sidebar.
  * - page.footer: Items for the footer region.
+ * - page.breadcrumb: Items for the breadcrumb region.
  *
  * @see template_preprocess_page()
  * @see html.html.twig
  */
 #}
-{% if page.header %}
-  {#{% include '@header/header--basic.twig' with { header : page.header } %}#}
-{% endif %}
-<div class="site-container">
-  <main class="site-main" role="main" tabindex="-1">
-    {{ page.content_top }}
-
-    <section class="site-content" id="main-content">
-      {% block content %}
+<div class="layout-container">
+  <header role="banner">
+    <div class="header-container sfgov-container">
+      {{ page.header }}
+    </div>
+  </header>
+  <main role="main">
+    <a id="main-content" tabindex="-1"></a>
+    <div class="main-content-container">
+      {% if page.content_top %}
+        <div class="content-top-container">
+          {{ page.content_top }}
+        </div>
+      {% endif %}
+      <div class="sfgov-container">
         {{ page.content }}
-      {% endblock %}
-
-      {% if page.content_aside|render|striptags|trim is not empty %}
-        <aside role="complementary" class="site-aside">
-          {{ page.content_aside }}
+      </div>
+      {% if page.content_left %}
+        <aside class="content-left-container" role="complementary">
+          {{ page.content_left }}
         </aside>
       {% endif %}
-    </section>
 
-    {{ page.content_bottom }}
+    </div>
   </main>
+  {% include "@organisms/02-footer/footer.twig" with {
+    "footer_top_content": page.footer_top,
+    "footer_bottom_content": page.footer_bottom
+  } %}
 </div>
-{% if page.footer %}
-  {#{% include "@footer/footer.twig" %}#}
-{% endif %}
