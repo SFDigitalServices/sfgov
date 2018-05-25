@@ -44,20 +44,21 @@
 #}
 <div class="layout-container">
   <header role="banner">
-    <div class="header-container">
+    <div class="header-container sfgov-container">
       {{ page.header }}
     </div>
   </header>
   <main role="main">
-    {# todo: probably deprecate the following: #}
-    {#<a id="main-content" tabindex="-1"></a>#}{# link is in html.html.twig #}
+    <a id="main-content" tabindex="-1"></a>
     <div class="main-content-container">
       {% if page.content_top %}
         <div class="content-top-container">
           {{ page.content_top }}
         </div>
       {% endif %}
-      {{ page.content }}
+      <div class="sfgov-container">
+        {{ page.content }}
+      </div>
       {% if page.content_left %}
         <aside class="content-left-container" role="complementary">
           {{ page.content_left }}
@@ -66,17 +67,8 @@
 
     </div>
   </main>
-  <footer role="contentinfo">
-    {% if page.footer_top %}
-      <div class="footer-top-container">
-        {{ page.footer_top }}
-      </div>
-    {% endif %}
-
-    {% if page.footer_bottom %}
-      <div class="footer-bottom-container">
-        {{ page.footer_bottom }}
-      </div>
-    {% endif %}
-  </footer>
+  {% include "@organisms/02-footer/footer.twig" with {
+    "footer_top_content": page.footer_top,
+    "footer_bottom_content": page.footer_bottom
+  } %}
 </div>
