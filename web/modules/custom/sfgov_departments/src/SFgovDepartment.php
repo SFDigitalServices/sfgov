@@ -6,6 +6,12 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupType;
 use Drupal\node\NodeInterface;
 
+/**
+ * Class SFgovDepartment
+ *
+ * Handles automatic creation/sync of department nodes and department groups,
+ * as well as helper methods to add content to the department group.
+ */
 class SFgovDepartment {
 
   /**
@@ -129,6 +135,15 @@ class SFgovDepartment {
     }
   }
 
+  /**
+   * Add a node to a department group.
+   *
+   * @param \Drupal\node\NodeInterface          $node Node to add to the group.
+   * @param \Drupal\group\Entity\GroupInterface $group Group to be added to.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   protected static function addNodeToGroup(NodeInterface $node, GroupInterface $group) {
     $entity_type_manager = \Drupal::entityTypeManager();
 
@@ -155,6 +170,14 @@ class SFgovDepartment {
     }
   }
 
+  /**
+   * Updates the groups a node belongs to.
+   *
+   * @param \Drupal\node\NodeInterface $node Node that will get its groups updated.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   public static function updateGroupContent(NodeInterface $node) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $group_content_storage = $entity_type_manager->getStorage('group_content');
@@ -175,7 +198,8 @@ class SFgovDepartment {
       ->range(0, 1);
     $content_in_groups = $group_content_storage->loadMultiple($query->execute());
     foreach ($content_in_groups as $group_content) {
-      $group = reset($group_content->gid->referencedEntities());
+      $referenced = $group_content->gid->referencedEntities();
+      $group = reset($referenced);
       $department_node = self::getDepartmentNode($group);
       $previous_departments_ids[$department_node->id()] = $group_content;
     }
@@ -197,6 +221,15 @@ class SFgovDepartment {
     }
   }
 
+  /**
+   * Add a node to a group given the department node.
+   *
+   * @param \Drupal\node\NodeInterface $node Node to add to the group.
+   * @param \Drupal\node\NodeInterface $department Deparment node.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   public static function addNodeToGroupByDepartmentNode(NodeInterface $node, NodeInterface $department) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $sf_gov_department = new self($department);
