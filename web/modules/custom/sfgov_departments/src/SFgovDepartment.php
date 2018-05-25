@@ -3,8 +3,15 @@
 namespace Drupal\sfgov_departments;
 
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\GroupType;
 use Drupal\node\NodeInterface;
 
+/**
+ * Class SFgovDepartment
+ *
+ * Handles automatic creation/sync of department nodes and department groups,
+ * as well as helper methods to add content to the department group.
+ */
 class SFgovDepartment {
 
   /**
@@ -43,6 +50,27 @@ class SFgovDepartment {
   }
 
   /**
+   * Get the department node given a department group.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   */
+  public static function getDepartmentNode(\Drupal\group\Entity\GroupInterface $group) {
+    /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+    $plugin = $group->getGroupType()->getContentPlugin('group_node:department');
+
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $query = \Drupal::entityQuery('group_content')
+      ->condition('type', $plugin->getContentTypeConfigId())
+      ->condition('gid', $group->id())
+      ->range(0, 1);
+    $ids = $query->execute();
+
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $entity_type_manager->getStorage('group_content')->load(reset($ids));
+    return $group_content->getEntity();
+  }
+
+  /**
    * Create/update the related department group entity when the department node
    * is created or updated.
    *
@@ -66,7 +94,6 @@ class SFgovDepartment {
       ->range(0, 1);
     $ids = $query->execute();
 
-//    $group_storage = \Drupal::entityManager()->getStorage('group');
     /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $group_storage */
     $group_storage = $entity_type_manager->getStorage('group');
     if (empty($ids)) {
@@ -108,6 +135,15 @@ class SFgovDepartment {
     }
   }
 
+  /**
+   * Add a node to a department group.
+   *
+   * @param \Drupal\node\NodeInterface          $node Node to add to the group.
+   * @param \Drupal\group\Entity\GroupInterface $group Group to be added to.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   protected static function addNodeToGroup(NodeInterface $node, GroupInterface $group) {
     $entity_type_manager = \Drupal::entityTypeManager();
 
@@ -120,8 +156,12 @@ class SFgovDepartment {
     if (empty($ids)) {
       /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $group_content_storage */
       $group_content_storage = $entity_type_manager->getStorage('group_content');
+
+      /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+      $plugin = $group->getGroupType()->getContentPlugin('group_node:department');
+
       $group_content = $group_content_storage->create([
-        'type' => 'department-group_node-department',
+        'type' => $plugin->getContentTypeConfigId(),
         'gid' => $group->id(),
         'entity_id' => $node->id(),
         'label' => $node->getTitle(),
@@ -130,56 +170,88 @@ class SFgovDepartment {
     }
   }
 
+  /**
+   * Updates the groups a node belongs to.
+   *
+   * @param \Drupal\node\NodeInterface $node Node that will get its groups updated.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   public static function updateGroupContent(NodeInterface $node) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $group_content_storage = $entity_type_manager->getStorage('group_content');
 
+    $plugin_types = [];
+    $group_type = GroupType::load('department');
+    foreach ($group_type->getInstalledContentPlugins() as $plugin) {
+      if ($plugin->getPluginDefinition()['entity_type_id'] == 'node') {
+        $plugin_types[] = $plugin->getContentTypeConfigId();
+      }
+    }
+
     // Get previous groups.
-    $previous_group_ids = [];
+    $previous_departments_ids = [];
     $query = \Drupal::entityQuery('group_content')
-      ->condition('type', 'department-group_node-' . $node->bundle())
+      ->condition('type', $plugin_types, 'IN')
       ->condition('entity_id', $node->id())
       ->range(0, 1);
-    $previous_department_ids = $query->execute();
-    $content_in_groups = $group_content_storage->loadMultiple($previous_department_ids);
+    $content_in_groups = $group_content_storage->loadMultiple($query->execute());
     foreach ($content_in_groups as $group_content) {
-      $group = reset($group_content->gid->referencedEntities());
-      $previous_group_ids[$group->id()] = $group_content;
+      $referenced = $group_content->gid->referencedEntities();
+      $group = reset($referenced);
+      $department_node = self::getDepartmentNode($group);
+      $previous_departments_ids[$department_node->id()] = $group_content;
     }
 
     // Add to new departments.
     $departments = $node->get('field_departments')->referencedEntities();
-    foreach ($departments as $department) {
-      if (in_array($department->id(), $previous_department_ids)) {
-        unset($previous_department_ids[$department->id()]);
+    foreach ($departments as $department_node) {
+      if (in_array($department_node->id(), array_keys($previous_departments_ids))) {
+        unset($previous_departments_ids[$department_node->id()]);
       }
       else {
-        SFgovDepartment::addNodeToGroupByDepartmentNode($node, $department);
+        SFgovDepartment::addNodeToGroupByDepartmentNode($node, $department_node);
       }
     }
 
     // Delete from previous/removed departments.
-    if ($previous_group_ids) {
-      $group_content_storage->delete($previous_group_ids);
+    if ($previous_departments_ids) {
+      $group_content_storage->delete($previous_departments_ids);
     }
   }
 
+  /**
+   * Add a node to a group given the department node.
+   *
+   * @param \Drupal\node\NodeInterface $node Node to add to the group.
+   * @param \Drupal\node\NodeInterface $department Deparment node.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   public static function addNodeToGroupByDepartmentNode(NodeInterface $node, NodeInterface $department) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $sf_gov_department = new self($department);
     $group = $sf_gov_department->getDepartmentGroup();
 
+    /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+    $plugin = $group->getGroupType()->getContentPlugin('group_node:' . $node->bundle());
+
     $query = \Drupal::entityQuery('group_content')
+      ->condition('type', $plugin->getContentTypeConfigId())
       ->condition('gid', $group->id())
       ->condition('entity_id', $node->id())
       ->range(0, 1);
     $ids = $query->execute();
 
     if (empty($ids)) {
+
       /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $group_content_storage */
       $group_content_storage = $entity_type_manager->getStorage('group_content');
+
       $group_content = $group_content_storage->create([
-        'type' => 'department-group_node-' . $node->bundle(),
+        'type' => $plugin->getContentTypeConfigId(),
         'gid' => $group->id(),
         'entity_id' => $node->id(),
         'label' => $node->getTitle(),
