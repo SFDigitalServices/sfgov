@@ -6,7 +6,6 @@ dependencies:
     - search_api_solr
     - search_api
     - node
-    - file
     - eck
     - media
   config:
@@ -28,35 +27,45 @@ field_settings:
           department: default
           topic: default
           transaction: default
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
   title:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
-    type: solr_text_ngram
+    type: solr_text_wstoken
     boost: !!float 21
   status:
     label: Published
     datasource_id: 'entity:node'
     property_path: status
     type: boolean
-  filename:
-    label: Filename
-    datasource_id: 'entity:file'
-    property_path: filename
-    type: solr_text_ngram
-    boost: !!float 13
+    indexed_locked: true
+    type_locked: true
+  uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
   location_title:
     label: Title
     datasource_id: 'entity:location'
     property_path: title
-    type: solr_text_ngram
-    boost: !!float 13
+    type: solr_text_wstoken
+    boost: !!float 21
   name:
     label: Name
     datasource_id: 'entity:media'
     property_path: name
-    type: solr_text_ngram
-    boost: !!float 13
+    type: solr_text_wstoken
+    boost: !!float 21
 datasource_settings:
   'entity:node':
     bundles:
@@ -68,7 +77,6 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
-  'entity:file': {  }
   'entity:location':
     bundles:
       default: true
@@ -86,10 +94,12 @@ datasource_settings:
 processor_settings:
   rendered_item: {  }
   html_filter:
-    all_fields: false
+    all_fields: true
     fields:
       - rendered_item
       - title
+      - location_title
+      - name
     title: true
     alt: true
     tags:
@@ -98,20 +108,37 @@ processor_settings:
       h3: 2
       strong: 2
       b: 2
-      em: 1
-      u: 1
     weights:
       preprocess_index: -15
       preprocess_query: -15
+  entity_status: {  }
   ignorecase:
-    all_fields: false
+    all_fields: true
     fields:
       - rendered_item
       - title
+      - location_title
+      - name
     weights:
       preprocess_index: -20
       preprocess_query: -20
+  highlight:
+    highlight: always
+    highlight_partial: false
+    excerpt: true
+    excerpt_length: 160
+    exclude_fields:
+      - title
+      - location_title
+      - name
+    prefix: '<strong>'
+    suffix: '</strong>'
+    weights:
+      postprocess_query: 0
   add_url: {  }
+  content_access:
+    weights:
+      preprocess_query: -30
   aggregated_field: {  }
 tracker_settings:
   default:
