@@ -43,11 +43,15 @@
  */
 #}
 <div class="layout-container">
-  <header role="banner">
-    <div class="header-container sfgov-container">
-      {{ page.header }}
-    </div>
-  </header>
+
+  {% if page.alpha %}
+    {{ page.alpha }}
+  {% endif %}
+
+  {% include "@organisms/01-header/header.twig" with {
+    "header_blocks": page.header
+  } %}
+
   <main role="main">
     <a id="main-content" tabindex="-1"></a>
     <div class="main-content-container">
