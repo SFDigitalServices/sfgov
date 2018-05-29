@@ -35,7 +35,7 @@ display:
           bypass_access: false
           skip_access: false
       exposed_form:
-        type: basic
+        type: input_required
         options:
           submit_button: Search
           reset_button: false
@@ -44,6 +44,8 @@ display:
           expose_sort_order: false
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: ''
+          text_input_required_format: sf_restricted_inline_html
       pager:
         type: mini
         options:
@@ -498,7 +500,7 @@ display:
           exposed: true
           expose:
             operator_id: search_api_fulltext_op
-            label: Keywords
+            label: ''
             description: ''
             use_operator: false
             operator: search_api_fulltext_op
@@ -510,7 +512,7 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            placeholder: ''
+            placeholder: 'What are you looking for?'
           is_grouped: false
           group_info:
             label: 'Fulltext search'
@@ -531,7 +533,6 @@ display:
           fields:
             rendered_item: rendered_item
             title: title
-            filename: filename
             location_title: location_title
             name: name
           plugin_id: search_api_fulltext
@@ -548,7 +549,7 @@ display:
           expose:
             label: ''
           plugin_id: search_api
-      title: Search
+      title: 'Search results'
       header: {  }
       footer: {  }
       empty:
@@ -584,7 +585,7 @@ display:
     display_options:
       display_extenders: {  }
       path: search
-      exposed_block: false
+      exposed_block: true
     cache_metadata:
       max-age: -1
       contexts:
