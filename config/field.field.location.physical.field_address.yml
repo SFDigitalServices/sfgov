@@ -15,33 +15,48 @@ label: 'Location Address'
 description: 'The address the user can put in their phone to find your office.'
 required: false
 translatable: true
-default_value: {  }
+default_value:
+  -
+    country_code: US
+    langcode: null
+    administrative_area: ''
+    locality: ''
+    dependent_locality: ''
+    postal_code: ''
+    sorting_code: ''
+    address_line1: ''
+    address_line2: ''
+    organization: ''
+    given_name: ''
+    additional_name: ''
+    family_name: ''
 default_value_callback: ''
 settings:
   available_countries:
     US: US
-  field_settings:
-    administrativeArea:
-      behavior: optional
-    locality:
-      behavior: optional
-    dependentLocality:
-      behavior: hidden
-    postalCode:
-      behavior: optional
-    sortingCode:
-      behavior: hidden
-    addressLine1:
-      behavior: optional
-    addressLine2:
-      behavior: optional
-    organization:
-      behavior: hidden
-    givenName:
-      behavior: hidden
-    additionalName:
-      behavior: hidden
-    familyName:
-      behavior: hidden
   langcode_override: ''
+  field_overrides:
+    givenName:
+      override: hidden
+    additionalName:
+      override: hidden
+    familyName:
+      override: hidden
+    organization:
+      override: optional
+    addressLine1:
+      override: optional
+    addressLine2:
+      override: optional
+    postalCode:
+      override: optional
+    sortingCode:
+      override: hidden
+    dependentLocality:
+      override: hidden
+    locality:
+      override: optional
+    administrativeArea:
+      override: optional
+  fields: {  }
 field_type: address
