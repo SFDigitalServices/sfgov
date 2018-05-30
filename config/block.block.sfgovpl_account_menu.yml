@@ -1,19 +1,20 @@
 uuid: 7c72bc95-615d-4f85-b73f-3e70bca9ad2c
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - system.menu.account
   module:
     - system
+    - user
   theme:
     - sfgovpl
 _core:
   default_config_hash: DweBpscQZdG0-fHkSpUzdYucrNH45G_KF7Z82V-oyQM
 id: sfgovpl_account_menu
 theme: sfgovpl
-region: header
-weight: -2
+region: content
+weight: -7
 provider: null
 plugin: 'system_menu_block:account'
 settings:
@@ -23,4 +24,11 @@ settings:
   label_display: '0'
   level: 1
   depth: 1
-visibility: {  }
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      authenticated: authenticated
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
