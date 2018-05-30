@@ -16,6 +16,7 @@ dependencies:
   module:
     - entity_reference_revisions
     - link
+    - text
     - user
 id: node.department.default
 targetEntityType: node
@@ -32,14 +33,14 @@ content:
     type: entity_reference_entity_view
     region: content
   field_description:
-    weight: 0
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    type: text_default
     region: content
   field_image:
-    weight: 1
+    weight: 0
     label: hidden
     settings:
       view_mode: default
@@ -50,7 +51,7 @@ content:
   field_phone_numbers:
     type: entity_reference_revisions_entity_view
     weight: 4
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: ''
@@ -68,14 +69,10 @@ content:
     third_party_settings: {  }
     type: link_separate
     region: content
-  links:
-    weight: 5
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   field_department_code: true
   field_go_to_current_url: true
   field_parent_department: true
   field_public_body: true
   langcode: true
+  links: true

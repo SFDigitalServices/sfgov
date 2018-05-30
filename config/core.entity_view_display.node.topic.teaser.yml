@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
     - node.type.topic
   module:
+    - text
     - user
 id: node.topic.teaser
 targetEntityType: node
@@ -14,12 +16,13 @@ bundle: topic
 mode: teaser
 content:
   field_description:
-    type: basic_string
+    type: text_default
     weight: 0
     region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_departments: true
   langcode: true
   links: true

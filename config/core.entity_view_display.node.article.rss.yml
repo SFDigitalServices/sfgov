@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.article.field_tags
     - node.type.article
   module:
+    - text
     - user
 _core:
   default_config_hash: 2rIr6K5Q0UQ9khg0zE_CK-PtJH76UL-BDDZcZnZzwCc
@@ -18,20 +19,29 @@ targetEntityType: node
 bundle: article
 mode: rss
 content:
-  field_description:
-    type: basic_string
+  body:
+    type: text_summary_or_trimmed
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+  field_image:
+    type: entity_reference_entity_view
     weight: 0
     region: content
-    label: above
-    settings: {  }
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
     third_party_settings: {  }
   links:
-    weight: 1
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
-  body: true
-  field_image: true
+  field_description: true
   field_tags: true
   langcode: true

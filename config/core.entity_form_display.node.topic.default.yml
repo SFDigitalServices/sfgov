@@ -7,7 +7,9 @@ dependencies:
     - field.field.node.topic.field_description
     - node.type.topic
   module:
+    - allowed_formats
     - path
+    - text
 id: node.topic.default
 targetEntityType: node
 bundle: topic
@@ -15,12 +17,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_departments:
-    weight: 51
+    weight: 3
     settings:
       match_operator: CONTAINS
       size: 60
@@ -31,10 +33,13 @@ content:
   field_description:
     weight: 1
     settings:
-      rows: 5
+      rows: 3
       placeholder: ''
-    third_party_settings: {  }
-    type: string_textarea
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+    type: text_textarea
     region: content
   langcode:
     type: language_select
@@ -45,7 +50,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -53,21 +58,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 6
+    weight: 7
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 10
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 8
     region: content
     third_party_settings: {  }
   title:
@@ -79,13 +84,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 4
     settings:
       match_operator: CONTAINS
       size: 60
@@ -93,6 +98,8 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 50
+    weight: 11
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden: {  }

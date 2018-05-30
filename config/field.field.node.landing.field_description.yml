@@ -1,19 +1,31 @@
-uuid: e78abbe6-48f7-4dd3-bfc1-bdb004081fd2
+uuid: b7ebd425-5430-40c0-b2f3-fff4ce4f092a
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_description
     - node.type.landing
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    sf_restricted_inline_html: '0'
+    sf_restricted_html: '0'
+    sf_basic_html: '0'
+    basic_html: '0'
+    restricted_html: '0'
+    full_html: '0'
 id: node.landing.field_description
 field_name: field_description
 entity_type: node
 bundle: landing
 label: Description
-description: 'Provide a short description of this page, which may be displayed as the description in search results, and social media embeds of this page.'
+description: 'Provide a short description of this page for display in search results, and social media embeds of this page.'
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: text_long
