@@ -1,19 +1,31 @@
-uuid: eb9338e2-10b5-4856-acb5-d544de0a86b2
+uuid: 9c179221-98cf-4732-89e2-98aaf614ab45
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_description
     - node.type.article
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    sf_restricted_inline_html: '0'
+    sf_restricted_html: '0'
+    sf_basic_html: '0'
+    basic_html: '0'
+    restricted_html: '0'
+    full_html: '0'
 id: node.article.field_description
 field_name: field_description
 entity_type: node
 bundle: article
 label: Description
-description: '''Provide a short description of this article, for display search results, and social media embeds of this page.'
+description: 'Provide a short description of this article, for display search results, and social media embeds of this page.'
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: text_long

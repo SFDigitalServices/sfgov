@@ -1,19 +1,31 @@
-uuid: 06478c7b-f892-4e14-8dd8-c40c076f73aa
+uuid: e42d0a08-c730-4ce1-9e22-4f1399ab1320
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_description
     - node.type.department
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    sf_restricted_inline_html: '0'
+    sf_restricted_html: '0'
+    sf_basic_html: '0'
+    basic_html: '0'
+    restricted_html: '0'
+    full_html: '0'
 id: node.department.field_description
 field_name: field_description
 entity_type: node
 bundle: department
 label: 'Department Mission'
-description: ''
+description: 'Describe the department''s mission, for display in the header, search results, and social media embeds of this page.'
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: text_long
