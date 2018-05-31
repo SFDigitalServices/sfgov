@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.transaction.field_description
     - field.field.node.transaction.field_direct_external_url
     - field.field.node.transaction.field_help
+    - field.field.node.transaction.field_related_topics
     - field.field.node.transaction.field_related_transaction
     - field.field.node.transaction.field_special_cases
     - field.field.node.transaction.field_step_email
@@ -68,6 +69,7 @@ third_party_settings:
       children:
         - field_help
         - field_related_transaction
+        - field_related_topics
         - field_departments
         - field_transaction_purpose
       parent_name: ''
@@ -153,7 +155,7 @@ content:
     third_party_settings: {  }
     region: content
   field_departments:
-    weight: 18
+    weight: 19
     settings:
       match_operator: CONTAINS
       size: 60
@@ -202,6 +204,15 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
+    region: content
+  field_related_topics:
+    weight: 18
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_related_transaction:
     weight: 17
@@ -384,7 +395,7 @@ content:
     region: content
   field_transaction_purpose:
     type: paragraphs
-    weight: 19
+    weight: 20
     settings:
       title: Paragraph
       title_plural: Paragraphs

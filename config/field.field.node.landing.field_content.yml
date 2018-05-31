@@ -5,9 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_content
     - node.type.landing
-    - paragraphs.paragraphs_type.block
-    - paragraphs.paragraphs_type.list
-    - paragraphs.paragraphs_type.text
+    - paragraphs.paragraphs_type.section
   module:
     - entity_reference_revisions
 id: node.landing.field_content
@@ -25,9 +23,7 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      block: block
-      list: list
-      text: text
+      section: section
     target_bundles_drag_drop:
       button:
         weight: 16
@@ -42,8 +38,8 @@ settings:
         weight: 19
         enabled: false
       block:
-        enabled: true
         weight: 20
+        enabled: false
       document:
         weight: 20
         enabled: false
@@ -71,19 +67,22 @@ settings:
       step:
         weight: 27
         enabled: false
-      list:
-        enabled: true
-        weight: 28
       text:
-        enabled: true
         weight: 28
-      list_item:
-        weight: 29
+        enabled: false
+      list:
+        weight: 28
         enabled: false
       thing_to_know:
+        weight: 29
+        enabled: false
+      list_item:
         weight: 29
         enabled: false
       website:
         weight: 30
         enabled: false
+      section:
+        enabled: true
+        weight: 35
 field_type: entity_reference_revisions
