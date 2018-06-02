@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.phone.field_owner
+    - field.field.paragraph.phone.field_tel
     - field.field.paragraph.phone.field_text
     - paragraphs.paragraphs_type.phone
   module:
+    - telephone_formatter
     - text
 id: paragraph.phone.default
 targetEntityType: paragraph
@@ -20,6 +22,16 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_tel:
+    weight: 3
+    label: above
+    settings:
+      format: 2
+      link: true
+      default_country: US
+    third_party_settings: {  }
+    type: telephone_formatter
     region: content
   field_text:
     weight: 2
