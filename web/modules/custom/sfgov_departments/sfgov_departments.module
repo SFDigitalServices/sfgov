@@ -43,3 +43,23 @@ function sfgov_departments_node_delete(\Drupal\node\NodeInterface $entity) {
     SFgovDepartment::delete($entity);
   }
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * Relate the media entity to a group when created.
+ */
+function sfgov_departments_media_insert(\Drupal\media\MediaInterface $entity) {
+  sfgov_departments_media_update($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Relate the media entity to a group when updated.
+ */
+function sfgov_departments_media_update(\Drupal\media\MediaInterface $entity) {
+  if ($entity->hasField('field_department')) {
+    SFgovDepartment::updateGroupMediaContent($entity);
+  }
+}
