@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.phone.field_owner
+    - field.field.paragraph.phone.field_tel
     - field.field.paragraph.phone.field_text
     - paragraphs.paragraphs_type.phone
   module:
     - allowed_formats
+    - telephone
     - text
 id: paragraph.phone.default
 targetEntityType: paragraph
@@ -21,6 +23,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_tel:
+    weight: 4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
     region: content
   field_text:
     weight: 3
