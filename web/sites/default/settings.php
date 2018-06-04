@@ -73,6 +73,15 @@ $config_directories = array(
 );
 
 /**
+ * UI Translations.
+ */
+// Use organization instead of Company in the UI.
+$settings['locale_custom_strings_en']['Address label'] = [
+  'Company'      => 'Organization',
+];
+
+
+/**
  * If there is a local settings file, then include it
  */
 $local_settings = __DIR__ . "/settings.local.php";
