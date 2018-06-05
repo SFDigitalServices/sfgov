@@ -44,7 +44,7 @@
   'paragraph--type--' ~ paragraph.bundle|clean_class,
   view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
   not paragraph.isPublished() ? 'paragraph--unpublished',
-  'sfgov-container'
+  'sfgov-container--full'
 ]
 %}
 {% block paragraph %}
@@ -53,7 +53,9 @@
       {% if paragraph.get('field_title').isEmpty() == false %}
         <h2 class="sfgov-header-section">{{ paragraph.get('field_title').getString() }}</h2>
       {% endif %}
-      {{ content|without('field_title') }}
+      <div class="sfgov-container">
+        {{ content|without('field_title') }}
+      </div>
     {% endblock %}
   </div>
 {% endblock paragraph %}
