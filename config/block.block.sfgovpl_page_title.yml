@@ -2,6 +2,9 @@ uuid: 9d93e600-acf5-474f-9866-431bebe96829
 langcode: en
 status: true
 dependencies:
+  module:
+    - ctools
+    - system
   theme:
     - sfgovpl
 _core:
@@ -17,4 +20,16 @@ settings:
   label: 'Page title'
   provider: core
   label_display: '0'
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: true
+    context_mapping: {  }
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      landing: landing
+    negate: true
+    context_mapping:
+      node: '@node.node_route_context:node'

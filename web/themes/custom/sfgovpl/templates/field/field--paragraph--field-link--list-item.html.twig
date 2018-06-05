@@ -1,0 +1,30 @@
+{%
+  set classes = [
+  'field',
+  'field--type-' ~ field_type|clean_class,
+  label_display == 'inline' ? 'field--inline',
+  bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+]
+%}
+{%
+  set title_classes = [
+  'field__label',
+  label_display == 'visually_hidden' ? 'visually-hidden',
+]
+%}
+{% if label_hidden %}
+  {% if multiple %}
+    <div{{ attributes.addClass(classes, 'field__items') }}>
+      {% for item in items %}
+        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% for item in items %}
+      {% include '@atoms/04-links/01-list-link.twig' with {
+        "title": item.content['#title'],
+        "url": item.content['#url'].toString()
+      } %}
+    {% endfor %}
+  {% endif %}
+{% endif %}
