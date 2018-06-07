@@ -33,10 +33,11 @@ TLDR version:
 ## Adding a contrib module
 1. Create a new branch `git checkout -b new_branch`
 2. Install module with composer `composer require drupal/paragraphs`
-3. Enable the module `lando drush -y en paragraphs`
-4. Export config `lando drush -y cex`
-5. Check in modified composer and config files `git add composer.* config/*`
-6. Commit and push changes `git commit -m 'installed paragraphs' && git push`
-7. Wait for CircleCI to build and deploy to a multidev.  CircleCI will add comment to the checkin on GitHub with link to the created MultiDev.
-8. Create Pull Request and merge to master
-9. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
+3. Update the lock file hash `composer update --lock`
+4. Enable the module `lando drush -y en paragraphs`
+5. Export config `lando drush -y cex`
+6. Check in modified composer and config files `git add composer.* config/*`
+7. Commit and push changes `git commit -m 'installed paragraphs' && git push`
+8. Wait for CircleCI to build and deploy to a multidev.  CircleCI will add comment to the checkin on GitHub with link to the created MultiDev.
+9. Create Pull Request and merge to master
+10. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
