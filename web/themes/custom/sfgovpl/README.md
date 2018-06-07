@@ -8,7 +8,9 @@ This is the sfgov patternlab theme.
 
 all the source files live in the folder:
 
-`sfgovpl/pattern-lab/source/_patterns`
+`/web/libraries/sfgov-pattern-lab`
+
+after doing your work create a tag and specify it in the `composer.json` file.
 
 in that folder you'll be able to place your twig template files that are going to be part of the Pattern Library.
 
