@@ -13,7 +13,7 @@
   * pantheon machine token (https://pantheon.io/docs/machine-tokens/)  
 
 2. [Init Lando with Github](https://docs.devwithlando.io/cli/init.html#github)  
-`lando init github --recipe=pantheon`
+`mkdir sfgov && cd sfgov && lando init github --recipe=pantheon`
 3. `composer install`
 4. `lando start`
 5. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
