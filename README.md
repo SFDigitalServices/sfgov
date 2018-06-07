@@ -31,7 +31,7 @@ TLDR version:
 5. Delete branch
 
 ## Adding a contrib module
-1. Create a new branch `git clone -b new_branch`
+1. Create a new branch `git checkout -b new_branch`
 2. Install module with composer `composer require drupal/paragraphs`
 3. Enable the module `lando drush -y en paragraphs`
 4. Export config `lando drush -y cex`
