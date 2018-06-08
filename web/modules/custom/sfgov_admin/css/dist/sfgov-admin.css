@@ -1,0 +1,172 @@
+.sidebar-toggle {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: transparent;
+  border: solid 1px transparent;
+  display: none;
+  float: right;
+  height: 50px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 1px 1px 0;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  text-indent: -999em;
+  white-space: nowrap;
+  width: 50px;
+}
+
+.sidebar-toggle:focus {
+  background: #f7f7f7;
+  outline: 0;
+}
+
+.sidebar-toggle:hover {
+  background: transparent;
+}
+
+@media only screen and (min-width: 780px), (min-device-height: 780px) and (orientation: landscape) {
+  .sidebar-toggle {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.sidebar-toggle-active .sidebar-toggle {
+  border: 1px solid #bfbfbf;
+  margin: 1px;
+}
+
+.sidebar-toggle, .sidebar-toggle *, .sidebar-toggle *::after, .sidebar-toggle *::before {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.sidebar-toggle .sidebar-toggle__icon {
+  background: transparent;
+  left: 0;
+  margin: -2px auto auto auto;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  -webkit-transition: background 0.2s;
+  transition: background 0.2s;
+}
+
+.sidebar-toggle .sidebar-toggle__icon, .sidebar-toggle .sidebar-toggle__icon::before, .sidebar-toggle .sidebar-toggle__icon::after {
+  display: inline-block;
+  height: 3px;
+  position: absolute;
+  width: 24px;
+}
+
+.sidebar-toggle .sidebar-toggle__icon::before, .sidebar-toggle .sidebar-toggle__icon::after {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  background: #585858;
+  content: '';
+  right: 0;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  -webkit-transform-origin: 0% 50%;
+          transform-origin: 0% 50%;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+}
+
+.sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon, .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::before, .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::after {
+  background: #000;
+}
+
+.sidebar-toggle .sidebar-toggle__icon::before {
+  top: -6px;
+  -webkit-transform: translateX(4px) translateY(-3px) rotate(45deg);
+          transform: translateX(4px) translateY(-3px) rotate(45deg);
+}
+
+.sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::before {
+  -webkit-transform: none;
+          transform: none;
+}
+
+.sidebar-toggle .sidebar-toggle__icon::after {
+  top: 6px;
+  -webkit-transform: translateX(4px) translateY(2px) rotate(-45deg);
+          transform: translateX(4px) translateY(2px) rotate(-45deg);
+}
+
+.sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::after {
+  -webkit-transform: none;
+          transform: none;
+}
+
+.sidebar-toggle:focus .sidebar-toggle__icon::before, .sidebar-toggle:focus .sidebar-toggle__icon::after, .sidebar-toggle:hover .sidebar-toggle__icon::before, .sidebar-toggle:hover .sidebar-toggle__icon::after {
+  background: #000;
+}
+
+.sidebar-toggle-active .sidebar-toggle:focus .sidebar-toggle__icon, .sidebar-toggle-active .sidebar-toggle:focus .sidebar-toggle__icon::before, .sidebar-toggle-active .sidebar-toggle:focus .sidebar-toggle__icon::after, .sidebar-toggle-active .sidebar-toggle:hover .sidebar-toggle__icon, .sidebar-toggle-active .sidebar-toggle:hover .sidebar-toggle__icon::before, .sidebar-toggle-active .sidebar-toggle:hover .sidebar-toggle__icon::after {
+  background: #000;
+}
+
+@media screen and (min-width: 780px), (orientation: landscape) and (min-device-height: 780px) {
+  .sidebar-toggle-active .layout-region-node-main,
+  .sidebar-toggle-active .layout-region-node-footer {
+    padding-right: 0;
+    width: calc(100% - 50px);
+  }
+  .sidebar-toggle-active .layout-region-node-secondary {
+    float: left;
+    width: 50px;
+  }
+}
+
+.field-prefix {
+  font-family: monospace;
+  font-size: 1.5em;
+}
+
+div.description {
+  font-size: 0.85em;
+  margin-top: 0.5em;
+}
+
+.form-composite > .fieldset-wrapper > div.description {
+  margin-top: 0;
+}
+
+input.form-autocomplete {
+  width: 100%;
+}
+
+.field--name-field-cost-type .form-radios, .field--name-field-cost-type .form-chexboxes {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  margin: 0.5em 0 0 0;
+}
+
+.field--name-field-cost-type .form-radios > .form-item, .field--name-field-cost-type .form-chexboxes > .form-item {
+  margin-bottom: 0.5em;
+  margin-right: 1em;
+}
+
+.field--name-field-cost-minimum,
+.field--name-field-cost-maximum {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+/*# sourceMappingURL=sfgov-admin.css.map */

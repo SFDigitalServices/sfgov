@@ -1,0 +1,99 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function sfgov_admin_page_attachments(array &$page) {
+  /** @var \Drupal\Core\Routing\RouteMatchInterface $route */
+  $route = \Drupal::routeMatch()->getRouteObject();
+  /** @var \Drupal\Core\Routing\AdminContext $is_admin */
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
+
+  if ($is_admin) {
+    $page['#attached']['library'][] = 'sfgov_admin/admin';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Attach Paragraphs admin library on node add/edit forms where Paragraphs are
+  // present.
+  $base_form_ids = ['node_form', 'node_edit_form'];
+  if (!empty($form_state->getBuildInfo()['base_form_id'])) {
+    if (in_array($form_state->getBuildInfo()['base_form_id'], $base_form_ids)) {
+      $node = $form_state->getFormObject()->getEntity();
+      $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', $node->bundle());
+      foreach (array_keys($field_definitions) as $field_name) {
+        if ($field_definitions[$field_name]->getType() == 'entity_reference_revisions') {
+          if ($field_definitions[$field_name]->getSettings()['target_type'] == 'paragraph') {
+            $form['#attached']['library'][] = 'sfgov_admin/paragraphs';
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ *
+ * Alters the Paragraphs Classic widget.
+ */
+function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
+  /** @var \Drupal\field\Entity\FieldConfig $field_definition */
+  $field_definition = $context['items']->getFieldDefinition();
+  $paragraph_entity_reference_field_name = $field_definition->getName();
+
+  if ($paragraph_entity_reference_field_name == 'field_cost') {
+    /** @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::formElement() */
+    $widget_state = \Drupal\Core\Field\WidgetBase::getWidgetState($element['#field_parents'], $paragraph_entity_reference_field_name, $form_state);
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    $paragraph_instance = $widget_state['paragraphs'][$element['#delta']]['entity'];
+    $paragraph_type = $paragraph_instance->bundle();
+
+    if ($paragraph_type == 'cost') {
+      $dependee_field_name = 'field_cost_type';
+      $selector = sprintf(':input[name="%s[%d][subform][%s]"]', $paragraph_entity_reference_field_name, $element['#delta'], $dependee_field_name);
+
+      if (!empty($element['subform']['field_cost_flat_fee'])) {
+        $element['subform']['field_cost_flat_fee']['#states'] = [
+          'visible' => [
+            $selector => ['value' => 'flat']
+          ]
+        ];
+      }
+
+      if (!empty($element['subform']['field_cost_minimum'])) {
+        $element['subform']['field_cost_minimum']['#states'] = [
+          'visible' => [
+            $selector => [
+              ['value' => 'range'],
+              ['value' => 'minimum'],
+            ]
+          ]
+        ];
+      }
+
+      if (!empty($element['subform']['field_cost_maximum'])) {
+        $element['subform']['field_cost_maximum']['#states'] = [
+          'visible' => [
+            $selector => ['value' => 'range']
+          ]
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ *
+ * Alters the Paragraphs Experimental widget.
+ */
+function sfgov_admin_field_widget_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
+  return sfgov_admin_field_widget_entity_reference_paragraphs_form_alter($element, $form_state, $context);
+}
