@@ -1,25 +1,26 @@
-uuid: 63ff849d-780a-44a5-8b8e-fcc55bbb1320
+uuid: a7585a58-d07f-41e3-bb4e-5418a96b5748
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_related_transaction
+    - field.storage.node.field_topics
+    - node.type.topic
     - node.type.transaction
-id: node.transaction.field_related_transaction
-field_name: field_related_transaction
+id: node.transaction.field_topics
+field_name: field_topics
 entity_type: node
 bundle: transaction
-label: 'Related Services'
+label: Topics
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
-      transaction: transaction
+      topic: topic
     sort:
       field: _none
     auto_create: false
