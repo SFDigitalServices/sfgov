@@ -6,6 +6,7 @@
  */
 
 use Drupal\sfgov_departments\SFgovDepartment;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -42,4 +43,108 @@ function sfgov_departments_node_delete(\Drupal\node\NodeInterface $entity) {
   if ($entity->bundle() == 'department') {
     SFgovDepartment::delete($entity);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * Relate the media entity to a group when created.
+ */
+function sfgov_departments_media_insert(\Drupal\media\MediaInterface $entity) {
+  sfgov_departments_media_update($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Relate the media entity to a group when updated.
+ */
+function sfgov_departments_media_update(\Drupal\media\MediaInterface $entity) {
+  if ($entity->hasField('field_department')) {
+    SFgovDepartment::updateGroupMediaContent($entity);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * Access control for media entities.
+ * When trying to view, update or delete an entity it suffices to have the right to
+ * do so in only one group the node belongs to.
+ */
+function sfgov_departments_media_access(
+  \Drupal\media\MediaInterface $entity,
+  $op,
+  \Drupal\Core\Session\AccountInterface $account
+) {
+  // We do not care about create access as we have our own wizard for that. Any
+  // operation aside from 'view', 'update' and 'delete' is also unsupported.
+  if (!in_array($op, ['view', 'update', 'delete'])) {
+    return AccessResult::neutral();
+  }
+
+  if ($entity->isNew()) {
+    return AccessResult::neutral();
+  }
+
+  $plugin_id = 'group_media:' . $entity->bundle();
+
+  // Only act if there are group content types for this entity type.
+  $group_content_types = \Drupal\group\Entity\GroupContentType::loadByContentPluginId($plugin_id);
+  if (empty($group_content_types)) {
+    return AccessResult::neutral();
+  }
+
+  // Load all the group content for this entity.
+  $group_contents = \Drupal::entityTypeManager()
+    ->getStorage('group_content')
+    ->loadByProperties([
+      'type' => array_keys($group_content_types),
+      'entity_id' => $entity->id(),
+    ]);
+
+  // If the entity does not belong to any group, we have nothing to say.
+  if (empty($group_contents)) {
+    return AccessResult::neutral();
+  }
+
+  /** @var \Drupal\group\Entity\GroupInterface[] $groups */
+  $groups = [];
+  foreach ($group_contents as $group_content) {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group = $group_content->getGroup();
+    $groups[$group->id()] = $group;
+  }
+
+  // From this point on you need group to allow you to perform the operation.
+  switch ($op) {
+    case 'view':
+      foreach ($groups as $group) {
+        if ($entity->isPublished()) {
+          if ($group->hasPermission("view $plugin_id entity", $account)) {
+            return AccessResult::allowed();
+          }
+        }
+        elseif ($group->hasPermission("view unpublished $plugin_id entity", $account)) {
+          return AccessResult::allowed();
+        }
+      }
+      break;
+
+    case 'update':
+    case 'delete':
+      foreach ($groups as $group) {
+        if ($group->hasPermission("$op any $plugin_id entity", $account)) {
+          return AccessResult::allowed();
+        }
+        elseif ($account->id() == $entity->getOwnerId() && $group->hasPermission("$op own $plugin_id entity", $account)) {
+          return AccessResult::allowed();
+        }
+      }
+      break;
+  }
+
+  // Instead of outright forbidding access when no group granted it, we return
+  // a neutral access result to play nice with other modules.
+  return AccessResult::neutral();
 }
