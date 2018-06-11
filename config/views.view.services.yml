@@ -161,22 +161,35 @@ display:
       header: {  }
       footer: {  }
       empty: {  }
-      relationships:
-        field_related_topics:
-          id: field_related_topics
-          table: node__field_related_topics
-          field: field_related_topics
-          relationship: none
-          group_type: group
-          admin_label: 'field_related_topics: Content'
-          required: true
-          plugin_id: standard
+      relationships: {  }
+      arguments: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: 'Topic Services (block)'
+    position: 3
+    display_options:
+      display_extenders: {  }
+      display_description: 'A listing of ''transaction'' node teasers that reference the current ''Topic` node.'
+      defaults:
+        relationships: false
+        arguments: false
       arguments:
         nid:
           id: nid
           table: node_field_data
           field: nid
-          relationship: field_related_topics
+          relationship: field_topics
           group_type: group
           admin_label: ''
           default_action: default
@@ -208,25 +221,16 @@ display:
           entity_type: node
           entity_field: nid
           plugin_id: node_nid
-      display_extenders: {  }
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-        - 'user.node_grants:view'
-        - user.permissions
-      tags: {  }
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: 'Topic Services (block)'
-    position: 3
-    display_options:
-      display_extenders: {  }
-      display_description: 'A listing of ''transaction'' node teasers that reference the current ''Topic` node.'
+      relationships:
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
+          relationship: none
+          group_type: group
+          admin_label: 'field_topics: Content'
+          required: true
+          plugin_id: standard
     cache_metadata:
       max-age: -1
       contexts:
