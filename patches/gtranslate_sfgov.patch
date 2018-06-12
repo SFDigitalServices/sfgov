@@ -1,0 +1,21 @@
+diff --git a/src/Plugin/Block/GTranslateBlock.php b/src/Plugin/Block/GTranslateBlock.php
+index 7469d6a..00526da 100644
+--- a/src/Plugin/Block/GTranslateBlock.php
++++ b/src/Plugin/Block/GTranslateBlock.php
+@@ -153,14 +153,14 @@ EOT;
+             }; break;
+             case 'dropdown': {
+                 $block_content .= '<select onchange="doGTranslate(this);">';
+-                $block_content .= '<option value="">Select Language</option>';
++                $block_content .= '<option value="">Translate</option>';
+ 
+                 $i = 0;
+                 foreach($languages as $lang => $lang_name) {
+                     $flag_y = $flag_map_vertical[$lang];
+ 
+                     if( $settings->get('gtranslate_'.$lang)) {
+-                        $block_content .= '<option value="'.$gtranslate_main_lang.'|'.$lang.'" style="'.($lang == $gtranslate_main_lang ? 'font-weight:bold;' : '').'background:url(\''.base_path().drupal_get_path('module', 'gtranslate').'/gtranslate-files/16l.png\') no-repeat scroll 0 -'.$flag_y.'px;padding-left:18px;">'.$lang_name.'</option>';
++                        $block_content .= '<option value="'.$gtranslate_main_lang.'|'.$lang.'">'.$lang_name.'</option>';
+                     }
+ 
+                     $i++;

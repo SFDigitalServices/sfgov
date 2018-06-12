@@ -1,33 +1,26 @@
-label: Multimedia
 display:
   default:
     display_title: Máster
     display_options:
       exposed_form:
         options:
-          submit_button: Filtro
+          submit_button: Aplicar
           reset_button_label: Restablecer
           exposed_sorts_label: 'Ordenar por'
       pager:
         options:
+          tags:
+            first: '« Primero'
+            last: 'Último »'
           expose:
             items_per_page_label: 'Elementos por página'
             items_per_page_options_all_label: '- Todo -'
             offset_label: Desplazamiento
-          tags:
-            previous: '‹ Anterior'
-            next: 'Siguiente >'
-            first: '« Primero'
-            last: 'Último »'
       fields:
-        thumbnail__target_id:
-          label: Miniatura
-        name:
-          label: 'Nombre del elemento multimedia'
-        bundle:
-          label: Tipo
-        uid:
-          label: Autor
+        title:
+          label: Título
+        type:
+          label: 'Tipo de contenido'
         status:
           label: Estado
           settings:
@@ -35,18 +28,12 @@ display:
             format_custom_false: 'No publicado'
         changed:
           label: Actualizado
-        operations:
+        dropbutton:
           label: Operaciones
       filters:
-        name:
-          expose:
-            label: 'Nombre del elemento multimedia'
-        bundle:
-          expose:
-            label: Tipo
         status:
           expose:
-            label: Verdadero
+            label: 'Estado de publicación'
           group_info:
             label: 'Estado de publicación'
             group_items:
@@ -54,15 +41,15 @@ display:
                 title: Publicado
               2:
                 title: 'No publicado'
-        langcode:
+        type:
           expose:
-            label: Idioma
-      title: Multimedia
+            label: Tipo
       empty:
         area_text_custom:
           content: 'No hay contenido disponible.'
-  media_page_list:
-    display_title: Multimedia
-    display_options:
-      menu:
-        title: Multimedia
+      arguments:
+        gid:
+          exception:
+            title: Todo
+  page_1:
+    display_title: Página
