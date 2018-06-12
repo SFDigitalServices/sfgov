@@ -1,11 +1,9 @@
-label: 內容
-description: 尋找及管理內容。
 display:
   default:
     display_options:
       exposed_form:
         options:
-          submit_button: 篩選
+          submit_button: 套用
           reset_button_label: 重設
           exposed_sorts_label: 排序依據
           sort_asc_label: 遞增
@@ -13,17 +11,17 @@ display:
       pager:
         options:
           tags:
-            previous: '‹ 上一頁'
-            next: '下一頁 ›'
             first: '« 最前'
             last: '最後 »'
+          expose:
+            items_per_page_label: 每頁的項目數
+            items_per_page_options_all_label: '- 全部 -'
+            offset_label: 位移
       fields:
         title:
           label: 標題
         type:
           label: 內容類型
-        name:
-          label: 作者
         status:
           label: 狀態
           settings:
@@ -31,18 +29,12 @@ display:
             format_custom_false: 尚未發佈
         changed:
           label: 已更新
-        operations:
+        dropbutton:
           label: 操作
       filters:
-        title:
-          expose:
-            label: 標題
-        type:
-          expose:
-            label: 內容類型
         status:
           expose:
-            label: 狀態
+            label: 發佈狀態
           group_info:
             label: 發佈狀態
             group_items:
@@ -50,18 +42,15 @@ display:
                 title: 已發表
               2:
                 title: 尚未發佈
-        langcode:
+        type:
           expose:
-            label: 語言
-      title: 內容
+            label: 類型
       empty:
         area_text_custom:
           content: 沒有可用的內容。
+      arguments:
+        gid:
+          exception:
+            title: 所有
   page_1:
-    display_options:
-      menu:
-        title: 內容
-      tab_options:
-        title: 內容
-        description: 尋找和管理內容
     display_title: 頁面
