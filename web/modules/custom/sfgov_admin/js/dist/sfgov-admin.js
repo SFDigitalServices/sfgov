@@ -50,5 +50,13 @@
       });
     }
   };
+  Drupal.behaviors.sfgovParagraphAddDropbutton = {
+    attach: function (context) {
+      // The add button is just a placeholder for the add buttons. Clicking it should have no affect.
+      $('.sfgov-admin-paragraph-add-link', context)
+        .once()
+        .on('click', function (event) { event.preventDefault(); });
+    }
+  };
 })(jQuery, Drupal, document, window);
 //# sourceMappingURL=sfgov-admin.js.map
