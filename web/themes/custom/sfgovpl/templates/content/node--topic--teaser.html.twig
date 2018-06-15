@@ -1,0 +1,10 @@
+
+{% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
+
+{% include "@molecules/04-cards/01-transaction-card.twig" with {
+  "transaction_card": {
+    "url": url,
+    "title": elements['#node'].get('title').getString(),
+    "body": elements['#node'].get('field_description').getString()
+  }
+} %}
