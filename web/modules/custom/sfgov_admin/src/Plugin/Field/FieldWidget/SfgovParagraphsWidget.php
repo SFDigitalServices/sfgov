@@ -10,7 +10,7 @@ use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
  *
  * @FieldWidget(
  *   id = "sfgov_paragraphs",
- *   label = @Translation("Paragraphs EXPERIMENTAL (Custom)"),
+ *   label = @Translation("Paragraphs EXPERIMENTAL (SF.gov)"),
  *   description = @Translation("An custom experimental paragraphs inline form widget."),
  *   field_types = {
  *     "entity_reference_revisions"
@@ -75,6 +75,7 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
         $elements[$button_key]['#value'] = $this->t('&nbsp;@type', ['@type' => $label]);
       }
       $elements = $this->buildDropbutton($elements);
+      // Adds an "Add" button to the top of the list.
       $elements["operations"]["#links"] = ['add_label' => [
         'title' => [
           '#type' => 'link',
@@ -92,7 +93,6 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
           '#attached' => ['library' => ['sfgov_admin/paragraphs']],
           ],
         ]] + $elements["operations"]["#links"];
-      $elements['#suffix'] = $this->t('to %type', ['%type' => $this->fieldDefinition->getLabel()]);
     }
 
     return $elements;
