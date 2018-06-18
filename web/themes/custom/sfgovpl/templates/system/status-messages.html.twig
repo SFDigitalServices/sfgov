@@ -21,33 +21,52 @@
  *   - class: HTML classes.
  */
 #}
-{% for type, messages in message_list %}
-{%
-  set classes = [
-    'messages',
-    'messages--' ~ type|clean_class
-  ]
-%}
-<div{{ attributes.addClass(classes)|without('role', 'aria-label') }} role="contentinfo" aria-label="{{ status_headings[type] }}">
-{% if type == 'error' %}
-  <div role="alert">
-{% endif %}
-  {% if status_headings[type] %}
-    <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
-  {% endif %}
-  {% if messages|length > 1 %}
-    <ul class="messages__list">
-      {% for message in messages %}
-        <li class="messages__item">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    {{ messages|first }}
-  {% endif %}
-{% if type == 'error' %}
-  </div>
-{% endif %}
+
+<div class="sfgov-container">
+
+  {% for type, messages in message_list %}
+
+    {% for message in messages %}
+
+      {% if type == "status" %}
+
+        {% include "@molecules/05-alerts/01-alert.twig" with {
+          "alert": {
+            "type": "success",
+            "role": "alertdialog",
+            "title": "Success",
+            "content": message
+          }
+        } %}
+
+      {% elseif type == "error" %}
+
+        {% include "@molecules/05-alerts/01-alert.twig" with {
+          "alert": {
+            "type": "error",
+            "role": "alertdialog",
+            "title": "Error",
+            "content": message
+          }
+        } %}
+
+      {% elseif type == "warning" %}
+
+        {% include "@molecules/05-alerts/01-alert.twig" with {
+          "alert": {
+            "type": "warning",
+            "role": "alertdialog",
+            "title": "Warning",
+            "content": message
+          }
+        } %}
+
+      {% endif %}
+
+
+    {% endfor %}
+
+  {% endfor %}
+
 </div>
-{# Remove type specific classes. #}
-{{ attributes.removeClass(classes) }}
-{% endfor %}
+
