@@ -1,0 +1,35 @@
+uuid: bfb91534-faa7-452d-9ab8-1fe843edddbb
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.location.preview
+    - eck.eck_type.location.mailing
+    - field.field.location.mailing.field_address
+  module:
+    - address
+id: location.mailing.preview
+targetEntityType: location
+bundle: mailing
+mode: preview
+content:
+  field_address:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  title:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  langcode: true
+  uid: true

@@ -7,33 +7,18 @@ dependencies:
     - field.field.paragraph.email.field_owner
     - field.field.paragraph.email.field_text
     - paragraphs.paragraphs_type.email
-  module:
-    - text
 id: paragraph.email.default
 targetEntityType: paragraph
 bundle: email
 mode: default
 content:
   field_email:
-    weight: 1
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_owner:
-    weight: 0
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_text:
-    weight: 2
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
-hidden: {  }
+hidden:
+  field_owner: true
+  field_text: true

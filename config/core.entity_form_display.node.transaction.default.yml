@@ -35,8 +35,8 @@ third_party_settings:
   field_group:
     group_before_you_start:
       children:
-        - field_cost
-        - field_things_to_know
+        - group_cost
+        - group_thing_to_know
       parent_name: ''
       weight: 4
       format_type: fieldset
@@ -49,12 +49,13 @@ third_party_settings:
       label: 'What to Know Before You Start'
     group_what_to_do:
       children:
-        - field_step_online
-        - field_step_phone
-        - field_step_email
-        - field_step_in_person
-        - field_step_mail
-        - field_step_fax
+        - group_online
+        - group_phone
+        - group_email
+        - group_in_person
+        - group_mail
+        - group_fax
+        - group_other_details
         - group_other
       parent_name: ''
       weight: 5
@@ -93,18 +94,174 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Supporting Information'
+    group_thing_to_know:
+      children:
+        - field_things_to_know
+      parent_name: group_before_you_start
+      weight: 22
+      format_type: html_element
+      format_settings:
+        label: 'Things to Know'
+        element: div
+        show_label: true
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+        id: paragraph-group-things-to-know
+        classes: 'paragraphs-group paragraphs-group--things-to-know'
+        required_fields: false
+      label: 'Things to Know'
+    group_cost:
+      children:
+        - field_cost
+      parent_name: group_before_you_start
+      weight: 20
+      format_type: html_element
+      format_settings:
+        id: paragraph-group-cost
+        classes: 'paragraphs-group paragraphs-group--cost'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Cost
+    group_phone:
+      children:
+        - field_step_phone
+      parent_name: group_what_to_do
+      weight: 21
+      format_type: html_element
+      format_settings:
+        id: paragraph-group-step-phone
+        classes: 'paragraphs-group paragraphs-group--step-phone'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: Phone
+        effect: none
+        speed: fast
+      label: Phone
+    group_email:
+      children:
+        - field_step_email
+      parent_name: group_what_to_do
+      weight: 22
+      format_type: html_element
+      format_settings:
+        label: Email
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: paragraph-group-step-email
+        classes: 'paragraphs-group paragraphs-group--email'
+      label: Email
+    group_in_person:
+      children:
+        - field_step_in_person
+      parent_name: group_what_to_do
+      weight: 23
+      format_type: html_element
+      format_settings:
+        id: paragraph-group-step-in-person
+        classes: 'paragraphs-group paragraphs-group--in-person'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: In-Person
+    group_mail:
+      children:
+        - field_step_mail
+      parent_name: group_what_to_do
+      weight: 24
+      format_type: html_element
+      format_settings:
+        label: Mail
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: paragraph-group-step-mail
+        classes: 'paragraphs-group paragraphs-group--mail'
+      label: Mail
+    group_fax:
+      children:
+        - field_step_fax
+      parent_name: group_what_to_do
+      weight: 25
+      format_type: html_element
+      format_settings:
+        id: paragraph-group-step-fax
+        classes: 'paragraphs-group paragraphs-group--fax'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Fax
+    group_online:
+      children:
+        - field_step_online
+      parent_name: group_what_to_do
+      weight: 20
+      format_type: html_element
+      format_settings:
+        id: paragraph-group-step-online
+        classes: 'paragraphs-group paragraphs-group--online'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Online
     group_other:
+      children: {  }
+      parent_name: group_what_to_do
+      weight: 27
+      format_type: html_element
+      format_settings:
+        id: paragraph-group-step-other
+        classes: 'paragraphs-group paragraphs-group--other'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Other
+    group_other_details:
       children:
         - field_step_other_title
         - field_step_other
       parent_name: group_what_to_do
-      weight: 22
+      weight: 26
       format_type: details
       format_settings:
-        id: ''
-        classes: ''
-        open: false
+        label: Other
+        open: true
         required_fields: true
+        id: paragraph-group-step-other
+        classes: 'paragraph-group paragraph-group--details'
       label: Other
 id: node.transaction.default
 targetEntityType: node
@@ -119,7 +276,7 @@ content:
     third_party_settings: {  }
   field_cost:
     type: paragraphs
-    weight: 13
+    weight: 21
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -154,7 +311,7 @@ content:
     third_party_settings: {  }
     region: content
   field_departments:
-    weight: 18
+    weight: 12
     settings:
       match_operator: CONTAINS
       size: 60
@@ -173,7 +330,7 @@ content:
         hide_guidelines: '1'
       maxlength:
         maxlength_js: 280
-        maxlength_js_label: '<strong>@remaining</strong> left'
+        maxlength_js_label: '<strong>@remaining</strong>/@limit'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
     type: text_textarea
@@ -188,7 +345,7 @@ content:
     region: content
   field_help:
     type: paragraphs
-    weight: 16
+    weight: 9
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -224,7 +381,7 @@ content:
     region: content
   field_step_email:
     type: paragraphs
-    weight: 16
+    weight: 13
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -242,7 +399,7 @@ content:
     region: content
   field_step_fax:
     type: paragraphs
-    weight: 19
+    weight: 16
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -260,7 +417,7 @@ content:
     region: content
   field_step_in_person:
     type: paragraphs
-    weight: 17
+    weight: 14
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -278,7 +435,7 @@ content:
     region: content
   field_step_mail:
     type: paragraphs
-    weight: 18
+    weight: 15
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -296,7 +453,7 @@ content:
     region: content
   field_step_online:
     type: paragraphs
-    weight: 14
+    weight: 21
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -314,7 +471,7 @@ content:
     region: content
   field_step_other:
     type: paragraphs
-    weight: 11
+    weight: 22
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -331,7 +488,7 @@ content:
     third_party_settings: {  }
     region: content
   field_step_other_title:
-    weight: 10
+    weight: 21
     settings:
       size: 60
       placeholder: ''
@@ -340,7 +497,7 @@ content:
     region: content
   field_step_phone:
     type: paragraphs
-    weight: 15
+    weight: 11
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -358,7 +515,7 @@ content:
     region: content
   field_things_to_know:
     type: paragraphs
-    weight: 14
+    weight: 15
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -385,7 +542,7 @@ content:
     region: content
   field_transaction_purpose:
     type: paragraphs
-    weight: 19
+    weight: 13
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -402,7 +559,7 @@ content:
     third_party_settings: {  }
     region: content
   field_transactions:
-    weight: 17
+    weight: 11
     settings:
       match_operator: CONTAINS
       size: 60
@@ -427,21 +584,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 11
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 16
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 12
     region: content
     third_party_settings: {  }
   title:
@@ -453,7 +610,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 11
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -467,7 +624,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 16
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }

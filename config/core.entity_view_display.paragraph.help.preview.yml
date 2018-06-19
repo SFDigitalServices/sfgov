@@ -1,25 +1,17 @@
-uuid: 794b2709-c5fa-4e83-bc3c-fc8233e2e0ac
+uuid: 91d61224-de37-41bd-8da5-e39e6cd9b79c
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.help.field_text
     - field.field.paragraph.help.field_title
     - paragraphs.paragraphs_type.help
-  module:
-    - text
-id: paragraph.help.default
+id: paragraph.help.preview
 targetEntityType: paragraph
 bundle: help
-mode: default
+mode: preview
 content:
-  field_text:
-    type: text_default
-    weight: 1
-    region: content
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
   field_title:
     weight: 0
     label: hidden
@@ -28,4 +20,5 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-hidden: {  }
+hidden:
+  field_text: true
