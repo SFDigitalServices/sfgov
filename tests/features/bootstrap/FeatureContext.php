@@ -45,7 +45,29 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
 //  }
 //
 
-    /**
+  /**
+   * Checks whether last command output contains provided button label.
+   *
+   * Example: I should see a button link labeled "Go"
+   *
+   * @Then /^(?:|I )should see a button link labeled "(?P<text>(?:[^"]|\\")*)"$/
+   */
+  public function assertPageContainsLinkLable($label) {
+    $this->assertSession()->elementTextContains('css', 'ul.dropbutton li a', $this->fixStepArgument($label));
+  }
+
+  /**
+   * Checks whether last command output contains provided button label.
+   *
+   * Example: I should see a button labeled "Submit"
+   *
+   * @Then /^(?:|I )should see a button labeled "(?P<text>(?:[^"]|\\")*)"$/
+   */
+  public function assertPageContainsButtonLable($label) {
+    $this->assertSession()->responseMatches('/<input.*type="submit".*value=".*'.preg_quote($label, '/').'.*"/Uui');
+  }
+
+  /**
      * Fills in form field with specified id|name|label|value
      * Example: And I enter the value of the env var "TEST_PASSWORD" for "edit-account-pass-pass1"
      *
@@ -247,4 +269,16 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
         $html = preg_replace('#\</title\>.*\</head\>#sU', '</title></head>', $html);
         return $html;
     }
+
+  /**
+   * Returns fixed step argument (with \\" replaced back to ")
+   *
+   * @param string $argument
+   *
+   * @return string
+   */
+  protected function fixStepArgument($argument)
+  {
+    return str_replace('\\"', '"', $argument);
+  }
 }
