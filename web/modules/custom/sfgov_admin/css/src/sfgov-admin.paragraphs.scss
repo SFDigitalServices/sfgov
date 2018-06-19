@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 .field--widget-paragraphs,
+.field--widget-sfgov-paragraphs,
 .field--widget-entity-reference-paragraphs {
   // Potential selectors:
   // - field-NAME-add-more-wrapper
@@ -44,7 +45,8 @@
   }
 }
 
-.field--widget-paragraphs {
+.field--widget-paragraphs,
+.field--widget-sfgov-paragraphs {
   .field--widget-paragraphs {
     margin: 1em 0;
   }
@@ -56,7 +58,7 @@
   > .paragraphs-tabs-wrapper > .form-item {
     position: relative;
 
-     > .field-add-more-submit {
+    > .field-add-more-submit {
       position: absolute;
       right: 10px;
       top: 0;
@@ -99,4 +101,61 @@
   }
 }
 
+// Copy styles from `field--widget-paragraphs` to `field--widget-sfgov-paragraphs`
+//-------------------------------------------------------------------------------
+.js {
+  .field--widget-sfgov-paragraphs {
+    th .paragraphs-actions {
+      float: right;
+      // Table th padding is 12px but for some weird reason here we need to do
+      // -11px to return it back.
+      margin-right: -11px;
+    }
 
+    .paragraphs-dropbutton-wrapper {
+      // We are using inline-flex here so 'Add type' dropdown button is inline
+      // and aligned 'to type' text.
+      display: inline-flex;
+    }
+
+    .dropbutton-wrapper {
+      // Reset some CSS that are coming from core.
+      margin-right: 0;
+      padding-right: 0;
+
+      // Override 600px breakpoint from core, needed again so 'to type' is in
+      // the same line with add dropdown button.
+      width: auto;
+    }
+
+    // Reset some CSS that are coming from core.
+    .dropbutton-widget {
+      position: static;
+    }
+
+    .field-multiple-table {
+      margin-bottom: 10px;
+    }
+
+    td { // stylelint-disable-line selector-no-type
+      padding: 10px 0;
+    }
+
+    .field-multiple-drag {
+      vertical-align: top;
+    }
+
+    .draggable .tabledrag-handle {
+      margin-left: 0;
+    }
+
+    .tabledrag-handle .handle {
+      height: 22px;
+    }
+
+    .delta-order {
+      padding-right: 10px;
+      text-align: right;
+    }
+  }
+}
