@@ -64,7 +64,7 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
    * @Then /^(?:|I )should see a button labeled "(?P<text>(?:[^"]|\\")*)"$/
    */
   public function assertPageContainsButtonLable($label) {
-    $this->assertSession()->responseMatches('/<input.*type="submit".*value=".*'.preg_quote($label, '/').'.*"/Uui');
+    $this->assertSession()->responseMatches('/<input[^>]*type="submit"[^>]*value="('. preg_quote($label, '/') .')"[^>]*>/i');
   }
 
   /**

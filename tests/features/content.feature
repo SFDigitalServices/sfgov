@@ -34,10 +34,11 @@ Feature: Content
     And  I am logged in as a user with the "administrator" role
     When I go to "node/add/landing"
     Then I should see a button link labeled "Add"
-    And  I should see a button labeled "Block"
-    And  I should see a button labeled "Button link"
-    And  I should see a button labeled "List"
-    And  I should see a button labeled "Text"
+    # The leading space in the following values is actualy UTF-8 `0xC2:0xA0` (non breaking space).
+    And  I should see a button labeled " Block"
+    And  I should see a button labeled " Button link"
+    And  I should see a button labeled " List"
+    And  I should see a button labeled " Text"
     And  I should not see "to Section Content"
 
 # Setting the body field contents does not seem to be effective
