@@ -6,11 +6,14 @@
 
 <div class="sfgov-container--full sfgov-container--right-sidebar">
   <div class="sfgov-container--content-right">
-    <div class="todo">To Implement services:</div>
+    {# todo: Implement services listing #}
+    {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
   </div>
   <div class="sfgov-container--content-left">
     {{ content.field_url }}
-    {{ content.field_address }}
-    {{ content.field_phone_numbers }}
+    <div class="sidebar-block">
+      {{ content.field_address }}
+      {{ content.field_phone_numbers }}
+    </div>
   </div>
 </div>
