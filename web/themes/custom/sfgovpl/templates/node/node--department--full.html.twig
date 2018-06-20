@@ -1,0 +1,22 @@
+{% if content.field_image['#items'] %}
+  {% set image = content.field_image %}
+{% endif %}
+{% include "@molecules/06-headers/01-content-head.twig" with {
+  "title": node.getTitle(),
+  "description": node.get('field_description').getString(),
+  "image": image
+} %}
+
+<div class="sfgov-container--full sfgov-container--right-sidebar">
+  <div class="sfgov-container--content-right">
+    {# todo: Implement services listing #}
+    {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
+  </div>
+  <div class="sfgov-container--content-left">
+    {{ content.field_url }}
+    <div class="sidebar-block">
+      {{ content.field_address }}
+      {{ content.field_phone_numbers }}
+    </div>
+  </div>
+</div>
