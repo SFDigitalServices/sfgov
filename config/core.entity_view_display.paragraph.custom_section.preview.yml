@@ -1,25 +1,17 @@
-uuid: 4f4ad7d7-99bc-4309-b2c9-39a37ee55cf1
+uuid: db203bae-e430-4de8-819e-460f45aabae2
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.custom_section.field_text
     - field.field.paragraph.custom_section.field_title
     - paragraphs.paragraphs_type.custom_section
-  module:
-    - text
-id: paragraph.custom_section.default
+id: paragraph.custom_section.preview
 targetEntityType: paragraph
 bundle: custom_section
-mode: default
+mode: preview
 content:
-  field_text:
-    type: text_default
-    weight: 1
-    region: content
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
   field_title:
     weight: 0
     label: hidden
@@ -28,4 +20,5 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-hidden: {  }
+hidden:
+  field_text: true
