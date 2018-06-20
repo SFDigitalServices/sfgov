@@ -1,10 +1,13 @@
-
 {% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
+
+{% if node.get('field_description').getValue()[0] %}
+  {% set content = node.get('field_description').getValue()[0]['value'] %}
+{% endif %}
 
 {% include "@molecules/04-cards/01-transaction-card.twig" with {
   "transaction_card": {
     "url": url,
     "title": elements['#node'].get('title').getString(),
-    "body": elements['#node'].get('field_description').getString()
+    "body": content
   }
 } %}
