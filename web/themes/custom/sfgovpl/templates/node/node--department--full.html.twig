@@ -1,7 +1,10 @@
+{% if content.field_image['#items'] %}
+  {% set image = content.field_image %}
+{% endif %}
 {% include "@molecules/06-headers/01-content-head.twig" with {
   "title": node.getTitle(),
   "description": node.get('field_description').getString(),
-  "image": content.field_image
+  "image": image
 } %}
 
 <div class="sfgov-container--full sfgov-container--right-sidebar">
