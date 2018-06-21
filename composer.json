@@ -133,7 +133,8 @@
             "web/libraries/{$name}": [
                 "type:drupal-library",
                 "type:bower-asset",
-                "type:npm-asset"
+                "type:npm-asset",
+                "type:github"
             ],
             "drush/contrib/{$name}": ["type:drupal-drush"]
         },
@@ -177,7 +178,10 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "preferred-install": "dist",
+        "preferred-install": {
+            "sf-digital-services/sfgov-pattern-lab": "source",
+            "*": "dist"
+        },
         "sort-packages": true,
         "platform": {
             "php": "7.0.8"
