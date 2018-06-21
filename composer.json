@@ -8,9 +8,18 @@
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
-        "sfgovpl": {
-            "type": "github",
-            "url": "https://github.com/SFDigitalServices/sfgov-pattern-lab.git"
+        "github": {
+            "type": "package",
+            "package": {
+                "name": "sf-digital-services/sfgov-pattern-lab",
+                "version": "dev-master",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/SFDigitalServices/sfgov-pattern-lab.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
         },
         "asset-packagist": {
             "type": "composer",
@@ -60,7 +69,7 @@
         "oomphinc/composer-installers-extender": "^1.1",
         "pantheon-systems/quicksilver-pushback": "~1",
         "rvtraveller/qs-composer-installer": "^1.1",
-        "sf-digital-services/sfgov-pattern-lab": "0.0.91",
+        "sf-digital-services/sfgov-pattern-lab": "dev-master#0.0.91",
         "webflo/drupal-core-strict": "^8"
     },
     "require-dev": {
@@ -125,8 +134,7 @@
             "web/libraries/{$name}": [
                 "type:drupal-library",
                 "type:bower-asset",
-                "type:npm-asset",
-                "type:github"
+                "type:npm-asset"
             ],
             "drush/contrib/{$name}": ["type:drupal-drush"]
         },
@@ -170,10 +178,7 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "preferred-install": {
-            "sf-digital-services/sfgov-pattern-lab": "source",
-            "*": "dist"
-        },
+        "preferred-install": "dist",
         "sort-packages": true,
         "platform": {
             "php": "7.0.8"
