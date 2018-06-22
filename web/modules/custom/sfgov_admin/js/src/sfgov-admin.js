@@ -54,5 +54,16 @@
 
     }
   };
+  Drupal.behaviors.sfgovParagraphAddDropbutton = {
+    attach: function (context) {
+      // The add button is just a placeholder for the add buttons. Clicking it should have no affect.
+      $('.sfgov-admin-paragraph-add-link', context)
+        .once()
+        .on('click', function (e) {
+          e.preventDefault();
+          $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+        });
+    }
+  };
 
 }(jQuery, Drupal, document, window));

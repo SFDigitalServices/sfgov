@@ -1,0 +1,41 @@
+uuid: afd00e2a-a053-4a80-994d-7cd6f03c7375
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.location.preview
+    - eck.eck_type.location.physical
+    - field.field.location.physical.field_address
+    - field.field.location.physical.field_directions_link
+    - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_text
+  module:
+    - address
+id: location.physical.preview
+targetEntityType: location
+bundle: physical
+mode: preview
+content:
+  field_address:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_plain
+    region: content
+  title:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  field_directions_link: true
+  field_operating_hours: true
+  field_text: true
+  langcode: true
+  uid: true
