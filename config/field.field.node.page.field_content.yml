@@ -1,19 +1,18 @@
-uuid: ab9f8b27-23b7-40a5-a255-8fda0d4e4057
+uuid: 244acb7d-3755-49a1-a1a9-3883a47033b9
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_step_fax
-    - node.type.transaction
-    - paragraphs.paragraphs_type.callout
-    - paragraphs.paragraphs_type.step
+    - field.storage.node.field_content
+    - node.type.page
+    - paragraphs.paragraphs_type.section
   module:
     - entity_reference_revisions
-id: node.transaction.field_step_fax
-field_name: field_step_fax
+id: node.page.field_content
+field_name: field_content
 entity_type: node
-bundle: transaction
-label: Fax
+bundle: page
+label: Content
 description: ''
 required: false
 translatable: false
@@ -24,52 +23,60 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      step: step
-      callout: callout
+      section: section
     target_bundles_drag_drop:
-      step:
-        enabled: true
-        weight: -31
-      callout:
-        enabled: true
-        weight: -30
+      block:
+        weight: 19
+        enabled: false
       button:
-        weight: -29
+        weight: 20
+        enabled: false
+      callout:
+        weight: 21
         enabled: false
       cost:
-        weight: -28
+        weight: 22
         enabled: false
       custom_section:
-        weight: -27
+        weight: 23
         enabled: false
       document:
-        weight: -26
+        weight: 24
         enabled: false
       email:
-        weight: -25
+        weight: 25
         enabled: false
       help:
-        weight: -24
+        weight: 26
         enabled: false
       in_person_location:
-        weight: -23
+        weight: 27
+        enabled: false
+      list:
+        weight: 28
+        enabled: false
+      list_item:
+        weight: 29
         enabled: false
       mailing_address:
-        weight: -22
+        weight: 30
         enabled: false
       phone:
-        weight: -21
+        weight: 31
         enabled: false
+      section:
+        enabled: true
+        weight: 32
       special_case:
-        weight: -20
+        weight: 33
+        enabled: false
+      step:
+        weight: 34
         enabled: false
       text:
-        weight: -19
+        weight: 35
         enabled: false
       thing_to_know:
-        weight: -18
-        enabled: false
-      website:
-        weight: -17
+        weight: 36
         enabled: false
 field_type: entity_reference_revisions
