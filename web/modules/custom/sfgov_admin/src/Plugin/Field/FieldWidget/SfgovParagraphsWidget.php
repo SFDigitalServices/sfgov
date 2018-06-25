@@ -89,7 +89,7 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
               'disabled' => 'disabled',
             ],
           ]),
-          '#title' => $this->t('Add'),
+          '#title' => $this->t('Add...'),
           '#attached' => ['library' => ['sfgov_admin/paragraphs']],
           ],
         ]] + $elements["operations"]["#links"];
