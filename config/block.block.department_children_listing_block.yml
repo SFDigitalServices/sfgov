@@ -1,0 +1,33 @@
+uuid: 9c582c9f-0ec0-44da-bf5e-57816efd5d07
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.departments
+  module:
+    - ctools
+    - views
+  theme:
+    - sfgovpl
+id: department_children_listing_block
+theme: sfgovpl
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:departments-block_1'
+settings:
+  id: 'views_block:departments-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+  context_mapping: {  }
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      department: department
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
