@@ -1,18 +1,19 @@
-uuid: 12becc94-e8fc-4d47-b4f1-e1ca61d88679
+uuid: ad697234-1cbe-4c51-86f7-456150a51088
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
-    - field.field.node.topic.field_description
-    - node.type.topic
+    - core.entity_view_mode.node.search_index
+    - field.field.node.landing.field_content
+    - field.field.node.landing.field_description
+    - node.type.landing
   module:
     - text
     - user
-id: node.topic.teaser
+id: node.landing.search_index
 targetEntityType: node
-bundle: topic
-mode: teaser
+bundle: landing
+mode: search_index
 content:
   field_description:
     type: text_default
@@ -22,6 +23,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  content_moderation_control: true
+  field_content: true
   langcode: true
   links: true
