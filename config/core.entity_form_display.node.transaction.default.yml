@@ -24,6 +24,7 @@ dependencies:
     - node.type.transaction
   module:
     - allowed_formats
+    - content_moderation
     - field_group
     - link
     - maxlength
@@ -51,10 +52,9 @@ third_party_settings:
       children:
         - group_online
         - group_phone
-        - group_email
         - group_in_person
+        - group_email
         - group_mail
-        - group_fax
         - group_other_details
         - group_other
       parent_name: ''
@@ -150,7 +150,7 @@ third_party_settings:
       children:
         - field_step_email
       parent_name: group_what_to_do
-      weight: 22
+      weight: 23
       format_type: html_element
       format_settings:
         label: Email
@@ -168,7 +168,7 @@ third_party_settings:
       children:
         - field_step_in_person
       parent_name: group_what_to_do
-      weight: 23
+      weight: 22
       format_type: html_element
       format_settings:
         id: paragraph-group-step-in-person
@@ -199,23 +199,6 @@ third_party_settings:
         id: paragraph-group-step-mail
         classes: 'paragraphs-group paragraphs-group--mail'
       label: Mail
-    group_fax:
-      children:
-        - field_step_fax
-      parent_name: group_what_to_do
-      weight: 25
-      format_type: html_element
-      format_settings:
-        id: paragraph-group-step-fax
-        classes: 'paragraphs-group paragraphs-group--fax'
-        element: div
-        show_label: true
-        label_element: h3
-        required_fields: true
-        attributes: ''
-        effect: none
-        speed: fast
-      label: Fax
     group_online:
       children:
         - field_step_online
@@ -283,7 +266,7 @@ content:
       edit_mode: closed
       closed_mode: preview
       autocollapse: all
-      add_mode: button
+      add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: _none
       features:
@@ -452,7 +435,7 @@ content:
     third_party_settings: {  }
     region: content
   field_step_other:
-    type: paragraphs
+    type: sfgov_paragraphs
     weight: 22
     settings:
       title: Paragraph
@@ -460,13 +443,13 @@ content:
       edit_mode: closed
       closed_mode: preview
       autocollapse: all
-      add_mode: dropdown
+      add_mode: dropdown_custom
       form_display_mode: default
       default_paragraph_type: _none
       features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
-        add_above: '0'
+        add_above: 0
     third_party_settings: {  }
     region: content
   field_step_other_title:
@@ -504,7 +487,7 @@ content:
       edit_mode: closed
       closed_mode: preview
       autocollapse: all
-      add_mode: button
+      add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: _none
       features:
@@ -555,6 +538,12 @@ content:
     region: content
     settings:
       include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    settings: {  }
+    region: content
     third_party_settings: {  }
   path:
     type: path

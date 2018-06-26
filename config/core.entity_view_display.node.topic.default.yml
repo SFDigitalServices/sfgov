@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
     - node.type.topic
   module:
@@ -14,6 +13,9 @@ targetEntityType: node
 bundle: topic
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
   field_description:
     weight: 1
     label: hidden
@@ -22,6 +24,5 @@ content:
     type: text_default
     region: content
 hidden:
-  field_departments: true
   langcode: true
   links: true
