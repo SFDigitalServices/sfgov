@@ -33,6 +33,8 @@ class SFgovDepartment {
    * Get the department group of this object.
    *
    * @return \Drupal\group\Entity\GroupInterface|null
+   *
+   * @throws \Exception See: `EntityTypeManagerInterface::getStorage`
    */
   public function getDepartmentGroup() {
     if (empty($this->department_group)) {
@@ -53,8 +55,10 @@ class SFgovDepartment {
   /**
    * Get the department node given a department group.
    *
-   * @return \Drupal\node\NodeInterface|null
-   */
+   * @return  NodeInterface|\Drupal\Core\Entity\EntityInterface|null
+   *
+   * @throws \Exception See: `EntityTypeManagerInterface::getStorage`
+     */
   public static function getDepartmentNode(\Drupal\group\Entity\GroupInterface $group) {
     /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
     $plugin = $group->getGroupType()->getContentPlugin('group_node:department');
@@ -204,8 +208,9 @@ class SFgovDepartment {
     foreach ($content_in_groups as $group_content) {
       $referenced = $group_content->gid->referencedEntities();
       $group = reset($referenced);
-      $department_node = self::getDepartmentNode($group);
-      $previous_departments_ids[$department_node->id()] = $group_content;
+      if ($department_node = self::getDepartmentNode($group)) {
+        $previous_departments_ids[$department_node->id()] = $group_content;
+      }
     }
 
     // Add to new departments.

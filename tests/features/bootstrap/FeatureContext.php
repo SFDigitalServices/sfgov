@@ -48,17 +48,6 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
   /**
    * Checks whether last command output contains provided button label.
    *
-   * Example: I should see a button link labeled "Go"
-   *
-   * @Then /^(?:|I )should see a button link labeled "(?P<text>(?:[^"]|\\")*)"$/
-   */
-  public function assertPageContainsLinkLable($label) {
-    $this->assertSession()->elementTextContains('css', 'ul.dropbutton li a', $this->fixStepArgument($label));
-  }
-
-  /**
-   * Checks whether last command output contains provided button label.
-   *
    * Example: I should see a button labeled "Submit"
    *
    * @Then /^(?:|I )should see a button labeled "(?P<text>(?:[^"]|\\")*)"$/
