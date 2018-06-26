@@ -1,17 +1,17 @@
-uuid: 576cce98-eda2-4c71-9d6e-1c22a6c9b60c
+uuid: bd6035ee-cad4-471c-a8b4-16f0edc04a82
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_departments
+    - field.storage.node.field_topics
     - node.type.department
     - node.type.topic
-id: node.topic.field_departments
-field_name: field_departments
+id: node.department.field_topics
+field_name: field_topics
 entity_type: node
-bundle: topic
-label: Departments
-description: 'Start typing the name of a department to see suggestions.'
+bundle: department
+label: Topic(s)
+description: 'Start typing the name of a topic to see suggestions.'
 required: false
 translatable: true
 default_value: {  }
@@ -20,10 +20,9 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
-      department: department
+      topic: topic
     sort:
-      field: title
-      direction: ASC
+      field: _none
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference
