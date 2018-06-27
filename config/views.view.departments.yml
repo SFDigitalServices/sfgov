@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.search_index
     - core.entity_view_mode.node.teaser
     - node.type.department
     - system.menu.main
@@ -146,21 +147,20 @@ display:
           entity_field: type
           plugin_id: bundle
       sorts:
-        created:
-          id: created
+        title:
+          id: title
           table: node_field_data
-          field: created
-          order: DESC
-          entity_type: node
-          entity_field: created
-          plugin_id: date
+          field: title
           relationship: none
           group_type: group
           admin_label: ''
+          order: ASC
           exposed: false
           expose:
             label: ''
-          granularity: second
+          entity_type: node
+          entity_field: title
+          plugin_id: standard
       title: Departments
       header: {  }
       footer: {  }
@@ -177,10 +177,248 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: 'Child Departments (block)'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      style:
+        type: html_list
+        options:
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+          type: ul
+          wrapper_class: item-list
+          class: ''
+      defaults:
+        style: false
+        row: false
+        arguments: false
+        relationships: false
+        filters: false
+        filter_groups: false
+        title: false
+        pager: false
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      arguments:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: field_parent_department
+          group_type: group
+          admin_label: ''
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: '{{ arguments.nid }} includes:'
+          default_argument_type: node
+          default_argument_options: {  }
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: node_nid
+      relationships:
+        field_parent_department:
+          id: field_parent_department
+          table: node__field_parent_department
+          field: field_parent_department
+          relationship: none
+          group_type: group
+          admin_label: 'field_parent_department: Content'
+          required: true
+          plugin_id: standard
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            department: department
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      block_hide_empty: true
+      title: 'Related Departments'
+      display_description: 'A list of child departments that displays when viewing the Parent department node.'
+      pager:
+        type: none
+        options:
+          offset: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  block_2:
+    display_plugin: block
+    id: block_2
+    display_title: 'Topic Related Departments (block)'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      style:
+        type: html_list
+        options:
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+          type: ul
+          wrapper_class: item-list
+          class: ''
+      defaults:
+        style: false
+        row: false
+        arguments: false
+        relationships: false
+        filters: false
+        filter_groups: false
+        title: false
+        pager: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: search_index
+      arguments:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: field_topics
+          group_type: group
+          admin_label: ''
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: node
+          default_argument_options: {  }
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: node_nid
+      relationships:
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
+          relationship: none
+          group_type: group
+          admin_label: 'field_topics: Content'
+          required: true
+          plugin_id: standard
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            department: department
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      block_hide_empty: true
+      title: 'Related Departments'
+      display_description: 'A list of departments that are associated with the Topic being viewed.'
+      pager:
+        type: none
+        options:
+          offset: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
-    display_title: Page
+    display_title: 'Departments Listing (page)'
     position: 1
     display_options:
       display_extenders: {  }
@@ -194,6 +432,7 @@ display:
         weight: 3
         context: '0'
         menu_name: main
+      display_description: 'The ''departments'' listing page.'
     cache_metadata:
       max-age: -1
       contexts:

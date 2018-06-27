@@ -1,9 +1,9 @@
-uuid: d382018b-128e-4f42-be77-8aaf7821cf23
+uuid: 4efbd0dc-25bf-41e8-bb53-a447bab56132
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.search_index
     - field.field.node.transaction.field_cost
     - field.field.node.transaction.field_custom_section
     - field.field.node.transaction.field_departments
@@ -26,21 +26,18 @@ dependencies:
   module:
     - text
     - user
-id: node.transaction.teaser
+id: node.transaction.search_index
 targetEntityType: node
 bundle: transaction
-mode: teaser
+mode: search_index
 content:
-  content_moderation_control:
-    weight: -20
-    region: content
   field_description:
-    type: text_default
     weight: 0
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    type: text_default
+    region: content
 hidden:
   content_moderation_control: true
   field_cost: true
@@ -48,6 +45,7 @@ hidden:
   field_departments: true
   field_direct_external_url: true
   field_help: true
+  field_related_departments: true
   field_special_cases: true
   field_step_email: true
   field_step_in_person: true

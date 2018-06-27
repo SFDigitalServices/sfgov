@@ -1,0 +1,53 @@
+uuid: d8ac2154-10c3-4f8c-8549-8325a5fd3950
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.location.search_index
+    - eck.eck_type.location.physical
+    - field.field.location.physical.field_address
+    - field.field.location.physical.field_directions_link
+    - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_text
+  module:
+    - address
+    - link
+id: location.physical.search_index
+targetEntityType: location
+bundle: physical
+mode: search_index
+content:
+  field_address:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_directions_link:
+    weight: 2
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link_separate
+    region: content
+  title:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  field_operating_hours: true
+  field_text: true
+  langcode: true
+  uid: true
