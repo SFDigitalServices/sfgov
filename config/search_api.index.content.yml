@@ -6,8 +6,6 @@ dependencies:
     - search_api_solr
     - search_api
     - node
-    - eck
-    - media
   config:
     - search_api.server.pantheon
 id: content
@@ -54,18 +52,6 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
-  location_title:
-    label: Title
-    datasource_id: 'entity:location'
-    property_path: title
-    type: solr_text_wstoken
-    boost: !!float 21
-  name:
-    label: Name
-    datasource_id: 'entity:media'
-    property_path: name
-    type: solr_text_wstoken
-    boost: !!float 21
 datasource_settings:
   'entity:node':
     bundles:
@@ -77,43 +63,10 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
-  'entity:location':
-    bundles:
-      default: true
-      selected: {  }
-    languages:
-      default: true
-      selected: {  }
-  'entity:media':
-    bundles:
-      default: true
-      selected: {  }
-    languages:
-      default: true
-      selected: {  }
 processor_settings:
   rendered_item: {  }
-  html_filter:
-    all_fields: true
-    fields:
-      - rendered_item
-      - title
-      - location_title
-      - name
-    title: true
-    alt: true
-    tags:
-      h1: 5
-      h2: 3
-      h3: 2
-      strong: 2
-      b: 2
-    weights:
-      preprocess_index: -15
-      preprocess_query: -15
-  content_access:
-    weights:
-      preprocess_query: -30
+  add_url: {  }
+  aggregated_field: {  }
   highlight:
     highlight: always
     highlight_partial: false
@@ -127,19 +80,34 @@ processor_settings:
     suffix: '</strong>'
     weights:
       postprocess_query: 0
-  aggregated_field: {  }
-  add_url: {  }
   entity_status: {  }
   ignorecase:
     all_fields: true
     fields:
       - rendered_item
       - title
-      - location_title
-      - name
     weights:
       preprocess_index: -20
       preprocess_query: -20
+  content_access:
+    weights:
+      preprocess_query: -30
+  html_filter:
+    all_fields: true
+    fields:
+      - rendered_item
+      - title
+    title: true
+    alt: true
+    tags:
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
+      b: 2
+    weights:
+      preprocess_index: -15
+      preprocess_query: -15
 tracker_settings:
   default:
     indexing_order: fifo
