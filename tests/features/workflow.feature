@@ -69,6 +69,7 @@ Feature: Workflow
       | Penelope  | penelope@sfgov.org  |               | 1      |
       | Admin     | admin@sfgov.org     | administrator | 1      |
 
+    ## Verify global permissions ##
     ## Make sure all roles are set properly.
     When I am logged in as "Admin"
     And  I visit "admin/people"
@@ -106,6 +107,7 @@ Feature: Workflow
     When I am on "node/add/topic"
     Then I should see "Access denied"
 
+    ## Assign users to groups ##
     ## Add Author to a group 1.
     When I am logged in as "Admin"
     And  I visit "group/1/content/add/group_membership"
@@ -130,9 +132,27 @@ Feature: Workflow
     And  I should not see the text "Writer" in the "Penelope" row
     And  I should not see the text "Admin" in the "Penelope" row
 
-    ## Make sure group Writers cannot create Departments.
+    ## Writers ##
+    ## Make sure group Writers can see group entities.
     When I am logged in as "Arthur"
-    And  I am on "group/1/content/create/group_node:department"
+    And  I am on "group/1/content"
+    Then I should not see "Access denied"
+    And  I should see the link "Create new entity in group"
+
+    ## Make sure group Writers can see group content.
+    When I am on "group/1/nodes"
+    Then I should not see "Access denied"
+    And  I should see the link "Create node"
+
+    # Make sure the content add page is behaving nicely.
+    When I visit "group/1/content/create"
+    Then I should not see "Access denied"
+    And  I should see the link "Group node (Topic)"
+    And  I should see the link "Group node (Transaction)"
+    And  I should not see the link "Group node (Department)"
+
+    ## Make sure group Writers cannot create Departments.
+    When I am on "group/1/content/create/group_node:department"
     Then I should see "Access denied"
 
     ## Make sure the Writers can use draft and Ready for review but not Published moderation states.
@@ -147,9 +167,28 @@ Feature: Workflow
     And  I should see "Ready for review" in the "#edit-moderation-state-wrapper" element
     And  I should not see "Published" in the "#edit-moderation-state-wrapper" element
 
-    ## Make sure Publishers cannot create Departments
+    ## Publishers ##
+    ## Make sure group Publishers can see group entities.
     When I am logged in as "Penelope"
-    And  I am on "group/1/content/create/group_node:department"
+    And  I am on "group/1/content"
+    Then I should not see "Access denied"
+    And  I should see the link "Create new entity in group"
+
+    ## Make sure group Publishers can see group content.
+    When I am on "group/1/nodes"
+    Then I should not see "Access denied"
+    And  I should see the link "Create node"
+
+    # Make sure the content add page is behaving nicely.
+    When I visit "group/1/content/create"
+    Then I should not see "Access denied"
+    And  I should see the link "Group node (Topic)"
+    And  I should see the link "Group node (Transaction)"
+    ## @todo: The link to create department content should not exist on this page.
+#    And  I should not see the link "Group node (Department)"
+
+    ## Make sure Publishers cannot create Departments
+    When I am on "group/1/content/create/group_node:department"
     Then I should see "Access denied"
 
     ## Make sure the Publishers can use any moderation state.
