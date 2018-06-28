@@ -3,7 +3,7 @@ Feature: Workflow
   We will create some users with required roles and test their access.
 
   @api
-  Scenario: Workflows
+  Scenario: Workflow
     Given users:
       | name      | mail                | roles         | status |
       | Arthur    | arthur@sfgov.org    | writer        | 1      |
@@ -62,7 +62,7 @@ Feature: Workflow
     And  I should see "Published" in the "#edit-moderation-state-wrapper" element
 
   @api
-  Scenario: Department Member Workflows
+  Scenario: Department Member Workflow
     Given users:
       | name      | mail                | roles         | status |
       | Arthur    | arthur@sfgov.org    |               | 1      |
@@ -137,7 +137,6 @@ Feature: Workflow
 
     ## Make sure the Writers can use draft and Ready for review but not Published moderation states.
     When I visit "group/1/content/create/group_node:transaction"
-    And  I wait 300 seconds
     Then I should see "Draft" in the "#edit-moderation-state-wrapper" element
     And  I should see "Ready for review" in the "#edit-moderation-state-wrapper" element
     And  I should not see "Published" in the "#edit-moderation-state-wrapper" element
