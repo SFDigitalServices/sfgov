@@ -38,8 +38,8 @@ third_party_settings:
       children:
         - group_cost
         - group_thing_to_know
-      parent_name: ''
-      weight: 6
+      parent_name: group_service_start_page
+      weight: 7
       format_type: fieldset
       format_settings:
         label: 'What to Know Before You Start'
@@ -57,41 +57,43 @@ third_party_settings:
         - group_mail
         - group_other_details
         - group_other
-      parent_name: ''
-      weight: 7
-      format_type: fieldset
-      format_settings:
-        id: ''
-        classes: sf-transaction-fieldgroup
-        description: ''
-        required_fields: true
-      label: 'What to Do'
-    group_related_info:
-      children:
-        - field_help
-        - field_transactions
-        - field_transaction_purpose
-      parent_name: ''
-      weight: 9
-      format_type: fieldset
-      format_settings:
-        id: ''
-        classes: sf-transaction-fieldgroup
-        description: ''
-        required_fields: true
-      label: 'Contact and Related Information'
-    group_supporting_info:
-      children:
-        - field_special_cases
-        - field_custom_section
-      parent_name: ''
+      parent_name: group_service_start_page
       weight: 8
       format_type: fieldset
       format_settings:
-        id: ''
-        classes: sf-transaction-fieldgroup
+        label: 'What to Do'
         description: ''
         required_fields: true
+        id: ''
+        classes: sf-transaction-fieldset
+      label: 'What to Do'
+    group_related_info:
+      children:
+        - group_help
+        - field_transactions
+      parent_name: group_service_start_page
+      weight: 10
+      format_type: fieldset
+      format_settings:
+        label: 'Contact and Related Information'
+        description: ''
+        required_fields: true
+        id: ''
+        classes: sf-transaction-fieldset
+      label: 'Contact and Related Information'
+    group_supporting_info:
+      children:
+        - group_special_cases
+        - group_custom_section
+      parent_name: group_service_start_page
+      weight: 9
+      format_type: fieldset
+      format_settings:
+        label: 'Supporting Information'
+        description: ''
+        required_fields: true
+        id: ''
+        classes: sf-transaction-fieldset
       label: 'Supporting Information'
     group_thing_to_know:
       children:
@@ -107,8 +109,8 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        id: paragraph-group-things-to-know
-        classes: 'paragraphs-group paragraphs-group--things-to-know'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--things-to-know'
         required_fields: false
       label: 'Things to Know'
     group_cost:
@@ -118,8 +120,8 @@ third_party_settings:
       weight: 20
       format_type: html_element
       format_settings:
-        id: paragraph-group-cost
-        classes: 'paragraphs-group paragraphs-group--cost'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--cost'
         element: div
         show_label: true
         label_element: h3
@@ -135,8 +137,8 @@ third_party_settings:
       weight: 21
       format_type: html_element
       format_settings:
-        id: paragraph-group-step-phone
-        classes: 'paragraphs-group paragraphs-group--step-phone'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--step-phone'
         element: div
         show_label: true
         label_element: h3
@@ -160,8 +162,8 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        id: paragraph-group-step-email
-        classes: 'paragraphs-group paragraphs-group--email'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--email'
       label: Email
     group_in_person:
       children:
@@ -170,8 +172,8 @@ third_party_settings:
       weight: 22
       format_type: html_element
       format_settings:
-        id: paragraph-group-step-in-person
-        classes: 'paragraphs-group paragraphs-group--in-person'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--in-person'
         element: div
         show_label: true
         label_element: h3
@@ -195,8 +197,8 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        id: paragraph-group-step-mail
-        classes: 'paragraphs-group paragraphs-group--mail'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--mail'
       label: Mail
     group_online:
       children:
@@ -205,8 +207,8 @@ third_party_settings:
       weight: 20
       format_type: html_element
       format_settings:
-        id: paragraph-group-step-online
-        classes: 'paragraphs-group paragraphs-group--online'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--online'
         element: div
         show_label: true
         label_element: h3
@@ -221,8 +223,8 @@ third_party_settings:
       weight: 27
       format_type: html_element
       format_settings:
-        id: paragraph-group-step-other
-        classes: 'paragraphs-group paragraphs-group--other'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--other'
         element: div
         show_label: true
         label_element: h3
@@ -242,9 +244,98 @@ third_party_settings:
         label: Other
         open: true
         required_fields: true
-        id: paragraph-group-step-other
-        classes: 'paragraph-group paragraph-group--details'
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--details'
       label: Other
+    group_service_start_page:
+      children:
+        - group_before_you_start
+        - group_what_to_do
+        - group_supporting_info
+        - group_related_info
+      parent_name: ''
+      weight: 6
+      format_type: html_element
+      format_settings:
+        label: 'Service Start'
+        element: div
+        show_label: true
+        label_element: h2
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: 'sf-paragraphs-container sf-paragraphs-container--service-start'
+      label: 'Service Start'
+    group_special_cases:
+      children:
+        - field_special_cases
+      parent_name: group_supporting_info
+      weight: 20
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--special-cases'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Special Cases'
+    group_custom_section:
+      children:
+        - field_custom_section
+      parent_name: group_supporting_info
+      weight: 21
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Custom Section'
+    group_help:
+      children:
+        - field_help
+      parent_name: group_related_info
+      weight: 20
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--help'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Ways to Get Help'
+    group_community:
+      children:
+        - field_transaction_purpose
+      parent_name: ''
+      weight: 23
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--community'
+        element: div
+        show_label: true
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Why is this Transaction Good for the Community?'
 id: node.transaction.default
 targetEntityType: node
 bundle: transaction
@@ -252,7 +343,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -276,7 +367,7 @@ content:
     region: content
   field_custom_section:
     type: paragraphs
-    weight: 23
+    weight: 22
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -327,7 +418,7 @@ content:
     region: content
   field_help:
     type: sfgov_paragraphs
-    weight: 9
+    weight: 21
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -345,7 +436,7 @@ content:
     region: content
   field_special_cases:
     type: paragraphs
-    weight: 22
+    weight: 21
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -523,7 +614,7 @@ content:
     third_party_settings: {  }
     region: content
   field_transactions:
-    weight: 11
+    weight: 22
     settings:
       match_operator: CONTAINS
       size: 60
@@ -540,13 +631,13 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 18
+    weight: 19
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -554,21 +645,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 13
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 18
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 14
     region: content
     third_party_settings: {  }
   title:
@@ -580,13 +671,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 11
     settings:
       match_operator: CONTAINS
       size: 60
@@ -594,7 +685,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
