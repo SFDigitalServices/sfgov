@@ -12,6 +12,7 @@ dependencies:
     - paragraphs.paragraphs_type.cost
   module:
     - options
+    - smart_trim
 id: paragraph.cost.preview
 targetEntityType: paragraph
 bundle: cost
@@ -19,7 +20,7 @@ mode: preview
 content:
   field_cost_flat_fee:
     weight: 1
-    label: hidden
+    label: inline
     settings:
       thousand_separator: ','
       decimal_separator: .
@@ -30,7 +31,7 @@ content:
     region: content
   field_cost_maximum:
     weight: 3
-    label: hidden
+    label: inline
     settings:
       thousand_separator: ','
       decimal_separator: .
@@ -41,7 +42,7 @@ content:
     region: content
   field_cost_minimum:
     weight: 2
-    label: hidden
+    label: inline
     settings:
       thousand_separator: ','
       decimal_separator: .
@@ -52,10 +53,28 @@ content:
     region: content
   field_cost_type:
     weight: 0
-    label: visually_hidden
+    label: inline
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
-hidden:
-  field_text: true
+  field_text:
+    type: smart_trim
+    weight: 4
+    region: content
+    label: inline
+    settings:
+      trim_length: 80
+      trim_type: chars
+      trim_suffix: ...
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      trim_options:
+        text: true
+        trim_zero: false
+      wrap_output: false
+      more_link: false
+      summary_handler: full
+    third_party_settings: {  }
+hidden: {  }
