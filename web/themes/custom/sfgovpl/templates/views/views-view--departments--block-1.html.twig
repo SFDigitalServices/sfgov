@@ -32,37 +32,42 @@
 #}
 {%
   set classes = [
-  dom_id ? 'js-view-dom-id-' ~ dom_id
-]
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'view--departments-block-1'
+  ]
 %}
 
-<div{{ attributes.addClass(classes) }}>
-  <h2 class="sfgov-header-section no-margin big-padding">{{ "Services"|t }}</h2>
-  {{ title_prefix }}
-  {{ title }}
-  {{ title_suffix }}
+{% if view.result|length > 0 %}
 
-  {% if header %}
-    <header>
-      {{ header }}
-    </header>
-  {% endif %}
+  <div{{ attributes.addClass(classes) }}>
+    <h2 class="sfgov-header-section no-margin big-padding">{{ view.getTitle() }}</h2>
+    {{ title_prefix }}
+    {{ title }}
+    {{ title_suffix }}
 
-  {{ exposed }}
-  {{ attachment_before }}
+    {% if header %}
+      <header>
+        {{ header }}
+      </header>
+    {% endif %}
 
-  {{ rows }}
-  {{ empty }}
-  {{ pager }}
+    {{ exposed }}
+    {{ attachment_before }}
 
-  {{ attachment_after }}
-  {{ more }}
+    {{ rows }}
+    {{ empty }}
+    {{ pager }}
 
-  {% if footer %}
-    <footer>
-      {{ footer }}
-    </footer>
-  {% endif %}
+    {{ attachment_after }}
+    {{ more }}
 
-  {{ feed_icons }}
-</div>
+    {% if footer %}
+      <footer>
+        {{ footer }}
+      </footer>
+    {% endif %}
+
+    {{ feed_icons }}
+  </div>
+
+{% endif %}
