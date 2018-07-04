@@ -1,18 +1,20 @@
+{% set description = node.get('field_description').getValue()[0]['value'] %}
 {% if content.field_image['#items'] %}
   {% set image = content.field_image %}
 {% endif %}
 {% include "@molecules/06-headers/01-content-head.twig" with {
   "title": node.getTitle(),
-  "description": node.get('field_description').getString(),
+  "description": description,
   "image": image
 } %}
-
 <div class="sfgov-container--full sfgov-container--right-sidebar">
   <div class="sfgov-container--content-right">
+    <h2 class="sfgov-header-section no-margin big-padding">{{ "Services"|t }}</h2>
     {{ drupal_view('services', 'block_2') }}
     {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
   </div>
   <div class="sfgov-container--content-left">
+    <h2 class="sfgov-header-section no-margin big-padding">{{ "Contact"|t }}</h2>
     {{ content.field_url }}
     <div class="sidebar-block">
       {{ content.field_address }}
