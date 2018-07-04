@@ -13,13 +13,24 @@
     {{ drupal_view('services', 'block_2') }}
     {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
   </div>
-  {% include "@organisms/04-containers/01-sidebar.twig" with {
-    "side": "right",
-    "title": "Contact"|t,
-    "content": [
-      content.field_url,
-      content.field_address,
-      content.field_phone_numbers
-    ]
-  } %}
+
+  {% set render_content = false %}
+
+  {% if node.get('field_url').isEmpty() == false %}
+    {% set render_content = true %}
+  {% elseif node.get('field_address').isEmpty() == false %}
+    {% set render_content = true %}
+  {% elseif node.get('field_phone_numbers').isEmpty() == false %}
+    {% set render_content = true %}
+  {% endif %}
+
+  {% if render_content %}
+    {% include "@organisms/04-containers/01-sidebar.twig" with {
+      "side": "right",
+      "title": "Contact"|t,
+      "content": [content.field_url,
+        content.field_address,
+        content.field_phone_numbers]
+    } %}
+  {% endif %}
 </div>
