@@ -7,16 +7,23 @@ dependencies:
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
     - field.field.location.physical.field_directions_link
-    - field.field.location.physical.field_get_directions
     - field.field.location.physical.field_operating_hours
     - field.field.location.physical.field_text
   module:
+    - address
     - link
 id: location.physical.search_index
 targetEntityType: location
 bundle: physical
 mode: search_index
 content:
+  field_address:
+    type: address_plain
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
   field_directions_link:
     weight: 0
     label: hidden
@@ -32,8 +39,6 @@ content:
 hidden:
   changed: true
   created: true
-  field_address: true
-  field_get_directions: true
   field_operating_hours: true
   field_text: true
   langcode: true
