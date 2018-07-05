@@ -1,0 +1,25 @@
+{% if node.get('field_description').isEmpty %}
+  {% set description = null %}
+{% else %}
+  {% set description = node.get('field_description').getValue()[0]['value'] %}
+{% endif %}
+
+{% if node.get('field_phone_numbers').isEmpty %}
+  {% set phone = null %}
+{% else %}
+  {% set phone = content.field_phone_numbers %}
+{% endif %}
+
+{% if node.get('field_address').isEmpty %}
+  {% set address = null %}
+{% else %}
+  {% set address = content.field_address %}
+{% endif %}
+
+{% include "@molecules/04-cards/02-department-search-result.twig" with {
+  "url": url,
+  "title": node.getTitle(),
+  "body": description,
+  "phone": phone,
+  "address": address
+} %}
