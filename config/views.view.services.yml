@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.search_index
     - core.entity_view_mode.node.teaser
     - field.storage.node.field_direct_external_url
     - node.type.topic
@@ -65,7 +66,8 @@ display:
       row:
         type: 'entity:node'
         options:
-          view_mode: teaser
+          relationship: none
+          view_mode: search_index
       fields:
         title:
           id: title
@@ -160,7 +162,12 @@ display:
       title: Services
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        messages:
+          id: messages
+          table: views
+          field: messages
+          plugin_id: messages
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
@@ -183,6 +190,7 @@ display:
       defaults:
         relationships: false
         arguments: false
+        empty: false
       arguments:
         nid:
           id: nid
@@ -231,6 +239,20 @@ display:
           required: true
           plugin_id: standard
       block_hide_empty: true
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: '<h3> No services listed yet </h3>'
+            format: basic_html
+          plugin_id: text
     cache_metadata:
       max-age: -1
       contexts:
@@ -251,6 +273,7 @@ display:
       defaults:
         relationships: false
         arguments: false
+        empty: false
       arguments:
         nid:
           id: nid
@@ -299,6 +322,20 @@ display:
           required: true
           plugin_id: standard
       block_hide_empty: true
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: '<h3> No services listed yet </h3>'
+            format: basic_html
+          plugin_id: text
     cache_metadata:
       max-age: -1
       contexts:
@@ -378,6 +415,7 @@ display:
         style: false
         row: false
         fields: false
+        empty: false
       filter_groups:
         operator: AND
         groups:
@@ -744,6 +782,7 @@ display:
           or: '<a href="{{ view_node }}">{{ title }}</a>'
           strip_tags: 0
           plugin_id: views_conditional_field
+      empty: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -822,6 +861,7 @@ display:
         pager: false
         style: false
         row: false
+        empty: false
       filter_groups:
         operator: AND
         groups:
@@ -857,6 +897,7 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
+      empty: {  }
     cache_metadata:
       max-age: -1
       contexts:
