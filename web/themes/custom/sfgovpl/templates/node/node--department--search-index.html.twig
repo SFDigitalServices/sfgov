@@ -13,10 +13,10 @@
 {% if node.get('field_address').isEmpty %}
   {% set address = null %}
 {% else %}
-  {% set address = content.field_address %}
+  {% set address = content.field_address|render %}
 {% endif %}
 
-{% include "@molecules/04-cards/02-department-search-result.twig" with {
+{% include "@molecules/08-search-results/02-department-search-result.twig" with {
   "url": url,
   "title": node.getTitle(),
   "body": description,
