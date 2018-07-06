@@ -60,7 +60,7 @@
       {% elseif not paragraph.field_title.isEmpty %}
         <h3>{{ paragraph.field_title.getString }}</h3>
       {% endif %}
-      <div class="sfgov-container">
+      <div {{ (parent.bundle == "landing" ? "class=\"sfgov-container\"") }}>
         {{ content|without('field_title') }}
       </div>
     {% endblock %}
