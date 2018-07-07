@@ -16,8 +16,9 @@
 `mkdir sfgov && cd sfgov && lando init github --recipe=pantheon`
 3. `composer install`
 4. `lando start`
-5. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
-  Note:  Run `lando drush cr` instead of `drush cr` in step 7.
+5. Get latest from Pantheon dev environment `lando pull`
+6. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
+  Note:  Run `lando drush cr` instead of `drush cr` in step 7 of linked article.
 
 ## Pull Request Workflow
 (https://pantheon.io/docs/guides/build-tools/new-pr/)
