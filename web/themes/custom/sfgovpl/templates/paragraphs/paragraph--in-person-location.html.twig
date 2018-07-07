@@ -38,29 +38,25 @@
  * @ingroup themeable
  */
 #}
-
 {% set parent = paragraph.getParentEntity() %}
-{% set classes = [
+{%
+  set classes = [
   'paragraph',
   'paragraph--type--' ~ paragraph.bundle|clean_class,
   view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
   not paragraph.isPublished() ? 'paragraph--unpublished',
-  (parent.bundle == 'landing') ? 'sfgov-container--full',
   "parent--bundle--" ~ parent.bundle
-] %}
+]
+%}
 {% block paragraph %}
-  <div {{ attributes.addClass(classes) }}>
+  {% if parent.bundle() == "page" %}
+    {% if paragraph.field_location.0.entity.label %}
+      <h3>{{ "Visit "|t ~ paragraph.field_location.0.entity.label }}</h3>
+    {% endif %}
+  {% endif %}
+  <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      {% if (not paragraph.field_title.isEmpty) and (parent.bundle() == "landing") %}
-        <h2 class="sfgov-header-section">
-          {{ paragraph.field_title.getString }}
-        </h2>
-      {% elseif not paragraph.field_title.isEmpty %}
-        <h3>{{ paragraph.field_title.getString }}</h3>
-      {% endif %}
-      <div {{ (parent.bundle == "landing" ? "class=\"sfgov-container\"") }}>
-        {{ content|without('field_title') }}
-      </div>
+      {{ content }}
     {% endblock %}
   </div>
 {% endblock paragraph %}
