@@ -5,9 +5,18 @@
   'block-' ~ plugin_id|clean_class,
 ]
 %}
+{%
+  set containerClasses = [
+    'sfgov-container',
+  ]
+%}
+{% if content['keyword']['#value']|length > 0 %}
+{%  set containerClasses = containerClasses|merge(['search-results']) %}
+{% endif %}
+
 <div{{ attributes.addClass(classes) }}>
-  <div class="sfgov-container">
-    {{ title_prefix }}
+  <div{{ attributes.addClass(containerClasses) }}>
+    <h2>Search Results</h2>
     {% if label %}
       <h2{{ title_attributes }}>{{ label }}</h2>
     {% endif %}
@@ -17,3 +26,5 @@
     {% endblock %}
   </div>
 </div>
+
+{# {{ kint(content['keyword']['#value']) }} #}
