@@ -89,7 +89,15 @@
         {% endif %}
 
       {% if content.field_custom_section|render %}
-        {# @todo... #}
+        {{ content.field_custom_section }}
+      {% endif %}
+
+      {% if content.field_special_cases|render %}
+        {% include '@organisms/05-sections/01-section.twig' with {
+          'title': 'Special cases'|t,
+          'level': 2,
+          'content': field_special_cases.items,
+        } %}
       {% endif %}
 
       {{ content|without(
@@ -101,7 +109,8 @@
         'field_step_in_person',
         'field_step_email',
         'field_step_mail',
-        'field_step_other'
+        'field_step_other',
+        'field_custom_section'
         ) }}
 
       </div>
