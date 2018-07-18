@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_transaction_purpose
     - node.type.transaction
+    - paragraphs.paragraphs_type.additional_info
     - paragraphs.paragraphs_type.custom_section
   module:
     - entity_reference_revisions
@@ -23,8 +24,12 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
+      additional_info: additional_info
       custom_section: custom_section
     target_bundles_drag_drop:
+      additional_info:
+        enabled: true
+        weight: 20
       block:
         weight: 20
         enabled: false
@@ -46,9 +51,6 @@ settings:
       email:
         weight: 26
         enabled: false
-      form_file:
-        weight: 27
-        enabled: false
       help:
         weight: 28
         enabled: false
@@ -67,6 +69,9 @@ settings:
       phone:
         weight: 33
         enabled: false
+      section:
+        weight: 34
+        enabled: false
       special_case:
         weight: 34
         enabled: false
@@ -78,8 +83,5 @@ settings:
         enabled: false
       thing_to_know:
         weight: 37
-        enabled: false
-      website:
-        weight: 38
         enabled: false
 field_type: entity_reference_revisions
