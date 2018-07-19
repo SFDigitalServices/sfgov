@@ -9,17 +9,13 @@
         $(block_search).attr({'placeholder': 'Search'});
       }
 
-      $('.sfgov-responsive--search-form .sfgov-search-form', context).clone().appendTo('.responsive-search--container');
+      $('.sfgov-responsive--search-form .sfgov-search-form', context).clone().appendTo('.responsive-search--container').addClass('cloned-search');
 
       // Search Toggle.
 
-      $('.block-views-exposed-filter-blocksearch-page-1 .form-submit', context).on('click', function(e) {
-
-        if ($(window).width() < 770) {
-          e.preventDefault();
-          $('.responsive-search--container').toggle();
-        }
-
+      $('header .block-views-exposed-filter-blocksearch-page-1 .form-submit').on('click', function(e) {
+        e.preventDefault();
+        $('.responsive-search--container').toggle();
       });
 
       $('.responsive-search--container .close', context).on('click', function() {
