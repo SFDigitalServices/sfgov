@@ -1,6 +1,8 @@
 {% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
 {% set description = node.get('field_description').getValue()[0]['value'] %}
+{% set type = node.type.entity.label %} {# content type #}
 {% include "@molecules/08-search-results/03-topic-search-result.twig" with {
+  "content_type": type,
   "url": url,
   "title": elements['#node'].get('title').getString(),
   "body": description

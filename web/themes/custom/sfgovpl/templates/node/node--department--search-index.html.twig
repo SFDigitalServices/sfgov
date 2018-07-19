@@ -16,7 +16,10 @@
   {% set address = content.field_address|render %}
 {% endif %}
 
+{% set type = node.type.entity.label %} {# content type #}
+
 {% include "@molecules/08-search-results/02-department-search-result.twig" with {
+  "content_type": type,
   "url": url,
   "title": node.getTitle(),
   "body": description,

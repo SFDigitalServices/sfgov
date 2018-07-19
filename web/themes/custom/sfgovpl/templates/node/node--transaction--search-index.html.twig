@@ -1,7 +1,13 @@
 {% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
 {% set description = node.get('field_description').getValue()[0]['value'] %}
+
+{% set relatedDept = content['field_departments'][0]['#node'].getTitle() %}
+{% if view.current_display == 'block_2' %}
+{%  set relatedDept = '' %}
+{% endif %}
 {% include "@molecules/08-search-results/01-transaction-search.twig" with {
   "url": url,
   "title": elements['#node'].get('title').getString(),
-  "body": description
+  "body": description,
+  "relatedDept": relatedDept
 } %}
