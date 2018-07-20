@@ -88,32 +88,33 @@
           {% endif %}
         {% endif %}
 
-      {% if content.field_custom_section|render %}
-        {{ content.field_custom_section }}
-      {% endif %}
+        {% if content.field_custom_section|render %}
+          {{ content.field_custom_section }}
+        {% endif %}
 
-      {% if content.field_special_cases|render %}
-        {% include '@organisms/05-sections/01-section.twig' with {
-          'title': 'Special cases'|t,
-          'level': 2,
-          'content': field_special_cases.items,
-        } %}
-      {% endif %}
+        {% if content.field_special_cases|render %}
+          {% include '@organisms/05-sections/01-section.twig' with {
+            'title': 'Special cases'|t,
+            'level': 2,
+            'content': field_special_cases.items,
+          } %}
+        {% endif %}
 
-      {{ content|without(
-        'field_description',
-        'field_cost',
-        'field_things_to_know',
-        'field_step_online',
-        'field_step_phone',
-        'field_step_in_person',
-        'field_step_email',
-        'field_step_mail',
-        'field_step_other',
-        'field_custom_section',
-        'field_help',
-        'field_transactions'
-        ) }}
+        {{ content|without(
+          'field_description',
+          'field_cost',
+          'field_things_to_know',
+          'field_step_online',
+          'field_step_phone',
+          'field_step_in_person',
+          'field_step_email',
+          'field_step_mail',
+          'field_step_other',
+          'field_custom_section',
+          'field_help',
+          'field_transactions',
+          'group_grey_boxes'
+          ) }}
 
       </div>
 
@@ -133,7 +134,10 @@
           'content': content.field_transactions
         } %}
       {% endif %}
-
     </div>
+    {% if content.group_grey_boxes|render %}
+      {{ content.group_grey_boxes }}
+    {% endif %}
+
   {% endblock content %}
 {% endembed %}
