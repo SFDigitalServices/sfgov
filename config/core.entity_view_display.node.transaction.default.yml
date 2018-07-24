@@ -24,6 +24,7 @@ dependencies:
     - node.type.transaction
   module:
     - entity_reference_revisions
+    - link
     - smart_trim
     - user
 id: node.transaction.default
@@ -32,13 +33,13 @@ bundle: transaction
 mode: default
 content:
   content_moderation_control:
-    weight: -20
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
   field_cost:
     type: entity_reference_revisions_entity_view
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       view_mode: default
@@ -63,7 +64,7 @@ content:
       link: true
     third_party_settings: {  }
   field_description:
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       trim_length: 600
@@ -81,6 +82,18 @@ content:
     third_party_settings: {  }
     type: smart_trim
     region: content
+  field_direct_external_url:
+    type: link
+    weight: 17
+    region: content
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings: {  }
   field_help:
     type: entity_reference_revisions_entity_view
     weight: 13
@@ -101,7 +114,7 @@ content:
     region: content
   field_step_email:
     type: entity_reference_revisions_entity_view
-    weight: 4
+    weight: 5
     label: hidden
     settings:
       view_mode: default
@@ -110,7 +123,7 @@ content:
     region: content
   field_step_in_person:
     type: entity_reference_revisions_entity_view
-    weight: 5
+    weight: 6
     label: hidden
     settings:
       view_mode: default
@@ -119,7 +132,7 @@ content:
     region: content
   field_step_mail:
     type: entity_reference_revisions_entity_view
-    weight: 6
+    weight: 7
     label: hidden
     settings:
       view_mode: default
@@ -128,7 +141,7 @@ content:
     region: content
   field_step_online:
     type: entity_reference_revisions_entity_view
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       view_mode: default
@@ -163,7 +176,7 @@ content:
     region: content
   field_things_to_know:
     type: entity_reference_revisions_entity_view
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       view_mode: default
@@ -188,7 +201,6 @@ content:
     type: entity_reference_label
     region: content
 hidden:
-  field_direct_external_url: true
   field_related_departments: true
   field_topics: true
   langcode: true

@@ -6,11 +6,13 @@ dependencies:
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
     - field.field.location.physical.field_directions_link
+    - field.field.location.physical.field_google_map
     - field.field.location.physical.field_operating_hours
     - field.field.location.physical.field_text
   module:
     - address
     - office_hours
+    - simple_gmap
     - text
 id: location.physical.default
 targetEntityType: location
@@ -22,27 +24,46 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: address_default
+    type: address_plain
+    region: content
+  field_google_map:
+    weight: 4
+    label: hidden
+    settings:
+      include_static_map: true
+      apikey: AIzaSyAH-IyDGeuWBmZScFR3LmuQoU74K0GYHTI
+      iframe_width: '218'
+      iframe_height: '117'
+      static_scale: 2
+      link_text: 'View larger map'
+      zoom_level: 16
+      map_type: m
+      langcode: en
+      include_map: false
+      include_link: false
+      include_text: false
+    third_party_settings: {  }
+    type: simple_gmap
     region: content
   field_operating_hours:
     weight: 2
     label: hidden
     settings:
-      show_closed: all
+      show_closed: open
       office_hours_first_day: '0'
-      day_format: two_letter
-      time_format: h
+      day_format: short
+      time_format: g
       compress: '1'
       grouped: '1'
       closed_format: Closed
       separator:
         days: '<br />'
         grouped_days: ' - '
-        day_hours: ': '
-        hours_hours: '-'
+        day_hours: ','
+        hours_hours: ' - '
         more_hours: ', '
       current_status:
-        position: before
+        position: ''
         open_text: 'Currently open'
         closed_text: 'Currently closed'
       schema:
