@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Displays the Simple Google Maps formatter.
+ *
+ * Available variables:
+ * - include_map: TRUE if an embedded map should be displayed.
+ * - include_static_map: TRUE if an embedded static map should be displayed.
+ * - width: Width of map.
+ * - height: Height of map.
+ * - static_scale: For use with retinal displays. Can double the width and
+ *   height of static map ( possible values 1 or 2 )
+ * - include_link: TRUE if a link to a map should be displayed.
+ * - link_text: Text of link to display.
+ * - url_suffix: Suffix of URLs to send to Google Maps for embedded and linked
+ *   maps. Contains the URL-encoded address.
+ * - zoom: Zoom level for embedded and linked maps.
+ * - address_text: Address text to display (empty if it should not be
+ *   displayed).
+ * - map_type: Type of map to use (Google code, such as 'm' or 't').
+ * - langcode: Two-letter language code to use.
+ * - static_map_type: Type of map to use for static map (Google code, such as
+ *  'roadmap' or 'satellite')
+ * - apikey: Google Maps API key (used for static maps only).
+ *
+ * @ingroup themeable
+ */
+#}
+
+
+{% include "@atoms/07-gmap/07-gmap.twig" with {
+  "height": height,
+  "width": width,
+  "zoom": zoom,
+  "langcode": langcode,
+  "url_suffix": url_suffix,
+  "include_map": include_map,
+  "include_static_map": include_static_map,
+  "include_link": include_link,
+  "address_text": address_text,
+  "map_type": map_type,
+  "apikey": apikey,
+  "static_scale": static_scale,
+  "address_text": address_text
+} %}
+
+

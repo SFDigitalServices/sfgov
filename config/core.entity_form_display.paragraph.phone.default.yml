@@ -9,6 +9,7 @@ dependencies:
     - paragraphs.paragraphs_type.phone
   module:
     - allowed_formats
+    - content_moderation
     - telephone
     - text
 id: paragraph.phone.default
@@ -25,14 +26,14 @@ content:
     type: string_textfield
     region: content
   field_tel:
-    weight: 2
+    weight: 3
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: telephone_default
     region: content
   field_text:
-    weight: 3
+    weight: 4
     settings:
       rows: 5
       placeholder: ''
@@ -42,6 +43,12 @@ content:
         hide_guidelines: '1'
     type: text_textarea
     region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 5
+    settings: {  }
+    region: content
+    third_party_settings: {  }
   translation:
     weight: 0
     region: content
