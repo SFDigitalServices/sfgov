@@ -14,8 +14,10 @@
       // Search Toggle.
 
       $('header .block-views-exposed-filter-blocksearch-page-1 .form-submit').on('click', function(e) {
-        e.preventDefault();
-        $('.responsive-search--container').toggle();
+        if($(window).width() < 770) {
+          e.preventDefault();
+          $('.responsive-search--container').toggle();
+        }
       });
 
       $('.responsive-search--container .close', context).on('click', function() {
