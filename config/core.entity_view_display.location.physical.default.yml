@@ -5,7 +5,6 @@ dependencies:
   config:
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
-    - field.field.location.physical.field_directions_link
     - field.field.location.physical.field_google_map
     - field.field.location.physical.field_operating_hours
     - field.field.location.physical.field_text
@@ -27,7 +26,7 @@ content:
     type: address_plain
     region: content
   field_google_map:
-    weight: 4
+    weight: 2
     label: hidden
     settings:
       include_static_map: true
@@ -35,18 +34,18 @@ content:
       iframe_width: '250'
       iframe_height: '200'
       static_scale: 1
-      link_text: 'View larger map'
+      include_link: true
+      link_text: 'Get directions'
       zoom_level: 16
       map_type: m
       langcode: en
       include_map: false
-      include_link: false
       include_text: false
     third_party_settings: {  }
     type: simple_gmap
     region: content
   field_operating_hours:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       show_closed: open
@@ -73,7 +72,7 @@ content:
     type: office_hours
     region: content
   field_text:
-    weight: 3
+    weight: 4
     label: hidden
     settings: {  }
     third_party_settings: {  }
@@ -90,6 +89,5 @@ content:
 hidden:
   changed: true
   created: true
-  field_directions_link: true
   langcode: true
   uid: true
