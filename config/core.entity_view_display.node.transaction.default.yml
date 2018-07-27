@@ -25,6 +25,7 @@ dependencies:
   module:
     - entity_reference_revisions
     - field_group
+    - link
     - smart_trim
     - user
 third_party_settings:
@@ -34,7 +35,7 @@ third_party_settings:
         - field_transaction_purpose
         - field_departments
       parent_name: ''
-      weight: 20
+      weight: 15
       format_type: html_element
       format_settings:
         id: ''
@@ -101,6 +102,18 @@ content:
     third_party_settings: {  }
     type: smart_trim
     region: content
+  field_direct_external_url:
+    type: link
+    weight: 16
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
   field_help:
     type: entity_reference_revisions_entity_view
     weight: 13
@@ -200,7 +213,7 @@ content:
     third_party_settings: {  }
     region: content
   field_transactions:
-    weight: 16
+    weight: 14
     label: hidden
     settings:
       view_mode: teaser
@@ -209,7 +222,6 @@ content:
     type: entity_reference_entity_view
     region: content
 hidden:
-  field_direct_external_url: true
   field_related_departments: true
   field_topics: true
   langcode: true
