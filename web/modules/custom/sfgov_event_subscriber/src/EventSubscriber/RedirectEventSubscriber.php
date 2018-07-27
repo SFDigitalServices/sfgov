@@ -41,13 +41,11 @@ public function redirectBasedOnField(GetResponseEvent $event) {
         $node = $event->getRequest()->attributes->get('node'); 
       
         if($node && $node->hasField('field_direct_external_url') ){
-          $field_external_url = $node->get('field_direct_external_url');
-          $external_url = $field_external_url->getValue()[0]['uri'];
+          $field_external_url = $node->get('field_direct_external_url')->getValue();
 
-          if($external_url != '' ){  
+          if( !empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
               // This is where you set the destination.
-              //$redirect_url = Url::fromUri($external_url->getValue());
-              $response = new TrustedRedirectResponse($external_url);
+              $response = new TrustedRedirectResponse($field_external_url[0]['uri']);
               $event->setResponse($response);
           }
         }
