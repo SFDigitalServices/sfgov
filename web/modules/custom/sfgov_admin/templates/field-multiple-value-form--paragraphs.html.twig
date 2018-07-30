@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * Theme override for an individual form element.
+ *
+ * Available variables for all fields:
+ * - multiple: Whether there are multiple instances of the field.
+ *
+ * Available variables for single cardinality fields:
+ * - elements: Form elements to be rendered.
+ *
+ * Available variables when there are multiple fields.
+ * - table: Table of field items.
+ * - description: The description element containing the following properties:
+ *   - content: The description content of the form element.
+ *   - attributes: HTML attributes to apply to the description container.
+ * - button: "Add another item" button.
+ *
+ * @see template_preprocess_field_multiple_value_form()
+ */
+#}
+{% if element.0.preview['#view_mode'] == 'preview' %}
+  {% set preview = true %}
+{% endif %}
+{% if element.0.subform %}
+  {% set subform = true %}
+{% endif %}
+{% if '<div class="ajax-new-content">' in element['#prefix'] %}
+  {% set ajaxform = true %}
+{% endif %}
+{% if not subform and not preview and not ajaxform %}
+  {% set empty = true %}
+{% endif %}
+
+{% if multiple %}
+  {% set nested = false %}
+  {% if element['#field_parents'] is iterable %}
+    {% set count = element['#field_parents']|length %}
+    {# field_name / key (0) / subform #}
+    {% set level = (count / 3) + 1 %}
+    {% if level > 1 %}
+      {% set nested = true %}
+    {% endif %}
+  {% endif %}
+  <div class="js-form-item form-item form-item-custom-paragraph{{ preview ? ' has-preview'}}{{ subform ? ' has-subform'}}{{ ajaxform ? ' has-ajaxform'}}{{ empty ? ' is-empty'}}{{ nested ? ' is-nested' }}"{{ level ? ' data-level=' ~ level ~ ''}}>
+    {{ table }}
+    {% if description.content %}
+      <div{{ description.attributes.addClass('description') }} >{{ description.content }}</div>
+    {% endif %}
+    {% if button %}
+      <div class="paragraphs-add-more{{ nested ? ' is-nested' }}"{{ level ? ' data-level=' ~ level ~ ''}}>{{ button }}</div>
+    {% endif %}
+  </div>
+{% else %}
+  {% for element in elements %}
+    {{ element }}
+  {% endfor %}
+{% endif %}

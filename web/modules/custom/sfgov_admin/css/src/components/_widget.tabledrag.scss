@@ -1,0 +1,81 @@
+// General tabledrag
+//------------------------------------------------------------------------------
+
+.form-item-custom-autocomplete,
+.form-item-custom-paragraph {
+  th.field-label .label {
+    text-transform: none;
+  }
+}
+
+
+// Tabledrag Warnings / Indicators
+//------------------------------------------------------------------------------
+
+.form-item-custom-autocomplete,
+.form-item-custom-paragraph {
+  // Visually hide the tabledrag weight link.
+  .tabledrag-toggle-weight-wrapper .tabledrag-toggle-weight {
+    @include visually-hidden-focusable;
+  }
+
+  // Removes warning message and row indicator stating changes have not been
+  // saved as requested.
+  abbr.tabledrag-changed,
+  body div.tabledrag-changed-warning {
+    display: none;
+  }
+
+  // Removes yellow and blue background indicators.
+  tr.drag-previous,
+  tr.tabledrag-changed {
+    background: transparent;
+  }
+
+  // Persists above rule.
+  tbody tr:hover,
+  tbody tr:focus {
+    background: inherit;
+  }
+}
+
+
+// Tabledrag Handles
+//------------------------------------------------------------------------------
+
+.form-item-custom-autocomplete,
+.form-item-custom-paragraph {
+  td.field-multiple-drag {
+    overflow: hidden !important;
+    padding: 0 !important;
+    text-align: center;
+    width: 45px !important;
+
+    &.paragraph-bullet {
+      padding-top: 1em !important;
+    }
+  }
+
+  .draggable a.tabledrag-handle {
+    align-self: stretch;
+    display: flex;
+    float: none;
+    margin: 0;
+    padding: 20px 0 10px 10px !important;
+
+    div.handle {
+      align-items: stretch;
+      background: none; // Hides the core-provided handle.
+      display: flex;
+      margin: 0;
+      padding: 0;
+      width: auto;
+    }
+
+    // Injected via sfgov-admin.js.
+    svg {
+      fill: #889;
+      position: relative;
+    }
+  }
+}

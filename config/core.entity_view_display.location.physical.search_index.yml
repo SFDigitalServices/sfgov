@@ -1,0 +1,34 @@
+uuid: d8ac2154-10c3-4f8c-8549-8325a5fd3950
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.location.search_index
+    - eck.eck_type.location.physical
+    - field.field.location.physical.field_address
+    - field.field.location.physical.field_google_map
+    - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_text
+  module:
+    - address
+id: location.physical.search_index
+targetEntityType: location
+bundle: physical
+mode: search_index
+content:
+  field_address:
+    type: address_plain
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  field_google_map: true
+  field_operating_hours: true
+  field_text: true
+  langcode: true
+  title: true
+  uid: true

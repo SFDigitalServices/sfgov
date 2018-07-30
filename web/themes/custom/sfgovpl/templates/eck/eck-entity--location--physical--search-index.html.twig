@@ -1,0 +1,9 @@
+{% if not eck_entity.get('field_address').isEmpty() %}
+  {% set address = eck_entity.get('field_address').getValue()[0]['address_line1'] %}
+{% endif %}
+
+{% if url %}
+  <a href="{{ url }}">{{ address }}</a>
+{% else %}
+  {{ address }}
+{% endif %}

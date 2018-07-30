@@ -8,10 +8,8 @@ dependencies:
     - field.field.node.article.field_description
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
-    - image.style.medium
     - node.type.article
   module:
-    - media
     - text
     - user
 _core:
@@ -23,29 +21,14 @@ mode: teaser
 content:
   field_description:
     type: text_default
-    weight: 1
+    weight: 0
     region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_image:
-    type: media_thumbnail
-    weight: 0
-    region: content
-    label: hidden
-    settings:
-      image_style: medium
-      image_link: content
-    third_party_settings: {  }
-  field_tags:
-    type: entity_reference_label
-    weight: 2
-    region: content
-    settings:
-      link: true
-    third_party_settings: {  }
-    label: hidden
 hidden:
   body: true
+  field_image: true
+  field_tags: true
   langcode: true
   links: true

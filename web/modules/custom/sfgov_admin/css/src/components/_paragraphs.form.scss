@@ -1,0 +1,185 @@
+// Global Paragraphs Customizations
+//------------------------------------------------------------------------------
+
+.form-item-custom-paragraph {
+  margin: 20px 0 !important;
+
+  td {
+    vertical-align: top;
+  }
+}
+
+
+// Paragraphs Preview (collapsed state)
+//------------------------------------------------------------------------------
+
+.form-item-custom-paragraph.has-preview {
+  // Make the edit buttons smaller to differentiate from larger "Add" buttons.
+  .paragraphs-icon-button-edit {
+    font-size: 0.923em;
+  }
+}
+
+
+// Paragraphs Subform (Paragraph item edit state)
+//------------------------------------------------------------------------------
+
+.paragraphs-subform {
+  // Reset margins on all form items.
+  .js & .form-item {
+    margin-bottom: 0;
+    margin-top: 0;
+
+    // Resets the larger label font-size defined in _form-elements.scss.
+    label {
+      font-size: 1em;
+    }
+  }
+
+  // These are form items inside the subform.
+  .form-wrapper.paragraphs-content {
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+}
+
+// Paragraphs Top (Header of Paragraph items in collapsed and edit states)
+//------------------------------------------------------------------------------
+
+.paragraph-top {
+  // The bundle type label.
+  .paragraph-type-label {
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+  .paragraphs-icon-changed {
+    display: none !important;
+  }
+}
+
+
+// SF Transaction Fieldset
+// .sf-transaction-fieldset applied via `field_group` module.
+//
+// The purpose of this is to provide a slightly custom fieldgroup for the
+// Transaction content type without breaking content the Seven theme elsewhere.
+// @todo Potentially generalize this and implement elsewhere.
+//------------------------------------------------------------------------------
+
+fieldset.sf-transaction-fieldset:not(.fieldgroup) {
+  background: #fff;
+  margin: 20px 0;
+  padding: 50px 18px 18px;
+
+  > legend {
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+    top: 20px;
+  }
+}
+
+
+// SF Paragraphs Group
+// .sf-paragraphs-group applied via `field_group` module.
+//
+// The purpose of this is to provide a stable markup structure and CSS classes
+// to target only certain Paragraphs and customize the look of the top-level
+// Paragraphs UI. Each group consists of a wrapper, and a label which is printed
+// as an `h3` element. The `h3` element mimics the label that was otherwise
+// displayed as the `thead`, and the wrapper is positioned relative, so that the
+// Paragraphs "Add" or "Add $type" button can be anchored at the top right. The
+// wrappers are mostly `div` elements, with the exception of the group for
+// `field_step_other` field which uses `details` to somewhat mimic the look and
+// behavior of the others, despite its different structure (all the others have
+// a single Paragraph field, while it also has a title).
+//
+//------------------------------------------------------------------------------
+
+.sf-paragraphs-group {
+  margin: 20px 0;
+  position: relative;
+
+  &--details {
+    border: 0;
+
+    .form-item label {
+      font-size: 1em;
+    }
+  }
+
+  // Looks like a table header.
+  > h3,
+  &--details > summary {
+    background: #f5f5f2;
+    border: solid #bfbfba;
+    border-width: 1px 0;
+    color: #333;
+    font-size: 1em;
+    margin: 0;
+    padding: 10px 12px;
+    text-transform: none;
+  }
+
+
+  // Anchor the Add more button at top right.
+  .paragraphs-add-more:not(.is-nested) {
+    display: inline-block;
+    position: absolute;
+    right: 6px;
+    top: 0;
+
+    // Single button
+    > input.field-add-more-submit {
+      line-height: normal;
+      margin-top: 0.6em;
+    }
+
+    // Single + Those in Dropbutton Wrapper.
+    input.field-add-more-submit {
+      font-size: 13px;
+    }
+
+    // Custom "Add.." toggle
+    .sfgov-admin-paragraph-add-link {
+      padding: 4px 1.5em;
+    }
+
+    .paragraphs-dropbutton-wrapper {
+      margin-top: 0.6em; // Mimics the single form submit top margin.
+    }
+  }
+
+  // Hide the actual label.
+  .field-multiple-table {
+    margin: 0 !important;
+
+    thead {
+      display: none;
+    }
+  }
+
+  .paragraphs-nested .field-multiple-table thead {
+    display: table-header-group;
+  }
+}
+
+
+// SF Paragraphs Container
+// .sf-paragraphs-container applied via `field_group` module.
+//
+// The purpose of this is to inject the "Service Start" header. It also groups
+// the fields that are specific to "Service start pages" because field groups
+// will not print unless they contain fields.
+//
+//------------------------------------------------------------------------------
+
+.sf-paragraphs-container {
+  > h2 {
+    border-top: 1px solid #bfbfba;
+    font-size: 20px;
+    margin: 30px 0 20px 0;
+    padding: 30px 0 20px 0;
+    position: relative;
+  }
+}

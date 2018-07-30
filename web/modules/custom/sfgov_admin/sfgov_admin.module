@@ -1,6 +1,22 @@
 <?php
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_admin_theme($existing, $type, $theme, $path) {
+  return array(
+    'field_multiple_value_form__paragraphs' => [
+      'base hook' => 'field_multiple_value_form',
+    ],
+    'field_multiple_value_form__autocomplete' => [
+      'base hook' => 'field_multiple_value_form',
+    ],
+  );
+}
 
 /**
  * Implements hook_page_attachments().
@@ -13,28 +29,6 @@ function sfgov_admin_page_attachments(array &$page) {
 
   if ($is_admin) {
     $page['#attached']['library'][] = 'sfgov_admin/admin';
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Attach Paragraphs admin library on node add/edit forms where Paragraphs are
-  // present.
-  $base_form_ids = ['node_form', 'node_edit_form'];
-  if (!empty($form_state->getBuildInfo()['base_form_id'])) {
-    if (in_array($form_state->getBuildInfo()['base_form_id'], $base_form_ids)) {
-      $node = $form_state->getFormObject()->getEntity();
-      $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', $node->bundle());
-      foreach (array_keys($field_definitions) as $field_name) {
-        if ($field_definitions[$field_name]->getType() == 'entity_reference_revisions') {
-          if ($field_definitions[$field_name]->getSettings()['target_type'] == 'paragraph') {
-            $form['#attached']['library'][] = 'sfgov_admin/paragraphs';
-          }
-        }
-      }
-    }
   }
 }
 
@@ -97,3 +91,70 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
 function sfgov_admin_field_widget_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
   return sfgov_admin_field_widget_entity_reference_paragraphs_form_alter($element, $form_state, $context);
 }
+
+/**
+ * Implements hook_preprocess_form_element().
+ */
+function sfgov_admin_preprocess_form_element(&$variables) {
+  // Make sure attributes is pluggable.
+  $variables['attributes'] = empty($variables['attributes']) ? new Attribute() : new Attribute($variables['attributes']);
+
+  if (isset($variables['element']['#maxlength_js'])) {
+    $variables['attributes']->addClass('form-type-maxlength');
+  }
+}
+
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function sfgov_admin_theme_suggestions_field_multiple_value_form_alter(array &$suggestions, array $variables) {
+  // Closed + Preview
+  if (!empty($variables['element'][0]['#paragraph_type'])) {
+    $suggestions[] = 'field_multiple_value_form__paragraphs';
+    $suggestions[] = 'field_multiple_value_form__paragraphs__preview';
+  }
+
+  // Closed + Subform
+  if (!empty($variables['element'][0]['#entity_type']) && $variables['element'][0]['#entity_type'] == 'paragraph') {
+    $suggestions[] = 'field_multiple_value_form__paragraphs';
+    $suggestions[] = 'field_multiple_value_form__paragraphs__subform';
+  }
+
+  // Checks the widgets against the first AJAX callback to find out type being
+  // used.
+  if (!empty($variables['element']['add_more'])) {
+    $children_count = count(Element::children($variables['element']['add_more']));
+    $paragraphs_widgets = [
+      'Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget',
+      'Drupal\sfgov_admin\Plugin\Field\FieldWidget\SfgovParagraphsWidget',
+    ];
+    $autocomplete_widgets = [
+      'Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget',
+    ];
+
+    if ($children_count >= 1) {
+      foreach (Element::children($variables['element']['add_more']) as $key => $button) {
+        if (!empty($variables['element']['add_more'][$button]['#ajax'])) {
+          if (in_array($variables['element']['add_more'][$button]['#ajax']['callback'][0], $paragraphs_widgets)) {
+            $suggestions[] = 'field_multiple_value_form__paragraphs';
+
+            if ($children_count == 1) {
+              $suggestions[] = 'field_multiple_value_form__paragraphs_single_button';
+            }
+            else {
+              $suggestions[] = 'field_multiple_value_form__paragraphs_multiple_button';
+            }
+          }
+        }
+      }
+    }
+
+    else {
+      if (in_array($variables['element']['add_more']['#ajax']['callback'][0], $autocomplete_widgets)) {
+        $suggestions[] = 'field_multiple_value_form__autocomplete';
+      }
+    }
+  }
+}
+

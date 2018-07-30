@@ -1,0 +1,30 @@
+uuid: 81d669dc-5662-4c0b-ae0b-8a02da6b6ed0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.search_result
+    - field.field.paragraph.phone.field_owner
+    - field.field.paragraph.phone.field_tel
+    - field.field.paragraph.phone.field_text
+    - paragraphs.paragraphs_type.phone
+  module:
+    - telephone_formatter
+id: paragraph.phone.search_result
+targetEntityType: paragraph
+bundle: phone
+mode: search_result
+content:
+  field_tel:
+    weight: 0
+    label: hidden
+    settings:
+      format: 2
+      link: true
+      default_country: US
+    third_party_settings: {  }
+    type: telephone_formatter
+    region: content
+hidden:
+  field_owner: true
+  field_text: true

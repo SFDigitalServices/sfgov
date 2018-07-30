@@ -1,3 +1,4 @@
+
 .path-frontpage .landing__content > .field__items > {
   .field__item:first-child {
     // search slice.
@@ -43,3 +44,47 @@
 }
 
 
+.sfgov-responsive--search-form {
+  .sfgov-search-form {
+    .js-form-type-textfield {
+      display: none;
+      @include media($medium-screen) {
+        width: 194px;
+        display: block;
+      }
+    }
+    .form-actions {
+      position: relative;
+      padding-right: 10px;
+      @include media($medium-screen) {
+        padding-right: 0;
+      }
+      &::before {
+        position: absolute;
+        content: ' ';
+        display: block;
+        background: url("../images/icons/search.png") no-repeat;
+        background: url("../images/icons/search.svg") no-repeat;
+        width: 30px;
+        height: 30px;
+        pointer-events: none;
+        left: 6px;
+        top: 6px;
+        @include media($medium-screen + 1) {
+          left: 15px;
+          top: 5px;
+        }
+      }
+      [type=submit] {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        width: 45px !important;
+        @include media($medium-screen) {
+          width: 63px !important;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+      }
+    }
+  }
+}

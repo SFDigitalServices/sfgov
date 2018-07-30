@@ -1,0 +1,70 @@
+uuid: 4efbd0dc-25bf-41e8-bb53-a447bab56132
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.transaction.field_cost
+    - field.field.node.transaction.field_custom_section
+    - field.field.node.transaction.field_departments
+    - field.field.node.transaction.field_description
+    - field.field.node.transaction.field_direct_external_url
+    - field.field.node.transaction.field_help
+    - field.field.node.transaction.field_special_cases
+    - field.field.node.transaction.field_step_email
+    - field.field.node.transaction.field_step_in_person
+    - field.field.node.transaction.field_step_mail
+    - field.field.node.transaction.field_step_online
+    - field.field.node.transaction.field_step_other
+    - field.field.node.transaction.field_step_other_title
+    - field.field.node.transaction.field_step_phone
+    - field.field.node.transaction.field_things_to_know
+    - field.field.node.transaction.field_topics
+    - field.field.node.transaction.field_transaction_purpose
+    - field.field.node.transaction.field_transactions
+    - node.type.transaction
+  module:
+    - text
+    - user
+id: node.transaction.search_index
+targetEntityType: node
+bundle: transaction
+mode: search_index
+content:
+  field_departments:
+    type: entity_reference_entity_view
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link: true
+      view_mode: default
+    third_party_settings: {  }
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  content_moderation_control: true
+  field_cost: true
+  field_custom_section: true
+  field_direct_external_url: true
+  field_help: true
+  field_related_departments: true
+  field_special_cases: true
+  field_step_email: true
+  field_step_in_person: true
+  field_step_mail: true
+  field_step_online: true
+  field_step_other: true
+  field_step_other_title: true
+  field_step_phone: true
+  field_things_to_know: true
+  field_topics: true
+  field_transaction_purpose: true
+  field_transactions: true
+  langcode: true
+  links: true

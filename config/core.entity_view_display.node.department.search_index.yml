@@ -1,0 +1,62 @@
+uuid: d20e0fb4-07ac-4567-86c3-112e265070f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.department.field_address
+    - field.field.node.department.field_department_code
+    - field.field.node.department.field_description
+    - field.field.node.department.field_go_to_current_url
+    - field.field.node.department.field_image
+    - field.field.node.department.field_parent_department
+    - field.field.node.department.field_phone_numbers
+    - field.field.node.department.field_public_body
+    - field.field.node.department.field_topics
+    - field.field.node.department.field_url
+    - node.type.department
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.department.search_index
+targetEntityType: node
+bundle: department
+mode: search_index
+content:
+  field_address:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: search_index
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_phone_numbers:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      view_mode: search_result
+      link: ''
+    third_party_settings: {  }
+hidden:
+  content_moderation_control: true
+  field_department_code: true
+  field_go_to_current_url: true
+  field_image: true
+  field_parent_department: true
+  field_public_body: true
+  field_topics: true
+  field_url: true
+  langcode: true
+  links: true

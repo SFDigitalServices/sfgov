@@ -1,0 +1,25 @@
+{% if node.get('field_sidebar').isEmpty %}
+  {% embed 'node--full.html.twig' %}
+    {% block content %}
+      <div class="sfgov-container--full">
+        {{ content.field_content }}
+      </div>
+    {% endblock content %}
+  {% endembed %}
+{% else %}
+  {% include '@molecules/03-heros/01-hero-banner.twig' with {
+    'banner': {
+      'title': node.label,
+      'text': content.field_description|render
+    }
+  } %}
+  <div class="sfgov-container--full sfgov-container--right-sidebar">
+    <div class="sfgov-container--content-left">
+      {{ content.field_content }}
+    </div>
+    {% include "@organisms/04-containers/01-sidebar.twig" with {
+      "side": "right",
+      "content": content.field_sidebar
+    } %}
+  </div>
+{% endif %}

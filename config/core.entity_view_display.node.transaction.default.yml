@@ -24,16 +24,42 @@ dependencies:
     - node.type.transaction
   module:
     - entity_reference_revisions
-    - text
+    - field_group
+    - link
+    - smart_trim
     - user
+third_party_settings:
+  field_group:
+    group_grey_boxes:
+      children:
+        - field_transaction_purpose
+        - field_departments
+      parent_name: ''
+      weight: 15
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: ''
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'grey boxes'
 id: node.transaction.default
 targetEntityType: node
 bundle: transaction
 mode: default
 content:
+  content_moderation_control:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_cost:
     type: entity_reference_revisions_entity_view
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       view_mode: default
@@ -51,19 +77,43 @@ content:
     region: content
   field_departments:
     type: entity_reference_label
-    weight: 16
+    weight: 15
     region: content
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
   field_description:
-    weight: 0
+    weight: 1
     label: hidden
-    settings: {  }
+    settings:
+      trim_length: 600
+      trim_type: chars
+      trim_suffix: ''
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      trim_options:
+        text: true
+        trim_zero: false
+      wrap_output: false
+      more_link: false
+      summary_handler: full
     third_party_settings: {  }
-    type: text_default
+    type: smart_trim
     region: content
+  field_direct_external_url:
+    type: link
+    weight: 16
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
   field_help:
     type: entity_reference_revisions_entity_view
     weight: 13
@@ -84,7 +134,7 @@ content:
     region: content
   field_step_email:
     type: entity_reference_revisions_entity_view
-    weight: 4
+    weight: 5
     label: hidden
     settings:
       view_mode: default
@@ -93,7 +143,7 @@ content:
     region: content
   field_step_in_person:
     type: entity_reference_revisions_entity_view
-    weight: 5
+    weight: 6
     label: hidden
     settings:
       view_mode: default
@@ -102,7 +152,7 @@ content:
     region: content
   field_step_mail:
     type: entity_reference_revisions_entity_view
-    weight: 6
+    weight: 7
     label: hidden
     settings:
       view_mode: default
@@ -111,7 +161,7 @@ content:
     region: content
   field_step_online:
     type: entity_reference_revisions_entity_view
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       view_mode: default
@@ -146,7 +196,7 @@ content:
     region: content
   field_things_to_know:
     type: entity_reference_revisions_entity_view
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       view_mode: default
@@ -163,15 +213,15 @@ content:
     third_party_settings: {  }
     region: content
   field_transactions:
-    weight: 15
+    weight: 14
     label: hidden
     settings:
-      link: true
+      view_mode: teaser
+      link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_entity_view
     region: content
 hidden:
-  field_direct_external_url: true
   field_related_departments: true
   field_topics: true
   langcode: true

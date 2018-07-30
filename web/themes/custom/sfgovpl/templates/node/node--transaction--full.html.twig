@@ -1,0 +1,143 @@
+{% embed 'node--full.html.twig' %}
+
+  {% block content %}
+
+    {% if content.field_cost|render or content.field_things_to_know|render %}
+      {% set top_content %}
+        <div class="sfgov-grid-two-columns no-padding">
+          {{ content.field_cost }}
+          {{ content.field_things_to_know }}
+        </div>
+      {% endset %}
+
+      {% include '@molecules/06-headers/02-subheader.twig' with {
+        'content': top_content,
+      } %}
+    {% endif %}
+
+    <div class="sfgov-container--full sfgov-container--right-sidebar">
+      <div class="sfgov-container--content-left">
+
+        {# Steps
+        All Step fields, which are essentially step types, need to be evaluated
+        as a group.
+        - The content of these fields contain entity references to "step"
+          and "callout" paragraphs. The callout content is not counted as a
+          step.
+        - When only a single step is present, the steps display in a numbered
+          list, without the step type label.
+        - When there are multiple step type, they are displayed as collapsible
+          details elements, with the exception of the "online" step, which acts
+          as the preferred step, and when present is not collapsible.
+        - When there are multiple step types, and the "online" step is NOT one
+          of them, the first step type that displays, displays as "open" by
+          default.
+        ----------------------------------------------------------------------#}
+        {% set steps = [] %}
+        {% if content.field_step_online|render %}
+          {% set steps = steps|merge(['field_step_online']) %}
+        {% endif %}
+        {% if content.field_step_phone|render %}
+          {% set steps = steps|merge(['field_step_phone']) %}
+        {% endif %}
+        {% if content.field_step_in_person|render %}
+          {% set steps = steps|merge(['field_step_in_person']) %}
+        {% endif %}
+        {% if content.field_step_email|render %}
+          {% set steps = steps|merge(['field_step_email']) %}
+        {% endif %}
+        {% if content.field_step_mail|render %}
+          {% set steps = steps|merge(['field_step_mail']) %}
+        {% endif %}
+        {% if content.field_step_other|render %}
+          {% set steps = steps|merge(['field_step_other']) %}
+        {% endif %}
+
+        {% if steps|length %}
+          {% set step_content %}
+            {# Single step, just renders normally. #}
+            {% if steps|length == 1 %}
+              {% for step in steps %}
+                {% set step = attribute(content, step) %}
+                {{ step }}
+              {% endfor %}
+            {% else %}
+              {# More than one step renders in details elements. #}
+              {% for step in steps %}
+                {% set step = attribute(content, step) %}
+                {% if loop.first %}
+                  {{ step }}
+                {% else %}
+                  {# @todo grab the summary from field_step_other_title if the
+                  field is field_step_other #}
+                  {% include '@organisms/03-forms/02-details.twig' with {
+                    'summary': step['#title'],
+                    'content': step,
+                  } %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endset %}
+
+          {% if step_content %}
+            {% include '@organisms/05-sections/01-section.twig' with {
+              'title': 'What to do'|t,
+              'level': 2,
+              'content': step_content,
+            } %}
+          {% endif %}
+        {% endif %}
+
+        {% if content.field_custom_section|render %}
+          {{ content.field_custom_section }}
+        {% endif %}
+
+        {% if content.field_special_cases|render %}
+          {% include '@organisms/05-sections/01-section.twig' with {
+            'title': 'Special cases'|t,
+            'level': 2,
+            'content': field_special_cases.items,
+          } %}
+        {% endif %}
+
+        {{ content|without(
+          'field_description',
+          'field_cost',
+          'field_things_to_know',
+          'field_step_online',
+          'field_step_phone',
+          'field_step_in_person',
+          'field_step_email',
+          'field_step_mail',
+          'field_step_other',
+          'field_custom_section',
+          'field_help',
+          'field_transactions',
+          'group_grey_boxes'
+          ) }}
+
+      </div>
+
+      {% if content.field_help|render %}
+        {% include "@organisms/04-containers/01-sidebar.twig" with {
+          'side': 'right',
+          'title': 'Get help'|t,
+          'content': content.field_help
+        } %}
+      {% endif %}
+
+      {# @todo sidebar component needs something for items separately,
+      this doesn't really work. #}
+      {% if content.field_transactions|render %}
+        {% include "@organisms/04-containers/01-sidebar.twig" with {
+          'side': 'right',
+          'content': content.field_transactions
+        } %}
+      {% endif %}
+    </div>
+    {% if content.group_grey_boxes|render %}
+      {{ content.group_grey_boxes }}
+    {% endif %}
+
+  {% endblock content %}
+{% endembed %}

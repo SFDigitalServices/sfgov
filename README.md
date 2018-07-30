@@ -16,8 +16,9 @@
 `mkdir sfgov && cd sfgov && lando init github --recipe=pantheon`
 3. `composer install`
 4. `lando start`
-5. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
-  Note:  Run `lando drush cr` instead of `drush cr` in step 7.
+5. Get latest from Pantheon dev environment `lando pull`
+6. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
+  Note:  Run `lando drush cr` instead of `drush cr` in step 7 of linked article.
 
 ## Pull Request Workflow
 (https://pantheon.io/docs/guides/build-tools/new-pr/)
@@ -26,7 +27,7 @@
 TLDR version:  
 1. Create a branch and make changes.  Push branch.
 2. Open a pull request to merge from branch to master.
-3. The team reviews, discusses, and makes change requests to the change
+3. The team reviews, discusses, and makes change requests to the change. This includes the PM reviewing the Circle CI review app BEFORE it is merged into master.
 4. Change is approved and merged
 5. Delete branch
 

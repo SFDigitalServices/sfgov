@@ -48,9 +48,19 @@
     {{ page.alpha }}
   {% endif %}
 
+  <div class="responsive-search">
+    <div class="responsive-search--container">
+      <div class="close">
+        <i class="fa fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  {# TODO: remove the hardcoded inclusion of blocks. #}
+
   {% include "@organisms/01-header/header.twig" with {
     "header_blocks": [page.header.sfgovpl_branding, page.header.sfgovpl_main_menu],
-    "translate_block": page.header.gtranslate
+    "translate_block": [page.header.gtranslate, page.header.exposedformsearchpage_1]
   } %}
 
   <main role="main">

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_template_preprocess_default_variables_alter().
+ */
+function sfgov_utilities_template_preprocess_default_variables_alter(&$variables) {
+ // An exception might be thrown.
+  try {
+    $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  }
+  catch (Exception $e) {
+    // If the database is not yet available, set to false.
+    $variables['is_front'] = FALSE;
+  }
+}

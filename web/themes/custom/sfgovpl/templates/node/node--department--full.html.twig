@@ -1,22 +1,36 @@
+{% set description = node.get('field_description').getValue()[0]['value'] %}
 {% if content.field_image['#items'] %}
   {% set image = content.field_image %}
 {% endif %}
 {% include "@molecules/06-headers/01-content-head.twig" with {
   "title": node.getTitle(),
-  "description": node.get('field_description').getString(),
+  "description": description,
   "image": image
 } %}
-
 <div class="sfgov-container--full sfgov-container--right-sidebar">
-  <div class="sfgov-container--content-right">
-    {# todo: Implement services listing #}
+  <div class="sfgov-container--content-left">
+    {{ drupal_view('services', 'block_2') }}
+    {{ drupal_view('departments', 'block_1') }}
     {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
   </div>
-  <div class="sfgov-container--content-left">
-    {{ content.field_url }}
-    <div class="sidebar-block">
-      {{ content.field_address }}
-      {{ content.field_phone_numbers }}
-    </div>
-  </div>
+
+  {% set render_content = false %}
+
+  {% if node.get('field_url').isEmpty() == false %}
+    {% set render_content = true %}
+  {% elseif node.get('field_address').isEmpty() == false %}
+    {% set render_content = true %}
+  {% elseif node.get('field_phone_numbers').isEmpty() == false %}
+    {% set render_content = true %}
+  {% endif %}
+
+  {% if render_content %}
+    {% include "@organisms/04-containers/01-sidebar.twig" with {
+      "side": "right",
+      "title": "Contact"|t,
+      "content": [content.field_url,
+        content.field_address,
+        content.field_phone_numbers]
+    } %}
+  {% endif %}
 </div>
