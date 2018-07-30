@@ -7,20 +7,18 @@
 
 namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
-use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-//use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-//use Drupal\node\Entity\Node;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
  */
 class RedirectEventSubscriber implements EventSubscriberInterface {
 
-  /**
+    /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -30,7 +28,12 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     return $events;
   }
 
-public function redirectBasedOnField(GetResponseEvent $event) {
+  public function redirectBasedOnField(GetResponseEvent $event) {
+      // don't redirect logged in users.
+      $account = \Drupal::currentUser();
+      if ( !empty($account->id()) ) {
+          return;
+      }
     // only redirect if in view mode. This relies on proper URL path setting for all nodes.  
     $uri_array = explode('/',  $event->getRequest()->getRequestUri() ); 
     if($uri_array[1] == 'node' && ( $uri_array[2] && is_numeric($uri_array[2]) ) && $uri_array[3] != '' ){
