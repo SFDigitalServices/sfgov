@@ -1,7 +1,7 @@
+
 {% embed 'node--full.html.twig' %}
 
   {% block content %}
-
     {% if content.field_cost|render or content.field_things_to_know|render %}
       {% set top_content %}
         <div class="sfgov-grid-two-columns no-padding">
@@ -113,7 +113,8 @@
           'field_custom_section',
           'field_help',
           'field_transactions',
-          'group_grey_boxes'
+          'group_grey_boxes',
+            'field_direct_external_url'
           ) }}
 
       </div>
@@ -129,15 +130,23 @@
       {# @todo sidebar component needs something for items separately,
       this doesn't really work. #}
       {% if content.field_transactions|render %}
+        <div class="sfgov-container--content-right sfgov-container--sidebar-divider"></div>
         {% include "@organisms/04-containers/01-sidebar.twig" with {
           'side': 'right',
           'content': content.field_transactions
         } %}
       {% endif %}
+
     </div>
     {% if content.group_grey_boxes|render %}
+
       {{ content.group_grey_boxes }}
     {% endif %}
-
+      {% include "@atoms/08-timestamp/08-timestamp.twig" with {
+      'updated_date': node.getChangedTime|date('F d, Y')
+      } %}
   {% endblock content %}
+
 {% endembed %}
+
+
