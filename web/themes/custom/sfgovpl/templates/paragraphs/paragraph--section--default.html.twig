@@ -46,8 +46,11 @@
   view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
   not paragraph.isPublished() ? 'paragraph--unpublished',
   (parent.bundle == 'landing') ? 'sfgov-container--full',
-  "parent--bundle--" ~ parent.bundle
+  "parent--bundle--" ~ parent.bundle,
+  (paragraph.field_title.getString == 'Services') ? 'sfgov-services'
 ] %}
+
+
 {% block paragraph %}
   <div {{ attributes.addClass(classes) }}>
     {% block content %}
