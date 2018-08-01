@@ -54,6 +54,9 @@
 .head-right--container {
   display: flex;
   align-items: center;
+  @include media-max($mobile-screen) {
+    overflow: hidden;
+  }
 }
 
 #block-gtranslate {
@@ -63,27 +66,17 @@
 .gtranslate {
   cursor: pointer;
   display: flex;
-  max-width: 150px;
+  max-width: 155px;
   @include media-max($mobile-screen) {
     width: 41px;
     margin-right: 10px;
-  }
-  &:hover {
-    background: #122E51;
-    select {
-      color: #fff;
-    }
-    &::before {
-      background: url("../../src/img/translate_white.png") no-repeat;
-      background: url("../../src/img/translate_white.svg") no-repeat;
-    }
   }
   &::before {
     content: '';
     background: url("../../src/img/translate.png") no-repeat;
     background: url("../../src/img/translate.svg") no-repeat;
     height: 30px;
-    width: 55px;
+    width: 50px;
     display: block;
     position: relative;
     top: 5px;
@@ -98,7 +91,7 @@
   select {
     border: 0;
     margin: 0;
-    font-size: 13px;
+    font-size: 16px;
     line-height: 17px;
     color: #0071bc;
     font-family: 'Source Sans Pro', sans-serif;
@@ -108,7 +101,8 @@
     padding: 5px 5px 5px 50px;
     background: transparent;
     @include media-max($mobile-screen) {
-      font-size: 0;
+      font-size: 16px;
+      right: 65px;
     }
     &:focus {
       outline: 0;
@@ -119,7 +113,7 @@
       margin: 0;
       width: 300px;
       @include media-max($mobile-screen) {
-        font-size: 13px;
+        font-size: 16px;
         position: relative;
         right: 50px;
       }
@@ -234,15 +228,6 @@
     }
   }
 }
-
-// #block-sfgovpl-local-tasks.contextual-region {
-//   padding: 41px 0 21px 0;
-//   margin-bottom: 40px;
-// }
-
-// #block-sfgovpl-footer.contextual-region {
-//   margin-top: 70px;
-// }
 
 .no-search-results--container {
   h2 {
