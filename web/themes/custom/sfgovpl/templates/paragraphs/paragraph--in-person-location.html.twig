@@ -40,23 +40,19 @@
 #}
 {% set parent = paragraph.getParentEntity() %}
 {%
-  set classes = [
-  'paragraph',
-  'paragraph--type--' ~ paragraph.bundle|clean_class,
-  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-  not paragraph.isPublished() ? 'paragraph--unpublished',
-  "parent--bundle--" ~ parent.bundle
+set classes = [
+'paragraph',
+'paragraph--type--' ~ paragraph.bundle|clean_class,
+view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+not paragraph.isPublished() ? 'paragraph--unpublished',
+"parent--bundle--" ~ parent.bundle
 ]
 %}
 {% block paragraph %}
-  {% if parent.bundle() == "page" %}
-    {% if paragraph.field_location.0.entity.label %}
-      <h3>{{ "Visit "|t ~ paragraph.field_location.0.entity.label }}</h3>
-    {% endif %}
-  {% endif %}
+
   <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {{ content }}
-    {% endblock %}
+      {% block content %}
+          {{ content }}
+      {% endblock %}
   </div>
 {% endblock paragraph %}

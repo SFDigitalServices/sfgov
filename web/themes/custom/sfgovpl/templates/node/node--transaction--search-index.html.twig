@@ -2,7 +2,8 @@
 {% set description = node.get('field_description').getValue()[0]['value'] %}
 
 {% set relatedDept = content['field_departments'][0]['#node'].getTitle() %}
-{% if view.current_display == 'block_2' %}
+
+{% if view.id == 'services' %}
 {%  set relatedDept = '' %}
 {% endif %}
 {% include "@molecules/08-search-results/01-transaction-search.twig" with {
