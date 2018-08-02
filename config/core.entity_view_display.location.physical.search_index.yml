@@ -6,12 +6,11 @@ dependencies:
     - core.entity_view_mode.location.search_index
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
-    - field.field.location.physical.field_directions_link
+    - field.field.location.physical.field_google_map
     - field.field.location.physical.field_operating_hours
     - field.field.location.physical.field_text
   module:
     - address
-    - link
 id: location.physical.search_index
 targetEntityType: location
 bundle: physical
@@ -24,21 +23,10 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_directions_link:
-    weight: 0
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
 hidden:
   changed: true
   created: true
+  field_google_map: true
   field_operating_hours: true
   field_text: true
   langcode: true

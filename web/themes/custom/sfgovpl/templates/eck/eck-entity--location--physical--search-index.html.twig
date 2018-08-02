@@ -2,10 +2,6 @@
   {% set address = eck_entity.get('field_address').getValue()[0]['address_line1'] %}
 {% endif %}
 
-{% if not eck_entity.get('field_directions_link').isEmpty() %}
-  {% set url = eck_entity.get('field_directions_link').get(0).getString() %}
-{% endif %}
-
 {% if url %}
   <a href="{{ url }}">{{ address }}</a>
 {% else %}

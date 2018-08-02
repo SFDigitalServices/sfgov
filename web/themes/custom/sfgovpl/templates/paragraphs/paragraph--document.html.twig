@@ -39,22 +39,26 @@
  */
 #}
 
-{% set number_of_items = content.field_content['#items'].getValue()|length %}
-
+{% set parent = paragraph.getParentEntity() %}
 {%
-  set classes = [
-  'paragraph',
-  'paragraph--type--' ~ paragraph.bundle|clean_class,
-  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-  not paragraph.isPublished() ? 'paragraph--unpublished',
-  "sfgov-drupal-two-columns-list"
+set classes = [
+'paragraph',
+'paragraph--type--' ~ paragraph.bundle|clean_class,
+view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+not paragraph.isPublished() ? 'paragraph--unpublished',
+"parent--bundle--" ~ parent.bundle
 ]
 %}
 
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {{ content }}
-    {% endblock %}
-  </div>
+    <div {{ attributes.addClass(classes) }}>
+        {% block content %}
+            {% include "@atoms/09-document/09-document.twig" with {
+            "parent_bundle": parent.bundle(),
+            "field_file": paragraph.field_file
+            } %}
+
+        {% endblock %}
+    </div>
 {% endblock paragraph %}
+

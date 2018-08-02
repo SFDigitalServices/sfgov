@@ -5,14 +5,12 @@ dependencies:
   config:
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
-    - field.field.location.physical.field_directions_link
     - field.field.location.physical.field_google_map
     - field.field.location.physical.field_operating_hours
     - field.field.location.physical.field_text
   module:
     - address
     - allowed_formats
-    - link
     - office_hours
     - text
 id: location.physical.default
@@ -21,22 +19,14 @@ bundle: physical
 mode: default
 content:
   field_address:
-    weight: 2
+    weight: 1
     settings:
       default_country: US
     third_party_settings: {  }
     type: address_default
     region: content
-  field_directions_link:
-    weight: 5
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
   field_google_map:
-    weight: 7
+    weight: 2
     settings:
       size: 60
       placeholder: ''
@@ -62,24 +52,17 @@ content:
     region: content
   langcode:
     type: language_select
-    weight: 1
+    weight: 0
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
-  title:
-    type: string_textfield
-    weight: 0
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   translation:
-    weight: 6
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   created: true
+  title: true
   uid: true

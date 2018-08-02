@@ -37,20 +37,6 @@
  */
 #}
 
-{% set departments_content %}
-    {% for item in items %}
-        <div>{{ item.content }}</div>
-    {% endfor %}
-{% endset %}
-
-{% set is_multiple =  "Department" %}
-{% if items|length > 1 %}
-    {% set is_multiple = "Departments" %}
-{% endif %}
-
-{% include "@molecules/04-cards/01-transaction-card.twig" with {
-  "transaction_card": {
-    "title": is_multiple,
-    "body": departments_content
-  }
-} %}
+{% for item in items %}
+    {{ item.content }}
+{% endfor %}

@@ -7,20 +7,18 @@
 
 namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
-use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-//use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-//use Drupal\node\Entity\Node;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
  */
 class RedirectEventSubscriber implements EventSubscriberInterface {
 
-  /**
+    /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -30,7 +28,12 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     return $events;
   }
 
-public function redirectBasedOnField(GetResponseEvent $event) {
+  public function redirectBasedOnField(GetResponseEvent $event) {
+      // don't redirect logged in users.
+      $account = \Drupal::currentUser();
+      if ( !empty($account->id()) ) {
+          return;
+      }
     // only redirect if in view mode. This relies on proper URL path setting for all nodes.  
     $uri_array = explode('/',  $event->getRequest()->getRequestUri() ); 
     if($uri_array[1] == 'node' && ( $uri_array[2] && is_numeric($uri_array[2]) ) && $uri_array[3] != '' ){
@@ -41,13 +44,11 @@ public function redirectBasedOnField(GetResponseEvent $event) {
         $node = $event->getRequest()->attributes->get('node'); 
       
         if($node && $node->hasField('field_direct_external_url') ){
-          $field_external_url = $node->get('field_direct_external_url');
-          $external_url = $field_external_url->getValue()[0]['uri'];
+          $field_external_url = $node->get('field_direct_external_url')->getValue();
 
-          if($external_url != '' ){  
+          if( !empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
               // This is where you set the destination.
-              //$redirect_url = Url::fromUri($external_url->getValue());
-              $response = new TrustedRedirectResponse($external_url);
+              $response = new TrustedRedirectResponse($field_external_url[0]['uri']);
               $event->setResponse($response);
           }
         }
