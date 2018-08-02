@@ -56,12 +56,18 @@ set classes = [
       {% if not field_address.isEmpty() %}
         {% set parent_bundle = parent.bundle() %}
         {% if parent_bundle == "step" %}
+          {% if field_address.locality or field_address.postal_code or field_address.administrative_area %}
+              {% if field_address.locality %}
+                  {% set city = "#{field_address.locality}," %}
+              {% endif %}
+              {% set line2 = "#{city} #{field_address.administrative_area} #{field_address.postal_code}" %}
+          {% endif %}
           {% include "@molecules/04-cards/03-address-card.twig" with {
             "address_card": {
-              "icon": "location",
+              "icon": "mail",
               "organization": field_address.organization,
               "line1": field_address.address_line1,
-              "line2": field_address.address_line2
+              "line2": line2
             }
           } %}
         {% else %}
@@ -78,7 +84,7 @@ set classes = [
           } %}
         {% endif %}
       {% endif %}
-      {{ content|without('field_address') }}
+      {{ content|without('field_address', 'field_location') }}
     {% endblock %}
   </div>
 {% endblock paragraph %}

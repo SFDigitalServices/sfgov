@@ -63,15 +63,23 @@
               {% endfor %}
             {% else %}
               {# More than one step renders in details elements. #}
-              {% for step in steps %}
-                {% set step = attribute(content, step) %}
+              {% for step_name in steps %}
+                {% set step = attribute(content, step_name) %}
                 {% if loop.first %}
                   {{ step }}
                 {% else %}
-                  {# @todo grab the summary from field_step_other_title if the
-                  field is field_step_other #}
+                  {# 
+                    grab the summary from field_step_other_title if the
+                    field is field_step_other 
+                  #}
+                  {% if step_name == "field_step_other" %}
+                    {% set title = content.field_step_other_title %}
+                  {% else %}
+                    {% set title = step['#title'] %}
+                  {% endif %}
+
                   {% include '@organisms/03-forms/02-details.twig' with {
-                    'summary': step['#title'],
+                    'summary': title,
                     'content': step,
                   } %}
                 {% endif %}
@@ -110,6 +118,7 @@
           'field_step_email',
           'field_step_mail',
           'field_step_other',
+          'field_step_other_title',
           'field_custom_section',
           'field_help',
           'field_transactions',
