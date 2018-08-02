@@ -49,6 +49,11 @@ set classes = [
 ]
 %}
 {% block paragraph %}
+
+        {% if paragraph.field_location.0.entity.label %}
+          <h4 class="field__label">{{ paragraph.field_location.0.entity.label }}</h4>
+        {% endif %}
+
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
       {%  set field_address = paragraph.field_location.entity.field_address[0] %}
