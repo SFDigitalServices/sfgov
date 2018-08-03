@@ -53,7 +53,8 @@ include __DIR__ . "/settings.pantheon.php";
  * example.org, with all subdomains included.
  */
 
-// force https on sf.gov and www.sfgov.org
+
+// force https on sf.gov
 if (isset($_ENV['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
     // Redirect to https://$primary_domain in the Live environment
     if ($_ENV['PANTHEON_ENVIRONMENT'] === 'live') {
