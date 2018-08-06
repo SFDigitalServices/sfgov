@@ -38,23 +38,53 @@
  * @ingroup themeable
  */
 #}
-
-{% set number_of_items = content.field_content['#items'].getValue()|length %}
-
+{% set parent = paragraph.getParentEntity() %}
 {%
-  set classes = [
+set classes = [
   'paragraph',
   'paragraph--type--' ~ paragraph.bundle|clean_class,
   view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
   not paragraph.isPublished() ? 'paragraph--unpublished',
-  "sfgov-drupal-two-columns-list"
+  "parent--bundle--" ~ parent.bundle
 ]
 %}
-
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      {{ content }}
+      {%  set field_address = paragraph.field_location.entity.field_address[0] %}
+      {%  set org = paragraph.field_location.entity.field_text[0] %}
+      {% if not field_address.isEmpty() %}
+        {% set parent_bundle = parent.bundle() %}
+        {% if parent_bundle == "step" %}
+          {% if field_address.locality or field_address.postal_code or field_address.administrative_area %}
+              {% if field_address.locality %}
+                  {% set city = "#{field_address.locality}," %}
+              {% endif %}
+              {% set line2 = "#{city} #{field_address.administrative_area} #{field_address.postal_code}" %}
+          {% endif %}
+          {% include "@molecules/04-cards/03-address-card.twig" with {
+            "address_card": {
+              "icon": "mail",
+              "organization": field_address.organization,
+              "line1": field_address.address_line1,
+              "line2": line2
+            }
+          } %}
+        {% else %}
+          {% include "@atoms/06-address/06-address.twig" with {
+            "given_name": field_address.given_name,
+            "family_name": field_address.family_name,
+            "organization": field_address.organization,
+            "address_line1": field_address.address_line1,
+            "address_line2": field_address.address_line2,
+            "dependent_locality": field_address.dependent_locality,
+            "locality": field_address.locality,
+            "postal_code": field_address.postal_code,
+            "administrative_area": field_address.administrative_area
+          } %}
+        {% endif %}
+      {% endif %}
+      {{ content|without('field_address', 'field_location') }}
     {% endblock %}
   </div>
 {% endblock paragraph %}

@@ -1,7 +1,7 @@
+
 {% embed 'node--full.html.twig' %}
 
   {% block content %}
-
     {% if content.field_cost|render or content.field_things_to_know|render %}
       {% set top_content %}
         <div class="sfgov-grid-two-columns no-padding">
@@ -63,15 +63,23 @@
               {% endfor %}
             {% else %}
               {# More than one step renders in details elements. #}
-              {% for step in steps %}
-                {% set step = attribute(content, step) %}
+              {% for step_name in steps %}
+                {% set step = attribute(content, step_name) %}
                 {% if loop.first %}
                   {{ step }}
                 {% else %}
-                  {# @todo grab the summary from field_step_other_title if the
-                  field is field_step_other #}
+                  {# 
+                    grab the summary from field_step_other_title if the
+                    field is field_step_other 
+                  #}
+                  {% if step_name == "field_step_other" %}
+                    {% set title = content.field_step_other_title %}
+                  {% else %}
+                    {% set title = step['#title'] %}
+                  {% endif %}
+
                   {% include '@organisms/03-forms/02-details.twig' with {
-                    'summary': step['#title'],
+                    'summary': title,
                     'content': step,
                   } %}
                 {% endif %}
@@ -110,10 +118,12 @@
           'field_step_email',
           'field_step_mail',
           'field_step_other',
+          'field_step_other_title',
           'field_custom_section',
           'field_help',
           'field_transactions',
-          'group_grey_boxes'
+          'group_grey_boxes',
+            'field_direct_external_url'
           ) }}
 
       </div>
@@ -129,15 +139,23 @@
       {# @todo sidebar component needs something for items separately,
       this doesn't really work. #}
       {% if content.field_transactions|render %}
+        <div class="sfgov-container--content-right sfgov-container--sidebar-divider"></div>
         {% include "@organisms/04-containers/01-sidebar.twig" with {
           'side': 'right',
           'content': content.field_transactions
         } %}
       {% endif %}
+
     </div>
     {% if content.group_grey_boxes|render %}
+
       {{ content.group_grey_boxes }}
     {% endif %}
-
+      {% include "@atoms/08-timestamp/08-timestamp.twig" with {
+      'updated_date': node.getChangedTime|date('F d, Y')
+      } %}
   {% endblock content %}
+
 {% endembed %}
+
+

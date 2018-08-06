@@ -1,6 +1,31 @@
+
+<br>
 {% if not content.field_address.isEmpty() %}
-  {{ content.field_address }}
+    {% set address_content = content.field_address[0] %}
+    <div class="eck-entity-address-field">
+        <p class="address" translate="no"> </p>
+        {% if address_content['#given_name'] or address_content['#family_name'] %}
+            <p>{{ address_content['#given_name'] }} {{ address_content['#family_name'] }} </p>
+        {% endif %}
+        {% if address_content['#organization'] %}
+            <h4 class="field__label">{{ address_content['#organization'] }} </h4>
+        {% endif %}
+        {% if address_content['#address_line1'] %}
+            <p>{{ address_content['#address_line1'] }}</p>
+        {% endif %}
+        {% if address_content['#address_line2'] %}
+            <p>{{ address_content['#address_line2'] }}</p>
+        {% endif %}
+
+        {% if address_content['#dependent_locality'].code %}
+            <p>{{ address_content['#dependent_locality.code'] }}</p>
+        {% endif %}
+        {% if address_content['#locality'] or address_content['#postal_code'] or address_content['#administrative_area.code'] %}
+            <p>{{ address_content['#locality'] }}, {{ address_content['#administrative_area'].code }} {{ address_content['#postal_code'] }}</p>
+        {% endif %}
+    </div>
 {% endif %}
+
 
 {% if not content.field_operating_hours.isEmpty() %}
     {{ content.field_operating_hours }}

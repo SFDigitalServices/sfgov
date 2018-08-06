@@ -52,6 +52,33 @@ include __DIR__ . "/settings.pantheon.php";
  * will allow the site to run off of all variants of example.com and
  * example.org, with all subdomains included.
  */
+
+
+// force https on sf.gov
+if (isset($_ENV['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
+    // Redirect to HTTPS on every Pantheon environment.
+    $primary_domain = $_SERVER['HTTP_HOST'];
+
+    if ($_SERVER['HTTP_HOST'] != $primary_domain
+        || !isset($_SERVER['HTTP_USER_AGENT_HTTPS'])
+        || $_SERVER['HTTP_USER_AGENT_HTTPS'] != 'ON' ) {
+
+        # Name transaction "redirect" in New Relic for improved reporting (optional)
+        if (extension_loaded('newrelic')) {
+            newrelic_name_transaction("redirect");
+        }
+
+        header('HTTP/1.0 301 Moved Permanently');
+        header('Location: https://'. $primary_domain . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+    // Drupal 8 Trusted Host Settings
+    if (is_array($settings)) {
+        $settings['trusted_host_patterns'] = array('^'. preg_quote($primary_domain) .'$');
+    }
+}
+
 if (defined('PANTHEON_ENVIRONMENT')) {
   if (in_array($_ENV['PANTHEON_ENVIRONMENT'], array('dev', 'test', 'live'))) {
     $settings['trusted_host_patterns'][] = "{$_ENV['PANTHEON_ENVIRONMENT']}-{$_ENV['PANTHEON_SITE_NAME']}.getpantheon.io";
