@@ -1,10 +1,20 @@
 {% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
 {% set description = node.get('field_description').getValue()[0]['value'] %}
 
-{% set relatedDept = content['field_departments'][0]['#node'].getTitle() %}
+{% set relatedDepts = node.get('field_departments').getValue() %}
+{% set relatedDept = null %}
+
+{% set break = false %}
+{% for i, value in relatedDepts if not break %}
+  {% if node.get('field_departments')[i].entity %}
+    {# this is an entity<br/> #}
+    {% set relatedDept = node.get('field_departments')[i].entity.getTitle() %}
+    {% set break = true %}
+  {% endif %}
+{% endfor %}
 
 {% if view.id == 'services' %}
-{%  set relatedDept = '' %}
+{%  set relatedDept = null %}
 {% endif %}
 {% include "@molecules/08-search-results/01-transaction-search.twig" with {
   "url": url,
