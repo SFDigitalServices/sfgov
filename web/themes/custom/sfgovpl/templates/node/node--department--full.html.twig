@@ -10,7 +10,10 @@
 } %}
 <div class="sfgov-container--full sfgov-container--right-sidebar">
   <div class="sfgov-container--content-left">
-    {{ drupal_view('services', 'block_2') }}
+    {% set view = drupal_view('services', 'block_2')|render  %}
+    {%  if view|striptags|trim != "Services" %}
+      {{ view }}
+    {% endif %}
     {{ drupal_view('departments', 'block_1') }}
     {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
   </div>
