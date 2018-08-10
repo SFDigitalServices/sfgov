@@ -17,10 +17,15 @@
     <div class="sfgov-container--content-left">
       {{ content.field_content }}
     </div>
-    {% include "@organisms/04-containers/01-sidebar.twig" with {
-      "side": "right",
-      "content": content.field_sidebar
-    } %}
+    {% set sidebarHtml %}
+      {{ content.field_sidebar }}
+    {% endset %}
+    {% if sidebarHtml|striptags|trim is not empty %}
+      {% include "@organisms/04-containers/01-sidebar.twig" with {
+        "side": "right",
+        "content": content.field_sidebar
+      } %}
+    {% endif %}
   </div>
   {% if content.field_content_bottom is not empty %}
     <div class="sfgov-container--content-bottom">
