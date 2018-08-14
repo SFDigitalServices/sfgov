@@ -16,8 +16,14 @@
 {% if view.id == 'services' %}
 {%  set relatedDept = null %}
 {% endif %}
+
+{# use internal drupal url if there is no external url or if user logged in, otherwise use the direct external url #}
+{% set externalUrlValueArray = node.get('field_direct_external_url').getValue() %}
+{% set hasExternalUrl = (externalUrlValueArray is not empty and not logged_in) ? true : false %}
+{% set theUrl = (externalUrlValueArray is empty or logged_in) ? url : externalUrlValueArray[0].uri %}
+
 {% include "@molecules/08-search-results/01-transaction-search.twig" with {
-  "url": url,
+  "url": {"url": theUrl, "external": hasExternalUrl},
   "title": elements['#node'].get('title').getString(),
   "body": description,
   "relatedDept": relatedDept
