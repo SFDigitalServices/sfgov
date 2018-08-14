@@ -1,5 +1,15 @@
 <?php
 
+
+try {
+  $module_handler = Drupal::service('module_handler');
+  $devel_path = $module_handler->getModule('devel')->getPath();
+  require_once($devel_path.'/kint/kint/Kint.class.php');
+  Kint::$maxLevels = 4;
+} catch(Exception $e) {
+  error_log("\n---\n" . $e->getMessage() . "\n---\n");
+}
+
 /**
  * Implements hook_template_preprocess_default_variables_alter().
  */
@@ -11,5 +21,29 @@ function sfgov_utilities_template_preprocess_default_variables_alter(&$variables
   catch (Exception $e) {
     // If the database is not yet available, set to false.
     $variables['is_front'] = FALSE;
+  }
+}
+
+function sfgov_utilities_preprocess_node__transaction__search_index(&$variables) {
+  $node = $variables['node'];
+  $contentType = $node->getType();
+  if($contentType == 'transaction') {
+    $relatedDeptVariable = null;
+    $externalUrl = null;
+    $userLoggedIn = false;
+
+    // get the related dept
+    $relatedDepts = $node->get('field_departments')->getValue();
+    for($i = 0; $i < count($relatedDepts); $i++) {
+      $relatedDept = $node->get('field_departments')->get($i)->getValue();
+      if(count($relatedDept) > 0) {
+        $relatedDeptId = $relatedDept['target_id'];
+        $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
+        $relatedDeptVariable = $relatedDeptNode->getTitle();
+        break;
+      }
+    }
+
+    $variables['related_dept'] = $relatedDeptVariable;
   }
 }

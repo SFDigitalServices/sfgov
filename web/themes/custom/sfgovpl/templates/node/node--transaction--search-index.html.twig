@@ -1,20 +1,8 @@
 {% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
 {% set description = node.get('field_description').getValue()[0]['value'] %}
 
-{% set relatedDepts = node.get('field_departments').getValue() %}
-{% set relatedDept = null %}
-
-{% set break = false %}
-{% for i, value in relatedDepts if not break %}
-  {% if node.get('field_departments')[i].entity %}
-    {# this is an entity<br/> #}
-    {% set relatedDept = node.get('field_departments')[i].entity.getTitle() %}
-    {% set break = true %}
-  {% endif %}
-{% endfor %}
-
 {% if view.id == 'services' %}
-{%  set relatedDept = null %}
+{%  set related_dept = null %}
 {% endif %}
 
 {# use internal drupal url if there is no external url or if user logged in, otherwise use the direct external url #}
@@ -26,5 +14,7 @@
   "url": {"url": theUrl, "external": hasExternalUrl},
   "title": elements['#node'].get('title').getString(),
   "body": description,
-  "relatedDept": relatedDept
+  "relatedDept": related_dept
 } %}
+
+{{ kint(related_dept) }}
