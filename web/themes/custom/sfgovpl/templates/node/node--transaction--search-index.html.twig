@@ -1,20 +1,10 @@
-{% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
-{% set description = node.get('field_description').getValue()[0]['value'] %}
-
 {% if view.id == 'services' %}
 {%  set related_dept = null %}
 {% endif %}
 
-{# use internal drupal url if there is no external url or if user logged in, otherwise use the direct external url #}
-{% set externalUrlValueArray = node.get('field_direct_external_url').getValue() %}
-{% set hasExternalUrl = (externalUrlValueArray is not empty and not logged_in) ? true : false %}
-{% set theUrl = (externalUrlValueArray is empty or logged_in) ? url : externalUrlValueArray[0].uri %}
-
 {% include "@molecules/08-search-results/01-transaction-search.twig" with {
-  "url": {"url": theUrl, "external": hasExternalUrl},
+  "url": {"url": the_url, "external": has_external_url},
   "title": elements['#node'].get('title').getString(),
   "body": description,
   "relatedDept": related_dept
 } %}
-
-{{ kint(related_dept) }}

@@ -30,7 +30,7 @@ function sfgov_utilities_preprocess_node__transaction__search_index(&$variables)
   if($contentType == 'transaction') {
     $relatedDeptVariable = null;
     $externalUrl = null;
-    $userLoggedIn = false;
+    $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
 
     // get the related dept
     $relatedDepts = $node->get('field_departments')->getValue();
@@ -43,7 +43,20 @@ function sfgov_utilities_preprocess_node__transaction__search_index(&$variables)
         break;
       }
     }
+    
+    // check external url
+    $externalUrlValueArray = $node->get('field_direct_external_url')->getValue();
+    $hasExternalUrl = (!empty($externalUrlValueArray) && !$userLoggedIn) ? true : false;
+    $options = ['absolute' => TRUE];
+    $drupalUrl = \Drupal\Core\Url::fromRoute('entity.node.canonical', ['node' => $node->id()], $options);
+    $drupalUrl = $drupalUrl->toString();
+    $theUrl = $hasExternalUrl ? $externalUrlValueArray[0]['uri'] : $drupalUrl;
 
     $variables['related_dept'] = $relatedDeptVariable;
+    $variables['the_url'] = $theUrl;
+    $variables['has_external_url'] = $hasExternalUrl;
+    $variables['title'] = $node->get('title')->getString();
+    $variables['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
+    
   }
 }
