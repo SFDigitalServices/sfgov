@@ -1,15 +1,5 @@
 <?php
 
-
-try {
-  $module_handler = Drupal::service('module_handler');
-  $devel_path = $module_handler->getModule('devel')->getPath();
-  require_once($devel_path.'/kint/kint/Kint.class.php');
-  Kint::$maxLevels = 4;
-} catch(Exception $e) {
-  error_log("\n---\n" . $e->getMessage() . "\n---\n");
-}
-
 /**
  * Implements hook_template_preprocess_default_variables_alter().
  */
@@ -27,36 +17,40 @@ function sfgov_utilities_template_preprocess_default_variables_alter(&$variables
 function sfgov_utilities_preprocess_node__transaction__search_index(&$variables) {
   $node = $variables['node'];
   $contentType = $node->getType();
-  if($contentType == 'transaction') {
-    $relatedDeptVariable = null;
-    $externalUrl = null;
-    $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
 
-    // get the related dept
-    $relatedDepts = $node->get('field_departments')->getValue();
-    for($i = 0; $i < count($relatedDepts); $i++) {
-      $relatedDept = $node->get('field_departments')->get($i)->getValue();
-      if(count($relatedDept) > 0) {
-        $relatedDeptId = $relatedDept['target_id'];
-        $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
-        $relatedDeptVariable = $relatedDeptNode->getTitle();
-        break;
-      }
-    }
-    
-    // check external url
-    $externalUrlValueArray = $node->get('field_direct_external_url')->getValue();
-    $hasExternalUrl = (!empty($externalUrlValueArray) && !$userLoggedIn) ? true : false;
-    $options = ['absolute' => TRUE];
-    $drupalUrl = \Drupal\Core\Url::fromRoute('entity.node.canonical', ['node' => $node->id()], $options);
-    $drupalUrl = $drupalUrl->toString();
-    $theUrl = $hasExternalUrl ? $externalUrlValueArray[0]['uri'] : $drupalUrl;
-
-    $variables['related_dept'] = $relatedDeptVariable;
-    $variables['the_url'] = $theUrl;
-    $variables['has_external_url'] = $hasExternalUrl;
-    $variables['title'] = $node->get('title')->getString();
-    $variables['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
-    
+  if($contentType != 'transaction') {
+    return;
   }
+
+  $relatedDept = null;
+  $externalUrl = null;
+  $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
+
+  // get the related dept
+  // we only want to show one related dept, but it may not always be in the first index
+  // so loop through and break out after we find one
+  $relatedDepts = $node->get('field_departments')->getValue();
+  for($i = 0; $i < count($relatedDepts); $i++) {
+    $relatedDept = $node->get('field_departments')->get($i)->getValue();
+    if(!empty($relatedDept)) {
+      $relatedDeptId = $relatedDept['target_id'];
+      $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
+      $relatedDept = $relatedDeptNode->getTitle();
+      break;
+    }
+  }
+
+  // check external url
+  $externalUrlValueArray = $node->get('field_direct_external_url')->getValue();
+  $hasExternalUrl = (!empty($externalUrlValueArray) && !$userLoggedIn) ? true : false;
+  $options = ['absolute' => TRUE];
+  $drupalUrl = \Drupal\Core\Url::fromRoute('entity.node.canonical', ['node' => $node->id()], $options);
+  $drupalUrl = $drupalUrl->toString();
+  $theUrl = $hasExternalUrl ? $externalUrlValueArray[0]['uri'] : $drupalUrl;
+
+  $variables['related_dept'] = $relatedDept;
+  $variables['the_url'] = $theUrl;
+  $variables['has_external_url'] = $hasExternalUrl;
+  $variables['title'] = $node->get('title')->getString();
+  $variables['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
 }
