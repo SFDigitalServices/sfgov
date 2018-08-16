@@ -1,0 +1,23 @@
+name: sfgov
+recipe: pantheon
+config:
+  framework: drupal8
+  site: sfgov
+  id: 91d50373-c4cf-40e4-a646-cb73e16a140c
+  xdebug: true
+
+services:
+  appserver:
+    overrides:
+      services:
+        environment:
+          BEHAT_PARAMS: >-
+            { "extensions": { "Behat\\MinkExtension": { "base_url": "http://sfgov.lndo.site", "goutte": { "guzzle_parameters": { "verify": false } } }, "Drupal\\DrupalExtension": { "drush": { "root": "/app/web" } } } }
+
+tooling:
+  behat:
+    service: appserver
+    cmd: /app/vendor/bin/behat
+  phpunit:
+    service: appserver
+    cmd: /app/vendor/bin/phpunit
