@@ -42,3 +42,10 @@ TLDR version:
 8. Wait for CircleCI to build and deploy to a multidev.  CircleCI will add comment to the checkin on GitHub with link to the created MultiDev.
 9. Create Pull Request and merge to master
 10. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
+
+## Local Behat Tests
+For additonal context, refer to config in .lando.yml.
+
+```
+$ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
+```
