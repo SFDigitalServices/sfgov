@@ -1,0 +1,39 @@
+Feature: Sfgov Content
+  In order to test some basic Behat functionality
+  As a website user
+  I need to be able to see that the Drupal and Drush drivers are working
+
+@api @sfgov
+Scenario: Create department node
+  Given "department" content:
+  | title           |
+  | Test Department |
+  When I go to "departments/test-department"
+  Then I should see "Test Department"
+
+@api @sfgov
+Scenario: Create topic and transaction related to that topic
+Given I am logged in as a user with the "administrator" role
+When I go to "node/add/topic"
+Then I enter "Test Topic" for "Title"
+And I enter "published" for "moderation_state[0][state]"
+And I press "Save"
+When I go to "topics/test-topic"
+Then I should see "Test Topic"
+When I go to "node/add/transaction"
+Then I enter "Test Transaction" for "Title"
+And I enter "http://test-external-url.link" for "field_direct_external_url[0][uri]"
+And I enter "Test Topic" for "field_topics[0][target_id]"
+And I enter "published" for "moderation_state[0][state]"
+And I press "Save"
+Given I have run the drush command "cr"
+Given I am not logged in
+When I go to "topics/test-topic"
+Then I should see "Test Topic"
+And I should see "Test Transaction"
+And I should see a ".title-url[href='http://test-external-url.link']" element
+Given I am logged in as a user with the "administrator" role
+And I go to "topics/test-topic"
+Then I should see "Test Topic"
+And I should see "Test Transaction"
+And I should not see a ".title-url[target='_blank']" element
