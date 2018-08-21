@@ -57,12 +57,22 @@
   {% if multiple %}
     <div{{ attributes.addClass(classes, 'field__items') }}>
       {% for item in items %}
-        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
+        {% if item.content["#options"]["external"] %}
+          {% set target = { 'target': '_blank' } %}
+        {% endif %}
+        <div{{ item.attributes.addClass('field__item') }}>
+          {{ link(item.content["#title"], item.content["#url"], target) }}
+        </div>
       {% endfor %}
     </div>
   {% else %}
     {% for item in items %}
-      <div{{ attributes.addClass(classes, 'field__item') }}>{{ item.content }}</div>
+      {% if item.content["#options"]["external"] %}
+        {% set target = { 'target': '_blank' } %}
+      {% endif %}
+      <div{{ attributes.addClass(classes, 'field__item') }}>
+        {{ link(item.content["#title"], item.content["#url"], target) }}
+      </div>
     {% endfor %}
   {% endif %}
 {% else %}
@@ -72,7 +82,12 @@
     <div class="field__items">
       {% endif %}
       {% for item in items %}
-        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
+        {% if item.content["#options"]["external"] %}
+          {% set target = { 'target': '_blank' } %}
+        {% endif %}
+        <div{{ item.attributes.addClass('field__item') }}>
+          {{ link(item.content["#title"], item.content["#url"], target) }}
+        </div>
       {% endfor %}
       {% if multiple %}
     </div>
