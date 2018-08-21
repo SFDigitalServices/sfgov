@@ -25,7 +25,7 @@
         {% endif %}
         {% if address_content['#locality'] or address_content['#postal_code'] or address_content['#administrative_area.code'] %}
            {%   set address_text = address_text ~ ' ' ~ address_content['#locality'] ~ ' ' ~ address_content['#administrative_area'].code %}
-            <p>{{ address_content['#locality'] }} {{ address_content['#postal_code'] }}</p>
+            <p>{{ address_content['#locality'] }}, {{ address_content['#administrative_area'].code }} {{ address_content['#postal_code'] }}</p>
         {% endif %}
     </div>
 
