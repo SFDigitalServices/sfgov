@@ -1,5 +1,13 @@
 <?php
 
+use \Drupal\Core\Form\FormStateInterface;
+use Drupal\sfgov_utilities\Utility;
+
+// $module_handler = Drupal::service('module_handler');
+// $devel_path = $module_handler->getModule('devel')->getPath();
+// require_once($devel_path.'/kint/kint/Kint.class.php');
+// Kint::$maxLevels = 4;
+
 /**
  * Implements hook_template_preprocess_default_variables_alter().
  */
@@ -53,4 +61,37 @@ function sfgov_utilities_preprocess_node__transaction__search_index(&$variables)
   $variables['has_external_url'] = $hasExternalUrl;
   $variables['title'] = $node->get('title')->getString();
   $variables['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
+}
+
+// alter the exposed filter form
+function sfgov_utilities_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $viewId = $form['#id'];
+  error_log('sfgov_utilities_form_views_exposed_form_alter: ' . $viewId);
+  if($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display
+    return;
+  }
+
+  $filterProps = array(
+    '#type' => 'select',
+    '#multiple' => FALSE,
+    '#empty_option' => t('- Any -'),
+    '#options' => [],
+  );
+
+  // change related dept filter to dropdown with departments as options
+  // default filter configured through drupal ui is text
+  $relatedDeptOptions = Utility::createSelectOptionsOfContentTypeNodes('department');
+  foreach($filterProps as $filterProp => $filterPropValue) {
+    ($filterProp == '#options') ? $form['field_departments_target_id'][$filterProp] = $relatedDeptOptions
+      : $form['field_departments_target_id'][$filterProp] = $filterPropValue;
+  }
+  unset($form['field_departments_target_id']['#size']);
+
+  // change topic filter to dropdown with departments as options, same deal as above
+  $relatedDeptOptions = Utility::createSelectOptionsOfContentTypeNodes('topic');
+  foreach($filterProps as $filterProp => $filterPropValue) {
+    ($filterProp == '#options') ? $form['field_topics_target_id'][$filterProp] = $relatedDeptOptions
+      : $form['field_topics_target_id'][$filterProp] = $filterPropValue;
+  }
+  unset($form['field_topics_target_id']['#size']);
 }
