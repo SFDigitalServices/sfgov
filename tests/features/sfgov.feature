@@ -39,7 +39,7 @@ And I should see a ".title-url" element
 And the ".title-url" element should have the attribute "target" equal to "_blank"
 
 @api @sfgov
-Scenario: Create and test transaction view
+Scenario: Verify transaction view e
 Given I am logged in as a user with the "administrator" role
 When I go to "node/add/topic"
 Then I enter "Test Topic" for "Title"
@@ -52,7 +52,7 @@ Then I enter "Test Transaction" for "Title"
 And I enter "Test Topic" for "field_topics[0][target_id]"
 And I enter "published" for "moderation_state[0][state]"
 And I press "Save"
-Given I have run the drush command "cr"
+# Given I have run the drush command "cr"
 When I go to "admin/content/transactions"
 Then I should see "Test Transaction"
 And I should see a "select#edit-field-departments-target-id" element
