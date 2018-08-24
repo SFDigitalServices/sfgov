@@ -29,6 +29,7 @@ class UtilityTest extends EntityKernelTestBase {
     $article->save();
     $articleId = $article->id();
 
+    // test the Utility::getNodesOfContentType function
     $nodes = Utility::getNodesOfContentType('article');
     $this->assertNotNull($nodes);
     $this->assertContainsOnlyInstancesOf('Drupal\node\Entity\Node', $nodes);
