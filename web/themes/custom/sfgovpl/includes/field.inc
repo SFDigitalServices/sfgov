@@ -24,7 +24,7 @@ function simple_gmap_preprocess_eck_entity(&$variables)  {
 	->load($entity_type . '.' . $bundle . '.' . $form_mode)
 	->getRenderer($field_name)
 	->getSettings();
-dpm($settings);
+  
   // add field_google_map settings for templating. By default, if the field has no value, the field object in content is null.
   $variables['content']['field_google_map'][0] = array(
 	"#theme" => "simple_gmap_output",
