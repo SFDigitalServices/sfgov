@@ -15,13 +15,4 @@
       ->execute();
       return empty($nids) ? null : $storage->loadMultiple($nids);;
     }
-
-    public static function createSelectOptionsOfContentTypeNodes($contentType) {
-      $options = [];
-      $nodes = Utility::getNodesOfContentType($contentType);
-      foreach($nodes as $node) {
-        $options[$node->id()] = $node->getTitle();
-      }
-      return $options;
-    }
   }
