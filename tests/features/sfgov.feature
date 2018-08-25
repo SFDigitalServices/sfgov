@@ -56,5 +56,5 @@ When I go to "admin/content/transactions"
 Then I should see "Test Transaction"
 Given I have run the drush command "cr"
 When I go to "admin/content/transactions"
-And I should see a "select#edit-field-departments-target-id" element
-And I should see a "select#edit-field-topics-target-id" element
+And I should see a "#edit-field-departments-target-id" element
+And I should see a "#edit-field-topics-target-id" element
