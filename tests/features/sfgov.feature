@@ -52,10 +52,7 @@ Then I enter "Test Transaction" for "Title"
 And I enter "Test Topic" for "field_topics[0][target_id]"
 And I enter "published" for "moderation_state[0][state]"
 And I press "Save"
-When I go to "admin/content"
-Then I should see "Test Transaction"
-When I click "Flush all caches"
-And I reload the page
 When I go to "admin/content/transactions"
-Then I should see a "#edit-field-departments-target-id" element
-# And I should see a "#edit-field-topics-target-id" element
+Then I should see "Test Transaction"
+And I should see a "select#edit-field-departments-target-id" element
+And I should see a "select#edit-field-topics-target-id" element
