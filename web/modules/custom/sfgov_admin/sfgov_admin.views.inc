@@ -8,7 +8,7 @@ function sfgov_admin_views_data_alter(&$data) {
       'help' => t('Specify a list of related departments'),
       'group' => 'Content',
       'field' => 'field_departments_target_id',
-      'id' => 'sfgov_admin_node_titles',
+      'id' => 'sfgov_admin_content_type_filter',
       'argument' => [
         'content_type' => 'department',
       ],
@@ -22,7 +22,7 @@ function sfgov_admin_views_data_alter(&$data) {
       'help' => t('Specify a list of related topics.'),
       'group' => 'Content',
       'field' => 'field_topics_target_id',
-      'id' => 'sfgov_admin_node_titles',
+      'id' => 'sfgov_admin_content_type_filter',
       'argument' => [
         'content_type' => 'topic',
       ],

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sfgov_admin\Plugin\Views\Filter;
+namespace Drupal\sfgov_admin\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\InOperator;
@@ -16,7 +16,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_filter_handlers
  *
- * @ViewsFilter("sfgov_admin_node_titles")
+ * @ViewsFilter("sfgov_admin_content_type_filter")
  */
 class ContentTypeFilter extends InOperator {
   /**
