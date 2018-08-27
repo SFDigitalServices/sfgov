@@ -58,4 +58,4 @@ When I click "Flush all caches"
 And I reload the page
 When I go to "admin/content/transactions"
 Then I should see a "#edit-field-departments-target-id" element
-And I should see a "#edit-field-topics-target-id" element
+# And I should see a "#edit-field-topics-target-id" element
