@@ -17,7 +17,7 @@
 3. `composer install`
 4. `lando start`
 5. Get latest from Pantheon dev environment `lando pull`
-	- most of the time, code will not need to be pulled from pantheon, so run ```lando pull -c none -d dev -f dev``` to skip the prompts
+	- most of the time, code will not need to be pulled from pantheon, so run ```lando pull --code=none --database=dev --files=dev``` to skip the prompts
 6. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
   Note:  Run `lando drush cr` instead of `drush cr` in step 7 of linked article.
 
