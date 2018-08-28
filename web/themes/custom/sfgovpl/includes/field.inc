@@ -3,6 +3,10 @@
 /**
  *  Implements hook_preprocess_field()
  *
+ *	Overrides template settings for the field field_google_map within the eck entity location. The purpose for this override is
+ *  to give the field a default value along with its settings for the map to render properly.
+ *  Default values for the field are NULLs which causes the template engine to exclude field settings in the rendered array.
+ *
  * @param array $variables
  */
 function simple_gmap_preprocess_eck_entity(&$variables)  {
@@ -24,7 +28,7 @@ function simple_gmap_preprocess_eck_entity(&$variables)  {
 	->load($entity_type . '.' . $bundle . '.' . $form_mode)
 	->getRenderer($field_name)
 	->getSettings();
-  
+
   // add field_google_map settings for templating. By default, if the field has no value, the field object in content is null.
   $variables['content']['field_google_map'][0] = array(
 	"#theme" => "simple_gmap_output",
