@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.person_section_display
+    - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
     - field.field.node.person.field_photo
     - field.field.node.person.field_sub_title
@@ -17,8 +18,16 @@ targetEntityType: node
 bundle: person
 mode: person_section_display
 content:
-  field_last_name:
+  field_first_name:
+    type: string
     weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_last_name:
+    weight: 1
     label: hidden
     settings:
       link_to_entity: false
@@ -26,16 +35,15 @@ content:
     type: string
     region: content
   field_photo:
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       image_style: ''
-      image_link: ''
     third_party_settings: {  }
-    type: image
+    type: image_url
     region: content
   field_sub_title:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       link_to_entity: false
@@ -43,7 +51,7 @@ content:
     type: string
     region: content
   field_title:
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       link_to_entity: false
