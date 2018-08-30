@@ -44,7 +44,8 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-    'sfgov-paragraph-people'
+    'sfgov-paragraph-people',
+    content.field_person['#items']|length == 1 ? 'sfgov-paragraph-people-single' : 'sfgov-paragraph-people-multiple'
   ]
 %}
 {% block paragraph %}

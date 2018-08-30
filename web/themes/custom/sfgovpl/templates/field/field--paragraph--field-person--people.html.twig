@@ -36,12 +36,14 @@
  * @see template_preprocess_field()
  */
 #}
+
 {%
   set classes = [
     'field',
     'field--type-' ~ field_type|clean_class,
     label_display == 'inline' ? 'field--inline',
     bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+    items|length == 1 ? 'person-item-single' : 'person-item-multiple'
   ]
 %}
 {%
@@ -59,7 +61,7 @@
     </div>
   {% else %}
     {% for item in items %}
-      <div{{ attributes.addClass(classes, 'field__item person-item') }}>{{ item.content }}</div>
+      <div{{ attributes.addClass(classes, 'field__item person-item single') }}>{{ item.content }}</div>
     {% endfor %}
   {% endif %}
 {% else %}
