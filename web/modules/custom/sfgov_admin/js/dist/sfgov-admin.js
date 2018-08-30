@@ -74,5 +74,17 @@
       });
     }
   };
+
+  Drupal.behaviors.sfgovPersonContentTypeName = {
+    attach: function (context) {
+      $('.node-person-form #edit-submit, .node-person-edit-form').click(function () {
+        $('#edit-title-0-value').val($('#edit-field-first-name-0-value').val() + ' ' + $('#edit-field-last-name-0-value').val());
+        $('form.node-person-form, form.node-person-edit-form').submit(function () {
+          $('#edit-title-0-value').val($('#edit-field-first-name-0-value').val() + ' ' + $('#edit-field-last-name-0-value').val());
+          return true;
+        });
+      });
+    }
+  };
 })(jQuery, Drupal, document, window);
 //# sourceMappingURL=sfgov-admin.js.map
