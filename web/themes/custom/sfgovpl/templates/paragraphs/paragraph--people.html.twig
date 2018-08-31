@@ -51,10 +51,10 @@
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      <div class="sfgov-people-header">
-        <h3>{{ content.field_people_title }}</h3>
-        {{ content.field_description }}
-      </div>
+      {% include "@organisms/05-sections/02-subsection-header.twig" with {
+        "subsection_title_text": content.field_people_title,
+        "subsection_subtitle_text": content.field_description
+      } %}
       {{ content.field_person }}
     {% endblock %}
   </div>
