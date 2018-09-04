@@ -38,7 +38,7 @@ Scenario: Create department node
   And I should see a ".title-url" element
   And the ".title-url" element should have the attribute "target" equal to "_blank"
 
-@api @sfgov @anttest
+@api @sfgov
   Scenario: Verify transaction view and related dept, topic, and has start page filters exist
   Given I am logged in as a user with the "administrator" role
   Given "department" content:
