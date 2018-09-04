@@ -157,3 +157,18 @@ function sfgov_admin_theme_suggestions_field_multiple_value_form_alter(array &$s
     }
   }
 }
+
+function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $viewId = $form['#id'];	
+  if($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display	
+    return;	
+  }
+
+  $form['field_direct_external_url_uri_op']['#options'] = array(
+    'All' => '- Any - ',
+    'empty' => 'Yes',
+    'not empty' => 'No',
+  );
+  $form['field_direct_external_url_uri_op']['#default_value'] = 'All';
+  $form['field_direct_external_url_uri_op']['#title'] = 'Has Start Page';
+}

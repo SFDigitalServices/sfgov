@@ -12,7 +12,7 @@ use Drupal\views\Views;
 
 
 /**
- * Filters by given list of node title options.
+ * Filters by given list of content type title options.
  *
  * @ingroup views_filter_handlers
  *
@@ -24,7 +24,7 @@ class ContentTypeFilter extends InOperator {
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
-    $this->valueTitle = t('Allowed departments');
+    $this->valueTitle = $this->definition['title'];
     $this->definition['options callback'] = array($this, 'generateOptions');
   }
   
