@@ -22,7 +22,7 @@ Scenario: Create department node
   Then I should see "Test Topic"
   When I go to "node/add/transaction"
   Then I enter "Test Transaction" for "Title"
-  And I enter "http://external-url.org" for "field_direct_external_url[0][uri]"
+  And I enter "http://sfgov.org" for "field_direct_external_url[0][uri]"
   And I enter "Test Topic" for "field_topics[0][target_id]"
   And I enter "published" for "moderation_state[0][state]"
   And I press "Save"
@@ -37,6 +37,8 @@ Scenario: Create department node
   And I should see "Test Transaction"
   And I should see a ".title-url" element
   And the ".title-url" element should have the attribute "target" equal to "_blank"
+  When I go to "test-transaction"
+  Then I should be on "http://sfgov.org"
 
 @api @sfgov
   Scenario: Verify transaction view and related dept, topic, and has start page filters exist
