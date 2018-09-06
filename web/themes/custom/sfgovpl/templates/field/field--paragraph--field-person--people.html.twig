@@ -59,7 +59,7 @@
   {% if multiple %}
     <div{{ attributes.addClass(classes, 'field__items') }}>
       {% for item in items %}
-
+        {% set nodeUrl = path('entity.node.canonical', {'node': item.content['#node'].id()}) %} 
         {% set firstName = item.content['#node'].get('field_first_name').getValue()[0]['value'] %}
         {% set lastName = item.content['#node'].get('field_last_name').getValue()[0]['value'] %}
         {% set personTitle = item.content['#node'].get('field_title').getValue()[0]['value'] %}
@@ -68,7 +68,7 @@
         {% set patternTemplateFile = isSingleItem ? "@molecules/10-person/10-person-section-display-hero.twig" : "@molecules/10-person/10-person-section-display.twig" %}
 
         {% include patternTemplateFile with {
-        "url": url,
+        "url": nodeUrl,
         "first_name": firstName,
         "last_name": lastName,
         "position_title": personTitle,
