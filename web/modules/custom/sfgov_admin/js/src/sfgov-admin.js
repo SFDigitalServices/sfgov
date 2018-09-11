@@ -91,4 +91,20 @@
     }
   }
 
+  // Enforce telephone numbers have format XXX-XXX-XXXX
+  Drupal.behaviors.sfgovFormatTelephone = {
+    attach: function(context, settings) {
+      $('#edit-submit').once().on('click', function(e) {
+        var phoneField = $('.form-tel');
+        if (phoneField.length > 0) {
+          var regex = new RegExp("\\d+", "g");
+          var number = phoneField.val().match(regex).join("");
+          if (number.length == 10) {
+            phoneField.val(number.slice(0,3) + "-" + number.slice(3,6) + "-" + number.slice(6));
+          }
+        }
+      })
+    }
+  }
+
 }(jQuery, Drupal, document, window));
