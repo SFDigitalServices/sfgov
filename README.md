@@ -50,5 +50,3 @@ For additonal context, refer to config in .lando.yml.
 ```
 $ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
 ```
-
-`slack notify test`
