@@ -53,7 +53,7 @@ $fields = array(
 );
 
 // Set a Slack Attachments title
-$title = 'Post-Deploy Site Audit :helmet_with_white_cross:';
+$title = 'Post-Deploy Site Audit :drupalparty:';
 
 // Prepare the slack payload as per:
 // https://api.slack.com/incoming-webhooks
@@ -108,7 +108,7 @@ function _slack_notification($slack_url, $channel, $username, $text, $attachment
   $post = array(
     'username' => $username,
     'channel' => $channel,
-    'icon_emoji' => ':lightning_cloud:',
+    'icon_emoji' => ':pantheon:',
     'attachments' => array($attachment)
   );
   if ($alwaysShowText) {
