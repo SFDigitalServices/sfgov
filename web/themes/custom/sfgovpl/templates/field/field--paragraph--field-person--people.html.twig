@@ -65,17 +65,17 @@
         {% set personTitle = item.content['#node'].get('field_title').getValue()[0]['value'] %}
         {% set personSubTitle = item.content['#node'].get('field_sub_title').getValue()[0]['value'] %}
         {% set photoUri = file_url(item.content['#node'].get('field_photo').getEntity().get('field_photo').entity.fileuri) %}
+        {% set personUrl = item.content['#node'].get('field_person_url').getValue()[0]['uri'] %}
         {% set patternTemplateFile = isSingleItem ? "@molecules/10-person/10-person-section-display-hero.twig" : "@molecules/10-person/10-person-section-display.twig" %}
 
         {% include patternTemplateFile with {
-        "url": nodeUrl,
+        "url": personUrl,
         "first_name": firstName,
         "last_name": lastName,
         "position_title": personTitle,
         "position_subtitle": personSubTitle,
         "photo": photoUri
         } %}
-
       {% endfor %}
     </div>
   {% else %}
