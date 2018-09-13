@@ -6,12 +6,14 @@ dependencies:
     - core.entity_view_mode.node.person_section_display
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
+    - field.field.node.person.field_person_url
     - field.field.node.person.field_photo
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
     - node.type.person
   module:
     - image
+    - link
     - user
 id: node.person.person_section_display
 targetEntityType: node
@@ -34,6 +36,18 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_person_url:
+    type: link
+    weight: 5
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
   field_photo:
     weight: 4
     label: hidden
