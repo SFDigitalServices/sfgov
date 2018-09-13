@@ -80,17 +80,13 @@
   bundle ~ '__title--' ~ view_mode|clean_class,
 ] %}
 
-{% set todayDate = "now"|date('F j, Y') %}
-
-
 <article{{ attributes.addClass(classes) }}>
   {% block header %}
     {{ title_prefix }}
     {% include '@molecules/03-heros/01-hero-banner.twig' with {
       'banner': {
         'title': node.label,
-        'text': content.field_description|render,
-        'date': is_front ? todayDate : false
+        'text': content.field_description|render
       }
     } %}
     {{ title_suffix }}
