@@ -11,7 +11,7 @@ Scenario: Create department node
   When I go to "departments/test-department"
   Then I should see "Test Department"
 
-@api @sfgov
+@api @sfgov @anttest
   Scenario: Create topic and transaction related to that topic
   Given I am logged in as a user with the "administrator" role
   When I go to "node/add/topic"
@@ -36,7 +36,7 @@ Scenario: Create department node
   Then I should see "Test Topic"
   And I should see "Test Transaction"
   And I should see a ".title-url" element
-  And the ".title-url" element should have the attribute "target" equal to "_blank"
+  And the "target" attribute of the ".title-url" element should contain "_blank"
   When I go to "test-transaction"
   Then I should be on "http://sfgov.org"
 
@@ -86,6 +86,7 @@ Scenario: Create department node
   And I attach the file "london-breed.jpg" to "files[field_photo_0]"
   And I press "Save"
   Then I should be on "person/testfirst-testlast"
+  And the "style" attribute of the ".person-photo" element should contain "london-breed.jpg"
   And I should see "Success"
   Given I am not logged in
   When I go to "person/testfirst-testlast"
