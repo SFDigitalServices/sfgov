@@ -3,9 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
-    - field.field.node.person.field_person_url
     - field.field.node.person.field_photo
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
@@ -19,6 +19,18 @@ targetEntityType: node
 bundle: person
 mode: default
 content:
+  field_direct_external_url:
+    weight: 5
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
   field_first_name:
     weight: 0
     label: hidden
@@ -34,18 +46,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
-    region: content
-  field_person_url:
-    weight: 5
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
     region: content
   field_photo:
     weight: 4
