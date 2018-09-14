@@ -59,7 +59,7 @@ function sfgov_utilities_preprocess_node__transaction__search_index(&$variables)
 }
 
 // paragraph people section 
-// override field_person_url
+// override field_direct_external_url
 function sfgov_utilities_preprocess_paragraph__people(&$variables) {
 
   $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
@@ -69,7 +69,7 @@ function sfgov_utilities_preprocess_paragraph__people(&$variables) {
 
   foreach($persons as $item) {
     $entityUrl = $item->entity->url();
-    $personUrl = $item->entity->get('field_person_url')->getValue() ? $item->entity->get('field_person_url')->getValue()[0]['uri'] : null;
+    $personUrl = $item->entity->get('field_direct_external_url')->getValue() ? $item->entity->get('field_direct_external_url')->getValue()[0]['uri'] : null;
     $theUrl = '';
     if($userLoggedIn) { // user logged in, just use the entity url
       $theUrl = $entityUrl;
@@ -77,6 +77,6 @@ function sfgov_utilities_preprocess_paragraph__people(&$variables) {
       // use the person url if it exists, else use entity url
       $theUrl = $personUrl ? $personUrl : $entityUrl;
     }
-    $item->entity->set('field_person_url', array('uri' => $theUrl));
+    $item->entity->set('field_direct_external_url', array('uri' => $theUrl));
   }
 }
