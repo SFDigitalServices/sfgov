@@ -68,3 +68,14 @@ Scenario: Create department node
   And I should see a "select#edit-field-direct-external-url-uri-op" element
   When I select "Test Topic" from "field_topics_target_id"
   Then I should see "Test Transaction"
+
+@api @sfgov
+  Scenario: Create Person
+  Given I am logged in as a user with the "administrator" role
+  Given "person" content:
+  | title              | first_name | last_name | person_url       | status |
+  | Testfirst Testlast | Testfirst  | Testlast  | http://sfgov.org | 1      |
+  When I go to "admin/content"
+  Then I should see "Testfirst Testlast"
+  When I click "Testfirst Testlast"
+  Then I should see "Testfirst Testlast"
