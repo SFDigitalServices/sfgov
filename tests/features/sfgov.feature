@@ -11,7 +11,7 @@ Scenario: Create department node
   When I go to "departments/test-department"
   Then I should see "Test Department"
 
-@api @sfgov @anttest
+@api @sfgov
   Scenario: Create topic and transaction related to that topic
   Given I am logged in as a user with the "administrator" role
   When I go to "node/add/topic"
@@ -69,7 +69,7 @@ Scenario: Create department node
   When I select "Test Topic" from "field_topics_target_id"
   Then I should see "Test Transaction"
 
-@api @sfgov @anttest
+@api @sfgov
   Scenario: Create Person and Test URL
   Given I am logged in as a user with the "administrator" role
   Given "person" content:
