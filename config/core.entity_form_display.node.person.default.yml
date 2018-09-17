@@ -3,9 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
-    - field.field.node.person.field_person_url
     - field.field.node.person.field_photo
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
@@ -27,6 +27,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_direct_external_url:
+    weight: 5
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
   field_first_name:
     weight: 0
     settings:
@@ -42,14 +50,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_person_url:
-    weight: 5
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
     region: content
   field_photo:
     weight: 4

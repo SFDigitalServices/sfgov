@@ -93,8 +93,9 @@
 
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content sfgov-container--full') }}>
+
       {% include '@molecules/10-person/10-person-section-display-hero.twig' with {
-        "url": '#',
+        "url": content.field_direct_external_url[0]['#url'].getUri(),
         "first_name": content.field_first_name['#items'].getValue()[0]['value'],
         "last_name": content.field_last_name['#items'].getValue()[0]['value'],
         "position_title": content.field_title,

@@ -36,7 +36,7 @@ Scenario: Create department node
   Then I should see "Test Topic"
   And I should see "Test Transaction"
   And I should see a ".title-url" element
-  And the ".title-url" element should have the attribute "target" equal to "_blank"
+  And the "target" attribute of the ".title-url" element should contain "_blank"
   When I go to "test-transaction"
   Then I should be on "http://sfgov.org"
 
@@ -70,12 +70,24 @@ Scenario: Create department node
   Then I should see "Test Transaction"
 
 @api @sfgov
-  Scenario: Create Person
+  Scenario: Create Person and Test URL
   Given I am logged in as a user with the "administrator" role
   Given "person" content:
-  | title              | first_name | last_name | person_url       | status |
-  | Testfirst Testlast | Testfirst  | Testlast  | http://sfgov.org | 1      |
+  | title              | status |
+  | Testfirst Testlast | 1      |
   When I go to "admin/content"
   Then I should see "Testfirst Testlast"
-  When I click "Testfirst Testlast"
+  When I go to "person/testfirst-testlast"
   Then I should see "Testfirst Testlast"
+  When I click the ".sfgov-tabbed-navigation>ul>li>a[href*='edit']" element
+  And I enter "http://sfgov.org" for "field_direct_external_url[0][uri]"
+  And I enter "Testfirst" for "field_first_name[0][value]"
+  And I enter "Testlast" for "field_last_name[0][value]"
+  And I attach the file "london-breed.jpg" to "files[field_photo_0]"
+  And I press "Save"
+  Then I should be on "person/testfirst-testlast"
+  And the "style" attribute of the ".person-photo" element should contain "london-breed.jpg"
+  And I should see "Success"
+  Given I am not logged in
+  When I go to "person/testfirst-testlast"
+  Then I should be on "http://sfgov.org"

@@ -9,6 +9,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 
 use Drupal\DrupalExtension\Context\RawDrupalContext;
+use Drupal\DrupalExtension\Hook\Scope\EntityScope;
 
 /**
  * Define application features from the specific context.
@@ -47,19 +48,19 @@ class SfGovContext extends RawDrupalContext implements Context, SnippetAccepting
 
   /**
    * Checks that the element with specified css selector has the specified attribute equal to the specified attribute_value
-   * Example: Then the ".title-url" element should have the attribute "target" equal to "_blank"
+   * Example: Then the "target" attribute of the ".title-url" element should contain "_blank"
    * 
-   * @Then /^the "(?P<element>[^"]*)" element should have the attribute "(?P<attribute>(?:[^"]|\\")*)" equal to "(?P<attribute_value>(?:[^"]|\\")*)"$/
+   * @Then /^the "(?P<attribute>(?:[^"]|\\")*)" attribute of the "(?P<element>[^"]*)" element should contain "(?P<attribute_value>(?:[^"]|\\")*)"$/
    */
-  public function theElementShouldHaveTheAttribute($element, $attribute, $attribute_value) {
+  public function theAttributeOfTheElementShouldContain($attribute, $element, $attribute_value) {
     $page = $this->getSession()->getPage();
     $el = $page->find('css', $element);
     if(!$el) {
       throw new Exception('The element with selector "' . $element . '" was not found');
     }
     if($el->hasAttribute($attribute)) {
-      if($el->getAttribute($attribute) != $attribute_value) {
-        $exceptionMsg = 'The element with selector "' . $element . '" does not have the attribute "' . $attribute . '" equal to "' . $attribute_value . '"' . "\n";
+      if(strpos($el->getAttribute($attribute), $attribute_value) < 0) {
+        $exceptionMsg = 'The "' . $attribute . '" attribute of the "' . $element . '" element does not contain "' . $attribute_value . '"' . "\n";
         $exceptionMsg .= 'It has the attribute "' . $attribute . '" equal to "' . $el->getAttribute($attribute) . '"';
         throw new Exception($exceptionMsg);
       }
@@ -68,4 +69,15 @@ class SfGovContext extends RawDrupalContext implements Context, SnippetAccepting
     }
   }
 
+  /**
+   * @When I click the :element element
+   */
+  public function iClickTheElement($element) {
+    $page = $this->getSession()->getPage();
+    $el = $page->find('css', $element);
+    if(!$el) {
+      throw new Exception('The element with selector "' . $element . '" was not found');
+    }
+    $el->click();
+  }
 }
