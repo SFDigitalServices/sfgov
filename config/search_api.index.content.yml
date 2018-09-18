@@ -13,6 +13,13 @@ name: Content
 description: 'Content (node) index for Pantheon Solr'
 read_only: false
 field_settings:
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
   rendered_item:
     label: 'Rendered HTML output'
     property_path: rendered_item
@@ -25,19 +32,6 @@ field_settings:
           department: default
           topic: default
           transaction: default
-  node_grants:
-    label: 'Node access information'
-    property_path: search_api_node_grants
-    type: string
-    indexed_locked: true
-    type_locked: true
-    hidden: true
-  title:
-    label: Title
-    datasource_id: 'entity:node'
-    property_path: title
-    type: solr_text_wstoken
-    boost: !!float 21
   status:
     label: Published
     datasource_id: 'entity:node'
@@ -45,6 +39,12 @@ field_settings:
     type: boolean
     indexed_locked: true
     type_locked: true
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: solr_text_wstoken
+    boost: !!float 21
   uid:
     label: uid
     datasource_id: 'entity:node'
@@ -64,34 +64,25 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
-  rendered_item: {  }
   add_url: {  }
   aggregated_field: {  }
+  content_access:
+    weights:
+      preprocess_query: -30
+  entity_status: {  }
   highlight:
     highlight: always
     highlight_partial: false
     excerpt: true
     excerpt_length: 160
     exclude_fields:
-      - title
       - location_title
       - name
+      - title
     prefix: '<strong>'
     suffix: '</strong>'
     weights:
       postprocess_query: 0
-  entity_status: {  }
-  ignorecase:
-    all_fields: true
-    fields:
-      - rendered_item
-      - title
-    weights:
-      preprocess_index: -20
-      preprocess_query: -20
-  content_access:
-    weights:
-      preprocess_query: -30
   html_filter:
     all_fields: true
     fields:
@@ -100,14 +91,23 @@ processor_settings:
     title: true
     alt: true
     tags:
+      b: 2
       h1: 5
       h2: 3
       h3: 2
       strong: 2
-      b: 2
     weights:
       preprocess_index: -15
       preprocess_query: -15
+  ignorecase:
+    all_fields: true
+    fields:
+      - rendered_item
+      - title
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
+  rendered_item: {  }
 tracker_settings:
   default:
     indexing_order: fifo
