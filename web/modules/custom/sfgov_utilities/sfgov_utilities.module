@@ -17,7 +17,8 @@ function sfgov_utilities_template_preprocess_default_variables_alter(&$variables
   }
 }
 
-function sfgov_utilities_preprocess_node__transaction__search_index(&$variables) {
+function sfgovGetTransactionSearchVariables($variables) {
+  $templateVars = array();
   $node = $variables['node'];
   $contentType = $node->getType();
 
@@ -51,11 +52,24 @@ function sfgov_utilities_preprocess_node__transaction__search_index(&$variables)
   $drupalUrl = $drupalUrl->toString();
   $theUrl = $hasExternalUrl ? $externalUrlValueArray[0]['uri'] : $drupalUrl;
 
-  $variables['related_dept'] = $relatedDept;
-  $variables['the_url'] = $theUrl;
-  $variables['has_external_url'] = $hasExternalUrl;
-  $variables['title'] = $node->get('title')->getString();
-  $variables['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
+  $templateVars['related_dept'] = $relatedDept;
+  $templateVars['the_url'] = $theUrl;
+  $templateVars['has_external_url'] = $hasExternalUrl;
+  $templateVars['title'] = $node->get('title')->getString();
+  $templateVars['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
+  return $templateVars;
+}
+
+function sfgov_utilities_preprocess_node__transaction__search_index(&$variables) {
+  $templateVars = sfgovGetTransactionSearchVariables($variables);
+  $variables['the_url'] = $templateVars['the_url'];
+  $variables['has_external_url'] = $templateVars['has_external_url'];
+  $variables['title'] = $templateVars['title'];
+  $variables['description'] = $templateVars['description'];
+}
+
+function sfgov_utilities_preprocess_node__transaction__transaction_search_result_related_dept(&$variables) {
+  $templateVars = sfgovGetTransactionSearchVariables($variables);
 }
 
 // paragraph people section 
