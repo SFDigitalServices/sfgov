@@ -75,7 +75,7 @@ display:
             'entity:node':
               department: search_index
               topic: search_index
-              transaction: search_index
+              transaction: transaction_search_result_related_dept
       fields:
         search_api_excerpt:
           id: search_api_excerpt
@@ -177,10 +177,10 @@ display:
           parse_mode: terms
           min_length: null
           fields:
-            rendered_item: rendered_item
-            title: title
-            location_title: location_title
-            name: name
+            - location_title
+            - name
+            - rendered_item
+            - title
           plugin_id: search_api_fulltext
       sorts:
         search_api_relevance:
