@@ -69,13 +69,18 @@
   <div{{ attributes.addClass(classes) }}>
     <h4{{ title_attributes.addClass(title_classes) }}>{{ label }}</h4>
     {% if multiple %}
-    <div class="field__items">
-      {% endif %}
-      {% for item in items %}
-        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
-      {% endfor %}
-      {% if multiple %}
-    </div>
+      <div class="field__items">
+    {% endif %}
+
+    {% for item in items %}
+      {% set url = item.content["#url_title"] %}
+      <div{{ item.attributes.addClass('field__item') }}>
+        <a href="{{ url }}">{{ url | replace({'https://':'', 'http://':''}) }}</a>
+      </div>
+    {% endfor %}
+
+    {% if multiple %}
+      </div>
     {% endif %}
   </div>
 {% endif %}
