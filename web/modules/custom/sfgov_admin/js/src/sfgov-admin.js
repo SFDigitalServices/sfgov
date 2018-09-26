@@ -128,7 +128,6 @@
       if(isTransactionEdit) {
         $('#edit-submit').on('click', function() {
           var sortTitle = stripStopWords($('#edit-title-0-value').val());
-          console.log(sortTitle);
           $('#edit-field-sort-title-0-value').val(sortTitle);
         });
       }
