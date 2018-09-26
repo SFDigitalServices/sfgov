@@ -22,7 +22,7 @@ Scenario: Create department node
   Then I should see "Test Topic"
   When I go to "node/add/transaction"
   Then I enter "Test Transaction" for "Title"
-  And I enter "http://sfgov.org" for "field_direct_external_url[0][uri]"
+  And I enter "http://google.com" for "field_direct_external_url[0][uri]"
   And I enter "Test Topic" for "field_topics[0][target_id]"
   And I enter "published" for "moderation_state[0][state]"
   And I press "Save"
@@ -38,7 +38,7 @@ Scenario: Create department node
   And I should see a ".title-url" element
   And the "target" attribute of the ".title-url" element should contain "_blank"
   When I go to "test-transaction"
-  Then I should be on "http://sfgov.org"
+  Then I should be on "http://google.com"
 
 @api @sfgov
   Scenario: Verify transaction view and related dept, topic, and has start page filters exist
@@ -80,7 +80,7 @@ Scenario: Create department node
   When I go to "person/testfirst-testlast"
   Then I should see "Testfirst Testlast"
   When I click the ".sfgov-tabbed-navigation>ul>li>a[href*='edit']" element
-  And I enter "http://sfgov.org" for "field_direct_external_url[0][uri]"
+  And I enter "http://google.com" for "field_direct_external_url[0][uri]"
   And I enter "Testfirst" for "field_first_name[0][value]"
   And I enter "Testlast" for "field_last_name[0][value]"
   And I attach the file "london-breed.jpg" to "files[field_photo_0]"
@@ -90,7 +90,7 @@ Scenario: Create department node
   And I should see "Success"
   Given I am not logged in
   When I go to "person/testfirst-testlast"
-  Then I should be on "http://sfgov.org"
+  Then I should be on "http://google.com"
 
 @api @sfgov
   Scenario: Create transaction with sort title and verify sort title exists as an attribute
