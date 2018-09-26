@@ -101,5 +101,27 @@
       });
     }
   };
+
+  Drupal.behaviors.sfgovTransactionSortTitle = {
+    attach: function (context, settings) {
+      var stripStopWords = function (str) {
+        var strArray = str.split(' ');
+        var stopWords = ["a", "an", "apply", "as", "be", "find", "for", "get", "have", "register", "the", "to", "your"];
+        while ($.inArray(strArray[0].toLowerCase(), stopWords) >= 0) {
+          strArray.splice(0, 1);
+        }
+        strArray[0] = strArray[0].charAt(0).toUpperCase() + strArray[0].slice(1);
+        return strArray.join(' ');
+      };
+      var isTransactionEdit = $('form.node-transaction-edit-form').length > 0 || $('form.node-transaction-form').length > 0 ? true : false;
+      if (isTransactionEdit) {
+        $('#edit-submit').on('click', function () {
+          var sortTitle = stripStopWords($('#edit-title-0-value').val());
+          console.log(sortTitle);
+          $('#edit-field-sort-title-0-value').val(sortTitle);
+        });
+      }
+    }
+  };
 })(jQuery, Drupal, document, window);
 //# sourceMappingURL=sfgov-admin.js.map
