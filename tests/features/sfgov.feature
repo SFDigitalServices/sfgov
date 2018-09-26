@@ -91,3 +91,19 @@ Scenario: Create department node
   Given I am not logged in
   When I go to "person/testfirst-testlast"
   Then I should be on "http://sfgov.org"
+
+@api @sfgov
+  Scenario: Create transaction with sort title and verify sort title exists as an attribute
+  Given I am logged in as a user with the "administrator" role
+  Given "transaction" content:
+  | title                                                  | sort_title                                | status |
+  | Apply for an awesome thing for your city related thing | Awesome thing for your city related thing | 1      |
+  When I go to "admin/content"
+  Then I should see "Apply for an awesome thing for your city related thing"
+  When I go to "apply-awesome-thing-your-city-related-thing"
+  And I click the ".sfgov-tabbed-navigation>ul>li>a[href*='edit']" element
+  And I enter "published" for "moderation_state[0][state]"
+  And I press "Save"
+  When I go to "services/all"
+  Then I should see "Apply for an awesome thing for your city related thing"
+  And I should see an "a[data-sort-title='Affordable housing mortgage lender']" element
