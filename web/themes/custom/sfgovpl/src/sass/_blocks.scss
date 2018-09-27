@@ -247,3 +247,35 @@
   }
   @include sfgov-container-full;
 }
+
+// Upper and lower menu items in the footer
+// Toggle the display of the last two items in each menu so that
+// "Privacy policy" and "Contact us" items can collapse into the
+// menu for mobile screens
+  .sfgov-footer-navigation-bottom {
+    ul {
+      li {
+        @include media-max($medium-screen - 1) {
+          &:last-child, &:nth-last-child(2) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  .sfgov-footer-navigation {
+    ul {
+      li {
+        @include media-max($medium-screen - 1) {
+          &:last-child, &:nth-last-child(2) {
+            display: visible;
+          }
+        }
+        @include media($medium-screen) {
+          &:last-child, &:nth-last-child(2) {
+            display: none;
+          }
+        }
+      }
+    }
+  }

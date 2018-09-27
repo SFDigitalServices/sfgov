@@ -1,9 +1,9 @@
-uuid: 4efbd0dc-25bf-41e8-bb53-a447bab56132
+uuid: 94abc576-7bfe-461a-b22c-35d6fecf6a5b
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.search_index
+    - core.entity_view_mode.node.transaction_search_result_related_dept
     - field.field.node.transaction.field_cost
     - field.field.node.transaction.field_custom_section
     - field.field.node.transaction.field_departments
@@ -26,23 +26,31 @@ dependencies:
   module:
     - text
     - user
-id: node.transaction.search_index
+id: node.transaction.transaction_search_result_related_dept
 targetEntityType: node
 bundle: transaction
-mode: search_index
+mode: transaction_search_result_related_dept
 content:
+  field_departments:
+    type: entity_reference_entity_view
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link: true
+      view_mode: default
+    third_party_settings: {  }
   field_description:
+    type: text_default
     weight: 0
+    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
-    region: content
 hidden:
   content_moderation_control: true
   field_cost: true
   field_custom_section: true
-  field_departments: true
   field_direct_external_url: true
   field_help: true
   field_related_departments: true
