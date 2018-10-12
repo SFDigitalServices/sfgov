@@ -3,13 +3,14 @@ Feature: Sfgov Content
   As a website user
   I need to be able to see that the Drupal and Drush drivers are working
 
-@api @sfgov
+@api @sfgov @anttest
 Scenario: Create department node
   Given "department" content:
   | title           |
   | Test Department |
   When I go to "departments/test-department"
   Then I should see "Test Department"
+  And I should see a "meta[name='department']" element
 
 @api @sfgov
   Scenario: Create topic and transaction related to that topic
