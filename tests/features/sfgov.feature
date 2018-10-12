@@ -3,7 +3,7 @@ Feature: Sfgov Content
   As a website user
   I need to be able to see that the Drupal and Drush drivers are working
 
-@api @sfgov @anttest
+@api @sfgov
 Scenario: Create department node
   Given "department" content:
   | title           |
@@ -12,7 +12,7 @@ Scenario: Create department node
   Then I should see "Test Department"
   And I should see a "meta[name='department']" element
 
-@api @sfgov
+@api @sfgov @anttest
   Scenario: Create topic and transaction related to that topic
   Given I am logged in as a user with the "administrator" role
   When I go to "node/add/topic"
@@ -32,6 +32,7 @@ Scenario: Create department node
   And I should see "Test Transaction"
   When I click "Test Transaction"
   Then I should see "Test Transaction"
+  And I should see a "meta[name='transaction']" element
   Given I am not logged in
   When I go to "topics/test-topic"
   Then I should see "Test Topic"
