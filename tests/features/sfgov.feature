@@ -12,7 +12,7 @@ Scenario: Create department node
   Then I should see "Test Department"
   And I should see a "meta[name='department']" element
 
-@api @sfgov @anttest
+@api @sfgov
   Scenario: Create topic and transaction related to that topic
   Given I am logged in as a user with the "administrator" role
   When I go to "node/add/topic"
