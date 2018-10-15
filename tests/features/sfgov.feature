@@ -10,6 +10,7 @@ Scenario: Create department node
   | Test Department |
   When I go to "departments/test-department"
   Then I should see "Test Department"
+  And I should see a "meta[name='department']" element
 
 @api @sfgov
   Scenario: Create topic and transaction related to that topic
@@ -31,6 +32,7 @@ Scenario: Create department node
   And I should see "Test Transaction"
   When I click "Test Transaction"
   Then I should see "Test Transaction"
+  And I should see a "meta[name='transaction']" element
   Given I am not logged in
   When I go to "topics/test-topic"
   Then I should see "Test Topic"

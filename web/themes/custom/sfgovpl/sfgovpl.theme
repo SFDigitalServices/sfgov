@@ -42,7 +42,7 @@ function sfgovpl_preprocess_html(&$variables) {
         '#tag' => 'meta',
         '#attributes' => [
           'name' => 'department',
-          'content' => json_encode($dept),
+          'content' => json_encode($dept, JSON_HEX_QUOT),
         ],
       ];
       $variables['page']['#attached']['html_head'][] = [$metaDept, 'department'];
@@ -63,14 +63,14 @@ function sfgovpl_preprocess_html(&$variables) {
         ];
         $transaction['related_depts'][] = $relatedDeptInfo;
       }
-      $metaDept = [
+      $metaTx = [
         '#tag' => 'meta',
         '#attributes' => [
           'name' => 'transaction',
-          'content' => json_encode($transaction),
+          'content' => json_encode($transaction, JSON_HEX_QUOT),
         ],
       ];
-      $variables['page']['#attached']['html_head'][] = [$metaDept, 'transaction'];
+      $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
     }
   }
 }
