@@ -45,7 +45,23 @@ function sfgovpl_preprocess_html(&$variables) {
           'content' => json_encode($dept, JSON_HEX_QUOT),
         ],
       ];
+      $metaDeptPhone = [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'department-phone',
+          'content' => $phone->field_tel->value,
+        ]
+      ];
+      $metaDeptAddress = [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'department-address',
+          'content' => $address->field_address->address_line1,
+        ]
+      ];
       $variables['page']['#attached']['html_head'][] = [$metaDept, 'department'];
+      $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'department-phone'];
+      $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'department-address'];
     }
 
     if($nodeType == 'transaction') {
@@ -70,7 +86,16 @@ function sfgovpl_preprocess_html(&$variables) {
           'content' => json_encode($transaction, JSON_HEX_QUOT),
         ],
       ];
+      $oneRelatedDept = \Drupal\Node\Entity\Node::load($relatedDepts[0]['target_id']);
+      $metaTxRelatedDept = [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'transaction-related-dept',
+          'content' => $oneRelatedDept->getTitle(),
+        ]
+        ];
       $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
+      $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transaction-related-dept'];
     }
   }
 }
