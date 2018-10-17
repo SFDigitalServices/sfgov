@@ -2,8 +2,8 @@
 <div>
     {% for item in items %}
         <p>
-            <span>{{ item.label }}</span>
-            <span>{{ item.slots }}</span>
+            <span>{{ item.label | replace({':':',', '-':'to'}) }}</span>
+            <span>{{ item.slots["#markup"] | replace({'-': 'to'}) }}</span>
             <span>{{ item.comments }}</span>
             <br />
         </p>

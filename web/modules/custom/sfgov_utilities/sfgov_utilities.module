@@ -1,5 +1,8 @@
 <?php
 
+use \Drupal\Core\Form\FormStateInterface;
+use Drupal\sfgov_utilities\Utility;
+
 /**
  * Implements hook_template_preprocess_default_variables_alter().
  */
@@ -11,5 +14,88 @@ function sfgov_utilities_template_preprocess_default_variables_alter(&$variables
   catch (Exception $e) {
     // If the database is not yet available, set to false.
     $variables['is_front'] = FALSE;
+  }
+}
+
+function sfgovGetTransactionSearchVariables($variables) {
+  $templateVars = array();
+  $node = $variables['node'];
+  $contentType = $node->getType();
+
+  if($contentType != 'transaction') {
+    return;
+  }
+
+  $relatedDept = null;
+  $externalUrl = null;
+  $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
+
+  // get the related dept
+  // we only want to show one related dept, but it may not always be in the first index
+  // so loop through and break out after we find one
+  $relatedDepts = $node->get('field_departments')->getValue();
+  for($i = 0; $i < count($relatedDepts); $i++) {
+    $relatedDept = $node->get('field_departments')->get($i)->getValue();
+    if(!empty($relatedDept)) {
+      $relatedDeptId = $relatedDept['target_id'];
+      $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
+      $relatedDept = $relatedDeptNode->getTitle();
+      break;
+    }
+  }
+
+  // check external url
+  $externalUrlValueArray = $node->get('field_direct_external_url')->getValue();
+  $hasExternalUrl = (!empty($externalUrlValueArray) && !$userLoggedIn) ? true : false;
+  $options = ['absolute' => TRUE];
+  $drupalUrl = \Drupal\Core\Url::fromRoute('entity.node.canonical', ['node' => $node->id()], $options);
+  $drupalUrl = $drupalUrl->toString();
+  $theUrl = $hasExternalUrl ? $externalUrlValueArray[0]['uri'] : $drupalUrl;
+
+  $templateVars['related_dept'] = $relatedDept;
+  $templateVars['the_url'] = $theUrl;
+  $templateVars['has_external_url'] = $hasExternalUrl;
+  $templateVars['title'] = $node->get('title')->getString();
+  $templateVars['description'] = (!empty($node->get('field_description')->getValue())) ? $node->get('field_description')->getValue()[0]['value'] : '';
+  return $templateVars;
+}
+
+function sfgov_utilities_preprocess_node__transaction__search_index(&$variables) {
+  $templateVars = sfgovGetTransactionSearchVariables($variables);
+  $variables['the_url'] = $templateVars['the_url'];
+  $variables['has_external_url'] = $templateVars['has_external_url'];
+  $variables['title'] = $templateVars['title'];
+  $variables['description'] = $templateVars['description'];
+}
+
+function sfgov_utilities_preprocess_node__transaction__transaction_search_result_related_dept(&$variables) {
+  $templateVars = sfgovGetTransactionSearchVariables($variables);
+  $variables['the_url'] = $templateVars['the_url'];
+  $variables['has_external_url'] = $templateVars['has_external_url'];
+  $variables['title'] = $templateVars['title'];
+  $variables['description'] = $templateVars['description'];
+  $variables['related_dept'] = $templateVars['related_dept'];
+}
+
+// paragraph people section 
+// override field_direct_external_url
+function sfgov_utilities_preprocess_paragraph__people(&$variables) {
+
+  $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
+  $numItems = $variables['elements']['#paragraph']->getFields()['field_person']->count();
+
+  $persons = $variables['elements']['#paragraph']->getFields()['field_person'];
+
+  foreach($persons as $item) {
+    $entityUrl = $item->entity->url();
+    $personUrl = $item->entity->get('field_direct_external_url')->getValue() ? $item->entity->get('field_direct_external_url')->getValue()[0]['uri'] : null;
+    $theUrl = '';
+    if($userLoggedIn) { // user logged in, just use the entity url
+      $theUrl = $entityUrl;
+    } else {
+      // use the person url if it exists, else use entity url
+      $theUrl = $personUrl ? $personUrl : $entityUrl;
+    }
+    $item->entity->set('field_direct_external_url', array('uri' => $theUrl));
   }
 }

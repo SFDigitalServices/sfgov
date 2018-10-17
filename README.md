@@ -17,6 +17,7 @@
 3. `composer install`
 4. `lando start`
 5. Get latest from Pantheon dev environment `lando pull`
+	- most of the time, code will not need to be pulled from pantheon, so run ```lando pull --code=none --database=dev --files=dev``` to skip the prompts
 6. (optional) Turn off caching.  Turn on debug. (https://www.drupal.org/node/2598914)  
   Note:  Run `lando drush cr` instead of `drush cr` in step 7 of linked article.
 
@@ -43,3 +44,9 @@ TLDR version:
 9. Create Pull Request and merge to master
 10. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
 
+## Local Behat Tests
+For additonal context, refer to config in .lando.yml.
+
+```
+$ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
+```

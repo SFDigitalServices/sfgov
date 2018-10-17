@@ -1,0 +1,64 @@
+uuid: d0da20fc-2623-458f-bad7-6e9cb3adf794
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.person_section_display
+    - field.field.node.person.field_first_name
+    - field.field.node.person.field_last_name
+    - field.field.node.person.field_photo
+    - field.field.node.person.field_sub_title
+    - field.field.node.person.field_title
+    - node.type.person
+  module:
+    - image
+    - user
+id: node.person.person_section_display
+targetEntityType: node
+bundle: person
+mode: person_section_display
+content:
+  field_first_name:
+    type: string
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_last_name:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_photo:
+    weight: 4
+    label: hidden
+    settings:
+      image_style: ''
+    third_party_settings: {  }
+    type: image_url
+    region: content
+  field_sub_title:
+    weight: 3
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_title:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_direct_external_url: true
+  langcode: true
+  links: true

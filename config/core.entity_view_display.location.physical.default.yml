@@ -19,14 +19,16 @@ bundle: physical
 mode: default
 content:
   field_address:
-    weight: 1
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: address_plain
     region: content
   field_google_map:
-    weight: 2
+    type: simple_gmap
+    weight: 1
+    region: content
     label: hidden
     settings:
       include_static_map: true
@@ -42,10 +44,8 @@ content:
       include_map: false
       include_text: false
     third_party_settings: {  }
-    type: simple_gmap
-    region: content
   field_operating_hours:
-    weight: 3
+    weight: 2
     label: hidden
     settings:
       show_closed: open
@@ -72,22 +72,15 @@ content:
     type: office_hours
     region: content
   field_text:
-    weight: 4
+    weight: 3
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
-  title:
-    label: hidden
-    type: string
-    weight: 0
-    region: content
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
 hidden:
   changed: true
   created: true
   langcode: true
+  title: true
   uid: true

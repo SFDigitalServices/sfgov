@@ -1,0 +1,100 @@
+{#
+/**
+ * @file
+ * Theme override for a field.
+ *
+ * To override output, copy the "field.html.twig" from the templates directory
+ * to your theme's directory and customize it, just like customizing other
+ * Drupal templates such as page.html.twig or node.html.twig.
+ *
+ * Instead of overriding the theming for all fields, you can also just override
+ * theming for a subset of fields using
+ * @link themeable Theme hook suggestions. @endlink For example,
+ * here are some theme hook suggestions that can be used for a field_foo field
+ * on an article node type:
+ * - field--node--field-foo--article.html.twig
+ * - field--node--field-foo.html.twig
+ * - field--node--article.html.twig
+ * - field--field-foo.html.twig
+ * - field--text-with-summary.html.twig
+ * - field.html.twig
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether to show the field label or not.
+ * - title_attributes: HTML attributes for the title.
+ * - label: The label for the field.
+ * - multiple: TRUE if a field can contain multiple items.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item's content.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
+ *
+ * @see template_preprocess_field()
+ */
+#}
+
+{% set isSingleItem = items|length == 1 ? true : false %}
+
+{%
+  set classes = [
+    'field',
+    'field--type-' ~ field_type|clean_class,
+    label_display == 'inline' ? 'field--inline',
+    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+    isSingleItem ? 'person-item-single' : 'person-item-multiple sfgov-three-column'
+  ]
+%}
+
+{%
+  set title_classes = [
+    'field__label',
+    label_display == 'visually_hidden' ? 'visually-hidden',
+  ]
+%}
+{% if label_hidden %}
+  {% if multiple %}
+    <div{{ attributes.addClass(classes, 'field__items') }}>
+      {% for item in items %}
+        {% set nodeUrl = path('entity.node.canonical', {'node': item.content['#node'].id()}) %} 
+        {% set firstName = item.content['#node'].get('field_first_name').getValue()[0]['value'] %}
+        {% set lastName = item.content['#node'].get('field_last_name').getValue()[0]['value'] %}
+        {% set personTitle = item.content['#node'].get('field_title').getValue()[0]['value'] %}
+        {% set personSubTitle = item.content['#node'].get('field_sub_title').getValue()[0]['value'] %}
+        {% set photoUri = file_url(item.content['#node'].get('field_photo').getEntity().get('field_photo').entity.fileuri) %}
+        {% set personUrl = item.content['#node'].get('field_direct_external_url').getValue()[0]['uri'] %}
+        {% set patternTemplateFile = isSingleItem ? "@molecules/10-person/10-person-section-display-hero.twig" : "@molecules/10-person/10-person-section-display.twig" %}
+
+        {% include patternTemplateFile with {
+        "url": personUrl,
+        "first_name": firstName,
+        "last_name": lastName,
+        "position_title": personTitle,
+        "position_subtitle": personSubTitle,
+        "photo": photoUri
+        } %}
+      {% endfor %}
+    </div>
+  {% else %}
+    not multiple
+    {% for item in items %}
+      <div{{ attributes.addClass(classes, 'field__item person-item single') }}>{{ item.content }}</div>
+    {% endfor %}
+  {% endif %}
+{% else %}
+  <div{{ attributes.addClass(classes) }}>
+    <h4{{ title_attributes.addClass(title_classes) }}>{{ label }}</h4>
+    {% if multiple %}
+      <div class="field__items">
+    {% endif %}
+    {% for item in items %}
+      <div{{ item.attributes.addClass('field__item person-item') }}>{{ item.content }}</div>
+    {% endfor %}
+    {% if multiple %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

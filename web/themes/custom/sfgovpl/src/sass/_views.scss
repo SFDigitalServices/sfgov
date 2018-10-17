@@ -3,11 +3,6 @@
   .field {
     margin-bottom: 30px;
   }
-  .field--type-telephone {
-    a {
-      text-decoration: none;
-    }
-  }
   .__address {
     .address {
       margin: 0;
@@ -42,9 +37,11 @@
       color: $color-gray-dark;
       font-weight: bold;
     }
-    .__owner,
-    .__tel {
+    .__owner {
       margin-bottom: 10px;
+    }
+    .__tel {
+      margin-bottom: 0px;
     }
   }
 }
@@ -72,20 +69,28 @@ article.transaction .sfgov-container--content-right {
   }
 }
 
-.view-services-block-1 {
+.view-services-block-1,
+.view--departments-block-2-topic-related-depts {
   padding: 0;
   @include media($medium-screen) {
-    padding: 61px 0 41px 0;
+    padding: 60px 0 40px 0;
   }
   .views-row {
     @include media($medium-screen) {
-      margin: 0 21px;
+      margin: 0 20px;
     }
     &:last-child {
-      .sfgov-transaction-search--container {
+      .sfgov-transaction-search--container,
+      .department-search-result--container {
         border-bottom: 0;
       }
     }
+  }
+}
+
+.view--departments-block-2-topic-related-depts {
+  @include media($medium-screen) {
+    padding: 10px 0 40px 0;
   }
 }
 
@@ -110,3 +115,6 @@ article.transaction .sfgov-container--content-right {
   }
 }
 
+.__cost-minimum, .__cost-maximum {
+  display: inline;
+}

@@ -9,13 +9,14 @@ default:
         - %paths.base%/site-features
       contexts:
         - FeatureContext
+        - SfGovContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
   extensions:
     Behat\MinkExtension:
       goutte: ~
       selenium2: ~
-      files_path: './data-files'
+      files_path: %paths.base%/data-files
     Drupal\DrupalExtension:
       blackbox: ~
       api_driver: 'drush'

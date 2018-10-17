@@ -79,4 +79,59 @@
     }
   }
 
+  Drupal.behaviors.sfgovPersonContentTypeName = {
+    attach: function (context) {
+      $('.node-person-form #edit-submit, .node-person-edit-form').click(function() {
+        $('#edit-title-0-value').val($('#edit-field-first-name-0-value').val() + ' ' + $('#edit-field-last-name-0-value').val());
+        $('form.node-person-form, form.node-person-edit-form').submit(function() {
+          $('#edit-title-0-value').val($('#edit-field-first-name-0-value').val() + ' ' + $('#edit-field-last-name-0-value').val());
+          return true;
+        });
+      });
+    }
+  }
+
+  // Enforce telephone numbers have format XXX-XXX-XXXX
+  Drupal.behaviors.sfgovFormatTelephone = {
+    attach: function(context, settings) {
+      $('#edit-submit').once().on('click', function(e) {
+        var phoneField = $('.form-tel');
+        if (phoneField.length > 0) {
+          var regex = new RegExp("\\d+", "g");
+          var number = phoneField.val().match(regex).join("");
+          if (number.length == 10) {
+            phoneField.val(number.slice(0,3) + "-" + number.slice(3,6) + "-" + number.slice(6));
+          }
+        }
+      })
+    }
+  }
+
+  // populate the sort title for transactions based on the title (excluding stop words at the beginning of a title)
+  // for example, sort title for "Apply for a loan to repair your home" would be "Loan to repair your home"
+  // this sort title is used in the services a-z view to group and sort the transaction titles
+  // refer to:
+  //  - transaction content type
+  //  - services page view a-z
+  Drupal.behaviors.sfgovTransactionSortTitle = {
+    attach: function(context, settings) {
+      var stripStopWords = function(str) {
+        var strArray = str.split(' ');
+        var stopWords = ["a", "an", "apply", "as", "be", "find", "for", "get", "have", "register", "the", "to", "your"];
+        while($.inArray(strArray[0].toLowerCase(), stopWords) >= 0) {
+          strArray.splice(0, 1);
+        }
+        strArray[0] = strArray[0].charAt(0).toUpperCase() + strArray[0].slice(1);
+        return strArray.join(' ');
+      };
+      var isTransactionEdit = $('form.node-transaction-edit-form').length > 0 || $('form.node-transaction-form').length > 0 ? true : false;
+      if(isTransactionEdit) {
+        $('#edit-submit').on('click', function() {
+          var sortTitle = stripStopWords($('#edit-title-0-value').val());
+          $('#edit-field-sort-title-0-value').val(sortTitle);
+        });
+      }
+    }
+  }
+
 }(jQuery, Drupal, document, window));
