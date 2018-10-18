@@ -73,14 +73,19 @@ function sfgovpl_preprocess_html(&$variables) {
           'content' => json_encode($transaction, JSON_HEX_QUOT),
         ],
       ];
-      $oneRelatedDept = \Drupal\Node\Entity\Node::load($relatedDepts[0]['target_id']);
+      
       $metaTxRelatedDept = [
         '#tag' => 'meta',
         '#attributes' => [
           'name' => 'transaction-related-dept',
-          'content' => $oneRelatedDept->getTitle(),
+          'content' => '',
         ]
-        ];
+      ];
+
+      if(count($relatedDepts) > 0) {
+        $oneRelatedDept = \Drupal\Node\Entity\Node::load($relatedDepts[0]['target_id']);
+        $metaTxRelatedDept['#attributes']['content'] = $oneRelatedDept->getTitle();
+      }
       $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
       $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transaction-related-dept'];
     }
