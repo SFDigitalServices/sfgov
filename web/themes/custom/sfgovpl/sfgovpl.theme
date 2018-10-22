@@ -22,14 +22,14 @@ function sfgovpl_preprocess_html(&$variables) {
       $metaDeptPhone = [
         '#tag' => 'meta',
         '#attributes' => [
-          'name' => 'department-phone',
+          'name' => 'departmentPhone',
           'content' => '',
         ]
       ];
       $metaDeptAddress = [
         '#tag' => 'meta',
         '#attributes' => [
-          'name' => 'department-address',
+          'name' => 'departmentAddress',
           'content' => '',
         ]
       ];
@@ -47,8 +47,8 @@ function sfgovpl_preprocess_html(&$variables) {
         $metaDeptAddress['#attributes']['content'] = $address->field_address->address_line1;
       }
 
-      $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'department-phone'];
-      $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'department-address'];
+      $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'departmentPhone'];
+      $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'departmentAddress'];
     }
 
     if($nodeType == 'transaction') {
@@ -77,7 +77,7 @@ function sfgovpl_preprocess_html(&$variables) {
       $metaTxRelatedDept = [
         '#tag' => 'meta',
         '#attributes' => [
-          'name' => 'transaction-related-dept',
+          'name' => 'transactionRelatedDept',
           'content' => '',
         ]
       ];
@@ -87,7 +87,7 @@ function sfgovpl_preprocess_html(&$variables) {
         $metaTxRelatedDept['#attributes']['content'] = $oneRelatedDept->getTitle();
       }
       $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
-      $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transaction-related-dept'];
+      $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
     }
   }
 }
