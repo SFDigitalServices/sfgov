@@ -29,7 +29,15 @@ function processSearchResults(data) {
     for(var i=0; i<results.length; i++) {
       var result = results[i];
       html += '<div class="sfgov-search-result views-row">';
-      html += '  <div class="sfgov-transaction-search--container">';
+      html += '  <div class="sfgov-transaction-search--container sfgov-fb-search-result">';
+
+      if(result.liveUrl.match(/\/departments\//)) {
+        html += '<div class="content-type"><i class="sfgov-icon-department"></i><span>Department</span></div>';
+      }
+      if(result.liveUrl.match(/\/topics\//)) {
+        html += '<div class="content-type"><i class="sfgov-icon-filefilled"></i><span>Topic</span></div>';
+      }
+      
       html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + result.title.replace(' | San Francisco', '') + '</h4></a>';
       html += '    <div clas="body-container">';
       html += '      <div class="related-dept"></div>';
