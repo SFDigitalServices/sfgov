@@ -7,7 +7,7 @@ function Search311() {
     "parameters": {
       "query": "",
       "collection": "sf-dev-crawl",
-      "SM": "qb",
+      "SM": "both",
       "qsup": "",
       "start_rank": 1,
       "num_ranks": 10,
@@ -48,13 +48,57 @@ function renderSearchResults(results, elem) {
   if(results.length > 0) {
     for(var i=0; i<results.length; i++) {
       var result = results[i];
-      html += '<div class="sfgov-search-result views-row">';
-      html += '  <div class="sfgov-transaction-search--container sfgov-fb-search-result">';
-  
-      if(result.liveUrl.match(/\/departments\//)) {
-        html += '<div class="content-type"><i class="sfgov-icon-department"></i><span>Department</span></div>';
+      var deptContactInfoHtml = '';
+      var isDeptSearchResult = result.liveUrl.match(/\/departments\//) ? true : false;
+      var isTopicSearchResult = result.liveUrl.match(/\/topics\//) ? true : false;
+      var searchResultClass = 'transaction-search-result';
+      var searchResultContainerClass = 'sfgov-transaction-search--container'
+      
+      if(isDeptSearchResult) {
+        searchResultClass = 'department-search-result';
+        searchResultContainerClass = 'department-search-result--container';
       }
-      if(result.liveUrl.match(/\/topics\//)) {
+
+      if(isTopicSearchResult) {
+        searchResultClass = 'topic-search-result';
+        searchResultContainerClass = 'topic-search-result--container';
+      }
+
+      console.log(result);
+
+      html += '<div class="sfgov-search-result views-row">';
+      html += '  <div class="' + searchResultClass + '">';
+      html += '  <div class="' + searchResultContainerClass + ' sfgov-fb-search-result">';
+  
+      if(isDeptSearchResult) {
+        html += '<div class="content-type"><i class="sfgov-icon-department"></i><span>Department</span></div>';
+        
+        var phone = result.metaData.dp ? result.metaData.dp : null;
+        var address = result.metaData.da ? result.metaData.da : null;
+
+        if(phone || address) {
+          deptContactInfoHtml = '<div class="phone-address--container">';
+          if(phone) {
+            deptContactInfoHtml += '' +  
+            '  <div class="phone--container">' +
+            '    <i class="sfgov-icon-phone"></i>' +
+            '    <span class="phone">' +
+            '      <a href="tel:+1-' + phone + '">' + phone + '</a>' +
+            '    </span>' +
+            '  </div>';
+          }
+          if(address) {
+            deptContactInfoHtml += '' +
+            '  <div class="address--container">' +
+            '    <i class="sfgov-icon-location"></i>' +
+            '    <span class="address">' + address +
+            '    </span>' +
+            '  </div>';
+          }
+          deptContactInfoHtml += '</div>';
+        }
+      }
+      if(isTopicSearchResult) {
         html += '<div class="content-type"><i class="sfgov-icon-filefilled"></i><span>Topic</span></div>';
       }
       
@@ -62,7 +106,9 @@ function renderSearchResults(results, elem) {
       html += '    <div clas="body-container">';
       html += '      <div class="related-dept"></div>';
       html += '      <p class="body">' + result.summary + '</p>';
+      html += deptContactInfoHtml;
       html += '    </div>';
+      html += '  </div>';
       html += '  </div>';
       html += '</div>';
     }
