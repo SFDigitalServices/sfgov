@@ -64,7 +64,7 @@ function renderSearchResults(results, elem) {
         searchResultContainerClass = 'topic-search-result--container';
       }
 
-      console.log(result);
+      // console.log(result);
 
       html += '<div class="sfgov-search-result views-row">';
       html += '  <div class="' + searchResultClass + '">';
@@ -157,6 +157,7 @@ function processSearchResults(data) {
 }
 
 jQuery(document).ready(function() {
+  jQuery('#edit-sfgov-search-input').val(drupalSettings.sfgovSearch.keyword);
   search311.setParam('query', drupalSettings.sfgovSearch.keyword);
   search311.makeRequest();
 });

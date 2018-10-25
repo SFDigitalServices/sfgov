@@ -14,9 +14,24 @@ class SearchForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $keyword = \Drupal::request()->query->get('keyword');
+    // drupal_set_message($keyword);
+    $form['#attributes'] = array(
+      'class' => array(
+        'sfgov-search-form',
+        'sfgov-search-form-311',
+      ),
+    );
+
     $form['sfgov_search_input'] = array(
       '#type' => 'textfield',
       '#placeholder' => t('What are you looking for?'),
+      '#attributes' => array(
+        'class' => array(
+          'sf-gov-search-input-class',
+        ),
+      ),
+      // '#value' => $keyword,
     );
 
     $form['actions']['#type'] = 'actions';
