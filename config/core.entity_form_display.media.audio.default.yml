@@ -6,6 +6,7 @@ dependencies:
     - field.field.media.audio.field_media_audio_file
     - media.type.audio
   module:
+    - content_moderation
     - file
     - path
 _core:
@@ -35,6 +36,12 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    settings: {  }
+    region: content
+    third_party_settings: {  }
   name:
     type: string_textfield
     weight: -5
@@ -56,6 +63,11 @@ content:
     weight: 5
     region: content
     third_party_settings: {  }
+  translation:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   uid:
     type: entity_reference_autocomplete
     weight: 2
