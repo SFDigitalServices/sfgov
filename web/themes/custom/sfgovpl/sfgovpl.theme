@@ -19,33 +19,36 @@ function sfgovpl_preprocess_html(&$variables) {
     if($nodeType == 'department') {
       $node = \Drupal::request()->attributes->get('node');
 
-      $paragraphPhoneId = $node->get('field_phone_numbers')->getValue()[0]['target_id'];
-      $phone = Paragraph::load($paragraphPhoneId);
-      
-      $paragraphAddressId = $node->get('field_address')->getValue()[0]['target_id'];
-      $paragraphAddress = Paragraph::load($paragraphAddressId);
-
-      $address = $node->get('field_address')->referencedEntities()[0];
-      
-      $nid = $node->id();
-      $dept = [
-        'id' => $nid,
-        'title' => $node->getTitle(),
-        'phone' => $phone->field_tel->value,
-        'address_line1' => $address->field_address->address_line1,
-        'address_line2' => $address->field_address->address_line2,
-        'postal_code' => $address->field_address->postal_code,
-        'locality' => $address->field_address->locality,
-        'organization' => $address->field_address->organization,
-      ];
-      $metaDept = [
+      $metaDeptPhone = [
         '#tag' => 'meta',
         '#attributes' => [
-          'name' => 'department',
-          'content' => json_encode($dept, JSON_HEX_QUOT),
-        ],
+          'name' => 'departmentPhone',
+          'content' => '',
+        ]
       ];
-      $variables['page']['#attached']['html_head'][] = [$metaDept, 'department'];
+      $metaDeptAddress = [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'departmentAddress',
+          'content' => '',
+        ]
+      ];
+
+      if(count($node->get('field_phone_numbers')->getValue()) > 0) {
+        $paragraphPhoneId = $node->get('field_phone_numbers')->getValue()[0]['target_id'];
+        $phone = Paragraph::load($paragraphPhoneId);
+        $metaDeptPhone['#attributes']['content'] = $phone->field_tel->value;
+      }
+      
+      if(count($node->get('field_address')->getValue()) > 0) {
+        $paragraphAddressId = $node->get('field_address')->getValue()[0]['target_id'];
+        $paragraphAddress = Paragraph::load($paragraphAddressId);
+        $address = $node->get('field_address')->referencedEntities()[0];
+        $metaDeptAddress['#attributes']['content'] = $address->field_address->address_line1;
+      }
+
+      $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'departmentPhone'];
+      $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'departmentAddress'];
     }
 
     if($nodeType == 'transaction') {
@@ -70,7 +73,21 @@ function sfgovpl_preprocess_html(&$variables) {
           'content' => json_encode($transaction, JSON_HEX_QUOT),
         ],
       ];
+      
+      $metaTxRelatedDept = [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'transactionRelatedDept',
+          'content' => '',
+        ]
+      ];
+
+      if(count($relatedDepts) > 0) {
+        $oneRelatedDept = \Drupal\Node\Entity\Node::load($relatedDepts[0]['target_id']);
+        $metaTxRelatedDept['#attributes']['content'] = $oneRelatedDept->getTitle();
+      }
       $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
+      $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
     }
   }
 }

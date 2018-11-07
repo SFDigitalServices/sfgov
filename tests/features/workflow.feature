@@ -2,7 +2,7 @@ Feature: Workflow
   In order to test that users have the correct permissions.
   We will create some users with required roles and test their access.
 
-  @api
+  @api @workflow
   Scenario: Workflow
     Given users:
       | name      | mail                | roles         | status |
@@ -61,7 +61,7 @@ Feature: Workflow
     And  I should see "Ready for review" in the "#edit-moderation-state-wrapper" element
     And  I should see "Published" in the "#edit-moderation-state-wrapper" element
 
-  @api
+  @api @workflow
   Scenario: Department Member Workflow
     Given users:
       | name      | mail                | roles         | status |
