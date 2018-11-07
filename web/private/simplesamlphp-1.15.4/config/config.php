@@ -46,7 +46,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => 'https://'. $host .'/simplesaml/',
+    'baseurlpath' => 'https://'. $host .':443/simplesaml/',
 
     /*
      * The 'application' configuration array groups a set configuration options
@@ -81,8 +81,8 @@ $config = array(
      * When specified as a relative path, this is relative to the SimpleSAMLphp
      * root directory.
      */
-    'certdir' => 'cert/',
-    'loggingdir' => $_ENV['HOME'] . 'log/',
+    'certdir' => $_ENV['HOME'] . 'files/private/',
+    'loggingdir' => $_ENV['HOME'] . 'files/private/log/',
     'datadir' => 'data/',
     'tempdir' => $_ENV['HOME'] . '/tmp/simplesaml',
 
@@ -91,8 +91,8 @@ $config = array(
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name' => 'Administrator',
-    'technicalcontact_email' => 'na@example.org',
+    'technicalcontact_name' => 'DSAdmin',
+    'technicalcontact_email' => 'ds-admin@sfgov.org',
 
     /*
      * The envelope from address for outgoing emails.

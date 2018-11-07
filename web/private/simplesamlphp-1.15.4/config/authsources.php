@@ -15,8 +15,8 @@ $config = array(
     // and Shibboleth 1.3 IdPs.
     'default-sp' => array(
         'saml:SP',
-        'privatekey' => 'CityAD-TokenSigning.pem',
-        'certificate' => 'CityAD-TokenSigning.cer',
+        'privatekey' => 'saml.pem',
+        'certificate' => 'saml.cer',
         
         // The entity ID of this SP.
         // Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
