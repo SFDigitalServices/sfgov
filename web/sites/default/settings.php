@@ -118,4 +118,4 @@ if (file_exists($local_settings)) {
 $settings['install_profile'] = 'standard';
 
 # Provide universal absolute path to simplesamlphp installation.
-$settings['simplesamlphp_dir'] = $_ENV['HOME'] .'/code/private/simplesamlphp-1.15.4';
+$settings['simplesamlphp_dir'] = $_ENV['HOME'] .'/code/private/simplesamlphp-1.16.2';
