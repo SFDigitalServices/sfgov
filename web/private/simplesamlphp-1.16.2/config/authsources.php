@@ -16,7 +16,7 @@ $config = array(
     'default-sp' => array(
         'saml:SP',
         'privatekey' => 'saml.pem',
-        'certificate' => 'saml.cer',
+        'certificate' => 'saml.crt',
 
         // The entity ID of this SP.
         // Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
