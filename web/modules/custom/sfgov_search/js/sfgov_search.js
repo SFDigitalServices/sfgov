@@ -43,16 +43,24 @@ function Search311() {
 
 var search311 = new Search311();
 
-function renderSearchResults(results, elem) {
+function renderSearchResults(results, elem, isSfGov) {
   var html = '';
   if(results.length > 0) {
+    if(isSfGov) {
+      elem.append('<div class="sfgov-search-domain-label sfgov-search-result views-row">Results from sf.gov</div>');
+    } else {
+      elem.append('<div class="sfgov-search-domain-label sfgov-search-result views-row">Results from other city departments</div>');
+    }
     for(var i=0; i<results.length; i++) {
       var result = results[i];
+      console.log(result);
       var deptContactInfoHtml = '';
       var isDeptSearchResult = result.liveUrl.match(/\/departments\//) ? true : false;
       var isTopicSearchResult = result.liveUrl.match(/\/topics\//) ? true : false;
       var searchResultClass = 'transaction-search-result';
       var searchResultContainerClass = 'sfgov-transaction-search--container'
+
+      var resultSummary = result.metaData.c ? result.metaData.c : result.summary;
       
       if(isDeptSearchResult) {
         searchResultClass = 'department-search-result';
@@ -105,19 +113,15 @@ function renderSearchResults(results, elem) {
       html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + result.title.replace(' | San Francisco', '') + '</h4></a>';
       html += '    <div clas="body-container">';
       html += '      <div class="related-dept"></div>';
-      html += '      <p class="body">' + result.summary + '</p>';
+      // html += '      <p class="body">' + result.summary + '</p>';
+      html += '      <p class="body">' + resultSummary + '</p>';
       html += deptContactInfoHtml;
       html += '    </div>';
       html += '  </div>';
       html += '  </div>';
       html += '</div>';
     }
-    elem.html(html);
-  } else {
-    elem.html('<div class="no-search-results--container">' +
-    '<h2>We don\'t have anything yet that matches your search.</h2>' +
-    '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
-    '</div>');
+    elem.html(elem.html() + html);
   }
 }
 
@@ -135,12 +139,31 @@ function getQueryParam(queryParam) {
   return null;
 }
 
+function splitSearchResults(results) {
+  var sfDotGovRegex = /sf\.gov/;
+  var splitResults = {
+    sfdotgov: [],
+    other: []
+  }
+  for(var i=0; i<results.length; i++) {
+    var result = results[i];
+    if(result.liveUrl.match(sfDotGovRegex)) {
+      splitResults.sfdotgov.push(result);
+    } else {
+      splitResults.other.push(result);
+    }
+  }
+  return splitResults;
+}
+
 function processSearchResults(data) {
   var spell = data.response.resultPacket.spell ? true : false;
   var error = data.response.resultPacket.error ? true : false;
   var results = data.response.resultPacket.results;
-  var resultsDiv = jQuery('#sfgov_search_results');
+  var resultsDiv = jQuery('#sfgov-search-results');
+  var resultsOtherDiv = jQuery('#other-sfgov-search-results');
   var messagesDiv = jQuery('#sfgov-search-messages');
+
   if(!error) {
     if(spell && getQueryParam('si') !== 'true') { // misspelled word
       messagesDiv.prepend('<div class="sfgov-search-misspelled">Showing results for <strong><em>' + data.response.resultPacket.spell.text + '</em></strong><br><div class="sfgov-search-instead">Search instead for <a href="/search_?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
@@ -148,7 +171,16 @@ function processSearchResults(data) {
       search311.setParam('query', data.response.resultPacket.spell.text);
       search311.makeRequest();
     } else {
-      renderSearchResults(results, resultsDiv);
+      if(results.length == 0) {
+        resultsDiv.html('<div class="no-search-results--container">' +
+        '<h2>We don\'t have anything yet that matches your search.</h2>' +
+        '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
+        '</div>');
+      } else {
+        var splitResults = splitSearchResults(results);
+        renderSearchResults(splitResults.sfdotgov, resultsDiv, true);
+        renderSearchResults(splitResults.other, resultsOtherDiv, false);
+      }
     }
   }
   else {

@@ -9,7 +9,7 @@ class SearchController extends ControllerBase {
     $searchKeyword = \Drupal::request()->query->get('keyword') ?: '';
     return [
       '#type' => 'markup',
-      '#markup' => $this->t('<div id="sfgov-search-results-container"><div id="sfgov-search-messages" class="sfgov-search-result views-row sfgov-search-messages"></div><div id="sfgov_search_results"></div></div>'),
+      '#markup' => $this->t('<div id="sfgov-search-results-container"><div id="sfgov-search-messages" class="sfgov-search-result views-row sfgov-search-messages"></div><div id="sfgov-search-results"></div><div id="other-sfgov-search-results"></div></div>'),
       '#attached' => array(
         'library' => array(
           'sfgov_search/search',
