@@ -25,9 +25,9 @@
         var peopleContent = document.getElementsByClassName("sfgov-paragraph-people")[0];
         if (peopleContent) {
             // Find the nearest ancestor h2 tag and add an id to it
-            var sectionParent = peopleContent.closest("div.paragraph--type--section");
-            var electedOfficialsSectionHeader = sectionParent.querySelector("h2.sfgov-header-section");
-            electedOfficialsSectionHeader.setAttribute("id", "elected-officials");
+            var sectionParent = $(peopleContent).closest("div.paragraph--type--section");
+            var electedOfficialsSectionHeader = sectionParent.find("h2.sfgov-header-section");
+            electedOfficialsSectionHeader.attr("id", "elected-officials");
 
             // Create Elected Officials nav item and inject it into the main nav
             var navItem = document.createElement("li");
