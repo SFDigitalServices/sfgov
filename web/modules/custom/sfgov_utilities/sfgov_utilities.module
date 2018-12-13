@@ -50,7 +50,7 @@ function sfgovGetTransactionSearchVariables($variables) {
   $options = ['absolute' => TRUE];
   $drupalUrl = \Drupal\Core\Url::fromRoute('entity.node.canonical', ['node' => $node->id()], $options);
   $drupalUrl = $drupalUrl->toString();
-  $theUrl = $hasExternalUrl ? $externalUrlValueArray[0]['uri'] : $drupalUrl;
+  $theUrl = $drupalUrl; // keep the drupal url because the redirect happens in web/modules/custom/sfgov_event_subscriber/src/EventSubscriber/RedirectEventSubscriber
 
   $templateVars['related_dept'] = $relatedDept;
   $templateVars['the_url'] = $theUrl;
