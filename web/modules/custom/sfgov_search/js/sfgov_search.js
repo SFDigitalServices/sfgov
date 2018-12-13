@@ -43,7 +43,7 @@ function Search311() {
 
 var search311 = new Search311();
 
-function renderSearchResults(results, elem, isSfGov) {
+function renderSearchResults(results, highlightRegex, elem, isSfGov) {
   var html = '';
   if(results.length > 0) {
     if(isSfGov) {
@@ -51,6 +51,9 @@ function renderSearchResults(results, elem, isSfGov) {
     } else {
       elem.append('<div class="sfgov-search-domain-label sfgov-search-result views-row">Results from other city departments</div>');
     }
+    var hr = new RegExp(highlightRegex.replace('(?i)', ''), 'gi');
+    console.log(hr);
+
     for(var i=0; i<results.length; i++) {
       var result = results[i];
       console.log(result);
@@ -61,7 +64,8 @@ function renderSearchResults(results, elem, isSfGov) {
       var searchResultContainerClass = 'sfgov-transaction-search--container'
 
       var resultSummary = result.metaData.c ? result.metaData.c : result.summary;
-      
+      resultSummary = resultSummary.replace(hr, '<strong>$&</strong>');
+
       if(isDeptSearchResult) {
         searchResultClass = 'department-search-result';
         searchResultContainerClass = 'department-search-result--container';
@@ -160,6 +164,8 @@ function processSearchResults(data) {
   var spell = data.response.resultPacket.spell ? true : false;
   var error = data.response.resultPacket.error ? true : false;
   var results = data.response.resultPacket.results;
+  var highlightRegex = data.response.resultPacket.queryHighlightRegex;
+  console.log(highlightRegex);
   var resultsDiv = jQuery('#sfgov-search-results');
   var resultsOtherDiv = jQuery('#other-sfgov-search-results');
   var messagesDiv = jQuery('#sfgov-search-messages');
@@ -178,8 +184,8 @@ function processSearchResults(data) {
         '</div>');
       } else {
         var splitResults = splitSearchResults(results);
-        renderSearchResults(splitResults.sfdotgov, resultsDiv, true);
-        renderSearchResults(splitResults.other, resultsOtherDiv, false);
+        renderSearchResults(splitResults.sfdotgov, highlightRegex, resultsDiv, true);
+        renderSearchResults(splitResults.other, highlightRegex, resultsOtherDiv, false);
       }
     }
   }
