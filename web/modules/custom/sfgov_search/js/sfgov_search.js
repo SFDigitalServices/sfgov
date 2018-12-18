@@ -61,9 +61,24 @@ function renderSearchResults(results, highlightRegex, elem, isSfGov) {
       var isDeptSearchResult = result.liveUrl.match(/\/departments\//) ? true : false;
       var isTopicSearchResult = result.liveUrl.match(/\/topics\//) ? true : false;
       var searchResultClass = 'transaction-search-result';
-      var searchResultContainerClass = 'sfgov-transaction-search--container'
+      var searchResultContainerClass = 'sfgov-transaction-search--container';
+      var title = '';
+      if(result.metaData.sfgovTitle) {
+        title = result.metaData.sfgovTitle;
+      } else {
+        title = result.title;
+      }
 
-      var resultSummary = result.metaData.c ? result.metaData.c : result.summary;
+      var resultSummary = '';
+      if(result.metaData.sfgovSummary) {
+        resultSummary = result.metaData.sfgovSummary;
+      } else if(result.metaData.c) {
+        resultSummary = result.metaData.c;
+      } else if(result.summary) {
+        resultSummary = result.summary;
+      } else {
+        resultSummary = 'No result summary';
+      }
       resultSummary = resultSummary.replace(hr, '<strong>$&</strong>');
 
       if(isDeptSearchResult) {
@@ -114,7 +129,7 @@ function renderSearchResults(results, highlightRegex, elem, isSfGov) {
         html += '<div class="content-type"><i class="sfgov-icon-filefilled"></i><span>Topic</span></div>';
       }
       
-      html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + result.title.replace(' | San Francisco', '') + '</h4></a>';
+      html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + title.replace(' | San Francisco', '') + '</h4></a>';
       html += '    <div clas="body-container">';
       html += '      <div class="related-dept"></div>';
       // html += '      <p class="body">' + result.summary + '</p>';
@@ -151,7 +166,7 @@ function splitSearchResults(results) {
   }
   for(var i=0; i<results.length; i++) {
     var result = results[i];
-    if(result.liveUrl.match(sfDotGovRegex)) {
+    if(result.liveUrl.match(sfDotGovRegex) || result.metaData.sfgovSummary) {
       splitResults.sfdotgov.push(result);
     } else {
       splitResults.other.push(result);
