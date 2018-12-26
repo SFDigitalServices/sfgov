@@ -163,6 +163,34 @@ function Search311() {
     }
   }
 
+  this.paginate = function(data) {
+    var resultsSummary = data.response.resultPacket.resultsSummary;
+    if(resultsSummary) {
+      var totalResults = resultsSummary.totalMatching;
+      var resultsPerPage = resultsSummary.numRanks;
+      var numPages = Math.ceil(totalResults/resultsPerPage);
+      var currStart = resultsSummary.currStart;
+      console.log(numPages);
+      var paginateHtml = jQuery('<ul class="sfgov-search-pagination-nav"></ul>');
+      for(var i=1; i<=numPages; i++) {
+        var listItem = jQuery('<li></li>');
+        var pageLink = jQuery('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + ((i * resultsPerPage) + 1) + '"></a>');
+        jQuery(listItem).append(pageLink);
+        jQuery(pageLink).click(function() {
+          var linkPageNum = jQuery(this).attr('data-page-num');
+          var nextStart = jQuery(this).attr('data-next-start');
+          console.log('pageNum: ' + linkPageNum);
+          console.log('nextStart: ' + nextStart);
+          _this.setParam('start_rank', nextStart);
+          _this.makeRequest();
+        })
+        jQuery(pageLink).append(i);
+        jQuery(paginateHtml).append(listItem);
+      }
+      jQuery('.sfgov-search-pagination').prepend(paginateHtml);
+    }
+  }
+
   this.splitSearchResults = function(results) {
     var sfDotGovRegex = /sf\.gov/;
     var splitResults = {
