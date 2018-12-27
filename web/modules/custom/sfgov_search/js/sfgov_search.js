@@ -1,4 +1,5 @@
 // $url = 'https://search.sf311.org/s/search.json?query=birth+certificate&collection=sf-prod-search-meta&SM=qb&qsup=&start_rank=1&num_ranks=10';
+$ = jQuery;
 function Search311() {
   this.props = {
     "protocol": "https",
@@ -22,7 +23,7 @@ function Search311() {
     }
     options = options.substring(0, options.length-1); // remove last &
     var url = this.props.protocol + '://' + this.props.domain + this.props.path + '?' + options;
-    jQuery.ajax({
+    $.ajax({
       url: url, 
       dataType: 'jsonp'
     });
@@ -78,6 +79,7 @@ function Search311() {
         // console.log(result);
   
         html += '<div class="sfgov-search-result views-row">';
+        // html += '  <div style="font-size:22px;font-weight:bold">' + (i+1) + '</div>';
         html += '  <div class="' + searchResultClass + '">';
         html += '  <div class="' + searchResultContainerClass + ' sfgov-fb-search-result">';
     
@@ -124,7 +126,7 @@ function Search311() {
         html += '  </div>';
         html += '</div>';
       }
-      elem.html(elem.html() + html);
+      $(elem).html(html);
     }
   }
 
@@ -134,9 +136,9 @@ function Search311() {
     var results = data.response.resultPacket.results;
     var highlightRegex = data.response.resultPacket.queryHighlightRegex;
     console.log(highlightRegex);
-    var resultsDiv = jQuery('#sfgov-search-results');
-    var resultsOtherDiv = jQuery('#other-sfgov-search-results');
-    var messagesDiv = jQuery('#sfgov-search-messages');
+    var resultsDiv = $('#sfgov-search-results');
+    var resultsOtherDiv = $('#other-sfgov-search-results');
+    var messagesDiv = $('#sfgov-search-messages');
   
     if(!error) {
       if(spell && getQueryParam('si') !== 'true') { // misspelled word
@@ -151,12 +153,16 @@ function Search311() {
           '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
           '</div>');
         } else {
-          var splitResults = _this.splitSearchResults(results);
-          _this.renderSearchResults(splitResults.sfdotgov, highlightRegex, resultsDiv, true);
-          _this.renderSearchResults(splitResults.other, highlightRegex, resultsOtherDiv, false);
+          _this.renderSearchResults(results, highlightRegex, resultsDiv, true);
+          // var splitResults = _this.splitSearchResults(results);
+          // _this.renderSearchResults(splitResults.sfdotgov, highlightRegex, resultsDiv, true);
+          // _this.renderSearchResults(splitResults.other, highlightRegex, resultsOtherDiv, false);
         }
       }
-      this.paginate(data);
+      if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
+        _this.paginate(data);
+        $('.sfgov-search-pagination').addClass('has-nav');
+      }
     }
     else {
       messagesDiv.prepend('There was an error retrieving search results.  Please try again later.');
@@ -171,23 +177,45 @@ function Search311() {
       var numPages = Math.ceil(totalResults/resultsPerPage);
       var currStart = resultsSummary.currStart;
       console.log(numPages);
-      var paginateHtml = jQuery('<ul class="sfgov-search-pagination-nav"></ul>');
+      var paginateHtml = $('<ul class="sfgov-search-pagination-nav"></ul>');
+      $(paginateHtml).append('<li class="previous"><a href="javascript:void(0)">previous</a></li>');
       for(var i=1; i<=numPages; i++) {
-        var listItem = jQuery('<li></li>');
-        var pageLink = jQuery('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + ((i * resultsPerPage) + 1) + '"></a>');
-        jQuery(listItem).append(pageLink);
-        jQuery(pageLink).click(function() {
-          var linkPageNum = jQuery(this).attr('data-page-num');
-          var nextStart = jQuery(this).attr('data-next-start');
+        var classname = '';
+        if(i==1) classname += ' first current';
+        if(i==numPages) classname += ' last';
+        var listItem = $('<li class="' + classname + '"></li>');
+        var pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i-1) * resultsPerPage) + 1) + '"></a>');
+        $(listItem).append(pageLink);
+        $(pageLink).click(function() {
+          $('.sfgov-search-pagination-nav .current').removeClass('current');
+          $(this).parent().addClass('current');
+          var linkPageNum = $(this).attr('data-page-num');
+          var nextStart = $(this).attr('data-next-start');
           console.log('pageNum: ' + linkPageNum);
           console.log('nextStart: ' + nextStart);
           _this.setParam('start_rank', nextStart);
           _this.makeRequest();
         })
-        jQuery(pageLink).append(i);
-        jQuery(paginateHtml).append(listItem);
+        $(pageLink).append(i);
+        $(paginateHtml).append(listItem);
       }
-      jQuery('.sfgov-search-pagination').prepend(paginateHtml);
+      $('.sfgov-search-pagination').prepend(paginateHtml);
+      $(paginateHtml).append('<li class="next"><a href="javascript:void(0)">next</a></li>');
+
+      // next click
+      $('.sfgov-search-pagination-nav .next').click(function() {
+        var current = $('.sfgov-search-pagination-nav .current');
+        var nextPage = parseInt($(current).find('a').attr('data-page-num')) + 1;
+        $('a[data-page-num="' + nextPage + '"]').click();
+      });
+
+      // prev click
+      $('.sfgov-search-pagination-nav .previous').click(function() {
+        var current = $('.sfgov-search-pagination-nav .current');
+        var prevPage = parseInt($(current).find('a').attr('data-page-num')) - 1;
+        $('a[data-page-num="' + prevPage + '"]').click();
+      });
+
     }
   }
 
@@ -238,8 +266,8 @@ function getQueryParam(queryParam) {
 }
 
 var search311 = new Search311();
-jQuery(document).ready(function() {
-  jQuery('#edit-sfgov-search-input').val(drupalSettings.sfgovSearch.keyword);
+$(document).ready(function() {
+  $('#edit-sfgov-search-input').val(drupalSettings.sfgovSearch.keyword);
   search311.setParam('query', drupalSettings.sfgovSearch.keyword);
   search311.makeRequest();
 });
