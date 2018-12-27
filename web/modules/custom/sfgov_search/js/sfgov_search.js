@@ -157,11 +157,11 @@ function Search311() {
           // var splitResults = _this.splitSearchResults(results);
           // _this.renderSearchResults(splitResults.sfdotgov, highlightRegex, resultsDiv, true);
           // _this.renderSearchResults(splitResults.other, highlightRegex, resultsOtherDiv, false);
+          if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
+            _this.paginate(data);
+            $('.sfgov-search-pagination').addClass('has-nav');
+          }
         }
-      }
-      if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
-        _this.paginate(data);
-        $('.sfgov-search-pagination').addClass('has-nav');
       }
     }
     else {
