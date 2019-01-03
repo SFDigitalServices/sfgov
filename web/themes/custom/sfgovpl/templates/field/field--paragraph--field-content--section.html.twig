@@ -58,7 +58,11 @@
   {% if multiple %}
     <div{{ attributes.addClass(classes, 'field__items') }}>
       {% for item in items %}
-        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
+        {% set multipleItemClasses = ['field__item'] %}
+        {% if item.content['#paragraph'].getType() == "top_search_suggestion" %}
+          {% set multipleItemClasses = multipleItemClasses|merge(['sfgov-top-search-suggestion']) %}
+        {% endif %}
+        <div{{ item.attributes.addClass(multipleItemClasses) }}>{{ item.content }}</div>
       {% endfor %}
     </div>
   {% else %}
