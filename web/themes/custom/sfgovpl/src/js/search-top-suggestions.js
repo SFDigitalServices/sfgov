@@ -1,0 +1,1 @@
+console.log('search top suggestions js');
