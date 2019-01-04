@@ -1,20 +1,36 @@
 (function($) {
-  var topSearchSuggs = $('.sfgov-top-search-suggestion');
+  var topSearchSuggsSelector = '.sfgov-top-search-suggestion';
+  var topSearchSuggs = $(topSearchSuggsSelector);
   if(topSearchSuggs.length > 0) {
     var containerId = 'sfgov-top-search-suggestions-container';
     var containerSelector = '#' + containerId;
+    
     $('#edit-keyword').attr('autocomplete', 'off');
+    
     $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>Top Searches:</h4></div>');
+    $(containerSelector).hide();
+
     $(topSearchSuggs).each(function() {
       $(containerSelector).append($(this));
     });
-    $(containerSelector).hide();
+
+    $(containerSelector).click(function() {
+      
+    })
+    
     $('#edit-keyword').focus(function() {
       $(containerSelector).show();
+      $(topSearchSuggsSelector).show();
     });
-    $('#edit-keyword').blur(function() {
-      $(containerSelector).hide();
-    })
+
+    $('body').click(function(e) {
+      var clickTarget = $(e.target);
+      if(clickTarget.attr('id') == 'edit-keyword') {
+
+      } else {
+        $(containerSelector).hide();
+      }
+    });
   }
 
 })(jQuery);
