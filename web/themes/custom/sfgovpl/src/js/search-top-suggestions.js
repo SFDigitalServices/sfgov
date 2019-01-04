@@ -14,9 +14,7 @@
       $(containerSelector).append($(this));
     });
 
-    $(containerSelector).click(function() {
-      
-    })
+    $('#views-exposed-form-search-page-1').after($(containerSelector));
     
     $('#edit-keyword').focus(function() {
       $(containerSelector).show();
