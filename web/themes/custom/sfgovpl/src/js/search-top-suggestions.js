@@ -21,6 +21,14 @@
       $(topSearchSuggsSelector).show();
     });
 
+    $('#edit-keyword').keyup(function() {
+      if($(this).val().length <= 0) {
+        $(containerSelector).show();
+      } else {
+        $(containerSelector).hide();
+      }
+    });
+
     $('body').click(function(e) {
       var clickTarget = $(e.target);
       if(clickTarget.attr('id') == 'edit-keyword') {
