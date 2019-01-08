@@ -50,3 +50,18 @@ For additonal context, refer to config in .lando.yml.
 ```
 $ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
 ```
+
+## Issues with lando/drush (12/26/2018)
+Refer to the issues here: [https://github.com/lando/lando/issues/1315](https://github.com/lando/lando/issues/1315)
+and here: [https://github.com/lando/lando/issues/1318#issuecomment-444274698](https://github.com/lando/lando/issues/1318#issuecomment-444274698)
+
+The `lando.yml` file and `composer.json` and `composer.lock` files are up to date with the workaround required, but an additional step is needed for local dev setup.  Need to install drush launcher *IN THE VM*!
+
+```
+$ lando ssh # to get into the container
+$ cd /usr/local/bin/ # to replace the installed version of drush in the next few commands
+$ wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar # Following the linux instructions from the docs
+$ chmod +x drush.phar
+$ mv drush.phar drush # To actually replace drush
+$ ls -la # To check file permissions
+```
