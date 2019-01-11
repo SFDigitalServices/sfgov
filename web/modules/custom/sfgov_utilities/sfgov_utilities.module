@@ -99,3 +99,21 @@ function sfgov_utilities_preprocess_paragraph__people(&$variables) {
     $item->entity->set('field_direct_external_url', array('uri' => $theUrl));
   }
 }
+
+function sfgov_utilities_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+  $translations = [];
+  $langs = $entity->getTranslationLanguages();
+
+  $currentTranslation = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+  foreach($langs as $lang) {
+    $langId = $lang->getId();
+    $translations[] = [
+      'lang' => $langId,
+      'url' => $entity->getTranslation($langId)->url(),
+    ];
+  }
+
+  $build['#attached']['drupalSettings']['translations'] = $translations;
+  $build['#attached']['drupalSettings']['currentTranslation'] = $currentTranslation;
+}
