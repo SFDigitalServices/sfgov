@@ -106,6 +106,13 @@ jobs:
                 command: composer -n build-assets
 
             - run:
+                name: create simplesamlphp config symlink
+                command: |
+                    mkdir -p ./vendor/simplesamlphp/simplesamlphp
+                    cd ./vendor/simplesamlphp/simplesamlphp
+                    ln -s ../../../web/private/simplesamlphp-1.16.2/config config
+
+            - run:
                 name: prepare database for site-under test
                 command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
                 # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
