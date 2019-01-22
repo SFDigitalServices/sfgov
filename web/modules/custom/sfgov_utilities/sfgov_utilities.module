@@ -44,7 +44,7 @@ function sfgovGetTransactionSearchVariables($variables) {
     if(!empty($relatedDept)) {
       $relatedDeptId = $relatedDept['target_id'];
       $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
-      $relatedDept = $relatedDeptNode->getTitle();
+      $relatedDept = $relatedDeptNode ? $relatedDeptNode->getTitle() : '';
       break;
     }
   }
