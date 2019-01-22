@@ -3,6 +3,11 @@
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\sfgov_utilities\Utility;
 
+// $module_handler = Drupal::service('module_handler');
+// $devel_path = $module_handler->getModule('devel')->getPath();
+// require_once($devel_path.'/kint/kint/Kint.class.php');
+// Kint::$maxLevels = 4;
+
 /**
  * Implements hook_template_preprocess_default_variables_alter().
  */
@@ -100,20 +105,42 @@ function sfgov_utilities_preprocess_paragraph__people(&$variables) {
   }
 }
 
-function sfgov_utilities_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
-  $translations = [];
-  $langs = $entity->getTranslationLanguages();
+// function sfgov_utilities_node_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+//   Kint::dump('what the what');
+//   $theNode = $build['#node'];
+//   $nodeId = $theNode->id();
+//   $nodeUrl = $theNode->url();
+//   $translations = [];
+  // $build['#attached']['drupalSettings']['sfgov']['nodeId'] = $build['#node']->id();
+  // $build['#attached']['drupalSettings']['translations'] = $translations;
+  // $build['#attached']['drupalSettings']['currentLanguage'] = $currentLanguage;
+// }
+// 
+// function sfgov_utilities_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+//   $translations = [];
+//   $langs = $entity->getTranslationLanguages();
 
-  $currentTranslation = \Drupal::languageManager()->getCurrentLanguage()->getId();
+//   $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-  foreach($langs as $lang) {
-    $langId = $lang->getId();
-    $translations[] = [
-      'lang' => $langId,
-      'url' => $entity->getTranslation($langId)->url(),
-    ];
-  }
+//   // Kint::dump($build['#node']);
+//   // Kint::dump($entity);
 
-  $build['#attached']['drupalSettings']['translations'] = $translations;
-  $build['#attached']['drupalSettings']['currentTranslation'] = $currentTranslation;
-}
+//   $theNode = $build['#node'];
+//   $nodeId = $theNode->id();
+//   $nodeUrl = $theNode->url();
+
+//   // Kint::dump($nodeId);
+
+//   foreach($langs as $lang) {
+//     $langId = $lang->getId();
+//     $translations[] = [
+//       'nid' => $nodeId,
+//       'lang' => $langId,
+//       'url' => $entity->getTranslation($langId)->url(),
+//       'nodeUrl' => $nodeUrl,
+//     ];
+//   }
+//   $build['#attached']['drupalSettings']['nodeId'] = $nodeId;
+//   $build['#attached']['drupalSettings']['translations'] = $translations;
+//   $build['#attached']['drupalSettings']['currentLanguage'] = $currentLanguage;
+// }

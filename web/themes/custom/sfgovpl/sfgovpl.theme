@@ -6,6 +6,11 @@
 
 use Drupal\paragraphs\Entity\Paragraph;
 
+$module_handler = Drupal::service('module_handler');
+$devel_path = $module_handler->getModule('devel')->getPath();
+require_once($devel_path.'/kint/kint/Kint.class.php');
+Kint::$maxLevels = 4;
+
 // Include all files from the includes directory.
 $includes_path = dirname(__FILE__) . '/includes/*.inc';
 foreach (glob($includes_path) as $filename) {
@@ -14,6 +19,7 @@ foreach (glob($includes_path) as $filename) {
 
 function sfgovpl_preprocess_html(&$variables) {
 
+  // for metadata
   if(!empty($variables['node_type'])) {
     $nodeType = $variables['node_type'];
     if($nodeType == 'department') {
@@ -90,4 +96,29 @@ function sfgovpl_preprocess_html(&$variables) {
       $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
     }
   }
+
+  // for translations
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $theNode = null;
+  $nodeInfo = [];
+  $nodeInfo['current_language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    // You can get nid and anything else you need from the node object.
+    $theNode = node_load($node->id());
+    $nodeInfo['nid'] = $theNode->id();
+    $nodeInfo['nurl'] = $theNode->url();
+    $langs = $theNode->getTranslationLanguages();
+    $nodeInfo['translations'] = [];
+    foreach($langs as $lang) {
+      $langId = $lang->getId();
+      $nodeInfo['translations'][] = [
+        'lang' => $langId,
+        'turl' => $theNode->getTranslation($langId)->url(),
+      ];
+    }
+  }
+
+  $variables['page']['#attached']['drupalSettings']['sfgov_translations']['node'] = $nodeInfo;
+  // Kint::dump($variables);
+
 }
