@@ -36,9 +36,10 @@
     if(selectedLanguageArr.length > 0) {
       var theSelectedLanguage = selectedLanguageArr[1];
       var drupalTranslation = getDrupalTranslation(theSelectedLanguage);
-      if(drupalTranslation) {
+      if(drupalTranslation && !(drupalTranslation.lang == 'en' && currentDrupalLanguage == 'en')) {
         if(drupalTranslation.lang != currentDrupalLanguage) {
-          doGTranslate('en|en'); // kill the gtranslate cookie
+          $('body').hide();
+          sfgovGtranslate('en|en'); // kill the gtranslate cookie
           setTimeout(function() {
             window.location.href = drupalTranslation.turl;
           },200);
@@ -47,11 +48,12 @@
         // go to english url, then set gtranslate cookie
         var enUrl = window.location.href.replace('/' + currentDrupalLanguage, '');
         $('body').hide();
-        doGTranslate(selectedLanguage);
+        sfgovGtranslate(selectedLanguage);
         setTimeout(function() {
           window.location.href = enUrl;
         },200)
       }
+      displayTranslationNotice();
     }
     
   }
@@ -66,10 +68,10 @@
       if(!drupalTranslation) {
         var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : '';
         if(currentDrupalLanguage != gTranslateLang) {
-          doGTranslate('en|' + currentDrupalLanguage);
+          sfgovGtranslate('en|' + currentDrupalLanguage);
         }
       } else {
-        doGTranslate('en|en'); // kill the gTranslateCookie
+        sfgovGtranslate('en|en'); // kill the gTranslateCookie
       }
     } else {
       // current drupal language is english, check for gtranslate cookie
@@ -79,12 +81,37 @@
         if(gTranslateLang != 'en') {
           if(drupalTranslation) {
             $('body').hide();
-            doGTranslate('en|en');
+            sfgovGtranslate('en|en');
             window.location.href = drupalTranslation.turl;
           }
         }
       }
     }
+    displayTranslationNotice();
+  }
+
+  function displayTranslationNotice() {
+    setTimeout(function() {
+      var currentDrupalLanguage = drupalSettings.sfgov_translations.node.current_language;
+      var gTranslateCookie = getCookie('googtrans');
+      var drupalTranslation = getDrupalTranslation(currentDrupalLanguage);
+      var translationNoticeStr = '';
+      if(currentDrupalLanguage == 'en' && !gTranslateCookie) {
+        translationNoticeStr = '';
+      }
+      else if(currentDrupalLanguage != 'en' && drupalTranslation) {
+        translationNoticeStr = 'This page was human translated';
+      } else {
+        translationNoticeStr = 'This page was machine translated';
+      }
+      if(translationNoticeStr.length > 0) {
+        $('.sfgov-alpha-banner').after('<div>' + translationNoticeStr + '</div>');
+      }
+    },500);
+  }
+
+  function sfgovGtranslate(languageValue) {
+    doGTranslate(languageValue);
   }
 
   function getCookie(cookieName) {
@@ -93,12 +120,10 @@
     if(document.cookie) {
       cookiesArr = document.cookie.split(';');
       for(var i=0; i<cookiesArr.length; i++) {
-        // console.log(cookiesArr[i]);
         var keyValPair = cookiesArr[i].split('=');
         cookies[keyValPair[0].replace(/\s/g, '')] = keyValPair[1];
       }
     }
-    // console.log(cookies);
     return cookies[cookieName];
   }
 
