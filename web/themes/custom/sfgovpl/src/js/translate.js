@@ -101,7 +101,12 @@
       }
       else if(currentDrupalLanguage != 'en' && drupalTranslation) {
         translationNoticeStr = 'This page was human translated';
-      } else {
+      } else if(currentDrupalLanguage == 'en' && gTranslateCookie) {
+        if(gTranslateCookie.split('/')[2] !== 'en') {
+          translationNoticeStr = 'This page was machine translated';
+        }
+      }
+      else {
         translationNoticeStr = 'This page was machine translated';
       }
       if(translationNoticeStr.length > 0) {
