@@ -7,7 +7,7 @@
     
     $('#edit-keyword').attr('autocomplete', 'off');
     
-    $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>Top Searches:</h4></div>');
+    $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>Top searches:</h4></div>');
     $(containerSelector).hide();
 
     $(topSearchSuggs).each(function() {
