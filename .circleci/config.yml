@@ -106,14 +106,12 @@ jobs:
                 command: composer -n build-assets
 
             - run:
-                name: create simplesamlphp symlinks
+                name: create simplesamlphp symlink
                 command: |
-                    mkdir -p ./vendor/simplesamlphp/simplesamlphp
-                    cd ./vendor/simplesamlphp/simplesamlphp
-                    rm -r config
-                    ln -Fs ../../../web/private/simplesamlphp-1.17.0-rc3/config config
-                    rm -r metadata
-                    ln -Fs ../../../web/sites/default/files/private/metadata metadata
+                    mkdir -p ./vendor/simplesamlphp
+                    cd ./vendor/simplesamlphp
+                    rm -r simplesamlphp
+                    ln -Fs ../../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
 
             - run:
                 name: prepare database for site-under test
