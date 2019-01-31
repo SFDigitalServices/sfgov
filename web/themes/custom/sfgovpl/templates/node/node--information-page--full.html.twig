@@ -1,0 +1,24 @@
+
+{% set description = node.get('field_description').getValue()[0]['value'] %}
+
+{% include "@molecules/06-headers/01-content-head.twig" with {
+  "title": node.getTitle(),
+  "description": description,
+  "image": image
+} %}
+
+<div class="sfgov-container--full sfgov-container--right-sidebar">
+  <div class="sfgov-container--content-left">
+    {{ content|without('field_description', 'group_grey_boxes') }}
+  </div>
+
+  {% if content.group_grey_boxes|render %}
+    {{ content.group_grey_boxes }}
+  {% endif %}
+
+  {% include "@atoms/08-timestamp/08-timestamp.twig" with {
+    'updated_date': node.getChangedTime|date('F d, Y')
+  } %}
+
+</div>
+
