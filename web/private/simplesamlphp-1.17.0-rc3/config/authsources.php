@@ -42,13 +42,13 @@ $config = array(
              'en' => 'A service',
              'no' => 'En tjeneste',
           ),
-        */
+        
         'attributes' => array(
             'email' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-        ),
-        /*'attributes.required' => array (
-            'urn:oid:x.x.x.x',
         ),*/
+        'attributes.required' => array (
+            'email', //'urn:oid:x.x.x.x',
+        ),
     ),
 
 
