@@ -1,0 +1,28 @@
+uuid: ab8ca706-90f5-4c10-9dba-72c53048e02f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departments
+    - node.type.department
+    - node.type.information_page
+id: node.information_page.field_departments
+field_name: field_departments
+entity_type: node
+bundle: information_page
+label: 'Related Departments'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
