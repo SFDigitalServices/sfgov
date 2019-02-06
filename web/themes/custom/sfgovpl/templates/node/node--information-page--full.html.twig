@@ -13,14 +13,12 @@
   <div class="sfgov-container--content-left">
     {{ content|without('field_description', 'field_transactions', 'group_grey_boxes') }}
   </div>
-
-  {% if content.group_grey_boxes|render %}
-    {{ content.group_grey_boxes }}
-  {% endif %}
-
-  {% include "@atoms/08-timestamp/08-timestamp.twig" with {
-    'updated_date': node.getChangedTime|date('F d, Y')
-  } %}
-
 </div>
+{% if content.group_grey_boxes|render %}
+  {{ content.group_grey_boxes }}
+{% endif %}
+
+{% include "@atoms/08-timestamp/08-timestamp.twig" with {
+  'updated_date': node.getChangedTime|date('F d, Y')
+} %}
 
