@@ -38,16 +38,15 @@ $config = array(
          * The metadata will then be created as follows:
          * <md:RequestedAttribute FriendlyName="friendlyName" Name="name" />
          */
-        /*'name' => array(
-             'en' => 'A service',
-             'no' => 'En tjeneste',
-          ),
-        
+        'name' => array(
+             'en' => 'sf.gov',
+        ),
         'attributes' => array(
-            'email' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-        ),*/
+            'email' => 'urn:oid:0.9.2342.19200300.100.1.3',
+        ),
         'attributes.required' => array (
-            'email', //'urn:oid:x.x.x.x',
+            'urn:oid:0.9.2342.19200300.100.1.3',
+            //'urn:oid:x.x.x.x',
         ),
     ),
 
