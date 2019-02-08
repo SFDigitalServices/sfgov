@@ -43,6 +43,7 @@ $config = array(
         ),
         'attributes' => array(
             'email' => 'urn:oid:0.9.2342.19200300.100.1.3',
+            'memberOf' => 'urn:oid:1.2.840.113556.1.2.102',
         ),
         'attributes.required' => array (
             'urn:oid:0.9.2342.19200300.100.1.3',
