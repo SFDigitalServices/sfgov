@@ -53,7 +53,7 @@
           window.location.href = enUrl;
         },200)
       }
-      displayTranslationNotice();
+      // displayTranslationNotice();
     }
     
   }
@@ -87,7 +87,7 @@
         }
       }
     }
-    displayTranslationNotice();
+    // displayTranslationNotice();
   }
 
   function displayTranslationNotice() {
