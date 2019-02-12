@@ -98,14 +98,14 @@ Scenario: Create department node
   Scenario: Create transaction with sort title and verify sort title exists as an attribute
   Given I am logged in as a user with the "administrator" role
   When I go to "node/add/transaction"
-  And I enter "Apply for a zawesome thing for your city related thing" for "Title"
+  And I enter "Apply for a aaaawesome thing for your city related thing" for "Title"
   And I enter "published" for "moderation_state[0][state]"
-  And I enter "Zawesome thing for your city related thing" for "field_sort_title[0][value]"
+  And I enter "aaaawesome thing for your city related thing" for "field_sort_title[0][value]"
   And I press "Save"
-  When I go to "apply-zawesome-thing-your-city-related-thing"
+  When I go to "apply-aaaawesome-thing-your-city-related-thing"
   And I click the ".sfgov-tabbed-navigation>ul>li>a[href*='edit']" element
   Then I should see "Published"
-  When I go to "services/all?page=2"
-  Then I should see "Apply for a zawesome thing for your city related thing"
-  And I should see an "a[data-sort-title='Zawesome thing for your city related thing']" element
+  When I go to "services/all"
+  Then I should see "Apply for a aaaawesome thing for your city related thing"
+  And I should see an "a[data-sort-title='aaaawesome thing for your city related thing']" element
   

@@ -1,0 +1,77 @@
+uuid: 054d4f4a-8bbb-4084-840e-1ac778794f58
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.information_page.field_departments
+    - field.field.node.information_page.field_description
+    - field.field.node.information_page.field_information_page_section
+    - field.field.node.information_page.field_transactions
+    - node.type.information_page
+  module:
+    - entity_reference_revisions
+    - field_group
+    - text
+    - user
+third_party_settings:
+  field_group:
+    group_grey_boxes:
+      children:
+        - field_departments
+      parent_name: ''
+      weight: 4
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: ''
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'grey boxes'
+id: node.information_page.default
+targetEntityType: node
+bundle: information_page
+mode: default
+content:
+  field_departments:
+    weight: 5
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_description:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_information_page_section:
+    type: entity_reference_revisions_entity_view
+    weight: 3
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_transactions:
+    weight: 2
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
