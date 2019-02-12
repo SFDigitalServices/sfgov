@@ -9,7 +9,9 @@
         $(block_search).attr({'placeholder': 'Search'});
       }
 
-      $('.sfgov-responsive--search-form .sfgov-search-form', context).clone().appendTo('.responsive-search--container').addClass('cloned-search');
+      $('#views-exposed-form-search-page-1').addClass('sfgov-search-form');
+
+      $('.sfgov-responsive--search-form #views-exposed-form-search-page-1', context).clone().appendTo('.responsive-search--container').addClass('cloned-search');
 
       // Search Toggle.
 
