@@ -15,7 +15,6 @@ class SearchForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
     $keyword = \Drupal::request()->query->get('keyword');
-    // drupal_set_message($keyword);
     $form['#attributes'] = array(
       'class' => array(
         'sfgov-search-form',
@@ -31,8 +30,10 @@ class SearchForm extends FormBase {
           'sf-gov-search-input-class',
         ),
       ),
-      // '#value' => $keyword,
     );
+
+    $form['#prefix'] = '<div class="mobile-btn"><i class="fa fa-times"></i></div>';
+    $form['#attached']['library'][] = 'sfgov_search/search';
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
@@ -40,14 +41,11 @@ class SearchForm extends FormBase {
       '#value' => $this->t('Search'),
       '#button_type' => 'primary',
     );
-    // $form['#attached']['library'][] = 'sfgov_search/search';
+
     return $form;
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // foreach ($form_state->getValues() as $key => $value) {
-    //   drupal_set_message($key . ': ' . $value);
-    // }
     $keyword = $form_state->getValues()['sfgov_search_input'];
     $form_state->setRedirect('sfgov_search.content', ['keyword' => $keyword]);
   }

@@ -260,9 +260,26 @@ function getQueryParam(queryParam) {
   return null;
 }
 
+function doMobile() {
+  var containerSelector = '.head-right--container #block-sfgovsearchblock';
+  $(containerSelector + ' .mobile-btn').click(function() {
+    if($(this).hasClass('close')) {
+      $(this).removeClass('close');
+      $(containerSelector).removeClass('mobile-open');
+    } else {
+      $(this).addClass('close');
+      $(containerSelector).addClass('mobile-open');
+    }
+  });
+}
+
 var search311 = new Search311();
 $(document).ready(function() {
-  $('.sf-gov-search-input-class').val(drupalSettings.sfgovSearch.keyword);
-  search311.setParam('query', drupalSettings.sfgovSearch.keyword);
-  search311.makeRequest();
+  console.log('sfgov_search.js');
+  if(drupalSettings.sfgovSearch) {
+    $('.sf-gov-search-input-class').val(drupalSettings.sfgovSearch.keyword);
+    search311.setParam('query', drupalSettings.sfgovSearch.keyword);
+    search311.makeRequest();
+  }
+  doMobile();
 });
