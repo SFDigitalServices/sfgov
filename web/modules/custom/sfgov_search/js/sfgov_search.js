@@ -32,11 +32,6 @@ function Search311() {
   this.renderSearchResults = function(results, highlightRegex, elem, isSfGov) {
     var html = '';
     if(results.length > 0) {
-      // if(isSfGov) {
-      //   elem.append('<div class="sfgov-search-domain-label sfgov-search-result views-row">Results from sf.gov</div>');
-      // } else {
-      //   elem.append('<div class="sfgov-search-domain-label sfgov-search-result views-row">Results from other city departments</div>');
-      // }
       var hr = new RegExp(highlightRegex.replace('(?i)', ''), 'gi');
       console.log(hr);
   
@@ -267,7 +262,7 @@ function getQueryParam(queryParam) {
 
 var search311 = new Search311();
 $(document).ready(function() {
-  $('#edit-sfgov-search-input').val(drupalSettings.sfgovSearch.keyword);
+  $('.sf-gov-search-input-class').val(drupalSettings.sfgovSearch.keyword);
   search311.setParam('query', drupalSettings.sfgovSearch.keyword);
   search311.makeRequest();
 });
