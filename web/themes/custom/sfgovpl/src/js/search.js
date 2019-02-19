@@ -9,8 +9,6 @@
         $(block_search).attr({'placeholder': 'Search'});
       }
 
-      $('#views-exposed-form-search-page-1').addClass('sfgov-search-form');
-
       $('.sfgov-responsive--search-form #views-exposed-form-search-page-1', context).clone().appendTo('.responsive-search--container').addClass('cloned-search');
 
       // Search Toggle.
