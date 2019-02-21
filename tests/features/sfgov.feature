@@ -125,4 +125,3 @@ Scenario: Create department node
   And I click the "#edit-submit" element
   Then I should be on "es/test-translation-transaction"
   And I should see "This is the translated version"
-  And the "class" attribute of the "#views-exposed-form-search-page-1" element should contain "sfgov-search-form"
