@@ -111,10 +111,11 @@ function Search311() {
         }
         
         html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + title.replace(' | San Francisco', '') + '</h4></a>';
-        html += '    <div clas="body-container">';
+        html += '    <div class="body-container">';
         html += '      <div class="related-dept"></div>';
         // html += '      <p class="body">' + result.summary + '</p>';
         html += '      <p class="body">' + resultSummary + '</p>';
+        html += '      <a href="' + result.liveUrl + '">' + result.liveUrl + '</a>';
         html += deptContactInfoHtml;
         html += '    </div>';
         html += '  </div>';
@@ -129,6 +130,7 @@ function Search311() {
     var spell = data.response.resultPacket.spell ? true : false;
     var error = data.response.resultPacket.error ? true : false;
     var results = data.response.resultPacket.results;
+    var resultsSummary = data.response.resultPacket.resultsSummary;
     var highlightRegex = data.response.resultPacket.queryHighlightRegex;
     console.log(highlightRegex);
     var resultsDiv = $('#sfgov-search-results');
@@ -137,7 +139,7 @@ function Search311() {
   
     if(!error) {
       if(spell && getQueryParam('si') !== 'true') { // misspelled word
-        messagesDiv.prepend('<div class="sfgov-search-misspelled">Showing results for <strong><em>' + data.response.resultPacket.spell.text + '</em></strong><br><div class="sfgov-search-instead">Search instead for <a href="/search_?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
+        messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for:</span><span class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</span><br><div class="sfgov-search-instead">Search instead for: <a href="/search_?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
         // make a request for the correctly spelled word
         search311.setParam('query', data.response.resultPacket.spell.text);
         search311.makeRequest();
@@ -149,13 +151,12 @@ function Search311() {
           '</div>');
         } else {
           _this.renderSearchResults(results, highlightRegex, resultsDiv, true);
-          // var splitResults = _this.splitSearchResults(results);
-          // _this.renderSearchResults(splitResults.sfdotgov, highlightRegex, resultsDiv, true);
-          // _this.renderSearchResults(splitResults.other, highlightRegex, resultsOtherDiv, false);
           if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
             _this.paginate(data);
             $('.sfgov-search-pagination').addClass('has-nav');
           }
+          // show number of results
+          this.updateCountSummary(resultsSummary.totalMatching, resultsSummary.currStart, (resultsSummary.nextStart ? resultsSummary.nextStart-1 : resultsSummary.totalMatching));
         }
       }
     }
@@ -164,14 +165,18 @@ function Search311() {
     }
   }
 
+  this.updateCountSummary = function(total, current, next) {
+    $('#sfgov-search-results-count').html(current + ' - ' + next + ' of ' + total + ' results');
+    $('#sfgov-search-results-count').show();
+  }
+
+  // add pagination for search results
   this.paginate = function(data) {
     var resultsSummary = data.response.resultPacket.resultsSummary;
     if(resultsSummary) {
       var totalResults = resultsSummary.totalMatching;
       var resultsPerPage = resultsSummary.numRanks;
       var numPages = Math.ceil(totalResults/resultsPerPage);
-      var currStart = resultsSummary.currStart;
-      console.log(numPages);
       var paginateHtml = $('<ul class="sfgov-search-pagination-nav"></ul>');
       $(paginateHtml).append('<li class="previous"><a href="javascript:void(0)">previous</a></li>');
       for(var i=1; i<=numPages; i++) {
@@ -186,8 +191,6 @@ function Search311() {
           $(this).parent().addClass('current');
           var linkPageNum = $(this).attr('data-page-num');
           var nextStart = $(this).attr('data-next-start');
-          console.log('pageNum: ' + linkPageNum);
-          console.log('nextStart: ' + nextStart);
           _this.setParam('start_rank', nextStart);
           _this.makeRequest();
         })
@@ -210,7 +213,6 @@ function Search311() {
         var prevPage = parseInt($(current).find('a').attr('data-page-num')) - 1;
         $('a[data-page-num="' + prevPage + '"]').click();
       });
-
     }
   }
 
