@@ -169,6 +169,23 @@ function Search311() {
 
   // add pagination for search results
   this.paginate = function(data) {
+
+    var updatePagination = function(currentPage) {
+      var pageLinks = $('.sfgov-search-pagination-nav .page-num');
+      var numPages = pageLinks.length;
+      var numPagesToShow = 5;
+      console.log('updatePagination:' + currentPage + ', numPages:' + pageLinks.length);
+
+      if(currentPage <= 2) {
+        console.log('do first 5');
+      } else if(currentPage >= (numPages-2)) {
+        console.log('do last 5');
+      } else {
+        console.log('do middle 5');
+      }
+
+    };
+
     var resultsSummary = data.response.resultPacket.resultsSummary;
     if(resultsSummary) {
       var totalResults = resultsSummary.totalMatching;
@@ -180,7 +197,7 @@ function Search311() {
         var classname = '';
         if(i==1) classname += ' first current';
         if(i==numPages) classname += ' last';
-        var listItem = $('<li class="' + classname + '"></li>');
+        var listItem = $('<li class="' + classname + ' page-num"></li>');
         var pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i-1) * resultsPerPage) + 1) + '"></a>');
         $(listItem).append(pageLink);
         $(pageLink).click(function() {
@@ -190,10 +207,6 @@ function Search311() {
           var first = parseInt($('.sfgov-search-pagination-nav .first a').attr('data-page-num'));
           var last = parseInt($('.sfgov-search-pagination-nav .last a').attr('data-page-num'));
           var nextStart = $(this).attr('data-next-start');
-          
-          console.log('pageNum:' + pageNum);
-          console.log('last:' + last);
-          console.log('first:' + first);
 
           if(pageNum == last) {
             $('.sfgov-search-pagination-nav .next').hide();
@@ -209,10 +222,12 @@ function Search311() {
 
           _this.setParam('start_rank', nextStart);
           _this.makeRequest();
-        })
+          updatePagination(pageNum);
+        });
         $(pageLink).append(i);
         $(paginateHtml).append(listItem);
       }
+
       $('.sfgov-search-pagination').prepend(paginateHtml);
       $(paginateHtml).append('<li class="next"><a href="javascript:void(0)">next</a></li>');
 
@@ -230,6 +245,8 @@ function Search311() {
         var prevPage = current - 1;
         $('a[data-page-num="' + prevPage + '"]').click();
       });
+
+      updatePagination(1);
     }
   }
 
