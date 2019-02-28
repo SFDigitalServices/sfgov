@@ -109,3 +109,20 @@ Scenario: Create department node
   Then I should see "Apply for a aaaawesome thing for your city related thing"
   And I should see an "a[data-sort-title='aaaawesome thing for your city related thing']" element
   
+@api @sfgov
+  Scenario: Create transaction with translation
+  Given I am logged in as a user with the "administrator" role
+  When I go to "node/add/transaction"
+  And I enter "Test translation transaction" for "Title"
+  And I enter "published" for "moderation_state[0][state]"
+  And I press "Save"
+  When I go to "test-translation-transaction"
+  And I click the ".sfgov-tabbed-navigation>ul>li>a[href*='translations']" element
+  And I click the "a[hreflang='es']" element
+  Then I should see "translation of Test Translation Transaction"
+  When I enter "This is the translated version" for "Description"
+  And I enter "published" for "moderation_state[0][state]"
+  And I click the "#edit-submit" element
+  Then I should be on "es/test-translation-transaction"
+  And I should see "This is the translated version"
+  And the "class" attribute of the "#views-exposed-form-search-page-1" element should contain "sfgov-search-form"
