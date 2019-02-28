@@ -7,8 +7,7 @@ function Search311() {
     "path": "/s/search.json",
     "parameters": {
       "query": "",
-      "collection": "sf-dev-crawl",
-      // "collection": "sf-prod-search-meta",
+      "collection": "sfgov-meta-prod",
       "SM": "both",
       "qsup": "",
       "start_rank": 1,
@@ -18,6 +17,8 @@ function Search311() {
   };
 
   this.makeRequest = function() {
+    $('#sfgov-search-overlay').show();
+    $('#sfgov-search-loading').html('Loading...').css({'top':($(document).scrollTop() + ($(window).height()/2))+'px'}).show();
     var options = '';
     for(var key in this.props.parameters) {
       options += key + '=' + this.props.parameters[key] + '&';
@@ -30,7 +31,7 @@ function Search311() {
     });
   };
 
-  this.renderSearchResults = function(results, highlightRegex, elem, isSfGov) {
+  this.renderSearchResults = function(results, resultsSummary, highlightRegex, elem, isSfGov) {
     var html = '';
     if(results.length > 0) {
       var hr = new RegExp(highlightRegex.replace('(?i)', ''), 'gi');
@@ -70,7 +71,7 @@ function Search311() {
           searchResultContainerClass = 'topic-search-result--container';
         }
   
-        html += '<div class="sfgov-search-result views-row">';
+        html += '<div class="sfgov-search-result views-row" data-result-page-num=' + Math.ceil(resultsSummary.currStart/resultsSummary.numRanks) + '>';
         html += '  <div class="' + searchResultClass + '">';
         html += '  <div class="' + searchResultContainerClass + ' sfgov-fb-search-result">';
     
@@ -117,7 +118,15 @@ function Search311() {
         html += '  </div>';
         html += '</div>';
       }
-      $(elem).html(html);
+
+      $('#sfgov-search-overlay').hide();
+      $('#sfgov-search-loading').hide();
+
+      if($('#sfgov-search-results').hasClass('sfgov-search-mobile-results')) {
+        $(elem).html($(elem).html() + html);
+      } else {
+        $(elem).html(html);
+      }
     }
   }
 
@@ -144,7 +153,7 @@ function Search311() {
           '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
           '</div>');
         } else {
-          _this.renderSearchResults(results, highlightRegex, resultsDiv, true);
+          _this.renderSearchResults(results, resultsSummary, highlightRegex, resultsDiv, true);
           if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
             _this.paginate(data);
             $('.sfgov-search-pagination').addClass('has-nav');
@@ -233,7 +242,9 @@ function Search311() {
             $('.sfgov-search-pagination-nav .previous').show();
           }
 
-          $(document).scrollTop($('#block-sfgovsearchblock-2').offset().top);
+          if(!$('#sfgov-search-results').hasClass('sfgov-search-mobile-results')) {
+            $(document).scrollTop($('#block-sfgovsearchblock-2').offset().top);
+          }
 
           _this.setParam('start_rank', nextStart);
           _this.makeRequest();
@@ -311,7 +322,7 @@ function getQueryParam(queryParam) {
   return null;
 }
 
-function doMobile() {
+function attachMobileEvents() {
   var containerSelector = '.head-right--container #block-sfgovsearchblock';
   $(containerSelector + ' .mobile-btn').click(function() {
     if($(this).hasClass('close')) {
@@ -322,15 +333,33 @@ function doMobile() {
       $(containerSelector).addClass('mobile-open');
     }
   });
+  $('.sfgov-search-mobile-more').click(function() {
+    $('.sfgov-search-pagination .next').click();
+  });
 }
 
 var search311 = new Search311();
 $(document).ready(function() {
-  console.log('sfgov_search.js');
+  var doMobile = function() {
+    var currentPage = $('.sfgov-search-pagination-nav .current a').attr('data-page-num');
+    var width = $(window).width();
+    if(width <= 770) {
+      $('#sfgov-search-results').addClass('sfgov-search-mobile-results');
+      $('#sfgov-search-results .sfgov-search-result.views-row').show();
+    } else {
+      $('#sfgov-search-results').removeClass('sfgov-search-mobile-results');
+      $('#sfgov-search-results .sfgov-search-result.views-row:not([data-result-page-num="' + currentPage + '"])').hide();
+    }
+  };
+
   if(drupalSettings.sfgovSearch) {
     $('.sf-gov-search-input-class').val(drupalSettings.sfgovSearch.keyword);
     search311.setParam('query', drupalSettings.sfgovSearch.keyword);
     search311.makeRequest();
   }
+  attachMobileEvents();
   doMobile();
+  $(window).resize(function() {
+    doMobile();
+  });
 });

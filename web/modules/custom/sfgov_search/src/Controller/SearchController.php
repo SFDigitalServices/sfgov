@@ -13,6 +13,9 @@ class SearchController extends ControllerBase {
             '  <div id="sfgov-search-results"></div>' .
             '  <div id="other-sfgov-search-results"></div>' .
             '  <div class="sfgov-search-pagination"></div>' .
+            '  <div class="sfgov-search-mobile-more"><a href="javascript:void(0)">Show more results</a></div>' .
+            '  <div id="sfgov-search-overlay"></div>' .
+            '  <div id="sfgov-search-loading"></div>' .
             '</div>';
     return [
       '#type' => 'markup',
