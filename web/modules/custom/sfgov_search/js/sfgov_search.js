@@ -152,6 +152,8 @@ function Search311() {
           '<h2>We don\'t have anything yet that matches your search.</h2>' +
           '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
           '</div>');
+          $('#sfgov-search-overlay').hide();
+          $('#sfgov-search-loading').hide();
         } else {
           _this.renderSearchResults(results, resultsSummary, highlightRegex, resultsDiv, true);
           if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
