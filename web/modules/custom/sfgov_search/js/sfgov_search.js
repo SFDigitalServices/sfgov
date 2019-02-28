@@ -133,7 +133,7 @@ function Search311() {
   
     if(!error) {
       if(spell && getQueryParam('si') !== 'true') { // misspelled word
-        messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for:</span><span class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</span><br><div class="sfgov-search-instead">Search instead for: <a href="/_search_?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
+        messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for:</span><span class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</span><br><div class="sfgov-search-instead">Search instead for: <a href="/search?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
         // make a request for the correctly spelled word
         search311.setParam('query', data.response.resultPacket.spell.text);
         search311.makeRequest();
