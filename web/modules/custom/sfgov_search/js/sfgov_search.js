@@ -109,7 +109,7 @@ function Search311() {
         
         html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + title.replace(' | San Francisco', '') + '</h4></a>';
         html += '    <div class="body-container">';
-        html += '      <div class="related-dept"></div>';
+        // html += '      <div class="related-dept"></div>';
         html += '      <p class="body">' + resultSummary + '</p>';
         html += '      <a href="' + result.liveUrl + '">' + result.liveUrl + '</a>';
         html += deptContactInfoHtml;
@@ -139,6 +139,8 @@ function Search311() {
     var resultsDiv = $('#sfgov-search-results');
     var resultsOtherDiv = $('#other-sfgov-search-results');
     var messagesDiv = $('#sfgov-search-messages');
+
+    console.log('spell', data.response.resultPacket);
   
     if(!error) {
       if(spell && getQueryParam('si') !== 'true') { // misspelled word
