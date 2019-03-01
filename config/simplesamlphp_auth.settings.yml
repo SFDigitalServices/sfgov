@@ -1,28 +1,32 @@
 langcode: en
 default_langcode: en
-activate: false
-mail_attr: mail
-unique_id: eduPersonPrincipalName
-user_name: eduPersonPrincipalName
+activate: true
+mail_attr: email
+unique_id: email
+user_name: email
 auth_source: default-sp
 login_link_display_name: 'Federated login'
 header_no_cache: false
 role:
-  population: null
+  population: ''
   eval_every_time: false
 register_users: true
 allow:
-  set_drupal_pwd: true
+  set_drupal_pwd: false
   default_login: true
-  default_login_roles: {  }
-  default_login_users: '1'
-logout_goto_url: null
+  default_login_roles:
+    administrator: administrator
+    authenticated: '0'
+    writer: '0'
+    publisher: '0'
+  default_login_users: '4048'
+logout_goto_url: ''
 user_register_original: visitors_admin_approval
 sync:
   mail: true
   user_name: true
 autoenablesaml: false
-debug: false
+debug: true
 secure: false
 httponly: false
 _core:
