@@ -112,6 +112,14 @@ jobs:
                     cd ./vendor/simplesamlphp
                     rm -r simplesamlphp
                     ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
+            
+            - run:
+                name: add secrets
+                command: |
+                    echo $FILE_IDCSCERTIFICATEPEM >> ./web/sites/default/files/private/IDCSCertificate.pem
+                    echo $FILE_SAMLCRT >> ./web/sites/default/files/private/saml.crt
+                    echo $FILE_SAMLPEM >> ./web/sites/default/files/private/saml.pem
+                    echo $FILE_SIMPLESAMLCONFIG >> ./web/sites/default/files/private/simplesaml_config.php
 
             - run:
                 name: prepare database for site-under test
