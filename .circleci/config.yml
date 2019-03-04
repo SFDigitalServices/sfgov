@@ -113,13 +113,16 @@ jobs:
                     rm -r simplesamlphp
                     ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
             
-            # - run:
-            #     name: add secrets
-            #     command: |
-            #         echo $FILE_IDCSCERTIFICATEPEM >> ./web/sites/default/files/private/IDCSCertificate.pem
-            #         echo $FILE_SAMLCRT >> ./web/sites/default/files/private/saml.crt
-            #         echo $FILE_SAMLPEM >> ./web/sites/default/files/private/saml.pem
-            #         echo $FILE_SIMPLESAMLCONFIG >> ./web/sites/default/files/private/simplesaml_config.php
+            - run:
+                name: add secrets
+                command: |
+                    echo $FILE_IDCSCERTIFICATEPEM >> ./web/private/IDCSCertificate.pem
+                    echo $FILE_SAMLCRT >> ./web/private/saml.crt
+                    echo $FILE_SAMLPEM >> ./web/private/saml.pem
+                    echo $FILE_SIMPLESAMLCONFIG >> ./web/private/simplesaml_config.php
+                    mkdir -p ./web/private/metadata
+                    echo $FILE_SAML20IDPREMOTE >> ./web/private/metadata/saml20-idp-remote.php
+                    echo $FILE_SAML20SPREMOTE >> ./web/private/metadata/saml20-sp-remote.php
 
             - run:
                 name: prepare database for site-under test

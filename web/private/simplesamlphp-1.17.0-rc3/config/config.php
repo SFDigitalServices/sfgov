@@ -1,1 +1,1 @@
-../../../sites/default/files/private/simplesaml_config.php
+../../simplesaml_config.php
