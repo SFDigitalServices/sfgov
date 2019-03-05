@@ -125,11 +125,6 @@ jobs:
                     echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
 
             - run:
-                name: create log simplesaml log directory
-                command: |
-                    mkdir -p ../files/private/log
-
-            - run:
                 name: prepare database for site-under test
                 command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
                 # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
