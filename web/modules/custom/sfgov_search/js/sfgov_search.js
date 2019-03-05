@@ -8,6 +8,7 @@ function Search311() {
     "parameters": {
       "query": "",
       "collection": "sfgov-meta-prod",
+      // "collection": "sf-dev-crawl",
       "SM": "both",
       "qsup": "",
       "start_rank": 1,
@@ -144,7 +145,7 @@ function Search311() {
   
     if(!error) {
       if(spell && getQueryParam('si') !== 'true') { // misspelled word
-        messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for:</span><span class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</span><br><div class="sfgov-search-instead">Search instead for: <a href="/search?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
+        messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for </span><a href="/search?keyword=' + data.response.resultPacket.spell.text + '" class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + drupalSettings.sfgovSearch.keyword + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
         // make a request for the correctly spelled word
         search311.setParam('query', data.response.resultPacket.spell.text);
         search311.makeRequest();
@@ -173,17 +174,17 @@ function Search311() {
   }
 
   this.updateCountSummary = function(total, current, next) {
-    $('#sfgov-search-results-count').html(current + ' - ' + next + ' of ' + total + ' results');
+    $('#sfgov-search-results-count').html(current + ' - ' + next + ' of ' + total.toLocaleString() + ' results');
     $('#sfgov-search-results-count').show();
   }
 
   // add pagination for search results
   this.paginate = function(data) {
+    var numPagesToShow = 5;
 
     var updatePagination = function(currentPage) {
       var pageLinks = $('.sfgov-search-pagination-nav .page-num');
       var numPages = pageLinks.length;
-      var numPagesToShow = 5;
       var start = 1;
       var end = 1;
 
@@ -259,7 +260,11 @@ function Search311() {
       }
 
       $('.sfgov-search-pagination').prepend(paginateHtml);
-      $(paginateHtml).append('<li class="next"><a href="javascript:void(0)">Next</a></li>');
+      
+      console.log(numPages);
+      console.log(numPagesToShow);
+
+      if(numPages > 1) $(paginateHtml).append('<li class="next"><a href="javascript:void(0)">Next</a></li>');
 
       // next click
       $('.sfgov-search-pagination-nav .next').click(function() {
