@@ -108,11 +108,11 @@ function Search311() {
           html += '<div class="content-type"><i class="sfgov-icon-filefilled"></i><span>Topic</span></div>';
         }
         
-        html += '    <a class="title-url" href="' + result.liveUrl + '"><h4>' + title.replace(' | San Francisco', '') + '</h4></a>';
+        html += '    <a class="title-url" href="' + result.liveUrl + '" title="' + title + '"><h4>' + title + '</h4></a>';
         html += '    <div class="body-container">';
         // html += '      <div class="related-dept"></div>';
         html += '      <p class="body">' + resultSummary + '</p>';
-        html += '      <a href="' + result.liveUrl + '">' + result.liveUrl + '</a>';
+        html += '      <a href="' + result.liveUrl + '" title="' + title + '">' + result.liveUrl + '</a>';
         html += deptContactInfoHtml;
         html += '    </div>';
         html += '  </div>';
@@ -219,13 +219,13 @@ function Search311() {
       var resultsPerPage = resultsSummary.numRanks;
       var numPages = Math.ceil(totalResults/resultsPerPage);
       var paginateHtml = $('<ul class="sfgov-search-pagination-nav"></ul>');
-      $(paginateHtml).append('<li class="previous" style="display:none"><a href="javascript:void(0)">Previous</a></li>');
+      $(paginateHtml).append('<li class="previous" style="display:none"><a href="javascript:void(0)" title="Previous search results page">Previous</a></li>');
       for(var i=1; i<=numPages; i++) {
         var classname = '';
         if(i==1) classname += ' first current';
         if(i==numPages) classname += ' last';
         var listItem = $('<li class="' + classname + ' page-num"></li>');
-        var pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i-1) * resultsPerPage) + 1) + '"></a>');
+        var pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i-1) * resultsPerPage) + 1) + '" title="Search results page ' + i + '"></a>');
         $(listItem).append(pageLink);
         $(pageLink).click(function() {
           $('.sfgov-search-pagination-nav .current').removeClass('current');
@@ -264,7 +264,7 @@ function Search311() {
       console.log(numPages);
       console.log(numPagesToShow);
 
-      if(numPages > 1) $(paginateHtml).append('<li class="next"><a href="javascript:void(0)">Next</a></li>');
+      if(numPages > 1) $(paginateHtml).append('<li class="next"><a href="javascript:void(0)" title="Next search results page">Next</a></li>');
 
       // next click
       $('.sfgov-search-pagination-nav .next').click(function() {
