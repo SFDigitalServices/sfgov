@@ -44,6 +44,7 @@ function Search311() {
         var searchResultClass = 'transaction-search-result';
         var searchResultContainerClass = 'sfgov-transaction-search--container';
         var title = '';
+
         if(result.metaData.sfgovTitle) {
           title = result.metaData.sfgovTitle;
         } else {
@@ -51,6 +52,7 @@ function Search311() {
         }
   
         var resultSummary = '';
+        var truncatedSummary = '';
         if(result.metaData.sfgovSummary) {
           resultSummary = result.metaData.sfgovSummary;
         } else if(result.metaData.c) {
@@ -60,7 +62,16 @@ function Search311() {
         } else {
           resultSummary = 'No result summary';
         }
-        resultSummary = resultSummary.replace(hr, '<strong>$&</strong>');
+
+        if(resultSummary.length > 200) {
+          truncatedSummary = resultSummary.substr(0, 200);
+          truncatedSummary = truncatedSummary.substr(0, truncatedSummary.lastIndexOf(' ')) + ' ...';
+        } else {
+          truncatedSummary = resultSummary;
+        }
+
+        truncatedSummary = truncatedSummary.replace(hr, '<strong>$&</strong>');
+        console.log(truncatedSummary);
   
         if(isDeptSearchResult) {
           searchResultClass = 'department-search-result';
@@ -107,11 +118,13 @@ function Search311() {
         if(isTopicSearchResult) {
           html += '<div class="content-type"><i class="sfgov-icon-filefilled"></i><span>Topic</span></div>';
         }
+
+        
         
         html += '    <a class="title-url" href="' + result.liveUrl + '" title="' + title + '"><h4>' + title + '</h4></a>';
         html += '    <div class="body-container">';
         // html += '      <div class="related-dept"></div>';
-        html += '      <p class="body">' + resultSummary + '</p>';
+        html += '      <p class="body">' + truncatedSummary + '</p>';
         html += '      <a href="' + result.liveUrl + '" title="' + title + '">' + result.liveUrl + '</a>';
         html += deptContactInfoHtml;
         html += '    </div>';
