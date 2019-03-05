@@ -10,12 +10,12 @@ class SearchController extends ControllerBase {
     $html = '<div id="sfgov-search-results-container">' .
             '  <div id="sfgov-search-messages" class="sfgov-search-result views-row sfgov-search-messages"></div>' . 
             '  <div id="sfgov-search-results-count" class="sfgov-search-result views-row"></div>' .
-            '  <div id="sfgov-search-results"></div>' .
+            '  <div id="sfgov-search-results" class="add-height"></div>' .
             '  <div id="other-sfgov-search-results"></div>' .
             '  <div class="sfgov-search-pagination"></div>' .
             '  <div class="sfgov-search-mobile-more"><a href="javascript:void(0)">Show more results</a></div>' .
             '  <div id="sfgov-search-overlay"></div>' .
-            '  <div id="sfgov-search-loading"></div>' .
+            '  <div id="sfgov-search-loading"><div class="loader loader-default is-active"></div></div>' .
             '</div>';
     return [
       '#type' => 'markup',

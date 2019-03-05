@@ -19,7 +19,7 @@ function Search311() {
 
   this.makeRequest = function() {
     $('#sfgov-search-overlay').show();
-    $('#sfgov-search-loading').html('Loading...').css({'top':($(document).scrollTop() + ($(window).height()/2))+'px'}).show();
+    $('#sfgov-search-loading').css({'top':($(document).scrollTop() + ($(window).height()/2))+'px'}).show();
     var options = '';
     for(var key in this.props.parameters) {
       options += key + '=' + this.props.parameters[key] + '&';
@@ -141,6 +141,8 @@ function Search311() {
       } else {
         $(elem).html(html);
       }
+
+      $('#sfgov-search-results').removeClass('add-height');
     }
   }
 
@@ -360,20 +362,20 @@ function attachMobileEvents() {
   });
 }
 
+function doMobile() {
+  var currentPage = $('.sfgov-search-pagination-nav .current a').attr('data-page-num');
+  var width = $(window).width();
+  if(width <= 770) {
+    $('#sfgov-search-results').addClass('sfgov-search-mobile-results');
+    $('#sfgov-search-results .sfgov-search-result.views-row').show();
+  } else {
+    $('#sfgov-search-results').removeClass('sfgov-search-mobile-results');
+    $('#sfgov-search-results .sfgov-search-result.views-row:not([data-result-page-num="' + currentPage + '"])').hide();
+  }
+};
+
 var search311 = new Search311();
 $(document).ready(function() {
-  var doMobile = function() {
-    var currentPage = $('.sfgov-search-pagination-nav .current a').attr('data-page-num');
-    var width = $(window).width();
-    if(width <= 770) {
-      $('#sfgov-search-results').addClass('sfgov-search-mobile-results');
-      $('#sfgov-search-results .sfgov-search-result.views-row').show();
-    } else {
-      $('#sfgov-search-results').removeClass('sfgov-search-mobile-results');
-      $('#sfgov-search-results .sfgov-search-result.views-row:not([data-result-page-num="' + currentPage + '"])').hide();
-    }
-  };
-
   if(drupalSettings.sfgovSearch) {
     $('.sf-gov-search-input-class').val(drupalSettings.sfgovSearch.keyword);
     search311.setParam('query', drupalSettings.sfgovSearch.keyword);
