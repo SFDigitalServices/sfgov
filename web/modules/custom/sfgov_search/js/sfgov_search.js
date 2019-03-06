@@ -146,42 +146,52 @@ function Search311() {
   }
 
   this.processSearchResults = function(data) {
-    var spell = data.response.resultPacket.spell ? true : false;
-    var error = data.response.resultPacket.error ? true : false;
-    var results = data.response.resultPacket.results;
-    var resultsSummary = data.response.resultPacket.resultsSummary;
-    var highlightRegex = data.response.resultPacket.queryHighlightRegex;
     var resultsDiv = $('#sfgov-search-results');
-    var resultsOtherDiv = $('#other-sfgov-search-results');
     var messagesDiv = $('#sfgov-search-messages');
-  
-    if(!error) {
-      if(spell && getQueryParam('si') !== 'true') { // misspelled word
-        messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for </span><a href="/search?keyword=' + data.response.resultPacket.spell.text + '" class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + data.question.query + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
-        // make a request for the correctly spelled word
-        search311.setParam('query', data.response.resultPacket.spell.text);
-        search311.makeRequest();
-      } else {
-        if(results.length == 0) {
-          resultsDiv.html('<div class="no-search-results--container">' +
-          '<h2>We don\'t have anything yet that matches your search.</h2>' +
-          '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
-          '</div>');
-          $('#sfgov-search-overlay').hide();
-          $('#sfgov-search-loading').hide();
+    var emptyResultSet = false;
+
+    if(data.response.resultPacket) {
+      var spell = data.response.resultPacket.spell ? true : false;
+      var error = data.response.resultPacket.error ? true : false;
+      var results = data.response.resultPacket.results;
+      var resultsSummary = data.response.resultPacket.resultsSummary;
+      var highlightRegex = data.response.resultPacket.queryHighlightRegex;
+    
+      if(!error) {
+        console.log('here');
+        if(spell && getQueryParam('si') !== 'true') { // misspelled word
+          messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for </span><a href="/search?keyword=' + data.response.resultPacket.spell.text + '" class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + data.question.query + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
+          // make a request for the correctly spelled word
+          search311.setParam('query', data.response.resultPacket.spell.text);
+          search311.makeRequest();
         } else {
-          _this.renderSearchResults(results, resultsSummary, highlightRegex, resultsDiv, true);
-          if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
-            _this.paginate(data);
-            $('.sfgov-search-pagination').addClass('has-nav');
+          if(results.length == 0) {
+            emptyResultSet = true;
+          } else {
+            _this.renderSearchResults(results, resultsSummary, highlightRegex, resultsDiv, true);
+            if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
+              _this.paginate(data);
+              $('.sfgov-search-pagination').addClass('has-nav');
+            }
+            // show number of results
+            this.updateCountSummary(resultsSummary.totalMatching, resultsSummary.currStart, (resultsSummary.nextStart ? resultsSummary.nextStart-1 : resultsSummary.totalMatching));
           }
-          // show number of results
-          this.updateCountSummary(resultsSummary.totalMatching, resultsSummary.currStart, (resultsSummary.nextStart ? resultsSummary.nextStart-1 : resultsSummary.totalMatching));
         }
       }
+      else {
+        messagesDiv.prepend('There was an error retrieving search results.  Please try again later.');
+      }
+    } else {
+      emptyResultSet = true;
     }
-    else {
-      messagesDiv.prepend('There was an error retrieving search results.  Please try again later.');
+    if(emptyResultSet) {
+      resultsDiv.html('<div class="no-search-results--container">' +
+      '<h2>We don\'t have anything yet that matches your search.</h2>' +
+      '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
+      '</div>');
+      $('#sfgov-search-overlay').hide();
+      $('#sfgov-search-loading').hide();
+      $('#sfgov-search-results').removeClass('add-height');
     }
   }
 
@@ -381,12 +391,4 @@ $(document).ready(function() {
   $(window).resize(function() {
     doMobile();
   });
-  $('input[name="sfgov_search_input"]').focus(function() {
-    $(this).val('');
-  });
-  $('#sfgov-search-form').submit(function() {
-    if($('input[name="sfgov_search_input"]').val().length <= 0) {
-      return false;
-    }
-  })
 });
