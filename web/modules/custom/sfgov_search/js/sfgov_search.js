@@ -372,7 +372,7 @@ var search311 = new Search311();
 $(document).ready(function() {
   var kw = getQueryParam('keyword');
   if(drupalSettings.sfgovSearch) {
-    $('.sf-gov-search-input-class').val(kw);
+    $('.sf-gov-search-input-class').val(decodeURIComponent(kw));
     search311.setParam('query', kw);
     search311.makeRequest();
   }
