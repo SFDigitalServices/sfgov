@@ -87,7 +87,7 @@ function Search311() {
         html += '  <div class="' + searchResultContainerClass + ' sfgov-fb-search-result">';
     
         if(isDeptSearchResult) {
-          html += '<div class="content-type"><i class="sfgov-icon-department"></i><span>Department</span></div>';
+          html += '<div class="content-type"><i class="sfgov-icon-department"></i><span>' + Drupal.t('Department') + '</span></div>';
           
           var phone = result.metaData.dp ? result.metaData.dp : null;
           var address = result.metaData.da ? result.metaData.da : null;
@@ -123,7 +123,7 @@ function Search311() {
         html += '    <a class="title-url" href="' + result.liveUrl + '" title="' + title + '"><h4>' + title + '</h4></a>';
         html += '    <div class="body-container">';
         // html += '      <div class="related-dept"></div>';
-        html += '      <p class="body">' + truncatedSummary + '</p>';
+        html += '      <p class="body">' + Drupal.t(truncatedSummary) + '</p>';
         html += '      <a href="' + result.liveUrl + '" title="' + title + '">' + result.liveUrl + '</a>';
         html += deptContactInfoHtml;
         html += '    </div>';
@@ -160,7 +160,7 @@ function Search311() {
       if(!error) {
         console.log('here');
         if(spell && getQueryParam('si') !== 'true') { // misspelled word
-          messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>Showing results for </span><a href="/search?keyword=' + data.response.resultPacket.spell.text + '" class="sfgov-spelled-keyword">' + data.response.resultPacket.spell.text + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + data.question.query + '&si=true">' + data.response.resultPacket.query + '</a></div></div>');
+          messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>' + Drupal.t('Showing results for') + ' </span><a href="/search?keyword=' + Drupal.t(data.response.resultPacket.spell.text) + '" class="sfgov-spelled-keyword">' + Drupal.t(data.response.resultPacket.spell.text) + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + Drupal.t(data.question.query) + '&si=true">' + Drupal.t(data.response.resultPacket.query) + '</a></div></div>');
           // make a request for the correctly spelled word
           search311.setParam('query', data.response.resultPacket.spell.text);
           search311.makeRequest();
@@ -179,15 +179,15 @@ function Search311() {
         }
       }
       else {
-        messagesDiv.prepend('There was an error retrieving search results.  Please try again later.');
+        messagesDiv.prepend(Drupal.t('There was an error retrieving search results.  Please try again later.'));
       }
     } else {
       emptyResultSet = true;
     }
     if(emptyResultSet) {
       resultsDiv.html('<div class="no-search-results--container">' +
-      '<h2>We don\'t have anything yet that matches your search.</h2>' +
-      '<p>Try searching our main website, <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
+      '<h2>' + Drupal.t('We don\'t have anything yet that matches your search.') + '</h2>' +
+      '<p>' + Druapl.t('Try searching our main website') + ', <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
       '</div>');
       $('#sfgov-search-overlay').hide();
       $('#sfgov-search-loading').hide();
@@ -241,13 +241,13 @@ function Search311() {
       var resultsPerPage = resultsSummary.numRanks;
       var numPages = Math.ceil(totalResults/resultsPerPage);
       var paginateHtml = $('<ul class="sfgov-search-pagination-nav"></ul>');
-      $(paginateHtml).append('<li class="previous" style="display:none"><a href="javascript:void(0)" title="Previous search results page">Previous</a></li>');
+      $(paginateHtml).append('<li class="previous" style="display:none"><a href="javascript:void(0)" title="' + Drupal.t('Previous search results page') + '">' + Drupal.t('Previous') + '</a></li>');
       for(var i=1; i<=numPages; i++) {
         var classname = '';
         if(i==1) classname += ' first current';
         if(i==numPages) classname += ' last';
         var listItem = $('<li class="' + classname + ' page-num"></li>');
-        var pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i-1) * resultsPerPage) + 1) + '" title="Search results page ' + i + '"></a>');
+        var pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i-1) * resultsPerPage) + 1) + '" title="' + Drupal.t('Search results page ') + i + '"></a>');
         $(listItem).append(pageLink);
         $(pageLink).click(function() {
           $('.sfgov-search-pagination-nav .current').removeClass('current');
@@ -283,7 +283,7 @@ function Search311() {
 
       $('.sfgov-search-pagination').prepend(paginateHtml);
 
-      if(numPages > 1) $(paginateHtml).append('<li class="next"><a href="javascript:void(0)" title="Next search results page">Next</a></li>');
+      if(numPages > 1) $(paginateHtml).append('<li class="next"><a href="javascript:void(0)" title="' + Drupal.t('Next search results page') + '">' + Drupal.t('Next') + '</a></li>');
 
       // next click
       $('.sfgov-search-pagination-nav .next').click(function() {
