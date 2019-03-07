@@ -158,7 +158,6 @@ function Search311() {
       var highlightRegex = data.response.resultPacket.queryHighlightRegex;
     
       if(!error) {
-        console.log('here');
         if(spell && getQueryParam('si') !== 'true') { // misspelled word
           messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>' + Drupal.t('Showing results for') + ' </span><a href="/search?keyword=' + Drupal.t(data.response.resultPacket.spell.text) + '" class="sfgov-spelled-keyword">' + Drupal.t(data.response.resultPacket.spell.text) + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + Drupal.t(data.question.query) + '&si=true">' + Drupal.t(data.response.resultPacket.query) + '</a></div></div>');
           // make a request for the correctly spelled word
