@@ -7,13 +7,15 @@
   }
 }
 
-#block-search-page-block-sfgov {
+#block-search-page-block-sfgov,
+#block-sfgovsearchblock-2 {
   background: $color-aqua-lightest;
 }
 
-.block-views-exposed-filter-blocksearch-page-1 {
+.block-views-exposed-filter-blocksearch-page-1,
+#block-sfgovsearchblock-2 {
   .sfgov-container {
-    &.search-results {
+    &.search-results, &.block-sfgov-search-form-block {
       padding: 42px 0 53px 0;
       h2 {
         display: block;
@@ -144,43 +146,21 @@
   }
 }
 
-.responsive-search {
-  position: relative;
-  .responsive-search--container {
-    border-bottom: 1px solid $color-gray-lighter;
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
+.block-sfgov-search, #block-sfgovsearchblock, .sfgov-search-311-block {
+  .mobile-btn {
     display: none;
-    .close {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      .fa {
-        cursor: pointer;
-        font-size: 23px;
-        color: #323a45;
-      }
-    }
-    .sfgov-search-form {
-      background: #ffffff;
-      padding: 40px 8px 8px 8px;
-      .js-form-type-textfield {
-        width: 100%;
-      }
-      .form-actions {
-        width: 40px;
-        padding-right: 0;
-      }
-      [type=submit] {
-        font-size: 0;
-      }
-    }
+  }
+}
+
+#block-sfgovsearchblock-2,
+.sfgov-search-311-block {
+  .sfgov-search-form-311 {
     .form-actions {
       position: relative;
-      padding-right: 10px;
-      @include media($medium-screen) {
-        padding-right: 0;
+      width: 63px;
+      .form-submit {
+        font-size: 0;
+        width: 100%;
       }
       &::before {
         position: absolute;
@@ -191,19 +171,104 @@
         width: 30px;
         height: 30px;
         pointer-events: none;
-        left: 3px;
+        left: 12px;
         top: 6px;
-        @include media($medium-screen + 1) {
-          left: 15px;
-          top: 5px;
-        }
       }
     }
-    .form-submit {
+  }
+}
+
+.head-right--container #block-sfgovsearchblock {
+  display: flex;
+  .js-form-item-sfgov-search-input {
+    width: 194px;
+  }
+  #edit-actions {
+    width: 63px;
+    position: relative;
+    #edit-submit {
+      width: 100%;
       font-size: 0;
     }
-    .sfgov-search-form {
+    &::before {
+      position: absolute;
+      content: ' ';
+      display: block;
+      background: url("../images/icons/search.png") no-repeat;
+      background: url("../images/icons/search.svg") no-repeat;
+      width: 30px;
+      height: 30px;
+      pointer-events: none;
+      left: 3px;
+      top: 6px;
+    }
+  }
+  @include media-max($medium-screen) {
+    .sfgov-search-form-311 {
+      display: none;
+    }
+    &.mobile-open {
+      display: block;
+      background: #fff;
+      position: absolute;
+      left: 0;
+      top: 44px;
       width: 100%;
+      .sfgov-search-form-311 {
+        display: table;
+        clear: both;
+        padding: 0 10px 10px 10px;
+      }
+      .js-form-item-sfgov-search-input {
+        width: 100%;
+        display: table-cell;
+        vertical-align: middle;
+      }
+      #edit-actions {
+        width: 40px;
+        display: table-cell;
+      }
+    }
+    .mobile-btn {
+      background: #0071bc;
+      display: block;
+      position: relative;
+      width: 45px;
+      height: 45px;
+      border-radius: 5px;
+      margin-right: 10px;
+      &::before {
+        display: block;
+        position: absolute;
+        content: ' ';
+        display: block;
+        background: url("../images/icons/search.png") no-repeat;
+        background: url("../images/icons/search.svg") no-repeat;
+        width: 30px;
+        height: 30px;
+        pointer-events: none;
+        left: 6px;
+        top: 6px;
+      }
+      i {
+        display: none;
+      }
+      &.close {
+        background: transparent;
+        float: right;
+        &::before {
+          display: none;
+        }
+        i {
+          display: block;
+          font-size: 23px;
+          cursor: pointer;
+          color: #323a45;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+        }
+      }
     }
   }
 }
