@@ -106,6 +106,25 @@ jobs:
                 command: composer -n build-assets
 
             - run:
+                name: create simplesamlphp symlink
+                command: |
+                    mkdir -p ./vendor/simplesamlphp
+                    cd ./vendor/simplesamlphp
+                    rm -r simplesamlphp
+                    ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
+            
+            - run:
+                name: add secrets
+                command: |
+                    echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem
+                    echo $FILE_SAMLCRT | base64 --decode >> ./web/private/saml.crt
+                    echo $FILE_SAMLPEM | base64 --decode >> ./web/private/saml.pem
+                    echo $FILE_SIMPLESAMLCONFIG | base64 --decode >> ./web/private/simplesaml_config.php
+                    mkdir -p ./web/private/metadata
+                    echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/metadata/saml20-idp-remote.php
+                    echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
+
+            - run:
                 name: prepare database for site-under test
                 command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
                 # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
