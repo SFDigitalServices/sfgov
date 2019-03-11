@@ -14,7 +14,7 @@
       $(containerSelector).append($(this));
     });
 
-    $('#views-exposed-form-search-page-1, .sfgov-search-form-311').after($(containerSelector));
+    $('#views-exposed-form-search-page-1, .sfgov-search-form-311').append($(containerSelector));
     
     $('#edit-keyword, #edit-sfgov-search-input').focus(function() {
       $(containerSelector).show();
