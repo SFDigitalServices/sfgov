@@ -8,7 +8,6 @@ function Search311() {
     "parameters": {
       "query": "",
       "collection": "sfgov-meta-prod",
-      // "collection": "sf-dev-crawl",
       "SM": "both",
       "qsup": "",
       "start_rank": 1,
@@ -186,7 +185,7 @@ function Search311() {
     if(emptyResultSet) {
       resultsDiv.html('<div class="no-search-results--container">' +
       '<h2>' + Drupal.t('We don\'t have anything yet that matches your search.') + '</h2>' +
-      '<p>' + Druapl.t('Try searching our main website') + ', <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
+      '<p>' + Drupal.t('Try searching our main website') + ', <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
       '</div>');
       $('#sfgov-search-overlay').hide();
       $('#sfgov-search-loading').hide();
