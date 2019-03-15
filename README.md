@@ -7,7 +7,7 @@
 
 ## Set up Lando for local development
 1. Prerequisites
-  * [Lando](https://docs.devwithlando.io/installation/installing.html)
+  * [Lando](https://docs.devwithlando.io/installation/installing.html) current setup requires 3.0.0-RC.2+
   * [composer](https://getcomposer.org/download/)
   * github personal access token (https://github.com/settings/tokens)
   * pantheon machine token (https://pantheon.io/docs/machine-tokens/)  
