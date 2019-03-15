@@ -30,9 +30,11 @@ class SearchForm extends FormBase {
           'sf-gov-search-input-class',
         ),
       ),
+      '#suffix' => '<div id="sfgov-search-autocomplete"></div>',
     );
 
     $form['#prefix'] = '<div class="mobile-btn"><i class="fa fa-times"></i></div>';
+    // $form['#suffix'] = '<div id="sfgov-search-autocomplete"></div>';
     $form['#attached']['library'][] = 'sfgov_search/search';
 
     $form['actions']['#type'] = 'actions';

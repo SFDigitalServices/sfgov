@@ -17,8 +17,10 @@
     $('#views-exposed-form-search-page-1, .sfgov-search-form-311').append($(containerSelector));
     
     $('#edit-keyword, #edit-sfgov-search-input').focus(function() {
-      $(containerSelector).show();
-      $(topSearchSuggsSelector).show();
+      if($(this).val().length <= 0) {
+        $(containerSelector).show();
+        $(topSearchSuggsSelector).show();
+      }
     });
 
     $('#edit-keyword, #edit-sfgov-search-input').keyup(function() {
