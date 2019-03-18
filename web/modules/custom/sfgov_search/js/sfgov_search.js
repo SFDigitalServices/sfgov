@@ -3,6 +3,8 @@ $ = jQuery;
 function Search311() {
 
   this.inputSelector = '#edit-sfgov-search-input';
+  this.topSearchContainerSelector = '#sfgov-top-search-suggestions-container';
+  this.autocompleteContainerSelector = '#sfgov-search-autocomplete';
 
   this.props = {
     "protocol": "https",
@@ -19,6 +21,50 @@ function Search311() {
     }
   };
 
+  $('body').click(function(e) {
+    var clickTarget = $(e.target);
+    if(clickTarget.attr('id') != 'edit-sfgov-search-input') {
+      $(_this.autocompleteContainerSelector).hide();
+      $(_this.topSearchContainerSelector).hide();
+    }
+  });
+
+  $(this.inputSelector).attr('autocomplete', 'off');
+
+  this.topSearchSuggestions = function() {
+    var topSearchSuggsSelector = '.sfgov-top-search-suggestion';
+    var topSearchSuggs = $(topSearchSuggsSelector);
+    if(topSearchSuggs.length > 0) {
+      
+      var containerId = this.topSearchContainerSelector.replace('#', '');
+      var containerSelector = '#' + containerId;
+      
+      $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>Top searches:</h4></div>');
+      $(this.topSearchContainerSelector).hide();
+  
+      $(topSearchSuggs).each(function() {
+        $(_this.topSearchContainerSelector).append($(this));
+      });
+  
+      $('.sfgov-search-form-311').append($(containerSelector));
+      
+      $(this.inputSelector).focus(function() {
+        if($(this).val().length <= 0) {
+          $(_this.topSearchContainerSelector).show();
+          $(topSearchSuggsSelector).show();
+        }
+      });
+  
+      $(this.inputSelector).keyup(function() {
+        if($(this).val().length <= 0) {
+          $(_this.topSearchContainerSelector).show();
+        } else {
+          $(_this.topSearchContainerSelector).hide();
+        }
+      });
+    }
+  }
+
   this.autocomplete = function() {
     $('#edit-keyword, #edit-sfgov-search-input').attr('autocomplete', 'off');
     $(this.inputSelector).on('keyup click', function(event) {
@@ -30,26 +76,19 @@ function Search311() {
           success: function(data) {
             var autocompletes = $.unique(data);
             if(autocompletes.length > 0) {
-              $('#sfgov-search-autocomplete').show();
+              $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
               for(var i = 0; i<autocompletes.length; i++) {
                 autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i] + '">' + autocompletes[i].replace(searchKeyword, '<strong>' + searchKeyword + '</strong>') + '</a>';
               }
-              $('#sfgov-search-autocomplete').html(autocompleteHtml);
+              $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
-              $('#sfgov-search-autocomplete').hide();
+              $(_this.autocompleteContainerSelector).hide();
             }
           }
         });
       } else {
-        $('#sfgov-search-autocomplete').hide();
-      }
-    });
-
-    $('body').click(function(e) {
-      var clickTarget = $(e.target);
-      if(clickTarget.attr('id') != 'edit-sfgov-search-input') {
-        $('#sfgov-search-autocomplete').hide();
+        $(_this.autocompleteContainerSelector).hide();
       }
     });
   }
@@ -401,6 +440,7 @@ $(document).ready(function() {
   search311.setParam('query', kw);
   search311.makeRequest();
   search311.autocomplete();
+  search311.topSearchSuggestions();
   attachMobileEvents();
   doMobile();
   $(window).resize(function() {
