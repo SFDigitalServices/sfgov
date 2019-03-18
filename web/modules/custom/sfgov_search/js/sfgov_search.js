@@ -39,7 +39,7 @@ function Search311() {
       var containerId = this.topSearchContainerSelector.replace('#', '');
       var containerSelector = '#' + containerId;
       
-      $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>Top searches:</h4></div>');
+      $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>' + Drupal.t('Top searches:') + '</h4></div>');
       $(this.topSearchContainerSelector).hide();
   
       $(topSearchSuggs).each(function() {
