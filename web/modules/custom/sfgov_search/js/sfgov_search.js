@@ -1,6 +1,6 @@
 // $url = 'https://search.sf311.org/s/search.json?query=birth+certificate&collection=sf-prod-search-meta&SM=qb&qsup=&start_rank=1&num_ranks=10';
 $ = jQuery;
-function Search311() {
+function Search311(collectionName) {
 
   this.inputSelector = '#edit-sfgov-search-input';
   this.topSearchContainerSelector = '#sfgov-top-search-suggestions-container';
@@ -12,7 +12,7 @@ function Search311() {
     "path": "/s/search.json",
     "parameters": {
       "query": "",
-      "collection": "sf-dev-crawl",
+      "collection": 'sfgov-meta-prod',
       "SM": "both",
       "qsup": "",
       "start_rank": 1,
@@ -436,7 +436,14 @@ function doMobile() {
 var search311 = new Search311();
 $(document).ready(function() {
   var kw = getQueryParam('keyword') ? getQueryParam('keyword') : '';
+  var collectionName = 'sfgov-meta-prod';
   $('.sf-gov-search-input-class').val(decodeURIComponent(kw));
+  if(drupalSettings && drupalSettings.sfgovSearch) {
+    if(drupalSettings.sfgovSearch.collection) {
+      collectionName = drupalSettings.sfgovSearch.collection;
+    }
+  }
+  search311.setParam('collection', collectionName);
   search311.setParam('query', kw);
   search311.makeRequest();
   search311.autocomplete();

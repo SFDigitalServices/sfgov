@@ -15,6 +15,7 @@ class SearchForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
     $keyword = \Drupal::request()->query->get('keyword');
+    $config = \Drupal::config('sfgov_search.settings');
     $form['#attributes'] = array(
       'class' => array(
         'sfgov-search-form',
@@ -34,8 +35,8 @@ class SearchForm extends FormBase {
     );
 
     $form['#prefix'] = '<div class="mobile-btn"><i class="fa fa-times"></i></div>';
-    // $form['#suffix'] = '<div id="sfgov-search-autocomplete"></div>';
     $form['#attached']['library'][] = 'sfgov_search/search';
+    $form['#attached']['drupalSettings']['sfgovSearch']['collection'] = $config->get('search_collection');
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
