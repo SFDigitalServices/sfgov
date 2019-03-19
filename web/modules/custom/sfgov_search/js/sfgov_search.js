@@ -85,6 +85,9 @@ function Search311(collectionName) {
             } else {
               $(_this.autocompleteContainerSelector).hide();
             }
+            $(_this.autocompleteContainerSelector + ' a').click(function() {
+              $(_this.inputSelector).val($(this).text());
+            });
           }
         });
       } else {
