@@ -71,15 +71,15 @@ function Search311(collectionName) {
       var searchKeyword = $(_this.inputSelector).val();
       if(searchKeyword.length >= 3) {
         $.ajax({
-          url: _this.props.protocol + '://' + _this.props.domain + '/s/suggest.json' + '?' + 'collection=' + _this.props.parameters.collection + '&partial_query=' + searchKeyword + '',
+          url: _this.props.protocol + '://' + _this.props.domain + '/s/suggest.json' + '?' + 'collection=' + _this.props.parameters.collection + '&partial_query=' + searchKeyword + '&show=10&sort=0&alpha=.5&fmt=json++&profile=_default',
           dataType: 'jsonp',
           success: function(data) {
-            var autocompletes = $.unique(data);
+            var autocompletes = data;
             if(autocompletes.length > 0) {
               $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
               for(var i = 0; i<autocompletes.length; i++) {
-                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i] + '">' + autocompletes[i].replace(searchKeyword, '<strong>' + searchKeyword + '</strong>') + '</a>';
+                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword, '<strong>' + searchKeyword + '</strong>') + '</a>';
               }
               $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
