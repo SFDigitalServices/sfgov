@@ -252,6 +252,8 @@ function Search311(collectionName) {
       }
       else {
         messagesDiv.prepend(Drupal.t('There was an error retrieving search results.  Please try again later.'));
+        $('#sfgov-search-overlay').hide();
+        $('#sfgov-search-loading').hide();
       }
     } else {
       emptyResultSet = true;
