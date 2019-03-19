@@ -437,6 +437,7 @@ function doMobile() {
 
 var search311 = new Search311();
 $(document).ready(function() {
+  $('.head-right--container #edit-sfgov-search-input').attr('placeholder', 'Search');
   var kw = getQueryParam('keyword') ? getQueryParam('keyword') : '';
   var collectionName = 'sfgov-meta-prod';
   $('.sf-gov-search-input-class').val(decodeURIComponent(kw));
