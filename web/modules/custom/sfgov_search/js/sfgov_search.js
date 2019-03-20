@@ -1,14 +1,18 @@
 // $url = 'https://search.sf311.org/s/search.json?query=birth+certificate&collection=sf-prod-search-meta&SM=qb&qsup=&start_rank=1&num_ranks=10';
 $ = jQuery;
-function Search311() {
+function Search311(collectionName) {
+
+  this.inputSelector = '#edit-sfgov-search-input';
+  this.topSearchContainerSelector = '#sfgov-top-search-suggestions-container';
+  this.autocompleteContainerSelector = '#sfgov-search-autocomplete';
+
   this.props = {
     "protocol": "https",
     "domain": "search.sf311.org",
     "path": "/s/search.json",
     "parameters": {
       "query": "",
-      "collection": "sfgov-meta-prod",
-      // "collection": "sf-dev-crawl",
+      "collection": 'sfgov-meta-prod',
       "SM": "both",
       "qsup": "",
       "start_rank": 1,
@@ -16,6 +20,81 @@ function Search311() {
       "callback": "search311.processSearchResults"
     }
   };
+
+  $('body').click(function(e) {
+    var clickTarget = $(e.target);
+    if(clickTarget.attr('id') != 'edit-sfgov-search-input') {
+      $(_this.autocompleteContainerSelector).hide();
+      $(_this.topSearchContainerSelector).hide();
+    }
+  });
+
+  $(this.inputSelector).attr('autocomplete', 'off');
+
+  this.topSearchSuggestions = function() {
+    var topSearchSuggsSelector = '.sfgov-top-search-suggestion';
+    var topSearchSuggs = $(topSearchSuggsSelector);
+    if(topSearchSuggs.length > 0) {
+      
+      var containerId = this.topSearchContainerSelector.replace('#', '');
+      var containerSelector = '#' + containerId;
+      
+      $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>' + Drupal.t('Top searches:') + '</h4></div>');
+      $(this.topSearchContainerSelector).hide();
+  
+      $(topSearchSuggs).each(function() {
+        $(_this.topSearchContainerSelector).append($(this));
+      });
+  
+      $('.sfgov-search-form-311').append($(containerSelector));
+      
+      $(this.inputSelector).focus(function() {
+        if($(this).val().length <= 0) {
+          $(_this.topSearchContainerSelector).show();
+          $(topSearchSuggsSelector).show();
+        }
+      });
+  
+      $(this.inputSelector).keyup(function() {
+        if($(this).val().length <= 0) {
+          $(_this.topSearchContainerSelector).show();
+        } else {
+          $(_this.topSearchContainerSelector).hide();
+        }
+      });
+    }
+  }
+
+  this.autocomplete = function() {
+    $('#edit-keyword, #edit-sfgov-search-input').attr('autocomplete', 'off');
+    $(this.inputSelector).on('keyup click', function(event) {
+      var searchKeyword = $(_this.inputSelector).val();
+      if(searchKeyword.length >= 3) {
+        $.ajax({
+          url: _this.props.protocol + '://' + _this.props.domain + '/s/suggest.json' + '?' + 'collection=' + _this.props.parameters.collection + '&partial_query=' + searchKeyword + '&show=10&sort=0&alpha=.5&fmt=json++&profile=_default',
+          dataType: 'jsonp',
+          success: function(data) {
+            var autocompletes = data;
+            if(autocompletes.length > 0) {
+              $(_this.autocompleteContainerSelector).show();
+              var autocompleteHtml = '';
+              for(var i = 0; i<autocompletes.length; i++) {
+                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword, '<strong>' + searchKeyword + '</strong>') + '</a>';
+              }
+              $(_this.autocompleteContainerSelector).html(autocompleteHtml);
+            } else {
+              $(_this.autocompleteContainerSelector).hide();
+            }
+            $(_this.autocompleteContainerSelector + ' a').click(function() {
+              $(_this.inputSelector).val($(this).text());
+            });
+          }
+        });
+      } else {
+        $(_this.autocompleteContainerSelector).hide();
+      }
+    });
+  }
 
   this.makeRequest = function() {
     $('#sfgov-search-overlay').show();
@@ -118,11 +197,8 @@ function Search311() {
           html += '<div class="content-type"><i class="sfgov-icon-filefilled"></i><span>Topic</span></div>';
         }
 
-        
-        
         html += '    <a class="title-url" href="' + result.liveUrl + '" title="' + title + '"><h4>' + title + '</h4></a>';
         html += '    <div class="body-container">';
-        // html += '      <div class="related-dept"></div>';
         html += '      <p class="body">' + Drupal.t(truncatedSummary) + '</p>';
         html += '      <a href="' + result.liveUrl + '" title="' + title + '">' + result.liveUrl + '</a>';
         html += deptContactInfoHtml;
@@ -179,6 +255,8 @@ function Search311() {
       }
       else {
         messagesDiv.prepend(Drupal.t('There was an error retrieving search results.  Please try again later.'));
+        $('#sfgov-search-overlay').hide();
+        $('#sfgov-search-loading').hide();
       }
     } else {
       emptyResultSet = true;
@@ -186,7 +264,7 @@ function Search311() {
     if(emptyResultSet) {
       resultsDiv.html('<div class="no-search-results--container">' +
       '<h2>' + Drupal.t('We don\'t have anything yet that matches your search.') + '</h2>' +
-      '<p>' + Druapl.t('Try searching our main website') + ', <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
+      '<p>' + Drupal.t('Try searching our main website') + ', <a href="https://sfgov.org/all-pages-docs" target="_blank" rel="noopener noreferrer">sfgov.org</a>.</p>' + 
       '</div>');
       $('#sfgov-search-overlay').hide();
       $('#sfgov-search-loading').hide();
@@ -303,23 +381,6 @@ function Search311() {
     }
   }
 
-  this.splitSearchResults = function(results) {
-    var sfDotGovRegex = /sf\.gov/;
-    var splitResults = {
-      sfdotgov: [],
-      other: []
-    }
-    for(var i=0; i<results.length; i++) {
-      var result = results[i];
-      if(result.liveUrl.match(sfDotGovRegex) || result.metaData.sfgovSummary) {
-        splitResults.sfdotgov.push(result);
-      } else {
-        splitResults.other.push(result);
-      }
-    }
-    return splitResults;
-  }
-
   this.setProp = function(prop, value) {
     this.props[prop] = value;
   }
@@ -379,12 +440,20 @@ function doMobile() {
 
 var search311 = new Search311();
 $(document).ready(function() {
-  var kw = getQueryParam('keyword');
-  if(drupalSettings.sfgovSearch) {
-    $('.sf-gov-search-input-class').val(decodeURIComponent(kw));
-    search311.setParam('query', kw);
-    search311.makeRequest();
+  $('.head-right--container #edit-sfgov-search-input').attr('placeholder', 'Search');
+  var kw = getQueryParam('keyword') ? getQueryParam('keyword') : '';
+  var collectionName = 'sfgov-meta-prod';
+  $('.sf-gov-search-input-class').val(decodeURIComponent(kw));
+  if(drupalSettings && drupalSettings.sfgovSearch) {
+    if(drupalSettings.sfgovSearch.collection) {
+      collectionName = drupalSettings.sfgovSearch.collection;
+    }
   }
+  search311.setParam('collection', collectionName);
+  search311.setParam('query', kw);
+  search311.makeRequest();
+  search311.autocomplete();
+  search311.topSearchSuggestions();
   attachMobileEvents();
   doMobile();
   $(window).resize(function() {
