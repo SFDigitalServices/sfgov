@@ -1,0 +1,33 @@
+uuid: 8deb38f1-f342-4efd-954d-1c604ff9d56e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.department_service_section.field_dept_service_sect_services
+    - field.field.paragraph.department_service_section.field_dept_service_section_title
+    - paragraphs.paragraphs_type.department_service_section
+id: paragraph.department_service_section.default
+targetEntityType: paragraph
+bundle: department_service_section
+mode: default
+content:
+  field_dept_service_sect_services:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_dept_service_section_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

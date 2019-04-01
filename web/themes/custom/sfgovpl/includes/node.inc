@@ -3,10 +3,10 @@
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 
-$module_handler = Drupal::service('module_handler');
-$devel_path = $module_handler->getModule('devel')->getPath();
-require_once($devel_path.'/kint/kint/Kint.class.php');
-Kint::$maxLevels = 6;
+// $module_handler = Drupal::service('module_handler');
+// $devel_path = $module_handler->getModule('devel')->getPath();
+// require_once($devel_path.'/kint/kint/Kint.class.php');
+// Kint::$maxLevels = 6;
 
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
