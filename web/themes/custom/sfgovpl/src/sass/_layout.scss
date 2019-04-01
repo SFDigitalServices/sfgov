@@ -1,0 +1,258 @@
+
+
+// $mobile-screen: 700px;
+// $medium-screen: 768px;
+// $wide-screen: 1280px;
+
+// .sfds-layout {
+//   width: 1280px;
+//   margin: 0 auto;
+//   @media screen and (max-width:$wide-screen) { // screen size less than $wide-screen
+//     border: 1px solid red;
+//     width: auto;
+//     margin: 0 96px;
+//   }
+//   @media screen and (max-width:$medium-screen) {
+//     border: 1px solid blue;
+//     width: auto;
+//     margin: 0 96px;
+//   }
+//   @media screen and (max-width:$mobile-screen) {
+//     border: 1px solid green;
+//     width: auto;
+//     margin: 0 60px;
+//   }
+// }
+
+$tiny: 375px;
+$small: 768px;
+$medium: 1024px;
+$large: 1280px;
+
+$breakpoints: (
+  'tiny': $tiny + 1,
+  'small': $small + 1,
+  'medium': $medium + 1,
+  'large': $large + 1,
+) !default;
+
+
+@mixin respond-to($breakpoint_floor, $breakpoint_ceil) {
+  @if $breakpoint_floor and $breakpoint_ceil {
+    @media screen and (min-width: map-get($breakpoints, $breakpoint_floor)) and (max-width: map-get($breakpoints, $breakpoint_ceil)) {
+      @content;
+    }
+  }
+  @else if $breakpoint_floor and $breakpoint_ceil == null {
+    @media screen and (max-width: map-get($breakpoints, $breakpoint_floor)) {
+      @content;
+    }
+  }
+  @else if $breakpoint_floor == null and $breakpoint_ceil {
+    @media screen and (min-width: map-get($breakpoints, $breakpoint_ceil)) {
+      @content;
+    }
+  }
+  // @if map-has-key($breakpoint_floor, $breakpoint) {
+  //   @if map-has-key($breakpoint_ceil) {
+  //     @media screen and (min-width: map-get($breakpoints, $breakpoint_floor) and (max-width: map-get($breakpoints, $breakpoint_ceil))) {
+  //       @content;
+  //     }
+  //   }
+  // }
+}
+
+header {
+  border: 1px solid #000;
+  .sfgov-nav-container {
+    .sfgov-nav-container__content {
+      @include clearfix;
+      > * {
+        display: inline-block;
+      }
+      .sfgov-menu-btn {
+        display: none;
+      }
+      .sfgov-logo__container {
+        float: left;
+      }
+      .head-right--container {
+        width: 75%;
+        float: right;
+        padding-top: 20px;
+        text-align: right;
+        > * {
+          display: inline-block;
+          width: 33%;
+          vertical-align: middle;
+          margin-right: 2%;
+        }
+        .sfgov-nav { // navigation container
+          text-align: right;
+          .sfgov-nav-close {
+            display: none;
+          }
+          .menu {
+            padding: 0;
+            margin: 0;
+            > li {
+              display: inline-block;
+              margin-right: 20px;
+              &:last-of-type {
+                margin-right: 0;
+              }
+              > a {
+                color: #5168E4;
+                @include rubik;
+                font-weight: 500;
+                font-size: 1.5rem;
+                text-decoration: none;
+                &:visited {
+                  color: #5168E4;
+                }
+              }
+            }
+          }
+        }
+        #block-gtranslate { // gtranslate container
+          width: 12%;
+          .gtranslate {
+            position: relative;
+            select {
+              border: 0;
+              background-image: none;
+              padding: 0;
+              margin: 0;
+              max-width: initial;
+              width: 105px;
+              display: inline-block;
+              @include rubik;
+              color: #5168E4;
+              font-size: 1.5rem;
+              font-weight: 500;
+              padding-left: 35px;
+            }
+            &::before {
+              content: '';
+              background: url("../../src/img/translate.png") no-repeat;
+              width: 35px;
+              height: 30px;
+              display: inline-block;
+              background-size: contain;
+              position: absolute;
+              top: 0;
+            }
+          }
+        }
+        .sfgov-search-311-block { // search block
+          // these styles are initially controlled by the custom module css
+          // TODO: move it all to fractal pattern library
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  @include respond-to(null, large) {
+    // width: 1280px;
+    // margin: 0 auto;
+    border: 2px solid blue;
+    width: 1280px;
+    margin: 0 auto;
+  }
+  @include respond-to('medium', 'large') {
+    border: 2px solid red;
+    margin: 0 36px;
+    .sfgov-nav-container {
+      .sfgov-nav-container__content {
+        > nav {
+          width: 47%;
+        }
+        .head-right--container {
+          .sfgov-search-311-block {
+            .sfgov-search-form-311 {
+              .form-item-sfgov-search-input {
+                
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @include respond-to('small', 'medium') {
+    border: 2px solid green;
+    .sfgov-nav-container {
+      .sfgov-nav-container__content {
+        .head-right--container {
+          > * {
+            margin-right: 5%;
+          }
+          .sfgov-search-311-block {
+            width: 10%;
+            .mobile-btn {
+              display: block;
+              &::before {
+                margin: 0 auto;
+              }
+            }
+            .sfgov-search-form-311 {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  @include respond-to('small', null) {
+    border: 2px solid orange;
+    .sfgov-nav-container {
+      .sfgov-nav-container__content {
+        .head-right--container {
+          width: 65%;
+          > * {
+            width: auto;
+          }
+          .sfgov-search-311-block {
+            width: 10%;
+            .mobile-btn {
+              display: block;
+              &::before {
+                margin: 0 auto;
+              }
+            }
+            .sfgov-search-form-311 {
+              display: none;
+            }
+          }
+          #block-gtranslate {
+            .gtranslate {
+              select {
+                width: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.sfds-layout-container {
+  width: auto;
+  @include respond-to(null, large) {
+    border: 2px solid blue;
+    width: 1280px;
+    margin: 0 auto;
+  }
+  @include respond-to('medium', 'large') {
+    border: 2px solid red;
+    margin: 0 96px;
+  }
+  @include respond-to('small', 'medium') {
+    border: 2px solid green;
+  }
+  @include respond-to('small', null) {
+    border: 2px solid orange;
+    margin: 0 20px;
+  }
+}

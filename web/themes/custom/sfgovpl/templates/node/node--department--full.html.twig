@@ -8,15 +8,81 @@
   "description": description,
   "image": image
 } %}
-<div class="sfgov-container--full sfgov-container--right-sidebar">
-  <div class="sfgov-container--content-left">
-    {% set view = drupal_view('services', 'block_2')|render  %}
-    {%  if view|striptags|trim != "Services" %}
-      {{ view }}
-    {% endif %}
-    {{ drupal_view('departments', 'block_1') }}
-    {{ content|without('field_description', 'field_image', 'field_url', 'field_address', 'field_phone_numbers') }}
+<div class="sfgov-container--full">
+  <div class="sfgov-dept-featured-items">
+    <div>
+      {% for featured_item in dept_fields.featured_items %}
+        {% include "@molecules/11-featured-item/11-featured-item.twig" with {
+          "title": featured_item.title | t,
+          "description": featured_item.description | t,
+          "url": featured_item.url | t
+        }%}
+      {% endfor %}
+    </div>
   </div>
+  <div class="sfgov-dept-in-this-page"></div>
+  <div class="sfgov-dept-services-list">
+    <h3>{{ dept_fields.services.label }}</h3>
+    <div class="sfgov-services-container"> {# table #}
+
+        {# {% for service in dept_fields.services.values %}
+        <div class="sfgov-services-transactions-container"> 
+          <h4>{{ service.title }}</h4>
+          <div class="sfgov-services-transactions">
+          {% for transaction in service.transactions %}
+            {% include "@molecules/12-service-card/12-service-card.twig" with {
+              "title": transaction.tx_title,
+              "description": transaction.tx_description,
+              "url": '#'
+            }%}
+          {% endfor %}
+          </div>
+        </div>
+        {% endfor %} #}
+
+    {% for service in dept_fields.services.values %}
+        <div class="sfgov-services-section">
+          <h4>{{ service.title }}</h4>
+          <div class="sfgov-services-transactions-container">
+            {% set i = 3 %}
+            {% for transaction in service.transactions %}
+              {% if loop.first %}
+              <div class="sfgov-services-transactions" data-attr="row">
+              {% endif %}
+                {% include "@molecules/12-service-card/12-service-card.twig" with {
+                  "title": transaction.tx_title,
+                  "description": transaction.tx_description,
+                  "url": '#'
+                }%}
+                {% set i = i - 1 %}
+              {% if loop.index is divisible by(3) %}
+                </div><div class="sfgov-services-transactions" data-attr="row">
+              {% endif %}
+              {% if loop.last %}
+                {% if i >= 1 %}
+                  {% for n in 1..i %}
+                    {% include "@molecules/12-service-card/12-service-card.twig" with {
+                      "title": '',
+                      "description": '',
+                      "url": '',
+                      "empty": true
+                    }%}
+                  {% endfor %}
+                {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="sfgov-dept-campaign"></div>
+  <div class="sfgov-dept-news"></div>
+  <div class="sfgov-dept-events"></div>
+  <div class="sfgov-dept-resources"></div>
+  <div class="sfgov-dept-about"></div>
+  <div class="sfgov-dept-contact"></div>
 
   {% set render_content = false %}
 
@@ -38,5 +104,20 @@
     } %}
   {% endif %}
 
+  Dept Fields: <br/>
+  <pre>
+  {{ dump(dept_fields) }}
+  </pre>
+
+  Services section: <br/>
+  <pre>
+  {{ dump(dept_fields.services) }}
+  </pre>
+
+  First service section: <br/>
+  title: {{ dept_fields.services.0.title }}
+  <pre>
+  {{ dump(dept_fields.services.0.transactions) }}
+  </pre>
 </div>
 
