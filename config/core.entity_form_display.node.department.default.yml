@@ -5,6 +5,7 @@ dependencies:
   config:
     - entity_browser.browser.image
     - field.field.node.department.field_address
+    - field.field.node.department.field_campaign
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
     - field.field.node.department.field_description
@@ -33,12 +34,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   field_address:
-    weight: 6
+    weight: 7
     settings:
       entity_browser: location_physical
       field_widget_display: rendered_entity
@@ -52,9 +53,27 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
+  field_campaign:
+    type: paragraphs
+    weight: 4
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+    third_party_settings: {  }
+    region: content
   field_department_code:
     type: string_textfield
-    weight: 10
+    weight: 11
     region: content
     settings:
       size: 60
@@ -95,7 +114,7 @@ content:
     type: text_textarea
     region: content
   field_featured_items:
-    type: entity_reference_paragraphs
+    type: paragraphs
     weight: 2
     settings:
       title: Paragraph
@@ -104,17 +123,23 @@ content:
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: featured_item
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
     third_party_settings: {  }
     region: content
   field_go_to_current_url:
-    weight: 8
+    weight: 9
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_image:
-    weight: 5
+    weight: 6
     settings:
       entity_browser: image
       field_widget_display: rendered_entity
@@ -130,7 +155,7 @@ content:
     region: content
   field_parent_department:
     type: entity_reference_autocomplete
-    weight: 11
+    weight: 12
     region: content
     settings:
       match_operator: CONTAINS
@@ -139,7 +164,7 @@ content:
     third_party_settings: {  }
   field_phone_numbers:
     type: paragraphs
-    weight: 9
+    weight: 10
     settings:
       title: 'Phone Number'
       title_plural: 'Phone Numbers'
@@ -158,13 +183,13 @@ content:
     region: content
   field_public_body:
     type: boolean_checkbox
-    weight: 12
+    weight: 13
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_topics:
-    weight: 13
+    weight: 14
     settings:
       match_operator: CONTAINS
       size: 60
@@ -173,7 +198,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_url:
-    weight: 7
+    weight: 8
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -182,20 +207,20 @@ content:
     region: content
   langcode:
     type: language_select
-    weight: 4
+    weight: 5
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 22
+    weight: 23
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 19
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -203,21 +228,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 18
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 20
+    weight: 21
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 19
     region: content
     third_party_settings: {  }
   title:
@@ -229,13 +254,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 14
+    weight: 15
     settings:
       match_operator: CONTAINS
       size: 60
@@ -243,7 +268,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 21
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }

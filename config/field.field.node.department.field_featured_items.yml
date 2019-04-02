@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_featured_items
     - node.type.department
+    - paragraphs.paragraphs_type.featured_item
   module:
     - entity_reference_revisions
 id: node.department.field_featured_items
@@ -19,5 +20,81 @@ default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:paragraph'
-  handler_settings: {  }
+  handler_settings:
+    negate: 0
+    target_bundles:
+      featured_item: featured_item
+    target_bundles_drag_drop:
+      campaign:
+        weight: 25
+        enabled: false
+      additional_info:
+        weight: 26
+        enabled: false
+      block:
+        weight: 27
+        enabled: false
+      button:
+        weight: 28
+        enabled: false
+      callout:
+        weight: 29
+        enabled: false
+      cost:
+        weight: 30
+        enabled: false
+      custom_section:
+        weight: 31
+        enabled: false
+      department_service_section:
+        weight: 32
+        enabled: false
+      document:
+        weight: 33
+        enabled: false
+      email:
+        weight: 34
+        enabled: false
+      featured_item:
+        enabled: true
+        weight: 35
+      help:
+        weight: 36
+        enabled: false
+      in_person_location:
+        weight: 37
+        enabled: false
+      list:
+        weight: 38
+        enabled: false
+      list_item:
+        weight: 39
+        enabled: false
+      mailing_address:
+        weight: 40
+        enabled: false
+      people:
+        weight: 41
+        enabled: false
+      phone:
+        weight: 42
+        enabled: false
+      section:
+        weight: 43
+        enabled: false
+      special_case:
+        weight: 44
+        enabled: false
+      step:
+        weight: 45
+        enabled: false
+      text:
+        weight: 46
+        enabled: false
+      thing_to_know:
+        weight: 47
+        enabled: false
+      top_search_suggestion:
+        weight: 48
+        enabled: false
 field_type: entity_reference_revisions
