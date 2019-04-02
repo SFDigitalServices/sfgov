@@ -5,7 +5,6 @@ dependencies:
   config:
     - entity_browser.browser.image
     - field.field.node.department.field_address
-    - field.field.node.department.field_campaign
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
     - field.field.node.department.field_description
@@ -15,6 +14,7 @@ dependencies:
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_public_body
+    - field.field.node.department.field_spotlight
     - field.field.node.department.field_topics
     - field.field.node.department.field_url
     - node.type.department
@@ -53,24 +53,6 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
-  field_campaign:
-    type: paragraphs
-    weight: 4
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      features:
-        duplicate: duplicate
-        collapse_edit_all: collapse_edit_all
-    third_party_settings: {  }
-    region: content
   field_department_code:
     type: string_textfield
     weight: 11
@@ -86,15 +68,16 @@ content:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
       features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
+        add_above: '0'
     third_party_settings: {  }
     region: content
   field_description:
@@ -120,15 +103,16 @@ content:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: featured_item
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
       features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
+        add_above: '0'
     third_party_settings: {  }
     region: content
   field_go_to_current_url:
@@ -188,6 +172,25 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_spotlight:
+    type: paragraphs
+    weight: 4
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
   field_topics:
     weight: 14
     settings:

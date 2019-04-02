@@ -53,7 +53,7 @@ function dept_page_fields() {
         $featuredItemParagraphId = $featuredItem->getValue()['target_id'];
         $featuredItemLoaded = Paragraph::load($featuredItemParagraphId);
         $featuredItemTitle = $featuredItemLoaded->get('field_feature_title')->getValue()[0]['value'];
-        $featuredItemDescription = $featuredItemLoaded->get('field_feature_description')->getValue()[0]['value'];
+        $featuredItemDescription = $featuredItemLoaded->get('field_description')->getValue()[0]['value'];
         $featuredItemUrl = $featuredItemLoaded->get('field_feature_link')->getValue()[0]['uri'];
         $theFields['featured_items'][] = array(
           'title' => $featuredItemTitle,

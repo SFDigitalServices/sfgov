@@ -24,22 +24,6 @@
   <div class="sfgov-dept-services-list">
     <h3>{{ dept_fields.services.label }}</h3>
     <div class="sfgov-services-container"> {# table #}
-
-        {# {% for service in dept_fields.services.values %}
-        <div class="sfgov-services-transactions-container"> 
-          <h4>{{ service.title }}</h4>
-          <div class="sfgov-services-transactions">
-          {% for transaction in service.transactions %}
-            {% include "@molecules/12-service-card/12-service-card.twig" with {
-              "title": transaction.tx_title,
-              "description": transaction.tx_description,
-              "url": '#'
-            }%}
-          {% endfor %}
-          </div>
-        </div>
-        {% endfor %} #}
-
     {% for service in dept_fields.services.values %}
         <div class="sfgov-services-section">
           <h4>{{ service.title }}</h4>
@@ -77,7 +61,11 @@
     {% endfor %}
     </div>
   </div>
-  <div class="sfgov-dept-campaign"></div>
+  <div class="sfgov-dept-spotlight">
+  <pre>
+    
+  </pre>
+  </div>
   <div class="sfgov-dept-news"></div>
   <div class="sfgov-dept-events"></div>
   <div class="sfgov-dept-resources"></div>
@@ -115,9 +103,9 @@
   </pre>
 
   First service section: <br/>
-  title: {{ dept_fields.services.0.title }}
+  title: {{ dept_fields.services.values.0.title}}
   <pre>
-  {{ dump(dept_fields.services.0.transactions) }}
+  {{ dump(dept_fields.services.values.0.transactions) }}
   </pre>
 </div>
 
