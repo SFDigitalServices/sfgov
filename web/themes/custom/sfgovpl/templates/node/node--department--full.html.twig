@@ -9,6 +9,7 @@
   "image": image
 } %}
 <div class="sfgov-container--full">
+{% if dept_fields.featured_items %}
   <div class="sfgov-dept-featured-items">
     <div>
       {% for featured_item in dept_fields.featured_items %}
@@ -20,7 +21,9 @@
       {% endfor %}
     </div>
   </div>
+{% endif %}
   <div class="sfgov-dept-in-this-page"></div>
+{% if dept_fields.services %}
   <div class="sfgov-dept-services-list">
     <h3>{{ dept_fields.services.label }}</h3>
     <div class="sfgov-services-container"> {# table #}
@@ -61,7 +64,9 @@
     {% endfor %}
     </div>
   </div>
-  {% if dept_fields.spotlight %}
+{% endif %}
+
+{% if dept_fields.spotlight %}
   <div class="sfgov-dept-spotlight">
   {# <pre>
     {{ dump(dept_fields.spotlight) }}
@@ -82,7 +87,7 @@
       "image_url": dept_fields.spotlight.image_url
     }%}
   </div>
-  {% endif %}
+{% endif %}
   <div class="sfgov-dept-news"></div>
   <div class="sfgov-dept-events"></div>
   <div class="sfgov-dept-resources"></div>
