@@ -61,11 +61,28 @@
     {% endfor %}
     </div>
   </div>
+  {% if dept_fields.spotlight %}
   <div class="sfgov-dept-spotlight">
-  <pre>
-    
-  </pre>
+  {# <pre>
+    {{ dump(dept_fields.spotlight) }}
+  </pre> #}
+    {# <div class="sfgov-spotlight-container">
+      <div class="sfgov-spotlight-container-lhs">
+
+      </div>
+      <div class="sfgov-spotlight-container-rhs">
+
+      </div>
+    </div> #}
+    {% include "@molecules/13-spotlight/13-spotlight.twig" with {
+      "title": dept_fields.spotlight.title,
+      "description": dept_fields.spotlight.description,
+      "button_text": dept_fields.spotlight.button_text,
+      "button_uri": dept_fields.spotlight.button_uri,
+      "image_url": dept_fields.spotlight.image_url
+    }%}
   </div>
+  {% endif %}
   <div class="sfgov-dept-news"></div>
   <div class="sfgov-dept-events"></div>
   <div class="sfgov-dept-resources"></div>
@@ -92,7 +109,7 @@
     } %}
   {% endif %}
 
-  Dept Fields: <br/>
+  {# Dept Fields: <br/>
   <pre>
   {{ dump(dept_fields) }}
   </pre>
@@ -106,6 +123,6 @@
   title: {{ dept_fields.services.values.0.title}}
   <pre>
   {{ dump(dept_fields.services.values.0.transactions) }}
-  </pre>
+  </pre> #}
 </div>
 

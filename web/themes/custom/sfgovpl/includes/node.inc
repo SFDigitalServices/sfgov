@@ -6,7 +6,7 @@ use Drupal\node\Entity\Node;
 // $module_handler = Drupal::service('module_handler');
 // $devel_path = $module_handler->getModule('devel')->getPath();
 // require_once($devel_path.'/kint/kint/Kint.class.php');
-// Kint::$maxLevels = 6;
+// Kint::$maxLevels = 4;
 
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
@@ -89,8 +89,29 @@ function dept_page_fields() {
           'transactions' => $txs,
         );
       }
+      if($node->hasField('field_spotlight')) {
+        $deptSpotlight = $node->get('field_spotlight');
+        if(!empty($deptSpotlight) && !empty($deptSpotlight->getValue())) {
+          // Kint::dump($deptSpotlight->getValue());
+          $deptSpotlightParagraphId = $deptSpotlight->getValue()[0]['target_id'];
+          $deptSpotlightParagraph = Paragraph::load($deptSpotlightParagraphId);
+          $spotlightTitle = $deptSpotlightParagraph->get('field_title')->getValue()[0]['value'];
+          $spotlightDescription = $deptSpotlightParagraph->get('field_description')->getValue()[0]['value'];
+          $spotlightButtonId = $deptSpotlightParagraph->get('field_spotlight_button')->getValue()[0]['target_id'];
+          $spotlightButtonParagraph = Paragraph::load($spotlightButtonId);
+          $spotlightButtonTitle = $spotlightButtonParagraph->get('field_link')->getValue()[0]['title'];
+          $spotlightButtonUri = $spotlightButtonParagraph->get('field_link')->getValue()[0]['uri'];
+          $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_image');
+          // Kint::dump($spotlightImage->entity->url());
+          $theFields['spotlight']['title'] = $spotlightTitle;
+          $theFields['spotlight']['description'] = $spotlightDescription;
+          $theFields['spotlight']['button_text'] = $spotlightButtonTitle;
+          $theFields['spotlight']['button_uri'] = $spotlightButtonUri;
+          $theFields['spotlight']['image_url'] = $spotlightImage->entity->url();
+        }
+      }
     }
-  }
+  }           
   // Kint::dump($theFields);
   return $theFields;
 }
