@@ -110,6 +110,38 @@ function dept_page_fields() {
           $theFields['spotlight']['image_url'] = $spotlightImage->entity->url();
         }
       }
+      if($node->hasField('field_resources')) {
+        $resources = $node->get('field_resources');
+        $resourcesLabel = $resources->getFieldDefinition()->getLabel();
+        // Kint::dump($resourcesLabel);
+        $theFields['resources']['label'] = $resourcesLabel;
+        foreach($resources as $resource) {
+          $resourceParagraphId = $resource->getValue()['target_id'];
+          // Kint::dump($resourceParagraphId);
+          $resourceParagraph = Paragraph::load($resourceParagraphId);
+          $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
+          $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
+          $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
+          $theFields['resources']['items'][] = array(
+            'title' => $resourceItemTitle,
+            'description' => $resourceItemDescription,
+            'url' => $resourceItemUrl,
+          );
+        }
+        // $featuredItems = $node->get('field_featured_items');
+        // foreach($featuredItems as $featuredItem) {
+        //   $featuredItemParagraphId = $featuredItem->getValue()['target_id'];
+        //   $featuredItemLoaded = Paragraph::load($featuredItemParagraphId);
+        //   $featuredItemTitle = $featuredItemLoaded->get('field_feature_title')->getValue()[0]['value'];
+        //   $featuredItemDescription = $featuredItemLoaded->get('field_description')->getValue()[0]['value'];
+        //   $featuredItemUrl = $featuredItemLoaded->get('field_feature_link')->getValue()[0]['uri'];
+        //   $theFields['featured_items'][] = array(
+        //     'title' => $featuredItemTitle,
+        //     'description' => $featuredItemDescription,
+        //     'url' => $featuredItemUrl,
+        //   );
+        // }
+      }
     }
   }           
   // Kint::dump($theFields);
