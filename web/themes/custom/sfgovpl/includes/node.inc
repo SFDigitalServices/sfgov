@@ -5,10 +5,10 @@ use Drupal\node\Entity\Node;
 use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
 
-$module_handler = Drupal::service('module_handler');
-$devel_path = $module_handler->getModule('devel')->getPath();
-require_once($devel_path.'/kint/kint/Kint.class.php');
-Kint::$maxLevels = 4;
+// $module_handler = Drupal::service('module_handler');
+// $devel_path = $module_handler->getModule('devel')->getPath();
+// require_once($devel_path.'/kint/kint/Kint.class.php');
+// Kint::$maxLevels = 4;
 
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
