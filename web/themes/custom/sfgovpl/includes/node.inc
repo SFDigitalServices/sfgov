@@ -138,27 +138,29 @@ function dept_page_fields() {
       if($node->hasField('field_address')) {
         $addressId = $node->get('field_address')->getValue()[0]['target_id'];
         $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
-        $addressValues = $addressEntity->get('field_address')->getValue()[0];
-        $theFields['address']['line1'] = $addressValues['address_line1'];
-        $theFields['address']['line2'] = $addressValues['address_line2'];
-        $theFields['address']['country_code'] = $addressValues['country_code'];
-        $theFields['address']['city'] = $addressValues['locality'];
-        $theFields['address']['state'] = $addressValues['administrative_area'];
-        $theFields['address']['zip'] = $addressValues['postal_code'];
-        $theFields['address']['organization'] = $addressValues['organization'];
-        $hours = $addressEntity->get('field_operating_hours')->getValue();
-        // Kint::dump($addressValues);
-        usort($hours, function($item1, $item2) {
-          return $item1['day'] <=> $item2['day'];
-        });
-        // Kint::dump($hours);
-        foreach($hours as $hour) {
-          $theFields['address']['hours'][] = array(
-            'day' => jddayofweek($hour['day'], 2),
-            'start' => date("g:i a", strtotime($hour['starthours'])),
-            'end' => date("g:i a", strtotime($hour['endhours'])),
-            'comment' => $hour['comment'],
-          );
+        if($addressEntity) {
+          $addressValues = $addressEntity->get('field_address')->getValue()[0];
+          $theFields['address']['line1'] = $addressValues['address_line1'];
+          $theFields['address']['line2'] = $addressValues['address_line2'];
+          $theFields['address']['country_code'] = $addressValues['country_code'];
+          $theFields['address']['city'] = $addressValues['locality'];
+          $theFields['address']['state'] = $addressValues['administrative_area'];
+          $theFields['address']['zip'] = $addressValues['postal_code'];
+          $theFields['address']['organization'] = $addressValues['organization'];
+          $hours = $addressEntity->get('field_operating_hours')->getValue();
+          // Kint::dump($addressValues);
+          usort($hours, function($item1, $item2) {
+            return $item1['day'] <=> $item2['day'];
+          });
+          // Kint::dump($hours);
+          foreach($hours as $hour) {
+            $theFields['address']['hours'][] = array(
+              'day' => jddayofweek($hour['day'], 2),
+              'start' => date("g:i a", strtotime($hour['starthours'])),
+              'end' => date("g:i a", strtotime($hour['endhours'])),
+              'comment' => $hour['comment'],
+            );
+          }
         }
       }
       if($node->hasField('field_phone_numbers')) {
@@ -174,10 +176,12 @@ function dept_page_fields() {
             if($length == 10) {
               $number = preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $number);
             }
+            $phoneDetails = $phoneParagraph->get('field_text')->getValue() ? $phoneParagraph->get('field_text')->getValue()[0]['value'] : null;
+            $phoneOwner = $phoneParagraph->get('field_owner')->getValue() ? $phoneParagraph->get('field_owner')->getValue()[0]['value'] : null;
             $theFields['phone_numbers'][] = array(
               'number' => $number,
-              'details' => $phoneParagraph->get('field_text')->getValue()[0]['value'],
-              'owner' => $phoneParagraph->get('field_owner')->getValue()[0]['value'],
+              'details' => $phoneDetails,
+              'owner' => $phoneOwner,
             );
           }
         }
