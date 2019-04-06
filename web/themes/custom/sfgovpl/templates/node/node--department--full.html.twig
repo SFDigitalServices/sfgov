@@ -8,7 +8,7 @@
   "description": description,
   "image": image
 } %}
-<div class="sfgov-container--full">
+<div>
 {% if dept_fields.featured_items %}
   <div class="sfgov-dept-featured-items">
     <div>
@@ -87,37 +87,46 @@
   <div class="sfgov-dept-resources">
     <h3>{{ dept_fields.resources.label }}</h3>
     <div class="sfgov-dept-resources-container">
-    {% set i = 2 %}
-    {% for item in dept_fields.resources.items %}
-        {% include "@molecules/14-resource-card/14-resource-card.twig" with {
-          "title": item.title,
-          "description": item.description,
-          "url": item.url
-        }%}
-        {% set i = i - 1 %}
-      {% if loop.index is divisible by (2) and not loop.last %}
-        </div><div class="sfgov-dept-resources-container">
-        {% set i = 2 %}
-      {% endif %}
-      {% if loop.last and i >= 1 %}
-        {% for n in 1..i %}
+      <div class="sfgov-dept-resource-items">
+      {% set i = 2 %}
+      {% for item in dept_fields.resources.items %}
           {% include "@molecules/14-resource-card/14-resource-card.twig" with {
-            "title": '',
-            "description": '',
-            "url": '',
-            "empty": true
+            "title": item.title,
+            "description": item.description,
+            "url": item.url
           }%}
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
+          {% set i = i - 1 %}
+        {% if loop.index is divisible by (2) and not loop.last %}
+          </div><div class="sfgov-dept-resources-container">
+          {% set i = 2 %}
+        {% endif %}
+        {% if loop.last and i >= 1 %}
+          {% for n in 1..i %}
+            {% include "@molecules/14-resource-card/14-resource-card.twig" with {
+              "title": '',
+              "description": '',
+              "url": '',
+              "empty": true
+            }%}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      </div>
     </div>
   </div>
 {% endif %}
 
   <div class="sfgov-dept-about"></div>
-  <div class="sfgov-dept-contact"></div>
+  
+  <div class="sfgov-dept-contact">
+    {% include "@organisms/06-contact/06-contact.twig" with {
+      "address": dept_fields.address,
+      "phone_numbers": dept_fields.phone_numbers,
+      "email": dept_fields.email
+    } %}
+  </div>
 
-  {% set render_content = false %}
+  {# {% set render_content = false %}
 
   {% if node.get('field_url').isEmpty() == false %}
     {% set render_content = true %}
@@ -135,7 +144,7 @@
         content.field_address,
         content.field_phone_numbers]
     } %}
-  {% endif %}
+  {% endif %} #}
 
   {# Dept Fields: <br/>
   <pre>
