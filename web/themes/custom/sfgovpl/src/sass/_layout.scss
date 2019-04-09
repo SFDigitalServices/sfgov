@@ -237,22 +237,58 @@ header {
   }
 }
 
+// .sfds-layout-container {
+//   width: auto;
+//   @include respond-to(null, large) {
+//     border: 2px solid blue;
+//     width: 1280px;
+//     margin: 0 auto;
+//   }
+//   @include respond-to('medium', 'large') {
+//     border: 2px solid red;
+//     margin: 0 96px;
+//   }
+//   @include respond-to('small', 'medium') {
+//     border: 2px solid green;
+//   }
+//   @include respond-to('small', null) {
+//     border: 2px solid orange;
+//     margin: 0 20px;
+//   }
+// }
+
+$not-big: 700px;
+$big: 1280px;
+
+$breakpointz: (
+  'not-big': $not-big,
+  'big': $big
+) !default;
+
+
+@mixin less-than($breakpoint) {
+  @if map-has-key($breakpointz, $breakpoint) {
+    @media (max-width: map-get($breakpointz, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
+@mixin greater-than($breakpoint) {
+  @if map-has-key($breakpointz, $breakpoint) {
+    @media (min-width: map-get($breakpointz, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
 .sfds-layout-container {
-  width: auto;
-  @include respond-to(null, large) {
-    border: 2px solid blue;
-    width: 1280px;
-    margin: 0 auto;
-  }
-  @include respond-to('medium', 'large') {
-    border: 2px solid red;
-    margin: 0 96px;
-  }
-  @include respond-to('small', 'medium') {
-    border: 2px solid green;
-  }
-  @include respond-to('small', null) {
-    border: 2px solid orange;
-    margin: 0 20px;
+  .sfds-responsive-container {
+    padding: 0 96px;
+    @include greater-than('big') {
+      width: 1280px;
+      padding: 0;
+      margin: 0 auto;
+    }
   }
 }
