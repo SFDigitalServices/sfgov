@@ -3,22 +3,30 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.department.field_about_description
     - field.field.node.department.field_address
+    - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
     - field.field.node.department.field_description
+    - field.field.node.department.field_divisions
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_parent_department
+    - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
+    - field.field.node.department.field_photo
+    - field.field.node.department.field_public_bodies
     - field.field.node.department.field_resources
+    - field.field.node.department.field_social_media
     - field.field.node.department.field_spotlight
     - field.field.node.department.field_topics
     - field.field.node.department.field_url
     - node.type.department
   module:
     - entity_reference_revisions
+    - image
     - link
     - smart_trim
     - user
@@ -32,6 +40,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_about_description:
+    weight: 11
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
   field_address:
     weight: 7
     label: hidden
@@ -40,6 +55,15 @@ content:
       view_mode: default
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
+  field_call_to_action:
+    type: entity_reference_revisions_entity_view
+    weight: 14
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
     region: content
   field_department_services:
     type: entity_reference_revisions_entity_view
@@ -69,6 +93,14 @@ content:
     third_party_settings: {  }
     type: smart_trim
     region: content
+  field_divisions:
+    weight: 12
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_email:
     type: entity_reference_revisions_entity_view
     weight: 10
@@ -87,9 +119,36 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
+  field_people:
+    type: entity_reference_revisions_entity_view
+    weight: 16
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
   field_phone_numbers:
     type: entity_reference_revisions_entity_view
     weight: 6
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_photo:
+    weight: 15
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  field_public_bodies:
+    type: entity_reference_revisions_entity_view
+    weight: 13
     label: above
     settings:
       view_mode: default
@@ -100,6 +159,15 @@ content:
     type: entity_reference_revisions_entity_view
     weight: 9
     label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_social_media:
+    type: entity_reference_revisions_entity_view
+    weight: 17
+    label: above
     settings:
       view_mode: default
       link: ''
