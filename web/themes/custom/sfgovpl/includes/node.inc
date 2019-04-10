@@ -132,7 +132,8 @@ function dept_page_fields() {
         }
       }
       if($node->hasField('field_url')) {
-        $deptUrl = $node->get('field_url')->getValue()[0]['uri'];
+        $theUrl = $node->get('field_url')->getValue();
+        $deptUrl =  $theUrl ? $theUrl : null;
         $theFields['dept_url'] = $deptUrl;
       }
       if($node->hasField('field_address')) {
