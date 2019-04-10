@@ -109,16 +109,18 @@
 {% endif %}
 
   <div class="sfgov-dept-about"></div>
-  
-  <div class="sfgov-dept-contact sfds-layout-container">
-    <div class="sfgov-dept-contact-content sfds-responsive-container">
-      {% include "@organisms/06-contact/06-contact.twig" with {
-        "address": dept_fields.address,
-        "phone_numbers": dept_fields.phone_numbers,
-        "email": dept_fields.email
-      } %}
+
+  {% if dept_fields.address or dept_fields.phone_numbers or dept_fields.email %}
+    <div class="sfgov-dept-contact sfds-layout-container">
+      <div class="sfgov-dept-contact-content sfds-responsive-container">
+        {% include "@organisms/06-contact/06-contact.twig" with {
+          "address": dept_fields.address,
+          "phone_numbers": dept_fields.phone_numbers,
+          "email": dept_fields.email
+        } %}
+      </div>
     </div>
-  </div>
+  {% endif %}
 
   {# {% set render_content = false %}
 
