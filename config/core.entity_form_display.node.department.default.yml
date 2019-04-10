@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - entity_browser.browser.image
+    - entity_browser.browser.location_physical
     - field.field.node.department.field_address
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
@@ -11,10 +11,8 @@ dependencies:
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
-    - field.field.node.department.field_image
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_phone_numbers
-    - field.field.node.department.field_public_body
     - field.field.node.department.field_resources
     - field.field.node.department.field_spotlight
     - field.field.node.department.field_topics
@@ -142,21 +140,6 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_image:
-    weight: 10
-    settings:
-      entity_browser: image
-      field_widget_display: rendered_entity
-      field_widget_edit: true
-      field_widget_remove: true
-      open: true
-      selection_mode: selection_append
-      field_widget_display_settings:
-        view_mode: preview
-      field_widget_replace: false
-    third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_parent_department:
     type: entity_reference_autocomplete
     weight: 14
@@ -185,13 +168,6 @@ content:
       closed_mode_threshold: 0
     third_party_settings: {  }
     region: content
-  field_public_body:
-    type: boolean_checkbox
-    weight: 15
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   field_resources:
     type: paragraphs
     weight: 5
