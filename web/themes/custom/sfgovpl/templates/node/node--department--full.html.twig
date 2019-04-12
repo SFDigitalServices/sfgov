@@ -14,7 +14,7 @@
   </div>
 </div>
 {% if dept_fields.featured_items %}
-  <div class="sfgov-dept-featured-items-layout-container sfds-layout-container">
+  <div class="sfgov-dept-section sfgov-dept-featured-items-layout-container sfds-layout-container">
     <div class="sfgov-dept-featured-items-container sfds-responsive-container">
       <div class="sfgov-dept-featured-items">
         {% for featured_item in dept_fields.featured_items %}
@@ -28,9 +28,11 @@
     </div>
   </div>
 {% endif %}
+
   <div class="sfgov-dept-in-this-page"></div>
+
 {% if dept_fields.services.values %}
-  <div class="sfgov-dept-services-list sfds-layout-container">
+  <div class="sfgov-dept-section sfgov-dept-services-list sfds-layout-container">
     <div class="sfgov-services-container sfds-responsive-container">
       <h3>{{ dept_fields.services.label }}</h3>
     {% for service in dept_fields.services.values %}
@@ -83,11 +85,12 @@
     }%}
   </div>
 {% endif %}
+
   <div class="sfgov-dept-news"></div>
   <div class="sfgov-dept-events"></div>
 
 {% if dept_fields.resources.items %}
-  <div class="sfgov-dept-resources sfds-layout-container">
+  <div class="sfgov-dept-section sfgov-dept-resources sfds-layout-container">
     <div class="sfgov-dept-resources-layout-container sfds-responsive-container">
       <h3>{{ dept_fields.resources.label }}</h3>
       <div class="sfgov-dept-resources-container">
@@ -108,19 +111,62 @@
   </div>
 {% endif %}
 
-  <div class="sfgov-dept-about"></div>
-
-  {% if dept_fields.address or dept_fields.phone_numbers or dept_fields.email %}
-    <div class="sfgov-dept-contact sfds-layout-container">
-      <div class="sfgov-dept-contact-content sfds-responsive-container">
-        {% include "@organisms/06-contact/06-contact.twig" with {
-          "address": dept_fields.address,
-          "phone_numbers": dept_fields.phone_numbers,
-          "email": dept_fields.email
-        } %}
+{% if(dept_fields.about) %}
+  <div class="sfgov-dept-section sfgov-dept-about sfds-layout-container">
+    <div class="sfgov-dept-about-container sfds-responsive-container">
+      <h3>About</h3>
+      <div class="sfgov-dept-about-content">
+        <div class="sfgov-dept-about-content-left">
+          <div class="sfgov-dept-about-description">
+            {{ dept_fields.about.description }}
+          </div>
+          <div class="sfgov-dept-about-divisions">
+            <h4>Divisions</h4>
+            <ul>
+            {% for division in dept_fields.about.divisions %}
+              <li><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="sfgov-dept-about-public-bodies">
+            <h4>Public Bodies</h4>
+            <ul>
+            {% for publicBody in dept_fields.about.public_bodies %}
+              <li><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="sfgov-dept-about-content-right">
+          <div class="sfgov-dept-about-logo">
+            <img src="{{ dept_fields.about.logo_url }}" />
+          </div>
+          <div class="sfgov-dept-about-cta">
+            <h5>{{ dept_fields.about.cta.title }}</h5>
+            <a href="{{ dept_fields.about.cta.url }}">{{ dept_fields.about.cta.button_text }}</a>
+          </div>
+        </div>
       </div>
+      <pre>
+        {{ dump(dept_fields.about.social) }}
+        {{ dump(dept_fields.about.people) }}
+      </pre>
+
     </div>
-  {% endif %}
+  </div>
+{% endif %}
+
+{% if dept_fields.address or dept_fields.phone_numbers or dept_fields.email %}
+  <div class="sfgov-dept-section sfgov-dept-contact sfds-layout-container">
+    <div class="sfgov-dept-contact-content sfds-responsive-container">
+      {% include "@organisms/06-contact/06-contact.twig" with {
+        "address": dept_fields.address,
+        "phone_numbers": dept_fields.phone_numbers,
+        "email": dept_fields.email
+      } %}
+    </div>
+  </div>
+{% endif %}
 
   {# {% set render_content = false %}
 

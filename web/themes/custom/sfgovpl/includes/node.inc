@@ -94,7 +94,6 @@ function dept_page_fields() {
       if($node->hasField('field_spotlight')) {
         $deptSpotlight = $node->get('field_spotlight');
         if(!empty($deptSpotlight) && !empty($deptSpotlight->getValue())) {
-          // Kint::dump($deptSpotlight->getValue());
           $deptSpotlightParagraphId = $deptSpotlight->getValue()[0]['target_id'];
           $deptSpotlightParagraph = Paragraph::load($deptSpotlightParagraphId);
           $spotlightTitle = $deptSpotlightParagraph->get('field_title')->getValue()[0]['value'];
@@ -104,7 +103,6 @@ function dept_page_fields() {
           $spotlightButtonTitle = $spotlightButtonParagraph->get('field_link')->getValue()[0]['title'];
           $spotlightButtonUri = $spotlightButtonParagraph->get('field_link')->getValue()[0]['uri'];
           $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_image');
-          // Kint::dump($spotlightImage->entity->url());
           $theFields['spotlight']['title'] = $spotlightTitle;
           $theFields['spotlight']['description'] = $spotlightDescription;
           $theFields['spotlight']['button_text'] = $spotlightButtonTitle;
@@ -202,7 +200,101 @@ function dept_page_fields() {
       // about fields
       if($node->hasField('field_about_description')) {
         $aboutDescription = $node->get('field_about_description')->getValue() ? $node->get('field_about_description')->getValue()[0]['value'] : null;
-        $theFields['about']['description'] = $aboutDescription;
+        // Kint::dump($aboutDescription);
+        if($aboutDescription) {
+          $theFields['about']['description'] = $aboutDescription;
+        }
+      }
+      if($node->hasField('field_divisions')) {
+        $aboutDivisions = $node->get('field_divisions')->getValue();
+        if($aboutDivisions) {
+          foreach($aboutDivisions as $aboutDivision) {
+            $divisionDept = Node::load($aboutDivision['target_id']);
+            $theFields['about']['divisions'][] = array(
+              'dept_name' => $divisionDept->get('title')->getValue()[0]['value'],
+              'dept_url' => $divisionDept->toUrl('canonical', ['absolute'=>true])->toString(),
+            );
+          }
+        }
+      }
+      if($node->hasField('field_public_bodies')) {
+        $aboutPublicBodies = $node->get('field_public_bodies')->getValue();
+        // Kint::dump($aboutPublicBodies);
+        if($aboutPublicBodies) {
+          foreach($aboutPublicBodies as $publicBody) {
+            $publicBodyId = $publicBody['target_id'];
+            $publicBodyParagraph = Paragraph::load($publicBodyId);
+            $publicBodyLink = $publicBodyParagraph->get('field_link');
+            $publicBodyValue = $publicBodyLink->getValue();
+            $theFields['about']['public_bodies'][] = array(
+              'name' => $publicBodyValue[0]['title'],
+              'url' => $publicBodyValue[0]['uri'],
+            );
+          }
+        }
+      }
+      if($node->hasField('field_photo')) {
+        $aboutLogo = $node->get('field_photo');
+        if($aboutLogo && $aboutLogo->getValue()) {
+          $logoUrl = file_create_url($aboutLogo->entity->uri->value);
+          $theFields['about']['logo_url'] = $logoUrl;
+        }
+      }
+      if($node->hasField('field_call_to_action')) {
+        $aboutCta = $node->get('field_call_to_action');
+        if($aboutCta && $aboutCta->getValue()) {
+          $aboutCtaId = $aboutCta->getValue()[0]['target_id'];
+          $aboutCtaParagraph = Paragraph::load($aboutCtaId);
+          $ctaTitle = $aboutCtaParagraph->get('field_title')->getValue()[0]['value'];
+          $ctaButtonId = $aboutCtaParagraph->get('field_button')->getValue() ? $aboutCtaParagraph->get('field_button')->getValue()[0]['target_id'] : null;
+          if($ctaButtonId) {
+            $ctaButtonParagraph = Paragraph::load($ctaButtonId);
+            $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
+            $ctaButtonUrl = $ctaButtonParagraph->get('field_link')->getValue()[0]['uri'];
+            $theFields['about']['cta']['title'] = $ctaTitle;
+            $theFields['about']['cta']['button_text'] = $ctaButtonText; 
+            $theFields['about']['cta']['url'] = $ctaButtonUrl;
+          }
+        }
+      }
+      if($node->hasField('field_social_media')) {
+        $aboutSocial = $node->get('field_social_media');
+        if($aboutSocial && $aboutSocial->getValue()) {
+          $aboutSocialId = $aboutSocial->getValue()[0]['target_id'];
+          $aboutSocialParagraph = Paragraph::load($aboutSocialId);
+          $socialFields = $aboutSocialParagraph->getFields();
+          foreach($socialFields as $socialField) {
+            if($socialField->getFieldDefinition()->getType() == 'link') {
+              $socialFieldKey = $socialField->getFieldDefinition()->getName();
+              // Kint::dump($aboutSocialParagraph->get($socialFieldKey));
+              $socialLabel = $socialField->getFieldDefinition()->getLabel();
+              $theFields['about']['social'][] = array(
+                'label' => $socialLabel,
+                'url' => $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'],
+              );
+            }
+          }
+        }
+      }
+      if($node->hasField('field_people')) {
+        $aboutPeople = $node->get('field_people');
+        if($aboutPeople && !empty($aboutPeople->getValue())) {
+          $peopleId = $aboutPeople->getValue()[0]['target_id'];
+          $peopleParagraph = Paragraph::load($peopleId);
+          if(!empty($peopleParagraph->get('field_person')->getValue())) {
+            $people = $peopleParagraph->get('field_person')->getValue();
+            foreach($people as $person) {
+              $personNode = Node::load($person['target_id']);
+              $theFields['about']['people'][] = array(
+                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
+                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
+                'title' => $personNode->get('field_title')->getValue()[0]['value'],
+                'url' => $personNode->get('field_direct_external_url')->getValue()[0]['uri'],
+                'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
+              );
+            }
+          }
+        }
       }
     }
   }           
