@@ -260,6 +260,8 @@ function dept_page_fields() {
       if($node->hasField('field_social_media')) {
         $aboutSocial = $node->get('field_social_media');
         if($aboutSocial && $aboutSocial->getValue()) {
+          $socialMediaLabel = $aboutSocial->getFieldDefinition()->getLabel();
+          $theFields['about']['social']['title'] = $socialMediaLabel;
           $aboutSocialId = $aboutSocial->getValue()[0]['target_id'];
           $aboutSocialParagraph = Paragraph::load($aboutSocialId);
           $socialFields = $aboutSocialParagraph->getFields();
@@ -268,7 +270,7 @@ function dept_page_fields() {
               $socialFieldKey = $socialField->getFieldDefinition()->getName();
               // Kint::dump($aboutSocialParagraph->get($socialFieldKey));
               $socialLabel = $socialField->getFieldDefinition()->getLabel();
-              $theFields['about']['social'][] = array(
+              $theFields['about']['social']['values'][] = array(
                 'label' => $socialLabel,
                 'url' => $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'],
               );

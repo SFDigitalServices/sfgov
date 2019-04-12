@@ -15,15 +15,17 @@
 </div>
 {% if dept_fields.featured_items %}
   <div class="sfgov-dept-section sfgov-dept-featured-items-layout-container sfds-layout-container">
-    <div class="sfgov-dept-featured-items-container sfds-responsive-container">
-      <div class="sfgov-dept-featured-items">
-        {% for featured_item in dept_fields.featured_items %}
-          {% include "@molecules/11-featured-item/11-featured-item.twig" with {
-            "title": featured_item.title | t,
-            "description": featured_item.description | t,
-            "url": featured_item.url | t
-          }%}
-        {% endfor %}
+    <div class="sfds-responsive-container">
+      <div class="sfgov-dept-featured-items-container">
+        <div class="sfgov-dept-featured-items">
+            {% for featured_item in dept_fields.featured_items %}
+              {% include "@molecules/11-featured-item/11-featured-item.twig" with {
+                "title": featured_item.title | t,
+                "description": featured_item.description | t,
+                "url": featured_item.url | t
+              }%}
+            {% endfor %}
+        </div>
       </div>
     </div>
   </div>
@@ -75,14 +77,35 @@
 {% endif %}
 
 {% if dept_fields.spotlight %}
-  <div class="sfgov-dept-spotlight">
-    {% include "@molecules/13-spotlight/13-spotlight.twig" with {
-      "title": dept_fields.spotlight.title,
-      "description": dept_fields.spotlight.description,
-      "button_text": dept_fields.spotlight.button_text,
-      "button_uri": dept_fields.spotlight.button_uri,
-      "image_url": dept_fields.spotlight.image_url
-    }%}
+  <div class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
+    <div class="sfds-responsive-container">
+      {# {% include "@molecules/13-spotlight/13-spotlight.twig" with {
+        "title": dept_fields.spotlight.title,
+        "description": dept_fields.spotlight.description,
+        "button_text": dept_fields.spotlight.button_text,
+        "button_uri": dept_fields.spotlight.button_uri,
+        "image_url": dept_fields.spotlight.image_url
+      }%} #}
+      <div class="sfgov-spotlight">
+        <div class="sfgov-spotlight-text sfgov-spotlight-section">
+          <h4>
+            {{ dept_fields.spotlight.title }}
+          </h4>
+          <p>
+            {{ dept_fields.spotlight.description }}
+          </p>
+          {% if dept_fields.spotlight.button_text and dept_fields.spotlight.button_uri %}
+            <a class="sfgov-spotlight-button" href="{{ dept_fields.spotlight.button_uri }}">{{ dept_fields.spotlight.button_text }}</a>
+          {% endif %}
+        </div>
+        {% if dept_fields.spotlight.image_url %}
+          <div class="sfgov-spotlight-image sfgov-spotlight-section" style="background-image: url({{ dept_fields.spotlight.image_url }})">
+            <img alt="{{ image_alt }}"/>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
   </div>
 {% endif %}
 
@@ -116,7 +139,7 @@
     <div class="sfgov-dept-about-container sfds-responsive-container">
       <h3>About</h3>
       <div class="sfgov-dept-about-content">
-        <div class="sfgov-dept-about-content-left">
+        <div class="sfgov-dept-about-content-left sfgov-dept-about-content-section">
           <div class="sfgov-dept-about-description">
             {{ dept_fields.about.description }}
           </div>
@@ -137,21 +160,40 @@
             </ul>
           </div>
         </div>
-        <div class="sfgov-dept-about-content-right">
-          <div class="sfgov-dept-about-logo">
+        <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section">
+          <div class="sfgov-dept-about-logo sfgov-logo">
             <img src="{{ dept_fields.about.logo_url }}" />
           </div>
-          <div class="sfgov-dept-about-cta">
+          <div class="sfgov-dept-about-cta sfgov-cta">
             <h5>{{ dept_fields.about.cta.title }}</h5>
             <a href="{{ dept_fields.about.cta.url }}">{{ dept_fields.about.cta.button_text }}</a>
           </div>
+          <div class="sfgov-dept-about-social sfgov-social">
+            <h5>{{ dept_fields.about.social.title }}</h5>
+            <ul class="sfgov-social-list">
+            {% for socialMedia in dept_fields.about.social.values %}
+              <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
+            {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
-      <pre>
-        {{ dump(dept_fields.about.social) }}
-        {{ dump(dept_fields.about.people) }}
-      </pre>
-
+    </div>
+  </div>
+  <div class="sfgov-dept-about-people sfds-layout-container sfgov-dept-section">
+    <div class="sfds-responsive-container">
+      <ul class="sfgov-dept-about-people-list">
+        {% for i in 0..2 %} {# only do first 3 people #}
+          {% set person = dept_fields.about.people[i] %}
+          <li class="sfgov-dept-about-people-list-item">
+            <div class="person-image"><img src="{{ person.photo }}" /></div>
+            <div class="person-details">
+              <h5>{{ person.first_name }} {{ person.last_name }}</h5>
+              <p>{{ person.title }}</p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endif %}
