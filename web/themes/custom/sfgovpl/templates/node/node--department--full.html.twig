@@ -18,11 +18,21 @@
     <div class="sfds-responsive-container">
       <div class="sfgov-dept-featured-items-container">
         <div class="sfgov-dept-featured-items">
+            {% set i = 3 %}
             {% for featured_item in dept_fields.featured_items %}
               {% include "@molecules/11-featured-item/11-featured-item.twig" with {
                 "title": featured_item.title | t,
                 "description": featured_item.description | t,
                 "url": featured_item.url | t
+              }%}
+              {% set i = i - 1 %}
+            {% endfor %}
+            {% for n in 1..i %}
+              {% include "@molecules/11-featured-item/11-featured-item.twig" with {
+                "title": '',
+                "description": '',
+                "url": '#',
+                "empty": true
               }%}
             {% endfor %}
         </div>
