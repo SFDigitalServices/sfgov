@@ -1,0 +1,29 @@
+uuid: aeae4bc0-41b8-48ce-bc35-441250ababd8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departments
+    - node.type.department
+    - node.type.news
+id: node.news.field_departments
+field_name: field_departments
+entity_type: node
+bundle: news
+label: Departments
+description: 'Start typing the name of a department to see suggestions.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
