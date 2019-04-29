@@ -27,14 +27,16 @@
               }%}
               {% set i = i - 1 %}
             {% endfor %}
-            {% for n in 1..i %}
-              {% include "@molecules/11-featured-item/11-featured-item.twig" with {
-                "title": '',
-                "description": '',
-                "url": '#',
-                "empty": true
-              }%}
-            {% endfor %}
+            {% if i > 0 %}
+              {% for n in 1..i %}
+                {% include "@molecules/11-featured-item/11-featured-item.twig" with {
+                  "title": '',
+                  "description": '',
+                  "url": '#',
+                  "empty": true
+                }%}
+              {% endfor %}
+            {% endif %}
         </div>
       </div>
     </div>

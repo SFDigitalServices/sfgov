@@ -156,6 +156,21 @@
       max-width: 0;
     }
   }
+  @include less-than('not-big') {
+    display: block;
+    margin: 0;
+    width: auto;
+    border-collapse: none;
+    border-spacing: 0;
+    .sfgov-dept-featured-items {
+      display: block;
+      .sfgov-featured-item {
+        display: block;
+        margin-bottom: 20px;
+        max-width: initial;
+      }
+    }
+  }
 }
 
 
@@ -176,9 +191,28 @@
           display: table-row;
         }
       }
+      @include less-than('not-big') {
+        .sfgov-services-transactions-container {
+          display: block;
+          width: auto;
+          border-collapse: none;
+          border-spacing: 0;
+          margin: 0;
+        }
+        .sfgov-service-card {
+          display: block;
+          max-width: initial;
+          margin-bottom: 20px;
+          &.empty {
+            display: none;
+          }
+        }
+      }
     }
   }
 }
+
+
 
 .sfgov-dept-spotlight {
   background: #8266BC;
@@ -229,9 +263,30 @@
         background-color: #cccced;
         background-repeat: no-repeat;
         background-size: cover;
-        background-position: center;
+        background-position: top center;
         img {
           display: none;
+        }
+      }
+    }
+  }
+  @include less-than('not-big') {
+    @include clearfix;
+    .sfds-responsive-container {
+      padding: 0 !important;
+    }
+    .sfgov-spotlight {
+      display: block;
+      .sfgov-spotlight-section {
+        display: block;
+        width: auto;
+        &.sfgov-spotlight-text {
+          padding: 20px 10% 40px 10%;
+          float: right;
+          margin-top: 300px;
+        }
+        &.sfgov-spotlight-image {
+          min-height: 300px;
         }
       }
     }
@@ -249,6 +304,18 @@
     margin-left: -20px;
     .sfgov-dept-resource-items {
       display: table-row;
+    }
+    @include less-than('not-big') {
+      display: block;
+      width: auto;
+      border-collapse: none;
+      border-spacing: 0;
+      margin: 0;
+      .sfgov-resource-card {
+        display: block;
+        margin-bottom: 20px;
+        max-width: initial;
+      }
     }
   }
 }
@@ -317,6 +384,35 @@
       }
     }
     @include clearfix;
+  }
+  @include less-than('not-big') {
+    .sfgov-dept-about-container {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      h3 {
+        padding: 0 10%;
+      }
+      .sfgov-dept-about-content-section {
+        &.sfgov-dept-about-content-left,
+        &.sfgov-dept-about-content-right {
+          display: block;
+          float: none;
+          width: auto;
+        }
+        &.sfgov-dept-about-content-left {
+          padding: 25px 10%;
+          .sfgov-dept-about-description,
+          .sfgov-dept-about-divisions ul,
+          .sfgov-dept-about-public-bodies ul {
+            padding-left: 25px;
+          }
+        }
+        &.sfgov-dept-about-content-right {
+          padding-left: 10%;
+          padding-bottom: 20px;
+        }
+      }
+    }
   }
 }
 

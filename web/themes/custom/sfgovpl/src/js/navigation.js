@@ -40,6 +40,7 @@
                 mainNav.appendChild(navItem);
             }
         }
+        
         var debug = document.createElement('div');
         $('body').append(debug);
         $(debug).attr('id', 'sfgov-debug');
