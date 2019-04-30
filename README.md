@@ -52,6 +52,13 @@ For additonal context, refer to config in .lando.yml.
 $ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
 ```
 
+## Updating core with composer
+Can sometimes cause php out of memory issues.  Do this:
+
+```
+$ php -d memory_limit=-1 `which composer` update drupal/core --with-dependencies
+```
+
 ## Issues with lando/drush (12/26/2018)
 Refer to the issues here: [https://github.com/lando/lando/issues/1315](https://github.com/lando/lando/issues/1315)
 and here: [https://github.com/lando/lando/issues/1318#issuecomment-444274698](https://github.com/lando/lando/issues/1318#issuecomment-444274698)
