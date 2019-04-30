@@ -91,13 +91,6 @@
 {% if dept_fields.spotlight %}
   <div class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
     <div class="sfds-responsive-container sfds-responsive-container-right-zero">
-      {# {% include "@molecules/13-spotlight/13-spotlight.twig" with {
-        "title": dept_fields.spotlight.title,
-        "description": dept_fields.spotlight.description,
-        "button_text": dept_fields.spotlight.button_text,
-        "button_uri": dept_fields.spotlight.button_uri,
-        "image_url": dept_fields.spotlight.image_url
-      }%} #}
       <div class="sfgov-spotlight">
         <div class="sfgov-spotlight-text sfgov-spotlight-section">
           <h4>
@@ -213,11 +206,46 @@
 {% if dept_fields.address or dept_fields.phone_numbers or dept_fields.email %}
   <div class="sfgov-dept-section sfgov-dept-contact sfds-layout-container">
     <div class="sfgov-dept-contact-content sfds-responsive-container">
-      {% include "@organisms/06-contact/06-contact.twig" with {
+      {# {% include "@organisms/06-contact/06-contact.twig" with {
         "address": dept_fields.address,
         "phone_numbers": dept_fields.phone_numbers,
         "email": dept_fields.email
-      } %}
+      } %} #}
+      <div class="sfgov-contact-container">
+        <h3>Contact</h3>
+        {% if dept_fields.address %}
+          <div class="sfgov-contact-section address">
+            <h5>{{ dept_fields.address.organization }}</h5>
+            <p>
+              {{ dept_fields.address.line1 }} <br/>
+            {% if dept_fields.address.line2 %}
+              {{ dept_fields.address.line2 }} <br/>
+            {% endif %}
+              {{ dept_fields.address.city }}, {{ dept_fields.address.state }} {{ dept_fields.address.zip }}
+            </p>
+          </div>
+        {% endif %}
+        {% if dept_fields.phone_numbers %}
+          <div class="sfgov-contact-section phone-numbers">
+            <h5>Phone</h5>
+            {% for phone in dept_fields.phone_numbers %}
+              <div class="phone">
+                <h6>{{ phone.owner }}</h6>
+                <p><a href="tel:{{ phone.number }}">{{ phone.number }}</a></p>
+                <div class="details">
+                  {{ phone.details | raw }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if dept_fields.email %}
+          <div class="sfgov-contact-section email">
+            <h5>Email</h5>
+            <p><a href="mailto:{{ dept_fields.email }}">{{ dept_fields.email }}</a></p>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endif %}

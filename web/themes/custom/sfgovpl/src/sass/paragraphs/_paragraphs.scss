@@ -400,7 +400,7 @@
           width: auto;
         }
         &.sfgov-dept-about-content-left {
-          padding: 25px 10%;
+          padding: 0 10%;
           .sfgov-dept-about-description,
           .sfgov-dept-about-divisions ul,
           .sfgov-dept-about-public-bodies ul {
@@ -460,13 +460,109 @@
   }
 }
 
+.sfgov-dept-contact {
+  .sfgov-contact-container {
+    margin-bottom: 20px;
+    h3 {
+      @include rubik;
+      font-size: 3.2rem;
+      font-weight: 500;
+      margin: 0 0 20px 0;
+      padding: 0;
+      display: block;
+      margin-bottom: 20px;
+    }
+    @include rubik;
+    > .sfgov-contact-section {
+      display: inline-block;
+      width: 33%;
+      vertical-align: top;
+      padding-left: 60px;
+      line-height: 2em;
+      position: relative;
+      h5, h6 {
+        @include rubik;
+        font-size: 2rem;
+        padding: 0;
+        margin: 0 0 15px 0;
+        text-transform: none;
+        font-weight: 500;
+      }
+      h6 {
+        font-weight: 300;
+        font-size: 1.7rem;
+        padding: 0;
+        margin: 0;
+      }
+      p {
+        padding: 0;
+        margin: 0;
+        line-height: 2em;
+      }
+      &::after {
+        content: ' ';
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 3px;
+        left: 30px;
+      }
+      &.address {
+        width: 35%;
+        &::after {
+          background: url(../../src/img/icons/location-2.svg) no-repeat;
+        }
+      }
+      &.phone-numbers {
+        width: 32%;
+        .phone {
+          margin-bottom: 30px;
+          .details {
+            font-style: italic;
+            color: #999;
+          }
+        }
+        &::after {
+          background: url(../../src/img/icons/phone-2.svg) no-repeat;
+        }
+      }
+      &.email {
+        width: 32%;
+        p {
+          line-height: normal;
+        }
+        &::after {
+          background: url(../../src/img/icons/mail-2.svg) no-repeat;
+        }
+      }
+    }
+    @include less-than('not-big') {
+      > .sfgov-contact-section {
+        display: block;
+        width: auto;
+        padding-left: 25px;
+        margin-top: 25px;
+        &.address,
+        &.phone-numbers,
+        &.email {
+          display: block;
+          width: auto;
+          &::after {
+            left: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
 .sfgov-dept-section {
   padding-top: 20px;
   h3 {
     @include rubik;
     font-size: 3.2rem;
     font-weight: 500;
-    margin: 0;
+    margin: 0 0 20px 0;
     padding: 0;
   }
   h4 {
@@ -474,12 +570,12 @@
     font-size: 2.4rem;
     font-weight: 500;
     padding: 0;
-    margin: 0 0 15px 0;
+    margin: 0 0 20px 0;
   }
   h5 {
     @include rubik;
     font-weight: 400;
     padding: 0;
-    margin: 0 0 15px 0;
+    margin: 0 0 20px 0;
   }
 }
