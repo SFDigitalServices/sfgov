@@ -19,6 +19,10 @@ dependencies:
     - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_photo
     - field.field.node.department.field_public_bodies
+    - field.field.node.department.field_req_public_records
+    - field.field.node.department.field_req_public_records_email
+    - field.field.node.department.field_req_public_records_link
+    - field.field.node.department.field_req_public_records_phone
     - field.field.node.department.field_resources
     - field.field.node.department.field_social_media
     - field.field.node.department.field_spotlight
@@ -36,6 +40,7 @@ dependencies:
     - maxlength
     - paragraphs
     - path
+    - telephone
     - text
 third_party_settings:
   field_group:
@@ -72,6 +77,21 @@ third_party_settings:
         open: false
         required_fields: false
       label: Contact
+    group_request_public_records:
+      children:
+        - field_req_public_records
+        - field_req_public_records_link
+        - field_req_public_records_email
+        - field_req_public_records_phone
+      parent_name: ''
+      weight: 8
+      format_type: details
+      format_settings:
+        id: sfgov-dept-request-public-records
+        classes: ''
+        open: false
+        required_fields: true
+      label: 'Request public records'
 id: node.department.default
 targetEntityType: node
 bundle: department
@@ -298,6 +318,35 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
+    region: content
+  field_req_public_records:
+    weight: 33
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_req_public_records_email:
+    weight: 35
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_req_public_records_link:
+    weight: 34
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_req_public_records_phone:
+    weight: 36
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
     region: content
   field_resources:
     type: paragraphs

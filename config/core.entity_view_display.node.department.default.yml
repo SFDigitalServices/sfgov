@@ -18,6 +18,10 @@ dependencies:
     - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_photo
     - field.field.node.department.field_public_bodies
+    - field.field.node.department.field_req_public_records
+    - field.field.node.department.field_req_public_records_email
+    - field.field.node.department.field_req_public_records_link
+    - field.field.node.department.field_req_public_records_phone
     - field.field.node.department.field_resources
     - field.field.node.department.field_social_media
     - field.field.node.department.field_spotlight
@@ -28,6 +32,7 @@ dependencies:
     - entity_reference_revisions
     - image
     - link
+    - options
     - smart_trim
     - user
 id: node.department.default
@@ -154,6 +159,39 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    region: content
+  field_req_public_records:
+    weight: 18
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_req_public_records_email:
+    weight: 20
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_req_public_records_link:
+    weight: 21
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_req_public_records_phone:
+    weight: 22
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
   field_resources:
     type: entity_reference_revisions_entity_view
