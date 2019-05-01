@@ -93,16 +93,23 @@
         var phoneField = $('.form-tel');
         if (phoneField.length > 0) {
           var regex = new RegExp("\\d+", "g");
-          var number = phoneField.val().match(regex).join("");
-          if (number.length == 10) {
-            phoneField.val(number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6));
+          if (phoneField.val().length > 0) {
+            var number = phoneField.val().match(regex).join("");
+            if (number.length == 10) {
+              phoneField.val(number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6));
+            }
           }
         }
       });
     }
-  };
 
-  Drupal.behaviors.sfgovTransactionSortTitle = {
+    // populate the sort title for transactions based on the title (excluding stop words at the beginning of a title)
+    // for example, sort title for "Apply for a loan to repair your home" would be "Loan to repair your home"
+    // this sort title is used in the services a-z view to group and sort the transaction titles
+    // refer to:
+    //  - transaction content type
+    //  - services page view a-z
+  };Drupal.behaviors.sfgovTransactionSortTitle = {
     attach: function (context, settings) {
       var stripStopWords = function (str) {
         var strArray = str.split(' ');
@@ -117,10 +124,35 @@
       if (isTransactionEdit) {
         $('#edit-submit').on('click', function () {
           var sortTitle = stripStopWords($('#edit-title-0-value').val());
-          console.log(sortTitle);
           $('#edit-field-sort-title-0-value').val(sortTitle);
         });
       }
+    }
+  };
+
+  Drupal.behaviors.sfgovDeptReqRecords = {
+    attach: function (context, settings) {
+      var associations = {
+        "phone": "edit-field-req-public-records-phone-wrapper",
+        "link": "edit-field-req-public-records-link-wrapper",
+        "email": "edit-field-req-public-records-email-wrapper"
+      };
+      var reqPublicRecords = function () {
+        // a key value pair of radio buttons values and wrapper id's for show/hide
+        $('#edit-field-req-public-records-none').parent().hide();
+        $('#edit-field-req-public-records input[type="radio"]').once().on('click', function () {
+          for (var key in associations) {
+            $('#' + associations[key]).hide();
+          }
+          var radioVal = $(this).val().toLowerCase();
+          $('#' + associations[radioVal]).show();
+        });
+      };
+      var checkedVal = $('input[name="field_req_public_records"]:checked').val();
+      if (checkedVal) {
+        $('#' + associations[checkedVal.toLowerCase()]).show();
+      }
+      reqPublicRecords();
     }
   };
 })(jQuery, Drupal, document, window);

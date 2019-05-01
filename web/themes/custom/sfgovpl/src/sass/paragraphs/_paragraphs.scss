@@ -142,6 +142,31 @@
 //   width: 100%;
 // }
 
+.sfgov-dept-section {
+  padding-top: 20px;
+  h3 {
+    @include rubik;
+    font-size: 3.2rem;
+    font-weight: 500;
+    margin: 0 0 20px 0;
+    padding: 0;
+  }
+  h4 {
+    @include rubik;
+    font-size: 2.4rem;
+    font-weight: 500;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+  h5 {
+    @include rubik;
+    font-size: 2rem;
+    font-weight: 400;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+}
+
 .sfgov-dept-featured-items-container {
   display: table;
   margin-bottom: 20px;
@@ -295,6 +320,9 @@
 
 .sfgov-dept-resources {
   background: #EDF4F7;
+  h3 {
+    margin-bottom: 0;
+  }
   .sfgov-dept-resources-container {
     display: table;
     table-layout: fixed;
@@ -305,7 +333,12 @@
     .sfgov-dept-resource-items {
       display: table-row;
     }
-    @include less-than('not-big') {
+  }
+  @include less-than('not-big') {
+    h3 {
+      margin-bottom: 20px;
+    }
+    .sfgov-dept-resources-container {
       display: block;
       width: auto;
       border-collapse: none;
@@ -350,12 +383,16 @@
         width: 34.9%;
       }
     }
+    .sfgov-dept-about-description {
+      padding-left: 25px;
+    }
     .sfgov-dept-about-description,
     .sfgov-dept-about-divisions,
     .sfgov-dept-about-public-bodies {
       margin-bottom: 40px;
       ul {
         list-style-type: none;
+        padding-left: 30px;
       }      
     }
     .sfgov-logo,
@@ -556,26 +593,25 @@
   }
 }
 
-.sfgov-dept-section {
-  padding-top: 20px;
-  h3 {
-    @include rubik;
-    font-size: 3.2rem;
-    font-weight: 500;
-    margin: 0 0 20px 0;
-    padding: 0;
-  }
-  h4 {
-    @include rubik;
-    font-size: 2.4rem;
-    font-weight: 500;
-    padding: 0;
-    margin: 0 0 20px 0;
-  }
-  h5 {
-    @include rubik;
-    font-weight: 400;
-    padding: 0;
-    margin: 0 0 20px 0;
+.sfgov-dept-public-records {
+  .sfgov-dept-public-records-content-container {
+    margin-bottom: 20px;
+    .sfgov-dept-public-records-content {
+      background: #EDF4F7;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 0 45px;
+      h5 {
+        font-weight: 500;
+      }
+      p, a {
+        @include rubik;
+      }
+    }
+    @include less-than('not-big') {
+      .sfgov-dept-public-records-content {
+        margin: 0;
+      }
+    }
   }
 }

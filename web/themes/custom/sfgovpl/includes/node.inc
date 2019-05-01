@@ -6,10 +6,10 @@ use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
 use Drupal\views\Views;
 
-// $module_handler = Drupal::service('module_handler');
-// $devel_path = $module_handler->getModule('devel')->getPath();
-// require_once($devel_path.'/kint/kint/Kint.class.php');
-// Kint::$maxLevels = 4;
+$module_handler = Drupal::service('module_handler');
+$devel_path = $module_handler->getModule('devel')->getPath();
+require_once($devel_path.'/kint/kint/Kint.class.php');
+Kint::$maxLevels = 4;
 
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
@@ -314,6 +314,36 @@ function dept_page_fields() {
               'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
             );
           }
+        }
+      }
+    }
+    if($node->hasField('field_req_public_records')) {
+      $reqPublicRecords = $node->get('field_req_public_records');
+      if($reqPublicRecords && !empty($reqPublicRecords->getValue())) {
+        $reqPublicRecordsMethod = strtolower($reqPublicRecords->getValue()[0]['value']);
+        $reqPublicRecordsValue = null;
+        switch($reqPublicRecordsMethod) {
+          case 'link':
+            if(!empty($node->get('field_req_public_records_link')->getValue())) {
+              $reqPublicRecordsValue = $node->get('field_req_public_records_link')->getValue()[0]['uri'];
+            }
+            break;
+          case 'email':
+            if(!empty($node->get('field_req_public_records_email')->getValue())) {
+              $reqPublicRecordsValue = $node->get('field_req_public_records_email')->getValue()[0]['value'];
+            }
+            break;
+          case 'phone':
+            if(!empty($node->get('field_req_public_records_phone')->getValue())) {
+              $reqPublicRecordsValue = $node->get('field_req_public_records_phone')->getValue()[0]['value'];
+            }
+            break;
+          default:
+            $reqPublicRecordsValue = null;
+        }
+        if($reqPublicRecordsMethod && $reqPublicRecordsValue) {
+          $theFields['public_records']['method'] = $reqPublicRecordsMethod;
+          $theFields['public_records']['value'] = $reqPublicRecordsValue;
         }
       }
     }

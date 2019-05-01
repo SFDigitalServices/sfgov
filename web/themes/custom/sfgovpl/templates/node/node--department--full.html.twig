@@ -245,6 +245,25 @@
   </div>
 {% endif %}
 
+{% if dept_fields.public_records %}
+  <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
+    <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
+      <div class="sfgov-dept-public-records-content">
+        <h5>Request public records</h5>
+        <p>
+        {% if dept_fields.public_records.method == "phone" %}
+          <a href="tel:{{ dept_fields.public_records.value }}">Call {{ dept_fields.public_records.value }}</a> to submit a request.
+        {% elseif dept_fields.public_records.method == "email" %}
+          <a href="mailto:{{ dept_fields.public_records.value }}">Email {{ dept_fields.public_records.value }}</a> to submit a request.
+        {% elseif dept_fields.public_records.method == "link" %}
+          <a href="{{ dept_fields.public_records.value }}">Submit requests</a> for the {{ node.getTitle() }}.
+        {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
   {# {% set render_content = false %}
 
   {% if node.get('field_url').isEmpty() == false %}
