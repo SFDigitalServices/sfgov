@@ -6,10 +6,10 @@ use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
 use Drupal\views\Views;
 
-$module_handler = Drupal::service('module_handler');
-$devel_path = $module_handler->getModule('devel')->getPath();
-require_once($devel_path.'/kint/kint/Kint.class.php');
-Kint::$maxLevels = 4;
+// $module_handler = Drupal::service('module_handler');
+// $devel_path = $module_handler->getModule('devel')->getPath();
+// require_once($devel_path.'/kint/kint/Kint.class.php');
+// Kint::$maxLevels = 4;
 
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
@@ -85,7 +85,6 @@ function dept_page_fields() {
               'tx_url' => $tx->toUrl('canonical', ['absolute'=>true])->toString(),
             );
           }
-          // Kint::dump($deptTransactions);
           $theFields['services']['values'][] = array(
             'title' => $deptServiceSectionTitle,
             'transactions' => $txs,
@@ -132,11 +131,9 @@ function dept_page_fields() {
     if($node->hasField('field_resources')) {
       $resources = $node->get('field_resources');
       $resourcesLabel = $resources->getFieldDefinition()->getLabel();
-      // Kint::dump($resourcesLabel);
       $theFields['resources']['label'] = $resourcesLabel;
       foreach($resources as $resource) {
         $resourceParagraphId = $resource->getValue()['target_id'];
-        // Kint::dump($resourceParagraphId);
         $resourceParagraph = Paragraph::load($resourceParagraphId);
         $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
         $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
@@ -167,11 +164,9 @@ function dept_page_fields() {
           $theFields['address']['zip'] = $addressValues['postal_code'];
           $theFields['address']['organization'] = $addressValues['organization'];
           $hours = $addressEntity->get('field_operating_hours')->getValue();
-          // Kint::dump($addressValues);
           usort($hours, function($item1, $item2) {
             return $item1['day'] <=> $item2['day'];
           });
-          // Kint::dump($hours);
           foreach($hours as $hour) {
             $theFields['address']['hours'][] = array(
               'day' => jddayofweek($hour['day'], 2),
@@ -189,7 +184,6 @@ function dept_page_fields() {
         foreach($phoneNumbers->getValue() as $phoneNumber) {
           $phoneNumberId = $phoneNumber['target_id'];
           $phoneParagraph = Paragraph::load($phoneNumberId);
-          // Kint::dump($phoneParagraph->get('field_tel')->getValue()[0]['value']);
           $number = $phoneParagraph->get('field_tel')->getValue()[0]['value'];
           $number = preg_replace("/[^\d]/","",$number); // remove non-digit characters
           $length = strlen($number);
@@ -219,7 +213,6 @@ function dept_page_fields() {
     // about fields
     if($node->hasField('field_about_description')) {
       $aboutDescription = $node->get('field_about_description')->getValue() ? $node->get('field_about_description')->getValue()[0]['value'] : null;
-      // Kint::dump($aboutDescription);
       if($aboutDescription) {
         $theFields['about']['description'] = $aboutDescription;
       }
@@ -238,7 +231,6 @@ function dept_page_fields() {
     }
     if($node->hasField('field_public_bodies')) {
       $aboutPublicBodies = $node->get('field_public_bodies')->getValue();
-      // Kint::dump($aboutPublicBodies);
       if($aboutPublicBodies) {
         foreach($aboutPublicBodies as $publicBody) {
           $publicBodyId = $publicBody['target_id'];
@@ -287,7 +279,6 @@ function dept_page_fields() {
         foreach($socialFields as $socialField) {
           if($socialField->getFieldDefinition()->getType() == 'link') {
             $socialFieldKey = $socialField->getFieldDefinition()->getName();
-            // Kint::dump($aboutSocialParagraph->get($socialFieldKey));
             $socialLabel = $socialField->getFieldDefinition()->getLabel();
             $theFields['about']['social']['values'][] = array(
               'label' => $socialLabel,
