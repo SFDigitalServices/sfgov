@@ -14,6 +14,7 @@ dependencies:
   module:
     - datetime
     - media
+    - options
     - text
     - user
 id: node.news.default
@@ -24,19 +25,24 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 1
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_abstract:
+  content_moderation_control:
     weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_abstract:
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_date:
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       timezone_override: ''
@@ -45,15 +51,15 @@ content:
     type: datetime_default
     region: content
   field_dept:
-    weight: 4
-    label: hidden
+    weight: 5
+    label: above
     settings:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
     region: content
   field_image:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       image_style: 750x500
@@ -61,7 +67,13 @@ content:
     third_party_settings: {  }
     type: media_thumbnail
     region: content
+  field_news_type:
+    type: list_default
+    weight: 6
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  field_news_type: true
   langcode: true
   links: true
