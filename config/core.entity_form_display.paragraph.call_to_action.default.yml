@@ -7,6 +7,7 @@ dependencies:
     - field.field.paragraph.call_to_action.field_title
     - paragraphs.paragraphs_type.call_to_action
   module:
+    - maxlength
     - paragraphs
 id: paragraph.call_to_action.default
 targetEntityType: paragraph
@@ -37,7 +38,10 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: 80
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
     type: string_textfield
     region: content
 hidden:
