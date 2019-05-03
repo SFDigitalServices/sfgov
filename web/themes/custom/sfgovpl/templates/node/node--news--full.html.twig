@@ -14,18 +14,26 @@
 
   {% block footer %}
     <div class="{{ bundle }}--meta">
-      {{ content.field_abstract }}
-      {{ content.field_date }}
-      {{ content.field_image }}
+      <div class="contain">
+        {{ content.field_abstract }}
+        {{ content.field_date }}
+        {{ content.field_image }}
+      </div>
     </div>
   {% endblock footer %}
 
   {% block content %}
-    <div{{ content_attributes.addClass(bundle ~ '--content') }}>
+    <div{{ content_attributes.addClass(bundle ~ '--body') }}>
       {{ content|without(
-        'field_news_type',
         'field_abstract',
-        'field_image'
+        'field_date',
+        'field_dept',
+        'field_image',
+        'field_news_type'
       ) }}
+    </div>
+
+    <div class="{{ bundle }}--footer">
+      {{ content.field_dept }}
     </div>
   {% endblock content %}
