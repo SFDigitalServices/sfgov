@@ -30,7 +30,11 @@
   }
 
   .news--meta-inner {
-    @include contain;
+    margin: 0 auto;
+
+    @include media($medium-screen) {
+      padding-left: 20px;
+    }
 
     @include media($wide-screen) {
       max-width: 1280px;
@@ -49,7 +53,7 @@
       width: 50%;
 
       @include media($wide-screen) {
-        padding-left: 192px;
+        padding-left: 96px;
       }
     }
   }
@@ -62,6 +66,7 @@
     }
 
     img {
+      display: block;
       height: auto;
     }
   }
@@ -78,15 +83,32 @@
   .__body {
     @include contain;
     @include fs-body-1;
+    padding-bottom: 100px;
+    padding-top: 23px;
+
+    p {
+      max-width: 669px;
+    }
   }
 
   .news--footer {
     background: $c-yellow-pale;
+    padding-bottom: 60px;
+    padding-top: 41px;
   }
 
   .__dept {
     @include contain;
     @include fs-body-2;
+
+    .field__item {
+      margin-bottom: 20px;
+      padding-left: 40px;
+    }
+
+    a {
+      @include link-colors($c-blue-button, $c-text);
+    }
   }
 
   .field__label {
