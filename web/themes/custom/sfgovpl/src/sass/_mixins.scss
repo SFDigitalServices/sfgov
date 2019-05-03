@@ -27,3 +27,79 @@
   font-family: "Montserrat", sans-serif;
 }
 
+@mixin button {
+  background: $c-blue-button;
+  border-radius: 8px;
+  color: $c-white;
+  font-size: 17px;
+  font-weight: $fw-medium;
+  padding: 13px 20px 11px;
+  text-decoration: none;
+
+  &:hover {
+    background: $c-text;
+  }
+}
+
+// Link mixin
+// @param {color} $normal - normal color
+// @param {color} $hover  - hover
+// @param {color} $active - active
+// @param {color} $focus - focus
+@mixin link-colors($normal, $hover: false, $active: false, $visited: false, $focus: false) {
+  &:link {
+    color: $normal;
+  }
+
+  @if $visited {
+    &:visited,
+    &:link:visited {
+      color: $visited;
+    }
+  }
+
+  @else {
+    &:visited,
+    &:link:visited {
+      color: $normal;
+    }
+  }
+
+  @if $focus {
+    &:focus {
+      color: $focus;
+    }
+  }
+
+  @else {
+    &:focus {
+      color: $normal;
+    }
+  }
+
+  @if $hover {
+    &.active:hover,
+    &.is-active:hover,
+    &.active-trail:hover,
+    &.visited:hover,
+    &:hover {
+      color: $hover;
+    }
+  }
+
+  @if $active {
+    &.is-active,
+    &:active,
+    &.active-trail {
+      color: $active;
+    }
+  }
+
+  @else {
+    &.is-active,
+    &:active,
+    &.active-trail {
+      color: $normal;
+    }
+  }
+}

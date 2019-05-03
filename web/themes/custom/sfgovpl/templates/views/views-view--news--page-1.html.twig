@@ -55,12 +55,17 @@
   {{ exposed }}
   {{ attachment_before }}
 
-  {{ rows }}
+  {% block rows %}
+    {{ rows }}
+  {% endblock rows %}
+
   {{ empty }}
   {{ pager }}
 
   {{ attachment_after }}
-  {{ more }}
+  {% block more %}
+    {{ more }}
+  {% endblock more %}
 
   {% if footer %}
     <footer>
