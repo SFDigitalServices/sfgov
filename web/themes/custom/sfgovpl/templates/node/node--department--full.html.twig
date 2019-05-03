@@ -14,7 +14,7 @@
   </div>
 </div>
 {% if dept_fields.featured_items %}
-  <div class="sfgov-dept-section sfgov-dept-featured-items-layout-container sfds-layout-container">
+  <div id="sfgov-dept-featured-items" class="sfgov-dept-section sfgov-dept-featured-items-layout-container sfds-layout-container">
     <div class="sfds-responsive-container">
       <div class="sfgov-dept-featured-items-container">
         <div class="sfgov-dept-featured-items">
@@ -43,10 +43,16 @@
   </div>
 {% endif %}
 
-  <div class="sfgov-dept-in-this-page"></div>
+  <div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
+    <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
+      <div class="sfgov-dept-in-this-page-label">In this page:</div>
+      <ul></ul>
+    </div>
+  </div>
 
 {% if dept_fields.services.values %}
-  <div class="sfgov-dept-section sfgov-dept-services-list sfds-layout-container">
+  <a name="services"></a>
+  <div id="sfgov-dept-services" class="sfgov-dept-section sfgov-dept-services-list sfds-layout-container">
     <div class="sfgov-services-container sfds-responsive-container">
       <h3>{{ dept_fields.services.label }}</h3>
     {% for service in dept_fields.services.values %}
@@ -89,7 +95,7 @@
 {% endif %}
 
 {% if dept_fields.spotlight %}
-  <div class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
+  <div id="sfgov-dept-spotlight" class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
     <div class="sfds-responsive-container sfds-responsive-container-right-zero">
       <div class="sfgov-spotlight">
         <div class="sfgov-spotlight-text sfgov-spotlight-section">
@@ -118,7 +124,8 @@
   <div class="sfgov-dept-events"></div>
 
 {% if dept_fields.resources.items %}
-  <div class="sfgov-dept-section sfgov-dept-resources sfds-layout-container">
+  <a name="resources"></a>
+  <div id="sfgov-dept-resources" class="sfgov-dept-section sfgov-dept-resources sfds-layout-container">
     <div class="sfgov-dept-resources-layout-container sfds-responsive-container">
       <h3>{{ dept_fields.resources.label }}</h3>
       <div class="sfgov-dept-resources-container">
@@ -140,7 +147,8 @@
 {% endif %}
 
 {% if(dept_fields.about) %}
-  <div class="sfgov-dept-section sfgov-dept-about sfds-layout-container">
+  <a name="about"></a>
+  <div id="sfgov-dept-about" class="sfgov-dept-section sfgov-dept-about sfds-layout-container">
     <div class="sfgov-dept-about-container sfds-responsive-container sfds-responsive-container-right-zero">
       <h3>About</h3>
       <div class="sfgov-dept-about-content">
@@ -204,7 +212,8 @@
 {% endif %}
 
 {% if dept_fields.address or dept_fields.phone_numbers or dept_fields.email %}
-  <div class="sfgov-dept-section sfgov-dept-contact sfds-layout-container">
+  <a name="contact"></a>
+  <div id="sfgov-dept-contact" class="sfgov-dept-section sfgov-dept-contact sfds-layout-container">
     <div class="sfgov-dept-contact-content sfds-responsive-container">
       <div class="sfgov-contact-container">
         <h3>Contact</h3>

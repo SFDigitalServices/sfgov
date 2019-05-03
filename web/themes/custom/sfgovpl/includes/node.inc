@@ -103,10 +103,12 @@ function dept_page_fields() {
             'tx_url' => $result->_entity->toUrl('canonical', ['absolute'=>true])->toString(),
           );
         }
-        $theFields['services']['values'][] = array(
-          'title' => '',
-          'transactions' => $txs,
-        );
+        if(count($txs) > 0) {
+          $theFields['services']['values'][] = array(
+            'title' => '',
+            'transactions' => $txs,
+          );
+        }
       }
     }
     if($node->hasField('field_spotlight')) {
