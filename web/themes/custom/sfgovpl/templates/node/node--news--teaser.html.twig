@@ -5,6 +5,8 @@
 
 {% block body %}
   {{ content.field_image }}
-  <h2{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h2>
-  {{ content|without('links', 'field_image') }}
+  <div class="news--teaser--body">
+    <h2{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h2>
+    {{ content|without('links', 'field_image') }}
+  </div>
 {% endblock body %}
