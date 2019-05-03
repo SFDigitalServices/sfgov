@@ -203,10 +203,12 @@
   @include rubik;
   margin-top: 40px;
   margin-bottom: 20px;
-  .sfgov-dept-in-this-page-container > * {
+  .sfgov-dept-in-this-page-label {
     display: inline-block;
+    font-weight: 500;
   }
   ul {
+    display: inline-block;
     padding: 0;
     margin: 0;
     li {
@@ -214,6 +216,19 @@
       margin-left: 40px;
       a {
         @include rubik;
+      }
+    }
+  }
+  @include less-than('not-big') {
+    .sfgov-dept-in-this-page-label {
+      display: block;
+    }
+    ul {
+      columns: 2;
+      display: block;
+      li {
+        display: block;
+        padding: 25px 0 0 0;
       }
     }
   }
