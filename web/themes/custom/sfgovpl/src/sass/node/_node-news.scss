@@ -21,25 +21,6 @@
   .news--meta {
     @include clearfix;
     background: $c-yellow-pale;
-    padding-left: 20px;
-    padding-right: 20px;
-
-    @include media($medium-screen) {
-      padding: 0;
-    }
-  }
-
-  .news--meta-inner {
-    margin: 0 auto;
-
-    @include media($medium-screen) {
-      padding-left: 20px;
-    }
-
-    @include media($wide-screen) {
-      max-width: 1280px;
-      padding: 0;
-    }
   }
 
   .news--meta-text {
@@ -47,14 +28,58 @@
     padding-top: 40px;
 
     @include media($medium-screen) {
-      float: left;
       padding-bottom: 54px;
-      padding-left: 76px;
       padding-top: 60px;
-      width: 50%;
+    }
+  }
+
+  // Meta with Image.
+  .news--meta.has-image {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      padding: 0;
+    }
+
+    .news--meta-inner {
+      margin: 0 auto;
+
+      @include media($medium-screen) {
+        padding-left: 20px;
+      }
 
       @include media($wide-screen) {
+        max-width: 1280px;
+        padding: 0;
+      }
+    }
+
+    .news--meta-text {
+
+      @include media($medium-screen) {
+        float: left;
+        padding-left: 76px;
+        width: 50%;
+
+        @include media($wide-screen) {
+          padding-left: 96px;
+        }
+      }
+    }
+  }
+
+  // Meta without Image.
+  .news--meta.no-image {
+    .news--meta-inner {
+      margin: 0 auto;
+      max-width: 1276px;
+      padding-left: 20px;
+      padding-right: 20px;
+
+      @include media($medium-screen) {
         padding-left: 96px;
+        padding-right: 96px;
       }
     }
   }
