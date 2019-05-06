@@ -11,6 +11,10 @@ use Drupal\views\Views;
 // require_once($devel_path.'/kint/kint/Kint.class.php');
 // Kint::$maxLevels = 4;
 
+
+/**
+ * Implements hook_preprocess_node().
+ */
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
     $content_type = $variables['node']->getType();
@@ -21,6 +25,7 @@ function sfgovpl_preprocess_node(&$variables) {
     }
     if($content_type == 'department') {
       $variables['dept_fields'] = dept_page_fields();
+      sfgovpl_add_regions_to_node(['department_news'], $variables);
     }
   }
 }
@@ -342,4 +347,30 @@ function dept_page_fields() {
     }
   }           
   return $theFields;
+}
+
+/**
+ * Helper function to facilitate rendering blocks within a node template.
+ *
+ * @see sfgovpl_preprocess_node().
+ */
+function sfgovpl_add_regions_to_node(array $regions, &$variables) {
+  // Retrieve active theme
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
+  $available_regions = system_region_list($theme);
+  // Validate allowed regions with available regions
+  $regions = array_intersect(array_keys($available_regions), $regions);
+  foreach ($regions as $key => $region) {
+    $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme, 'region' => $region));
+    uasort($blocks, 'Drupal\block\Entity\Block::sort');
+    // Capture viewable blocks and their settings to $build
+    $build = array();
+    foreach ($blocks as $key => $block) {
+      if ($block->access('view')) {
+        $build[$key] = entity_view($block, 'block');
+      }
+    }
+    // Add build to region
+    $variables[$region] = $build;
+  }
 }
