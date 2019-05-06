@@ -49,6 +49,7 @@
     @include media($medium-screen) {
       float: left;
       padding-bottom: 54px;
+      padding-left: 76px;
       padding-top: 60px;
       width: 50%;
 
@@ -87,7 +88,13 @@
     padding-top: 23px;
 
     p {
-      max-width: 669px;
+      @include media($narrow-screen) {
+        max-width: $w-news-body;
+      }
+    }
+
+    blockquote {
+      @include blockquote;
     }
   }
 

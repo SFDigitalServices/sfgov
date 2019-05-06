@@ -27,6 +27,33 @@
   font-family: "Montserrat", sans-serif;
 }
 
+@mixin blockquote {
+  @include fs-pull-large;
+  background: $c-yellow-mid;
+  border-radius: 10px 0 0 10px;
+  font-style: italic;
+  margin: 30px -20px 40px 0;
+  padding: 35px 38px 27px;
+
+  @include media($medium-screen) {
+    margin: 30px -96px 40px 0;
+  }
+
+  @include media($narrow-screen) {
+    margin: 30px -96px 40px $w-news-body + 40px;
+    position: absolute;
+  }
+
+  p {
+    margin: 0;
+    max-width: none;
+
+    @include media($narrow-screen) {
+      max-width: calc(100% - 76px);
+    }
+  }
+}
+
 @mixin button {
   background: $c-blue-button;
   border-radius: 8px;
@@ -38,7 +65,7 @@
   text-decoration: none;
 
   &:hover {
-    background: $c-text;
+    background: $c-blue-button-hover;
   }
 }
 
