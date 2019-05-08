@@ -33,70 +33,6 @@
     }
   }
 
-  // Meta with Image.
-  .news--meta.has-image {
-    padding-left: 20px;
-    padding-right: 20px;
-
-    @include media($medium-screen) {
-      padding: 0;
-    }
-
-    .news--meta-inner {
-      margin: 0 auto;
-
-      @include media($medium-screen) {
-        padding-left: 20px;
-      }
-
-      @include media($wide-screen) {
-        max-width: 1280px;
-        padding: 0;
-      }
-    }
-
-    .news--meta-text {
-
-      @include media($medium-screen) {
-        float: left;
-        padding-left: 76px;
-        width: 50%;
-
-        @include media($wide-screen) {
-          padding-left: 96px;
-        }
-      }
-    }
-  }
-
-  // Meta without Image.
-  .news--meta.no-image {
-    .news--meta-inner {
-      margin: 0 auto;
-      max-width: 1276px;
-      padding-left: 20px;
-      padding-right: 20px;
-
-      @include media($medium-screen) {
-        padding-left: 96px;
-        padding-right: 96px;
-      }
-    }
-  }
-
-  .__image {
-    @include media($medium-screen) {
-      float: right;
-      max-width: 630px;
-      width: 50%;
-    }
-
-    img {
-      display: block;
-      height: auto;
-    }
-  }
-
   .__abstract {
     @include fs-abstract;
     margin-bottom: 20px;
@@ -146,5 +82,72 @@
   .field__label {
     @include rubik;
     @include fs-h2;
+  }
+}
+
+// Meta with Image.
+.news--meta.has-image {
+
+  .news--meta-inner {
+    margin: 0 auto;
+
+    @include media($medium-screen) {
+      padding-left: 20px;
+    }
+
+    @include media($wide-screen) {
+      max-width: 1280px;
+      padding: 0;
+    }
+  }
+
+  .news--meta-text {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      float: left;
+      padding-left: 76px;
+      width: 50%;
+
+      @include media($wide-screen) {
+        padding-left: 96px;
+      }
+    }
+  }
+
+  .__image {
+    @include media($medium-screen) {
+      float: right;
+      padding-bottom: 76px;
+      padding-top: 60px;
+      width: 50%;
+    }
+
+    @include media($wide-screen) {
+      max-width: 630px;
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+
+    img {
+      display: block;
+      height: auto;
+    }
+  }
+}
+
+// Meta without Image.
+.news--meta.no-image {
+  .news--meta-inner {
+    margin: 0 auto;
+    max-width: 1276px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      padding-left: 96px;
+      padding-right: 96px;
+    }
   }
 }
