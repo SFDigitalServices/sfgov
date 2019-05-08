@@ -29,6 +29,7 @@
   line-height: 29px;
 }
 
+// H1
 @mixin fs-h1 {
   @include fs-h1-small;
   @include  media($medium-screen) {
@@ -50,6 +51,28 @@
   line-height: 43px;
 }
 
+// h1-page
+@mixin fs-h1-page {
+  @include fs-h1-page-small;
+  @include  media($medium-screen) {
+    @include fs-h1-page-large;
+  }
+}
+
+@mixin fs-h1-page-large {
+  font-size: 72px;
+  font-weight: $fw-light;
+  letter-spacing: -.2px;
+  line-height: 80.2px;
+}
+
+@mixin fs-h1-page-small {
+  font-size: 33px;
+  font-weight: $fw-medium;
+  letter-spacing: 0;
+  line-height: 43px;
+}
+
 @mixin fs-h2 {
   font-size: 17px;
   font-weight: $fw-medium;
@@ -68,6 +91,7 @@
   line-height: 28px;
 }
 
+// fs-pull
 @mixin fs-pull-large {
   font-size: 20px;
   font-weight: $fw-medium;
@@ -85,4 +109,11 @@
   @include  media($medium-screen) {
     @include fs-pull-large;
   }
+}
+
+@mixin fs-title {
+  font-size: 17px;
+  font-weight: $fw-medium;
+  line-height: 24px;
+  text-decoration: underline;
 }
