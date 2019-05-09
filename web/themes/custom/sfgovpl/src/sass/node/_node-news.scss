@@ -1,0 +1,154 @@
+.page-node-type-news {
+  @include rubik;
+  color: $c-text;
+
+  .hero-banner {
+    background: $c-yellow;
+    padding: 40px 0 60px;
+
+    h1 {
+      @include rubik;
+      @include fs-h1;
+      color: $c-text;
+    }
+  }
+
+  .__news-type {
+    @include fs-h2;
+    padding-bottom: 20px;
+  }
+
+  .news--meta {
+    @include clearfix;
+    background: $c-yellow-pale;
+  }
+
+  .news--meta-text {
+    padding-bottom: 34px;
+    padding-top: 40px;
+
+    @include media($medium-screen) {
+      padding-bottom: 54px;
+      padding-top: 60px;
+    }
+  }
+
+  .__abstract {
+    @include fs-abstract;
+    margin-bottom: 20px;
+  }
+
+  .__date {
+    @include fs-h2;
+  }
+
+  .__body {
+    @include contain;
+    @include fs-body-1;
+    padding-bottom: 100px;
+    padding-top: 23px;
+
+    p {
+      @include fs-body-1;
+      @include media($narrow-screen) {
+        max-width: $w-news-body;
+      }
+    }
+
+    blockquote {
+      @include blockquote;
+    }
+  }
+
+  .news--footer {
+    background: $c-yellow-pale;
+    padding-bottom: 60px;
+    padding-top: 41px;
+  }
+
+  .__dept {
+    @include contain;
+    @include fs-body-2;
+
+    .field__item {
+      margin-bottom: 20px;
+      padding-left: 40px;
+    }
+
+    a {
+      @include link-colors($c-blue-button, $c-text);
+    }
+  }
+
+  .field__label {
+    @include rubik;
+    @include fs-h2;
+  }
+}
+
+// Meta with Image.
+.news--meta.has-image {
+
+  .news--meta-inner {
+    margin: 0 auto;
+
+    @include media($medium-screen) {
+      padding-left: 20px;
+    }
+
+    @include media($wide-screen) {
+      max-width: 1280px;
+      padding: 0;
+    }
+  }
+
+  .news--meta-text {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      float: left;
+      padding-left: 76px;
+      width: 50%;
+
+      @include media($wide-screen) {
+        padding-left: 96px;
+      }
+    }
+  }
+
+  .__image {
+    @include media($medium-screen) {
+      float: right;
+      padding-bottom: 76px;
+      padding-top: 60px;
+      width: 50%;
+    }
+
+    @include media($wide-screen) {
+      max-width: 630px;
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+
+    img {
+      display: block;
+      height: auto;
+    }
+  }
+}
+
+// Meta without Image.
+.news--meta.no-image {
+  .news--meta-inner {
+    margin: 0 auto;
+    max-width: 1276px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      padding-left: 96px;
+      padding-right: 96px;
+    }
+  }
+}

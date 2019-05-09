@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.email.field_email
+    - field.field.paragraph.email.field_title
     - paragraphs.paragraphs_type.email
 id: paragraph.email.default
 targetEntityType: paragraph
@@ -11,10 +12,18 @@ bundle: email
 mode: default
 content:
   field_email:
-    weight: 0
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: email_mailto
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
 hidden: {  }

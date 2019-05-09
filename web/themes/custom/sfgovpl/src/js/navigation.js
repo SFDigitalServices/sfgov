@@ -40,5 +40,14 @@
                 mainNav.appendChild(navItem);
             }
         }
+        
+        var debug = document.createElement('div');
+        $('body').append(debug);
+        $(debug).attr('id', 'sfgov-debug');
+        $(debug).attr('style', 'position:absolute;top:0;left:0;border:1px solid yellow;background:#fff;color:#000');
+        $(debug).html($(window).outerWidth());
+        $(window).resize(function() {
+            $(debug).html($(window).outerWidth());
+        });
     })
 })(jQuery);

@@ -1,0 +1,41 @@
+{% extends 'node--full.html.twig' %}
+
+  {% block header %}
+    {{ title_prefix }}
+    {% include '@theme/hero-banner.twig' with {
+      'banner': {
+        'label': content.field_news_type,
+        'title': node.label,
+        'text': content.field_description|render
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+  {% block footer %}
+    <div class="news--meta{{ content.field_image|render|striptags ? ' has-image' : ' no-image'}}">
+      <div class="news--meta-inner">
+        {{ content.field_image }}
+        <div class="news--meta-text">
+          {{ content.field_abstract }}
+          {{ content.field_date }}
+        </div>
+      </div>
+    </div>
+  {% endblock footer %}
+
+  {% block content %}
+    <div{{ content_attributes.addClass(bundle ~ '--body') }}>
+      {{ content|without(
+        'field_abstract',
+        'field_date',
+        'field_dept',
+        'field_image',
+        'field_news_type'
+      ) }}
+    </div>
+
+    <div class="{{ bundle }}--footer">
+      {{ content.field_dept }}
+    </div>
+  {% endblock content %}

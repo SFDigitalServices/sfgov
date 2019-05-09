@@ -1,8 +1,10 @@
 
 @import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/01-atoms/01-colors/01-colors';
+@import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/01-atoms/02-typography/01-fonts';
 @import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/00-breakpoints';
 @import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/02-mixins';
-@import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/01-grid.scss';
+// @import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/01-grid.scss';
+@import 'layout';
 @import 'mixins';
 
 body {
@@ -10,4 +12,16 @@ body {
 }
 li {
   margin-bottom: 0;
+}
+
+.contain {
+  @include contain;
+}
+
+// Use medium for body in WYSIWYG.
+.field--type-text-with-summary {
+  strong,
+  b {
+    font-weight: $fw-medium;
+  }
 }

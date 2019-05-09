@@ -1,0 +1,39 @@
+uuid: c5fe1118-be48-44ba-9973-19de5b8a1060
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.location.event_address
+    - field.field.location.event_address.field_address
+  module:
+    - address
+id: location.event_address.default
+targetEntityType: location
+bundle: event_address
+mode: default
+content:
+  field_address:
+    weight: 1
+    settings:
+      default_country: US
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

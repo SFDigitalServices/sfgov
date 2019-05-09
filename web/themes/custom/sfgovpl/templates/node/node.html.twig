@@ -85,7 +85,9 @@
   {% block content %}
     {{ title_prefix }}
     {% if not page %}
+      {% block title %}
       <h1{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h1>
+      {% endblock title %}
     {% endif %}
     {{ title_suffix }}
 
@@ -100,7 +102,9 @@
     {% endif %}
 
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
+      {% block body %}
       {{ content|without('links') }}
+      {% endblock body %}
     </div>
 
     {{ content.links }}

@@ -1,0 +1,60 @@
+uuid: 846e56bf-7f32-4d06-a9d9-763893c80ac2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.resources.field_description
+    - field.field.paragraph.resources.field_link
+    - field.field.paragraph.resources.field_title
+    - paragraphs.paragraphs_type.resources
+  module:
+    - allowed_formats
+    - link
+    - maxlength
+    - text
+id: paragraph.resources.default
+targetEntityType: paragraph
+bundle: resources
+mode: default
+content:
+  field_description:
+    weight: 1
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+      maxlength:
+        maxlength_js: 110
+        maxlength_js_label: '<strong>@remaining</strong> left'
+        maxlength_js_enforce: true
+        maxlength_js_truncate_html: false
+    type: text_textarea
+    region: content
+  field_link:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+    type: link_default
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 65
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

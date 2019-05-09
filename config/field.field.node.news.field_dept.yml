@@ -1,28 +1,29 @@
-uuid: ae4a0e5d-c80d-4b04-bec9-6bdeee3f0c77
+uuid: 2ccdc7af-4b28-408b-b8b0-6250147da032
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_image
-    - media.type.image
+    - field.storage.node.field_dept
     - node.type.department
-id: node.department.field_image
-field_name: field_image
+    - node.type.news
+id: node.news.field_dept
+field_name: field_dept
 entity_type: node
-bundle: department
-label: Logo
+bundle: news
+label: Departments
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:media'
+  handler: 'default:node'
   handler_settings:
     target_bundles:
-      image: image
+      department: department
     sort:
-      field: _none
+      field: title
+      direction: ASC
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference
