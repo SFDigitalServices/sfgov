@@ -1,11 +1,10 @@
-{#{% extends "block.html.twig" %}#}
-
-{#{% block content %}#}
-  {% include "@molecules/01-blocks/01-branding.twig" with {
-    "branding_logo_url": site_logo,
-    "branding_logo_alt": "Home",
-    "branding_pre_title": site_slogan ? site_slogan : "city & county of",
-    "branding_url": path('<front>'),
-    "branding_title": site_name
-  } %}
-{#{% endblock %}#}
+<div class="sfgov-logo__container">
+  <a href="{{ path('<front>') }}" class="branding-link">
+  <span class="sfgov-logo">
+    <span class="sfgov-logo__image">
+      <img class="sfgov-logo--seal" src="{{ site_logo }}" alt="Home"/>
+      <img class="sfgov-logo--lockup" src="{{ directory ~ '/src/img/sfgov.svg' }}" alt="Home"/>
+    </span>
+  </span>
+  </a>
+</div>

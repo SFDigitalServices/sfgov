@@ -1,4 +1,4 @@
-name: sfgov
+name: sfgov-retheme
 recipe: pantheon
 config:
   framework: drupal8
@@ -6,8 +6,7 @@ config:
   id: 91d50373-c4cf-40e4-a646-cb73e16a140c
   xdebug: true
   webroot: web
-  drush: global:8.1.16
-
+  drush: 'global:8.1.16'
 services:
   appserver:
     run:
@@ -15,8 +14,10 @@ services:
     overrides:
       environment:
         BEHAT_PARAMS: >-
-          { "extensions": { "Behat\\MinkExtension": { "base_url": "http://sfgov.lndo.site", "goutte": { "guzzle_parameters": { "verify": false } } }, "Drupal\\DrupalExtension": { "drush": { "root": "/app/web" } } } }
-
+          { "extensions": { "Behat\\MinkExtension": { "base_url":
+          "http://sfgov.lndo.site", "goutte": { "guzzle_parameters": { "verify":
+          false } } }, "Drupal\\DrupalExtension": { "drush": { "root":
+          "/app/web" } } } }
 tooling:
   behat:
     service: appserver
