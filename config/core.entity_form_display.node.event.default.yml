@@ -3,33 +3,90 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.image
     - field.field.node.event.body
     - field.field.node.event.field_address
+    - field.field.node.event.field_call_to_action
     - field.field.node.event.field_cost
+    - field.field.node.event.field_departments
     - field.field.node.event.field_description
+    - field.field.node.event.field_email
     - field.field.node.event.field_end_date
+    - field.field.node.event.field_image
+    - field.field.node.event.field_phone_numbers
     - field.field.node.event.field_start_date
     - node.type.event
   module:
     - allowed_formats
     - content_moderation
     - datetime
+    - entity_browser
+    - field_group
     - maxlength
     - paragraphs
     - text
+third_party_settings:
+  field_group:
+    group_contact:
+      children:
+        - field_email
+        - field_phone_numbers
+      parent_name: ''
+      weight: 9
+      format_type: details
+      format_settings:
+        id: sfgov-event-contact
+        classes: ''
+        open: false
+        required_fields: true
+      label: Contact
 id: node.event.default
 targetEntityType: node
 bundle: event
 mode: default
 content:
-  field_address:
-    weight: 26
+  body:
+    type: text_textarea_with_summary
+    weight: 7
+    region: content
     settings:
-      match_operator: CONTAINS
-      size: 60
+      rows: 9
+      summary_rows: 3
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+  field_address:
+    weight: 5
+    settings:
+      entity_browser: location_event_address
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+      open: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_call_to_action:
+    weight: 8
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    type: paragraphs
     region: content
   field_cost:
     weight: 4
@@ -37,11 +94,27 @@ content:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
     third_party_settings: {  }
-    type: entity_reference_paragraphs
+    type: paragraphs
+    region: content
+  field_departments:
+    weight: 10
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_description:
     weight: 1
@@ -59,11 +132,64 @@ content:
         maxlength_js_truncate_html: false
     type: text_textarea
     region: content
+  field_email:
+    weight: 26
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
   field_end_date:
     weight: 3
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
+    region: content
+  field_image:
+    weight: 6
+    settings:
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: preview
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_phone_numbers:
+    weight: 27
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    type: paragraphs
     region: content
   field_start_date:
     weight: 2
@@ -71,16 +197,9 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
-  langcode:
-    type: language_select
-    weight: 5
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 6
+    weight: 11
     settings: {  }
     region: content
     third_party_settings: {  }
@@ -88,7 +207,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 12
     region: content
     third_party_settings: {  }
   title:
@@ -100,8 +219,8 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
-  body: true
   created: true
+  langcode: true
   path: true
   promote: true
   sticky: true
