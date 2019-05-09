@@ -5,6 +5,7 @@
       {"selector": "#sfgov-dept-services", "label":"Services"},
       {"selector": "#sfgov-dept-resources", "label":"Resources"},
       {"selector": "#sfgov-dept-about", "label":"About"},
+      {"selector": "#sfgov-dept-news", "label":"News"},
       {"selector": "#sfgov-dept-contact", "label":"Contact"},
     ];
     var $inPageMenuContainer = $('#sfgov-dept-in-this-page');
