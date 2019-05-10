@@ -1,0 +1,52 @@
+uuid: 83f949e1-863a-44ba-89c5-915c78dd043d
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.image
+    - field.field.paragraph.campaign.field_link
+    - field.field.paragraph.campaign.field_media
+    - field.field.paragraph.campaign.field_title
+    - paragraphs.paragraphs_type.campaign
+  module:
+    - entity_browser
+    - link
+id: paragraph.campaign.default
+targetEntityType: paragraph
+bundle: campaign
+mode: default
+content:
+  field_link:
+    weight: 1
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_media:
+    weight: 2
+    settings:
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: preview
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
