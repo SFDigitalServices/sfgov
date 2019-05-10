@@ -40,6 +40,7 @@
 #}
 
 {% set parent = paragraph.getParentEntity() %}
+{% set child = paragraph.field_content.entity.bundle %}
 {% set classes = [
   'paragraph',
   'paragraph--type--' ~ paragraph.bundle|clean_class,
@@ -47,12 +48,20 @@
   not paragraph.isPublished() ? 'paragraph--unpublished',
   (parent.bundle == 'landing') ? 'sfgov-container--full',
   "parent--bundle--" ~ parent.bundle,
-  (paragraph.field_title.getString == 'Services') ? 'sfgov-services'
+  (paragraph.field_title.getString == 'Services') ? 'sfgov-services',
+  'paragraph-child--' ~ child
 ] %}
 
 
 {% block paragraph %}
-  <div {{ attributes.addClass(classes) }}>
+
+  {% if child == 'campaign' %}
+    <div {{ attributes.addClass(classes).removeClass('sfgov-container--full') }}>
+      {{ content|without('field_title') }}
+    </div>
+  {% else %}
+
+    <div {{ attributes.addClass(classes) }}>
     {% block content %}
       {% if (not paragraph.field_title.isEmpty) and (parent.bundle() == "landing") %}
         <h2 class="sfgov-header-section">
@@ -66,4 +75,7 @@
       </div>
     {% endblock %}
   </div>
+
+  {% endif %}
+
 {% endblock paragraph %}
