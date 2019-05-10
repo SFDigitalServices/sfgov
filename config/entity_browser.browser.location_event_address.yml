@@ -1,0 +1,42 @@
+uuid: 1e03441f-1843-498b-ac75-fdb10ee045bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_location
+  module:
+    - entity_browser_entity_form
+    - views
+name: location_event_address
+label: 'Location: Event Address'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add Event Address'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  625f78c9-7658-4981-bed6-dfdf398c116a:
+    settings:
+      entity_type: location
+      bundle: event_address
+      form_mode: default
+      submit_text: 'Save and attach event address'
+    uuid: 625f78c9-7658-4981-bed6-dfdf398c116a
+    weight: 1
+    label: 'New event address'
+    id: entity_form
+  58c96f6b-60e2-42c4-977d-33ea064f5686:
+    settings:
+      view: entity_browser_location
+      view_display: entity_browser_event_address
+      submit_text: 'Attach Event Address'
+      auto_select: false
+    uuid: 58c96f6b-60e2-42c4-977d-33ea064f5686
+    weight: 2
+    label: 'Existing event address'
+    id: view

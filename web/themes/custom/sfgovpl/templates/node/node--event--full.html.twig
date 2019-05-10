@@ -1,0 +1,39 @@
+{% extends 'node--full.html.twig' %}
+
+  {% block header %}
+    {% include '@theme/hero-banner.twig' with {
+      'banner': {
+        'title': label,
+        'text': content.field_description|render
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+    {% block footer %}
+    <div class="event--meta{{ content.field_image|render|striptags ? ' has-image' : ' no-image'}}">
+      <div class="event--meta-inner">
+        <div class="event--meta-left">
+          <div class="event--meta-date">
+            {{ content.field_start_date }}<br/>
+            {{ content.field_end_date }}
+          </div>
+          <div class="event--meta-cost">
+            {{ content.field_cost }}
+          </div>
+        </div>
+        <div class="event--meta-right">
+          {{ content.field_address }}
+        </div>
+      </div>
+    </div>
+  {% endblock footer %}
+
+  {% block content %}
+    {{ content | without(
+      'field_start_date',
+      'field_end_date',
+      'field_cost',
+      'field_address'
+    ) }}
+  {% endblock content %}
