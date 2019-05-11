@@ -5,12 +5,28 @@
 .paragraph--type--campaign {
   @include contain-1280;
   background: $c-yellow;
+  display: table;
+
 
   .__media {
     margin-bottom: 39px;
 
     @include media($medium-screen) {
       margin-bottom: 0;
+    }
+  }
+
+  img {
+    display: block;
+  }
+
+  .paragraph-campaign--text {
+    @include media($medium-screen) {
+      background: $c-yellow;
+      display: table-cell;
+      height: 100%;
+      max-width: 444px;
+      vertical-align: middle;
     }
   }
 
@@ -21,6 +37,10 @@
 
   .__link {
     padding: 0 38px 39px;
+
+    @include media($medium-screen) {
+      padding-bottom: 0;
+    }
 
     a {
       @include button-clear;
