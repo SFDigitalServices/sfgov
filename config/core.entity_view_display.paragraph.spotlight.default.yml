@@ -5,12 +5,11 @@ dependencies:
   config:
     - field.field.paragraph.spotlight.field_description
     - field.field.paragraph.spotlight.field_spotlight_button
-    - field.field.paragraph.spotlight.field_spotlight_image
+    - field.field.paragraph.spotlight.field_spotlight_img
     - field.field.paragraph.spotlight.field_title
     - paragraphs.paragraphs_type.spotlight
   module:
     - entity_reference_revisions
-    - image
     - text
 id: paragraph.spotlight.default
 targetEntityType: paragraph
@@ -33,14 +32,14 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
-  field_spotlight_image:
-    weight: 3
+  field_spotlight_img:
+    type: entity_reference_entity_view
+    weight: 4
     label: hidden
     settings:
-      image_style: ''
-      image_link: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
-    type: image
     region: content
   field_title:
     weight: 0

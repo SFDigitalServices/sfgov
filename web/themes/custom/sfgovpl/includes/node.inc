@@ -127,12 +127,15 @@ function dept_page_fields() {
         $spotlightButtonParagraph = Paragraph::load($spotlightButtonId);
         $spotlightButtonTitle = $spotlightButtonParagraph->get('field_link')->getValue()[0]['title'];
         $spotlightButtonUri = $spotlightButtonParagraph->get('field_link')->getValue()[0]['uri'];
-        $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_image');
+        $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_img');
+        $spotlightImageUrl = $spotlightImage ? file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri()) : null;
         $theFields['spotlight']['title'] = $spotlightTitle;
         $theFields['spotlight']['description'] = $spotlightDescription;
         $theFields['spotlight']['button_text'] = $spotlightButtonTitle;
         $theFields['spotlight']['button_uri'] = $spotlightButtonUri;
-        $theFields['spotlight']['image_url'] = $spotlightImage->entity->url();
+        if($spotlightImageUrl) {
+          $theFields['spotlight']['image_url'] = $spotlightImageUrl;
+        }
       }
     }
     if($node->hasField('field_resources')) {
@@ -251,10 +254,10 @@ function dept_page_fields() {
         }
       }
     }
-    if($node->hasField('field_photo')) {
-      $aboutLogo = $node->get('field_photo');
+    if($node->hasField('field_image')) {
+      $aboutLogo = $node->get('field_image');
       if($aboutLogo && $aboutLogo->getValue()) {
-        $logoUrl = file_create_url($aboutLogo->entity->uri->value);
+        $logoUrl = file_create_url($aboutLogo->entity->field_media_image->entity->getFileUri());
         $theFields['about']['logo_url'] = $logoUrl;
       }
     }
