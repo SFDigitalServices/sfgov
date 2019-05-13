@@ -10,7 +10,7 @@
     {{ title_suffix }}
   {% endblock header %}
 
-    {% block footer %}
+  {% block footer %}
     <div class="event--meta{{ content.field_image|render|striptags ? ' has-image' : ' no-image'}}">
       <div class="event--meta-inner">
         <div class="event--meta-left">
@@ -23,17 +23,35 @@
           </div>
         </div>
         <div class="event--meta-right">
-          {{ content.field_address }}
+          {{ content.field_address[0]['#location'].title.value }}
+          {# {{ content.field_address }} #}
         </div>
       </div>
     </div>
-  {% endblock footer %}
+    {% endblock footer %}
 
   {% block content %}
-    {{ content | without(
-      'field_start_date',
-      'field_end_date',
-      'field_cost',
-      'field_address'
-    ) }}
+    <div class="event--content-container">
+      <div class="event--content-body">
+        {{ content | without(
+          'field_start_date',
+          'field_end_date',
+          'field_cost',
+          'field_address',
+          'field_call_to_action',
+          'field_email',
+          'field_phone_numbers',
+          'field_dept'
+        ) }}
+      </div>
+      <div class="event--content-sidebar">
+        {{ content.field_call_to_action }}
+        {{ content.field_address }}
+        {{ content.field_phone_numbers }}
+        {{ content.field_email }}
+      </div>
+    </div>
+    <div class="{{ bundle }}--footer">
+      {{ content.field_dept }}
+    </div>
   {% endblock content %}
