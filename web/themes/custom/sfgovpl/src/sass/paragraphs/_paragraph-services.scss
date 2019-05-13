@@ -1,4 +1,43 @@
+// @todo. Much of this should be generalized to all/most paragraphs.
 .sfgov-services {
   @include sfgov-container--full-override;
   background: $c-blue-pale;
+
+  .sfgov-header-section {
+    @include contain-1210;
+    @include fs-h1;
+  }
+
+  .sfgov-container {
+    @include contain-1090;
+  }
+
+  .sfgov-cta-button__container a {
+    @include button;
+  }
+
+  .sfgov-drupal-two-columns-list > .__content {
+
+    .field__item {
+      background: $c-white;
+      border: 3px solid $c-blue-button;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 20px;
+      width: 100%;
+
+      @include media($medium-screen) {
+        float: left;
+        margin-right: 2%;
+        min-height: 100px;
+        width: 32%;
+      }
+
+      &:nth-child(3n) {
+        @include media($medium-screen) {
+          margin-right: 0;
+        }
+      }
+    }
+  }
 }
