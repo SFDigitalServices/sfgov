@@ -38,7 +38,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $node = $event->getRequest()->attributes->get('node'); 
     if($node && $node->isPublished()) {
       $node_type = strtolower($node->type->entity->label());
-      if($node_type == 'transaction' && $node->hasField('field_direct_external_url') ){
+      if($node->hasField('field_direct_external_url') ){
         $field_external_url = $node->get('field_direct_external_url')->getValue();
         if( !empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
           // This is where you set the destination.
