@@ -143,6 +143,9 @@
     }
   }
 }
+@mixin sfgov-responsive-container-override {
+  padding: 0;
+}
 
 @mixin sfgov-container--full-override {
   width: 100%;
@@ -175,5 +178,25 @@
 
   @include media($wide-screen) {
     padding: 0;
+  }
+}
+
+@mixin three-column-item {
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 100%;
+
+  @include media($medium-screen) {
+    float: left;
+    margin-right: 2%;
+    min-height: 100px;
+    width: 32%;
+  }
+
+  &:nth-child(3n) {
+    @include media($medium-screen) {
+      margin-right: 0;
+    }
   }
 }
