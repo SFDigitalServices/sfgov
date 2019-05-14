@@ -52,11 +52,10 @@
   'paragraph-child--' ~ child
 ] %}
 
-
 {% block paragraph %}
 
-  {% if child == 'campaign' %}
-    <div {{ attributes.addClass(classes).removeClass('sfgov-container--full') }}>
+  {% if (child == 'campaign') or (child == 'people') %}
+    <div {{ attributes.addClass(classes).removeClass('sfgov-container--full').addClass('clearfix') }}>
       {{ content|without('field_title') }}
     </div>
   {% else %}

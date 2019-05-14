@@ -45,17 +45,16 @@
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
     'sfgov-paragraph-people',
-    content.field_person['#items']|length == 1 ? 'sfgov-paragraph-people-single' : 'sfgov-paragraph-people-multiple'
-  ]
+    content.field_person['#items']|length == 1 ? 'sfgov-paragraph-people-single' : 'sfgov-paragraph-people-multiple',
+    paragraph.field_people_title.value ? 'sfgov-title--' ~ paragraph.field_people_title.value|clean_class,
+]
 %}
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      {% include "@organisms/05-sections/02-subsection-header.twig" with {
-        "subsection_title_text": content.field_people_title,
-        "subsection_subtitle_text": content.field_description
-      } %}
+      {{ content.field_people_title }}
       {{ content.field_person }}
+      {{ content.field_description }}
     {% endblock %}
   </div>
 {% endblock paragraph %}

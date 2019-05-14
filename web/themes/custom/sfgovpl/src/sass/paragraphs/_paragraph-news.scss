@@ -1,5 +1,9 @@
 // @todo The news paragraph and the news section on the department news page
 // should be refactored to be identical.
+.paragraph-child--news {
+  padding-bottom: 0;
+}
+
 .paragraph--type--news {
   .sfds-layout-container .sfds-responsive-container {
     @include sfgov-responsive-container-override;
@@ -12,6 +16,11 @@
 
   .views-news--rows {
     @include contain-1090;
+    margin-bottom: 40px;
+
+    @include media($medium-screen) {
+      margin-bottom: 56px;
+    }
 
     // @todo This is all hacky overrides.
     // Better to remove from here and _view-news-embed.scss
@@ -21,5 +30,9 @@
     .views-row {
       @include three-column-item;
     }
+  }
+
+  .more-link {
+    @include contain-1090;
   }
 }
