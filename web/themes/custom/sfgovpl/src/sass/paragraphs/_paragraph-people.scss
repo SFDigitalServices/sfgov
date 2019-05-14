@@ -1,0 +1,76 @@
+.paragraph--type--people {
+
+  .__people-title {
+    @include fs-campaign-title;
+  }
+
+  .person-name {
+    @include fs-h2;
+
+    a {
+      @include link-colors($c-text);
+    }
+  }
+
+  .person-title {
+    @include fs-h2;
+  }
+
+  .person-subtitle {
+    @include fs-body-2;
+    opacity: .7;
+  }
+}
+
+.sfgov-title--elected-officials { // Mayor
+  background: $c-blue-button-hover;
+  color: $c-white;
+
+  h3 {
+    @include fs-h1;
+    color: white;
+  }
+
+  a {
+    @include link-colors($c-white);
+  }
+
+  .person-name {
+    @include fs-mayor-name-small;
+
+    @include media($medium-screen) {
+      @include fs-campaign-title;
+
+      a {
+        @include link-colors($c-white);
+      }
+    }
+  }
+
+  .person-title {
+    @include fs-mayor-title-large;
+    color: $c-blue-grey;
+  }
+}
+
+.sfgov-title--board-of-supervisors {
+  background: $c-blue-pale;
+
+  @include media($medium-screen) {
+    float: right;
+    width: 60%;
+  }
+}
+
+.sfgov-title--elected-officers {
+  background: $c-blue-pale;
+
+  @include media($medium-screen) {
+    float: left;
+    width: 30%;
+  }
+
+  .person-title {
+    opacity: .7;
+  }
+}
