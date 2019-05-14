@@ -55,25 +55,38 @@
         ) }}
       </div>
       <div class="event--content-sidebar">
-        <div class="event--content-sidebar-card">
-          {{ content.field_call_to_action }}
-        </div>
-        <div class="event--content-sidebar-card">
-          {{ content.field_address }}
-        </div>
-        <div class="event--content-sidebar-card phone-email">
-          <div class="event--content-phone">
-            <h3>Phone</h3>
-            {{ content.field_phone_numbers }}
+        {# {{ kint(content.field_call_to_action) }} #}
+        {% if content.field_call_to_action['#items'] is not empty %}
+          <div class="event--content-sidebar-card">
+            {{ content.field_call_to_action }}
           </div>
-          <div class="event--content-email">
-            <h3>Email</h3>
-            {{ content.field_email }}
+        {% endif %}
+        {% if content.field_address['#items'] is not empty %}
+          <div class="event--content-sidebar-card">
+            {{ content.field_address }}
           </div>
-        </div>
+        {% endif %}
+        {% if content.field_phone_numbers['#items'] is not empty or content.field_email['#items'] is not empty %}
+          <div class="event--content-sidebar-card phone-email">
+            {% if content.field_phone_numbers['#items'] is not empty %}
+              <div class="event--content-phone">
+                <h3>Phone</h3>
+                {{ content.field_phone_numbers }}
+              </div>
+            {% endif %}
+            {% if content.field_email['#items'] is not empty %}
+              <div class="event--content-email">
+                <h3>Email</h3>
+                {{ content.field_email }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
     </div>
-    <div class="{{ bundle }}--footer">
-      {{ content.field_dept }}
-    </div>
+    {% if content.field_dept['#items'] is not empty %}
+      <div class="{{ bundle }}--footer">
+        {{ content.field_dept }}
+      </div>
+    {% endif %}
   {% endblock content %}
