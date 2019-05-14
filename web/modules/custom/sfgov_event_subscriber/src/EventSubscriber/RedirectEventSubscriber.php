@@ -36,16 +36,32 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     }
 
     $node = $event->getRequest()->attributes->get('node'); 
-
-    if($node && $node->hasField('field_direct_external_url') ){
-      $field_external_url = $node->get('field_direct_external_url')->getValue();
-
-      if( !empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
-        // This is where you set the destination.
-        $response = new TrustedRedirectResponse($field_external_url[0]['uri']);
-        $event->setResponse($response);
+    if($node && $node->isPublished()) {
+      $node_type = strtolower($node->type->entity->label());
+      // error_log($node->isPublished());
+      if($node_type == 'transaction' && $node->hasField('field_direct_external_url') ){
+        $field_external_url = $node->get('field_direct_external_url')->getValue();
+        if( !empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
+          // This is where you set the destination.
+          $redirect_url = $field_external_url[0]['uri'];
+          $response = new TrustedRedirectResponse($redirect_url);
+          $event->setResponse($response);
+        }
+      }
+      if($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
+        $field_go_to_current_url = $node->get('field_go_to_current_url')->getValue();
+        // error_log($field_go_to_current_url[0]['value']);
+        if(!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
+          $field_dept_url = $node->get('field_url')->getValue();
+          if(!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
+            $redirect_url = $field_dept_url[0]['uri'];
+            $response = new TrustedRedirectResponse($redirect_url);
+            $event->setResponse($response);
+          }
+        }
       }
     }
+
   }
 }
 
