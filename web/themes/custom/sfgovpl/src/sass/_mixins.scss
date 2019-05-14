@@ -1,3 +1,45 @@
+@mixin contain { // @todo Deprecate this mixin.
+  margin: 0 auto;
+  max-width: 1276px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include  media($medium-screen) {
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@mixin contain-1280 { // Zeplin Artboard.
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 100%;
+}
+
+@mixin contain-1210 { // Para titles.
+  margin: 0 auto;
+  max-width: 1210px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+
+  @include media($wide-screen) {
+    padding: 0;
+  }
+}
+
+@mixin contain-1090 { // Most contents.
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+
+  @include media($wide-screen) {
+    padding: 0;
+  }
+}
+
 @mixin media($bp) {
   @media screen and (min-width: #{$bp}) {
     @content;
@@ -136,36 +178,6 @@
 
 @mixin sfgov-container--full-override {
   width: 100%;
-}
-
-@mixin contain-1280 { // Zeplin Artboard.
-  margin: 0 auto;
-  max-width: 1280px;
-  width: 100%;
-}
-
-@mixin contain-1210 { // Para titles.
-  margin: 0 auto;
-  max-width: 1210px;
-  padding-left: 20px;
-  padding-right: 20px;
-  width: 100%;
-
-  @include media($wide-screen) {
-    padding: 0;
-  }
-}
-
-@mixin contain-1090 { // Most contents.
-  margin: 0 auto;
-  max-width: 1090px;
-  padding-left: 20px;
-  padding-right: 20px;
-  width: 100%;
-
-  @include media($wide-screen) {
-    padding: 0;
-  }
 }
 
 @mixin three-column-item {
