@@ -14,6 +14,22 @@
 
   .__person {
     @include contain-1090;
+    @include clearfix;
+    margin: 0 auto;
+
+    .person-container {
+      display: block;
+      margin: 0 auto 35px;
+
+      @include media($mobile-screen) {
+        display: inline-block;
+        width: 48%;
+      }
+
+      @include media($medium-screen) {
+        width: 32%;
+      }
+    }
   }
 
   .person-name {
@@ -22,6 +38,19 @@
     a {
       @include link-colors($c-text);
     }
+  }
+
+  .person-photo {
+    display: inline-block;
+    height: 70px;
+    margin-right: 22px;
+    width: 70px;
+  }
+
+  .person-bio {
+    display: inline-block;
+    text-align: left;
+    width: calc(100% - 122px);
   }
 
   .person-title {
