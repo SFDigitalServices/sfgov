@@ -1,0 +1,59 @@
+.sfgov-dept-events {
+  @include clearfix;
+  padding-bottom: 80px;
+  padding-top: 60px;
+
+  @include media($medium-screen) {
+    padding-top: 80px;
+  }
+
+  // @todo Use three-column-item mixin instead.
+  .views-events--rows {
+    margin-bottom: 40px;
+
+    @include media($medium-screen) {
+      border-collapse: separate;
+      border-spacing: 20px;
+      display: table;
+      margin-bottom: 56px;
+      margin-left: -20px;
+      padding-left: 61px;
+      table-layout: fixed;
+      width: 103%;
+    }
+  }
+
+  .views-row {
+    background: $c-green;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    @include media($medium-screen) {
+      display: table-cell;
+      max-width: 33%;
+      padding: 20px;
+    }
+
+    &:nth-child(3) {
+      @include media($medium-screen) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  h3 {
+    @include fs-h1;
+    margin: 0 0 40px;
+  }
+
+  .more-link {
+    @include media($medium-screen) {
+      padding-left: 61px;
+    }
+
+    a {
+      @include button;
+    }
+  }
+}

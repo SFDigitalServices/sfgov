@@ -6,10 +6,10 @@ use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
 use Drupal\views\Views;
 
-// $module_handler = Drupal::service('module_handler');
-// $devel_path = $module_handler->getModule('devel')->getPath();
-// require_once($devel_path.'/kint/kint/Kint.class.php');
-// Kint::$maxLevels = 4;
+$module_handler = Drupal::service('module_handler');
+$devel_path = $module_handler->getModule('devel')->getPath();
+require_once($devel_path.'/kint/kint/Kint.class.php');
+Kint::$maxLevels = 4;
 
 
 /**
@@ -26,6 +26,7 @@ function sfgovpl_preprocess_node(&$variables) {
     if($content_type == 'department') {
       $variables['dept_fields'] = dept_page_fields();
       sfgovpl_add_regions_to_node(['department_news'], $variables);
+      sfgovpl_add_regions_to_node(['department_events'], $variables);
     }
   }
 }

@@ -1,4 +1,4 @@
-{% extends 'views-view--news--page-1.html.twig' %}
+{% extends 'views-view--events--page-1.html.twig' %}
 
 {% block header %}
 {% endblock header %}
@@ -7,15 +7,15 @@
 
   {% if rows %}
     {% set count = 3 - (rows[0]['#rows']|length) %}
-    <a name="news"></a>
-    <div id="sfgov-dept-news" class="sfgov-dept-news sfds-layout-container">
+    <a name="events"></a>
+    <div id="sfgov-dept-events" class="sfgov-dept-events sfds-layout-container">
       <div class="sfds-responsive-container">
-        <h3>{{ "News"|t }}</h3>
-        <div class="views-news--rows">
+        <h3>{{ "Events"|t }}</h3>
+        <div class="views-events--rows">
           {{ rows }}
           {% if count > 0 %}
             {% for n in 1..count %}
-              <div class="views-row"></div>
+              <div class="views-row" style="visibility:hidden;"></div>
             {% endfor %}
           {% endif %}
         </div>
