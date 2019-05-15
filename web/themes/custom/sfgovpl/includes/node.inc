@@ -128,7 +128,13 @@ function dept_page_fields() {
         $spotlightButtonTitle = $spotlightButtonParagraph->get('field_link')->getValue()[0]['title'];
         $spotlightButtonUri = $spotlightButtonParagraph->get('field_link')->getValue()[0]['uri'];
         $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_img');
-        $spotlightImageUrl = $spotlightImage ? file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri()) : null;
+        $spotlightImageUrl = null;
+        if($spotlightImage) {
+          if($spotlightImage->entity) {
+            $spotlightImageUrl = file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri());
+          }
+        }
+        // $spotlightImageUrl = $spotlightImage ? file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri()) : null;
         $theFields['spotlight']['title'] = $spotlightTitle;
         $theFields['spotlight']['description'] = $spotlightDescription;
         $theFields['spotlight']['button_text'] = $spotlightButtonTitle;
