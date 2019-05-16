@@ -1,18 +1,47 @@
+#sfgov-top-search-suggestions-container {
+  clear: both;
+  position: absolute;
+  background: $color-white;
+  width: 100%;
+  padding: 0;
+  box-shadow: #aaa 0px 5px 5px 2px;
+  border-width: 0 1px 1px 1px;
+  border-color: #999;
+  border-style: solid;
+  top: 48px;
+  > h4 {
+    margin: 10px 25px;
+    padding: 0;
+    font-family: inherit;
+    font-size: 1.7rem;
+  }
+}
+
+.sfgov-top-search-suggestion {
+  display: none;
+  float: none !important;
+  a {
+    text-decoration: none;
+    display: block;
+    padding: 10px 25px;
+    color: $color-gray;
+    // @include open-sans;
+    &:hover {
+      background-color: $color-aqua-lightest;
+    }
+  }
+}
+
 .sfgov-dept-section {
-  padding-top: 20px;
+  padding: 80px 0;
   h3 {
     @include rubik;
-    font-size: 3.2rem;
-    font-weight: 500;
-    margin: 0 0 20px 0;
-    padding: 0;
+    @include fs-h1;
   }
   h4 {
     @include rubik;
-    font-size: 2.4rem;
-    font-weight: 500;
-    padding: 0;
-    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: normal;
   }
   h5 {
     @include rubik;
@@ -35,6 +64,7 @@
     .sfgov-featured-item {
       display: table-cell;
       max-width: 0;
+      color: #fff;
     }
   }
   @include less-than('not-big') {
@@ -79,6 +109,8 @@
   background: #EDF4F7;
   .sfgov-services-container {
     .sfgov-services-section {
+      margin-left: 40px;
+      margin-bottom: 60px;
       .sfgov-services-transactions-container {
         display: table;
         table-layout: fixed;
@@ -120,8 +152,9 @@
   color: #fff;
   &.sfgov-dept-section {
     padding-top: 0;
+    padding-bottom: 0;
   }
-  h4 {
+  h3 {
     color: #fff;
   }
   p {
@@ -145,7 +178,7 @@
       &.sfgov-spotlight-text {
         background: #8266bc;
         color: #fff;
-        padding: 20px 0 40px 0;
+        padding: 80px 0 40px 40px;
         h4 {
           @include rubik;
           font-size: 3.2rem;
@@ -197,7 +230,7 @@
 .sfgov-dept-resources {
   background: #EDF4F7;
   h3 {
-    margin-bottom: 0;
+    margin-bottom: 40px;
   }
   .sfgov-dept-resources-container {
     display: table;
@@ -205,7 +238,7 @@
     width: 103%;
     border-collapse: separate;
     border-spacing: 20px;
-    margin-left: -20px;
+    margin-left: 20px;
     .sfgov-dept-resource-items {
       display: table-row;
     }
@@ -376,15 +409,6 @@
 .sfgov-dept-contact {
   .sfgov-contact-container {
     margin-bottom: 20px;
-    h3 {
-      @include rubik;
-      font-size: 3.2rem;
-      font-weight: 500;
-      margin: 0 0 20px 0;
-      padding: 0;
-      display: block;
-      margin-bottom: 20px;
-    }
     @include rubik;
     > .sfgov-contact-section {
       display: inline-block;
@@ -395,7 +419,7 @@
       position: relative;
       h5, h6 {
         @include rubik;
-        font-size: 2rem;
+        font-size: 20px;
         padding: 0;
         margin: 0 0 15px 0;
         text-transform: none;

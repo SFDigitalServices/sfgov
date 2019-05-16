@@ -1,0 +1,11 @@
+{% extends 'paragraph.html.twig' %}
+
+{% block content %}
+  {% set cta_title = content.field_title.0 %}
+  {% set url = paragraph.field_button.0.entity.field_link.value[0].uri %}
+  {% set button_text = paragraph.field_button.0.entity.field_link.value[0].title %}
+  <div class="sfds-call-to-action">
+    <h3>{{ cta_title }}</h3>
+    <a href="{{ url }}">{{ button_text }}</a>
+  </div>
+{% endblock %}

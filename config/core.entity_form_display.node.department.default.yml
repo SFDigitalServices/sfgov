@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - entity_browser.browser.location_physical
+    - entity_browser.browser.image
     - field.field.node.department.field_about_description
     - field.field.node.department.field_address
     - field.field.node.department.field_call_to_action
@@ -14,10 +14,10 @@ dependencies:
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
+    - field.field.node.department.field_image
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
-    - field.field.node.department.field_photo
     - field.field.node.department.field_public_bodies
     - field.field.node.department.field_req_public_records
     - field.field.node.department.field_req_public_records_email
@@ -28,14 +28,12 @@ dependencies:
     - field.field.node.department.field_spotlight
     - field.field.node.department.field_topics
     - field.field.node.department.field_url
-    - image.style.thumbnail
     - node.type.department
   module:
     - allowed_formats
     - content_moderation
     - entity_browser
     - field_group
-    - image
     - link
     - maxlength
     - paragraphs
@@ -47,9 +45,9 @@ third_party_settings:
     group_about:
       children:
         - field_about_description
+        - field_image
         - field_divisions
         - field_public_bodies
-        - field_photo
         - field_call_to_action
         - field_social_media
         - field_people
@@ -69,7 +67,7 @@ third_party_settings:
         - field_phone_numbers
         - field_email
       parent_name: ''
-      weight: 7
+      weight: 8
       format_type: details
       format_settings:
         id: sfgov-dept-contact-group
@@ -84,7 +82,7 @@ third_party_settings:
         - field_req_public_records_email
         - field_req_public_records_phone
       parent_name: ''
-      weight: 8
+      weight: 9
       format_type: details
       format_settings:
         id: sfgov-dept-request-public-records
@@ -99,7 +97,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -151,7 +149,7 @@ content:
     region: content
   field_department_code:
     type: string_textfield
-    weight: 12
+    weight: 13
     region: content
     settings:
       size: 60
@@ -193,7 +191,7 @@ content:
     type: text_textarea
     region: content
   field_divisions:
-    weight: 27
+    weight: 28
     settings:
       match_operator: CONTAINS
       size: 60
@@ -239,15 +237,30 @@ content:
     third_party_settings: {  }
     region: content
   field_go_to_current_url:
-    weight: 11
+    weight: 12
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
+  field_image:
+    weight: 27
+    settings:
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+      open: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
   field_parent_department:
     type: entity_reference_autocomplete
-    weight: 13
+    weight: 14
     region: content
     settings:
       match_operator: CONTAINS
@@ -292,17 +305,9 @@ content:
       closed_mode_threshold: 0
     third_party_settings: {  }
     region: content
-  field_photo:
-    weight: 29
-    settings:
-      preview_image_style: thumbnail
-      progress_indicator: throbber
-    third_party_settings: {  }
-    type: image_image
-    region: content
   field_public_bodies:
     type: paragraphs
-    weight: 28
+    weight: 29
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -326,7 +331,7 @@ content:
     type: options_buttons
     region: content
   field_req_public_records_email:
-    weight: 35
+    weight: 36
     settings:
       size: 60
       placeholder: ''
@@ -334,7 +339,7 @@ content:
     type: email_default
     region: content
   field_req_public_records_link:
-    weight: 34
+    weight: 35
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -342,7 +347,7 @@ content:
     type: link_default
     region: content
   field_req_public_records_phone:
-    weight: 36
+    weight: 37
     settings:
       placeholder: ''
     third_party_settings: {  }
@@ -406,7 +411,7 @@ content:
     third_party_settings: {  }
     region: content
   field_topics:
-    weight: 14
+    weight: 15
     settings:
       match_operator: CONTAINS
       size: 60
@@ -415,7 +420,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_url:
-    weight: 10
+    weight: 11
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -424,20 +429,20 @@ content:
     region: content
   langcode:
     type: language_select
-    weight: 9
+    weight: 10
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 23
+    weight: 24
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 20
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -445,21 +450,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 19
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 21
+    weight: 22
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 19
+    weight: 20
     region: content
     third_party_settings: {  }
   title:
@@ -471,13 +476,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 15
+    weight: 16
     settings:
       match_operator: CONTAINS
       size: 60
@@ -485,7 +490,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 22
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }

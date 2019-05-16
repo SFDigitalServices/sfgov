@@ -1,8 +1,8 @@
 
 {% set description = node.get('field_description').getValue()[0]['value'] %}
-{% if content.field_image['#items'] %}
+{# {% if content.field_image['#items'] %}
   {% set image = content.field_image %}
-{% endif %}
+{% endif %} #}
 
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
@@ -99,9 +99,9 @@
     <div class="sfds-responsive-container sfds-responsive-container-right-zero">
       <div class="sfgov-spotlight">
         <div class="sfgov-spotlight-text sfgov-spotlight-section">
-          <h4>
+          <h3>
             {{ dept_fields.spotlight.title }}
-          </h4>
+          </h3>
           <p>
             {{ dept_fields.spotlight.description }}
           </p>
@@ -122,7 +122,7 @@
 
 {{ department_news }}
 
-  <div class="sfgov-dept-events"></div>
+{{ department_events }}
 
 {% if dept_fields.resources.items %}
   <a name="resources"></a>
@@ -175,21 +175,27 @@
           </div>
         </div>
         <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section sfds-responsive-container-right-zero">
-          <div class="sfgov-dept-about-logo sfgov-logo">
-            <img src="{{ dept_fields.about.logo_url }}" />
-          </div>
-          <div class="sfgov-dept-about-cta sfgov-cta">
-            <h5>{{ dept_fields.about.cta.title }}</h5>
-            <a href="{{ dept_fields.about.cta.url }}">{{ dept_fields.about.cta.button_text }}</a>
-          </div>
-          <div class="sfgov-dept-about-social sfgov-social">
-            <h5>{{ dept_fields.about.social.title }}</h5>
-            <ul class="sfgov-social-list">
-            {% for socialMedia in dept_fields.about.social.values %}
-              <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
-            {% endfor %}
-            </ul>
-          </div>
+          {% if dept_fields.about.logo_url %}
+            <div class="sfgov-dept-about-logo sfgov-logo">
+              <img src="{{ dept_fields.about.logo_url }}" />
+            </div>
+          {% endif %}
+          {% if dept_fields.about.cta %}
+            <div class="sfgov-dept-about-cta sfgov-cta">
+              <h5>{{ dept_fields.about.cta.title }}</h5>
+              <a href="{{ dept_fields.about.cta.url }}">{{ dept_fields.about.cta.button_text }}</a>
+            </div>
+          {% endif %}
+          {% if dept_fields.about.social.values %}
+            <div class="sfgov-dept-about-social sfgov-social">
+              <h5>{{ dept_fields.about.social.title }}</h5>
+              <ul class="sfgov-social-list">
+              {% for socialMedia in dept_fields.about.social.values %}
+                <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>

@@ -1,0 +1,34 @@
+uuid: 04be1fb2-eeaa-4212-a637-2423aa395e1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.events
+  module:
+    - ctools
+    - views
+  theme:
+    - sfgovpl
+id: views_block__events_block_1
+theme: sfgovpl
+region: department_events
+weight: 0
+provider: null
+plugin: 'views_block:events-block_1'
+settings:
+  id: 'views_block:events-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+  context_mapping:
+    field_dept_target_id: '@node.node_route_context:node'
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      department: department
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
