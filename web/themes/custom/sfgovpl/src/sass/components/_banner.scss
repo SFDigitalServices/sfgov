@@ -1,10 +1,5 @@
 .hero-banner {
 
-  h1 {
-    @include fs-h1-page;
-    color: $c-black;
-  }
-
   .lead-paragraph {
     margin-bottom: 25px;
   }
@@ -15,8 +10,28 @@
     line-height: 19px;
     margin-top: 20px;
   }
+}
 
-  &.color .hero-banner--container {
+.hero-banner.default {
+  @include contain-1090;
+  border-top: 3px solid rgba(28, 62, 87, .1);
+
+  h1 {
+    @include fs-h1-default;
+    color: $c-black;
+    margin-bottom: 40px;
+  }
+
+  .path-frontpage & {
+    h1 {
+      @include fs-h1-home;
+      margin-bottom: 27px;
+    }
+  }
+}
+
+.hero-banner.color {
+  .hero-banner--container {
     margin: 0 auto;
     max-width: 1276px;
     padding-left: 20px;
@@ -26,14 +41,5 @@
       padding-left: 96px;
       padding-right: 96px;
     }
-  }
-
-}
-
-.hero-banner.plain {
-  @include contain-1090;
-
-  h1 {
-    margin-bottom: 27px;
   }
 }
