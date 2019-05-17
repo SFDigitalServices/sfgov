@@ -25,7 +25,7 @@
     width: 48px;
 
     &::before {
-      @include background-image('search.svg');
+      @include background-image('search-white.svg');
       content: '';
       display: block;
       width: 30px;
@@ -69,24 +69,56 @@
     [data-drupal-selector="edit-sfgov-search-input"] {
       height: 48px;
       margin-bottom: 20px;
+
+      @include media($narrow-screen) {
+        padding: 15px 15px 15px 54px;
+      }
     }
 
     [data-drupal-selector="edit-actions"] {
       border-bottom: 0;
-      width: 148px;
+      width: 50px;
+
+      @include media($narrow-screen) {
+        width: 148px
+      }
 
       &::before {
-        top: 9px;
+        @include media($narrow-screen) {
+          content: none;
+        }
       }
     }
 
     [data-drupal-selector="edit-submit"] {
       height: 48px;
-      font-size: 20px;
+      font-size: 0;
+      padding: 0;
+
+      @include media($narrow-screen) {
+        font-size: 20px;
+      }
     }
 
-      .form-item-sfgov-search-input {
-      width: calc(100% - 148px);
+    .form-item-sfgov-search-input {
+      width: calc(100% - 50px);
+
+      @include media($narrow-screen) {
+        width: calc(100% - 148px);
+      }
+
+      &::before {
+        @include media($narrow-screen) {
+          @include background-image('search-blue.svg');
+          content: '';
+          display: block;
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          left: 9px;
+          top: 9px;
+        }
+      }
     }
   }
 }
