@@ -1,5 +1,15 @@
 
 {% embed 'node--full.html.twig' %}
+  {% block header %}
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-color.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': content.field_description|render
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
 
   {% block content %}
     {% if content.field_cost|render or content.field_things_to_know|render %}
