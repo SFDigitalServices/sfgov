@@ -4,7 +4,7 @@
 
   .__people-title {
     @include fs-h1-small;
-    @include contain-1210;
+    @include contain-1090;
     margin-bottom: 50px;
 
     @include media($medium-screen) {
@@ -59,11 +59,39 @@
 
   .person-subtitle {
     @include fs-body-2;
-    opacity: .7;
+  }
+
+  .__description {
+    @include contain-1090;
+    background: $c-white;
+    border-radius: 8px;
+    padding: 30px;
+
+    @include media($medium-screen) {
+      padding: 30px;
+    }
+
+    p {
+      @include fs-pull-large;
+      color: $c-text;
+      font-style: italic;
+      margin: 0 0 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    a {
+      @include button;
+      display: inline-block;
+      font-style: normal;
+    }
   }
 }
 
-.sfgov-title--elected-officials { // Mayor
+// Mayor
+.sfgov-title--elected-officials {
   background: $c-blue-button-hover;
   color: $c-white;
 
@@ -113,39 +141,26 @@
   }
 }
 
+// Board of Supervisors.
 .sfgov-title--board-of-supervisors {
-  background: $c-blue-pale;
+  background: $c-blue-button-hover;
+  color: $c-white;
 
-  .__description {
-    @include contain-1090;
-    background: $c-white;
-    border-radius: 8px;
-    padding: 30px;
-
-    @include media($medium-screen) {
-      padding: 30px;
-    }
-
-    p {
-      margin: 0 0 15px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    a {
-      @include button;
-      display: inline-block;
-    }
+  .person-name a {
+    @include link-colors($c-white, $c-white);
   }
 }
 
+// Elected Officers.
 .sfgov-title--elected-officers {
   background: $c-blue-pale;
   margin-bottom: 50px;
 
   .person-title {
+    opacity: .7;
+  }
+
+  .person-subtitle {
     opacity: .7;
   }
 }
