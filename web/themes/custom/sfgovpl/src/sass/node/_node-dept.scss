@@ -346,7 +346,7 @@
         &.sfgov-dept-about-content-left {
           width: 65%;
           float: left;
-          padding-right: 20px;
+          padding-right: 40px;
           @include antialiasing;
         }
         &.sfgov-dept-about-content-right {
@@ -371,7 +371,7 @@
       .sfgov-social {
         background: #fff;
         border-radius: 8px;
-        padding: 20px;
+        padding: 40px;
         margin-bottom: 20px;
         a {
           color: #0071bc;
@@ -379,16 +379,29 @@
         @include rubik;
         h5 {
           color: #1C3E57;
-          margin: 0 0 15px 0;
+          margin: 0 0 20px 0;
           padding: 0;
-          font-size: 17px;
-          font-weight: 500;
           @include rubik;
+          @include fs-title-medium;
+          text-decoration: none;
         }
         &.sfgov-logo {
           img {
             max-width: 170px;
           }
+        }
+      }
+
+      .sfgov-cta {
+        > a {
+          @include fs-title;
+          @include antialiasing;
+          display: block;
+          border-radius: 8px;
+          background: #4F66EE;
+          padding: 13px 20px;
+          color: #fff;
+          text-decoration: none;
         }
       }
       @include clearfix;
@@ -444,15 +457,23 @@
           overflow: hidden;
           border-radius: 8px;
           margin-right: 20px;
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: top center;
         }
         .person-details {
           h5 {
-            margin: 0;
-            font-weight: 500;
+            @include rubik;
+            @include fs-button;
+            text-decoration: underline;
+            color: $c-text;
+            margin-bottom: 10px;
           }
           p {
             margin: 0;
             padding: 0;
+            @include fs-body-2;
+            color: $c-text;
           }
         }
       }
