@@ -1,0 +1,48 @@
+uuid: 1a33b77b-c98f-4a54-a6cd-bbc26f6bb2a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.campaign.field_link
+    - field.field.paragraph.campaign.field_media
+    - field.field.paragraph.campaign.field_title
+    - image.style.836x484
+    - paragraphs.paragraphs_type.campaign
+  module:
+    - link
+    - media
+id: paragraph.campaign.default
+targetEntityType: paragraph
+bundle: campaign
+mode: default
+content:
+  field_link:
+    weight: 2
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_media:
+    type: media_thumbnail
+    weight: 0
+    label: hidden
+    settings:
+      image_style: 836x484
+      image_link: ''
+    third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

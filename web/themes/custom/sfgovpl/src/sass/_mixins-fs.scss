@@ -23,12 +23,37 @@
   line-height: 28.9px;
 }
 
+@mixin fs-button {
+  font-size: 17px;
+  font-weight: $fw-medium;
+  line-height: 24px;
+}
+
+@mixin fs-campaign-title {
+  font-size: 30px;
+  font-weight: $fw-medium;
+  line-height: 42px;
+}
+
 @mixin fs-department {
   font-size: 20px;
   font-weight: $fw-regular;
   line-height: 29px;
 }
 
+@mixin fs-mayor-name-small {
+  font-size: 24px;
+  font-weight: $fw-medium;
+  line-height: 30px;
+}
+
+@mixin fs-mayor-title-large {
+  font-size: 24px;
+  font-weight: $fw-regular;
+  line-height: 34px;
+}
+
+// H1
 @mixin fs-h1 {
   @include fs-h1-small;
   @include  media($medium-screen) {
@@ -50,10 +75,60 @@
   line-height: 43px;
 }
 
+// h1-default
+@mixin fs-h1-default {
+  @include fs-h1-default-small;
+  @include  media($medium-screen) {
+    @include fs-h1-default-large;
+  }
+}
+
+@mixin fs-h1-default-large {
+  font-size: 50px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 59px;
+}
+
+@mixin fs-h1-default-small {
+  font-size: 33px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 39px;
+}
+
+// h1-home
+@mixin fs-h1-home {
+  @include fs-h1-home-small;
+  @include  media($medium-screen) {
+    @include fs-h1-home-large;
+  }
+}
+
+@mixin fs-h1-home-large {
+  font-size: 72px;
+  font-weight: $fw-light;
+  letter-spacing: -.2px;
+  line-height: 80.2px;
+}
+
+@mixin fs-h1-home-small {
+  font-size: 42px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 43px;
+}
+
 @mixin fs-h2 {
   font-size: 17px;
   font-weight: $fw-medium;
   line-height: 24px;
+}
+
+@mixin fs-new-website-text {
+  font-size: 20px;
+  font-weight: $fw-regular;
+  line-height: 28px;
 }
 
 @mixin fs-news-title {
@@ -68,6 +143,7 @@
   line-height: 28px;
 }
 
+// fs-pull
 @mixin fs-pull-large {
   font-size: 20px;
   font-weight: $fw-medium;
@@ -86,3 +162,17 @@
     @include fs-pull-large;
   }
 }
+
+@mixin fs-title {
+  font-size: 17px;
+  font-weight: $fw-medium;
+  line-height: 24px;
+  text-decoration: underline;
+}
+
+@mixin fs-title-medium {
+  font-size: 20px;
+  line-height: 27px;
+  font-weight: $fw-medium;
+}
+

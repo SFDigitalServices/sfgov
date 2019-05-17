@@ -1,0 +1,85 @@
+.hero-banner {
+
+  .lead-paragraph {
+    margin-bottom: 25px;
+  }
+
+  .date {
+    font-size: 15px;
+    color: $color-gray;
+    line-height: 19px;
+    margin-top: 20px;
+  }
+}
+
+.hero-banner--border {
+  display: block;
+  height: 3px;
+  margin: 0 auto;
+  max-width: 1070px;
+  width: 100%;
+
+  .hero-banner--border-contain {
+    display: block;
+    background: rgba(28, 62, 87, .1);
+    height: 3px;
+    margin-left: 20px;
+    margin-right: 20px;
+    @include media($wide-screen) {
+      margin: 0;
+    }
+  }
+}
+
+.hero-banner.default {
+  @include contain-1090;
+  padding-top: 40px;
+
+  @include media($medium-screen) {
+    padding-top: 80px;
+  }
+
+  h1 {
+    @include fs-h1-default;
+    color: $c-black;
+    margin-bottom: 40px;
+  }
+
+  .path-frontpage & {
+    h1 {
+      @include fs-h1-home;
+      margin-bottom: 27px;
+    }
+  }
+}
+
+.hero-banner.color {
+  padding: 40px 0 60px;
+
+  .hero-banner--container {
+    margin: 0 auto;
+    max-width: 1276px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      padding-left: 96px;
+      padding-right: 96px;
+    }
+  }
+
+  h1 {
+    @include fs-h1;
+  }
+
+  // News
+  .page-node-type-news & {
+    background: $c-yellow;
+
+  }
+
+  // Transaction
+  .page-node-type-transaction & {
+    background: $c-blue-grey;
+  }
+}

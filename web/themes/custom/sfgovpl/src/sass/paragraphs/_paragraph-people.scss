@@ -1,0 +1,102 @@
+.paragraph--type--people {
+  padding-bottom: 60px;
+  padding-top: 60px;
+
+  .__people-title {
+    @include fs-h1-small;
+    margin-bottom: 50px;
+
+    @include media($medium-screen) {
+      @include fs-campaign-title;
+    }
+  }
+
+  .__person.person-item-multiple {
+    @include contain-1090;
+    @include clearfix;
+    margin: 0 auto;
+
+    .person-container {
+      display: block;
+      margin: 0 auto 35px;
+      width: 100%;
+
+      @include media($mobile-screen) {
+        display: inline-block;
+        width: 48%;
+      }
+
+      @include media($medium-screen) {
+        width: 32%;
+      }
+    }
+  }
+
+  .person-name {
+    @include fs-h2;
+
+    a {
+      @include link-colors($c-text);
+    }
+  }
+
+  .person-photo {
+    display: inline-block;
+    height: 70px;
+    margin-right: 22px;
+    width: 70px;
+  }
+
+  .person-bio {
+    display: inline-block;
+    text-align: left;
+    width: calc(100% - 122px);
+  }
+
+  .person-title {
+    @include fs-h2;
+  }
+
+  .person-subtitle {
+    @include fs-body-2;
+  }
+
+  .__description {
+    background: $c-white;
+    border-radius: 8px 0 0 8px;
+    margin-left: 20px;
+    padding: 30px;
+
+    @include media($narrow-screen) {
+      margin-left: 0;
+      position: absolute;
+      right: 0;
+      width: 33%;
+    }
+
+    @include media($wide-screen) {
+      width: calc(50% - 180px);
+    }
+
+    p {
+      @include fs-pull-large;
+      color: $c-text;
+      font-style: italic;
+      margin: 0 0 15px;
+
+      @include media($narrow-screen) {
+        max-width: 307px;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    a {
+      @include button;
+      display: inline-block;
+      font-style: normal;
+    }
+  }
+}

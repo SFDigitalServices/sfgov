@@ -1,21 +1,43 @@
-
-@import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/01-atoms/01-colors/01-colors';
-@import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/01-atoms/02-typography/01-fonts';
-@import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/00-breakpoints';
-@import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/02-mixins';
-// @import '../../../../../libraries/sfgov-pattern-lab/pattern-lab/source/_patterns/00-protons/01-grid.scss';
-@import 'layout';
-@import 'mixins';
-
 body {
-    color: $color-gray;
+  @include rubik;
+  color: $c-text;
 }
+
+p {
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  clear: both;
+  margin-bottom: .5em;
+  margin-top: 0;
+}
+
+a {
+  @include link-colors($c-blue-button)
+}
+
 li {
   margin-bottom: 0;
 }
 
-.contain {
-  @include contain;
+img {
+  height: auto;
+}
+
+.sfgov-list-link {
+  @include link-colors($c-blue-button);
+  @include fs-title;
+}
+
+// Rounded corners.
+.person-photo {
+  border-radius: 8px;
 }
 
 // Use medium for body in WYSIWYG.
@@ -24,4 +46,9 @@ li {
   b {
     font-weight: $fw-medium;
   }
+}
+
+// Forms.
+::placeholder {
+  color: rgba(28, 62, 87, .4);
 }

@@ -1,0 +1,24 @@
+{% extends 'node.html.twig' %}
+
+{% block title %}
+{% endblock title %}
+
+{% block body %}
+  {% set start_date_time = content.field_start_date.0['#attributes']['datetime'] %}
+  {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
+  <div class="event--teaser--body">
+    <h2 class="event-date">
+      {{ start_date_time|date("l, F j") }}
+    </h2>
+    <h2{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h2>
+    {{ content | without('field_start_date','field_end_date','field_address') }}
+    <div class="event-meta">
+      <div class="event-time">
+        {{ start_date_time|date("g:i a") }} to {{ end_date_time|date("g:i a") }}
+      </div>
+      <div class="event-location">
+        {{ content.field_address[0]['#location'].title.value }}
+      </div>
+    </div>
+  </div>
+{% endblock body %}

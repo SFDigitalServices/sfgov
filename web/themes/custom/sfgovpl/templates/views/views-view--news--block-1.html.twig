@@ -6,14 +6,22 @@
 {% block rows %}
 
   {% if rows %}
+    {% set count = 3 - (rows[0]['#rows']|length) %}
     <a name="news"></a>
     <div id="sfgov-dept-news" class="sfgov-dept-news sfds-layout-container">
       <div class="sfds-responsive-container">
         <h3>{{ "News"|t }}</h3>
-        <div class="views-news--rows">
-          {{ rows }}
+        <div class="sfgov-dept-section-content-container">
+          <div class="views-news--rows">
+            {{ rows }}
+            {% if count > 0 %}
+              {% for n in 1..count %}
+                <div class="views-row" style="visibility:hidden"></div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          {{ more }}
         </div>
-        {{ more }}
       </div>
     </div>
   {% endif %}

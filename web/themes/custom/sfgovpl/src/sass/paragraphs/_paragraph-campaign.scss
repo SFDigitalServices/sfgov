@@ -1,0 +1,51 @@
+.paragraph-child--campaign {
+  background: $c-yellow;
+}
+
+.paragraph--type--campaign {
+  @include contain-1280;
+  background: $c-yellow;
+  display: table;
+
+
+  .__media {
+    margin-bottom: 39px;
+
+    @include media($narrow-screen) {
+      margin-bottom: 0;
+    }
+  }
+
+  img {
+    display: block;
+    width: 100%;
+  }
+
+  .paragraph-campaign--text {
+    @include media($narrow-screen) {
+      background: $c-yellow;
+      display: table-cell;
+      height: 100%;
+      max-width: 444px;
+      vertical-align: middle;
+    }
+  }
+
+  .__title {
+    @include fs-campaign-title;
+    padding: 0 38px 39px;
+  }
+
+  .__link {
+    padding: 0 38px 39px;
+
+    @include media($narrow-screen) {
+      padding-bottom: 0;
+    }
+
+    a {
+      @include button-clear;
+      border: 0;
+    }
+  }
+}

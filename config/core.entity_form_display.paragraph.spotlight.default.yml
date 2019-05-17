@@ -3,15 +3,15 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.image
     - field.field.paragraph.spotlight.field_description
     - field.field.paragraph.spotlight.field_spotlight_button
-    - field.field.paragraph.spotlight.field_spotlight_image
+    - field.field.paragraph.spotlight.field_spotlight_img
     - field.field.paragraph.spotlight.field_title
-    - image.style.thumbnail
     - paragraphs.paragraphs_type.spotlight
   module:
     - allowed_formats
-    - image
+    - entity_browser
     - maxlength
     - paragraphs
     - text
@@ -38,7 +38,7 @@ content:
     region: content
   field_spotlight_button:
     type: entity_reference_paragraphs
-    weight: 2
+    weight: 3
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -48,13 +48,20 @@ content:
       default_paragraph_type: ''
     third_party_settings: {  }
     region: content
-  field_spotlight_image:
-    weight: 3
+  field_spotlight_img:
+    weight: 2
     settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+      open: false
     third_party_settings: {  }
-    type: image_image
+    type: entity_browser_entity_reference
     region: content
   field_title:
     weight: 0
@@ -66,4 +73,5 @@ content:
     region: content
 hidden:
   created: true
+  field_spotlight_image: true
   status: true

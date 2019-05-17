@@ -1,3 +1,49 @@
+@mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
+  background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
+}
+
+@mixin contain { // @todo Deprecate this mixin.
+  margin: 0 auto;
+  max-width: 1276px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include  media($medium-screen) {
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@mixin contain-1280 { // Zeplin Artboard.
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 100%;
+}
+
+@mixin contain-1210 { // Para titles.
+  margin: 0 auto;
+  max-width: 1210px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+
+  @include media($wide-screen) {
+    padding: 0;
+  }
+}
+
+@mixin contain-1090 { // Most contents.
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+
+  @include media($wide-screen) {
+    padding: 0;
+  }
+}
+
 @mixin media($bp) {
   @media screen and (min-width: #{$bp}) {
     @content;
@@ -10,21 +56,8 @@
   }
 }
 
-
 @mixin source-sans-pro {
   font-family: "Source Sans Pro", sans-serif;
-}
-
-@mixin merriweather {
-  font-family: "Merriweather", sans-serif;
-}
-
-@mixin open-sans {
-  font-family: "Open Sans", sans-serif;
-}
-
-@mixin montserrat {
-  font-family: "Montserrat", sans-serif;
 }
 
 @mixin blockquote {
@@ -142,4 +175,38 @@
       color: $normal;
     }
   }
+}
+@mixin sfgov-responsive-container-override {
+  padding: 0;
+}
+
+@mixin sfgov-container--full-override {
+  width: 100%;
+}
+
+@mixin three-column-item {
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 100%;
+
+  @include media($medium-screen) {
+    float: left;
+    margin-right: 2%;
+    min-height: 100px;
+    width: 32%;
+  }
+
+  &:nth-child(3n) {
+    @include media($medium-screen) {
+      margin-right: 0;
+    }
+  }
+}
+
+@mixin antialiasing($type:antialiased) {
+  /* antialiased, none, subpixel-antialiased*/
+	-webkit-font-smoothing: $type;
+	font-smoothing: $type;
+	font-smooth: always;
 }

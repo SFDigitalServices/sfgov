@@ -1,0 +1,124 @@
+.sfgov-search-311-block {
+  display: none;
+  width: 250px;
+
+  @include media($medium-screen) {
+    display: inline-block;
+  }
+
+  [data-drupal-selector="edit-sfgov-search-input"] {
+    border-color: $c-blue-button;
+    border-radius: 8px 0 0 8px;
+    border-style: solid;
+    border-width: 3px 0 3px 3px;
+    height: 44px;
+    margin: 0;
+    max-width: initial;
+    padding: 15px;
+  }
+
+  [data-drupal-selector="edit-actions"] {
+    background: $c-blue-button;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+    text-align: center;
+    width: 48px;
+
+    &::before {
+      @include background-image('search-white.svg');
+      content: '';
+      display: block;
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      left: 9px;
+      top: 9px;
+    }
+  }
+
+  [data-drupal-selector="edit-submit"] {
+    @include rubik;
+    background: $c-blue-button;
+    border-radius: 0 8px 8px 0;
+    font-size: 0px;
+    font-weight: $fw-medium;
+    height: 44px;
+    margin: 0;
+    padding: 0 0 0 30px;
+  }
+
+  .form-item-sfgov-search-input {
+    width: calc(100% - 48px);
+  }
+}
+
+// Paragraph version
+.paragraph--type--block {
+  .sfgov-search-311-block {
+    display: inline-block;
+    width: auto;
+
+    form {
+      margin-bottom: 20px;
+
+      @include media($narrow-screen) {
+        margin-bottom: 40px;
+      }
+    }
+
+    [data-drupal-selector="edit-sfgov-search-input"] {
+      height: 48px;
+      margin-bottom: 20px;
+
+      @include media($narrow-screen) {
+        padding: 15px 15px 15px 54px;
+      }
+    }
+
+    [data-drupal-selector="edit-actions"] {
+      border-bottom: 0;
+      width: 50px;
+
+      @include media($narrow-screen) {
+        width: 148px
+      }
+
+      &::before {
+        @include media($narrow-screen) {
+          content: none;
+        }
+      }
+    }
+
+    [data-drupal-selector="edit-submit"] {
+      height: 48px;
+      font-size: 0;
+      padding: 0;
+
+      @include media($narrow-screen) {
+        font-size: 20px;
+      }
+    }
+
+    .form-item-sfgov-search-input {
+      width: calc(100% - 50px);
+
+      @include media($narrow-screen) {
+        width: calc(100% - 148px);
+      }
+
+      &::before {
+        @include media($narrow-screen) {
+          @include background-image('search-blue.svg');
+          content: '';
+          display: block;
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          left: 9px;
+          top: 9px;
+        }
+      }
+    }
+  }
+}
