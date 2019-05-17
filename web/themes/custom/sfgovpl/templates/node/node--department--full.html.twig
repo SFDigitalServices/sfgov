@@ -155,22 +155,26 @@
           <div class="sfgov-dept-about-description">
             {{ dept_fields.about.description }}
           </div>
-          <div class="sfgov-dept-about-divisions">
-            <h4>Divisions</h4>
-            <ul>
-            {% for division in dept_fields.about.divisions %}
-              <li><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
-            {% endfor %}
-            </ul>
-          </div>
-          <div class="sfgov-dept-about-public-bodies">
-            <h4>Public Bodies</h4>
-            <ul>
-            {% for publicBody in dept_fields.about.public_bodies %}
-              <li><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
-            {% endfor %}
-            </ul>
-          </div>
+          {% if dept_fields.about.divisions %}
+            <div class="sfgov-dept-about-divisions">
+              <h4>Divisions</h4>
+              <ul>
+              {% for division in dept_fields.about.divisions %}
+                <li><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          {% if dept_fields.about.public_bodies %}
+            <div class="sfgov-dept-about-public-bodies">
+              <h4>Public Bodies</h4>
+              <ul>
+              {% for publicBody in dept_fields.about.public_bodies %}
+                <li><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
         </div>
         <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section sfds-responsive-container-right-zero">
           {% if dept_fields.about.logo_url %}
