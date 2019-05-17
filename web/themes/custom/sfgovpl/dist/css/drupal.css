@@ -2044,15 +2044,7 @@ header[role="banner"] {
     font-weight: 500;
     letter-spacing: -.3px;
     line-height: 43px;
-    margin: 0 auto;
-    max-width: 1090px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 100%;
     margin-bottom: 50px; }
-    @media screen and (min-width: 1280px) {
-      .paragraph--type--people .__people-title {
-        padding: 0; } }
     @media screen and (min-width: 768px) {
       .paragraph--type--people .__people-title {
         font-size: 30px;
@@ -2116,9 +2108,15 @@ header[role="banner"] {
     border-radius: 8px 0 0 8px;
     margin-left: 20px;
     padding: 30px; }
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 950px) {
       .paragraph--type--people .__description {
+        margin-left: 0;
+        position: absolute;
+        right: 0;
         width: 33%; } }
+    @media screen and (min-width: 1280px) {
+      .paragraph--type--people .__description {
+        width: calc(50% - 180px); } }
     .paragraph--type--people .__description p {
       font-size: 20px;
       font-weight: 500;
@@ -2126,6 +2124,9 @@ header[role="banner"] {
       color: #1c3e57;
       font-style: italic;
       margin: 0 0 15px; }
+      @media screen and (min-width: 950px) {
+        .paragraph--type--people .__description p {
+          max-width: 307px; } }
       .paragraph--type--people .__description p:last-child {
         margin-bottom: 0; }
     .paragraph--type--people .__description a {
@@ -2145,14 +2146,45 @@ header[role="banner"] {
 .sfgov-title--elected-officials {
   background: #0c1464;
   color: #fff; }
-  .sfgov-title--elected-officials .__person {
-    padding-left: 20px; }
+  .sfgov-title--elected-officials .__people-title {
+    margin: 0 auto;
+    max-width: 1210px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%; }
+    @media screen and (min-width: 1280px) {
+      .sfgov-title--elected-officials .__people-title {
+        padding: 0; } }
+  .sfgov-title--elected-officials .sfgov-people--content {
+    position: relative; }
+  .sfgov-title--elected-officials .person-container {
+    margin-bottom: 20px; }
     @media screen and (min-width: 768px) {
+      .sfgov-title--elected-officials .person-container {
+        margin-bottom: 40px; } }
+  .sfgov-title--elected-officials .__person {
+    margin: 0 auto;
+    max-width: 1090px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%; }
+    @media screen and (min-width: 1280px) {
       .sfgov-title--elected-officials .__person {
-        width: 66%; } }
+        padding: 0; } }
+  @media screen and (min-width: 950px) {
+    .sfgov-title--elected-officials .__description {
+      top: 0; } }
   .sfgov-title--elected-officials .person-photo {
+    display: inline-block;
+    width: 140px;
+    height: 140px;
     margin-right: 28px;
     vertical-align: top; }
+    .sfgov-title--elected-officials .person-photo img {
+      max-width: 1px;
+      max-height: 1px;
+      position: relative;
+      left: -999px; }
   .sfgov-title--elected-officials .__people-title {
     font-size: 33px;
     font-weight: 500;
@@ -2170,6 +2202,8 @@ header[role="banner"] {
       .sfgov-title--elected-officials .__people-title {
         margin-bottom: 50px; } }
   .sfgov-title--elected-officials .person-bio {
+    display: inline-block;
+    text-align: left;
     width: calc(100% - 194px); }
     @media screen and (min-width: 768px) {
       .sfgov-title--elected-officials .person-bio {
@@ -2188,21 +2222,32 @@ header[role="banner"] {
   .sfgov-title--elected-officials .person-name {
     font-size: 24px;
     font-weight: 500;
-    line-height: 30px; }
+    line-height: 30px;
+    margin-bottom: 9px; }
     @media screen and (min-width: 768px) {
       .sfgov-title--elected-officials .person-name {
         font-size: 30px;
         font-weight: 500;
-        line-height: 42px; } }
+        line-height: 42px;
+        margin-bottom: 9px; } }
   .sfgov-title--elected-officials .person-title {
     font-size: 24px;
     font-weight: 400;
     line-height: 34px;
-    color: #a9d6ea; }
+    color: #a9d6ea;
+    margin-bottom: 12px; }
+    @media screen and (min-width: 768px) {
+      .sfgov-title--elected-officials .person-title {
+        margin-bottom: 12px; } }
+  @media screen and (min-width: 950px) {
+    .sfgov-title--elected-officials .person-subtitle {
+      max-width: 373px; } }
 
 .sfgov-title--board-of-supervisors {
   background: #0c1464;
-  color: #fff; }
+  color: #fff;
+  padding-bottom: 185px;
+  position: relative; }
   .sfgov-title--board-of-supervisors .person-name a:link {
     color: #fff; }
   .sfgov-title--board-of-supervisors .person-name a:visited, .sfgov-title--board-of-supervisors .person-name a:link:visited {
@@ -2213,10 +2258,32 @@ header[role="banner"] {
     color: #fff; }
   .sfgov-title--board-of-supervisors .person-name a.is-active, .sfgov-title--board-of-supervisors .person-name a:active, .sfgov-title--board-of-supervisors .person-name a.active-trail {
     color: #fff; }
+  .sfgov-title--board-of-supervisors .__people-title {
+    margin: 0 auto;
+    max-width: 1090px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    margin-bottom: 40px; }
+    @media screen and (min-width: 1280px) {
+      .sfgov-title--board-of-supervisors .__people-title {
+        padding: 0; } }
+  .sfgov-title--board-of-supervisors .__description {
+    bottom: 77px; }
 
 .sfgov-title--elected-officers {
   background: #edf4f7;
   margin-bottom: 50px; }
+  .sfgov-title--elected-officers .__people-title {
+    margin: 0 auto;
+    max-width: 1090px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    margin-bottom: 40px; }
+    @media screen and (min-width: 1280px) {
+      .sfgov-title--elected-officers .__people-title {
+        padding: 0; } }
   .sfgov-title--elected-officers .person-title {
     opacity: .7; }
   .sfgov-title--elected-officers .person-subtitle {
