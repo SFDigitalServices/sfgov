@@ -67,6 +67,16 @@
   background: $c-blue-button-hover;
   color: $c-white;
 
+  .__person .person-container {
+    @include media($medium-screen) {
+      width: 66%;
+    }
+  }
+
+  .person-photo {
+    vertical-align: top;
+  }
+
   .__people-title {
     @include fs-h1;
     color: white;
@@ -77,8 +87,16 @@
     }
   }
 
-  .person-bio .person-name a {
-    @include link-colors($c-white, $c-white);
+  .person-bio {
+
+    @include media($medium-screen) {
+      vertical-align: top;
+      width: calc(100% - 194px);
+    }
+
+    .person-name a {
+      @include link-colors($c-white, $c-white);
+    }
   }
 
   .person-name {
