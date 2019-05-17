@@ -224,38 +224,40 @@
     <div class="sfgov-dept-contact-content sfds-responsive-container">
       <div class="sfgov-contact-container">
         <h3>Contact</h3>
-        {% if dept_fields.address %}
-          <div class="sfgov-contact-section address">
-            <h5>{{ dept_fields.address.organization }}</h5>
-            <p>
-              {{ dept_fields.address.line1 }} <br/>
-            {% if dept_fields.address.line2 %}
-              {{ dept_fields.address.line2 }} <br/>
-            {% endif %}
-              {{ dept_fields.address.city }}, {{ dept_fields.address.state }} {{ dept_fields.address.zip }}
-            </p>
-          </div>
-        {% endif %}
-        {% if dept_fields.phone_numbers %}
-          <div class="sfgov-contact-section phone-numbers">
-            <h5>Phone</h5>
-            {% for phone in dept_fields.phone_numbers %}
-              <div class="phone">
-                <h6>{{ phone.owner }}</h6>
-                <p><a href="tel:{{ phone.number }}">{{ phone.number }}</a></p>
-                <div class="details">
-                  {{ phone.details | raw }}
+        <div class="sfgov-dept-section-content-container">
+          {% if dept_fields.address %}
+            <div class="sfgov-contact-section address">
+              <h5>{{ dept_fields.address.organization }}</h5>
+              <p>
+                {{ dept_fields.address.line1 }} <br/>
+              {% if dept_fields.address.line2 %}
+                {{ dept_fields.address.line2 }} <br/>
+              {% endif %}
+                {{ dept_fields.address.city }}, {{ dept_fields.address.state }} {{ dept_fields.address.zip }}
+              </p>
+            </div>
+          {% endif %}
+          {% if dept_fields.phone_numbers %}
+            <div class="sfgov-contact-section phone-numbers">
+              <h5>Phone</h5>
+              {% for phone in dept_fields.phone_numbers %}
+                <div class="phone">
+                  <h6>{{ phone.owner }}</h6>
+                  <p><a href="tel:{{ phone.number }}">{{ phone.number }}</a></p>
+                  <div class="details">
+                    {{ phone.details | raw }}
+                  </div>
                 </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-        {% if dept_fields.email %}
-          <div class="sfgov-contact-section email">
-            <h5>Email</h5>
-            <p><a href="mailto:{{ dept_fields.email }}">{{ dept_fields.email }}</a></p>
-          </div>
-        {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if dept_fields.email %}
+            <div class="sfgov-contact-section email">
+              <h5>Email</h5>
+              <p><a href="mailto:{{ dept_fields.email }}">{{ dept_fields.email }}</a></p>
+            </div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
