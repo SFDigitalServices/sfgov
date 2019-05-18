@@ -13,16 +13,23 @@
 
   {% block content %}
     {% if content.field_cost|render or content.field_things_to_know|render %}
-      {% set top_content %}
-        <div class="sfgov-grid-two-columns no-padding">
-          {{ content.field_cost }}
-          {{ content.field_things_to_know }}
-        </div>
-      {% endset %}
 
-      {% include '@molecules/06-headers/02-subheader.twig' with {
-        'content': top_content,
-      } %}
+      {% if content %}
+        <section class="banner-subheader{{ styleModifier ? ' sfgov-subheader--' ~ styleModifier }}">
+          <div class="banner-subheader__container">
+            {% if title %}
+              <h2 class="sfgov-subheader__title">{{ title }}</h2>
+            {% endif %}
+            <div class="sfgov-subheader__content">
+              <div class="">
+                {{ content.field_cost }}
+                {{ content.field_things_to_know }}
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
     {% endif %}
 
     <div class="sfgov-container--full sfgov-container--right-sidebar">
