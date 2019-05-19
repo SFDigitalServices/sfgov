@@ -51,7 +51,7 @@
 (function($) {
   var aurl = 'https://antk.github.io/birthday/assets/';
   var cbg1 = aurl + 'confetti-bg.png';
-  var cbg2 = aurl + 'rain-transparent-confetti-1.gif';
+  var cbg2 = aurl + 'rain-confetti.gif';
   var fw = aurl + 'fireworks.gif';
   var bn = aurl+ 'balloons.gif';
   var bs = aurl + 'birthday.mp3';
@@ -73,7 +73,7 @@
     clickCount++;
     if(clickCount >= 5) {
       clickCount = 0;
-      $('body').css({overflow:'hidden'});
+      $('html, body').css({overflow:'hidden'});
       happyBirthday();
       window.clearInterval(intervalId);
     }
@@ -107,6 +107,7 @@
     var elemHtml = '<img class="fireworks" data-src="' + fw + '" style="position:absolute;top:0;left:0;"/>';
     birthdayHtml += elemHtml;
     birthdayHtml += '</div>';
+
     $.ajax({
       url: "//api.giphy.com/v1/gifs/search?api_key=OB4hiQ16LN99kAgP2oAFBsX550GD223X&q=birthday&limit=100&offset=0&rating=G&lang=en"
     }).done(function(data) {
@@ -115,9 +116,8 @@
         $(birthdayElem).html(birthdayHtml);
         birthdaySong();
         mouseBalloon();
-        setTimeout(function() {
-          cycleGifs(gifs);
-        },2500);
+        cycleGifs(gifs);
+        $('#bplay-btn').click();
       }
     });
 
@@ -143,8 +143,12 @@
     }
 
     function birthdaySong() {
-      var html = '<audio loop autoplay controls><source src="' + bs + '"></audio>';
+      var html = '<audio id="baudio" loop controls><source src="' + bs + '"></audio>';
+      html += '<a id="bplay-btn" href="#">play</a>';
       $('body').append(html);
+      $('#bplay-btn').click(function() {
+        $('#baudio')[0].play();
+      });
     }
 
     function cycleGifs(gifs) {
