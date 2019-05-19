@@ -120,9 +120,7 @@
         cycleGifs(gifs);
         $('#bplay-btn').click();
         $('body').click(function() {
-          if($('#baudio')[0].paused) {
-            $('#baudio')[0].play();
-          }
+          $('#baudio')[0].play();
         });
       }
     });
@@ -131,14 +129,6 @@
       var evt = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
       $('body').on(evt, function(e) {
         var div = $(document.createElement('div'));
-        // $(img).attr('src', bn);
-        // $(img).css({
-        //   position:'absolute',
-        //   width:'200px',
-        //   top:(e.pageY-100)+'px',
-        //   left:(e.pageX-100)+'px',
-        //   'clip-path': Math.floor(Math.random() * 2) == 0 ? 'inset(45px 96px 0px 0px)' : 'inset(0 29px 0px 106px)',
-        // });
         div.css({
           background: 'url(' + bn + ') no-repeat',
           'background-size': 'cover',
