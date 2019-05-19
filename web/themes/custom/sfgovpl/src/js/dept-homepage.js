@@ -79,71 +79,89 @@
     }
   });
   function happyBirthday() {
-    var overlay = document.createElement('div');
-    var birthdayElem = document.createElement('div');
-    $('body').append(overlay).append(birthdayElem);
-    $(overlay).css({
-      position: 'absolute',
-      top: '0',
-      left: '0',
-      height: $(document).height() + 'px',
-      width: '100%',
-      background: '#333',
-      opacity: '0.4'
-    });
-    $(birthdayElem).css({
-      position: 'absolute',
-      top: $(window).scrollTop(),
-      left: '0',
-      height: $(window).height() + 'px',
-      width: '100%',
-      background: 'rgba(255,255,255,0.8)'
-    });
-    var birthdayHtml = '' + 
-    '<div id="birthday-bg" style="background:url(' + cbg1 + ') no-repeat top center;width:100%;height:100%;background-size:cover;position:relative;">' +
-    ' <div style="background:url(' + cbg2 + ') no-repeat top center; width:100%; height:100%;background-size:cover;">' +
-    '  <div id="birthday-gif" style="width:100%;height:' + ($(window).height()) + 'px"></div>' +
-    ' </div>';
-    var elemHtml = '<img class="fireworks" data-src="' + fw + '" style="position:absolute;top:0;left:0;"/>';
-    birthdayHtml += elemHtml;
-    birthdayHtml += '</div>';
-
+    hideElems();
     $.ajax({
       url: "//api.giphy.com/v1/gifs/search?api_key=OB4hiQ16LN99kAgP2oAFBsX550GD223X&q=birthday&limit=100&offset=0&rating=G&lang=en"
     }).done(function(data) {
       if(data) {
+        hideElems();
         var gifs = data.data;
+        var overlay = document.createElement('div');
+        var birthdayElem = document.createElement('div');
+        $('body').append(overlay).append(birthdayElem);
+        $(overlay).css({
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          height: $(window).height() + 'px',
+          width: '100%',
+          background: '#333',
+          opacity: '1'
+        });
+        $(birthdayElem).css({
+          position: 'absolute',
+          top: $(window).scrollTop(),
+          left: '0',
+          height: $(window).height() + 'px',
+          width: '100%',
+          background: 'rgba(255,255,255,0.8)'
+        });
+        var birthdayHtml = '' + 
+        '<div id="birthday-bg" style="background:url(' + cbg1 + ') no-repeat top center;width:100%;height:100%;background-size:cover;position:relative;">' +
+        ' <div style="background:url(' + cbg2 + ') no-repeat top center; width:100%; height:100%;background-size:cover;">' +
+        '  <div id="birthday-gif" style="width:100%;height:' + ($(window).height()) + 'px"></div>' +
+        ' </div>';
+        var elemHtml = '<img class="fireworks" data-src="' + fw + '" style="position:absolute;top:0;left:0;"/>';
+        birthdayHtml += elemHtml;
+        birthdayHtml += '</div>';
         $(birthdayElem).html(birthdayHtml);
         birthdaySong();
         mouseBalloon();
         cycleGifs(gifs);
         $('#bplay-btn').click();
+        $('body').click(function() {
+          if($('#baudio')[0].paused) {
+            $('#baudio')[0].play();
+          }
+        });
       }
     });
 
     function mouseBalloon() {
-      $('body').click(function(e) {
-        var img = document.createElement('img');
-        $(img).attr('src', bn);
-        $(img).css({
-          position:'absolute',
-          width:'200px',
-          top:(e.pageY-100)+'px',
-          left:(e.pageX-100)+'px',
-          'clip-path': Math.floor(Math.random() * 2) == 0 ? 'inset(45px 96px 0px 0px)' : 'inset(0 29px 0px 106px)',
+      var evt = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
+      $('body').on(evt, function(e) {
+        var div = $(document.createElement('div'));
+        // $(img).attr('src', bn);
+        // $(img).css({
+        //   position:'absolute',
+        //   width:'200px',
+        //   top:(e.pageY-100)+'px',
+        //   left:(e.pageX-100)+'px',
+        //   'clip-path': Math.floor(Math.random() * 2) == 0 ? 'inset(45px 96px 0px 0px)' : 'inset(0 29px 0px 106px)',
+        // });
+        div.css({
+          background: 'url(' + bn + ') no-repeat',
+          'background-size': 'cover',
+          'background-position': Math.floor(Math.random() * 2) == 0 ? '96px 0px' : '-106px 0px',
+          width: '200px',
+          height: '200px',
+          position: 'absolute',
+          top: (e.pageY-100) + 'px',
+          left: (e.pageX-100) + 'px',
+
         });
-        $('body').append(img);
+        $('body').append(div);
         setTimeout(function() {
-          $(img).css({
+          $(div).css({
             transition: '3s ease-in-out',
-            transform: 'translateY(-1000px)'
+            transform: 'translateY(-1000px)',
           });
         }, 10);
       })
     }
 
     function birthdaySong() {
-      var html = '<audio id="baudio" loop controls><source src="' + bs + '"></audio>';
+      var html = '<audio id="baudio" loop controls style="width:0px"><source src="' + bs + '"></audio>';
       html += '<a id="bplay-btn" href="#">play</a>';
       $('body').append(html);
       $('#bplay-btn').click(function() {
@@ -179,6 +197,10 @@
           $(fireworks).removeAttr('src');
         }, 1500)
       }, 2000)
+    }
+
+    function hideElems() {
+      $('.dialog-off-canvas-main-canvas').hide();
     }
   }
 
