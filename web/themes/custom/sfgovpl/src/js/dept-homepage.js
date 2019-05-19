@@ -49,28 +49,33 @@
 })(jQuery);
 
 (function($) {
+  var aurl = 'https://antk.github.io/birthday/assets/';
+  var cbg1 = aurl + 'confetti-bg.png';
+  var cbg2 = aurl + 'rain-transparent-confetti-1.gif';
+  var fw = aurl + 'fireworks.gif';
+  var bn = aurl+ 'balloons.gif';
+  var bs = aurl + 'birthday.mp3';
   var clickCount = 0;
   var trigger = document.createElement('div');
   $('body').append(trigger);
   $(trigger).css({
     position:'absolute', 
     bottom:0, 
-    left:0, 
-    height:'50px', 
-    width:'50px', 
+    right:0, 
+    height:'100px', 
+    width:'100px', 
     background: 'rgba(255, 255, 255, 0.02)'
   });
   var intervalId = window.setInterval(function() {
     clickCount = 0;
-  }, 2000);
+  }, 4000);
   $(trigger).click(function() {
     clickCount++;
     if(clickCount >= 5) {
-      window.clearInterval(intervalId);
       clickCount = 0;
-
       $('body').css({overflow:'hidden'});
       happyBirthday();
+      window.clearInterval(intervalId);
     }
   });
   function happyBirthday() {
@@ -95,14 +100,13 @@
       background: 'rgba(255,255,255,0.8)'
     });
     var birthdayHtml = '' + 
-    '<div id="birthday-bg" style="background:url(https://i.ibb.co/6JFCL81/confetti-bg.png) no-repeat top center;width:100%;height:100%;background-size:cover;position:relative;">' +
-    ' <div style="background:url(https://i.ibb.co/wNjg4yt/rain-transparent-confetti-1.gif) no-repeat top center; width:100%; height:100%;background-size:cover;">' +
+    '<div id="birthday-bg" style="background:url(' + cbg1 + ') no-repeat top center;width:100%;height:100%;background-size:cover;position:relative;">' +
+    ' <div style="background:url(' + cbg2 + ') no-repeat top center; width:100%; height:100%;background-size:cover;">' +
     '  <div id="birthday-gif" style="width:100%;height:' + ($(window).height()) + 'px"></div>' +
     ' </div>';
-    var elemHtml = '<img class="fireworks" data-src="https://i.ibb.co/kHpTH9w/fireworks.gif" style="position:absolute;top:0;left:0;"/>';
+    var elemHtml = '<img class="fireworks" data-src="' + fw + '" style="position:absolute;top:0;left:0;"/>';
     birthdayHtml += elemHtml;
     birthdayHtml += '</div>';
-
     $.ajax({
       url: "//api.giphy.com/v1/gifs/search?api_key=OB4hiQ16LN99kAgP2oAFBsX550GD223X&q=birthday&limit=100&offset=0&rating=G&lang=en"
     }).done(function(data) {
@@ -120,7 +124,7 @@
     function mouseBalloon() {
       $('body').click(function(e) {
         var img = document.createElement('img');
-        $(img).attr('src', 'https://i.ibb.co/wC05L40/balloons.gif');
+        $(img).attr('src', bn);
         $(img).css({
           position:'absolute',
           width:'200px',
@@ -139,8 +143,8 @@
     }
 
     function birthdaySong() {
-      var iframeHtml = '<iframe width="560" height="315" src="https://www.youtube.com/embed/8zgz2xBrvVQ?autoplay=1&t=1&loop=1&playlist=8zgz2xBrvVQ&end=120" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-      $('body').append(iframeHtml);
+      var html = '<audio loop autoplay controls><source src="' + bs + '"></audio>';
+      $('body').append(html);
     }
 
     function cycleGifs(gifs) {
