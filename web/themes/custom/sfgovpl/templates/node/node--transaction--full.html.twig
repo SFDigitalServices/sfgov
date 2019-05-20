@@ -1,4 +1,3 @@
-
 {% embed 'node--full.html.twig' %}
   {% block header %}
     {{ title_prefix }}
@@ -32,8 +31,8 @@
 
     {% endif %}
 
-    <div class="sfgov-container--full sfgov-container--right-sidebar">
-      <div class="sfgov-container--content-left">
+    <div class="transaction--content">
+      <div class="transaction--left">
 
         {# Steps
         All Step fields, which are essentially step types, need to be evaluated
@@ -113,9 +112,7 @@
           {% endif %}
         {% endif %}
 
-        {% if content.field_custom_section|render %}
-          {{ content.field_custom_section }}
-        {% endif %}
+        {{ content.field_custom_section }}
 
         {% if content.field_special_cases|render %}
           {% include '@organisms/05-sections/01-section.twig' with {
@@ -143,34 +140,20 @@
             'field_direct_external_url'
           ) }}
 
+        {{ content.field_transaction_purpose }}
+        <p>Last updated {{ node.changedtime|date('F d, Y') }}</p>
+        {{ content.field_departments }}
       </div>
 
-      {% if content.field_help|render %}
-        {% include "@organisms/04-containers/01-sidebar.twig" with {
-          'side': 'right',
-          'title': 'Get help'|t,
-          'content': content.field_help
-        } %}
-        <div class="sfgov-container--content-right sfgov-container--sidebar-divider"></div>
-      {% endif %}
-
-      {# @todo sidebar component needs something for items separately,
-      this doesn't really work. #}
-      {% if content.field_transactions|render %}
-        {% include "@organisms/04-containers/01-sidebar.twig" with {
-          'side': 'right',
-          'content': content.field_transactions
-        } %}
-      {% endif %}
+      <div class="transaction--right">
+        <div class="transaction--right-content">
+          {{ content.field_help }}
+          {{ content.field_transactions }}
+        </div>
+      </div>
 
     </div>
-    {% if content.group_grey_boxes|render %}
 
-      {{ content.group_grey_boxes }}
-    {% endif %}
-      {% include "@atoms/08-timestamp/08-timestamp.twig" with {
-      'updated_date': node.getChangedTime|date('F d, Y')
-      } %}
   {% endblock content %}
 
 {% endembed %}

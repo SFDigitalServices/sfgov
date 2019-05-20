@@ -1,13 +1,36 @@
 .page-node-type-transaction {
 
+  // Generic.
+  h3 {
+    @include fs-h3;
+  }
+
+  .sfgov-cta-button__container a {
+    @include button;
+  }
+
+  .sfgov-section__title {
+    @include fs-campaign-title;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .sfgov-section__content {
+    @include media($narrow-screen) {
+      margin-left: 60px;
+    }
+  }
+
+  // Banner.
   .banner-subheader {
     background: $c-blue-button-hover;
     color: $c-white;
-    padding: 40px 0;
-    @include media-max($narrow-screen) {
-      padding-left: 20px;
-      padding-right: 20px;
+    padding-top: 40px;
+
+    @include media($narrow-screen) {
+      padding: 40px 0;
     }
+
     h3 {
       @include fs-button;
       color: $c-white;
@@ -23,19 +46,50 @@
     }
   }
 
-  .paragraph--type--cost div {
-    margin-left: 40px;
+  .paragraph--type--thing-to-know,
+  .paragraph--type--cost {
+    padding-bottom: 40px;
+
+    div {
+      margin-left: 40px;
+    }
   }
 
   .banner-subheader__container {
     @include contain-1090;
   }
 
-  h3 {
-    @include fs-h3;
+  // Content.
+  .transaction--content {
+    margin-top: 60px;
+    position: relative;
+  }
+}
+
+// Content left.
+.transaction--left {
+  @include contain-1210;
+
+  > .sfgov-section {
+    max-width: 697px;
   }
 
-  .sfgov-cta-button__container a {
-    @include button;
+  .paragraph--type--step {
+    margin: 0 0 60px;
+  }
+
+  .sfgov-alert-info {
+    margin-bottom: 60px;
+  }
+}
+
+// Content right.
+.transaction--right {
+  @include sidebar('.transaction--right-content');
+  background: $c-blue-pale;
+  top: 0;
+
+  h2 {
+    @include fs-h3;
   }
 }
