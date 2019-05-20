@@ -184,6 +184,29 @@
   width: 100%;
 }
 
+@mixin sidebar($child-element) {
+  border-radius: 8px 0 0 8px;
+  margin-left: 20px;
+  padding: 30px;
+
+  @include media($narrow-screen) {
+    margin-left: 0;
+    position: absolute;
+    right: 0;
+    width: 33%;
+  }
+
+  @include media($wide-screen) {
+    width: calc(50% - 180px);
+  }
+
+  #{$child-element} {
+    @include media($narrow-screen) {
+      max-width: 307px;
+    }
+  }
+}
+
 @mixin three-column-item {
   border-radius: 8px;
   margin-bottom: 20px;
