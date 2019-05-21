@@ -95,8 +95,10 @@
   @include contain-1210;
 
   > .sfgov-section {
-
-    max-width: 697px;
+    @include media($narrow-screen) {
+      max-width: 697px;
+      width: 66%;
+    }
   }
 
   > details {
@@ -140,5 +142,20 @@
 
   h2 {
     @include fs-h3;
+    margin-bottom: 34px;
+
+    @include media($medium-screen) {
+      @include fs-campaign-title;
+    }
+  }
+
+  .transaction--right-para {
+    margin-bottom: 60px;
+  }
+
+  .sidebar-card--link {
+    @include fs-title-right;
+    display: block;
+    margin-bottom: 18px;
   }
 }
