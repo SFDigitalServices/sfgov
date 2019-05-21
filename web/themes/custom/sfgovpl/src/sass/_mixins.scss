@@ -17,6 +17,13 @@
   }
 }
 
+@mixin antialiasing($type:antialiased) {
+  /* antialiased, none, subpixel-antialiased*/
+  -webkit-font-smoothing: $type;
+  font-smoothing: $type;
+  font-smooth: always;
+}
+
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
   background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
 }
@@ -61,22 +68,6 @@
   @include media($wide-screen) {
     padding: 0;
   }
-}
-
-@mixin media($bp) {
-  @media screen and (min-width: #{$bp}) {
-    @content;
-  }
-}
-
-@mixin media-max($bp) {
-  @media screen and (max-width: #{$bp}) {
-    @content;
-  }
-}
-
-@mixin source-sans-pro {
-  font-family: "Source Sans Pro", sans-serif;
 }
 
 @mixin blockquote {
@@ -195,6 +186,19 @@
     }
   }
 }
+
+@mixin media($bp) {
+  @media screen and (min-width: #{$bp}) {
+    @content;
+  }
+}
+
+@mixin media-max($bp) {
+  @media screen and (max-width: #{$bp}) {
+    @content;
+  }
+}
+
 @mixin sfgov-responsive-container-override {
   padding: 0;
 }
@@ -244,11 +248,4 @@
       margin-right: 0;
     }
   }
-}
-
-@mixin antialiasing($type:antialiased) {
-  /* antialiased, none, subpixel-antialiased*/
-	-webkit-font-smoothing: $type;
-	font-smoothing: $type;
-	font-smooth: always;
 }
