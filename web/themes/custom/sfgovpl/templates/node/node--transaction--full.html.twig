@@ -61,21 +61,24 @@
           'field_help',
           'field_transactions',
           'group_grey_boxes',
-            'field_direct_external_url'
-          ) }}
+          'field_direct_external_url'
+        ) }}
 
-        {{ content.field_transaction_purpose }}
+        {{ content.group_grey_boxes.field_transaction_purpose }}
         <p class="updated">Last updated {{ node.changedtime|date('F d, Y') }}</p>
-        {{ content.field_departments }}
       </div>
 
-      <div class="transaction--right">
-        <div class="transaction--right-content">
-          {{ content.field_help }}
-          {{ content.field_transactions }}
+      {% if content.field_help|render|striptags or  content.field_transaction|render|striptags %}
+        <div class="transaction--right">
+          <div class="transaction--right-content">
+            {{ content.field_help }}
+            {{ content.field_transactions }}
+          </div>
         </div>
-      </div>
+      {% endif %}
+
     </div>
+    {{ content.group_grey_boxes.field_departments }}
 
   {% endblock content %}
 
