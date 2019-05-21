@@ -1,3 +1,22 @@
+@mixin ankle($field-element){
+  padding-bottom: 60px;
+  padding-top: 41px;
+
+  #{$field-element} {
+    @include contain-1090;
+    @include fs-body-2;
+
+    .field__item {
+      margin-bottom: 20px;
+      padding-left: 40px;
+    }
+
+    a {
+      @include link-colors($c-blue-button, $c-text);
+    }
+  }
+}
+
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
   background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
 }
