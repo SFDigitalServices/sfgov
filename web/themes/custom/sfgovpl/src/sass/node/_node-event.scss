@@ -6,6 +6,7 @@
     color: #fff;
     padding-top: 60px;
     padding-bottom: 60px;
+    @include antialiasing;
     h1, h3 {
       color: #fff;
     }
@@ -16,6 +17,7 @@
     }
     .lead-paragraph {
       @include fs-abstract;
+      margin-bottom: 0;
     }
     .hero-banner-label {
       @include fs-title;
@@ -168,18 +170,53 @@
       }
     }
   }
-}
 
-.event--meta.no-image {
-  .event--meta-inner {
-    margin: 0 auto;
-    max-width: 1276px;
-    padding-left: 20px;
-    padding-right: 20px;
-
-    @include media($medium-screen) {
-      padding-left: 96px;
-      padding-right: 96px;
+  .event--meta.no-image {
+    .event--meta-inner {
+      margin: 0 auto;
+      max-width: 1276px;
+      padding-left: 20px;
+      padding-right: 20px;
+  
+      @include media($medium-screen) {
+        padding-left: 96px;
+        padding-right: 96px;
+      }
     }
+  }
+  
+  @include media-max($medium-screen) {
+    .hero-banner {
+      h1 {
+        @include fs-h1-small;
+      }
+      .lead-paragraph {
+        @include fs-department;
+      }
+    }
+
+    .event--meta {
+      .event--meta-inner {
+        .event--meta-left,
+        .event--meta-right {
+          float: none;
+        }
+      }
+    }
+
+    .event--content-container-inner {
+      padding-right: 0;
+      .event--content-body,
+      .event--content-sidebar {
+        float: none;
+        display: block;
+        width: auto;
+        position: static;
+        .event--content-sidebar-card {
+
+        }
+      }
+    }
+
   }
 }
