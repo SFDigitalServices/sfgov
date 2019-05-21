@@ -27,7 +27,8 @@
   .event--meta {
     background: #0C1464;
     color: #fff;
-    padding: 60px 96px;
+    padding: 60px 0;
+    @include antialiasing;
     .event--meta-inner {
       @include clearfix;
       @include fs-body-2;
@@ -53,26 +54,36 @@
         margin-bottom: 25px;
         > div {
           margin: 0 0 0 40px;
+          @include fs-body-2;
         }
       }
     }
   }
 
   .event--content-container {
+    position: relative;
+    margin-bottom: 100px;
+  }
+  .event--content-container-inner {
+    @include contain;
     @include clearfix;
     @include rubik;
-    padding: 60px 0 50px 96px;
+    padding-top: 70px;
     .event--content-body {
       float: left;
-      width: 60%;
+      width: 65%;
       padding-right: 20px;
+      @include fs-body-1;
       p {
         margin: 0 0 1em 0;
+        @include fs-body-1;
       }
     }
     .event--content-sidebar {
-      float: right;
-      width: 40%;
+      position: absolute;
+      right: 0;
+      top: 75px;
+      width: 35%;
       .event--content-sidebar-card {
         margin-bottom: 20px;
         background: #E9F7EC;
@@ -139,8 +150,9 @@
 
   .event--footer {
     background: #C0E2C5;
-    padding: 40px 96px;
+    padding: 40px 0px;
     .__dept {
+      @include contain;
       h4 {
         @include rubik;
         @include fs-title;
@@ -154,6 +166,20 @@
           color: $c-text;
         }
       }
+    }
+  }
+}
+
+.event--meta.no-image {
+  .event--meta-inner {
+    margin: 0 auto;
+    max-width: 1276px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($medium-screen) {
+      padding-left: 96px;
+      padding-right: 96px;
     }
   }
 }
