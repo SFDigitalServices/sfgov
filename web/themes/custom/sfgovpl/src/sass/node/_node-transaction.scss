@@ -15,14 +15,26 @@
     padding-right: 0;
   }
 
-  // Banner.
+  // Banner Subheader.
   .banner-subheader {
     background: $c-blue-button-hover;
     color: $c-white;
     padding-top: 40px;
 
     @include media($narrow-screen) {
+      @include clearfix;
       padding: 40px 0;
+    }
+
+    .banner-subheader__container {
+      @include contain-1090;
+    }
+
+    .paragraph {
+      @include media($narrow-screen) {
+        float: left;
+        width: 50%;
+      }
     }
 
     h3 {
@@ -40,8 +52,7 @@
     }
   }
 
-  .paragraph--type--thing-to-know,
-  .paragraph--type--cost {
+  .paragraph--type--thing-to-know {
     padding-bottom: 40px;
 
     div {
@@ -49,8 +60,21 @@
     }
   }
 
-  .banner-subheader__container {
-    @include contain-1090;
+  .paragraph--type--cost {
+    padding-bottom: 40px;
+
+    div {
+      margin-left: 40px;
+    }
+
+    .__cost-minimum {
+      display: inline;
+    }
+
+    .__cost-maximum {
+      display: inline;
+      margin-left: 0;
+    }
   }
 
   // Content.
