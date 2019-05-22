@@ -30,14 +30,22 @@
  * @see template_preprocess_views_view()
  */
 #}
-{%
+{# {%
   set classes = [
   dom_id ? 'js-view-dom-id-' ~ dom_id,
   'sfgov-grid-two-columns',
   'sfgov-view-content-container',
   'sfgov-services'
 ]
+%} #}
+
+{%
+  set classes = [
+  dom_id ? 'js-view-dom-id-' ~ dom_id,
+  'sfgov-services'
+]
 %}
+
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {{ title }}

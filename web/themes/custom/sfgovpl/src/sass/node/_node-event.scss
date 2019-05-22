@@ -4,17 +4,36 @@
   .hero-banner {
     background: #00896D;
     color: #fff;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    @include antialiasing;
     h1, h3 {
       color: #fff;
+    }
+    h1 {
+      @include fs-h1-large;
+      @include rubik;
+      margin-bottom: 20px;
+    }
+    .lead-paragraph {
+      @include fs-abstract;
+      margin-bottom: 0;
+    }
+    .hero-banner-label {
+      @include fs-title;
+      margin-bottom: 20px;
+      text-decoration: none;
     }
   }
 
   .event--meta {
     background: #0C1464;
     color: #fff;
-    padding: 60px 96px;
+    padding: 60px 0;
+    @include antialiasing;
     .event--meta-inner {
       @include clearfix;
+      @include fs-body-2;
       .event--meta-left {
         float: left;
         width: 50%;
@@ -24,10 +43,10 @@
         width: 49%;
       }
       h3 {
-        font-size: 1.7rem;
+        @include fs-title;
         color: #fff;
         margin: 0 0 10px 0;
-        font-weight: 500;
+        text-decoration: none;
       }
       p {
         margin: 0;
@@ -37,35 +56,56 @@
         margin-bottom: 25px;
         > div {
           margin: 0 0 0 40px;
+          @include fs-body-2;
         }
       }
     }
   }
 
   .event--content-container {
+    position: relative;
+    margin-bottom: 100px;
+  }
+  .event--content-container-inner {
+    @include contain;
     @include clearfix;
     @include rubik;
-    padding: 60px 0 50px 96px;
+    padding-top: 70px;
     .event--content-body {
       float: left;
       width: 60%;
+      padding-right: 20px;
+      @include fs-body-1;
       p {
         margin: 0 0 1em 0;
+        @include fs-body-1;
       }
     }
     .event--content-sidebar {
       float: right;
-      width: 39%;
+      width: 40%;
       .event--content-sidebar-card {
         margin-bottom: 20px;
         background: #E9F7EC;
-        border-radius: 8px 0 0 8px;
+        border-radius: 8px;
         padding: 40px;
+        .paragraph--type--call-to-action {
+          .sfds-call-to-action {
+            a {
+              @include fs-button;
+            }
+          }
+        }
+        .__address {
+          .__title {
+            @include fs-title-medium;
+            margin-bottom: 20px;
+          }
+        }
         &.phone-email {
           h3 {
             @include rubik;
-            font-size: 2rem;
-            font-weight: 500;
+            @include fs-title-medium;
             margin: 0 0 20px 0;
           }
           .event--content-phone {
@@ -73,6 +113,7 @@
             .paragraph--type--phone {
               h4 {
                 @include rubik;
+                
                 font-weight: normal;
               }
               .phone--container {
@@ -92,6 +133,10 @@
             }
           }
           .event--content-email {
+            h3 {
+              @include rubik;
+              @include fs-title-medium;
+            }
             .paragraph--type--email {
               .__title {
                 display: none;
@@ -105,18 +150,68 @@
 
   .event--footer {
     background: #C0E2C5;
-    padding: 40px 96px;
+    padding: 40px 0px;
     .__dept {
+      @include contain;
       h4 {
-        margin: 0 0 20px 0;
         @include rubik;
+        @include fs-title;
+        text-decoration: none;
+        margin: 0 0 20px 0;
       }
       .field__items {
         margin-left: 40px;
         a {
           @include rubik;
+          color: $c-text;
         }
       }
     }
+  }
+
+  .event--meta.no-image {
+    .event--meta-inner {
+      margin: 0 auto;
+      max-width: 1276px;
+      padding-left: 20px;
+      padding-right: 20px;
+  
+      @include media($medium-screen) {
+        padding-left: 96px;
+        padding-right: 96px;
+      }
+    }
+  }
+  
+  @include media-max($medium-screen) {
+    .hero-banner {
+      h1 {
+        @include fs-h1-small;
+      }
+      .lead-paragraph {
+        @include fs-department;
+      }
+    }
+
+    .event--meta {
+      .event--meta-inner {
+        .event--meta-left,
+        .event--meta-right {
+          float: none;
+          width: auto;
+        }
+      }
+    }
+
+    .event--content-container-inner {
+      .event--content-body,
+      .event--content-sidebar {
+        float: none;
+        display: block;
+        width: auto;
+        position: static;
+      }
+    }
+
   }
 }

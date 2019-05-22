@@ -14,5 +14,38 @@
                 break;
             };
         };
-    })
+
+        var checkWindowSize = function() {
+            var bp = 768;
+            var windowWidth = $(window).width();
+            if(windowWidth <= bp) {
+                $('nav.sfgov-nav').css({height:$(window).height()+'px'});
+            } else {
+                $('nav.sfgov-nav').css({height:'auto'});
+            }
+        }
+
+        $('button.sfgov-mobile-search').click(function() {
+            $('header .sfgov-search-311-block').show();
+            $('body').removeClass('sfgov-mobile_nav-active');
+        });
+
+        $('header .sfgov-search-311-block .sfgov-mobile-btn-close').click(function() {
+            $('header .sfgov-search-311-block').attr("style", false);
+        });
+
+        $('button.sfgov-menu-btn').click(function() {
+            $('header .sfgov-search-311-block').attr("style", false);
+        });
+
+        $('button.sfgov-mobile-translate').click(function() {
+            $('#block-gtranslate').show();
+        });
+
+        $(window).on('resize', function() {
+            checkWindowSize();
+        });
+
+        checkWindowSize();
+    });
 })(jQuery);

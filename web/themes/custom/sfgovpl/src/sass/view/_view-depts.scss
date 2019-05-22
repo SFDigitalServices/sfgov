@@ -1,0 +1,85 @@
+.path-departments {
+  .sfgov-departments {
+    display: block !important;
+    @include contain-1090;
+    .views-view-grid {
+      &.horizontal {
+        display: table;
+        table-layout: fixed; 
+        border-collapse: separate;
+        border-spacing: 20px;
+        width: 103%;
+        margin-left: -20px;
+        margin-bottom: 100px;
+        .l-grid__row {
+          display: table-row;
+          .l-grid__column {
+            display: table-cell;
+            width: 50%;
+            padding: 20px;
+            background: #EDF4F7;
+            border-radius: 8px;
+            .transaction-card {
+              @include rubik;
+              @include fs-body-2;
+              padding: 0;
+              background: none;
+              color: $c-text;
+              .transaction-card__body {
+                color: $c-text;
+              }
+              .transaction-card__title {
+                @include rubik;
+                @include fs-campaign-title;
+                margin-bottom: 10px;
+              }
+              &:hover {
+                .transaction-card__title {
+                  color: $c-text;
+                }
+                .transaction-card__body {
+                  color: $c-text;
+                }
+              }
+            }
+          }
+          &.clearfix::after {
+            display: none;
+          }
+        }
+      }
+    }
+    @include media-max($medium-screen) {
+      .hero-banner.default {
+        h1 {
+          @include fs-h1-home-small;
+        }
+      }
+      .views-view-grid {
+        &.horizontal {
+          display: block;
+          width: auto;
+          margin: 0 0 100px 0;
+          border-collapse: initial;
+          border-spacing: initial;
+          .l-grid__row {
+            display: block;
+            .l-grid__column {
+              display: block;
+              width: auto;
+              margin-bottom: 20px;
+              .transaction-card {
+                .transaction-card__title {
+                  @include fs-news-title;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .sfgov-tabbed-navigation {
+    display: none;
+  }
+}
