@@ -28,6 +28,7 @@
         $('button.sfgov-mobile-search').click(function() {
             $('header .sfgov-search-311-block').show();
             $('body').removeClass('sfgov-mobile_nav-active');
+            $('.sf-gov-search-input-class').focus();
         });
 
         $('header .sfgov-search-311-block .sfgov-mobile-btn-close').click(function() {
