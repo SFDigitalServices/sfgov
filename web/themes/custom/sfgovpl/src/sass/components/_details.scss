@@ -1,0 +1,30 @@
+details {
+  summary {
+    @include fs-accordion-title;
+    background: $c-white;
+    border: 3px solid $c-blue-button;
+    border-radius: 8px;
+    color: $c-blue-button;
+
+    &:after {
+      top: 18px;
+    }
+  }
+
+  &[open] {
+    summary {
+      background: $c-blue-button;
+      border-radius: 8px 8px 0 0;
+      color: $c-white;
+
+      &:after {
+        content: '-';
+      }
+    }
+
+    .details__content {
+      border: 3px solid $c-blue-button;
+      border-radius: 0 0 8px 8px;
+    }
+  }
+}
