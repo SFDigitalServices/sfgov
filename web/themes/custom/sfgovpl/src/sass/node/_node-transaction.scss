@@ -1,0 +1,161 @@
+.page-node-type-transaction {
+
+  // Generic.
+  h3 {
+    @include fs-h3;
+  }
+
+  .sfgov-cta-button__container a {
+    @include button;
+  }
+
+  .sfgov-section__title {
+    @include fs-campaign-title;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  // Banner Subheader.
+  .banner-subheader {
+    background: $c-blue-button-hover;
+    color: $c-white;
+    padding-top: 40px;
+
+    @include media($narrow-screen) {
+      @include clearfix;
+      padding: 40px 0;
+    }
+
+    .banner-subheader__container {
+      @include contain-1090;
+    }
+
+    .paragraph {
+      @include media($narrow-screen) {
+        float: left;
+        width: 50%;
+      }
+    }
+
+    h3 {
+      @include fs-button;
+      color: $c-white;
+    }
+
+    h4 {
+      margin-top: 0;
+    }
+
+    p {
+      @include fs-body-2;
+      margin: 0;
+    }
+  }
+
+  .paragraph--type--thing-to-know {
+    padding-bottom: 40px;
+
+    div {
+      margin-left: 40px;
+    }
+  }
+
+  .paragraph--type--cost {
+    padding-bottom: 40px;
+
+    div {
+      margin-left: 40px;
+    }
+
+    .__cost-minimum {
+      display: inline;
+    }
+
+    .__cost-maximum {
+      display: inline;
+      margin-left: 0;
+    }
+  }
+
+  // Content.
+  .transaction--content {
+    margin-top: 60px;
+    position: relative;
+  }
+
+  // Ankle.
+  .transaction--ankle {
+    @include ankle('.__departments');
+    background: $c-blue-pale;
+  }
+}
+
+// Content left.
+.transaction--left {
+  @include contain-1210;
+
+  > .sfgov-section {
+    @include media($narrow-screen) {
+      max-width: 697px;
+      width: 66%;
+    }
+  }
+
+  > details {
+    max-width: 697px;
+    @include media($narrow-screen) {
+      margin-left: 60px;
+    }
+  }
+
+  .paragraph--type--step {
+    margin: 0 0 60px;
+  }
+
+  .sfgov-alert-info {
+    margin-bottom: 30px;
+  }
+
+  .sfgov-section__content {
+    @include media($narrow-screen) {
+      margin-left: 60px;
+    }
+  }
+
+  .updated {
+    font-style: italic;
+    margin-bottom: 25px;
+    opacity: .6;
+
+    @include media($narrow-screen) {
+      margin-left: 60px;
+    }
+  }
+}
+
+// Content right.
+.transaction--right {
+  @include sidebar('.transaction--right-content');
+  background: $c-blue-pale;
+  margin-bottom: 20px;
+  top: 0;
+
+  h2 {
+    @include fs-h3;
+    margin-bottom: 34px;
+
+    @include media($medium-screen) {
+      @include fs-campaign-title;
+    }
+  }
+
+  .transaction--right-para {
+    margin-bottom: 60px;
+  }
+
+  .sidebar-card--link {
+    @include fs-title-right;
+    display: block;
+    margin-bottom: 18px;
+  }
+}

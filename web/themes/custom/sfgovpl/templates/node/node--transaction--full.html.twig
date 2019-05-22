@@ -1,4 +1,3 @@
-
 {% embed 'node--full.html.twig' %}
   {% block header %}
     {{ title_prefix }}
@@ -13,102 +12,31 @@
 
   {% block content %}
     {% if content.field_cost|render or content.field_things_to_know|render %}
-      {% set top_content %}
-        <div class="sfgov-grid-two-columns no-padding">
-          {{ content.field_cost }}
-          {{ content.field_things_to_know }}
-        </div>
-      {% endset %}
 
-      {% include '@molecules/06-headers/02-subheader.twig' with {
-        'content': top_content,
-      } %}
+      {% if content %}
+        <section class="banner-subheader{{ styleModifier ? ' sfgov-subheader--' ~ styleModifier }}">
+          <div class="banner-subheader__container">
+            {% if title %}
+              <h2 class="sfgov-subheader__title">{{ title }}</h2>
+            {% endif %}
+            <div class="sfgov-subheader__content">
+              <div class="">
+                {{ content.field_cost }}
+                {{ content.field_things_to_know }}
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
     {% endif %}
 
-    <div class="sfgov-container--full sfgov-container--right-sidebar">
-      <div class="sfgov-container--content-left">
+    <div class="transaction--content">
+      <div class="transaction--left">
 
-        {# Steps
-        All Step fields, which are essentially step types, need to be evaluated
-        as a group.
-        - The content of these fields contain entity references to "step"
-          and "callout" paragraphs. The callout content is not counted as a
-          step.
-        - When only a single step is present, the steps display in a numbered
-          list, without the step type label.
-        - When there are multiple step type, they are displayed as collapsible
-          details elements, with the exception of the "online" step, which acts
-          as the preferred step, and when present is not collapsible.
-        - When there are multiple step types, and the "online" step is NOT one
-          of them, the first step type that displays, displays as "open" by
-          default.
-        ----------------------------------------------------------------------#}
-        {% set steps = [] %}
-        {% if content.field_step_online|render %}
-          {% set steps = steps|merge(['field_step_online']) %}
-        {% endif %}
-        {% if content.field_step_phone|render %}
-          {% set steps = steps|merge(['field_step_phone']) %}
-        {% endif %}
-        {% if content.field_step_in_person|render %}
-          {% set steps = steps|merge(['field_step_in_person']) %}
-        {% endif %}
-        {% if content.field_step_email|render %}
-          {% set steps = steps|merge(['field_step_email']) %}
-        {% endif %}
-        {% if content.field_step_mail|render %}
-          {% set steps = steps|merge(['field_step_mail']) %}
-        {% endif %}
-        {% if content.field_step_other|render %}
-          {% set steps = steps|merge(['field_step_other']) %}
-        {% endif %}
+        {% include '@theme/transaction-steps.twig' %}
 
-        {% if steps|length %}
-          {% set step_content %}
-            {# Single step, just renders normally. #}
-            {% if steps|length == 1 %}
-              {% for step in steps %}
-                {% set step = attribute(content, step) %}
-                {{ step }}
-              {% endfor %}
-            {% else %}
-              {# More than one step renders in details elements. #}
-              {% for step_name in steps %}
-                {% set step = attribute(content, step_name) %}
-                {% if loop.first %}
-                  {{ step }}
-                {% else %}
-                  {# 
-                    grab the summary from field_step_other_title if the
-                    field is field_step_other 
-                  #}
-                  {% if step_name == "field_step_other" %}
-                    {% set title = content.field_step_other_title %}
-                  {% else %}
-                    {% set title = step['#title'] %}
-                  {% endif %}
-
-                  {% include '@organisms/03-forms/02-details.twig' with {
-                    'summary': title,
-                    'content': step,
-                  } %}
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-          {% endset %}
-
-          {% if step_content %}
-            {% include '@organisms/05-sections/01-section.twig' with {
-              'title': 'What to do'|t,
-              'level': 2,
-              'content': step_content,
-            } %}
-          {% endif %}
-        {% endif %}
-
-        {% if content.field_custom_section|render %}
-          {{ content.field_custom_section }}
-        {% endif %}
+        {{ content.field_custom_section }}
 
         {% if content.field_special_cases|render %}
           {% include '@organisms/05-sections/01-section.twig' with {
@@ -133,37 +61,27 @@
           'field_help',
           'field_transactions',
           'group_grey_boxes',
-            'field_direct_external_url'
-          ) }}
+          'field_direct_external_url'
+        ) }}
 
+        {{ content.group_grey_boxes.field_transaction_purpose }}
+        <p class="updated">Last updated {{ node.changedtime|date('F d, Y') }}</p>
       </div>
 
-      {% if content.field_help|render %}
-        {% include "@organisms/04-containers/01-sidebar.twig" with {
-          'side': 'right',
-          'title': 'Get help'|t,
-          'content': content.field_help
-        } %}
-        <div class="sfgov-container--content-right sfgov-container--sidebar-divider"></div>
-      {% endif %}
-
-      {# @todo sidebar component needs something for items separately,
-      this doesn't really work. #}
-      {% if content.field_transactions|render %}
-        {% include "@organisms/04-containers/01-sidebar.twig" with {
-          'side': 'right',
-          'content': content.field_transactions
-        } %}
+      {% if content.field_help|render|striptags or  content.field_transaction|render|striptags %}
+        <div class="transaction--right">
+          <div class="transaction--right-content">
+            {{ content.field_help }}
+            {{ content.field_transactions }}
+          </div>
+        </div>
       {% endif %}
 
     </div>
-    {% if content.group_grey_boxes|render %}
+    <div class="{{ bundle }}--ankle">
+      {{ content.group_grey_boxes.field_departments }}
+    </div>
 
-      {{ content.group_grey_boxes }}
-    {% endif %}
-      {% include "@atoms/08-timestamp/08-timestamp.twig" with {
-      'updated_date': node.getChangedTime|date('F d, Y')
-      } %}
   {% endblock content %}
 
 {% endembed %}
