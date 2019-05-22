@@ -25,7 +25,7 @@ class SearchForm extends FormBase {
 
     $form['sfgov_search_input'] = array(
       '#type' => 'textfield',
-      '#placeholder' => t('What are you looking for?'),
+      '#placeholder' => t('Search'),
       '#attributes' => array(
         'class' => array(
           'sf-gov-search-input-class',
