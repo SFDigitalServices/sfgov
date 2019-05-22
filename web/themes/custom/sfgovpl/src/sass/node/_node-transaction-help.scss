@@ -1,6 +1,7 @@
 .transaction--help {
 
-  .field__label {
+  .field__label,
+  .__title {
     @include fs-accordion-title;
   }
 
@@ -23,11 +24,35 @@
     }
   }
 
-  .paragraph--type--email {
+  .paragraph--type--document {
+    @include icon-transaction-help('document.svg');
+
+    .sfgov-icon-filefilled {
+      &:before {
+        content: none;
+      }
+    }
+
+    .document {
+      line-height: 24px;
+      margin: 0;
+    }
+  }
+
+  .paragraph--type--email,
+  .paragraph--type--mailing-address {
     @include icon-transaction-help('icons/mail-2.svg');
   }
 
   .paragraph--type--in-person-location {
     @include icon-transaction-help('icons/location-2.svg');
+  }
+
+  .paragraph--type--help {
+    @include icon-transaction-help('');
+  }
+
+  .sidebar-card {
+    padding: 0 0 34px;
   }
 }
