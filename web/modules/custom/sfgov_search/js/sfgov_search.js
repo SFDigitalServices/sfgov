@@ -247,6 +247,7 @@ function Search311(collectionName) {
             if(!$('.sfgov-search-pagination').hasClass('has-nav')) {
               _this.paginate(data);
               $('.sfgov-search-pagination').addClass('has-nav');
+              $('#sfgov-search-results-container').removeClass('no-search-results');
             }
             // show number of results
             this.updateCountSummary(resultsSummary.totalMatching, resultsSummary.currStart, (resultsSummary.nextStart ? resultsSummary.nextStart-1 : resultsSummary.totalMatching));
@@ -269,6 +270,7 @@ function Search311(collectionName) {
       $('#sfgov-search-overlay').hide();
       $('#sfgov-search-loading').hide();
       $('#sfgov-search-results').removeClass('add-height');
+      $('#sfgov-search-results-container').addClass('no-search-results');
     }
   }
 

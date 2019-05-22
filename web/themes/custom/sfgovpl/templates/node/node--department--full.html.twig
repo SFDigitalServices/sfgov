@@ -6,13 +6,23 @@
 
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
-    {% include "@molecules/06-headers/01-content-head.twig" with {
+    {# {% include "@molecules/06-headers/01-content-head.twig" with {
       "title": node.getTitle(),
       "description": description,
       "image": image
+    } %} #}
+
+    {% include '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': content.field_description|render
+      }
     } %}
+
   </div>
 </div>
+
+
 {% if dept_fields.featured_items %}
     <div id="sfgov-dept-featured-items" class="sfgov-dept-section sfgov-dept-section-content-container">
       <div class="sfgov-dept-featured-items-container">
@@ -109,7 +119,7 @@
         </div>
         {% if dept_fields.spotlight.image_url %}
           <div class="sfgov-spotlight-image sfgov-spotlight-section" style="background-image: url({{ dept_fields.spotlight.image_url }})">
-            <img alt="{{ image_alt }}"/>
+            <img alt="{{ image_alt }}" src="{{ dept_fields.spotlight.image_url }}"/>
           </div>
         {% endif %}
       </div>

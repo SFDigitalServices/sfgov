@@ -30,21 +30,27 @@
  * @see template_preprocess_views_view()
  */
 #}
-{%
+{# {%
   set classes = [
   dom_id ? 'js-view-dom-id-' ~ dom_id,
   'sfgov-grid-two-columns',
   'sfgov-view-content-container',
   'sfgov-departments'
 ]
+%} #}
+
+{%
+  set classes = [
+  dom_id ? 'js-view-dom-id-' ~ dom_id,
+  'sfgov-departments'
+]
 %}
 
-{% include "@molecules/03-heros/01-hero-banner.twig" with {
-  "banner": {
-    "title": "Departments"
-  }
-}
-%}
+    {% include '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': 'Departments',
+      }
+    } %}
 
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}

@@ -1,4 +1,13 @@
 .page-node-type-department {
+  .hero-banner.default {
+    padding-top: 60px;
+    h3 {
+      &.lead-paragraph {
+        color: #212123;
+        margin-bottom: 60px;
+      }
+    }
+  }
   .content-head--content {
     @include contain-1090;
     > h1 {
@@ -23,6 +32,11 @@
     .views-news--rows {
       padding-left: 0;
     }
+    @include less-than('not-big') {
+      .empty {
+        display: none;
+      }
+    }
   }
 
   .sfgov-dept-section {
@@ -32,6 +46,9 @@
       @include fs-h1;
       color: $c-text;
       @include contain-1210;
+      @include less-than('not-big') {
+        margin-bottom: 20px;
+      }
     }
     h4 {
       @include rubik;
@@ -43,6 +60,10 @@
       @include fs-title;
       padding: 0;
       margin: 0 0 20px 0;
+    }
+    @include less-than('not-big') {
+      padding-top: 60px;
+      padding-bottom: 60px;
     }
   }
 
@@ -74,6 +95,7 @@
       .sfgov-featured-item {
         display: table-cell;
         color: #fff;
+        max-width: 0;
         h5 {
           @include rubik;
           @include fs-title-medium;
@@ -91,7 +113,8 @@
     }
     @include less-than('not-big') {
       display: block;
-      margin: 0;
+      margin-left: 0;
+      margin-bottom: 60px;
       width: auto;
       border-collapse: none;
       border-spacing: 0;
@@ -131,6 +154,17 @@
         }
       }
     }
+    @include less-than('not-big') {
+
+      ul {
+        padding-top: 24px;
+        li {
+          margin-bottom: 20px;
+          margin-left: 0;
+          margin-right: 40px;
+        }
+      }
+    }
   }
 
   .sfgov-dept-services-list {
@@ -138,6 +172,9 @@
     .sfgov-services-container {
       h3 {
         margin-bottom: 60px;
+        @include less-than('not-big') {
+          margin-bottom: 20px;
+        }
       }
       .sfgov-services-section {
         margin-bottom: 60px;
@@ -214,7 +251,6 @@
     }
     .sfgov-spotlight {
       display: table;
-      // @include clearfix;
       @include contain-1090;
       .sfgov-spotlight-section {
         display: table-cell;
@@ -248,7 +284,6 @@
           }
         }
         &.sfgov-spotlight-image {
-          // float: right;
           background-color: #cccced;
           background-repeat: no-repeat;
           background-size: cover;
@@ -261,21 +296,26 @@
     }
     @include less-than('not-big') {
       @include clearfix;
-      .sfds-responsive-container {
-        padding: 0 !important;
+      h3 {
+        @include fs-h1-small;
       }
       .sfgov-spotlight {
+        padding-left: 0;
+        padding-right: 0;
         display: block;
         .sfgov-spotlight-section {
           display: block;
           width: auto;
           &.sfgov-spotlight-text {
-            padding: 20px 10% 40px 10%;
-            float: right;
-            margin-top: 300px;
+            padding: 40px 20px;
           }
           &.sfgov-spotlight-image {
-            min-height: 300px;
+            display: block;
+            background-image: none !important;
+            img {
+              display: block;
+              width: 100%;
+            }
           }
         }
       }
@@ -286,6 +326,9 @@
     background: #EDF4F7;
     h3 {
       margin-bottom: 40px;
+    }
+    h5 {
+      margin-bottom: 10px;
     }
     .sfgov-dept-resources-container {
       display: table;
@@ -298,6 +341,14 @@
       margin-left: -20px;
       .sfgov-dept-resource-items {
         display: table-row;
+        .sfgov-resource-card {
+          &:hover {
+            border-color: $c-blue-button-hover;
+            h5 {
+              color: $c-blue-button-hover;
+            }
+          }
+        }
       }
     }
     @include less-than('not-big') {
@@ -326,13 +377,13 @@
   .sfgov-dept-about {
     background: #0C1464;
     color: #fff;
-    .sfgov-dept-about-container {
-
-    }
     h3 {
       color: #fff;
       margin-bottom: 20px;
       @include antialiasing;
+    }
+    h4 {
+      @include fs-mayor-name-small;
     }
     .sfgov-dept-about-content {
       position: relative;
@@ -354,9 +405,6 @@
           width: 34.9%;
         }
       }
-      .sfgov-dept-about-description {
-        // padding-left: 25px;
-      }
       .sfgov-dept-about-description,
       .sfgov-dept-about-divisions,
       .sfgov-dept-about-public-bodies {
@@ -364,7 +412,18 @@
         ul {
           list-style-type: none;
           padding-left: 30px;
+          @include fs-body-2;
+          li {
+            @include fs-body-2;
+            margin-bottom: 20px;
+            a {
+              @include antialiasing;
+            }
+          }
         }      
+      }
+      .sfgov-dept-about-description {
+        @include fs-abstract;
       }
       .sfgov-logo,
       .sfgov-cta,
@@ -388,7 +447,7 @@
           margin: 0 0 20px 0;
           padding: 0;
           @include rubik;
-          @include fs-title-medium;
+          @include fs-campaign-title;
           text-decoration: none;
         }
         &.sfgov-logo {
@@ -424,7 +483,7 @@
         > a {
           @include fs-title;
           @include antialiasing;
-          display: block;
+          display: inline-block;
           border-radius: 8px;
           background: #4F66EE;
           padding: 13px 20px;
@@ -436,11 +495,6 @@
     }
     @include less-than('not-big') {
       .sfgov-dept-about-container {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        h3 {
-          padding: 0 10%;
-        }
         .sfgov-dept-about-content-section {
           &.sfgov-dept-about-content-left,
           &.sfgov-dept-about-content-right {
@@ -449,17 +503,26 @@
             width: auto;
           }
           &.sfgov-dept-about-content-left {
-            padding: 0 10%;
-            .sfgov-dept-about-description,
+            // padding: 0 10%;
+            .sfgov-dept-about-description {
+              padding-left: 40px;
+            }
             .sfgov-dept-about-divisions ul,
             .sfgov-dept-about-public-bodies ul {
-              padding-left: 25px;
+              padding-left: 40px;
+              > li {
+                margin-bottom: 20px;
+              }
             }
           }
           &.sfgov-dept-about-content-right {
-            padding-left: 10%;
             padding-bottom: 20px;
           }
+        }
+        .sfgov-logo,
+        .sfgov-cta,
+        .sfgov-social {
+          border-radius: 8px 0 0 8px;
         }
       }
     }
@@ -467,7 +530,7 @@
 
   .sfgov-dept-about-people {
     background: #A9D6EA;
-    padding: 20px 0;
+    padding: 40px 0;
     .sfgov-dept-about-people-list {
       list-style-type: none;
       padding: 0;
@@ -619,7 +682,7 @@
       .sfgov-dept-public-records-content {
         background: #EDF4F7;
         border-radius: 8px;
-        padding: 25px;
+        padding: 40px;
         h5 {
           @include fs-title-medium;
           text-decoration: none;

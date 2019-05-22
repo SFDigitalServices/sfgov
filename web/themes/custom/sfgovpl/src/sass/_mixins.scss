@@ -1,3 +1,29 @@
+@mixin ankle($field-element){
+  padding-bottom: 60px;
+  padding-top: 41px;
+
+  #{$field-element} {
+    @include contain-1090;
+    @include fs-body-2;
+
+    .field__item {
+      margin-bottom: 20px;
+      padding-left: 40px;
+    }
+
+    a {
+      @include link-colors($c-blue-button, $c-text);
+    }
+  }
+}
+
+@mixin antialiasing($type:antialiased) {
+  /* antialiased, none, subpixel-antialiased*/
+  -webkit-font-smoothing: $type;
+  font-smoothing: $type;
+  font-smooth: always;
+}
+
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
   background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
 }
@@ -42,22 +68,6 @@
   @include media($wide-screen) {
     padding: 0;
   }
-}
-
-@mixin media($bp) {
-  @media screen and (min-width: #{$bp}) {
-    @content;
-  }
-}
-
-@mixin media-max($bp) {
-  @media screen and (max-width: #{$bp}) {
-    @content;
-  }
-}
-
-@mixin source-sans-pro {
-  font-family: "Source Sans Pro", sans-serif;
 }
 
 @mixin blockquote {
@@ -111,6 +121,23 @@
   &:hover {
     background: $c-blue-button;
     color: $c-white;
+  }
+}
+
+@mixin icon-transaction-help($file-name) {
+  position: relative;
+  margin-bottom: 30px;
+  margin-left: 42px;
+
+  &:before {
+    @include background-image(#{$file-name});
+    content: '';
+    display: inline-block;
+    height: 20px;
+    left: -42px;
+    padding-right: 22px;
+    position: absolute;
+    width: 20px;
   }
 }
 
@@ -176,12 +203,48 @@
     }
   }
 }
+
+@mixin media($bp) {
+  @media screen and (min-width: #{$bp}) {
+    @content;
+  }
+}
+
+@mixin media-max($bp) {
+  @media screen and (max-width: #{$bp}) {
+    @content;
+  }
+}
+
 @mixin sfgov-responsive-container-override {
   padding: 0;
 }
 
 @mixin sfgov-container--full-override {
   width: 100%;
+}
+
+@mixin sidebar($child-element) {
+  border-radius: 8px 0 0 8px;
+  margin-left: 20px;
+  padding: 30px;
+
+  @include media($narrow-screen) {
+    margin-left: 0;
+    position: absolute;
+    right: 0;
+    width: 33%;
+  }
+
+  @include media($wide-screen) {
+    width: calc(50% - 180px);
+  }
+
+  #{$child-element} {
+    @include media($narrow-screen) {
+      max-width: 307px;
+    }
+  }
 }
 
 @mixin three-column-item {
@@ -202,11 +265,4 @@
       margin-right: 0;
     }
   }
-}
-
-@mixin antialiasing($type:antialiased) {
-  /* antialiased, none, subpixel-antialiased*/
-	-webkit-font-smoothing: $type;
-	font-smoothing: $type;
-	font-smooth: always;
 }
