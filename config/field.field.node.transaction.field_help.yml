@@ -5,9 +5,11 @@ dependencies:
   config:
     - field.storage.node.field_help
     - node.type.transaction
+    - paragraphs.paragraphs_type.document
     - paragraphs.paragraphs_type.email
     - paragraphs.paragraphs_type.help
     - paragraphs.paragraphs_type.in_person_location
+    - paragraphs.paragraphs_type.mailing_address
     - paragraphs.paragraphs_type.phone
   module:
     - entity_reference_revisions
@@ -26,9 +28,11 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
+      document: document
       email: email
       help: help
       in_person_location: in_person_location
+      mailing_address: mailing_address
       phone: phone
     target_bundles_drag_drop:
       button:
@@ -47,8 +51,8 @@ settings:
         weight: 20
         enabled: false
       document:
+        enabled: true
         weight: 20
-        enabled: false
       email:
         enabled: true
         weight: 21
@@ -59,16 +63,13 @@ settings:
         enabled: true
         weight: 23
       mailing_address:
+        enabled: true
         weight: 24
-        enabled: false
       phone:
         enabled: true
         weight: 25
       special_case:
         weight: 26
-        enabled: false
-      form_file:
-        weight: 27
         enabled: false
       step:
         weight: 27
@@ -82,10 +83,49 @@ settings:
       list:
         weight: 30
         enabled: false
-      website:
-        enabled: true
-        weight: 30
       list_item:
         weight: 31
+        enabled: false
+      additional_info:
+        weight: 32
+        enabled: false
+      call_to_action:
+        weight: 36
+        enabled: false
+      campaign:
+        weight: 37
+        enabled: false
+      department_service_section:
+        weight: 40
+        enabled: false
+      events:
+        weight: 43
+        enabled: false
+      featured_item:
+        weight: 44
+        enabled: false
+      link:
+        weight: 47
+        enabled: false
+      news:
+        weight: 51
+        enabled: false
+      people:
+        weight: 52
+        enabled: false
+      resources:
+        weight: 54
+        enabled: false
+      section:
+        weight: 55
+        enabled: false
+      social_media:
+        weight: 56
+        enabled: false
+      spotlight:
+        weight: 58
+        enabled: false
+      top_search_suggestion:
+        weight: 62
         enabled: false
 field_type: entity_reference_revisions
