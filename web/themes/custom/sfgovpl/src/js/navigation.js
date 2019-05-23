@@ -51,7 +51,7 @@
       
           var input = $('[data-drupal-selector="edit-sfgov-search-input"]');
           var inputWrapper = $('.form-item-sfgov-search-input');
-          var inputClearButton = '<span class="input-clear"></span>'
+          var inputClearButton = '<span class="input-clear"></span>';
   
           inputWrapper.prepend(inputClearButton);
   
@@ -66,6 +66,7 @@
           $('.input-clear').click(function() {
             console.log('val')
             input.val('');
+            inputWrapper.removeClass('is_typing');
           });
         }
 
