@@ -1,3 +1,9 @@
+// @todo Componetize and refactor search theming from
+// - sfgov_search.css
+// - _block-search.scss
+// - _block-search-small.scss
+// - _layout.scss
+
 .sfgov-search-311-block {
   display: none;
   width: 250px;
@@ -59,15 +65,7 @@
   }
 
   .is_typing .input-clear {
-    @include background-image('input-clear.svg');
-    content: '';
-    cursor: pointer;
-    height: 18px;
-    position: absolute;
     right: 60px;
-    top: 14px;
-    width: 18px;
-    z-index: $z-search-input-clear;
   }
 }
 
@@ -139,12 +137,12 @@
         }
       }
     }
-  }
 
-  .is_typing .input-clear {
+    .is_typing .input-clear {
 
-    @include media($narrow-screen) {
-      right: 156px;
+      @include media($narrow-screen) {
+        right: 156px;
+      }
     }
   }
 }
