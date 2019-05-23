@@ -19,7 +19,7 @@
             var bp = 768;
             var windowWidth = $(window).width();
             if(windowWidth <= bp) {
-                $('nav.sfgov-nav').css({height:$(window).height()+'px'});
+                $('nav.sfgov-nav.is-visible').css({height:$(window).height()+'px'});
             } else {
                 $('nav.sfgov-nav').css({height:'auto'});
             }
