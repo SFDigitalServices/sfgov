@@ -51,6 +51,18 @@
   .form-item-sfgov-search-input {
     width: calc(100% - 48px);
   }
+
+  .is_typing .input-clear {
+    @include background-image('input-clear.svg');
+    content: '';
+    cursor: pointer;
+    height: 18px;
+    position: absolute;
+    right: 60px;
+    top: 14px;
+    width: 18px;
+    z-index: $z-search-input-clear;
+  }
 }
 
 // Paragraph version
@@ -120,6 +132,13 @@
           top: 9px;
         }
       }
+    }
+  }
+
+  .is_typing .input-clear {
+
+    @include media($narrow-screen) {
+      right: 156px;
     }
   }
 }
