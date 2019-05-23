@@ -38,6 +38,7 @@
 
         $('button.sfgov-menu-btn').click(function() {
             $('header .sfgov-search-311-block').attr("style", false);
+            $(this).toggleClass('is-active');
         });
 
         $('button.sfgov-mobile-translate').click(function() {
