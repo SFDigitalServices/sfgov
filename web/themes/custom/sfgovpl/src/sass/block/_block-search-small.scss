@@ -15,14 +15,36 @@
     .sf-gov-search-input-class {
       border: 0;
       border-radius: 8px;
+      padding-left: 50px;
     }
 
     .form-item-sfgov-search-input {
       width: 100%;
     }
 
-    #edit-actions {
-      display: none;
+    .is_typing .input-clear {
+      @include background-image('input-clear.svg');
+      content: '';
+      cursor: pointer;
+      height: 18px;
+      position: absolute;
+      right: 60px;
+      top: 26px;
+      width: 18px;
+      z-index: 10000000000;
+    }
+
+    [data-drupal-selector="edit-submit"] {
+      background: transparent;
+    }
+
+    [data-drupal-selector="edit-actions"] {
+      background: transparent;
+      position: absolute;
+
+      &:before {
+        @include background-image('search-grey.svg');
+      }
     }
 
     #sfgov-search-autocomplete {
