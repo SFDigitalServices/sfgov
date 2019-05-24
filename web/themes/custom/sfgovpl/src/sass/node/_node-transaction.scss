@@ -79,20 +79,22 @@
 
   // Content.
   .transaction--content {
+    @include contain-1150;
+    @include clearfix;
     margin-top: 60px;
     position: relative;
   }
 
   // Updated.
   .updated {
-    @include contain-1090;
+    @include contain-1150;
     font-style: italic;
     margin-bottom: 25px;
-    margin-top: 100px;
+    margin-top: 20px;
     opacity: .6;
 
     @include media($narrow-screen) {
-      margin-left: 60px;
+      padding-left: 60px;
     }
   }
 
@@ -105,14 +107,7 @@
 
 // Content left.
 .transaction--left {
-  @include contain-1210;
-
-  > .sfgov-section {
-    @include media($narrow-screen) {
-      max-width: 697px;
-      width: 66%;
-    }
-  }
+  @include columns-780(left);
 
   > details {
     max-width: 697px;
@@ -138,10 +133,13 @@
 
 // Content right.
 .transaction--right {
-  @include sidebar('.transaction--right-content');
+  @include columns-350(right);
+}
+
+.transaction--right-content {
   background: $c-blue-pale;
+  border-radius: 8px;
   margin-bottom: 20px;
-  top: 0;
 
   h2 {
     @include fs-h3;
@@ -154,6 +152,7 @@
 
   .transaction--right-para {
     margin-bottom: 60px;
+    padding: 30px;
   }
 
   .sidebar-card--link {

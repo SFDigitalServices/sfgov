@@ -2492,25 +2492,37 @@ header[role="banner"] {
     margin-left: 0; }
 
 .page-node-type-transaction .transaction--content {
+  margin: 0 auto;
+  max-width: 1210px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
   margin-top: 60px;
   position: relative; }
+  @media screen and (min-width: 1280px) {
+    .page-node-type-transaction .transaction--content {
+      padding: 0 60px 0 0; } }
+  .page-node-type-transaction .transaction--content::after {
+    clear: both;
+    content: "";
+    display: block; }
 
 .page-node-type-transaction .updated {
   margin: 0 auto;
-  max-width: 1090px;
+  max-width: 1210px;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;
   font-style: italic;
   margin-bottom: 25px;
-  margin-top: 100px;
+  margin-top: 20px;
   opacity: .6; }
   @media screen and (min-width: 1280px) {
     .page-node-type-transaction .updated {
-      padding: 0; } }
+      padding: 0 60px 0 0; } }
   @media screen and (min-width: 950px) {
     .page-node-type-transaction .updated {
-      margin-left: 60px; } }
+      padding-left: 60px; } }
 
 .page-node-type-transaction .transaction--ankle {
   padding-bottom: 60px;
@@ -2546,64 +2558,52 @@ header[role="banner"] {
     .page-node-type-transaction .transaction--ankle .__departments a.is-active, .page-node-type-transaction .transaction--ankle .__departments a:active, .page-node-type-transaction .transaction--ankle .__departments a.active-trail {
       color: #4f66ee; }
 
-.transaction--left {
-  margin: 0 auto;
-  max-width: 1210px;
-  padding-left: 20px;
-  padding-right: 20px;
-  width: 100%; }
-  @media screen and (min-width: 1280px) {
-    .transaction--left {
-      padding: 0; } }
+@media screen and (min-width: 768px) {
+  .transaction--left {
+    float: left;
+    max-width: 780px;
+    width: calc((100% - 20px)/3*2); } }
+
+.transaction--left > details {
+  max-width: 697px; }
   @media screen and (min-width: 950px) {
-    .transaction--left > .sfgov-section {
-      max-width: 697px;
-      width: 66%; } }
-  .transaction--left > details {
-    max-width: 697px; }
-    @media screen and (min-width: 950px) {
-      .transaction--left > details {
-        margin-left: 60px; } }
-  .transaction--left .paragraph--type--step {
-    margin: 0 0 60px; }
-  .transaction--left .sfgov-alert-info {
-    margin-bottom: 30px; }
-  @media screen and (min-width: 950px) {
-    .transaction--left .sfgov-section__content {
+    .transaction--left > details {
       margin-left: 60px; } }
 
-.transaction--right {
-  border-radius: 8px 0 0 8px;
-  margin-left: 20px;
-  padding: 30px;
+.transaction--left .paragraph--type--step {
+  margin: 0 0 60px; }
+
+.transaction--left .sfgov-alert-info {
+  margin-bottom: 30px; }
+
+@media screen and (min-width: 950px) {
+  .transaction--left .sfgov-section__content {
+    margin-left: 60px; } }
+
+@media screen and (min-width: 768px) {
+  .transaction--right {
+    float: right;
+    max-width: 350px;
+    width: calc((100% - 40px)/3); } }
+
+.transaction--right-content {
   background: #edf4f7;
-  margin-bottom: 20px;
-  top: 0; }
-  @media screen and (min-width: 950px) {
-    .transaction--right {
-      margin-left: 0;
-      position: absolute;
-      right: 0;
-      width: 33%; } }
-  @media screen and (min-width: 1280px) {
-    .transaction--right {
-      width: calc(50% - 180px); } }
-  @media screen and (min-width: 950px) {
-    .transaction--right .transaction--right-content {
-      max-width: 307px; } }
-  .transaction--right h2 {
+  border-radius: 8px;
+  margin-bottom: 20px; }
+  .transaction--right-content h2 {
     font-size: 24px;
     font-weight: 500;
     line-height: 30px;
     margin-bottom: 34px; }
     @media screen and (min-width: 768px) {
-      .transaction--right h2 {
+      .transaction--right-content h2 {
         font-size: 30px;
         font-weight: 500;
         line-height: 42px; } }
-  .transaction--right .transaction--right-para {
-    margin-bottom: 60px; }
-  .transaction--right .sidebar-card--link {
+  .transaction--right-content .transaction--right-para {
+    margin-bottom: 60px;
+    padding: 30px; }
+  .transaction--right-content .sidebar-card--link {
     font-size: 20px;
     font-weight: 500;
     line-height: 24px;
@@ -2748,7 +2748,7 @@ header[role="banner"] {
   border-radius: 8px;
   margin-bottom: 80px;
   padding: 30px 40px; }
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 950px) {
     .paragraph--type--additional-info {
       margin-left: 60px; } }
   .paragraph--type--additional-info .__additional-info-heading {
