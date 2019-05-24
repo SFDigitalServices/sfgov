@@ -1,0 +1,48 @@
+// @todo Componetize and refactor search theming from
+// - sfgov_search.css
+// - _block-search.scss
+// - _block-search-small.scss
+// - _layout.scss
+
+@include less-than('not-big') {
+  header[role="banner"] .sfgov-search-311-block {
+    width: 100%;
+    background: $c-blue-button;
+    position: absolute;
+    bottom: -73px;
+    left: 0;
+    padding: 15px;
+
+    .sfgov-search-form-311 {
+      width: calc(100% - 40px);
+      position: static;
+    }
+
+    .sf-gov-search-input-class {
+      border: 0;
+      border-radius: 8px;
+      padding-left: 50px;
+    }
+
+    .form-item-sfgov-search-input {
+      width: 100%;
+    }
+
+    .is_typing .input-clear {
+      top: 26px;
+    }
+
+    [data-drupal-selector="edit-submit"] {
+      background: transparent;
+    }
+
+    [data-drupal-selector="edit-actions"] {
+      background: transparent;
+      position: absolute;
+
+      &:before {
+        @include background-image('search-grey.svg');
+      }
+    }
+  }
+}

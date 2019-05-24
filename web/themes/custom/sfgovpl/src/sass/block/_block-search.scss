@@ -1,9 +1,21 @@
+// @todo Componetize and refactor search theming from
+// - sfgov_search.css
+// - _block-search.scss
+// - _block-search-small.scss
+// - _layout.scss
+
 .sfgov-search-311-block {
   display: none;
   width: 250px;
 
   @include media($medium-screen) {
     display: inline-block;
+    width: 150px;
+  }
+
+  @include media($narrow-screen) {
+    display: inline-block;
+    width: 250px;
   }
 
   [data-drupal-selector="edit-sfgov-search-input"] {
@@ -50,6 +62,19 @@
 
   .form-item-sfgov-search-input {
     width: calc(100% - 48px);
+  }
+
+  .is_typing .input-clear {
+    right: 60px;
+  }
+}
+
+// Header version only
+header[role="banner"] {
+  .sfgov-search-311-block[style] {
+    @include media($medium-screen) {
+      display: inline-block !important; // @todo better handled in js on resize.
+    }
   }
 }
 
@@ -119,6 +144,13 @@
           left: 9px;
           top: 9px;
         }
+      }
+    }
+
+    .is_typing .input-clear {
+
+      @include media($narrow-screen) {
+        right: 156px;
       }
     }
   }
