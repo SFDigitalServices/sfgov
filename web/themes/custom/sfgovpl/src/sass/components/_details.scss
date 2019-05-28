@@ -7,18 +7,24 @@ details {
     color: $c-blue-button;
 
     &:after {
+      @include background-image('plus-blue.svg');
+      content: '';
+      height: 30px;
       top: 18px;
+      width: 30px;
     }
   }
 
   &[open] {
     summary {
+      @include antialiasing;
       background: $c-blue-button;
       border-radius: 8px 8px 0 0;
       color: $c-white;
 
       &:after {
-        content: '-';
+        @include background-image('minus-white.svg');
+        content: '';
       }
     }
 

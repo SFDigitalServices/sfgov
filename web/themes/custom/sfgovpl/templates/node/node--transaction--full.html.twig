@@ -65,19 +65,17 @@
         ) }}
 
         {{ content.group_grey_boxes.field_transaction_purpose }}
-        <p class="updated">Last updated {{ node.changedtime|date('F d, Y') }}</p>
       </div>
 
       {% if content.field_help|render|striptags or  content.field_transaction|render|striptags %}
         <div class="transaction--right">
-          <div class="transaction--right-content">
-            {{ content.field_help }}
-            {{ content.field_transactions }}
-          </div>
+          {{ content.field_help }}
+          {{ content.field_transactions }}
         </div>
       {% endif %}
 
     </div>
+    <p class="updated">Last updated {{ node.changedtime|date('F d, Y') }}</p>
     <div class="{{ bundle }}--ankle">
       {{ content.group_grey_boxes.field_departments }}
     </div>

@@ -6,6 +6,10 @@
     @include contain-1090;
     @include fs-body-2;
 
+    .field__label {
+      @include fs-h2;
+    }
+
     .field__item {
       margin-bottom: 20px;
       padding-left: 40px;
@@ -26,6 +30,22 @@
 
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
   background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
+}
+
+@mixin columns-780($left-or-right) {
+  @include media($medium-screen){
+    float: #{$left-or-right};
+    max-width: 780px;
+    width: calc((100% - 20px)/3*2);
+  }
+}
+
+@mixin columns-350($left-or-right) {
+  @include media($medium-screen){
+    float: #{$left-or-right};
+    max-width: 350px;
+    width: calc((100% - 40px)/3);
+  }
 }
 
 @mixin contain { // @todo Deprecate this mixin.
@@ -55,6 +75,18 @@
 
   @include media($wide-screen) {
     padding: 0;
+  }
+}
+
+@mixin contain-1150 { // Contents with offset.
+  margin: 0 auto;
+  max-width: 1210px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+
+  @include media($wide-screen) {
+    padding: 0 60px 0 0;
   }
 }
 
@@ -126,17 +158,17 @@
 
 @mixin icon-transaction-help($file-name) {
   position: relative;
-  margin-bottom: 30px;
   margin-left: 42px;
 
   &:before {
-    @include background-image(#{$file-name});
+    @include background-image(#{$file-name}, top);
     content: '';
     display: inline-block;
     height: 20px;
     left: -42px;
     padding-right: 22px;
     position: absolute;
+    top: 6px;
     width: 20px;
   }
 }

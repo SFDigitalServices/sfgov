@@ -17,6 +17,7 @@
 
   // Banner Subheader.
   .banner-subheader {
+    @include antialiasing;
     background: $c-blue-button-hover;
     color: $c-white;
     padding-top: 40px;
@@ -79,8 +80,23 @@
 
   // Content.
   .transaction--content {
+    @include contain-1150;
+    @include clearfix;
     margin-top: 60px;
     position: relative;
+  }
+
+  // Updated.
+  .updated {
+    @include contain-1150;
+    font-style: italic;
+    margin-bottom: 25px;
+    margin-top: 20px;
+    opacity: .6;
+
+    @include media($narrow-screen) {
+      padding-left: 60px;
+    }
   }
 
   // Ankle.
@@ -92,14 +108,7 @@
 
 // Content left.
 .transaction--left {
-  @include contain-1210;
-
-  > .sfgov-section {
-    @include media($narrow-screen) {
-      max-width: 697px;
-      width: 66%;
-    }
-  }
+  @include columns-780(left);
 
   > details {
     max-width: 697px;
@@ -121,24 +130,21 @@
       margin-left: 60px;
     }
   }
-
-  .updated {
-    font-style: italic;
-    margin-bottom: 25px;
-    opacity: .6;
-
-    @include media($narrow-screen) {
-      margin-left: 60px;
-    }
-  }
 }
 
 // Content right.
 .transaction--right {
-  @include sidebar('.transaction--right-content');
+  @include columns-350(right);
+
+  .sidebar-card {
+    padding: 0 0 34px;
+  }
+}
+
+.transaction--right-content {
   background: $c-blue-pale;
+  border-radius: 8px;
   margin-bottom: 20px;
-  top: 0;
 
   h2 {
     @include fs-h3;
@@ -151,6 +157,7 @@
 
   .transaction--right-para {
     margin-bottom: 60px;
+    padding: 30px;
   }
 
   .sidebar-card--link {
