@@ -6,22 +6,23 @@
     }
   } %}
   <div class="basic--content">
-    <div class="basic--left">
-      {{ content.field_content }}
+    <div class="clearfix">
+      {% if content.field_sidebar|render|striptags != '' %}
+        <div class="basic--right">
+          {% include "@organisms/04-containers/01-sidebar.twig" with {
+            "side": "right",
+            "content": content.field_sidebar
+          } %}
+        </div>
+      {% endif %}
+
+      <div class="basic--left">
+        {{ content.field_content }}
+      </div>
     </div>
 
-    {% if content.field_sidebar|render|striptags != '' %}
-      <div class="basic--right">
-        {% include "@organisms/04-containers/01-sidebar.twig" with {
-          "side": "right",
-          "content": content.field_sidebar
-        } %}
-      </div>
-    {% endif %}
-  </div>
-  {% if content.field_content_bottom is not empty %}
     <div class="sfgov-container--content-bottom">
       {{ content.field_content_bottom }}
     </div>
-  {% endif %}
+  </div>
 </article>
