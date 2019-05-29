@@ -1,13 +1,12 @@
-{% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
-
-{% if node.get('field_description').getValue()[0] %}
-  {% set content = node.get('field_description').getValue()[0]['value'] %}
-{% endif %}
-
-{% include "@molecules/04-cards/01-transaction-card.twig" with {
-  "transaction_card": {
-    "url": url,
-    "title": elements['#node'].get('title').getString(),
-    "body": content
-  }
-} %}
+<div class="transaction-card">
+  <div class="transaction-card-container">
+    <h4 class="transaction-card__title">
+      {% if url %}
+        <a href="{{ url }}" class="transaction-card--link">{{ label }}</a>
+      {% else %}
+        {{ label }}
+      {% endif %}
+    </h4>
+    <div class="transaction-card__body">{{ node.field_description.value }}</div>
+  </div>
+</div>
