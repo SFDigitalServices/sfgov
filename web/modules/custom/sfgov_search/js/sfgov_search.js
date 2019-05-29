@@ -79,7 +79,7 @@ function Search311(collectionName) {
               $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
               for(var i = 0; i<autocompletes.length; i++) {
-                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword, '<strong>' + searchKeyword + '</strong>') + '</a>';
+                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
               }
               $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
