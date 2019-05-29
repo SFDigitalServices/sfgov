@@ -1,5 +1,9 @@
 // Note: Only define font size, weight, line height and letter spacing in fs- definitions.
 
+// Ordered by fontsize, then line height, then by font weight
+
+// https://app.zeplin.io/project/5cd9e1b9936b89681acbd2d6/styleguide
+
 @mixin fs-display-1 {
   font-size: 72px;
   font-weight: $fw-light;
@@ -64,58 +68,38 @@
   line-height: 28px;
 }
 
-// Complex mixins.
-
-// H1
-@mixin fs-h1 {
-  @include fs-h1-small;
-  @include  media($medium-screen) {
-    @include fs-title-1;
-  }
-}
-
-// h1-default
-@mixin fs-h1-default {
-  @include fs-display-1-mobile;
-  @include  media($medium-screen) {
-    @include fs-display-1;
-  }
-}
-
-// h1-home
-@mixin fs-h1-home {
-  @include fs-display-1-mobile;
-  @include  media($medium-screen) {
-    @include fs-display-1;
-  }
-}
-
-// @todo Update to SF.gov Zeplin.
-//------------------------------
-@mixin fs-campaign-title {
+@mixin fs-title-3 {
   font-size: 30px;
   font-weight: $fw-medium;
   line-height: 42px;
 }
 
-@mixin fs-department {
+@mixin fs-big-description-mobile {
   font-size: 20px;
   font-weight: $fw-regular;
   line-height: 29px;
 }
 
-@mixin fs-mayor-name-small {
+@mixin fs-title-3-mobile {
   font-size: 24px;
   font-weight: $fw-medium;
   line-height: 30px;
 }
 
-@mixin fs-mayor-title-large {
+@mixin fs-title-4 {
   font-size: 24px;
   font-weight: $fw-regular;
   line-height: 34px;
 }
 
+@mixin fs-title-3-mobile {
+  font-size: 24px;
+  font-weight: $fw-medium;
+  line-height: 30px;
+}
+
+// Styles from older Zeplin file to deprecate.
+// https://app.zeplin.io/project/5ccb490a87477603a8753db7/styleguide
 
 @mixin fs-h1-small {
   font-size: 33px;
@@ -131,14 +115,20 @@
   line-height: 39px;
 }
 
-@mixin fs-h2 {
-  font-size: 17px;
+@mixin fs-pull-small {
+  font-size: 20px;
   font-weight: $fw-medium;
-  line-height: 24px;
+  line-height: 34px;
 }
 
-@mixin fs-h3 {
-  font-size: 24px;
+@mixin fs-pull-large {
+  font-size: 20px;
+  font-weight: $fw-medium;
+  line-height: 32px;
+}
+
+@mixin fs-news-title {
+  font-size: 20px;
   font-weight: $fw-medium;
   line-height: 30px;
 }
@@ -149,36 +139,16 @@
   line-height: 28px;
 }
 
-@mixin fs-news-title {
+@mixin fs-title-right {
   font-size: 20px;
   font-weight: $fw-medium;
-  line-height: 30px;
+  line-height: 24px;
 }
 
-@mixin fs-news-type {
-  font-size: 16px;
-  font-weight: $fw-bold;
-  line-height: 28px;
-}
-
-// fs-pull
-@mixin fs-pull-large {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 32px;
-}
-
-@mixin fs-pull-small {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 34px;
-}
-
-@mixin fs-pull {
-  @include fs-pull-small;
-  @include  media($medium-screen) {
-    @include fs-pull-large;
-  }
+@mixin fs-body-3 {
+  font-size: 17px;
+  font-weight: $fw-regular;
+  line-height: 28.9px;
 }
 
 @mixin fs-title {
@@ -188,26 +158,43 @@
   text-decoration: underline;
 }
 
-@mixin fs-title-medium {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 27px;
-}
-
 @mixin fs-nav-link {
   font-size: 17px;
   font-weight: $fw-medium;
   line-height: 20px;
 }
 
-@mixin fs-title-right {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 24px;
+@mixin fs-news-type {
+  font-size: 16px;
+  font-weight: $fw-bold;
+  line-height: 28px;
 }
 
-@mixin fs-body-3 { // @todo deprecate.
-  font-size: 17px;
-  font-weight: $fw-regular;
-  line-height: 28.9px;
+// Complex mixins.
+@mixin fs-h1 {
+  @include fs-h1-small;
+  @include  media($medium-screen) {
+    @include fs-title-1;
+  }
+}
+
+@mixin fs-h1-default {
+  @include fs-display-1-mobile;
+  @include  media($medium-screen) {
+    @include fs-display-1;
+  }
+}
+
+@mixin fs-h1-home {
+  @include fs-display-1-mobile;
+  @include  media($medium-screen) {
+    @include fs-display-1;
+  }
+}
+
+@mixin fs-pull {
+  @include fs-pull-small;
+  @include  media($medium-screen) {
+    @include fs-pull-large;
+  }
 }
