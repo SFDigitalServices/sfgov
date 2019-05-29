@@ -1,4 +1,39 @@
 // Note: Only define font size, weight, line height and letter spacing in fs- definitions.
+
+@mixin fs-display-1 {
+  font-size: 72px;
+  font-weight: $fw-light;
+  letter-spacing: -.2px;
+  line-height: 80.2px;
+}
+
+@mixin fs-title-1 {
+  font-size: 62px;
+  font-weight: $fw-medium;
+  letter-spacing: -.3px;
+  line-height: 70px;
+}
+
+@mixin fs-header-title-2 {
+  font-size: 50px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 59px;
+}
+
+@mixin fs-display-1-mobile {
+  font-size: 42px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 43px;
+}
+
+@mixin fs-title-2 {
+  font-size: 40px;
+  font-weight: $fw-medium;
+  line-height: 47px;
+}
+
 @mixin fs-big-description {
   font-size: 24px;
   font-weight: $fw-regular;
@@ -11,10 +46,10 @@
   line-height: 27px;
 }
 
-@mixin fs-body-long {
+@mixin fs-body-bold {
   font-size: 17px;
-  font-weight: $fw-regular;
-  line-height: 28px;
+  font-weight: $fw-medium;
+  line-height: 24px;
 }
 
 @mixin fs-body-short {
@@ -23,23 +58,13 @@
   line-height: 24px;
 }
 
-@mixin fs-body-3 { // @todo deprecate.
+@mixin fs-body-long {
   font-size: 17px;
   font-weight: $fw-regular;
-  line-height: 28.9px;
+  line-height: 28px;
 }
 
-@mixin fs-body-bold {
-  font-size: 17px;
-  font-weight: $fw-medium;
-  line-height: 24px;
-}
-
-@mixin fs-title-2 {
-  font-size: 40px;
-  font-weight: $fw-medium;
-  line-height: 47px;
-}
+// Complex mixins.
 
 // H1
 @mixin fs-h1 {
@@ -47,13 +72,6 @@
   @include  media($medium-screen) {
     @include fs-title-1;
   }
-}
-
-@mixin fs-title-1 {
-  font-size: 62px;
-  font-weight: $fw-medium;
-  letter-spacing: -.3px;
-  line-height: 70px;
 }
 
 // h1-default
@@ -64,33 +82,12 @@
   }
 }
 
-@mixin fs-header-title-2 {
-  font-size: 50px;
-  font-weight: $fw-light;
-  letter-spacing: 0;
-  line-height: 59px;
-}
-
 // h1-home
 @mixin fs-h1-home {
   @include fs-display-1-mobile;
   @include  media($medium-screen) {
     @include fs-display-1;
   }
-}
-
-@mixin fs-display-1 {
-  font-size: 72px;
-  font-weight: $fw-light;
-  letter-spacing: -.2px;
-  line-height: 80.2px;
-}
-
-@mixin fs-display-1-mobile {
-  font-size: 42px;
-  font-weight: $fw-light;
-  letter-spacing: 0;
-  line-height: 43px;
 }
 
 // @todo Update to SF.gov Zeplin.
@@ -207,4 +204,10 @@
   font-size: 20px;
   font-weight: $fw-medium;
   line-height: 24px;
+}
+
+@mixin fs-body-3 { // @todo deprecate.
+  font-size: 17px;
+  font-weight: $fw-regular;
+  line-height: 28.9px;
 }
