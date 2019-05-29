@@ -1,40 +1,100 @@
 // Note: Only define font size, weight, line height and letter spacing in fs- definitions.
-@mixin fs-abstract {
+@mixin fs-big-description {
   font-size: 24px;
   font-weight: $fw-regular;
   line-height: 36px;
 }
 
-@mixin fs-accordion-title {
+@mixin fs-title-5 {
   font-size: 20px;
   font-weight: $fw-medium;
   line-height: 27px;
 }
 
-@mixin fs-body-1 {
+@mixin fs-body-long {
   font-size: 17px;
   font-weight: $fw-regular;
   line-height: 28px;
 }
 
-@mixin fs-body-2 {
+@mixin fs-body-short {
   font-size: 17px;
   font-weight: $fw-regular;
   line-height: 24px;
 }
 
-@mixin fs-body-3 {
+@mixin fs-body-3 { // @todo deprecate.
   font-size: 17px;
   font-weight: $fw-regular;
   line-height: 28.9px;
 }
 
-@mixin fs-button {
+@mixin fs-body-bold {
   font-size: 17px;
   font-weight: $fw-medium;
   line-height: 24px;
 }
 
+@mixin fs-title-2 {
+  font-size: 40px;
+  font-weight: $fw-medium;
+  line-height: 47px;
+}
+
+// H1
+@mixin fs-h1 {
+  @include fs-h1-small;
+  @include  media($medium-screen) {
+    @include fs-title-1;
+  }
+}
+
+@mixin fs-title-1 {
+  font-size: 62px;
+  font-weight: $fw-medium;
+  letter-spacing: -.3px;
+  line-height: 70px;
+}
+
+// h1-default
+@mixin fs-h1-default {
+  @include fs-h1-default-small;
+  @include  media($medium-screen) {
+    @include fs-header-title-2;
+  }
+}
+
+@mixin fs-header-title-2 {
+  font-size: 50px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 59px;
+}
+
+// h1-home
+@mixin fs-h1-home {
+  @include fs-display-1-mobile;
+  @include  media($medium-screen) {
+    @include fs-display-1;
+  }
+}
+
+@mixin fs-display-1 {
+  font-size: 72px;
+  font-weight: $fw-light;
+  letter-spacing: -.2px;
+  line-height: 80.2px;
+}
+
+@mixin fs-display-1-mobile {
+  font-size: 42px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 43px;
+}
+
+// @todo Update to SF.gov Zeplin.
+//------------------------------
 @mixin fs-campaign-title {
   font-size: 30px;
   font-weight: $fw-medium;
@@ -45,12 +105,6 @@
   font-size: 20px;
   font-weight: $fw-regular;
   line-height: 29px;
-}
-
-@mixin fs-heading {
-  font-size: 40px;
-  font-weight: $fw-medium;
-  line-height: 47px;
 }
 
 @mixin fs-mayor-name-small {
@@ -65,20 +119,6 @@
   line-height: 34px;
 }
 
-// H1
-@mixin fs-h1 {
-  @include fs-h1-small;
-  @include  media($medium-screen) {
-    @include fs-h1-large;
-  }
-}
-
-@mixin fs-h1-large {
-  font-size: 62px;
-  font-weight: $fw-medium;
-  letter-spacing: -.3px;
-  line-height: 70px;
-}
 
 @mixin fs-h1-small {
   font-size: 33px;
@@ -87,48 +127,11 @@
   line-height: 43px;
 }
 
-// h1-default
-@mixin fs-h1-default {
-  @include fs-h1-default-small;
-  @include  media($medium-screen) {
-    @include fs-h1-default-large;
-  }
-}
-
-@mixin fs-h1-default-large {
-  font-size: 50px;
-  font-weight: $fw-light;
-  letter-spacing: 0;
-  line-height: 59px;
-}
-
 @mixin fs-h1-default-small {
   font-size: 33px;
   font-weight: $fw-light;
   letter-spacing: 0;
   line-height: 39px;
-}
-
-// h1-home
-@mixin fs-h1-home {
-  @include fs-h1-home-small;
-  @include  media($medium-screen) {
-    @include fs-h1-home-large;
-  }
-}
-
-@mixin fs-h1-home-large {
-  font-size: 72px;
-  font-weight: $fw-light;
-  letter-spacing: -.2px;
-  line-height: 80.2px;
-}
-
-@mixin fs-h1-home-small {
-  font-size: 42px;
-  font-weight: $fw-light;
-  letter-spacing: 0;
-  line-height: 43px;
 }
 
 @mixin fs-h2 {
