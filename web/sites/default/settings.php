@@ -120,7 +120,7 @@ $settings['install_profile'] = 'standard';
 # Provide universal absolute path to simplesamlphp installation.
 $settings['simplesamlphp_dir'] = $_ENV['HOME'] .'/code/web/private/simplesamlphp-1.17.0-rc3';
 
-$keys = __DIR__ . "/settings.keys.php";
+$keys = "sites/default/files/private/settings.keys.php";
 if(file_exists($keys)) {
   include($keys);
 }
