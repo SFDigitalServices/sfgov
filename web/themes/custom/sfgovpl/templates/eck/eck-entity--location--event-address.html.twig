@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display an ECK entity.
+ *
+ * Available variables:
+ * - eck_entity: The full ECK entity with limited access to object properties
+ *   and methods. Only "getter" methods (method names starting with "get",
+ *   "has", or "is") and a few common methods such as "id" and "label" are
+ *   available. Calling other methods (such as node.delete) will result in an
+ *   exception.
+ * - content: All ECK entity items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ *
+ * @see template_preprocess_eck_entity()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = [
+'eck-entity',
+'sfgov-event-address',
+'sfgov-address'
+] %}
+<div{{ attributes.addClass(classes) }}>
+    {% set title = content.title.0['#context'].value %}
+    {% set addressLine1 = content.field_address[0]['address_line1']['#value'] %}
+    {% set addressLine2 = content.field_address[0]['address_line2']['#value'] %}
+    {% set city = content.field_address[0]['locality']['#value'] %}
+    {% set state = content.field_address[0]['administrative_area']['#value'] %}
+    {% set zip = content.field_address[0]['postal_code']['#value'] %}
+    
+    <h4>{{ title }}</h4>
+    <p>
+      {{ addressLine1 }}<br/>
+      {% if addressLine2 %}
+        {{ addressLine2 }}<br/>
+      {% endif %}
+      {{ city }}, {{ state }} {{ zip }}
+    </p>
+    <img src="{{ map_img_url }}" />
+    <a href="{{ map_directions_url }}">Get directions</a>
+</div>
