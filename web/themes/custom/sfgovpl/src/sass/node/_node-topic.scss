@@ -14,17 +14,17 @@
     }
   }
 
-  .container {
-    @include contain-1090;
-    @include clearfix;
-  }
-
   // Services.
   // @todo. See also _paragraph_services.scss.
   .view-services-block-1 {
     background: $c-blue-pale;
     padding-bottom: 60px;
     padding-top: 60px;
+
+    .container {
+      @include contain-1090-table;
+      @include clearfix;
+    }
 
     @include media($medium-screen) {
       padding-top: 50px;
@@ -44,14 +44,13 @@
       @include fs-title;
     }
 
-    .views-row {
-      @include three-column-item;
+    .three-column-table-row {
+      @include three-column-table-row;
+    }
+
+    .three-column-table-row-item {
       background: $c-white;
       border: 3px solid $c-blue-button;
-
-      @include media($medium-screen) {
-        min-height: 195px;
-      }
     }
 
     .sfgov-transaction-search--container {
@@ -73,6 +72,11 @@
     padding-bottom: 80px;
     padding-top: 80px;
 
+    .container {
+      @include contain-1090;
+      @include clearfix;
+    }
+
     .views-row {
       @include background-image('building-white.svg', left 5px);
       padding-left: 44px;
@@ -85,6 +89,7 @@
 
       @include media($medium-screen) {
         @include fs-title-1;
+        padding-bottom: 45px;
       }
     }
 

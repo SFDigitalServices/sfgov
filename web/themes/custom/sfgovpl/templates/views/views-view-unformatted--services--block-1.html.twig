@@ -1,1 +1,19 @@
-{% include '@theme/views-content-container.twig' %}
+{% embed '@theme/views-content-container.twig' %}
+
+  {% block rows %}
+
+    {% for row in rows %}
+      {% if loop.index0 is divisibleby(3) %}
+        <div class="three-column-table-row">
+      {% endif %}
+      <div class="three-column-table-row-item">
+        {{ row.content }}
+      </div>
+      {% if loop.index is divisibleby(3) or loop.last %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  {% endblock rows %}
+
+{% endembed %}
