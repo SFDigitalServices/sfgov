@@ -40,6 +40,7 @@
         $('button.sfgov-menu-btn').click(function() {
             $('header .sfgov-search-311-block').attr("style", false);
             $(this).toggleClass('is-active');
+          $('body').toggleClass('sfgov-mobile_nav-active');
         });
 
         $('button.sfgov-mobile-translate').click(function() {
