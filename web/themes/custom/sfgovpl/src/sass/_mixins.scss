@@ -98,6 +98,18 @@
   }
 }
 
+@mixin contain-1090-table { // Match 1090 spacing when a 3-column table is the child.
+  margin: 0 auto;
+  max-width: 1130px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+
+  @include media($medium-screen) {
+    padding: 0;
+  }
+}
+
 @mixin contain-1090 { // Most contents.
   margin: 0 auto;
   max-width: 1090px;
@@ -287,7 +299,7 @@
   }
 }
 
-@mixin three-column-item {
+@mixin three-column-item-no-table {
   border-radius: 8px;
   margin-bottom: 20px;
   padding: 20px;
@@ -296,13 +308,33 @@
   @include media($medium-screen) {
     float: left;
     margin-right: 2%;
-    min-height: 100px;
     width: 32%;
   }
 
   &:nth-child(3n) {
     @include media($medium-screen) {
       margin-right: 0;
+    }
+  }
+}
+
+@mixin three-column-table-row {
+  // See views-view-unformatted--services--block-1.html.twig and
+  // _node-topic.scss for usage.
+  @include media($medium-screen) {
+    display: table;
+    border-spacing: 20px 10px;
+  }
+
+  > * {
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+    width: 100%;
+
+    @include media($medium-screen) {
+      display: table-cell;
+      width: 33%;
     }
   }
 }

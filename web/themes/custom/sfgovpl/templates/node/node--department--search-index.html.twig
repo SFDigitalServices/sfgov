@@ -1,33 +1,10 @@
-{% if node.get('field_description').isEmpty %}
-  {% set description = null %}
-{% else %}
-  {% set description = node.get('field_description').getValue()[0]['value'] %}
-{% endif %}
-
-{% if node.get('field_phone_numbers').isEmpty %}
-  {% set phone = null %}
-{% else %}
-  {% set phoneNum = content.field_phone_numbers[0]['#paragraph'].field_tel.value %}
-  {% if phoneNum | length > 0 %}
-    {% set phone = content.field_phone_numbers[0] %}
+<div class="department-search-result">
+  {% if url %}
+    <h4>
+      <a class="title-url" href="{{ url }}">{{ label }}</a>
+    </h4>
   {% else %}
-    {% set phone = null %}
+    <h4>{{ label }}</h4>
   {% endif %}
-{% endif %}
-
-{% if node.get('field_address').isEmpty %}
-  {% set address = null %}
-{% else %}
-  {% set address = content.field_address|render %}
-{% endif %}
-
-{% set type = node.type.entity.label %} {# content type #}
-
-{% include "@molecules/08-search-results/02-department-search-result.twig" with {
-  "content_type": type,
-  "url": url,
-  "title": node.getTitle(),
-  "body": description,
-  "phone": phone,
-  "address": address
-} %}
+  <div class="body">{{ content.field_description }}</div>
+</div>
