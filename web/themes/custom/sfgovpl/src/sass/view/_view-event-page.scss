@@ -19,7 +19,7 @@
   }
 
   .view-events {
-    @include contain;
+    // @include contain;
     padding-top: 60px;
     padding-bottom: 60px;
   }
@@ -39,6 +39,27 @@
     a {
       @include button-clear;
       display: block;
+    }
+  }
+
+  .views-element-container {
+    .view-events {
+      > div {
+        background: #fff;
+        padding-top: 40px;
+        padding-bottom: 60px;
+        &:nth-child(2n) {
+          background: rgba(28,62,87,0.04);
+        }
+        @include media($medium-screen) {
+          padding-top: 40px;
+          padding-bottom: 40px;
+          background: #fff;
+          &:nth-child(2n) {
+            background: #fff;
+          }
+        }
+      }
     }
   }
 }
