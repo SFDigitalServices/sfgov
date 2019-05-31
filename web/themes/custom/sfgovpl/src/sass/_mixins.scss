@@ -4,10 +4,10 @@
 
   #{$field-element} {
     @include contain-1090;
-    @include fs-body-2;
+    @include fs-body-short;
 
     .field__label {
-      @include fs-h2;
+      @include fs-body-bold;
     }
 
     .field__item {
@@ -36,6 +36,14 @@
   @include media($medium-screen){
     float: #{$left-or-right};
     max-width: 780px;
+    width: calc((100% - 20px)/3*2);
+  }
+}
+
+@mixin columns-720($left-or-right) {
+  @include media($medium-screen){
+    float: #{$left-or-right};
+    max-width: 720px;
     width: calc((100% - 20px)/3*2);
   }
 }

@@ -11,6 +11,15 @@
   .sfgov-footer__container {
     @include clearfix;
     @include contain-1090;
+    .sfgov-footer-nav {
+      @include clearfix;
+      float: none;
+      width: auto;
+      @include media($medium-screen) {
+        float: right;
+        width: 50%;
+      }
+    }
   }
 
   .seal {
@@ -28,11 +37,14 @@
   }
 
   .logo {
+    float: none;
+    width: auto;
+    margin-top: 30px;
     margin-bottom: 30px;
-
     @include media($medium-screen) {
-      float: left;
       width: 50%;
+      float: left;
+      margin-top: 0;
     }
   }
 
@@ -66,21 +78,38 @@
   }
 
   .sfgov-footer-navigation {
-    float: left;
-    width: 25%;
-
+    float: none;
+    width: auto;
     a {
-      @include fs-button;
+      @include fs-body-bold;
     }
-
+    @include media($medium-screen) {
+      float: left;
+      width: 50%;  
+    }
   }
 
   .sfgov-footer-navigation-bottom {
-    float: left;
-    width: 25%;
-
+    float: none;
+    width: auto;
     a {
       opacity: .7;
+    }
+    @include media($medium-screen) {
+      float: left;
+      width: 50%;
+    }
+  }
+
+  // silly override of pattern lab
+  .sfgov-footer-navigation,
+  .sfgov-footer-navigation-bottom {
+    ul {
+      li {
+        &:first-child {
+          padding-left: 0;
+        }
+      }
     }
   }
 }

@@ -1,11 +1,33 @@
-.is_typing .input-clear {
+.is_typing .input-clear { // default.
   @include background-image('input-clear.svg');
   content: '';
   cursor: pointer;
   height: 18px;
   position: absolute;
   right: 60px;
-  top: 14px;
+  top: 15px;
   width: 18px;
   z-index: $z-search-input-clear;
+
+  // Home page search.
+  .paragraph--type--block  .sfgov-search-311-block & {
+    @include media($narrow-screen) {
+      right: 156px;
+    }
+  }
+
+  // Header search.
+  header[role="banner"] .sfgov-search-311-block & {
+    @include media-max($medium-screen) {
+      top: 28px;
+      right: 67px;
+    }
+  }
+
+  // Search page.
+  .block-sfgov-search-form-block & {
+    @include media($medium-screen) {
+      right: 168px;
+    }
+  }
 }

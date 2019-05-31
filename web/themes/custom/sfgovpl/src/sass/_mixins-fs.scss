@@ -1,84 +1,105 @@
 // Note: Only define font size, weight, line height and letter spacing in fs- definitions.
-@mixin fs-abstract {
-  font-size: 24px;
-  font-weight: $fw-regular;
-  line-height: 36px;
+
+// Ordered by fontsize, then line height, then by font weight
+
+// https://app.zeplin.io/project/5cd9e1b9936b89681acbd2d6/styleguide
+
+@mixin fs-display-1 {
+  font-size: 72px;
+  font-weight: $fw-light;
+  letter-spacing: -.2px;
+  line-height: 80.2px;
 }
 
-@mixin fs-accordion-title {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 27px;
-}
-
-@mixin fs-body-1 {
-  font-size: 17px;
-  font-weight: $fw-regular;
-  line-height: 28px;
-}
-
-@mixin fs-body-2 {
-  font-size: 17px;
-  font-weight: $fw-regular;
-  line-height: 24px;
-}
-
-@mixin fs-body-3 {
-  font-size: 17px;
-  font-weight: $fw-regular;
-  line-height: 28.9px;
-}
-
-@mixin fs-button {
-  font-size: 17px;
-  font-weight: $fw-medium;
-  line-height: 24px;
-}
-
-@mixin fs-campaign-title {
-  font-size: 30px;
-  font-weight: $fw-medium;
-  line-height: 42px;
-}
-
-@mixin fs-department {
-  font-size: 20px;
-  font-weight: $fw-regular;
-  line-height: 29px;
-}
-
-@mixin fs-heading {
-  font-size: 40px;
-  font-weight: $fw-medium;
-  line-height: 47px;
-}
-
-@mixin fs-mayor-name-small {
-  font-size: 24px;
-  font-weight: $fw-medium;
-  line-height: 30px;
-}
-
-@mixin fs-mayor-title-large {
-  font-size: 24px;
-  font-weight: $fw-regular;
-  line-height: 34px;
-}
-
-// H1
-@mixin fs-h1 {
-  @include fs-h1-small;
-  @include  media($medium-screen) {
-    @include fs-h1-large;
-  }
-}
-
-@mixin fs-h1-large {
+@mixin fs-title-1 {
   font-size: 62px;
   font-weight: $fw-medium;
   letter-spacing: -.3px;
   line-height: 70px;
 }
+
+@mixin fs-header-title-2 {
+  font-size: 50px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 59px;
+}
+
+@mixin fs-display-1-mobile {
+  font-size: 42px;
+  font-weight: $fw-light;
+  letter-spacing: 0;
+  line-height: 43px;
+}
+
+@mixin fs-title-2 {
+  font-size: 40px;
+  font-weight: $fw-medium;
+  line-height: 47px;
+}
+
+@mixin fs-big-description {
+  font-size: 24px;
+  font-weight: $fw-regular;
+  line-height: 36px;
+}
+
+@mixin fs-title-5 {
+  font-size: 20px;
+  font-weight: $fw-medium;
+  line-height: 27px;
+}
+
+@mixin fs-body-bold {
+  font-size: 17px;
+  font-weight: $fw-medium;
+  line-height: 24px;
+}
+
+@mixin fs-body-short {
+  font-size: 17px;
+  font-weight: $fw-regular;
+  line-height: 24px;
+}
+
+@mixin fs-body-long {
+  font-size: 17px;
+  font-weight: $fw-regular;
+  line-height: 28px;
+}
+
+@mixin fs-title-3 {
+  font-size: 30px;
+  font-weight: $fw-medium;
+  line-height: 42px;
+}
+
+@mixin fs-big-description-mobile {
+  font-size: 20px;
+  font-weight: $fw-regular;
+  line-height: 29px;
+}
+
+@mixin fs-title-3-mobile {
+  font-size: 24px;
+  font-weight: $fw-medium;
+  line-height: 30px;
+}
+
+@mixin fs-title-4 {
+  font-size: 24px;
+  font-weight: $fw-regular;
+  line-height: 34px;
+}
+
+@mixin fs-title-3-mobile {
+  font-size: 24px;
+  font-weight: $fw-medium;
+  line-height: 30px;
+}
+
+// Styles from older Zeplin file to deprecate.
+// https://app.zeplin.io/project/5ccb490a87477603a8753db7/styleguide
 
 @mixin fs-h1-small {
   font-size: 33px;
@@ -87,58 +108,27 @@
   line-height: 43px;
 }
 
-// h1-default
-@mixin fs-h1-default {
-  @include fs-h1-default-small;
-  @include  media($medium-screen) {
-    @include fs-h1-default-large;
-  }
-}
-
-@mixin fs-h1-default-large {
-  font-size: 50px;
-  font-weight: $fw-light;
-  letter-spacing: 0;
-  line-height: 59px;
-}
-
-@mixin fs-h1-default-small {
+@mixin fs-display-1-mobile {
   font-size: 33px;
   font-weight: $fw-light;
   letter-spacing: 0;
   line-height: 39px;
 }
 
-// h1-home
-@mixin fs-h1-home {
-  @include fs-h1-home-small;
-  @include  media($medium-screen) {
-    @include fs-h1-home-large;
-  }
-}
-
-@mixin fs-h1-home-large {
-  font-size: 72px;
-  font-weight: $fw-light;
-  letter-spacing: -.2px;
-  line-height: 80.2px;
-}
-
-@mixin fs-h1-home-small {
-  font-size: 42px;
-  font-weight: $fw-light;
-  letter-spacing: 0;
-  line-height: 43px;
-}
-
-@mixin fs-h2 {
-  font-size: 17px;
+@mixin fs-pull-small {
+  font-size: 20px;
   font-weight: $fw-medium;
-  line-height: 24px;
+  line-height: 34px;
 }
 
-@mixin fs-h3 {
-  font-size: 24px;
+@mixin fs-pull-large {
+  font-size: 20px;
+  font-weight: $fw-medium;
+  line-height: 32px;
+}
+
+@mixin fs-news-title {
+  font-size: 20px;
   font-weight: $fw-medium;
   line-height: 30px;
 }
@@ -149,36 +139,16 @@
   line-height: 28px;
 }
 
-@mixin fs-news-title {
+@mixin fs-title-right {
   font-size: 20px;
   font-weight: $fw-medium;
-  line-height: 30px;
+  line-height: 24px;
 }
 
-@mixin fs-news-type {
-  font-size: 16px;
-  font-weight: $fw-bold;
-  line-height: 28px;
-}
-
-// fs-pull
-@mixin fs-pull-large {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 32px;
-}
-
-@mixin fs-pull-small {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 34px;
-}
-
-@mixin fs-pull {
-  @include fs-pull-small;
-  @include  media($medium-screen) {
-    @include fs-pull-large;
-  }
+@mixin fs-body-3 {
+  font-size: 17px;
+  font-weight: $fw-regular;
+  line-height: 28.9px;
 }
 
 @mixin fs-title {
@@ -188,20 +158,43 @@
   text-decoration: underline;
 }
 
-@mixin fs-title-medium {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 27px;
-}
-
 @mixin fs-nav-link {
   font-size: 17px;
   font-weight: $fw-medium;
   line-height: 20px;
 }
 
-@mixin fs-title-right {
-  font-size: 20px;
-  font-weight: $fw-medium;
-  line-height: 24px;
+@mixin fs-news-type {
+  font-size: 16px;
+  font-weight: $fw-bold;
+  line-height: 28px;
+}
+
+// Complex mixins.
+@mixin fs-h1 {
+  @include fs-h1-small;
+  @include  media($medium-screen) {
+    @include fs-title-1;
+  }
+}
+
+@mixin fs-h1-default {
+  @include fs-display-1-mobile;
+  @include  media($medium-screen) {
+    @include fs-display-1;
+  }
+}
+
+@mixin fs-h1-home {
+  @include fs-display-1-mobile;
+  @include  media($medium-screen) {
+    @include fs-display-1;
+  }
+}
+
+@mixin fs-pull {
+  @include fs-pull-small;
+  @include  media($medium-screen) {
+    @include fs-pull-large;
+  }
 }
