@@ -2,15 +2,38 @@
 
   {% block rows %}
 
-    {% for row in rows %}
+    {# Count widowed items. #}
+    {% set widow_count = rows|length is divisible by(3) ? '':  rows|length % 3 %}
+
+
+    {# Group results in rows of three. #}
+    {% for result in rows %}
+
+      {# Open wrapper. #}
       {% if loop.index0 is divisibleby(3) %}
         <div class="three-column-table-row">
       {% endif %}
-      <div class="three-column-table-row-item">
-        {{ row.content }}
-      </div>
-      {% if loop.index is divisibleby(3) or loop.last %}
+
+        {# Print items. #}
+        <div class="three-column-table-row-item">
+          {{ result.content }}
         </div>
+
+      {# Create phantom items to fill row. #}
+      {% if loop.index is divisibleby(3) or loop.last %}
+
+        {% if loop.last %}
+          {% if widow_count == 1 %}
+            <div class="three-column-table-row-item visually-hidden"></div>
+            <div class="three-column-table-row-item visually-hidden"></div>
+          {% endif %}
+          {% if widow_count == 2 %}
+            <div class="three-column-table-row-item element-invisible"></div>
+          {% endif %}
+        {% endif %}
+        {# End phantom #}
+
+        </div> {# Close wrapper. #}
       {% endif %}
     {% endfor %}
 
