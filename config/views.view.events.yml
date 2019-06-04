@@ -345,6 +345,7 @@ display:
         filter_groups: false
         footer: false
         empty: false
+        pager: false
       style:
         type: default
         options: {  }
@@ -462,6 +463,27 @@ display:
           tokenize: true
           content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events for this department.  <a href=\"/past-events/{{ arguments.field_dept_target_id }}\">See past events</a>\r\n</div>"
           plugin_id: text_custom
+      pager:
+        type: full
+        options:
+          items_per_page: 2
+          offset: 0
+          id: 0
+          total_pages: null
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
     cache_metadata:
       max-age: -1
       contexts:
@@ -502,6 +524,7 @@ display:
         filters: false
         filter_groups: false
         footer: false
+        pager: false
       style:
         type: default
         options: {  }
@@ -607,6 +630,27 @@ display:
             value: "<ul class=\"sfgov-events-pill\">\r\n  <li><a href=\"/events/{{ arguments.field_dept_target_id }}\">Upcoming ([view:total-rows])</a></li>\r\n  <li class=\"current\"><a href=\"/past-events/{{ arguments.field_dept_target_id }}\">Past Events</a></li>\r\n</ul>"
             format: full_html
           plugin_id: text
+      pager:
+        type: full
+        options:
+          items_per_page: 2
+          offset: 0
+          id: 0
+          total_pages: null
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
     cache_metadata:
       max-age: -1
       contexts:
