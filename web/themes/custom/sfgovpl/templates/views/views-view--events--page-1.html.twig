@@ -39,6 +39,8 @@
 ]
 %}
 
+{% set current_display = view.current_display %}
+
 {% block header %}
 {% include "@theme/hero-banner-color.twig" with {
   "banner": {
@@ -49,33 +51,40 @@
 %}
 {% endblock header %}
 
-{% if footer %}
+{% block events_nav %}
+  {% set deptId = view.args[0] ? view.args[0] : 'all' %}
+
   <div class="sfgov-events-pill-container">
     <div class="sfgov-events-pill-list-container">
-      {{ footer }}
+      <ul class="sfgov-events-pill">
+        <li class="sfgov-upcoming-events {{ current_display == 'page_1' ? 'current' : '' }}"><a href="/events/{{ deptId }}">Upcoming ({{ upcoming_event_count }})</a></li>
+        <li class="sfgov-past-events {{ current_display == 'page_2' ? 'current' : '' }}"><a href="/past-events/{{ deptId }}">Past Events</a></li>
+      </ul>
     </div>
   </div>
-{% endif %}
+{% endblock events_nav %}
 
-<div{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  {{ title }}
-  {{ title_suffix }}
+{% block content %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ title_prefix }}
+    {{ title }}
+    {{ title_suffix }}
 
-  {{ exposed }}
-  {{ attachment_before }}
+    {{ exposed }}
+    {{ attachment_before }}
 
-  {% block rows %}
-    {{ rows }}
-  {% endblock rows %}
+    {% block rows %}
+      {{ rows }}
+    {% endblock rows %}
 
-  {{ empty }}
-  {{ pager }}
+    {{ empty }}
+    {{ pager }}
 
-  {{ attachment_after }}
-  {% block more %}
-    {{ more }}
-  {% endblock more %}
+    {{ attachment_after }}
+    {% block more %}
+      {{ more }}
+    {% endblock more %}
 
-  {{ feed_icons }}
-</div>
+    {{ feed_icons }}
+  </div>
+{% endblock content %}
