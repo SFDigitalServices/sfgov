@@ -1,3 +1,5 @@
+{# upcoming events #}
+
 {#
 /**
  * @file
@@ -47,6 +49,14 @@
 %}
 {% endblock header %}
 
+{% if footer %}
+  <div class="sfgov-events-pill-container">
+    <div class="sfgov-events-pill-list-container">
+      {{ footer }}
+    </div>
+  </div>
+{% endif %}
+
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {{ title }}
@@ -66,12 +76,6 @@
   {% block more %}
     {{ more }}
   {% endblock more %}
-
-  {% if footer %}
-    <footer>
-      {{ footer }}
-    </footer>
-  {% endif %}
 
   {{ feed_icons }}
 </div>

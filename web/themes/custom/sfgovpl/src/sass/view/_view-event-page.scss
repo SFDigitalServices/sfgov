@@ -1,21 +1,65 @@
-.path-events {
+.path-events,
+.path-past-events {
   @include rubik;
   color: $c-text;
 
   .hero-banner {
     background: #00896d;
-    padding: 40px 0 60px;
+    padding: 40px 0 60px 0;
 
     h1 {
       @include rubik;
       @include fs-h1;
-      color: #fff;
+      color: $c-white;
+    }
+  }
+
+  .sfgov-events-pill-container {
+    background: $c-green-pale;
+    padding: 60px 0;
+    .sfgov-events-pill-list-container {
+      @include contain-1090;
+      .sfgov-events-pill {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: inline-block;
+        li {
+          display: inline-block;
+          a {
+            color: $c-blue-button;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            background: $c-white;
+            border-radius: 8px 0 0 8px;
+            border: 3px solid $c-text;
+            @include fs-nav-link;
+          }
+          &:last-child {
+            margin-left: -5px;
+            a {
+              border-radius: 0 8px 8px 0;
+            }
+          }
+          &.current {
+            a {
+              background: $c-text;
+              color: $c-white;
+            }
+          }
+        }
+      }
     }
   }
 
   .lead-paragraph {
     @include fs-big-description-mobile;
-    color: #fff;
+    color: $c-white;
+    > span {
+      display: block;
+
+    }
   }
 
   .view-events {
@@ -49,6 +93,11 @@
         padding-bottom: 60px;
         &:nth-child(2n) {
           background: rgba(28,62,87,0.04);
+        }
+        &.sfgov-no-events {
+          @include contain-1090;
+          padding-top: 0;
+          padding-bottom: 0;
         }
         @include media($medium-screen) {
           padding-top: 40px;
