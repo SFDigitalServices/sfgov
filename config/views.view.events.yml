@@ -54,7 +54,7 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 3
+          items_per_page: 2
           offset: 0
           id: 0
           total_pages: null
@@ -167,7 +167,12 @@ display:
           table: views
           field: area
           plugin_id: text
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
       relationships: {  }
       arguments:
         field_dept_target_id:
@@ -339,6 +344,7 @@ display:
         filters: false
         filter_groups: false
         footer: false
+        empty: false
       style:
         type: default
         options: {  }
@@ -441,9 +447,21 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<ul class=\"sfgov-events-pill\">\r\n  <li><a href=\"javascript:void(0)\">Upcoming Events ([view:total-rows])</a></li>\r\n  <li><a href=\"javascript:void(0)\">Past Events</a></li>\r\n</ul>"
+            value: "<ul class=\"sfgov-events-pill\">\r\n  <li class=\"current\"><a href=\"/events/{{ arguments.field_dept_target_id }}\">Upcoming ([view:total-rows])</a></li>\r\n  <li class=\"\"><a href=\"/past-events/{{ arguments.field_dept_target_id }}\">Past Events</a></li>\r\n</ul>"
             format: full_html
           plugin_id: text
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: true
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events for this department.  <a href=\"/past-events/{{ arguments.field_dept_target_id }}\">See past events</a>\r\n</div>"
+          plugin_id: text_custom
     cache_metadata:
       max-age: -1
       contexts:
@@ -586,7 +604,7 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<ul class=\"sfgov-events-pill\">\r\n  <li><a href=\"javascript:void(0)\">Upcoming Events ([view:total-rows])</a></li>\r\n  <li><a href=\"javascript:void(0)\">Past Events</a></li>\r\n</ul>"
+            value: "<ul class=\"sfgov-events-pill\">\r\n  <li><a href=\"/events/{{ arguments.field_dept_target_id }}\">Upcoming ([view:total-rows])</a></li>\r\n  <li class=\"current\"><a href=\"/past-events/{{ arguments.field_dept_target_id }}\">Past Events</a></li>\r\n</ul>"
             format: full_html
           plugin_id: text
     cache_metadata:
