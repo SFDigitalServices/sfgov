@@ -25,23 +25,34 @@
         padding-bottom: 60px;
         h4 {
           @include fs-body-bold;
-          display: inline-block;
-          margin: 8px 25px 0 0;
-          width: 57px;
-          vertical-align: top;
+          display: block;
+          margin: 0 0 17px 0;
+          @include media($medium-screen) {
+            display: inline-block;
+            margin: 8px 25px 0 0;
+            width: 57px;
+            vertical-align: top;
+          }
         }
         .field__items {
-          display: inline-block;
-          width: calc(100% - 87px);
-          .field__item {
+          display: block;
+          width: auto;
+          @include media($medium-screen) {
             display: inline-block;
+            width: calc(100% - 87px);
+          }
+          .field__item {
+            display: block;
             a {
-              display: block;
+              display: inline-block;
               text-decoration: none;
               background: $c-white;
               border-radius: 6px;
               padding: 10px 20px;
               margin: 0 20px 20px 0;
+            }
+            @include media($medium-screen) {
+              display: inline-block;
             }
           }
         }
@@ -57,9 +68,13 @@
   .__information-section {
     h2 {
       padding: 0;
-      margin-left: -40px;
+      margin-left: 0;
       margin-bottom: 20px;
-      @include fs-title-3;  
+      @include fs-title-5;
+      @include media($medium-screen) {
+        margin-left: -40px;
+        @include fs-title-3;
+      }
     }
   }
 
