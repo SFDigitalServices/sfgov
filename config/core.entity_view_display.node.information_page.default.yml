@@ -1,0 +1,56 @@
+uuid: ec552ac3-8799-409a-8359-3190e3a46cce
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.information_page.body
+    - field.field.node.information_page.field_dept
+    - field.field.node.information_page.field_description
+    - field.field.node.information_page.field_information_section
+    - field.field.node.information_page.field_transactions
+    - node.type.information_page
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.information_page.default
+targetEntityType: node
+bundle: information_page
+mode: default
+content:
+  field_dept:
+    weight: 3
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_information_section:
+    type: entity_reference_revisions_entity_view
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_transactions:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  body: true
+  langcode: true
+  links: true
