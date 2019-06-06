@@ -18,11 +18,6 @@ use Drupal\views\Views;
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
     $content_type = $variables['node']->getType();
-    $tags = [];
-    if($content_type == 'information_page') {
-      $tags = info_page_tags();
-      $variables['sfgov_tags'] = $tags;
-    }
     if($content_type == 'department') {
       $variables['dept_fields'] = dept_page_fields();
       sfgovpl_add_regions_to_node(['department_news'], $variables);
