@@ -65,6 +65,10 @@
 {% endblock events_nav %}
 
 {% block content %}
+
+  {# {{ kint(pager['#views_plugin'].options.items_per_page) }}
+  {{ kint(pager['#views_plugin'].total_items) }} #}
+
   <div{{ attributes.addClass(classes) }}>
     {{ title_prefix }}
     {{ title }}
@@ -78,8 +82,14 @@
     {% endblock rows %}
 
     {{ empty }}
-    {{ pager }}
 
+    {% if pager and pager['#views_plugin'] %}
+      {% set itemsPerPage = pager['#views_plugin'].options.items_per_page %}
+      {% set totalItems = pager['#views_plugin'].total_items %}
+      {% if totalItems > itemsPerPage %}
+        {{ pager }}
+      {% endif %}
+    {% endif %}
     {{ attachment_after }}
     {% block more %}
       {{ more }}
