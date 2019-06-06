@@ -25,22 +25,6 @@ function sfgovpl_preprocess_node(&$variables) {
   }
 }
 
-// expose the information page "part of" tags for template
-function info_page_tags() {
-  $node = \Drupal::request()->attributes->get('node');
-  $tx_tags_exposed = [];
-  if($node && $node->hasField('field_transactions')) {
-    $tx_nodes = $node->get('field_transactions')->referencedEntities();
-    foreach($tx_nodes as $tx_node) {
-      $tx_tags_exposed[] = [
-        'name' => $tx_node->getTitle(),
-        'url' => $tx_node->toUrl()->toString(),
-      ];
-    }
-  }
-  return $tx_tags_exposed;
-}
-
 function dept_page_fields() {
   $node = \Drupal::request()->attributes->get('node');
   $theFields = array(
