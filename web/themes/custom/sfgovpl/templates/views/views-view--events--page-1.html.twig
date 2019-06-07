@@ -1,3 +1,5 @@
+{# upcoming events #}
+
 {#
 /**
  * @file
@@ -37,6 +39,8 @@
 ]
 %}
 
+{% set current_display = view.current_display %}
+
 {% block header %}
 {% include "@theme/hero-banner-color.twig" with {
   "banner": {
@@ -47,31 +51,50 @@
 %}
 {% endblock header %}
 
-<div{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  {{ title }}
-  {{ title_suffix }}
+{% block events_nav %}
+  {% set deptId = view.args[0] ? view.args[0] : 'all' %}
 
-  {{ exposed }}
-  {{ attachment_before }}
+  <div class="sfgov-events-pill-container">
+    <div class="sfgov-events-pill-list-container">
+      <ul class="sfgov-events-pill">
+        <li class="sfgov-upcoming-events {{ current_display == 'page_1' ? 'current' : '' }}"><a href="/events/{{ deptId }}">Upcoming ({{ upcoming_event_count }})</a></li>
+        <li class="sfgov-past-events {{ current_display == 'page_2' ? 'current' : '' }}"><a href="/past-events/{{ deptId }}">Past Events</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock events_nav %}
 
-  {% block rows %}
-    {{ rows }}
-  {% endblock rows %}
+{% block content %}
 
-  {{ empty }}
-  {{ pager }}
+  {# {{ kint(pager['#views_plugin'].options.items_per_page) }}
+  {{ kint(pager['#views_plugin'].total_items) }} #}
 
-  {{ attachment_after }}
-  {% block more %}
-    {{ more }}
-  {% endblock more %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ title_prefix }}
+    {{ title }}
+    {{ title_suffix }}
 
-  {% if footer %}
-    <footer>
-      {{ footer }}
-    </footer>
-  {% endif %}
+    {{ exposed }}
+    {{ attachment_before }}
 
-  {{ feed_icons }}
-</div>
+    {% block rows %}
+      {{ rows }}
+    {% endblock rows %}
+
+    {{ empty }}
+
+    {% if pager and pager['#views_plugin'] %}
+      {% set itemsPerPage = pager['#views_plugin'].options.items_per_page %}
+      {% set totalItems = pager['#views_plugin'].total_items %}
+      {% if totalItems > itemsPerPage %}
+        {{ pager }}
+      {% endif %}
+    {% endif %}
+    {{ attachment_after }}
+    {% block more %}
+      {{ more }}
+    {% endblock more %}
+
+    {{ feed_icons }}
+  </div>
+{% endblock content %}
