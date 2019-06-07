@@ -2419,10 +2419,10 @@ header[role="banner"] {
         display: block; }
       .page-node-type-event .event--meta .event--meta-inner .event--meta-left {
         float: left;
-        width: 50%; }
+        width: 49%; }
       .page-node-type-event .event--meta .event--meta-inner .event--meta-right {
         float: right;
-        width: 49%; }
+        width: 50%; }
       .page-node-type-event .event--meta .event--meta-inner h3 {
         font-size: 17px;
         font-weight: 500;
@@ -2498,8 +2498,10 @@ header[role="banner"] {
         .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-phone {
           margin-bottom: 45px; }
           .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-phone .paragraph--type--phone h4 {
-            font-family: "Rubik", sans-serif;
-            font-weight: normal; }
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 24px;
+            font-family: "Rubik", sans-serif; }
           .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-phone .paragraph--type--phone .phone--container .sfgov-icon-phone {
             display: none; }
           .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-phone .paragraph--type--phone .phone--container .phone {
@@ -2514,8 +2516,12 @@ header[role="banner"] {
           font-size: 20px;
           font-weight: 500;
           line-height: 27px; }
-        .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-email .paragraph--type--email .__title {
-          display: none; }
+        .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-email .paragraph--type--email {
+          font-size: 17px;
+          font-weight: 400;
+          line-height: 24px; }
+          .page-node-type-event .event--content-container-inner .event--content-sidebar .event--content-sidebar-card.phone-email .event--content-email .paragraph--type--email .__title {
+            margin-bottom: 10px; }
   .page-node-type-event .event--footer {
     background: #C0E2C5;
     padding: 40px 0px; }
@@ -2604,20 +2610,27 @@ header[role="banner"] {
       color: #fff; }
 
 .event--teaser {
+  margin: 0 auto;
+  max-width: 1276px;
+  padding-left: 20px;
+  padding-right: 20px;
   font-size: 17px;
   font-weight: 400;
   line-height: 24px;
-  line-height: 24px;
-  margin-bottom: 60px; }
+  line-height: 24px; }
   .event--teaser::after {
     clear: both;
     content: "";
     display: block; }
+  @media screen and (min-width: 768px) {
+    .event--teaser {
+      padding-left: 96px;
+      padding-right: 96px; } }
   .event--teaser h2 {
     font-size: 20px;
     font-weight: 500;
     line-height: 30px;
-    margin: 0 0 10px 0; }
+    margin: 0 0 40px 0; }
     .event--teaser h2 a:link {
       color: #4f66ee; }
     .event--teaser h2 a:visited, .event--teaser h2 a:link:visited {
@@ -2628,21 +2641,36 @@ header[role="banner"] {
       color: #1c3e57; }
     .event--teaser h2 a.is-active, .event--teaser h2 a:active, .event--teaser h2 a.active-trail {
       color: #4f66ee; }
+  .event--teaser .event-details h2 {
+    margin-bottom: 10px; }
   .event--teaser p {
     margin: 0 0 10px 0;
     line-height: 28px; }
+  .event--teaser .event-details {
+    margin-left: 40px; }
   .event--teaser .event-meta::after {
     clear: both;
     content: "";
     display: block; }
   .event--teaser .event-meta .event-time {
-    float: left;
-    width: 50%; }
+    padding-left: 25px;
+    background: url(../../src/img/icons/clock_1-outlined.svg) no-repeat;
+    background-size: 18px 18px;
+    background-position: center left;
+    margin-bottom: 10px; }
   .event--teaser .event-meta .event-location {
-    float: right;
-    width: 49%;
-    background: url(../../src/img/icons/location-2.svg) no-repeat;
-    padding-left: 25px; }
+    padding-left: 25px;
+    background: url(../../src/img/icons/location_1-outlined.svg) no-repeat;
+    background-size: 18px 18px;
+    background-position: center left; }
+  @media screen and (min-width: 768px) {
+    .event--teaser .event-meta .event-time {
+      float: left;
+      width: 33%;
+      margin-bottom: 0; }
+    .event--teaser .event-meta .event-location {
+      float: right;
+      width: 66%; } }
 
 @media screen and (min-width: 768px) {
   .page-node-type-topic .hero-banner h1 {
@@ -3757,13 +3785,16 @@ header[role="banner"] {
     .sfgov-dept-news .more-link a:hover {
       background: #0c1464; }
 
-.path-events {
+.path-events,
+.path-past-events {
   font-family: "Rubik", sans-serif;
   color: #1c3e57; }
-  .path-events .hero-banner {
+  .path-events .hero-banner,
+  .path-past-events .hero-banner {
     background: #00896d;
-    padding: 40px 0 60px; }
-    .path-events .hero-banner h1 {
+    padding: 40px 0 60px 0; }
+    .path-events .hero-banner h1,
+    .path-past-events .hero-banner h1 {
       font-family: "Rubik", sans-serif;
       font-size: 33px;
       font-weight: 500;
@@ -3771,36 +3802,84 @@ header[role="banner"] {
       line-height: 43px;
       color: #fff; }
       @media screen and (min-width: 768px) {
-        .path-events .hero-banner h1 {
+        .path-events .hero-banner h1,
+        .path-past-events .hero-banner h1 {
           font-size: 62px;
           font-weight: 500;
           letter-spacing: -.3px;
           line-height: 70px; } }
-  .path-events .lead-paragraph {
+  .path-events .sfgov-events-pill-container,
+  .path-past-events .sfgov-events-pill-container {
+    background: #e9f7ec;
+    padding: 60px 0;
+    margin-bottom: 60px; }
+    .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container,
+    .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container {
+      margin: 0 auto;
+      max-width: 1090px;
+      padding-left: 20px;
+      padding-right: 20px;
+      width: 100%; }
+      @media screen and (min-width: 1280px) {
+        .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container,
+        .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container {
+          padding: 0; } }
+      .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill,
+      .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: inline-block; }
+        .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li,
+        .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li {
+          display: inline-block; }
+          .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li a,
+          .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li a {
+            color: #4f66ee;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            background: #fff;
+            border-radius: 8px 0 0 8px;
+            border: 3px solid #1c3e57;
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 20px; }
+          .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li:last-child,
+          .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li:last-child {
+            margin-left: -5px; }
+            .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li:last-child a,
+            .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li:last-child a {
+              border-radius: 0 8px 8px 0; }
+          .path-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li.current a,
+          .path-past-events .sfgov-events-pill-container .sfgov-events-pill-list-container .sfgov-events-pill li.current a {
+            background: #1c3e57;
+            color: #fff; }
+  .path-events .lead-paragraph,
+  .path-past-events .lead-paragraph {
     font-size: 20px;
     font-weight: 400;
     line-height: 29px;
     color: #fff; }
-  .path-events .view-events {
-    margin: 0 auto;
-    max-width: 1276px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 60px;
-    padding-bottom: 60px; }
-    @media screen and (min-width: 768px) {
-      .path-events .view-events {
-        padding-left: 96px;
-        padding-right: 96px; } }
-  .path-events .pager {
+    .path-events .lead-paragraph > span,
+    .path-past-events .lead-paragraph > span {
+      display: block; }
+  .path-events .view-events,
+  .path-past-events .view-events {
+    margin-bottom: 160px; }
+  .path-events .pager,
+  .path-past-events .pager {
     margin: 40px 0;
     padding: 0; }
     @media screen and (min-width: 768px) {
-      .path-events .pager {
+      .path-events .pager,
+      .path-past-events .pager {
         margin: 113px 0 62px; } }
-    .path-events .pager li {
+    .path-events .pager li,
+    .path-past-events .pager li {
       list-style: none; }
-    .path-events .pager a {
+    .path-events .pager a,
+    .path-past-events .pager a {
       background: #4f66ee;
       border-radius: 8px;
       color: #fff;
@@ -3813,11 +3892,43 @@ header[role="banner"] {
       border: 3px solid #4f66ee;
       color: #4f66ee;
       display: block; }
-      .path-events .pager a:hover {
+      .path-events .pager a:hover,
+      .path-past-events .pager a:hover {
         background: #0c1464; }
-      .path-events .pager a:hover {
+      .path-events .pager a:hover,
+      .path-past-events .pager a:hover {
         background: #4f66ee;
         color: #fff; }
+  .path-events .views-element-container .view-events > div,
+  .path-past-events .views-element-container .view-events > div {
+    background: #fff;
+    padding-top: 40px;
+    padding-bottom: 60px; }
+    .path-events .views-element-container .view-events > div:nth-child(2n),
+    .path-past-events .views-element-container .view-events > div:nth-child(2n) {
+      background: rgba(28, 62, 87, 0.04); }
+    .path-events .views-element-container .view-events > div.sfgov-no-events,
+    .path-past-events .views-element-container .view-events > div.sfgov-no-events {
+      margin: 0 auto;
+      max-width: 1090px;
+      padding-left: 20px;
+      padding-right: 20px;
+      width: 100%;
+      padding-top: 0;
+      padding-bottom: 0; }
+      @media screen and (min-width: 1280px) {
+        .path-events .views-element-container .view-events > div.sfgov-no-events,
+        .path-past-events .views-element-container .view-events > div.sfgov-no-events {
+          padding: 0; } }
+    @media screen and (min-width: 768px) {
+      .path-events .views-element-container .view-events > div,
+      .path-past-events .views-element-container .view-events > div {
+        padding-top: 0;
+        padding-bottom: 60px;
+        background: #fff; }
+        .path-events .views-element-container .view-events > div:nth-child(2n),
+        .path-past-events .views-element-container .view-events > div:nth-child(2n) {
+          background: #fff; } }
 
 .sfgov-dept-events {
   padding-bottom: 80px;
@@ -4022,6 +4133,25 @@ header[role="banner"] {
       height: 44px;
       width: 100%;
       background: #4f66ee; }
+
+.sfgov-event-address h4 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 27px;
+  margin-bottom: 20px; }
+
+.sfgov-event-address p {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 28px; }
+
+.sfgov-event-address img {
+  display: block;
+  margin-bottom: 20px;
+  border: 1px solid #a9d6ea; }
+
+.sfgov-event-address a {
+  display: block; }
 
 .path-frontpage h1 {
   max-width: 658px; }
