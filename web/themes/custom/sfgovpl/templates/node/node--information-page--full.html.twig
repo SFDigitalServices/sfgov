@@ -1,9 +1,9 @@
-{% if node.get('field_transactions').getValue() %}
+{% if node.field_transactions.value %}
   {% set hasTags = true %}
   {% set classes = ['info--has-tags'] %}
 {% endif %}
 
-{% if node.get('field_dept').getValue() %}
+{% if node.field_dept.value %}
   {% set hasDept = true %}
 {% endif %}
 
@@ -25,7 +25,7 @@
   <div class="info--content">
     {{ content.field_information_section }}
     <div class="info--last-updated">
-      Last updated {{ node.getChangedTime|date('F d, Y') }}
+      Last updated {{ node.updated|date('F d, Y') }}
     </div>
   </div>
 
