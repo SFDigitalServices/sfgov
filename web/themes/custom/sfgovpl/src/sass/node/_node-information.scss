@@ -22,7 +22,7 @@
     .info--tags {
       @include contain-1090;
       .__transactions {
-        padding-bottom: 60px;
+        padding-bottom: 40px;
         h4 {
           @include fs-body-bold;
           display: block;
@@ -61,24 +61,34 @@
   }
 
   .info--content {
-    @include contain-1090;
     @include fs-body-3;
   }
 
   .__information-section {
-    h2 {
-      padding: 0;
-      margin-left: 0;
-      margin-bottom: 20px;
-      @include fs-title-5;
-      @include media($medium-screen) {
-        margin-left: -40px;
-        @include fs-title-3;
+    
+    .sfgov-section {
+      h2 {
+        padding: 0;
+        margin-left: 0;
+        margin-bottom: 20px;
+        @include contain-1210;
+        @include fs-title-5;
+        @include media($medium-screen) {
+          @include fs-title-3;
+        }
+      }
+      .sfgov-section__content {
+        @include clearfix;
+        @include contain-1090;
+        .__text {
+          @include columns-720(left);
+        }
       }
     }
   }
 
   .info--last-updated {
+    @include contain-1090;
     font-style: italic;
     color: $c-text;
     opacity: 0.6;

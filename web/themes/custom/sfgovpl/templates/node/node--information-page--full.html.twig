@@ -1,9 +1,12 @@
-
-
 {% if node.get('field_transactions').getValue() %}
   {% set hasTags = true %}
   {% set classes = ['info--has-tags'] %}
 {% endif %}
+
+{% if node.get('field_dept').getValue() %}
+  {% set hasDept = true %}
+{% endif %}
+
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {
@@ -26,14 +29,12 @@
     </div>
   </div>
 
-
-
-  <div class="info--departments-container">
-    <div class="info--departments">
-      {{ content.field_dept }}
+  {% if hasDept %}
+    <div class="info--departments-container">
+      <div class="info--departments">
+        {{ content.field_dept }}
+      </div>
     </div>
-  </div>
-
-
+  {% endif %}
 </article>
 
