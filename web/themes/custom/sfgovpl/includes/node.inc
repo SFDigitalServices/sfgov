@@ -12,33 +12,12 @@ use Drupal\views\Views;
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
     $content_type = $variables['node']->getType();
-    $tags = [];
-    if($content_type == 'information_page') {
-      $tags = info_page_tags();
-      $variables['sfgov_tags'] = $tags;
-    }
     if($content_type == 'department') {
       $variables['dept_fields'] = dept_page_fields();
       sfgovpl_add_regions_to_node(['department_news'], $variables);
       sfgovpl_add_regions_to_node(['department_events'], $variables);
     }
   }
-}
-
-// expose the information page "part of" tags for template
-function info_page_tags() {
-  $node = \Drupal::request()->attributes->get('node');
-  $tx_tags_exposed = [];
-  if($node && $node->hasField('field_transactions')) {
-    $tx_nodes = $node->get('field_transactions')->referencedEntities();
-    foreach($tx_nodes as $tx_node) {
-      $tx_tags_exposed[] = [
-        'name' => $tx_node->getTitle(),
-        'url' => $tx_node->toUrl()->toString(),
-      ];
-    }
-  }
-  return $tx_tags_exposed;
 }
 
 function dept_page_fields() {

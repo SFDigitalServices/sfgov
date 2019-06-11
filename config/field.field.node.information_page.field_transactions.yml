@@ -1,0 +1,28 @@
+uuid: 07a627af-260b-4627-a358-c53bf0f83b2a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_transactions
+    - node.type.information_page
+    - node.type.transaction
+id: node.information_page.field_transactions
+field_name: field_transactions
+entity_type: node
+bundle: information_page
+label: 'Part of'
+description: 'Tag transactions that are part of this information page'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      transaction: transaction
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
