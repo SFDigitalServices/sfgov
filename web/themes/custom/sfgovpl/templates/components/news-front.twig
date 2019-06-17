@@ -1,0 +1,18 @@
+<div class="news-front">
+  <h3>{{ "News"|t }}</h3>
+  <div class="news-front--container">
+    <div class="news-front--view">
+      {{ rows }}
+      {% if count > 0 %}
+        {% for n in 1..count %}
+          <div class="views-row" style="visibility:hidden"></div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {{ more }}
+
+    <div class="news-front--twitter">
+      {% include '@theme/twitter.twig' %}
+    </div>
+  </div>
+</div>
