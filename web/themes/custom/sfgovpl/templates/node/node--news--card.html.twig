@@ -1,1 +1,15 @@
 {% extends 'node--news--teaser.html.twig' %}
+
+{% block body %}
+
+  {% if is_front and content.field_image|render|striptags %}
+    {% set thumbnail = file_url(node.field_image.entity.field_media_image.entity.uri.value | image_style('160x160')) %}
+    <div class="news--teaser--body w-image" style="background-image: url('{{ thumbnail }}');">
+  {% else %}
+    <div class="news--teaser--body">
+  {% endif %}
+
+    <h2{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h2>
+    {{ content|without('links', 'field_image') }}
+  </div>
+{% endblock body %}
