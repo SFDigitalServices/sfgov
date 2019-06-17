@@ -58,9 +58,13 @@
           {{ page.content_top }}
         </div>
       {% endif %}
-      {% if page.content %}
-        {{ page.content }}
-      {% endif %}
+
+      {% block page_content %}
+        {% if page.content %}
+          {{ page.content }}
+        {% endif %}
+      {% endblock page_content %}
+
       {% if page.content_left %}
         <aside class="content-left-container" role="complementary">
           {{ page.content_left }}

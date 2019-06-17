@@ -15,17 +15,6 @@
             };
         };
 
-        // @todo Deprecate?
-        var checkWindowSize = function() {
-            var bp = 768;
-            var windowWidth = $(window).width();
-            if(windowWidth <= bp) {
-            //     $('nav.sfgov-nav.is-visible').css({height:$(window).height()+'px'});
-            } else {
-            //     $('nav.sfgov-nav').css({height:'auto'});
-            }
-        }
-
         $('button.sfgov-mobile-search').click(function() {
           $('header .sfgov-search-311-block').show();
           $('body').removeClass('sfgov-mobile_nav-active');
@@ -46,36 +35,33 @@
         $('button.sfgov-mobile-translate').click(function() {
             $('#block-gtranslate').show();
         });
-
-        $(window).on('resize', function() {
-            checkWindowSize();
-        });
-        
-        var searchClearInput = function() {
+  
+      // Search Clear Input functionality.
+      var searchClearInput = function () {
+    
+        var input = $('[data-drupal-selector="edit-sfgov-search-input"]');
+        var inputWrapper = $('.form-item-sfgov-search-input');
+        var inputClearButton = '<span class="input-clear"></span>';
+    
+        inputWrapper.prepend(inputClearButton);
+    
+        input.keyup(function () {
+          var parent = $(this).parent('.form-item-sfgov-search-input')
       
-          var input = $('[data-drupal-selector="edit-sfgov-search-input"]');
-          var inputWrapper = $('.form-item-sfgov-search-input');
-          var inputClearButton = '<span class="input-clear"></span>';
-  
-          inputWrapper.prepend(inputClearButton);
-  
-          input.keyup(function(){
-            if (input.val() != '') {
-              inputWrapper.addClass('is_typing');
-            } else {
-              inputWrapper.removeClass('is_typing');
-            }
-          });
-  
-          $('.input-clear').click(function() {
-            console.log('val')
-            input.val('');
-            inputWrapper.removeClass('is_typing');
-          });
-        }
-
-        checkWindowSize();
-        
-        searchClearInput();
-    });
+          if ($(this).val() != '') {
+            parent.addClass('is_typing');
+          }
+          else {
+            parent.removeClass('is_typing');
+          }
+        });
+    
+        $('.input-clear').click(function () {
+          input.val('');
+          inputWrapper.removeClass('is_typing');
+        });
+      };
+    
+    searchClearInput();
+  });
 })(jQuery);

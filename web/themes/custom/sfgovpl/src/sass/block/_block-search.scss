@@ -19,18 +19,18 @@
   }
 
   [data-drupal-selector="edit-sfgov-search-input"] {
-    border-color: $c-blue-button;
+    border-color: $c-bright-blue;
     border-radius: 8px 0 0 8px;
     border-style: solid;
     border-width: 3px 0 3px 3px;
     height: 44px;
     margin: 0;
     max-width: initial;
-    padding: 15px;
+    padding: 0 15px;
   }
 
   [data-drupal-selector="edit-actions"] {
-    background: $c-blue-button;
+    background: $c-bright-blue;
     border-radius: 0 8px 8px 0;
     position: relative;
     text-align: center;
@@ -42,17 +42,17 @@
       @include background-image('search-white.svg');
       content: '';
       display: block;
-      width: 25px;
-      height: 25px;
+      width: 22px;
+      height: 22px;
       position: absolute;
       left: 12px;
-      top: 11px;
+      top: 13px;
     }
   }
 
   [data-drupal-selector="edit-submit"] {
     @include rubik;
-    background: $c-blue-button;
+    background: $c-bright-blue;
     border-radius: 0 8px 8px 0;
     font-size: 0px;
     font-weight: $fw-medium;
@@ -73,10 +73,15 @@ header[role="banner"] {
       display: inline-block !important; // @todo better handled in js on resize.
     }
   }
+
+  [data-drupal-selector='edit-actions']::before {
+    top: 11px;
+  }
 }
 
 // Paragraph version
-.paragraph--type--block {
+.region-fourofour, // 404 page.
+.paragraph--type--block { // home page.
   .sfgov-search-311-block {
     display: inline-block;
     width: auto;
@@ -94,7 +99,7 @@ header[role="banner"] {
       margin-bottom: 20px;
 
       @include media($narrow-screen) {
-        padding: 15px 15px 15px 54px;
+        padding: 0 15px 0 54px;
       }
     }
 
@@ -135,8 +140,8 @@ header[role="banner"] {
           @include background-image('search-blue.svg');
           content: '';
           display: block;
-          width: 20px;
-          height: 20px;
+          width: 22px;
+          height: 22px;
           position: absolute;
           left: 15px;
           top: 13px;
