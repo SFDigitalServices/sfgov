@@ -1,39 +1,109 @@
 @import 'variables';
+@import 'mixins';
 @import 'mixins-fs';
 
-a:visited {
-  color: #4f66ee;
+abbr[title] {
+  text-decoration: none;
 }
 
-.SandboxRoot {
+.SandboxRoot body {
   @include rubik;
-}
 
-.timeline-Body {
-  border-top: 3px solid $c-border;
-}
-
-.timeline-Header {
-  padding: 0;
-}
-
-.timeline-Header-title {
-  @include fs-title-3;
-}
-
-.timeline-TweetList li {
-  display: none;
-
-  &:first-child,
-  &:nth-child(2){
-    display: list-item;
+  a {
+    @include link-colors($c-bright-blue);
   }
-}
 
-.timeline-Tweet-media {
-  display: none;
-}
+  .timeline-Header-title {
+    @include fs-title-3-mobile;
+    color: $c-slate;
 
-.timeline-LoadMore {
-  display: none;
+    @include media($wide-screen) {
+      @include fs-title-3;
+    }
+  }
+
+  .timeline-Header-subtitle {
+    @include fs-small-text;
+    color: $c-slate;
+  }
+
+  .timeline-Tweet .timeline-Tweet-text {
+    @include fs-small-text;
+    margin-left: 0;
+  }
+
+  .timeline-Widget {
+    background-color: $c-black-opacity-3;
+  }
+
+  .timeline-Body {
+    border-bottom: 3px solid $c-border;
+    border-top: 3px solid $c-border;
+  }
+
+  .timeline-Tweet-text {
+    color: $c-slate;
+    margin-bottom: 33px;
+  }
+
+  .timeline-Header {
+    padding: 20px 0 37px;
+  }
+
+  .timeline-TweetList .timeline-TweetList-tweet {
+    display: none;
+
+    &:first-child,
+    &:nth-child(2){
+      display: list-item;
+    }
+  }
+
+  .timeline-Tweet {
+    padding: 22px 0 19px;
+
+    .timeline-Tweet-author {
+      height: 40px;
+      margin-bottom: 7px;
+      padding-left: 45px;
+
+      .TweetAuthor-avatar {
+        height: 40px;
+        width: 40px;
+      }
+
+      .TweetAuthor-name {
+        color: $c-slate;
+        font-weight: $fw-medium;
+      }
+
+      .TweetAuthor-screenName {
+        @include fs-small-text;
+        color: $c-slate;
+      }
+    }
+
+    .timeline-Tweet-actions {
+      margin-left: 0;
+    }
+  }
+
+  .timeline-Tweet-media {
+    display: none;
+  }
+
+  .timeline-LoadMore {
+    display: none;
+  }
+
+  .timeline-Tweet-metadata {
+    a {
+      color: rgba(33, 33, 35, .5);
+    }
+  }
+
+  .timeline-Footer {
+    @include fs-small-text;
+    padding: 14px 0;
+  }
 }
