@@ -1,13 +1,16 @@
 "use strict";
 (function($) {
-    var nowrap = function(oldPhase, newPhase){
+    var nowrap = function(oldPhrase){
+        var newPhrase = oldPhrase.replace(' ', '\xa0');
         $('body :not(script)').contents().filter(function(){
                 return this.nodeType === 3;
-        }).replaceWith(function() {
-            return this.nodeValue.replace(oldPhase, newPhase);
-        });      
+        }).each(function(){
+            if(this.nodeValue.indexOf(oldPhrase)>=0){
+                this.nodeValue = this.nodeValue.replace(oldPhrase, newPhrase);
+            }
+        });
     }
     $('document').ready(function(){
-        nowrap('San Francisco', 'San&nbsp;Francisco');
+        nowrap('San Francisco');
     });
 })(jQuery);
