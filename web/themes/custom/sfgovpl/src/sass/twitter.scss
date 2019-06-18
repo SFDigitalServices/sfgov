@@ -18,27 +18,53 @@ abbr[title] {
     color: $c-slate;
   }
 
-  .timeline-Tweet .timeline-Tweet-text {
-    @include fs-small-text;
-    margin-left: 0;
-  }
-
   .timeline-Widget {
     background-color: $c-black-opacity-3;
 
     .timeline-Header-title {
       display: none;
     }
+
+    .timeline-Tweet {
+      padding: 22px 0 19px;
+
+      .timeline-Tweet-author {
+        height: 40px;
+        margin-bottom: 7px;
+        padding-left: 45px;
+
+        .TweetAuthor-avatar {
+          height: 40px;
+          width: 40px;
+        }
+
+        .TweetAuthor-name {
+          color: $c-slate;
+          font-weight: $fw-medium;
+        }
+
+        .TweetAuthor-screenName {
+          @include fs-small-text;
+          color: $c-slate;
+        }
+      }
+
+      .timeline-Tweet-actions {
+        margin-left: 0;
+      }
+
+      .timeline-Tweet-text {
+        @include fs-small-text;
+        color: $c-slate;
+        margin-bottom: 33px;
+        margin-left: 0;
+      }
+    }
   }
 
   .timeline-Body {
     border-bottom: 3px solid $c-border;
     border-top: 3px solid $c-border;
-  }
-
-  .timeline-Tweet-text {
-    color: $c-slate;
-    margin-bottom: 33px;
   }
 
   .timeline-Header {
@@ -58,33 +84,8 @@ abbr[title] {
     }
   }
 
-  .timeline-Tweet {
-    padding: 22px 0 19px;
-
-    .timeline-Tweet-author {
-      height: 40px;
-      margin-bottom: 7px;
-      padding-left: 45px;
-
-      .TweetAuthor-avatar {
-        height: 40px;
-        width: 40px;
-      }
-
-      .TweetAuthor-name {
-        color: $c-slate;
-        font-weight: $fw-medium;
-      }
-
-      .TweetAuthor-screenName {
-        @include fs-small-text;
-        color: $c-slate;
-      }
-    }
-
-    .timeline-Tweet-actions {
-      margin-left: 0;
-    }
+  .timeline-Tweet-retweetCredit {
+    margin-left: 0;
   }
 
   .timeline-Tweet-media {
@@ -107,10 +108,10 @@ abbr[title] {
   }
 }
 
-//// Large screens.
-//// Our media mixin doesn't work because of the ifram.
-//.SandboxRoot.env-bp-min body {
-//  .timeline-Header-title {
-//    @include fs-title-3;
-//  }
-//}
+// Large screens.
+// Our media mixin doesn't work because of the ifram.
+.SandboxRoot.env-bp-min body {
+  .timeline-Header {
+    padding: 0 0 23px;
+  }
+}
