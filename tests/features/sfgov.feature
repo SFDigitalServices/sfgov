@@ -4,7 +4,7 @@ Feature: Sfgov Content
   I need to be able to see that the Drupal and Drush drivers are working
 
 @api @sfgov
-Scenario: Create department node
+Scenario: Create department
   Given "department" content:
   | title           |
   | Test Department |
@@ -72,7 +72,7 @@ Scenario: Create department node
   Then I should see "Test Transaction"
 
 @api @sfgov
-  Scenario: Create Person and Test URL
+  Scenario: Create person and test url
   Given I am logged in as a user with the "administrator" role
   Given "person" content:
   | title              | status |
@@ -125,3 +125,17 @@ Scenario: Create department node
   And I click the "#edit-submit" element
   Then I should be on "es/test-translation-transaction"
   And I should see "This is the translated version"
+
+@api @sfgov
+  Scenario: Create information page
+  Given I am logged in as a user with the "administrator" role
+  When I go to "node/add/information_page"
+  And I enter "Test information page" for "Title"
+  And I enter "Test information page description" for "Description"
+  And I enter "Get a San Francisco birth certificate" for "field_transactions[0][target_id]"
+  And I enter "Info page section heading" for "field_information_section[0][subform][field_title][0][value]"
+  And I enter "County Clerk" for "field_dept[0][target_id]"
+  And I enter "published" for "moderation_state[0][state]"
+  And I click the "#edit-submit" element
+  Then I should be on "information/test-information-page"
+  And I should see "Test information page"
