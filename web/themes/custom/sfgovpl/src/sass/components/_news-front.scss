@@ -4,7 +4,7 @@
   overflow: hidden;
   padding-top: 60px;
 
-  @include media($wide-screen) {
+  @include media($narrow-screen) {
     padding-bottom: 80px;
     padding-top: 80px;
   }
@@ -22,6 +22,11 @@
   .news-front--view {
     padding-left: 20px;
     padding-right: 20px;
+
+    @include media($narrow-screen) {
+      padding-right: 20px;
+      width: calc(100% - 445px);
+    }
 
     @include media($wide-screen) {
       padding-right: 102px;
@@ -53,8 +58,8 @@
     background: $c-black-opacity-3;
     padding: 20px;
 
-    @include media($wide-screen) {
-      background: $c-white;
+    @include media($narrow-screen) {
+      background: $c-black-opacity-3;
       padding: 190px 56px 140px 59px;
       position: absolute;
       right: 0;
