@@ -13,15 +13,6 @@ abbr[title] {
     @include link-colors($c-bright-blue);
   }
 
-  .timeline-Header-title {
-    @include fs-title-3-mobile;
-    color: $c-slate;
-
-    @include media($narrow-screen) {
-      @include fs-title-3;
-    }
-  }
-
   .timeline-Header-subtitle {
     @include fs-small-text;
     color: $c-slate;
@@ -34,6 +25,10 @@ abbr[title] {
 
   .timeline-Widget {
     background-color: $c-black-opacity-3;
+
+    .timeline-Header-title {
+      display: none;
+    }
   }
 
   .timeline-Body {
@@ -47,7 +42,11 @@ abbr[title] {
   }
 
   .timeline-Header {
-    padding: 20px 0 37px;
+    padding: 0 0 37px;
+
+    .timeline-InformationCircle {
+      display: none;
+    }
   }
 
   .timeline-TweetList .timeline-TweetList-tweet {
@@ -107,3 +106,11 @@ abbr[title] {
     padding: 14px 0;
   }
 }
+
+//// Large screens.
+//// Our media mixin doesn't work because of the ifram.
+//.SandboxRoot.env-bp-min body {
+//  .timeline-Header-title {
+//    @include fs-title-3;
+//  }
+//}
