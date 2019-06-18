@@ -86,7 +86,8 @@ Scenario: Create department
   And I enter "Testfirst" for "field_first_name[0][value]"
   And I enter "Testlast" for "field_last_name[0][value]"
   And I attach the file "london-breed.jpg" to "files[field_photo_0]"
-  And I press "Save"
+  And I enter "published" for "moderation_state[0][state]"
+  And I click the "#edit-submit" element
   Then I should be on "person/testfirst-testlast"
   And the "style" attribute of the ".person-photo" element should contain "london-breed.jpg"
   And I should see "Success"
