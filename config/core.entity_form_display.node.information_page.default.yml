@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.information_page.field_dept
     - field.field.node.information_page.field_description
     - field.field.node.information_page.field_information_section
+    - field.field.node.information_page.field_topics
     - field.field.node.information_page.field_transactions
     - node.type.information_page
   module:
@@ -64,6 +65,15 @@ content:
         add_above: '0'
     third_party_settings: {  }
     region: content
+  field_topics:
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_transactions:
     weight: 2
     settings:
@@ -75,7 +85,7 @@ content:
     region: content
   moderation_state:
     type: moderation_state_default
-    weight: 5
+    weight: 6
     settings: {  }
     region: content
     third_party_settings: {  }
