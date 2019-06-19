@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.news.field_dept
     - field.field.node.news.field_image
     - field.field.node.news.field_news_type
+    - field.field.node.news.field_topics
     - node.type.news
   module:
     - content_moderation
@@ -79,6 +80,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
+  field_topics:
+    weight: 26
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   moderation_state:
     type: moderation_state_default
