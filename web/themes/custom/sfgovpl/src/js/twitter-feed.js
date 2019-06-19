@@ -2,6 +2,13 @@
  Modified from https://github.com/kevinburke/customize-twitter-1.1/blob/master/customize-twitter-1.1.js
  Allows for css and google font injection.
  */
+
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];
+  if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
+    js.src="//platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js,fjs);}
+}(document,"script","twitter-wjs");
+
 var CustomizeTwitterWidget = function(data) {
   // ie hack, http://stackoverflow.com/a/10183573/329700
   if(!(window.console && console.log)) {
