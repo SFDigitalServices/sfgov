@@ -98,29 +98,21 @@ var CustomizeTwitterWidget = function(data) {
 }
 
 function checkIframeLoaded() {
-  // Get a handle to the iframe element
+
   var iframe = document.getElementById('twitter-widget-0');
-  // var iframeDoc = iframe.contentWindow.document;
   
-  // Check if loading is complete
-  if (  iframe != null ) {
-    // The loading is complete, call the function we want executed once the iframe is loaded
-    afterLoading();
+  if (iframe != null) {
+    
+    var options = {
+      "url": "/themes/custom/sfgovpl/dist/css/twitter.css",
+      "url2": "//fonts.googleapis.com/css?family=Rubik:300,400,500,700",
+    };
+  
+    CustomizeTwitterWidget(options);
     return;
   }
   
-  // If we are here, it is not loaded. Set things up so we check   the status again in 100 milliseconds
   window.setTimeout(checkIframeLoaded, 1000);
-}
-
-function afterLoading(){
-  
-  var options = {
-    "url": "/themes/custom/sfgovpl/dist/css/twitter.css",
-    "url2": "//fonts.googleapis.com/css?family=Rubik:300,400,500,700",
-  };
-  
-  CustomizeTwitterWidget(options);
 }
 
 checkIframeLoaded();
