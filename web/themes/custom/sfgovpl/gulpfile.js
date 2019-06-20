@@ -8,6 +8,7 @@ const imagemin = require('gulp-imagemin');
 const concat = require('gulp-concat');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
+const browsersync = require('browser-sync').create();
 
 const config = require('./config');
 
@@ -25,7 +26,8 @@ function css() {
     .pipe(postcss(plugins))
     .pipe(concat(config.css.output))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(config.css.dest));
+    .pipe(gulp.dest(config.css.dest))
+    .pipe(browsersync.stream());
 }
 
 // not currently doing anything with images
@@ -36,6 +38,12 @@ function images() {
     .pipe(gulp.dest(config.images.dest));
 }
 
+function serve() {
+  browsersync.init({
+    proxy: 'https://sfgov.lndo.site/'
+  });
+}
+
 function watch() {
   gulp.watch(config.css.source, css);
 }
@@ -44,5 +52,5 @@ exports.css = gulp.series(css);
 
 exports.default = gulp.series(
   gulp.parallel(css),
-  watch
+  gulp.parallel(watch, serve)
 );
