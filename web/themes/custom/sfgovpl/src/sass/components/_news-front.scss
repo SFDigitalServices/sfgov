@@ -1,0 +1,93 @@
+.news-front {
+  @include clearfix;
+  background: $c-yellow-1;
+  overflow: hidden;
+  padding-top: 60px;
+
+  @include media($narrow-screen) {
+    padding-bottom: 80px;
+    padding-top: 80px;
+  }
+
+  h3 {
+    @include fs-h1;
+  }
+
+  .news-front--container {
+    @include contain-1090;
+    padding: 0;
+    position: relative;
+  }
+
+  .news-front--view {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    @include media($narrow-screen) {
+      padding-right: 20px;
+      width: calc(100% - 445px);
+    }
+
+    @include media($wide-screen) {
+      padding-right: 102px;
+      width: calc(100% - 445px);
+    }
+  }
+
+  .news--teaser--body {
+    background-color: $c-yellow-3;
+    background-position: right top;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    &.w-image {
+      height: 160px;
+      padding: 20px 180px 20px 20px;
+
+      @include media-max($medium-screen) {
+        background-image: none !important;
+        height: auto;
+        padding: 20px;
+      }
+    }
+  }
+
+  .news-front--twitter {
+    background: $c-black-opacity-3;
+    padding: 40px 20px 20px;
+
+    @include media($narrow-screen) {
+      background: $c-black-opacity-3;
+      padding: 180px 56px 240px 59px;
+      position: absolute;
+      right: 0;
+      top: -190px;
+      width: 445px;
+    }
+
+    h2 {
+      @include fs-title-3-mobile;
+      margin-bottom: 0;
+
+      @include media($narrow-screen) {
+        @include fs-title-3;
+      }
+    }
+  }
+
+  .news-front--view-more {
+    @include clearfix;
+    padding-bottom: 80px;
+    padding-top: 30px;
+
+    .more-link {
+      padding: 0;
+    }
+
+    a {
+      @include button;
+    }
+  }
+}

@@ -1,0 +1,117 @@
+@import 'variables';
+@import 'mixins';
+@import 'mixins-fs';
+
+abbr[title] {
+  text-decoration: none;
+}
+
+.SandboxRoot body {
+  @include rubik;
+
+  a {
+    @include link-colors($c-bright-blue);
+  }
+
+  .timeline-Header-subtitle {
+    @include fs-small-text;
+    color: $c-slate;
+  }
+
+  .timeline-Widget {
+    background-color: $c-black-opacity-3;
+
+    .timeline-Header-title {
+      display: none;
+    }
+
+    .timeline-Tweet {
+      padding: 22px 0 19px;
+
+      .timeline-Tweet-author {
+        height: 40px;
+        margin-bottom: 7px;
+        padding-left: 45px;
+
+        .TweetAuthor-avatar {
+          height: 40px;
+          width: 40px;
+        }
+
+        .TweetAuthor-name {
+          color: $c-slate;
+          font-weight: $fw-medium;
+        }
+
+        .TweetAuthor-screenName {
+          @include fs-small-text;
+          color: $c-slate;
+        }
+      }
+
+      .timeline-Tweet-actions {
+        margin-left: 0;
+      }
+
+      .timeline-Tweet-text {
+        @include fs-small-text;
+        color: $c-slate;
+        margin-bottom: 33px;
+        margin-left: 0;
+      }
+    }
+  }
+
+  .timeline-Body {
+    border-bottom: 3px solid $c-border;
+    border-top: 3px solid $c-border;
+  }
+
+  .timeline-Header {
+    padding: 0 0 37px;
+
+    .timeline-InformationCircle {
+      display: none;
+    }
+  }
+
+  .timeline-TweetList .timeline-TweetList-tweet {
+    display: none;
+
+    &:first-child,
+    &:nth-child(2){
+      display: list-item;
+    }
+  }
+
+  .timeline-Tweet-retweetCredit {
+    margin-left: 0;
+  }
+
+  .timeline-Tweet-media {
+    display: none;
+  }
+
+  .timeline-LoadMore {
+    display: none;
+  }
+
+  .timeline-Tweet-metadata {
+    a {
+      color: rgba(33, 33, 35, .5);
+    }
+  }
+
+  .timeline-Footer {
+    @include fs-small-text;
+    padding: 14px 0;
+  }
+}
+
+// Large screens.
+// Our media mixin doesn't work because of the ifram.
+.SandboxRoot.env-bp-min body {
+  .timeline-Header {
+    padding: 0 0 23px;
+  }
+}

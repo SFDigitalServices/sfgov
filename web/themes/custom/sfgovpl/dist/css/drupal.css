@@ -861,24 +861,13 @@ header[role="banner"] .sfgov-nav-container .sfgov-nav-container__content .head-r
   }
 }
 
-@media screen and (min-width: 768px) {
-  main {
-    margin-bottom: 250px;
-  }
-}
-
-footer {
-  height: auto;
-  width: auto;
-  position: static;
+main[role="main"] {
+  min-height: calc(100vh - 524px);
 }
 
 @media screen and (min-width: 768px) {
-  footer {
-    height: 250px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  main[role="main"] {
+    min-height: calc(100vh - 418px);
   }
 }
 
@@ -1487,6 +1476,7 @@ details[open] .details__content {
 
 @media screen and (min-width: 768px) {
   .sfgov-footer {
+    height: 250px;
     padding-bottom: 60px;
     padding-top: 60px;
   }
@@ -1846,6 +1836,159 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 
 .sfgov-new-website a.is-active, .sfgov-new-website a:active, .sfgov-new-website a.active-trail {
   color: #4f66ee;
+}
+
+.news-front {
+  background: #f8f1df;
+  overflow: hidden;
+  padding-top: 60px;
+}
+
+.news-front::after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+@media screen and (min-width: 950px) {
+  .news-front {
+    padding-bottom: 80px;
+    padding-top: 80px;
+  }
+}
+
+.news-front h3 {
+  font-size: 33px;
+  font-weight: 500;
+  letter-spacing: -.3px;
+  line-height: 43px;
+}
+
+@media screen and (min-width: 768px) {
+  .news-front h3 {
+    font-size: 62px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 70px;
+  }
+}
+
+.news-front .news-front--container {
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  padding: 0;
+  position: relative;
+}
+
+@media screen and (min-width: 1280px) {
+  .news-front .news-front--container {
+    padding: 0;
+  }
+}
+
+.news-front .news-front--view {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media screen and (min-width: 950px) {
+  .news-front .news-front--view {
+    padding-right: 20px;
+    width: calc(100% - 445px);
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .news-front .news-front--view {
+    padding-right: 102px;
+    width: calc(100% - 445px);
+  }
+}
+
+.news-front .news--teaser--body {
+  background-color: #f4c435;
+  background-position: right top;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.news-front .news--teaser--body.w-image {
+  height: 160px;
+  padding: 20px 180px 20px 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .news-front .news--teaser--body.w-image {
+    background-image: none !important;
+    height: auto;
+    padding: 20px;
+  }
+}
+
+.news-front .news-front--twitter {
+  background: #f9f9f9;
+  padding: 40px 20px 20px;
+}
+
+@media screen and (min-width: 950px) {
+  .news-front .news-front--twitter {
+    background: #f9f9f9;
+    padding: 180px 56px 240px 59px;
+    position: absolute;
+    right: 0;
+    top: -190px;
+    width: 445px;
+  }
+}
+
+.news-front .news-front--twitter h2 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 30px;
+  margin-bottom: 0;
+}
+
+@media screen and (min-width: 950px) {
+  .news-front .news-front--twitter h2 {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 42px;
+  }
+}
+
+.news-front .news-front--view-more {
+  padding-bottom: 80px;
+  padding-top: 30px;
+}
+
+.news-front .news-front--view-more::after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.news-front .news-front--view-more .more-link {
+  padding: 0;
+}
+
+.news-front .news-front--view-more a {
+  background: #4f66ee;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 500;
+  padding: 13px 20px 11px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.news-front .news-front--view-more a:hover {
+  background: #0c1464;
 }
 
 .page-node-type-page .sfgov-new-website {
@@ -3351,6 +3494,10 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 
 .news--card h2 a.is-active, .news--card h2 a:active, .news--card h2 a.active-trail {
   color: #1c3e57;
+}
+
+.news--card .__image {
+  display: none;
 }
 
 .news--teaser {
@@ -5961,6 +6108,10 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   padding-bottom: 0;
 }
 
+.paragraph-child--news .sfgov-container {
+  padding: 0;
+}
+
 .paragraph--type--news .sfds-layout-container .sfds-responsive-container {
   padding: 0;
 }
@@ -6234,6 +6385,133 @@ body h3 {
   body div.sfgov-timestamp {
     padding: 0;
   }
+}
+
+abbr[title] {
+  text-decoration: none;
+}
+
+.SandboxRoot body {
+  font-family: "Rubik", sans-serif;
+}
+
+.SandboxRoot body a:link {
+  color: #4f66ee;
+}
+
+.SandboxRoot body a:visited, .SandboxRoot body a:link:visited {
+  color: #4f66ee;
+}
+
+.SandboxRoot body a:focus {
+  color: #4f66ee;
+}
+
+.SandboxRoot body a.is-active, .SandboxRoot body a:active, .SandboxRoot body a.active-trail {
+  color: #4f66ee;
+}
+
+.SandboxRoot body .timeline-Header-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #1c3e57;
+}
+
+.SandboxRoot body .timeline-Widget {
+  background-color: #f9f9f9;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Header-title {
+  display: none;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet {
+  padding: 22px 0 19px;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet .timeline-Tweet-author {
+  height: 40px;
+  margin-bottom: 7px;
+  padding-left: 45px;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet .timeline-Tweet-author .TweetAuthor-avatar {
+  height: 40px;
+  width: 40px;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet .timeline-Tweet-author .TweetAuthor-name {
+  color: #1c3e57;
+  font-weight: 500;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet .timeline-Tweet-author .TweetAuthor-screenName {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #1c3e57;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet .timeline-Tweet-actions {
+  margin-left: 0;
+}
+
+.SandboxRoot body .timeline-Widget .timeline-Tweet .timeline-Tweet-text {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #1c3e57;
+  margin-bottom: 33px;
+  margin-left: 0;
+}
+
+.SandboxRoot body .timeline-Body {
+  border-bottom: 3px solid rgba(28, 62, 87, 0.1);
+  border-top: 3px solid rgba(28, 62, 87, 0.1);
+}
+
+.SandboxRoot body .timeline-Header {
+  padding: 0 0 37px;
+}
+
+.SandboxRoot body .timeline-Header .timeline-InformationCircle {
+  display: none;
+}
+
+.SandboxRoot body .timeline-TweetList .timeline-TweetList-tweet {
+  display: none;
+}
+
+.SandboxRoot body .timeline-TweetList .timeline-TweetList-tweet:first-child, .SandboxRoot body .timeline-TweetList .timeline-TweetList-tweet:nth-child(2) {
+  display: list-item;
+}
+
+.SandboxRoot body .timeline-Tweet-retweetCredit {
+  margin-left: 0;
+}
+
+.SandboxRoot body .timeline-Tweet-media {
+  display: none;
+}
+
+.SandboxRoot body .timeline-LoadMore {
+  display: none;
+}
+
+.SandboxRoot body .timeline-Tweet-metadata a {
+  color: rgba(33, 33, 35, 0.5);
+}
+
+.SandboxRoot body .timeline-Footer {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  padding: 14px 0;
+}
+
+.SandboxRoot.env-bp-min body .timeline-Header {
+  padding: 0 0 23px;
 }
 
 /*# sourceMappingURL=drupal.css.map */

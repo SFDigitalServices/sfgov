@@ -1,0 +1,28 @@
+uuid: 9e9753ba-b2a5-4689-b63c-a15f4c8bb76b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.information_page
+    - node.type.topic
+id: node.information_page.field_topics
+field_name: field_topics
+entity_type: node
+bundle: information_page
+label: Topic(s)
+description: 'Start typing the name of a topic to see suggestions.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      topic: topic
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
