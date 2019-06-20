@@ -3,8 +3,7 @@
 module.exports = {
   css: {
     source: './src/sass/**/*.scss',
-    dest: './dist/css',
-    output: 'drupal.css'
+    dest: './dist/css'
   },
   images: {
     source: './src/img/**',
