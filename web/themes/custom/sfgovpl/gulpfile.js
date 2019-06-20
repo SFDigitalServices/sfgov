@@ -23,7 +23,6 @@ function css() {
     .pipe(sourcemaps.init())
     .pipe(sass({ outputStyle: 'expanded'}))
     .pipe(postcss(plugins))
-    .pipe(concat(config.css.output))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(config.css.dest));
 }
