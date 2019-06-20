@@ -1,53 +1,48 @@
-// Include gulp.
-let gulp = require('gulp');
-let browserSync = require('browser-sync').create();
-var config = require('./config.json');
+"use strict";
 
-// Include plugins.
-var sass = require('gulp-sass');
-var plumber = require('gulp-plumber');
-var notify = require('gulp-notify');
-var autoprefix = require('gulp-autoprefixer');
-var glob = require('gulp-sass-glob');
-var sourcemaps = require('gulp-sourcemaps');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const sassLint = require('gulp-sass-lint');
+const sourcemaps = require('gulp-sourcemaps');
+const imagemin = require('gulp-imagemin');
+const concat = require('gulp-concat');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
 
-// CSS.
-gulp.task('css', function() {
-  return gulp.src(config.css.src)
-    .pipe(glob())
-    .pipe(plumber({
-      errorHandler: function (error) {
-        notify.onError({
-          title:    "Gulp",
-          subtitle: "Failure!",
-          message:  "Error: <%= error.message %>",
-          sound:    "Beep"
-        }) (error);
-        this.emit('end');
-      }}))
+const config = require('./config');
+
+function css() {
+  const plugins = [
+    autoprefixer()
+  ];
+  return gulp
+    .src(config.css.source)
+    // .pipe(sassLint())
+    // .pipe(sassLint.format())
+    // .pipe(sassLint.failOnError())
     .pipe(sourcemaps.init())
-    .pipe(sass({
-      outputStyle: 'nested',
-      errLogToConsole: true,
-      includePaths: config.css.includePaths
-    }))
-    .pipe(autoprefix('last 2 versions', '> 1%', 'ie 9', 'ie 10'))
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(config.css.dest))
-    .pipe(browserSync.reload({ stream: true, match: '**/*.css' }));
-});
+    .pipe(sass({ outputStyle: 'expanded'}))
+    .pipe(postcss(plugins))
+    .pipe(concat(config.css.output))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(config.css.dest));
+}
 
-// Watch task.
-gulp.task('watch', function() {
-  gulp.watch(config.css.src, ['css']);
-});
+// not currently doing anything with images
+function images() {
+  return gulp
+    .src(config.images.source)
+    .pipe(imagemin())
+    .pipe(gulp.dest(config.images.dest));
+}
 
-// Static Server + Watch
-gulp.task('serve', ['css', 'watch'], function() {
-  browserSync.init({
-    proxy: config.browserSyncProxy
-  });
-});
+function watch() {
+  gulp.watch(config.css.source, css);
+}
 
-// Default Task
-gulp.task('default', ['serve']);
+exports.css = gulp.series(css);
+
+exports.default = gulp.series(
+  gulp.parallel(css),
+  watch
+);

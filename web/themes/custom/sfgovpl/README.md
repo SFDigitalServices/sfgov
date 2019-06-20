@@ -76,3 +76,21 @@ the `sfgovpl.libraries.yml` defines the library that references the css and js f
 - create a `$ gulp publish` which is going to install dependencies and copy template files to the drupal theme.
 
 
+## TODO:
+  - review and revise all of the above, because some of it will be irrelevant soon
+  
+## What is relevant and remains true:
+  - this theme uses sass
+  - this theme uses the gulp task runner (v4) to compile sass to css
+  - there is no gulp task to concat and minify js
+  
+### Minimum node and npm versions
+```
+node: 10.3.0
+npm: 6.1.0
+```
+### Compile sass and watch for changes
+from this directory:
+```
+$ gulp 
+```
