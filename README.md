@@ -59,17 +59,14 @@ Can sometimes cause php out of memory issues.  Do this:
 $ php -d memory_limit=-1 `which composer` update drupal/core --with-dependencies
 ```
 
-## Issues with lando/drush (12/26/2018)
-Refer to the issues here: [https://github.com/lando/lando/issues/1315](https://github.com/lando/lando/issues/1315)
-and here: [https://github.com/lando/lando/issues/1318#issuecomment-444274698](https://github.com/lando/lando/issues/1318#issuecomment-444274698)
-
-The `lando.yml` file and `composer.json` and `composer.lock` files are up to date with the workaround required, but an additional step is needed for local dev setup.  Need to install drush launcher *IN THE VM*!
+## Issues with lando/drush (7/26/2019)
+Pantheon required a `drush` update to `8.2.3`.  Updating site-local drush to this version resulted in a failed attempt to `lando pull` the db from pantheon, with the following error
 
 ```
-$ lando ssh # to get into the container
-$ cd /usr/local/bin/ # to replace the installed version of drush in the next few commands
-$ wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar # Following the linux instructions from the docs
-$ chmod +x drush.phar
-$ mv drush.phar drush # To actually replace drush
-$ ls -la # To check file permissions
+Class 'Drush\Commands\DrushCommands' not found
+/etc/drush/drupal-8-drush-commandfiles/Commands/site-audit-tool/SiteAuditCommands.php:18
 ```
+
+Temp workaround is to use lando's helper script to import db.  Refer to `.lando.yml` file, under the `tooling` section.
+
+In short, do `lando getdb` to import the db from pantheon `dev` environment.
