@@ -6,7 +6,6 @@ config:
   id: 91d50373-c4cf-40e4-a646-cb73e16a140c
   xdebug: true
   webroot: web
-  drush: 'global:8.1.16'
 services:
   appserver:
     run:
@@ -25,3 +24,13 @@ tooling:
   phpunit:
     service: appserver
     cmd: /app/vendor/bin/phpunit
+  drush:
+    service: appserver
+    cmd: /app/vendor/bin/drush
+  getdb:
+    description: Supplement to `lando pull` when it fails because of drush issues
+    cmd:
+      - appserver: rm -f /app/web/database.sql.gz
+      - appserver: terminus backup:create sfgov.dev --element=db
+      - appserver: terminus backup:get sfgov.dev --element=db --to=/app/web/database.sql.gz
+      - database: /helpers/sql-import.sh web/database.sql.gz
