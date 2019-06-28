@@ -33,4 +33,4 @@ tooling:
       - appserver: rm -f /app/web/database.sql.gz
       - appserver: terminus backup:create sfgov.dev --element=db
       - appserver: terminus backup:get sfgov.dev --element=db --to=/app/web/database.sql.gz
-      - database: /helpers/sql-import.sh web/database.sql.gz
+      - database: /helpers/sql-import.sh database.sql.gz # this is relative to current working dir, be sure to run this command from `web` dir
