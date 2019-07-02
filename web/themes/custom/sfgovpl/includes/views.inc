@@ -19,7 +19,7 @@ function getUpcomingEventCount($view) {
   if(!$view) {
     return 0;
   } else {
-    $deptId = $view->args[0];
+    $deptId = !empty($view->args[0]) ? $view->args[0]: null;
     $viewId = $view->storage->id();
     $eventsView = Views::getView($viewId);
     $eventsView->setArguments([$deptId]);
