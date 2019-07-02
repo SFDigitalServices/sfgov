@@ -52,36 +52,9 @@ set classes = [
 
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      {%  set field_address = paragraph.field_location.entity.field_address[0] %}
-      {%  set org = paragraph.field_location.entity.field_text[0] %}
       {% if not field_address.isEmpty() %}
-        {% set parent_bundle = parent.bundle() %}
-        {% if parent_bundle == "step" %}
-          {% include "@molecules/04-cards/03-address-card.twig" with {
-            "address_card": {
-              "icon": "location",
-              "organization": field_address.organization,
-              "line1": field_address.address_line1,
-              "line2": field_address.address_line2
-            }
-          } %}
-        {% else %}
-          {% include "@atoms/06-address/06-address.twig" with {
-            "given_name": field_address.given_name,
-            "family_name": field_address.family_name,
-            "organization": field_address.organization,
-            "address_line1": field_address.address_line1,
-            "address_line2": field_address.address_line2,
-            "dependent_locality": field_address.dependent_locality,
-            "locality": field_address.locality,
-            "postal_code": field_address.postal_code,
-            "administrative_area": field_address.administrative_area
-          } %}
-        {% endif %}
-      {% endif %}
-      <div class="address-in-paragraph">
         {{ content }}
-      </div>
+      {% endif %}
     {% endblock %}
   </div>
 {% endblock paragraph %}
