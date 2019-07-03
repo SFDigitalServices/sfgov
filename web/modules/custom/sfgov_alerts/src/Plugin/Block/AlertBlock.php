@@ -61,7 +61,7 @@ class AlertBlock extends BlockBase {
       '@expiration' => $this->configuration['alert_expiration']
     ]);
 
-    $display_message = t('Expiration Date: @expiration. Alert Text: @text', [
+    $display_message = t('Alert Expiration Date: @expiration. Alert Text: @text', [
       '@text' => $this->configuration['alert_text'],
       '@expiration' => $this->configuration['alert_expiration']
     ]);
@@ -75,12 +75,17 @@ class AlertBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    $build = [];
 
-    $build['#theme'] = 'sfgov_alerts';
-    $build['alert']['#type'] = 'html_tag';
-    $build['alert']['#tag'] = 'p';
-    $build['alert']['#value'] = $this->configuration['alert_text'];
+    if ($this->configuration['alert_expiration'] < date('Y-m-d')) {
+      $build = [];
+    }
+
+    else {
+      $build['#theme'] = 'sfgov_alerts';
+      $build['alert']['#type'] = 'html_tag';
+      $build['alert']['#tag'] = 'p';
+      $build['alert']['#value'] = $this->configuration['alert_text'];
+    }
 
     return $build;
   }
