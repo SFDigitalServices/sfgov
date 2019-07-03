@@ -20,19 +20,20 @@ class AlertBlock extends BlockBase {
    */
   public function defaultConfiguration() {
     return [
-            'number' => 5,
-          ] + parent::defaultConfiguration();
+      'alert_expiration' => '',
+      'alert_text' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $form['expiration_date'] = [
+    $form['alert_expiration'] = [
       '#type' => 'date',
       '#title' => $this->t('Expiration Date'),
       '#description' => $this->t('Alert will be hidden on this date.'),
-      '#default_value' => '',
+      '#default_value' => $this->configuration['alert_expiration'],
       '#weight' => '4',
     ];
 
@@ -51,9 +52,23 @@ class AlertBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['number'] = $form_state->getValue('number');
+
     $this->configuration['alert_text'] = $form_state->getValue('alert_text');
-    $this->configuration['expiration_date'] = $form_state->getValue('expiration_date');
+    $this->configuration['alert_expiration'] = $form_state->getValue('alert_expiration');
+
+    $log_message = t('@expiration - @text', [
+      '@text' => $this->configuration['alert_text'],
+      '@expiration' => $this->configuration['alert_expiration']
+    ]);
+
+    $display_message = t('Expiration Date: @expiration. Alert Text: @text', [
+      '@text' => $this->configuration['alert_text'],
+      '@expiration' => $this->configuration['alert_expiration']
+    ]);
+
+    \Drupal::logger('sfgov_alerts')->info($log_message);
+    \Drupal::messenger()->addMessage($display_message);
+
   }
 
   /**
