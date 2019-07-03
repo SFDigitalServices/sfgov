@@ -1,5 +1,6 @@
-
 {% set description = node.get('field_description').getValue()[0]['value'] %}
+{% set date_exp =  node.field_alert_expiration_date.0.value %}
+{% set date_today = 'now'|date('Y-m-d') %}
 
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
@@ -12,7 +13,6 @@
 
   </div>
 </div>
-
 
 {% if dept_fields.featured_items %}
     <div id="sfgov-dept-featured-items" class="sfgov-dept-section sfgov-dept-section-content-container">
@@ -48,6 +48,15 @@
       <ul></ul>
     </div>
   </div>
+
+{# Alert #}
+{% if date_today <= date_exp  %}
+  {% include '@theme/sfgov-alerts.html.twig' with {
+    'content': {
+      'alert': content.field_alert_text.0
+    }
+  } %}
+{% endif %}
 
 {% if dept_fields.services.values %}
   <a name="services"></a>
