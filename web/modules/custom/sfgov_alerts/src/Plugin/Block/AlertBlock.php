@@ -31,7 +31,7 @@ class AlertBlock extends BlockBase {
   public function blockForm($form, FormStateInterface $form_state) {
     $form['alert_expiration'] = [
       '#type' => 'date',
-      '#title' => $this->t('Expiration Date'),
+      '#title' => $this->t('Alert Expiration Date'),
       '#description' => $this->t('Alert will be hidden on this date.'),
       '#default_value' => $this->configuration['alert_expiration'],
       '#weight' => '4',
