@@ -27,8 +27,8 @@ class Alert {
   public function __construct(Entity $entity) {
     $this->type = $entity->label();
     $this->text = strip_tags($entity->field_alert_text->value);
-    $this->expiration_original = $entity->field_alert_expiration_date->value;
-    $this->expiration_updated = $entity->original->field_alert_expiration_date->value;
+    $this->expiration_original = $entity->original->field_alert_expiration_date->value;
+    $this->expiration_updated = $entity->field_alert_expiration_date->value;
   }
 
   /**
@@ -38,13 +38,7 @@ class Alert {
 
     if ($this->expiration_original != $this->expiration_updated) {
 
-      $log_message = t('@type - @expiration - @text', [
-        '@type' => $this->type,
-        '@text' => $this->text,
-        '@expiration' => $this->expiration_updated
-      ]);
-
-      $screen_message = t(
+      $message = t(
         '<em>@type</em> Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b>', [
         '@type' => $this->type,
         '@text' => $this->text,
@@ -52,8 +46,8 @@ class Alert {
         '@expiration_original' => $this->expiration_original,
       ]);
 
-      \Drupal::logger('sfgov_alerts')->info($log_message);
-      \Drupal::messenger()->addMessage($screen_message);
+      \Drupal::logger('sfgov_alerts')->info($message);
+      \Drupal::messenger()->addMessage($message);
     }
   }
 }
