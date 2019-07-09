@@ -270,10 +270,13 @@ function dept_page_fields() {
           if($socialField->getFieldDefinition()->getType() == 'link') {
             $socialFieldKey = $socialField->getFieldDefinition()->getName();
             $socialLabel = $socialField->getFieldDefinition()->getLabel();
-            $theFields['about']['social']['values'][] = array(
-              'label' => $socialLabel,
-              'url' => $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'],
-            );
+            $socialUrl = $aboutSocialParagraph->get($socialFieldKey)->getValue() ? $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'] : null;
+            if($socialUrl) {
+              $theFields['about']['social']['values'][] = array(
+                'label' => $socialLabel,
+                'url' => $socialUrl,
+              );
+            }
           }
         }
       }
