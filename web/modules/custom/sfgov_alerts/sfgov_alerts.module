@@ -27,18 +27,21 @@ function sfgov_alerts_node_presave($node) {
   $type = $node->getType();
 
   if ($type == 'department') {
+    $alert = new Alert($node);
+    $alert->notify();
+  }
+}
 
-    $alert_type = $node->label();
-    $alert_expiration_original = $node->original->field_alert_expiration_date->value;
-    $alert_expiration_updated = $node->field_alert_expiration_date->value;
-    $alert_text_updated = $node->field_alert_text->value;
+/**
+ * @param $entity Drupal\Core\Entity\Entity
+ *
+ * Implements hook_entity_presave().
+ */
+function sfgov_alerts_entity_presave($entity) {
+  $bundle = $entity->bundle();
 
-    $alert = new Alert(
-      $alert_type,
-      $alert_text_updated,
-      $alert_expiration_original,
-      $alert_expiration_updated
-    );
+  if ($bundle == 'alert') {
+    $alert = new Alert($entity);
     $alert->notify();
   }
 }

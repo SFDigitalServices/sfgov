@@ -2,6 +2,8 @@
 
 namespace Drupal\sfgov_alerts;
 
+use Drupal\Core\Entity\Entity;
+
 /**
  * Class Alert.
  */
@@ -22,11 +24,11 @@ class Alert {
    * @param $expiration_original string
    * @param $expiration_updated string
    */
-  public function __construct($type, $text, $expiration_original, $expiration_updated) {
-    $this->type = $type;
-    $this->text = strip_tags($text);
-    $this->expiration_original = $expiration_original;
-    $this->expiration_updated = $expiration_updated;
+  public function __construct(Entity $entity) {
+    $this->type = $entity->label();
+    $this->text = strip_tags($entity->field_alert_text->value);
+    $this->expiration_original = $entity->field_alert_expiration_date->value;
+    $this->expiration_updated = $entity->original->field_alert_expiration_date->value;
   }
 
   /**
@@ -43,7 +45,7 @@ class Alert {
       ]);
 
       $screen_message = t(
-        '@type Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b>', [
+        '<em>@type</em> Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b>', [
         '@type' => $this->type,
         '@text' => $this->text,
         '@expiration' => $this->expiration_updated,

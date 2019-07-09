@@ -1,0 +1,38 @@
+uuid: 54c2bc2d-1fd6-4247-acc4-b1adb195bd05
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.alert
+    - field.field.block_content.alert.field_alert_expiration_date
+    - field.field.block_content.alert.field_alert_text
+  module:
+    - datetime
+    - text
+id: block_content.alert.default
+targetEntityType: block_content
+bundle: alert
+mode: default
+content:
+  field_alert_expiration_date:
+    weight: 1
+    settings:
+      increment: 15
+      date_order: YMD
+      time_type: '24'
+    third_party_settings: {  }
+    type: datetime_datelist
+    region: content
+  field_alert_text:
+    weight: 0
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+hidden:
+  info: true
+  langcode: true
+  moderation_state: true
+  translation: true
