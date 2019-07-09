@@ -66,8 +66,8 @@ class AlertBlock extends BlockBase {
       '@expiration' => $this->configuration['alert_expiration']
     ]);
 
-    \Drupal::logger('sfgov_alerts')->info($log_message);
-    \Drupal::messenger()->addMessage($display_message);
+    Drupal::logger('sfgov_alerts')->info($log_message);
+    Drupal::messenger()->addMessage($display_message);
 
   }
 
