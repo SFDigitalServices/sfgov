@@ -19,10 +19,7 @@ class Alert {
 
   /**
    * Alert constructor.
-   * @param $type string
-   * @param $text string
-   * @param $expiration_original string
-   * @param $expiration_updated string
+   * @param \Drupal\Core\Entity\Entity $entity
    */
   public function __construct(Entity $entity) {
     $this->type = $entity->label();
