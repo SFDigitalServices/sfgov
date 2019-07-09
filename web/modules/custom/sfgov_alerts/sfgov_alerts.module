@@ -5,6 +5,8 @@
  * Contains sfgov_alerts.module.
  */
 
+use Drupal\sfgov_alerts\Alert;
+
 /**
  * Implements hook_theme().
  */
@@ -16,29 +18,27 @@ function sfgov_alerts_theme() {
   ];
 }
 
+/**
+ * @param $node
+ *
+ * Implements hook_node_presave().
+ */
 function sfgov_alerts_node_presave($node) {
   $type = $node->getType();
+
   if ($type == 'department') {
 
+    $alert_type = $node->label();
     $alert_expiration_original = $node->original->field_alert_expiration_date->value;
     $alert_expiration_updated = $node->field_alert_expiration_date->value;
-
     $alert_text_updated = $node->field_alert_text->value;
 
-    if ($alert_expiration_original != $alert_expiration_updated) {
-
-      $log_message = t('@expiration - @text', [
-        '@text' => strip_tags($alert_text_updated),
-        '@expiration' => $alert_expiration_updated,
-      ]);
-
-      $display_message = t('Alert Expiration Date: @expiration. Alert Text: @text', [
-        '@text' => strip_tags($alert_text_updated),
-        '@expiration' => $alert_expiration_updated
-      ]);
-
-      Drupal::logger('sfgov_alerts')->info($log_message);
-      Drupal::messenger()->addMessage($display_message);
-    }
+    $alert = new Alert(
+      $alert_type,
+      $alert_text_updated,
+      $alert_expiration_original,
+      $alert_expiration_updated
+    );
+    $alert->notify();
   }
 }

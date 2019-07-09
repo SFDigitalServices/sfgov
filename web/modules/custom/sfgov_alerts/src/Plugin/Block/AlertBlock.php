@@ -4,6 +4,7 @@ namespace Drupal\sfgov_alerts\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\sfgov_alerts\Alert;
 
 /**
  * Provides a 'AlertBlock' block.
@@ -54,21 +55,16 @@ class AlertBlock extends BlockBase {
   public function blockSubmit($form, FormStateInterface $form_state) {
 
     $this->configuration['alert_text'] = $form_state->getValue('alert_text');
+    $alert_original_expiration = $form['settings']['alert_expiration']['#default_value'];
     $this->configuration['alert_expiration'] = $form_state->getValue('alert_expiration');
 
-    $log_message = t('@expiration - @text', [
-      '@text' => $this->configuration['alert_text'],
-      '@expiration' => $this->configuration['alert_expiration']
-    ]);
-
-    $display_message = t('Alert Expiration Date: @expiration. Alert Text: @text', [
-      '@text' => $this->configuration['alert_text'],
-      '@expiration' => $this->configuration['alert_expiration']
-    ]);
-
-    Drupal::logger('sfgov_alerts')->info($log_message);
-    Drupal::messenger()->addMessage($display_message);
-
+    $alert = new Alert(
+      t('Site-Wide'),
+      $this->configuration['alert_text'],
+      $alert_original_expiration,
+      $this->configuration['alert_expiration']
+    );
+    $alert->notify();
   }
 
   /**
