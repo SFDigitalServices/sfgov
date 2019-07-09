@@ -65,12 +65,15 @@
     @include sidebar('p');
     background: $c-white;
 
+    @include media($wide-screen) {
+      width: calc(50% - 160px);
+    }
+
     p {
       @include fs-pull-large;
       color: $c-slate;
       font-style: italic;
-      margin: 0 0 15px;
-
+      margin: 0;
       &:last-child {
         margin-bottom: 0;
       }
@@ -80,6 +83,7 @@
       @include button;
       display: inline-block;
       font-style: normal;
+      margin-top: 20px;
     }
   }
 }
