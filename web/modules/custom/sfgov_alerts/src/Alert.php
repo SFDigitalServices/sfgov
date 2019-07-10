@@ -24,8 +24,8 @@ class Alert {
   public function __construct(Entity $entity) {
     $this->type = $entity->label();
     $this->text = strip_tags($entity->field_alert_text->value);
-    $this->expiration_original = $entity->original->field_alert_expiration_date->value;
-    $this->expiration_updated = $entity->field_alert_expiration_date->value;
+    $this->expiration_original = $entity->original->field_alert_expiration_date->value ? $entity->original->field_alert_expiration_date->value : 'none';
+    $this->expiration_updated = $entity->field_alert_expiration_date->value ? $entity->field_alert_expiration_date->value : 'none';
   }
 
   /**
