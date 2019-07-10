@@ -33,7 +33,7 @@ function SFGovTranslate() {
         that.sfgovGTranslateFireEvent(c, 'change');
         that.sfgovGTranslateFireEvent(c, 'change');
         $('body').show();
-        $('body').addClass('sfgov-translate-' + b);
+        $('body').addClass('sfgov-translate-lang-' + b);
         deferred.resolve();
     }
     return deferred.promise();
@@ -42,6 +42,17 @@ function SFGovTranslate() {
   this.sfgovGTranslate = function(event) {
     var lang = event.target.value.split('|')[1];
     var drupalTranslation = that.getDrupalTranslation(lang);
+    $('body').removeClass(function(i, classNames) {
+      var classes = classNames.split(' ');
+      var classesToRemove = [];
+      for(var i = 0; i<classes.length; i++) {
+        if(classes[i].indexOf('sfgov-translate-lang-') >= 0) {
+          classesToRemove.push(classes[i]);
+        }
+      }
+      console.log(classesToRemove);
+      return classesToRemove.join(' ');
+    });
     if(drupalTranslation) {
       // drupal translation always wins
       // set gtranslate to english to kill the gtranslate cookie
@@ -71,7 +82,7 @@ function SFGovTranslate() {
     var gTranslateCookie = getCookie('googtrans');
     var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null;
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
-      $('body').addClass('sfgov-translate-' + gTranslateLang);
+      $('body').addClass('sfgov-translate-lang-' + gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
       if(drupalTranslation) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
@@ -89,7 +100,7 @@ function SFGovTranslate() {
       } else {
         that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       }
-      $('body').addClass('sfgov-translate-' + currentDrupalLanguage);
+      $('body').addClass('sfgov-translate-lang-' + currentDrupalLanguage);
     }
   }
 
