@@ -1,6 +1,127 @@
-(function($) {
+function SFGovTranslate() {
+  this.sfgovGTranslateFireEvent = function (a, b) {
+    try {
+        if (document.createEvent) {
+            var c = document.createEvent("HTMLEvents");
+            c.initEvent(b, true, true);
+            a.dispatchEvent(c)
+        } else {
+            var c = document.createEventObject();
+            a.fireEvent('on' + b, c)
+        }
+    } catch (e) {}
+  };
 
+  this.sfgovDoGTranslate = function(a) {
+    $('body').hide();
+    var deferred = jQuery.Deferred();
+    if (a == '')
+        return;
+    var b = a.split('|')[1];
+    var c;
+
+    var d = document.getElementsByTagName('select');
+    for (var i = 0; i < d.length; i++)
+        if (d[i].className == 'goog-te-combo')
+            c = d[i];
+    if (document.getElementById('google_translate_element2') == null || document.getElementById('google_translate_element2').innerHTML.length == 0 || c.length == 0 || c.innerHTML.length == 0) {
+        setTimeout(function() {
+          that.sfgovDoGTranslate(a)
+        }, 500)
+    } else {
+        c.value = b;
+        that.sfgovGTranslateFireEvent(c, 'change');
+        that.sfgovGTranslateFireEvent(c, 'change');
+        $('body').show();
+        $('body').addClass('sfgov-translate-lang-' + b);
+        deferred.resolve();
+    }
+    return deferred.promise();
+  };
+
+  this.sfgovGTranslate = function(event) {
+    var lang = event.target.value.split('|')[1];
+    var drupalTranslation = that.getDrupalTranslation(lang);
+    $('body').removeClass(function(i, classNames) {
+      var classes = classNames.split(' ');
+      var classesToRemove = [];
+      for(var i = 0; i<classes.length; i++) {
+        if(classes[i].indexOf('sfgov-translate-lang-') >= 0) {
+          classesToRemove.push(classes[i]);
+        }
+      }
+      return classesToRemove.join(' ');
+    });
+    if(drupalTranslation) {
+      // drupal translation always wins
+      // set gtranslate to english to kill the gtranslate cookie
+      $.when(that.sfgovDoGTranslate('en|en')).then(function() {
+        window.location.href = drupalTranslation.turl;
+      });
+    } else { // no drupal translation exists, use gtranslate
+      that.sfgovDoGTranslate(event.target.value);
+    }
+  };
+
+  this.getDrupalTranslation = function(lang) {
+    var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
+    if(drupalTranslations) {
+      for(var i=0; i<drupalTranslations.length; i++) {
+        var someTranslation = drupalTranslations[i];
+        if(someTranslation.lang == lang) {
+          return someTranslation;
+        }
+      }
+    }
+    return null;
+  };
+
+  this.checkCurrentLanguage = function() {
+    var currentDrupalLanguage = drupalSettings.sfgov_translations.node.current_language;
+    var gTranslateCookie = getCookie('googtrans');
+    var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null;
+    if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
+      $('body').addClass('sfgov-translate-lang-' + gTranslateLang);
+      var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
+      if(drupalTranslation) { // drupal translation exists
+        $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
+          if(drupalTranslation.turl != window.location.pathname) {
+            window.location.href = drupalTranslation.turl;
+          }
+        });
+      }
+    } 
+    if(currentDrupalLanguage != 'en') {
+      var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
+      if(drupalTranslation) {
+        // drupal translation exists, remove the gtranslate cookie
+        that.sfgovDoGTranslate('en|en');
+      } else {
+        that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
+      }
+      $('body').addClass('sfgov-translate-lang-' + currentDrupalLanguage);
+    }
+  }
+
+  var that = this;
+}
+
+function getCookie(cookieName) {
+  var cookiesArr = [];
+  var cookies = {};
+  if(document.cookie) {
+    cookiesArr = document.cookie.split(';');
+    for(var i=0; i<cookiesArr.length; i++) {
+      var keyValPair = cookiesArr[i].split('=');
+      cookies[keyValPair[0].replace(/\s/g, '')] = keyValPair[1];
+    }
+  }
+  return cookies[cookieName];
+}
+
+(function($) {
   // watch for dom mutations
+  var t = new SFGovTranslate();
   var observeElement = $('.head-right--container')[0];
   var config = { attributes: true, childList: true, subtree: true };
   var callback = function(mutationsList, observer) {
@@ -15,117 +136,19 @@
     }
     if(elem) { // muck around with the gtranslate dropdown
       $(elem)[0].setAttribute('onchange', ''); // take over onchange
+      $(elem)[0].onchange = t.sfgovGTranslate;
       $(elem)[0].setAttribute('data-gtranslate', 'sfgov');
-      setTimeout(function() { 
-        // this dropdown list that gets added doesn't always have the english option
-        // if a language option doesn't exist in this drop down, the first option is always
-        // selected by default, which is problematic
-        // so, always add the english option
+      // this dropdown list that gets added doesn't always have the english option
+      // if a language option doesn't exist in this drop down, the first option is always
+      // selected by default, which is problematic
+      // so, always add the english option
+      setTimeout(function() {
         $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
-      }, 300)
-      $(elem).change(function() { // attach our own change event
-        checkLanguage($(this).val());
-      });
+        t.checkCurrentLanguage(); // check the current language of the page AFTER english has been added
+      }, 500);
     }
   }
-
-  // check the current page's translations
-  function checkLanguage(selectedLanguage) {
-    var selectedLanguageArr = selectedLanguage.split('|');
-    var currentDrupalLanguage = drupalSettings.sfgov_translations.node.current_language;
-    if(selectedLanguageArr.length > 0) {
-      var theSelectedLanguage = selectedLanguageArr[1];
-      var drupalTranslation = getDrupalTranslation(theSelectedLanguage);
-      if(drupalTranslation && !(drupalTranslation.lang == 'en' && currentDrupalLanguage == 'en')) {
-        if(drupalTranslation.lang != currentDrupalLanguage) {
-          $('body').hide();
-          sfgovGtranslate('en|en'); // kill the gtranslate cookie
-          setTimeout(function() {
-            window.location.href = drupalTranslation.turl;
-          },530);
-        }
-      } else {
-        // go to english url, then set gtranslate cookie
-        var enUrl = window.location.href.replace('/' + currentDrupalLanguage, '');
-        $('body').hide();
-        sfgovGtranslate(selectedLanguage);
-        setTimeout(function() {
-          window.location.href = enUrl;
-        },530)
-      }
-    }
-  }
-
-  function checkCurrentLanguage() {
-    // always prefer the language set by drupal
-    var currentDrupalLanguage = drupalSettings.sfgov_translations.node.current_language;
-    var gTranslateCookie = getCookie('googtrans');
-    var drupalTranslation = getDrupalTranslation(currentDrupalLanguage);
-    if(currentDrupalLanguage != 'en') { // current drupal language is not english
-      if(!drupalTranslation) {
-        var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : '';
-        if(currentDrupalLanguage != gTranslateLang) {
-          sfgovGtranslate('en|' + currentDrupalLanguage);
-        }
-      } else {
-        sfgovGtranslate('en|en'); // kill the gTranslateCookie
-      }
-      $('body').addClass('sfgov-translate-' + currentDrupalLanguage);
-    } else {
-      // current drupal language is english, check for gtranslate cookie
-      if(gTranslateCookie) {
-        var gTranslateLang = gTranslateCookie.split('/')[2];
-        var drupalTranslation = getDrupalTranslation(gTranslateLang);
-        if(gTranslateLang != 'en') {
-          $('body').addClass('sfgov-translate-' + gTranslateLang);
-          if(drupalTranslation) {
-            $('body').hide();
-            setTimeout(function() {
-              sfgovGtranslate('en|en');
-              window.location.href = drupalTranslation.turl;
-            }, 350)
-          }
-        }
-      }
-    }
-  }
-
-  function sfgovGtranslate(languageValue) {
-    setTimeout(function() {
-      doGTranslate(languageValue);
-    },200);
-  }
-
-  function getCookie(cookieName) {
-    var cookiesArr = [];
-    var cookies = {};
-    if(document.cookie) {
-      cookiesArr = document.cookie.split(';');
-      for(var i=0; i<cookiesArr.length; i++) {
-        var keyValPair = cookiesArr[i].split('=');
-        cookies[keyValPair[0].replace(/\s/g, '')] = keyValPair[1];
-      }
-    }
-    return cookies[cookieName];
-  }
-
-  function getDrupalTranslation(lang) {
-    var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
-    if(drupalTranslations) {
-      for(var i=0; i<drupalTranslations.length; i++) {
-        var someTranslation = drupalTranslations[i];
-        if(someTranslation.lang == lang) {
-          return someTranslation;
-        }
-      }
-    }
-    return null;
-  }
-
-  $(document).ready(function() {
-    checkCurrentLanguage();
-  });
 
   var observer = new MutationObserver(callback);
   observer.observe(observeElement, config);
