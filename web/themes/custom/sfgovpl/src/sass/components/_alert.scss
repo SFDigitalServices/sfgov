@@ -1,3 +1,45 @@
+.alert {
+  @include fs-small-text;
+  background: $c-blue-2;
+  padding-bottom: 17px;
+  padding-top: 17px;
+
+  @include media($medium-screen) {
+    @include fs-body-bold;
+  }
+
+  &.orange {
+    background: $c-red-3;
+    color: $c-white;
+
+    .alert--container {
+      @include background-image('info-white.svg', 10px center);
+    }
+
+    a {
+      @include link-colors($c-white);
+    }
+  }
+
+  &.yellow {
+    background: $c-yellow-3;
+  }
+
+  p {
+    margin: 0 0 0 30px;
+
+    @include media($medium-screen) {
+      margin-left: 60px;
+    }
+  }
+
+  .alert--container {
+    @include background-image('info.svg', 10px center);
+    @include contain-1210;
+    min-height: 20px;
+  }
+}
+
 .sfgov-alert-info {
   @include fs-body-long;
   @include background-image('info.svg', 42px 45px, $c-blue-1);
