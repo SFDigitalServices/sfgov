@@ -50,7 +50,6 @@ function SFGovTranslate() {
           classesToRemove.push(classes[i]);
         }
       }
-      console.log(classesToRemove);
       return classesToRemove.join(' ');
     });
     if(drupalTranslation) {
