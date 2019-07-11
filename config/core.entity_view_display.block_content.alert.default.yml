@@ -5,9 +5,11 @@ dependencies:
   config:
     - block_content.type.alert
     - field.field.block_content.alert.field_alert_expiration_date
+    - field.field.block_content.alert.field_alert_style
     - field.field.block_content.alert.field_alert_text
   module:
     - datetime
+    - options
     - text
 id: block_content.alert.default
 targetEntityType: block_content
@@ -22,6 +24,13 @@ content:
       format_type: html_date
     third_party_settings: {  }
     type: datetime_default
+    region: content
+  field_alert_style:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
     region: content
   field_alert_text:
     weight: 0
