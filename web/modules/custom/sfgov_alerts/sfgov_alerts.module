@@ -16,8 +16,7 @@ function sfgov_alerts_node_presave($node) {
   $type = $node->getType();
 
   if ($type == 'department') {
-    $alert = new Alert($node);
-    $alert->notify();
+    sfgov_alerts_notify($node);
   }
 }
 
@@ -30,7 +29,26 @@ function sfgov_alerts_entity_presave($entity) {
   $bundle = $entity->bundle();
 
   if ($bundle == 'alert') {
-    $alert = new Alert($entity);
-    $alert->notify();
+    sfgov_alerts_notify($entity);
+  }
+}
+
+function sfgov_alerts_notify($entity) {
+
+  $expiration_original = $entity->original->field_alert_expiration_date->value ? $entity->original->field_alert_expiration_date->value : 'none';
+  $expiration_updated = $entity->field_alert_expiration_date->value ? $entity->field_alert_expiration_date->value : 'none';
+
+  if ($expiration_original != $expiration_updated) {
+
+    $message = t(
+      '<em>@type</em> Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b>', [
+      '@type' => $entity->label(),
+      '@text' => strip_tags($entity->field_alert_text->value),
+      '@expiration' => $expiration_updated,
+      '@expiration_original' => $expiration_original,
+    ]);
+
+    \Drupal::logger('sfgov_alerts')->info($message);
+    \Drupal::messenger()->addMessage($message);
   }
 }
