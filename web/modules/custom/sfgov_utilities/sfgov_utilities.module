@@ -134,3 +134,12 @@ function sfgov_utilities_preprocess_eck_entity(&$variables) {
     $variables['map_directions_url'] = $directionsUrl;
   }
 }
+
+function sfgov_utilities_field_widget_form_alter(&$element, FormStateInterface &$form_state, $context) {
+  if(array_key_exists('uri', $element)) {
+    if($element['#description']) {
+      $element['uri']['#description'] = $element['#description'];
+      $element['#description'] = '';
+    }
+  }
+}
