@@ -60,6 +60,9 @@ function sfgovGetTransactionSearchVariables($variables) {
   return $templateVars;
 }
 
+/**
+ * Implements hook_preprocess_node__transaction__search_index().
+ */
 function sfgov_utilities_preprocess_node__transaction__search_index(&$variables) {
   $templateVars = sfgovGetTransactionSearchVariables($variables);
   $variables['the_url'] = $templateVars['the_url'];
@@ -68,6 +71,9 @@ function sfgov_utilities_preprocess_node__transaction__search_index(&$variables)
   $variables['description'] = $templateVars['description'];
 }
 
+/**
+ * Implements hook_preprocess_node__transaction__transaction_search_result_related_dept().
+ */
 function sfgov_utilities_preprocess_node__transaction__transaction_search_result_related_dept(&$variables) {
   $templateVars = sfgovGetTransactionSearchVariables($variables);
   $variables['the_url'] = $templateVars['the_url'];
@@ -77,8 +83,9 @@ function sfgov_utilities_preprocess_node__transaction__transaction_search_result
   $variables['related_dept'] = $templateVars['related_dept'];
 }
 
-// paragraph people section 
-// override field_direct_external_url
+/**
+ * Implements hook_preprocess_paragraph__people().
+ */
 function sfgov_utilities_preprocess_paragraph__people(&$variables) {
 
   $userLoggedIn = \Drupal::currentUser()->isAnonymous() ? false : true;
@@ -100,6 +107,9 @@ function sfgov_utilities_preprocess_paragraph__people(&$variables) {
   }
 }
 
+/**
+ * Implements hook_preprocess_eck_entity().
+ */
 function sfgov_utilities_preprocess_eck_entity(&$variables) {
   $bundle = $variables['bundle'];
   if($bundle && $bundle == 'event_address') {
@@ -135,6 +145,9 @@ function sfgov_utilities_preprocess_eck_entity(&$variables) {
   }
 }
 
+/**
+ * Implements hook_field_widget_form_alter().
+ */
 function sfgov_utilities_field_widget_form_alter(&$element, FormStateInterface &$form_state, $context) {
   if(array_key_exists('uri', $element)) {
     if($element['#description']) {
