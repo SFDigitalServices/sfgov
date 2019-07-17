@@ -126,7 +126,8 @@ function getCookie(cookieName) {
   var config = { attributes: true, childList: true, subtree: true };
   var callback = function(mutationsList, observer) {
     var elem = null;
-    for(var mutation of mutationsList) {
+    for(var i = 0; i < mutationsList.length; i++) {
+      var mutation = mutationsList[i];
       if (mutation.type == 'childList') {
           if(mutation.target.id == ':0.targetLanguage') {
             elem = $('#block-gtranslate .gtranslate > select'); // catch the gtranslate dropdown
