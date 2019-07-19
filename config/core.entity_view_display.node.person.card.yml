@@ -1,38 +1,44 @@
-uuid: d0da20fc-2623-458f-bad7-6e9cb3adf794
+uuid: 5c9a2c9d-ae31-4b66-8e8d-9738ed068f78
 langcode: en
-status: false
+status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.person_section_display
+    - core.entity_view_mode.node.card
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
     - field.field.node.person.field_photo
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
+    - image.style.medium
     - node.type.person
   module:
     - image
+    - link
     - user
-id: node.person.person_section_display
+id: node.person.card
 targetEntityType: node
 bundle: person
-mode: person_section_display
+mode: card
 content:
   content_moderation_control:
-    weight: -20
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  field_first_name:
-    type: string
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_direct_external_url:
+    weight: 6
     label: hidden
     settings:
-      link_to_entity: false
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
     third_party_settings: {  }
-  field_last_name:
+    type: link
+    region: content
+  field_first_name:
     weight: 1
     label: hidden
     settings:
@@ -40,23 +46,7 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_photo:
-    weight: 4
-    label: hidden
-    settings:
-      image_style: ''
-    third_party_settings: {  }
-    type: image_url
-    region: content
-  field_sub_title:
-    weight: 3
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_title:
+  field_last_name:
     weight: 2
     label: hidden
     settings:
@@ -64,7 +54,31 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_photo:
+    weight: 5
+    label: hidden
+    settings:
+      image_style: medium
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  field_sub_title:
+    weight: 4
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_title:
+    weight: 3
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
 hidden:
-  field_direct_external_url: true
   langcode: true
   links: true
