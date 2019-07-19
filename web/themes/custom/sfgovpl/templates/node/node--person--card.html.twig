@@ -3,15 +3,13 @@
 {% block title %}
 {% endblock title %}
 
-
-
 {% block body %}
   {% include '@theme/person-card.twig' with {
     "url": url,
-    "first_name": content.field_first_name.0['#context'].value,
-    "last_name": content.field_last_name.0['#context'].value,
-    "position_title": content.field_title,
-    "position_subtitle": content.field_sub_title,
-    "photo": file_url(elements['#node'].field_photo.entity.fileuri)
+    "first_name": content.field_first_name.0,
+    "last_name": content.field_last_name.0,
+    "position_title": content.field_title.0,
+    "position_subtitle": content.field_sub_title.0,
+    "photo": content.field_photo.0
   } %}
 {% endblock body %}
