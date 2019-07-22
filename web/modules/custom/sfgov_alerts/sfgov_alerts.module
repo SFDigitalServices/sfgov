@@ -61,11 +61,12 @@ function sfgov_alerts_notify($entity) {
   if ($expiration_original != $expiration_updated) {
 
     $message = t(
-      '<em>@type</em> Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b>', [
+      '<div class="message-alert-updated" data-alertmessage="message" data-style="@type" data-exp=@expiration data-user=@current_user><em>@type</em>Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b></div>', [
       '@type' => $entity->label(),
       '@text' => strip_tags($entity->field_alert_text->value),
       '@expiration' => $expiration_updated,
       '@expiration_original' => $expiration_original,
+      '@current_user' => \Drupal::currentUser()->getAccountName(),
     ]);
 
     \Drupal::logger('sfgov_alerts')->info($message);
