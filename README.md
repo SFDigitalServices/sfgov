@@ -53,10 +53,19 @@ $ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
 ```
 
 ## Updating core with composer
+From (https://www.drupal.org/docs/8/update/update-core-via-composer)
+
 Can sometimes cause php out of memory issues.  Do this:
 
 ```
 $ php -d memory_limit=-1 `which composer` update drupal/core --with-dependencies
+```
+
+then 
+
+```
+$ (lando) drush updatedb
+$ (lando) drush cr
 ```
 
 ## Issues with lando/drush (7/26/2019)
@@ -69,4 +78,4 @@ Class 'Drush\Commands\DrushCommands' not found
 
 Temp workaround is to use lando's helper script to import db.  Refer to `.lando.yml` file, under the `tooling` section.
 
-In short, do `lando getdb` to import the db from pantheon `dev` environment.
+In short, do `lando getdb` from the `/web` directory to import the db from pantheon `dev` environment.
