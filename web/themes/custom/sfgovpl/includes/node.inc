@@ -286,15 +286,15 @@ function dept_page_fields() {
       if($aboutPeople && !empty($aboutPeople->getValue())) {
         $peopleId = $aboutPeople->getValue()[0]['target_id'];
         $peopleParagraph = Paragraph::load($peopleId);
-        if(!empty($peopleParagraph->get('field_person')->getValue())) {
-          $people = $peopleParagraph->get('field_person')->getValue();
+        if(!empty($peopleParagraph->get('field_person_2')->getValue())) {
+          $people = $peopleParagraph->get('field_person_2')->getValue();
           foreach($people as $person) {
             $personNode = Node::load($person['target_id']);
             $theFields['about']['people'][] = array(
               'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
               'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
               'title' => $personNode->get('field_title')->getValue()[0]['value'],
-              'url' => $personNode->get('field_direct_external_url')->getValue()[0]['uri'],
+              'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
               'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
             );
           }

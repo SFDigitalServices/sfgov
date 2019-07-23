@@ -71,7 +71,7 @@ Scenario: Create department
   When I select "Test Topic" from "field_topics_target_id"
   Then I should see "Test Transaction"
 
-@api @sfgov
+@api @sfgov @sfgov-person-test
   Scenario: Create person and test url
   Given I am logged in as a user with the "administrator" role
   Given "person" content:
