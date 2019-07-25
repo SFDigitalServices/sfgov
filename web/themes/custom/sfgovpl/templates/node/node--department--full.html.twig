@@ -63,11 +63,11 @@
               {% if loop.first %}
               <div class="sfgov-services-transactions" data-attr="row">
               {% endif %}
-                {% include "@molecules/12-service-card/12-service-card.twig" with {
-                  "title": transaction.tx_title,
-                  "description": transaction.tx_description,
-                  "url": transaction.tx_url
-                }%}
+              {% include "@theme/service-card.twig" with {
+                "title": transaction.tx_title,
+                "description": transaction.tx_description,
+                "url": transaction.tx_url
+              } %}
                 {% set i = i - 1 %}
               {% if loop.index is divisible by(3) %}
                 </div><div class="sfgov-services-transactions" data-attr="row">
@@ -75,7 +75,7 @@
               {% if loop.last %}
                 {% if i >= 1 %}
                   {% for n in 1..i %}
-                    {% include "@molecules/12-service-card/12-service-card.twig" with {
+                    {% include "@theme/service-card.twig" with {
                       "title": '',
                       "description": '',
                       "url": '',

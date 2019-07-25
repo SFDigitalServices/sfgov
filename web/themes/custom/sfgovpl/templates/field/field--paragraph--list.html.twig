@@ -1,0 +1,11 @@
+{# See field.html.twig for variables. #}
+
+{% set parent = element['#object'] %}
+{% set grandparent = parent.getParentEntity() %}
+{% set grandparent_title = grandparent.field_title.value %}
+{% if  grandparent_title == 'Services' %}
+  {% include '@theme/service-cards.twig' with { cards: items} %}
+{% else %}
+  {% include 'field.html.twig' %}
+{% endif %}
+
