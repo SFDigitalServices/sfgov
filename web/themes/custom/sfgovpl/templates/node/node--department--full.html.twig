@@ -58,34 +58,7 @@
         <div class="sfgov-services-section sfgov-dept-section-content-container">
           <h4>{{ service.title }}</h4>
           <div class="sfgov-services-transactions-container">
-            {% set i = 3 %}
-            {% for transaction in service.transactions %}
-              {% if loop.first %}
-              <div class="sfgov-services-transactions" data-attr="row">
-              {% endif %}
-              {% include "@theme/service-card.twig" with {
-                "title": transaction.tx_title,
-                "description": transaction.tx_description,
-                "url": transaction.tx_url
-              } %}
-                {% set i = i - 1 %}
-              {% if loop.index is divisible by(3) %}
-                </div><div class="sfgov-services-transactions" data-attr="row">
-              {% endif %}
-              {% if loop.last %}
-                {% if i >= 1 %}
-                  {% for n in 1..i %}
-                    {% include "@theme/service-card.twig" with {
-                      "title": '',
-                      "description": '',
-                      "url": '',
-                      "empty": true
-                    }%}
-                  {% endfor %}
-                {% endif %}
-                </div>
-              {% endif %}
-            {% endfor %}
+            {% include '@theme/service-cards.twig' with { input_type: 'transaction' } %}
           </div>
         </div>
     {% endfor %}

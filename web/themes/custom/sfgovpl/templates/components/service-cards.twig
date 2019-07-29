@@ -1,9 +1,37 @@
-<div class="service-cards">
-  {% for card in cards %}
-    {% set paragraph_field_link = card.content['#paragraph'].field_link.0 %}
-    {% include "@theme/service-card.twig" with {
-      "title": paragraph_field_link.title,
-      "url": paragraph_field_link.url
-    } %}
-  {% endfor %}
-</div>
+{% if input_type == 'link' %}
+  {% set rows = items %}
+{% elseif input_type ==  'transaction' %}
+  {% set rows = service.transactions %}
+{% endif %}
+
+            {% set i = 3 %}
+            {% for row in rows %}
+              {% if loop.first %}
+                <div class="sfgov-services-transactions" data-attr="row">
+              {% endif %}
+
+              {% if input_type == 'link' %}
+                {% include "@theme/service-card-link.twig"%}
+              {% elseif input_type ==  'transaction' %}
+                {% include "@theme/service-card-transaction.twig"%}
+              {% endif %}
+
+
+              {% set i = i - 1 %}
+              {% if loop.index is divisible by(3) %}
+                </div><div class="sfgov-services-transactions" data-attr="row">
+              {% endif %}
+              {% if loop.last %}
+                {% if i >= 1 %}
+                  {% for n in 1..i %}
+                    {% if input_type == 'link' %}
+                      {% include "@theme/service-card-link.twig" with { empty : 'empty'} %}
+                    {% elseif input_type ==  'transaction' %}
+                      {% include "@theme/service-card-transaction.twig" with { empty : 'empty'} %}
+                    {% endif %}
+
+                  {% endfor %}
+                {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
