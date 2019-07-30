@@ -196,7 +196,9 @@ function dept_page_fields() {
         $emailId = $emailField->getValue()[0]['target_id'];
         $emailParagraph = Paragraph::load($emailId);
         $email = $emailParagraph->get('field_email')->getValue() ? $emailParagraph->get('field_email')->getValue()[0]['value'] : null;
-        $theFields['email'] = $email ? $email : null;
+        $emailTitle = $emailParagraph->get('field_title')->getValue() ? $emailParagraph->get('field_title')->getValue()[0]['value'] : null;
+        $theFields['email']['email_address'] = $email ? $email : null;
+        $theFields['email']['email_title'] = $emailTitle ? $emailTitle : null;
       }
     }
 
