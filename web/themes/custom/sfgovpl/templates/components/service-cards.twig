@@ -14,6 +14,8 @@
                 {% include "@theme/service-card-link.twig"%}
               {% elseif input_type ==  'transaction' %}
                 {% include "@theme/service-card-transaction.twig"%}
+              {% else %}
+                {% include "@theme/service-card-nodes.twig"%}
               {% endif %}
 
 
@@ -28,6 +30,8 @@
                       {% include "@theme/service-card-link.twig" with { empty : 'empty'} %}
                     {% elseif input_type ==  'transaction' %}
                       {% include "@theme/service-card-transaction.twig" with { empty : 'empty'} %}
+                    {% elseif input_type ==  'views' %}
+                      {% include "@theme/service-card-nodes.twig" with { empty : 'empty'} %}
                     {% endif %}
 
                   {% endfor %}
