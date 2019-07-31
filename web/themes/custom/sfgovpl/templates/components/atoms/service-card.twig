@@ -1,6 +1,9 @@
-<a class="service-card {{ invisible ? 'invisible' }}" href="{{ url }}">
-  <h5>{{ title }}</h5>
-  <p>
-    {{ description }}
-  </p>
+<a class="service-card {{ invisible ? 'invisible' }}" href="{{ invisible ? '' : url }}">
+  {% if invisible == 'invisible' %}
+  {% else  %}
+    <h5>{{ title }}</h5>
+    <p>
+      {{ description }}
+    </p>
+  {% endif %}
 </a>
