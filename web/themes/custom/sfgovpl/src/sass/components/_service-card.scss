@@ -1,13 +1,16 @@
-.service-cards  {
-  @include clearfix;
-  display: table-row;
+.service-cards--container {
+  @include contain-1090-table;
 }
 
-.sfgov-service-card {
-  @include three-column-item-no-table;
+.service-cards  {
+  @include three-column-table-row;
+}
+
+.service-card {
   background: $c-white;
   border: 3px solid $c-bright-blue;
-  min-height: 105px;
+  text-decoration: none;
+
 
   &:hover {
     border-color: $c-dark-blue;
@@ -24,6 +27,8 @@
 
   p {
     @include fs-body-long;
+    color: $c-dark-blue;
+    text-decoration: none;
 
     &:empty {
       display: none;

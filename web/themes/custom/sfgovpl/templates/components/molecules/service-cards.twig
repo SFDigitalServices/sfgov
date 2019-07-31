@@ -1,0 +1,43 @@
+{% if input_type == 'link' %}
+  {% set rows = items %}
+{% elseif input_type ==  'transaction' %}
+  {% set rows = service.transactions %}
+{% endif %}
+
+<div class="service-cards--container">
+
+{% set i = 3 %}
+{% for row in rows %}
+  {% if loop.first %}
+    <div class="service-cards" data-attr="row">
+  {% endif %}
+
+  {% if input_type == 'link' %}
+    {% include "@theme/atoms/service-card-link.twig" %}
+  {% elseif input_type ==  'transaction' %}
+    {% include "@theme/atoms/service-card-transaction.twig" %}
+  {% else %}
+    {% include "@theme/atoms/service-card-nodes.twig" %}
+  {% endif %}
+
+  {% set i = i - 1 %}
+  {% if loop.index is divisible by(3) %}
+    </div><div class="service-cards" data-attr="row">
+  {% endif %}
+  {% if loop.last %}
+    {% if i >= 1 %}
+      {% for n in 1..i %}
+        {% if input_type == 'link' %}
+          {% include "@theme/atoms/service-card-link.twig" with { invisible : true } %}
+        {% elseif input_type ==  'transaction' %}
+          {% include "@theme/atoms/service-card-transaction.twig" with { invisible : true} %}
+        {% elseif input_type ==  'views' %}
+          {% include "@theme/atoms/service-card-nodes.twig" with { invisible : true} %}
+        {% endif %}
+
+      {% endfor %}
+    {% endif %}
+    </div>
+  {% endif %}
+{% endfor %}
+</div>
