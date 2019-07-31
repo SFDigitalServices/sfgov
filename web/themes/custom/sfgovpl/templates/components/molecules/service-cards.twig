@@ -6,32 +6,36 @@
 
 <div class="service-cards--container">
 
-{% set i = 3 %}
-{% for row in rows %}
-  {% if loop.first %}
-    <div class="service-cards" data-attr="row">
-  {% endif %}
+  {# Count number of invisible cards we'll need to print. #}
+  {% set insivible_card_count = rows|length is divisible by(3) ? '':  3 - rows|length % 3 %}
 
-  {% if input_type == 'link' %}
-    {% include "@theme/atoms/service-card-link.twig" %}
-  {% elseif input_type ==  'transaction' %}
-    {% include "@theme/atoms/service-card-transaction.twig" %}
-  {% else %}
-    {% include "@theme/atoms/service-card-nodes.twig" %}
-  {% endif %}
-
-  {% set i = i - 1 %}
-  {% if loop.index is divisible by(3) %}
-    </div>
-    <div class="service-cards" data-attr="row">
-  {% endif %}
-  {% if loop.last %}
-    {% if i >= 1 %}
-      {% for n in 1..i %}
-         {% include "@theme/atoms/service-card.twig" with { invisible : 'invisible' } %}
-      {% endfor %}
+  {# Begin Loop. #}
+  {% for card in rows %}
+    {% if loop.first %}
+      <div class="service-cards" data-attr="row"> {# Start first row. #}
     {% endif %}
-    </div>
-  {% endif %}
-{% endfor %}
+
+    {# Print cards. #}
+    {% if input_type == 'link' %}
+      {% include "@theme/atoms/service-card-link.twig" %}
+    {% elseif input_type ==  'transaction' %}
+      {% include "@theme/atoms/service-card-transaction.twig" %}
+    {% else %}
+      {% include "@theme/atoms/service-card-nodes.twig" %}
+    {% endif %}
+
+    {% if loop.index is divisible by(3) %}
+      </div> {# End row of three. #}
+
+      <div class="service-cards" data-attr="row"> {# Start next row of three. #}
+    {% endif %}
+
+    {% if loop.last %}
+      {% for n in 1..insivible_card_count %}
+        {% include "@theme/atoms/service-card.twig" with { invisible : 'invisible' } %}
+      {% endfor %}
+      </div> {# End all rows. #}
+    {% endif %}
+
+  {% endfor %}
 </div>
