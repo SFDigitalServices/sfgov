@@ -105,8 +105,9 @@ $settings['locale_custom_strings_en']['Address label'] = [
 
 /**
  * If there is a local settings file, then include it
+ * Local settings file need to be in sites/default/files/private for Pantheon sites
  */
-$local_settings = __DIR__ . "/settings.local.php";
+$local_settings = "sites/default/files/private/settings.local.php";
 if (file_exists($local_settings)) {
   include $local_settings;
 }
