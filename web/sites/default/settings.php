@@ -115,12 +115,22 @@ if (file_exists($local_settings)) {
  * Always install the 'standard' profile to stop the installer from
  * modifying settings.php.
  */
-$settings['install_profile'] = 'standard';
+$settings['install_profile'] = 'config_installer';
 
 # Provide universal absolute path to simplesamlphp installation.
-$settings['simplesamlphp_dir'] = $_ENV['HOME'] .'/code/web/private/simplesamlphp-1.17.0-rc3';
+//$settings['simplesamlphp_dir'] = $_ENV['HOME'] .'/code/web/private/simplesamlphp-1.17.0-rc3';
 
 $keys = "sites/default/files/private/settings.keys.php";
 if(file_exists($keys)) {
   include($keys);
-}
+}$databases['default']['default'] = array (
+  'database' => 'default',
+  'username' => 'user',
+  'password' => 'user',
+  'prefix' => '',
+  'host' => 'db',
+  'port' => '3306',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+);
+$settings['hash_salt'] = 'XLkcIorebWxNZRMt_tA9t4QsDP6Mii1z8xydqRbN4TU0c4_2cPULav2xL9lUTzgFNQokBp54xA';
