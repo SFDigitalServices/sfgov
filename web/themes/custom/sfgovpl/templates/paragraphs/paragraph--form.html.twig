@@ -50,7 +50,8 @@
     %}
     {% block paragraph %}
     <div{{ attributes.addClass(classes) }}>
-        <script src="{{ formbuilderUrl ~ "?id=" ~ paragraph.field_form_id.value }}"></script>
+        <link rel="stylesheet" href="{{ formbuilderUrl ~ "/assets/css/form-base.css" }}" />
+        <script src="{{ formbuilderUrl ~ "/form/embed?id=" ~ paragraph.field_form_id.value }}"></script>
         <div id="SFDSWF-Container"></div>
     </div>
     {% endblock paragraph %}
