@@ -1,10 +1,5 @@
 <?php
 
-$module_handler = Drupal::service('module_handler');
-$devel_path = $module_handler->getModule('devel')->getPath();
-require_once($devel_path.'/kint/kint/Kint.class.php');
-Kint::$maxLevels = 7;
-
 /**
  * Implements template_preprocess_paragraph().
  *
