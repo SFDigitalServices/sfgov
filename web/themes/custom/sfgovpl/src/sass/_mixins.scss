@@ -99,6 +99,11 @@
 }
 
 @mixin contain-1090-table { // Match 1090 spacing when a 3-column table is the child.
+  // Add
+  // ```@include media($medium-screen) {
+  //      padding-left: 20px;
+  //    }```
+  // to any non-table children.
   margin: 0 auto;
   max-width: 1130px;
   padding-left: 20px;
@@ -167,12 +172,11 @@
 @mixin button-clear {
   @include button;
   background: $c-white;
-  border: 3px solid $c-bright-blue;
   color: $c-bright-blue;
 
   &:hover {
-    background: $c-bright-blue;
-    color: $c-white;
+    background: $c-white;
+    color: $c-dark-blue;
   }
 }
 
@@ -334,14 +338,16 @@
 }
 
 @mixin three-column-table-row {
-  // See views-view-unformatted--services--block-1.html.twig and
-  // _node-topic.scss for usage.
+  // See service-cards.twig and
+  // _service-cards.scss for usage.
   @include media($medium-screen) {
     display: table;
     border-spacing: 20px 10px;
+    width: 100%;
   }
 
   > * {
+    display: block;
     border-radius: 8px;
     margin-bottom: 20px;
     padding: 20px;

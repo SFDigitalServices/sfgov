@@ -18,6 +18,16 @@
     width: 250px;
   }
 
+  &:hover {
+    [data-drupal-selector="edit-sfgov-search-input"] {
+      border-color: $c-dark-blue;
+    }
+
+    [data-drupal-selector="edit-submit"] {
+      background-color: $c-dark-blue;
+    }
+  }
+
   [data-drupal-selector="edit-sfgov-search-input"] {
     border-color: $c-bright-blue;
     border-radius: 8px 0 0 8px;
@@ -30,35 +40,30 @@
   }
 
   [data-drupal-selector="edit-actions"] {
-    background: $c-bright-blue;
     border-radius: 0 8px 8px 0;
     position: relative;
     text-align: center;
     width: 48px;
     float: left;
     display: block;
-
-    &::before {
-      @include background-image('search-white.svg');
-      content: '';
-      display: block;
-      width: 22px;
-      height: 22px;
-      position: absolute;
-      left: 12px;
-      top: 13px;
-    }
   }
 
   [data-drupal-selector="edit-submit"] {
     @include rubik;
-    background: $c-bright-blue;
+    @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
+    background-size: 22px 22px;
     border-radius: 0 8px 8px 0;
-    font-size: 0px;
+    font-size: 0;
     font-weight: $fw-medium;
     height: 44px;
     margin: 0;
     padding: 0 0 0 30px;
+    width: 50px;
+
+    @include media($medium-screen) {
+      background: $c-bright-blue;
+      width: 148px;
+    }
   }
 
   .form-item-sfgov-search-input {
@@ -74,8 +79,10 @@ header[role="banner"] {
     }
   }
 
-  [data-drupal-selector='edit-actions']::before {
-    top: 11px;
+  [data-drupal-selector="edit-submit"] {
+    @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
+    background-size: 22px 22px;
+    width: 48px;
   }
 }
 
@@ -85,6 +92,14 @@ header[role="banner"] {
   .sfgov-search-311-block {
     display: inline-block;
     width: auto;
+
+    &:hover {
+      .form-item-sfgov-search-input::before {
+        @include media($medium-screen) {
+          @include background-image('search-dark-blue.svg');
+        }
+      }
+    }
 
     form {
       margin-bottom: 20px;
@@ -148,5 +163,21 @@ header[role="banner"] {
         }
       }
     }
+  }
+}
+
+// Hover states.
+// @todo Refactor. Organize.
+.block-sfgov-search-form-block > #block-sfgovsearchblock-2 .sfgov-search-form-311:hover {
+  #edit-actions {
+    background: $c-dark-blue;
+  }
+
+  .js-form-item-sfgov-search-input #edit-sfgov-search-input {
+    border-color: $c-dark-blue;
+  }
+
+  .js-form-item-sfgov-search-input::before {
+    @include background-image('search-dark-blue.svg');
   }
 }

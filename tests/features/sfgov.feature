@@ -37,8 +37,6 @@ Scenario: Create department
   When I go to "topics/test-topic"
   Then I should see "Test Topic"
   And I should see "Test Transaction"
-  And I should see a ".title-url" element
-  And the "target" attribute of the ".title-url" element should contain "_blank"
   When I go to "test-transaction"
   Then I should be on "http://google.com"
 

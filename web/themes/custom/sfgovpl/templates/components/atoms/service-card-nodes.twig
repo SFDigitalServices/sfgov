@@ -1,0 +1,5 @@
+{% set node = card.content['#node'] %}
+{% include "@theme/atoms/service-card.twig" with {
+  "title": node.label,
+  "url": path('entity.node.canonical', {'node': node.id} )
+} %}
