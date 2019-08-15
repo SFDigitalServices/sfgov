@@ -61,36 +61,7 @@
     {% for service in dept_fields.services.values %}
         <div class="sfgov-services-section sfgov-dept-section-content-container">
           <h4>{{ service.title }}</h4>
-          <div class="sfgov-services-transactions-container">
-            {% set i = 3 %}
-            {% for transaction in service.transactions %}
-              {% if loop.first %}
-              <div class="sfgov-services-transactions" data-attr="row">
-              {% endif %}
-                {% include "@molecules/12-service-card/12-service-card.twig" with {
-                  "title": transaction.tx_title,
-                  "description": transaction.tx_description,
-                  "url": transaction.tx_url
-                }%}
-                {% set i = i - 1 %}
-              {% if loop.index is divisible by(3) %}
-                </div><div class="sfgov-services-transactions" data-attr="row">
-              {% endif %}
-              {% if loop.last %}
-                {% if i >= 1 %}
-                  {% for n in 1..i %}
-                    {% include "@molecules/12-service-card/12-service-card.twig" with {
-                      "title": '',
-                      "description": '',
-                      "url": '',
-                      "empty": true
-                    }%}
-                  {% endfor %}
-                {% endif %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
+          {% include '@theme/molecules/service-cards.twig' with { input_type: 'transaction' } %}
         </div>
     {% endfor %}
     </div>
@@ -236,7 +207,9 @@
         <div class="sfgov-dept-section-content-container">
           {% if dept_fields.address %}
             <div class="sfgov-contact-section address">
+            {% if dept_fields.address.organization %}
               <h5>{{ dept_fields.address.organization }}</h5>
+            {% endif %}
               <p>
                 {{ dept_fields.address.line1 }} <br/>
               {% if dept_fields.address.line2 %}
@@ -261,10 +234,15 @@
             </div>
           {% endif %}
           {% if dept_fields.email %}
-            <div class="sfgov-contact-section email">
-              <h5>Email</h5>
-              <p><a href="mailto:{{ dept_fields.email }}">{{ dept_fields.email }}</a></p>
-            </div>
+            {% if dept_fields.email.email_address %}
+              <div class="sfgov-contact-section email">
+                <h5>Email</h5>
+                {% if dept_fields.email.email_title %}
+                  <h6>{{ dept_fields.email.email_title }}</h6>
+                {% endif %}
+                <p><a href="mailto:{{ dept_fields.email.email_address }}">{{ dept_fields.email.email_address }}</a></p>
+              </div>
+            {% endif %}
           {% endif %}
         </div>
       </div>

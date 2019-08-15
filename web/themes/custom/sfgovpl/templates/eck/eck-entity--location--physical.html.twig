@@ -34,22 +34,16 @@
     {{ content.field_operating_hours }}
 {% endif %}
 
-{% if not content.field_google_map.isEmpty() %}
-    {% include "@atoms/07-gmap/07-gmap.twig" with {
-    "height": content.field_google_map[0]['#height'],
-    "width": content.field_google_map[0]['#width'],
-    "zoom": content.field_google_map[0]['#zoom'],
-    "langcode": content.field_google_map[0]['#langcode'],
-    "url_suffix": address_text|url_encode,
-    "include_map": content.field_google_map[0]['#include_map'],
-    "include_static_map": content.field_google_map[0]['#include_static_map'],
-    "include_link": content.field_google_map[0]['#include_link'],
-    "map_type": content.field_google_map[0]['#map_type'],
-    "apikey": content.field_google_map[0]['#apikey'],
-    "static_scale": content.field_google_map[0]['#static_scale'],
-    "link_text" : content.field_google_map[0]['#link_text'],
-    "address_text": content.field_google_map[0]['#address_text']
-    } %}
+{% if map_img_url %}
+    <div class="simple-gmap-static-map">
+        <a href="{{ map_site_url }}"><img src="{{ map_img_url }}" /></a>
+    </div>
+{% endif %}
+
+{% if map_directions_url %}
+    <p class="simple-gmap-link">
+        <a href="{{ map_directions_url }}">Get directions</a>
+    </p>
 {% endif %}
 
 {{ content.field_text }}

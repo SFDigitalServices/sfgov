@@ -906,6 +906,10 @@ a:focus {
   color: #4f66ee;
 }
 
+a.active:hover, a.is-active:hover, a.active-trail:hover, a.visited:hover, a:hover {
+  color: #0c1464;
+}
+
 a.is-active, a:active, a.active-trail {
   color: #4f66ee;
 }
@@ -935,6 +939,10 @@ img {
 
 .sfgov-list-link:focus {
   color: #4f66ee;
+}
+
+.sfgov-list-link.active:hover, .sfgov-list-link.is-active:hover, .sfgov-list-link.active-trail:hover, .sfgov-list-link.visited:hover, .sfgov-list-link:hover {
+  color: #0c1464;
 }
 
 .sfgov-list-link.is-active, .sfgov-list-link:active, .sfgov-list-link.active-trail {
@@ -1072,6 +1080,14 @@ img {
   }
 }
 
+.sfgov-search-311-block:hover [data-drupal-selector="edit-sfgov-search-input"] {
+  border-color: #0c1464;
+}
+
+.sfgov-search-311-block:hover [data-drupal-selector="edit-submit"] {
+  background-color: #0c1464;
+}
+
 .sfgov-search-311-block [data-drupal-selector="edit-sfgov-search-input"] {
   border-color: #4f66ee;
   border-radius: 8px 0 0 8px;
@@ -1084,7 +1100,6 @@ img {
 }
 
 .sfgov-search-311-block [data-drupal-selector="edit-actions"] {
-  background: #4f66ee;
   border-radius: 0 8px 8px 0;
   position: relative;
   text-align: center;
@@ -1093,26 +1108,24 @@ img {
   display: block;
 }
 
-.sfgov-search-311-block [data-drupal-selector="edit-actions"]::before {
-  background: url("/themes/custom/sfgovpl/src/img/search-white.svg") no-repeat 50% 50% transparent;
-  content: '';
-  display: block;
-  width: 22px;
-  height: 22px;
-  position: absolute;
-  left: 12px;
-  top: 13px;
-}
-
 .sfgov-search-311-block [data-drupal-selector="edit-submit"] {
   font-family: "Rubik", sans-serif;
-  background: #4f66ee;
+  background: url("/themes/custom/sfgovpl/src/img/search-white.svg") no-repeat 50% 50% #4f66ee;
+  background-size: 22px 22px;
   border-radius: 0 8px 8px 0;
-  font-size: 0px;
+  font-size: 0;
   font-weight: 500;
   height: 44px;
   margin: 0;
   padding: 0 0 0 30px;
+  width: 50px;
+}
+
+@media screen and (min-width: 768px) {
+  .sfgov-search-311-block [data-drupal-selector="edit-submit"] {
+    background: #4f66ee;
+    width: 148px;
+  }
 }
 
 .sfgov-search-311-block .form-item-sfgov-search-input {
@@ -1125,14 +1138,23 @@ img {
   }
 }
 
-header[role="banner"] [data-drupal-selector='edit-actions']::before {
-  top: 11px;
+header[role="banner"] [data-drupal-selector="edit-submit"] {
+  background: url("/themes/custom/sfgovpl/src/img/search-white.svg") no-repeat 50% 50% #4f66ee;
+  background-size: 22px 22px;
+  width: 48px;
 }
 
 .region-fourofour .sfgov-search-311-block,
 .paragraph--type--block .sfgov-search-311-block {
   display: inline-block;
   width: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .region-fourofour .sfgov-search-311-block:hover .form-item-sfgov-search-input::before,
+  .paragraph--type--block .sfgov-search-311-block:hover .form-item-sfgov-search-input::before {
+    background: url("/themes/custom/sfgovpl/src/img/search-dark-blue.svg") no-repeat 50% 50% transparent;
+  }
 }
 
 .region-fourofour .sfgov-search-311-block form,
@@ -1218,6 +1240,18 @@ header[role="banner"] [data-drupal-selector='edit-actions']::before {
     left: 15px;
     top: 13px;
   }
+}
+
+.block-sfgov-search-form-block > #block-sfgovsearchblock-2 .sfgov-search-form-311:hover #edit-actions {
+  background: #0c1464;
+}
+
+.block-sfgov-search-form-block > #block-sfgovsearchblock-2 .sfgov-search-form-311:hover .js-form-item-sfgov-search-input #edit-sfgov-search-input {
+  border-color: #0c1464;
+}
+
+.block-sfgov-search-form-block > #block-sfgovsearchblock-2 .sfgov-search-form-311:hover .js-form-item-sfgov-search-input::before {
+  background: url("/themes/custom/sfgovpl/src/img/search-dark-blue.svg") no-repeat 50% 50% transparent;
 }
 
 @media (max-width: 768px) {
@@ -1528,6 +1562,10 @@ details summary {
   border: 3px solid #4f66ee;
   border-radius: 8px;
   color: #4f66ee;
+}
+
+details summary:hover {
+  cursor: pointer;
 }
 
 details summary:after {
@@ -2153,6 +2191,81 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   text-align: left;
 }
 
+.service-cards--container {
+  margin: 0 auto;
+  max-width: 1130px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .service-cards--container {
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .service-cards {
+    display: table;
+    border-spacing: 20px 10px;
+    width: 100%;
+  }
+}
+
+.service-cards > * {
+  display: block;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .service-cards > * {
+    display: table-cell;
+    width: 33%;
+  }
+}
+
+.service-card {
+  background: #fff;
+  border: 3px solid #4f66ee;
+  text-decoration: none;
+}
+
+.service-card:hover {
+  border-color: #0c1464;
+}
+
+.service-card:hover h5 {
+  color: #0c1464;
+}
+
+.service-card.invisible {
+  height: 0;
+}
+
+.service-card h5 {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration: underline;
+  margin-bottom: 10px;
+}
+
+.service-card p {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 28px;
+  color: #0c1464;
+  text-decoration: none;
+}
+
+.service-card p:empty {
+  display: none;
+}
+
 .page-node-type-page .sfgov-new-website {
   margin-bottom: 0;
   margin-top: 30px;
@@ -2503,65 +2616,23 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   margin-bottom: 60px;
 }
 
-.page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container {
-  display: table;
-  table-layout: fixed;
-  width: 103%;
-  border-collapse: separate;
-  border-spacing: 20px;
-  margin-left: -20px;
-  margin-top: -20px;
+.page-node-type-department .sfgov-dept-services-list .sfgov-dept-section-content-container {
+  margin: 0 auto;
+  max-width: 1130px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
 }
 
-.page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container .sfgov-services-transactions {
-  display: table-row;
-}
-
-.page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container .sfgov-services-transactions .sfgov-service-card h5 {
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 24px;
-  text-decoration: underline;
-  margin-bottom: 10px;
-}
-
-.page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container .sfgov-services-transactions .sfgov-service-card:hover {
-  border-color: #0c1464;
-}
-
-.page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container .sfgov-services-transactions .sfgov-service-card:hover h5 {
-  color: #0c1464;
-}
-
-.page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container .sfgov-services-transactions .sfgov-service-card p {
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 28px;
-}
-
-@media (max-width: 768px) {
-  .page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-services-transactions-container {
-    display: block;
-    width: auto;
-    border-collapse: none;
-    border-spacing: 0;
-    margin: 0;
+@media screen and (min-width: 768px) {
+  .page-node-type-department .sfgov-dept-services-list .sfgov-dept-section-content-container {
+    padding: 0;
   }
-  .page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-service-card {
-    display: block;
-    max-width: initial;
-    margin-bottom: 20px;
-  }
-  .page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-service-card.empty {
-    display: none;
-  }
-  .page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-service-card h5 {
-    margin-bottom: 20px;
-  }
-  .page-node-type-department .sfgov-dept-services-list .sfgov-services-container .sfgov-services-section .sfgov-service-card p {
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 28px;
+}
+
+@media screen and (min-width: 768px) {
+  .page-node-type-department .sfgov-dept-services-list h4 {
+    padding-left: 20px;
   }
 }
 
@@ -2610,16 +2681,25 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 .page-node-type-department .sfgov-dept-spotlight .sfgov-spotlight .sfgov-spotlight-section .sfgov-spotlight-button {
-  font-family: "Rubik", sans-serif;
+  background: #4f66ee;
+  border-radius: 8px;
+  color: #fff;
   font-size: 17px;
   font-weight: 500;
-  line-height: 24px;
-  color: #4F66EE;
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: 8px;
-  background: #fff;
+  padding: 13px 20px 11px;
+  text-align: center;
   text-decoration: none;
+  background: #fff;
+  color: #4f66ee;
+}
+
+.page-node-type-department .sfgov-dept-spotlight .sfgov-spotlight .sfgov-spotlight-section .sfgov-spotlight-button:hover {
+  background: #0c1464;
+}
+
+.page-node-type-department .sfgov-dept-spotlight .sfgov-spotlight .sfgov-spotlight-section .sfgov-spotlight-button:hover {
+  background: #fff;
+  color: #0c1464;
 }
 
 .page-node-type-department .sfgov-dept-spotlight .sfgov-spotlight .sfgov-spotlight-section.sfgov-spotlight-text {
@@ -2917,6 +2997,10 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   background: url(../../src/img/icons/twitter.svg) no-repeat center left;
 }
 
+.page-node-type-department .sfgov-dept-about .sfgov-dept-about-content .sfgov-social .sfgov-social-list li.instagram a {
+  background: url(../../src/img/icons/instagram.svg) no-repeat center left;
+}
+
 .page-node-type-department .sfgov-dept-about .sfgov-dept-about-content .sfgov-cta > a {
   font-size: 17px;
   font-weight: 500;
@@ -3112,8 +3196,10 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   width: 32%;
 }
 
-.page-node-type-department .sfgov-dept-contact .sfgov-contact-container .sfgov-contact-section.email p {
-  line-height: normal;
+.page-node-type-department .sfgov-dept-contact .sfgov-contact-container .sfgov-contact-section.email h6 {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 24px;
 }
 
 .page-node-type-department .sfgov-dept-contact .sfgov-contact-container .sfgov-contact-section.email::after {
@@ -4285,32 +4371,6 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   text-decoration: underline;
 }
 
-@media screen and (min-width: 768px) {
-  .page-node-type-topic .view-services-block-1 .three-column-table-row {
-    display: table;
-    border-spacing: 20px 10px;
-  }
-}
-
-.page-node-type-topic .view-services-block-1 .three-column-table-row > * {
-  border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 20px;
-  width: 100%;
-}
-
-@media screen and (min-width: 768px) {
-  .page-node-type-topic .view-services-block-1 .three-column-table-row > * {
-    display: table-cell;
-    width: 33%;
-  }
-}
-
-.page-node-type-topic .view-services-block-1 .three-column-table-row-item {
-  background: #fff;
-  border: 3px solid #4f66ee;
-}
-
 .page-node-type-topic .view-services-block-1 .sfgov-transaction-search--container {
   border-bottom: 0;
   margin: 0;
@@ -4492,6 +4552,22 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 
 .page-node-type-transaction .paragraph--type--thing-to-know div {
   margin-left: 40px;
+}
+
+.page-node-type-transaction .paragraph--type--thing-to-know a:link {
+  color: #fff;
+}
+
+.page-node-type-transaction .paragraph--type--thing-to-know a:visited, .page-node-type-transaction .paragraph--type--thing-to-know a:link:visited {
+  color: #fff;
+}
+
+.page-node-type-transaction .paragraph--type--thing-to-know a:focus {
+  color: #fff;
+}
+
+.page-node-type-transaction .paragraph--type--thing-to-know a.is-active, .page-node-type-transaction .paragraph--type--thing-to-know a:active, .page-node-type-transaction .paragraph--type--thing-to-know a.active-trail {
+  color: #fff;
 }
 
 .page-node-type-transaction .paragraph--type--cost {
@@ -5019,7 +5095,6 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   text-align: center;
   text-decoration: none;
   background: #fff;
-  border: 3px solid #4f66ee;
   color: #4f66ee;
   border: 0;
 }
@@ -5029,8 +5104,8 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 .paragraph--type--campaign .__link a:hover {
-  background: #4f66ee;
-  color: #fff;
+  background: #fff;
+  color: #0c1464;
 }
 
 .paragraph--type--people {
@@ -5456,12 +5531,13 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   bottom: 77px;
 }
 
-.sfgov-title--elected-officers {
+.sfgov-title--elected-officers,
+.sfgov-title--city-officials {
   background: #edf4f7;
-  margin-bottom: 50px;
 }
 
-.sfgov-title--elected-officers .sfgov-people--content .__person-2 {
+.sfgov-title--elected-officers .sfgov-people--content .__person-2,
+.sfgov-title--city-officials .sfgov-people--content .__person-2 {
   margin: 0 auto;
   max-width: 1090px;
   padding-left: 20px;
@@ -5470,12 +5546,14 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 @media screen and (min-width: 1280px) {
-  .sfgov-title--elected-officers .sfgov-people--content .__person-2 {
+  .sfgov-title--elected-officers .sfgov-people--content .__person-2,
+  .sfgov-title--city-officials .sfgov-people--content .__person-2 {
     padding: 0;
   }
 }
 
-.sfgov-title--elected-officers .sfgov-people--content .__person-2 .field__item {
+.sfgov-title--elected-officers .sfgov-people--content .__person-2 .field__item,
+.sfgov-title--city-officials .sfgov-people--content .__person-2 .field__item {
   vertical-align: top;
   margin: 0 auto 35px;
   width: auto;
@@ -5483,20 +5561,23 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 @media screen and (min-width: 700px) {
-  .sfgov-title--elected-officers .sfgov-people--content .__person-2 .field__item {
+  .sfgov-title--elected-officers .sfgov-people--content .__person-2 .field__item,
+  .sfgov-title--city-officials .sfgov-people--content .__person-2 .field__item {
     display: inline-block;
     width: 49%;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .sfgov-title--elected-officers .sfgov-people--content .__person-2 .field__item {
+  .sfgov-title--elected-officers .sfgov-people--content .__person-2 .field__item,
+  .sfgov-title--city-officials .sfgov-people--content .__person-2 .field__item {
     display: inline-block;
     width: 32%;
   }
 }
 
-.sfgov-title--elected-officers .__people-title {
+.sfgov-title--elected-officers .__people-title,
+.sfgov-title--city-officials .__people-title {
   margin: 0 auto;
   max-width: 1090px;
   padding-left: 20px;
@@ -5506,17 +5587,29 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 @media screen and (min-width: 1280px) {
-  .sfgov-title--elected-officers .__people-title {
+  .sfgov-title--elected-officers .__people-title,
+  .sfgov-title--city-officials .__people-title {
     padding: 0;
   }
 }
 
-.sfgov-title--elected-officers .person-title {
+.sfgov-title--elected-officers .person-title,
+.sfgov-title--city-officials .person-title {
   opacity: .7;
 }
 
-.sfgov-title--elected-officers .person-subtitle {
+.sfgov-title--elected-officers .person-subtitle,
+.sfgov-title--city-officials .person-subtitle {
   opacity: .7;
+}
+
+.path-frontpage .sfgov-people > div:last-of-type .sfgov-title--city-officials,
+.path-frontpage .sfgov-people > div:last-of-type .sfgov-title--elected-officers {
+  margin-bottom: 50px;
+}
+
+.sfgov-title--city-officials {
+  padding-top: 0;
 }
 
 .sfgov-services.paragraph {
@@ -5565,17 +5658,23 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   }
 }
 
-.sfgov-services.paragraph .sfgov-container {
+.sfgov-services.paragraph .sfgov-cta-button__container {
   margin: 0 auto;
-  max-width: 1090px;
+  max-width: 1130px;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;
 }
 
-@media screen and (min-width: 1280px) {
-  .sfgov-services.paragraph .sfgov-container {
+@media screen and (min-width: 768px) {
+  .sfgov-services.paragraph .sfgov-cta-button__container {
     padding: 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .sfgov-services.paragraph .sfgov-cta-button__container .__link {
+    padding-left: 20px;
   }
 }
 
@@ -5594,36 +5693,6 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   background: #0c1464;
 }
 
-.sfgov-services.paragraph .sfgov-drupal-two-columns-list > .__content::after {
-  clear: both;
-  content: "";
-  display: block;
-}
-
-.sfgov-services.paragraph .sfgov-drupal-two-columns-list > .__content .field__item {
-  border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 20px;
-  width: 100%;
-  background: #fff;
-  border: 3px solid #4f66ee;
-  min-height: 100px;
-}
-
-@media screen and (min-width: 768px) {
-  .sfgov-services.paragraph .sfgov-drupal-two-columns-list > .__content .field__item {
-    float: left;
-    margin-right: 2%;
-    width: 32%;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .sfgov-services.paragraph .sfgov-drupal-two-columns-list > .__content .field__item:nth-child(3n) {
-    margin-right: 0;
-  }
-}
-
 .sfds-call-to-action h3 {
   font-family: "Rubik", sans-serif;
   font-size: 20px;
@@ -5638,11 +5707,15 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   font-smoothing: antialiased;
   font-smooth: always;
   display: inline-block;
-  background: #4F66EE;
+  background: #4f66ee;
   border-radius: 8px;
   color: #fff;
   padding: 15px 20px;
   text-decoration: none;
+}
+
+.sfds-call-to-action a:hover {
+  background: #0c1464;
 }
 
 .sfgov-alert-error {
@@ -5697,6 +5770,10 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   padding: 20px;
   background: #EDF4F7;
   border-radius: 8px;
+}
+
+.path-services .sfgov-services .views-view-grid.horizontal .l-grid__row .l-grid__column:hover {
+  background: #a9d6ea;
 }
 
 .path-services .sfgov-services .views-view-grid.horizontal .l-grid__row .l-grid__column .transaction-card {
@@ -5944,7 +6021,6 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   text-align: center;
   text-decoration: none;
   background: #fff;
-  border: 3px solid #4f66ee;
   color: #4f66ee;
   display: block;
 }
@@ -5954,8 +6030,8 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 .path-news .pager a:hover {
-  background: #4f66ee;
-  color: #fff;
+  background: #fff;
+  color: #0c1464;
 }
 
 .sfgov-dept-news {
@@ -6200,7 +6276,6 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   text-align: center;
   text-decoration: none;
   background: #fff;
-  border: 3px solid #4f66ee;
   color: #4f66ee;
   display: block;
 }
@@ -6212,8 +6287,8 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 
 .path-events .pager a:hover,
 .path-past-events .pager a:hover {
-  background: #4f66ee;
-  color: #fff;
+  background: #fff;
+  color: #0c1464;
 }
 
 .path-events .views-element-container .view-events > div,
