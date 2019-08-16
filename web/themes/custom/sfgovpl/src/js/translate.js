@@ -41,6 +41,7 @@ function SFGovTranslate() {
 
   this.sfgovGTranslate = function(event) {
     var lang = event.target.value.split('|')[1];
+    if(!lang) return;
     var drupalTranslation = that.getDrupalTranslation(lang);
     $('body').removeClass(function(i, classNames) {
       var classes = classNames.split(' ');
