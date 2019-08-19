@@ -6,6 +6,8 @@ dependencies:
     - entity_browser.browser.image
     - field.field.node.department.field_about_description
     - field.field.node.department.field_address
+    - field.field.node.department.field_alert_expiration_date
+    - field.field.node.department.field_alert_text
     - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
@@ -32,6 +34,7 @@ dependencies:
   module:
     - allowed_formats
     - content_moderation
+    - datetime
     - entity_browser
     - field_group
     - link
@@ -52,7 +55,7 @@ third_party_settings:
         - field_social_media
         - field_people
       parent_name: ''
-      weight: 6
+      weight: 7
       format_type: details
       format_settings:
         label: About
@@ -90,6 +93,41 @@ third_party_settings:
         open: false
         required_fields: true
       label: 'Request public records'
+    group_01:
+      children: {  }
+      parent_name: ''
+      weight: 21
+      format_type: tabs
+      format_settings:
+        id: ''
+        classes: ''
+        direction: vertical
+      label: '01'
+    group_02:
+      children: {  }
+      parent_name: ''
+      weight: 20
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: false
+        required_fields: true
+      label: '02'
+    group_alert:
+      children:
+        - field_alert_text
+        - field_alert_expiration_date
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        label: Alert
+        id: ''
+        classes: alert-fieldset
+        open: false
+        required_fields: false
+      label: Alert
 id: node.department.default
 targetEntityType: node
 bundle: department
@@ -129,6 +167,31 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
+  field_alert_expiration_date:
+    weight: 40
+    settings:
+      increment: 15
+      date_order: YMD
+      time_type: '24'
+    third_party_settings: {  }
+    type: datetime_datelist
+    region: content
+  field_alert_text:
+    weight: 39
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 100
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: true
+        maxlength_js_truncate_html: true
+      allowed_formats:
+        hide_help: '0'
+        hide_guidelines: '0'
+    type: text_textarea
+    region: content
   field_call_to_action:
     type: paragraphs
     weight: 30
@@ -157,7 +220,7 @@ content:
     third_party_settings: {  }
   field_department_services:
     type: paragraphs
-    weight: 3
+    weight: 4
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -219,7 +282,7 @@ content:
     region: content
   field_featured_items:
     type: paragraphs
-    weight: 2
+    weight: 3
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -355,7 +418,7 @@ content:
     region: content
   field_resources:
     type: paragraphs
-    weight: 5
+    weight: 6
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -393,7 +456,7 @@ content:
     region: content
   field_spotlight:
     type: paragraphs
-    weight: 4
+    weight: 5
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -436,13 +499,13 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 24
+    weight: 26
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 21
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -457,14 +520,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 22
+    weight: 24
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 20
+    weight: 22
     region: content
     third_party_settings: {  }
   title:
@@ -490,7 +553,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 23
+    weight: 25
     region: content
     settings: {  }
     third_party_settings: {  }
