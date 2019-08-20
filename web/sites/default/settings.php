@@ -85,6 +85,20 @@ if (defined('PANTHEON_ENVIRONMENT')) {
     $settings['trusted_host_patterns'][] = '^.+\.sfgov.org$';
     $settings['trusted_host_patterns'][] = '^sfgov.org$';
   }
+
+  switch($_ENV['PANTHEON_ENVIRONMENT']) {
+    // Responsibility of forms is handled by formbuilder
+    // https://github.com/SFDigitalServices/webform
+    // Comment out these lines to remove the dependency.
+    case 'live':
+    case 'test':
+      $settings['formbuilder_include_url'] = 'https://formbuilder-sf.herokuapp.com';
+      break;
+    case 'dev':
+    default:
+      $settings['formbuilder_include_url'] = 'https://formbuilder-sf-staging.herokuapp.com';
+
+  }
 }
 
 /**
@@ -105,9 +119,8 @@ $settings['locale_custom_strings_en']['Address label'] = [
 
 /**
  * If there is a local settings file, then include it
- * Local settings file need to be in sites/default/files/private for Pantheon sites
  */
-$local_settings = "sites/default/files/private/settings.local.php";
+$local_settings = __DIR__ . "/settings.local.php";
 if (file_exists($local_settings)) {
   include $local_settings;
 }
