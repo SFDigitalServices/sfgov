@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.field.node.department.field_about_description
     - field.field.node.department.field_address
+    - field.field.node.department.field_alert_expiration_date
+    - field.field.node.department.field_alert_text
     - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
@@ -29,11 +31,13 @@ dependencies:
     - field.field.node.department.field_url
     - node.type.department
   module:
+    - datetime
     - entity_reference_revisions
     - link
     - options
     - smart_trim
     - telephone
+    - text
     - user
 id: node.department.default
 targetEntityType: node
@@ -60,6 +64,22 @@ content:
       view_mode: default
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
+  field_alert_expiration_date:
+    weight: 24
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_date
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_alert_text:
+    weight: 25
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
     region: content
   field_call_to_action:
     type: entity_reference_revisions_entity_view

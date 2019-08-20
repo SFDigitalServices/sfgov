@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Contains sfgov_alerts.module.
+ */
+
+use Drupal\sfgov_alerts\Alert;
+use Drupal\Core\Form\FormState;
+
+/**
+ * @param $node
+ *
+ * Implements hook_node_presave().
+ */
+function sfgov_alerts_node_presave($node) {
+  $type = $node->getType();
+
+  if ($type == 'department') {
+    sfgov_alerts_notify($node);
+  }
+}
+
+/**
+ * @param $entity Drupal\Core\Entity\Entity
+ *
+ * Implements hook_entity_presave().
+ */
+function sfgov_alerts_entity_presave($entity) {
+  $bundle = $entity->bundle();
+
+  if ($bundle == 'alert') {
+    sfgov_alerts_notify($entity);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_alerts_form_node_department_edit_form_alter(&$form, FormState $form_state, $form_id) {
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $date_exp = $node->field_alert_expiration_date->value;
+  $date_today = date('Y-m-d');
+
+  if ($date_today <= $date_exp) {
+    $form['#fieldgroups']['group_alert']->format_settings['open'] = TRUE;
+  }
+}
+
+/**
+ * @param $entity Drupal\Core\Entity\Entity
+ *
+ * Send alert information to logs.
+ */
+function sfgov_alerts_notify($entity) {
+
+  $expiration_original = $entity->original->field_alert_expiration_date->value ? $entity->original->field_alert_expiration_date->value : 'none';
+  $expiration_updated = $entity->field_alert_expiration_date->value ? $entity->field_alert_expiration_date->value : 'none';
+
+  if ($expiration_original != $expiration_updated) {
+
+    $message = t(
+      '<div class="message-alert-updated" data-alertmessage="message" data-style="@type" data-exp=@expiration data-user=@current_user><em>@type</em>Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b></div>', [
+      '@type' => $entity->label(),
+      '@text' => strip_tags($entity->field_alert_text->value),
+      '@expiration' => $expiration_updated,
+      '@expiration_original' => $expiration_original,
+      '@current_user' => \Drupal::currentUser()->getAccountName(),
+    ]);
+
+    \Drupal::messenger()->addMessage($message);
+  }
+}

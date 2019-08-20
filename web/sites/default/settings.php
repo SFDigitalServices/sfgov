@@ -85,6 +85,20 @@ if (defined('PANTHEON_ENVIRONMENT')) {
     $settings['trusted_host_patterns'][] = '^.+\.sfgov.org$';
     $settings['trusted_host_patterns'][] = '^sfgov.org$';
   }
+
+  switch($_ENV['PANTHEON_ENVIRONMENT']) {
+    // Responsibility of forms is handled by formbuilder
+    // https://github.com/SFDigitalServices/webform
+    // Comment out these lines to remove the dependency.
+    case 'live':
+    case 'test':
+      $settings['formbuilder_include_url'] = 'https://formbuilder-sf.herokuapp.com';
+      break;
+    case 'dev':
+    default:
+      $settings['formbuilder_include_url'] = 'https://formbuilder-sf-staging.herokuapp.com';
+
+  }
 }
 
 /**
