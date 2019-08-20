@@ -1,4 +1,5 @@
 function SFGovTranslate() {
+  this.currentSelectedTranslation = null;
   this.sfgovGTranslateFireEvent = function (a, b) {
     try {
         if (document.createEvent) {
@@ -41,7 +42,10 @@ function SFGovTranslate() {
 
   this.sfgovGTranslate = function(event) {
     var lang = event.target.value.split('|')[1];
-    if(!lang) return;
+    if(!lang) {
+      $(event.target).val(that.currentSelectedTranslation);
+      return;
+    }
     var drupalTranslation = that.getDrupalTranslation(lang);
     $('body').removeClass(function(i, classNames) {
       var classes = classNames.split(' ');
@@ -61,6 +65,7 @@ function SFGovTranslate() {
       });
     } else { // no drupal translation exists, use gtranslate
       that.sfgovDoGTranslate(event.target.value);
+      that.currentSelectedTranslation = event.target.value;
     }
   };
 
