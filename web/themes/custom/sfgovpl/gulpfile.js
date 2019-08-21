@@ -48,6 +48,7 @@ function watch() {
 }
 
 exports.css = gulp.series(css);
+exports.watch = gulp.series(css, watch);
 
 exports.default = gulp.series(
   gulp.parallel(css),
