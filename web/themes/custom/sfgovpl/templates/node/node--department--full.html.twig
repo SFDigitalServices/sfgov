@@ -104,20 +104,26 @@
     <h2 class="dept-heading--section">{{ dept_fields.resources.label }}</h2>
     <div class="sfgov-dept-section-content-container">
       <div class="sfgov-dept-resources-container">
-        <div class="sfgov-dept-resource-items">
+        <div class="service-cards--two-column">
           {% for item in dept_fields.resources.items %}
-            {% include "@molecules/14-resource-card/14-resource-card.twig" with {
-              "title": item.title,
-              "description": item.description,
-              "url": item.url
-            }%}
-            {% if loop.index is divisible by (2) %}
-              </div><div class="sfgov-dept-resource-items">
-            {% endif %}
-          {% endfor %}
+          {% include "@theme/atoms/service-card.twig" with {
+            "title": item.title,
+            "description": item.description,
+            "url": item.url
+          } %}
+          {% if loop.index is divisible by (2) %}
         </div>
+        <div class="service-cards--two-column">
+          {% else %}
+          {% if loop.last %}
+          <div class="service-card invisible"></div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
       </div>
     </div>
+  </div>
   </div>
 {% endif %}
 

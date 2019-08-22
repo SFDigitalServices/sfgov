@@ -337,9 +337,13 @@
   }
 }
 
-@mixin three-column-table-row {
-  // See service-cards.twig and
-  // _service-cards.scss for usage.
+// Column Table Rows.
+// See:
+// service-cards.twig
+// _service-cards.scss
+// node--department--full.html.twig
+
+@mixin column-table-row-base {
   @include media($medium-screen) {
     display: table;
     border-spacing: 20px 10px;
@@ -355,7 +359,27 @@
 
     @include media($medium-screen) {
       display: table-cell;
+    }
+  }
+}
+
+@mixin column-table-row-two {
+  @include column-table-row-base;
+  > * {
+
+    @include media($medium-screen) {
+      width: 50%;
+    }
+  }
+}
+
+@mixin column-table-row-three {
+  @include column-table-row-base;
+  > * {
+
+    @include media($medium-screen) {
       width: 33%;
     }
   }
 }
+
