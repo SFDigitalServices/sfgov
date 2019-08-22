@@ -20,6 +20,7 @@
 
   .dept-heading--service-title {
     font-size: 24px;
+    line-height: 24px;
     font-weight: normal;
 
     @include media($medium-screen) {
@@ -42,6 +43,10 @@
   }
   .sfgov-dept-news,
   .sfgov-dept-events {
+    .dept-heading--section {
+      margin-bottom: 40px;
+    }
+
     .views-events--rows,
     .views-news--rows {
       padding-left: 0;
@@ -89,10 +94,10 @@
         color: #fff;
         max-width: 0;
         h5 {
-          @include rubik;
-          @include fs-title-5;
-          text-decoration: none;
           @include antialiasing;
+          @include fs-title-5;
+          margin: 0 0 20px 0;
+          text-decoration: none;
         }
         > div {
           @include fs-body-long;
@@ -265,32 +270,22 @@
 
   .sfgov-dept-resources {
     background: #EDF4F7;
+
     h2 {
-      margin-bottom: 40px;
-    }
-    .sfgov-dept-resources-container {
-      display: table;
-      table-layout: fixed;
-      width: 103%;
-      border-collapse: separate;
-      border-spacing: 20px;
-      padding-left: 0;
-      padding-right: 0;
-      margin-left: -20px;
-    }
-    @include less-than('not-big') {
-      .sfgov-dept-resources-container {
-        display: block;
-        width: auto;
-        border-collapse: none;
-        border-spacing: 0;
-        margin: 0;
-        .sfgov-resource-card {
-          display: block;
-          margin-bottom: 20px;
-          max-width: initial;
-        }
+      margin-bottom: 20px;
+
+      @include media($medium-screen) {
+        margin-bottom: 40px;
       }
+    }
+
+    p {
+      line-height: 24px;
+      margin: 0;
+    }
+
+    .sfgov-dept-resources-container {
+      @include contain-1090-table;
     }
   }
 
@@ -306,9 +301,12 @@
       color: #fff;
       margin-bottom: 20px;
     }
+
     h4 {
       @include fs-title-3-mobile;
+      margin-bottom: 12px;
     }
+
     .sfgov-dept-about-content {
       position: relative;
       @include contain-1090;
