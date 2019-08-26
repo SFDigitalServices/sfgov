@@ -33,6 +33,9 @@
   a {
     @include search-suggestions-link;
   }
+  @media screen and (max-width: 770px) {  
+    width: calc(100% - 58px);
+  }
 }
 
 #sfgov-top-search-suggestions-container {
@@ -85,6 +88,9 @@
     }
     .no-search-results--container {
       padding-top: 60px;
+      @media screen and (max-width: 770px) {
+        padding: 40px 20px;
+      }
     }
   }
   
@@ -247,6 +253,9 @@
         }
       }
     }
+    @media screen and (max-width: 770px) {
+      display: none;
+    }
   }
 
   @media screen and (min-width: 1280px) {
@@ -255,7 +264,24 @@
 
   @media screen and (max-width: 950px) {
     padding: 0;
+    #sfgov-search-messages,
+    #sfgov-search-results-count {
+      margin: 0 25px;
+    }
+    #sfgov-search-results-count {
+      padding: 25px 0 0 0;
+    }
   }
+
+  @media screen and (max-width: 770px) {
+    &.no-search-results {
+      .sfgov-search-mobile-more {
+        display: none;
+      }
+    }
+  }
+
+
 }
 
 // loading css
@@ -426,7 +452,7 @@
     padding-right: 20px;
     width: 100%;
     @media screen and (min-width: 1280px) {
-      padding: 60px;
+      padding: 60px 0;
     }
     @media screen and (max-width: 770px) {
       padding: 40px 0;
@@ -487,6 +513,39 @@
     }
     .mobile-btn {
       display: none;
+    }
+    @media screen and (max-width: 770px) {
+      padding: 40px 20px;
+      h2 {
+        font-size: 33px;
+      }
+      .sfgov-search-form-311 {
+        #edit-actions {
+          width: 50px;
+          &::before {
+            background: url(/themes/custom/sfgovpl/src/img/search-white.svg) no-repeat 50% 50% transparent;
+            content: '';
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            left: 12px;
+            top: 13px;
+          }
+          #edit-submit {
+            font-size: 0;
+          }
+        }
+        .js-form-item-sfgov-search-input {
+          width: calc(100% - 50px);
+          &::before {
+            display: none;
+          }
+          #edit-sfgov-search-input {
+            padding: 15px;
+          }
+        }
+      }
     }
   }
 }
