@@ -14,7 +14,7 @@ Feature: Content
 
   @api
   Scenario: Create many nodes
-    Given "page" content:
+    Given "basic page" content:
     | title    |
     | Page one |
     | Page two |
