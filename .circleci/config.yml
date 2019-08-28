@@ -150,6 +150,7 @@ jobs:
                 command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
 
     ghost_inspector:
+        <<: *defaults
         steps:
             - run:
                 name: test
@@ -167,6 +168,7 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
+      - ghost_inspector
 
 experimental:
   notify:
