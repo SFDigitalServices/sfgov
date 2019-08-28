@@ -133,9 +133,9 @@ jobs:
                 name: run composer install again to get dev dependencies
                 command: composer install
 
-            - run:
-                name: run functional tests with Behat
-                command: ./tests/scripts/run-behat
+            # - run:
+            #     name: run functional tests with Behat
+            #     command: ./tests/scripts/run-behat
 
             - run:
                 name: post-test actions
@@ -148,6 +148,12 @@ jobs:
             - run:
                 name: remove transient test fixtures
                 command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
+
+    ghost_inspector:
+        steps:
+            - run:
+                name: test
+                command: echo $TERMINUS_ENV-$TERMINUS_SITE
 
     # TODO:
     # 04-merge-master
