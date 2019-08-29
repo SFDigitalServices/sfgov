@@ -21,15 +21,18 @@ class SearchForm extends FormBase {
         'sfgov-search-form',
         'sfgov-search-form-311',
       ),
+      'role' => 'search',
     );
 
     $form['sfgov_search_input'] = array(
+      '#title' => 'Search',
       '#type' => 'textfield',
       '#placeholder' => t('Search'),
       '#attributes' => array(
         'class' => array(
           'sf-gov-search-input-class',
         ),
+        'title' => 'Enter the terms you wish to search for.',
       ),
       '#suffix' => '<div id="sfgov-search-autocomplete"></div>',
     );
