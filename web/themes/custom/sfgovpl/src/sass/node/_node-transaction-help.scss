@@ -1,5 +1,11 @@
 .transaction--help {
 
+  padding: 40px;
+
+  > h2 {
+    margin-bottom: 30px;
+  }
+
   .field__label,
   .__title {
     @include fs-title-5;
@@ -35,13 +41,41 @@
     }
   }
 
+  .paragraph--type--help {
+    .__text {
+      font-style: normal;
+    }
+  }
+
+  .paragraph--type--in-person-location {
+    .__location {
+      .field--type-office-hours {
+        white-space: normal;
+      }
+    }
+    .simple-gmap-static-map {
+      img {
+        border: 1px solid $c-blue-2;
+      }
+    }
+  }
+
   .paragraph--type--document,
   .paragraph--type--email,
   .paragraph--type--help,
   .paragraph--type--in-person-location,
   .paragraph--type--mailing-address,
   .paragraph--type--phone {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
   }
-
+  
+  // subtitles (email address, name of way to get help, in person address organization, phone number owner, etc)
+  .paragraph {
+    > .__title,
+    > .__location .field__label,
+    &.paragraph--type--phone .field__label {
+      @include antialiasing;
+      margin-bottom: 10px;
+    }
+  }
 }
