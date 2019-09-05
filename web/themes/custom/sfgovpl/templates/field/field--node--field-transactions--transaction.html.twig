@@ -40,7 +40,13 @@
   <div class="transaction--right-para transaction--related-services">
     <h2>Related Services</h2>
     {% for item in items %}
-      {{ item.content }}
+      {% if loop.last %}
+        <div class="transaction--related-services-item last">
+      {% else %}
+        <div class="transaction--related-services-item">
+      {% endif %}
+          {{ item.content }}
+        </div>
     {% endfor %}
   </div>
 </div>
