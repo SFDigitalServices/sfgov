@@ -2,7 +2,13 @@
   <div class="transaction--right-para transaction--help">
     <h2>{{ 'Get help'|t }}</h2>
     {% for item in items %}
-      {{ item.content }}
+      {% if loop.last %}
+        <div class="transaction--help-item last">
+      {% else %}
+        <div class="transaction--help-item">
+      {% endif %}
+          {{ item.content }}
+        </div>
     {% endfor %}
   </div>
 </div>
