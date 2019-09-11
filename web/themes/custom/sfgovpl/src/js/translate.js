@@ -34,11 +34,17 @@ function SFGovTranslate() {
         that.sfgovGTranslateFireEvent(c, 'change');
         that.sfgovGTranslateFireEvent(c, 'change');
         $('body').show();
-        $('body').addClass('sfgov-translate-lang-' + b);
+        that.addElementTranslationClass(b);
         deferred.resolve();
     }
     return deferred.promise();
   };
+
+  this.addElementTranslationClass = function(translationVal) {
+    var elementClass = 'sfgov-translate-lang-' + translationVal;
+    $('body').addClass(elementClass);
+    $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').addClass(elementClass);
+  }
 
   this.sfgovGTranslate = function(event) {
     var lang = event.target.value.split('|')[1];
@@ -47,7 +53,7 @@ function SFGovTranslate() {
       return;
     }
     var drupalTranslation = that.getDrupalTranslation(lang);
-    $('body').removeClass(function(i, classNames) {
+    $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').removeClass(function(i, classNames) {
       var classes = classNames.split(' ');
       var classesToRemove = [];
       for(var i = 0; i<classes.length; i++) {
@@ -87,7 +93,7 @@ function SFGovTranslate() {
     var gTranslateCookie = getCookie('googtrans');
     var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null;
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
-      $('body').addClass('sfgov-translate-lang-' + gTranslateLang);
+      that.addElementTranslationClass(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
       if(drupalTranslation) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
@@ -105,7 +111,7 @@ function SFGovTranslate() {
       } else {
         that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       }
-      $('body').addClass('sfgov-translate-lang-' + currentDrupalLanguage);
+      that.addElementTranslationClass(currentDrupalLanguage);
     }
   }
 
