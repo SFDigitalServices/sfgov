@@ -42,7 +42,6 @@ function SFGovTranslate() {
 
   this.addElementTranslationClass = function(translationVal) {
     var elementClass = 'sfgov-translate-lang-' + translationVal;
-    $('body').addClass(elementClass);
     $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').addClass(elementClass);
   }
 
