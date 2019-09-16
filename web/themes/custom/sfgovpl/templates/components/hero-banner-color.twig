@@ -1,11 +1,13 @@
 <header class="hero-banner color">
   <div class="hero-banner--container">
-    <div class="hero-banner-label">
-      {{ banner.label }}
-    </div>
+    {% if banner.label %}
+      <div class="hero-banner-label">
+        {{ banner.label }}
+      </div>
+    {% endif %}
     <h1>{{ banner.title }}</h1>
     {% if banner.text %}
-      <p class="lead-paragraph">{{ banner.text }}</p>
+      <p class="lead-paragraph">{{ banner.text | striptags }}</p>
     {% endif %}
   </div>
 </header>
