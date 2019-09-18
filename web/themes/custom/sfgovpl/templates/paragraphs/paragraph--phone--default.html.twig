@@ -53,13 +53,11 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
 {% block paragraph %}
     <div {{ attributes.addClass(classes) }}>
         {% block content %}
-            {% include "@molecules/09-phone/09-phone.twig" with {
-            "parent_bundle": parent.bundle(),
-            "field_owner": paragraph.field_owner,
-            "field_tel": content.field_tel,
-            "field_text": content.field_text
+            {% include "@theme/phone.twig" with {
+                "phone_owner": content.field_owner.0,
+                "phone_number": content.field_tel.0,
+                "phone_details": content.field_text.0
             } %}
-
         {% endblock %}
     </div>
 {% endblock paragraph %}
