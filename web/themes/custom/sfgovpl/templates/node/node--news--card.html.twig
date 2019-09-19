@@ -1,15 +1,19 @@
-{% extends 'node--news--teaser.html.twig' %}
+{% extends 'node.html.twig' %}
+
+{% block title %}{% endblock %}
 
 {% block body %}
-
   {% if is_front and content.field_image|render|striptags %}
-    {% set thumbnail = file_url(node.field_image.entity.field_media_image.entity.uri.value | image_style('160x160')) %}
+    {% set thumbnail = file_url(node.field_image.entity.field_media_image.entity.uri.value|image_style('160x160')) %}
     <div class="news--teaser--body w-image" style="background-image: url('{{ thumbnail }}');">
+
   {% else %}
     <div class="news--teaser--body">
   {% endif %}
 
-    <h3{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
+    <h3{{ title_attributes.addClass(title_classes) }}>
+      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+    </h3>
     {{ content|without('links', 'field_image') }}
   </div>
 {% endblock body %}
