@@ -1,0 +1,10 @@
+{% set heading = heading|default('h3') %}
+<a class="news-card {{ invisible ? 'invisible' }}" href="{{ invisible ? '' : url }}">
+  {% if invisible == 'invisible' %}
+  {% else  %}
+    <{{ heading }} class="news-card--title">{{ title }}</{{ heading }}>
+    <p>
+      {{ description }}
+    </p>
+  {% endif %}
+</a>
