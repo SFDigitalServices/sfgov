@@ -8,47 +8,17 @@
     padding-top: 80px;
   }
 
-  // @todo Use three-column-item mixin instead.
-  .views-news--rows {
-    margin-bottom: 40px;
-
-    @include media($medium-screen) {
-      border-collapse: separate;
-      border-spacing: 20px;
-      display: table;
-      margin-bottom: 56px;
-      margin-left: -20px;
-      padding-left: 61px;
-      table-layout: fixed;
-      width: 103%;
-    }
-  }
-
-  .views-row {
-    background: $c-yellow-3;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    padding: 20px;
-    &:hover {
-      background: #E7B22E;
-    }
-
-    @include media($medium-screen) {
-      display: table-cell;
-      max-width: 33%;
-      padding: 20px;
-    }
-
-    &:nth-child(3) {
-      @include media($medium-screen) {
-        margin-right: 0;
-      }
-    }
-  }
-
   h2 {
     @include fs-h1;
     margin-bottom: 40px;
+  }
+
+  .views-news--rows {
+    @include contain-1090-table;
+  }
+
+  .news-cards {
+    @include column-table-row-three;
   }
 
   .more-link {
