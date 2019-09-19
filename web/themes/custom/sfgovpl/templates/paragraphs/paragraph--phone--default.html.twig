@@ -38,7 +38,7 @@
  * @ingroup themeable
  */
 #}
-
+∏
 {% set parent = paragraph.getParentEntity() %}
 {%
 set classes = [
@@ -51,14 +51,14 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
 %}
 
 {% block paragraph %}
-    <div {{ attributes.addClass(classes) }}>
-        {% block content %}
-            {% include "@theme/phone.twig" with {
-                "phone_owner": content.field_owner.0,
-                "phone_number": content.field_tel.0,
-                "phone_details": content.field_text.0
-            } %}
-        {% endblock %}
-    </div>
+  <div {{ attributes.addClass(classes) }}>
+    {% block content %}
+      {% include "@theme/phone.twig" with {
+        "phone_owner": content.field_owner.0,
+        "phone_number": content.field_tel.0,
+        "phone_details": content.field_text.0
+      } %}
+    {% endblock %}
+  </div>
 {% endblock paragraph %}
 
