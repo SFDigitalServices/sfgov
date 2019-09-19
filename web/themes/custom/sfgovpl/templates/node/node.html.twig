@@ -73,7 +73,7 @@
     node.isPromoted() ? bundle ~ '--promoted',
     node.isSticky() ? bundle ~ '--sticky',
     not node.isPublished() ? bundle ~ '--unpublished',
-  ]
+  ]|merge(classes|default([]))
 %}
 {%
   set title_classes = [
