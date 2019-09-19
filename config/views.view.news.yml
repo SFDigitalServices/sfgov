@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.card
+    - core.entity_view_mode.node.card_compact
     - core.entity_view_mode.node.teaser
     - node.type.department
     - node.type.news
@@ -182,7 +183,7 @@ display:
   block_1:
     display_plugin: block
     id: block_1
-    display_title: Block
+    display_title: 'News Block'
     position: 2
     display_options:
       display_extenders: {  }
@@ -214,6 +215,53 @@ display:
       use_more_always: false
       use_more_text: 'See more news'
       header: {  }
+      block_description: 'News block'
+      display_description: 'A list of News content rendered with "Card" view mode.'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  block_2:
+    display_plugin: block
+    id: block_2
+    display_title: 'News Block (compact)'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      defaults:
+        style: false
+        row: false
+        pager: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
+        header: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: card_compact
+      pager:
+        type: some
+        options:
+          items_per_page: 3
+          offset: 0
+      use_more: true
+      use_more_always: false
+      use_more_text: 'See more news'
+      header: {  }
+      block_description: 'News block (no image)'
+      display_description: 'A list of News content rendered with "Card compact" view mode.'
     cache_metadata:
       max-age: -1
       contexts:
