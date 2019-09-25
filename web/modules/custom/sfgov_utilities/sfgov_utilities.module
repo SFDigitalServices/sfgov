@@ -114,7 +114,8 @@ function sfgov_utilities_preprocess_eck_entity(&$variables) {
   $bundle = $variables['bundle'];
   if($bundle && ($bundle == 'event_address' || $bundle == 'physical')) {
     $address = $variables['eck_entity']->get('field_address')->getValue()[0];
-    $singleLineAddress = urlencode($address['address_line1'] . ',' . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
+    $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
+    $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
 
     $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
     // options for the map image

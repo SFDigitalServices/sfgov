@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -eo pipefail
+
+apt-get install wget
+wget -qN -Ojq https://stedolan.github.io/jq/download/linux64/jq
+chmod +x jq
+
+# use the terminus env vars created by previous steps
+GI_START_URL=https://$TERMINUS_ENV-$TERMINUS_SITE.pantheonsite.io/
+
+echo "Using start url: $GI_START_URL"
+
+# set up a couple variables to monitor result state
+STATUS='null'
+SUITE_RESULT=
+PASSING=
+
+EXECUTE_URL="https://api.ghostinspector.com/v1/suites/$GI_SUITE/execute?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1"
+
+echo "Execute url: $EXECUTE_URL"
+
+RESULT_ID=$(curl -s $EXECUTE_URL | ./jq -r '.data._id')
+
+# Poll for the suite result, sleep for a few seconds if it hasn't changed
+echo "Polling for suite results (ID: $RESULT_ID)"
+while [ "$STATUS" = 'null' ]; do
+  SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$RESULT_ID/?apiKey=$GI_API_KEY")
+  RESPONSE_STATUS=$(echo $SUITE_RESULT | ./jq -r '.code')
+  if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
+    echo "API ERROR"
+    break
+  fi
+  STATUS=$(echo $SUITE_RESULT | ./jq -r '.data.passing')
+  echo " - status: $STATUS"
+  sleep 5
+done
+
+# status has been updated, check results for "passing"
+if [ "$(echo $SUITE_RESULT | ./jq -r '.data.passing')" != 'true' ]; then
+  echo "Suite failed! ¯\_(ツ)_/¯"
+  PASSING=1
+else 
+  echo "Suite passed! \o/"
+  PASSING=0
+fi
+
+# return our passing status
+exit $PASSING

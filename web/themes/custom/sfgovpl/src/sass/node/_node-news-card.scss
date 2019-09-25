@@ -1,17 +1,31 @@
 .news--card {
-  color: $c-slate;
+  @include link-colors($c-slate);
+  background-color: $c-yellow-3;
+  background-position: right top;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  display: block; // <= Default needed for homepage, overridden on dept page.
+  margin-bottom: 20px;
+  padding: 20px;
+  text-decoration: none;
+
+  &.has-image {
+    height: 160px;
+    padding: 20px 180px 20px 20px;
+
+    @include media-max($medium-screen) {
+      background-image: none !important;
+      height: auto;
+    }
+  }
+
+  &:hover {
+    background-color: #e7b22e;
+  }
+
 
   h3 {
     @include fs-body-bold;
     margin: 0 0 11px;
-
-    a {
-      @include link-colors($c-slate);
-      text-decoration: none;
-    }
-  }
-
-  .__image {
-    display: none;
   }
 }

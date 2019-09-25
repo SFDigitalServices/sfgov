@@ -1,0 +1,45 @@
+uuid: 38ccaa1e-9192-4495-a3b3-0370d7d79c8e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card_compact
+    - field.field.node.news.body
+    - field.field.node.news.field_abstract
+    - field.field.node.news.field_date
+    - field.field.node.news.field_dept
+    - field.field.node.news.field_image
+    - field.field.node.news.field_news_type
+    - field.field.node.news.field_topics
+    - node.type.news
+  module:
+    - datetime
+    - user
+id: node.news.card_compact
+targetEntityType: node
+bundle: news
+mode: card_compact
+content:
+  content_moderation_control:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_date:
+    weight: 1
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: default
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+hidden:
+  body: true
+  field_abstract: true
+  field_dept: true
+  field_image: true
+  field_news_type: true
+  field_topics: true
+  langcode: true
+  links: true

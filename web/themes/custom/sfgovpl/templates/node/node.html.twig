@@ -73,7 +73,7 @@
     node.isPromoted() ? bundle ~ '--promoted',
     node.isSticky() ? bundle ~ '--sticky',
     not node.isPublished() ? bundle ~ '--unpublished',
-  ]
+  ]|merge(classes|default([]))
 %}
 {%
   set title_classes = [
@@ -81,32 +81,34 @@
     'article--' ~ view_mode|clean_class ~ '__title',
   ]
 %}
-<article class="{{ attributes.addClass(classes).class }}"{{ attributes|without('class', 'id') }}>
-  {% block content %}
-    {{ title_prefix }}
-    {% if not page %}
-      {% block title %}
-      <h1{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h1>
-      {% endblock title %}
-    {% endif %}
-    {{ title_suffix }}
+{% block node %}
+  <article attributes.addClass(classes)|without('class', 'id') }}>
+    {% block content %}
+      {{ title_prefix }}
+      {% if not page %}
+        {% block title %}
+        <h1{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h1>
+        {% endblock title %}
+      {% endif %}
+      {{ title_suffix }}
 
-    {% if display_submitted %}
-      <footer class="{{ bundle ~ '__footer' }}">
-        {{ author_picture }}
-        <div{{ author_attributes.addClass(bundle ~ '__submitted') }}>
-          {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-          {{ metadata }}
-        </div>
-      </footer>
-    {% endif %}
+      {% if display_submitted %}
+        <footer class="{{ bundle ~ '__footer' }}">
+          {{ author_picture }}
+          <div{{ author_attributes.addClass(bundle ~ '__submitted') }}>
+            {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+            {{ metadata }}
+          </div>
+        </footer>
+      {% endif %}
 
-    <div{{ content_attributes.addClass(bundle ~ '__content') }}>
-      {% block body %}
-      {{ content|without('links') }}
-      {% endblock body %}
-    </div>
+      <div{{ content_attributes.addClass(bundle ~ '__content') }}>
+        {% block body %}
+        {{ content|without('links') }}
+        {% endblock body %}
+      </div>
 
-    {{ content.links }}
-  {% endblock %}
-</article>
+      {{ content.links }}
+    {% endblock %}
+  </article>
+{% endblock node %}
