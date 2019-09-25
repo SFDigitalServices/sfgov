@@ -26,8 +26,8 @@ RESULT_ID=$(curl -s $EXECUTE_URL | ./jq -r '.data._id')
 echo "Polling for suite results (ID: $RESULT_ID)"
 while [ "$STATUS" = 'null' ]; do
   SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$RESULT_ID/?apiKey=$GI_API_KEY")
-  echo $SUITE_RESULT | ./jq type > /dev/null
-  if [ $? -ne 0 ]; then # invalid json, break
+  RESPONSE_STATUS=$(echo $SUITE_RESULT | ./jq -r '.code')
+  if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
     break
   fi
   STATUS=$(echo $SUITE_RESULT | ./jq -r '.data.passing')
