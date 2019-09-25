@@ -28,6 +28,7 @@ while [ "$STATUS" = 'null' ]; do
   SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$RESULT_ID/?apiKey=$GI_API_KEY")
   RESPONSE_STATUS=$(echo $SUITE_RESULT | ./jq -r '.code')
   if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
+    echo "API ERROR"
     break
   fi
   STATUS=$(echo $SUITE_RESULT | ./jq -r '.data.passing')
