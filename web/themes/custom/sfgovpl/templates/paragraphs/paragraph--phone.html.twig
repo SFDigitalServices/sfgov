@@ -38,21 +38,27 @@
  * @ingroup themeable
  */
 #}
+
+{% set parent = paragraph.getParentEntity() %}
 {%
-  set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
-  ]
+set classes = [
+'paragraph',
+'paragraph--type--' ~ paragraph.bundle|clean_class,
+view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+not paragraph.isPublished() ? 'paragraph--unpublished',
+"parent--bundle--" ~ parent.bundle
+]
 %}
+
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
+  <div {{ attributes.addClass(classes) }}>
     {% block content %}
-      {% include "@theme/email.twig" with {
-          "email_title": content.field_title.0,
-          "email_address": content.field_email.0
+      {% include "@theme/phone.twig" with {
+        "phone_owner": content.field_owner,
+        "phone_number": content.field_tel,
+        "phone_details": content.field_text
       } %}
     {% endblock %}
   </div>
 {% endblock paragraph %}
+
