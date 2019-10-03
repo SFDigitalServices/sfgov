@@ -37,7 +37,7 @@ class SfGovSearchConfigurationForm extends ConfigFormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config(self::SETTINGS);
-    $form['#prefix'] = $this->t('This form allows you to use a specific 311 Funnelback search collection.');
+    $form['#prefix'] = $this->t('This form allows you to 311 Funnelback search settings.');
     $options = [];
     $arr = self::FUNNELBACK_COLLECTIONS;
     $count = count($arr);
@@ -50,12 +50,20 @@ class SfGovSearchConfigurationForm extends ConfigFormBase {
       '#options' => $options,
       '#default_value' => $config->get('search_collection'),
     ];
+    $form['qie_influence'] = [
+      '#type' => 'textfield',
+      '#size' => '5',
+      '#maxlength' => '3',
+      '#title' => $this->t('QIE influence (between 0 - 1, eg: 0.7)'),
+      '#default_value' => $config->get('qie_influence'),
+    ];
     return parent::buildForm($form, $form_state);
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config(self::SETTINGS)
       ->set('search_collection', $form_state->getValue('search_collection_name'))
+      ->set('qie_influence', $form_state->getValue('qie_influence'))
       ->save();
     parent::submitForm($form, $form_state);
   }

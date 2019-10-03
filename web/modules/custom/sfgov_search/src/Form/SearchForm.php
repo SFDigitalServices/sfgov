@@ -38,7 +38,8 @@ class SearchForm extends FormBase {
     );
 
     $form['#attached']['library'][] = 'sfgov_search/search';
-    $form['#attached']['drupalSettings']['sfgovSearch']['collection'] = $config->get('search_collection');
+    $form['#attached']['drupalSettings']['sfgovSearch']['collection'] = empty($config->get('search_collection')) ? null : $config->get('search_collection');
+    $form['#attached']['drupalSettings']['sfgovSearch']['qie'] = empty($config->get('qie_influence')) ? null : $config->get('qie_influence');
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
