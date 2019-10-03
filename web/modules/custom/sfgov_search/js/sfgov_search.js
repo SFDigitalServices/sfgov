@@ -13,6 +13,7 @@ function Search311(collectionName) {
     "parameters": {
       "query": "",
       "collection": 'sfgov-meta-prod',
+      "cool.4": 0.8,
       "SM": "both",
       "qsup": "",
       "start_rank": 1,
@@ -445,13 +446,18 @@ $(document).ready(function() {
   $('.head-right--container #edit-sfgov-search-input').attr('placeholder', 'Search');
   var kw = getQueryParam('keyword') ? getQueryParam('keyword') : '';
   var collectionName = 'sfgov-meta-prod';
+  var qie = '0.7';
   $('.sf-gov-search-input-class').val(decodeURIComponent(kw));
   if(drupalSettings && drupalSettings.sfgovSearch) {
     if(drupalSettings.sfgovSearch.collection) {
       collectionName = drupalSettings.sfgovSearch.collection;
     }
+    if(drupalSettings.sfgovSearch.qie) {
+      qie = drupalSettings.sfgovSearch.qie;
+    }
   }
   search311.setParam('collection', collectionName);
+  search311.setParam('cool.4', qie);
   search311.setParam('query', kw);
   search311.makeRequest();
   search311.autocomplete();
