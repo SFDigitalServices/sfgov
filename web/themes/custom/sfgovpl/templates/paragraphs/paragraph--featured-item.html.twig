@@ -46,16 +46,24 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
-{% block paragraph %}
+{# {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      {% include "@molecules/11-featured-item/11-featured-item.twig" with {
+      {% include "@theme/featured-item.twig" with {
         "title": content.field_feature_title,
-        "description": content.field_feature_description,
-        "url": content.field_feature_link[0]['#url']
-      }%}
+        "url": content.field_feature_link.0.url,
+        "description": content.field_description
+      } %}
     {% endblock %}
   </div>
+{% endblock paragraph %} #}
+
+{% block paragraph %}
+    {% block content %}
+      {% include "@theme/featured-item.twig" with {
+        "title": content.field_feature_title,
+        "url": content.field_feature_link.0.url,
+        "description": content.field_description
+      } %}
+    {% endblock %}
 {% endblock paragraph %}
-
-
