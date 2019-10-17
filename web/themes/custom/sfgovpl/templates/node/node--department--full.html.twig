@@ -79,50 +79,15 @@
 
   </div>
 </div>
-{% set featured_item_count = content.field_featured_items['#items'].getValue() | length %}
 
 {{ content.field_featured_items }}
 
-{% set featured_item_fill_count = 3 - featured_item_count %}
-
-{{ featured_item__fill_count }}
-
-{# {% if dept_fields.featured_items %}
-    <div id="sfgov-dept-featured-items" class="sfgov-dept-section sfgov-dept-section-content-container">
-      <div class="sfgov-dept-featured-items-container">
-        <div class="sfgov-dept-featured-items">
-            {% set i = 3 %}
-            {% for featured_item in dept_fields.featured_items %}
-              {% include "@molecules/11-featured-item/11-featured-item.twig" with {
-                "title": featured_item.title | t,
-                "description": featured_item.description | t,
-                "url": featured_item.url | t
-              }%}
-              {% set i = i - 1 %}
-            {% endfor %}
-            {% if i > 0 %}
-              {% for n in 1..i %}
-                {% include "@molecules/11-featured-item/11-featured-item.twig" with {
-                  "title": '',
-                  "description": '',
-                  "url": '#',
-                  "empty": true
-                }%}
-              {% endfor %}
-            {% endif %}
-        </div>
-      </div>
-    </div>
-{% endif %} #}
-
-  
-
-  <div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
-    <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
-      <div class="sfgov-dept-in-this-page-label">In this page:</div>
-      <ul></ul>
-    </div>
+<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
+  <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
+    <div class="sfgov-dept-in-this-page-label">In this page:</div>
+    <ul></ul>
   </div>
+</div>
 
 {# Alert #}
 {% include '@theme/alert.twig' with {
@@ -130,7 +95,7 @@
   style: 'department',
 } %}
 
-{% if dept_fields.services.values %}
+{# {% if dept_fields.services.values %}
   <a name="services"></a>
   <div id="sfgov-dept-services" class="sfgov-dept-section sfgov-dept-services-list sfds-layout-container">
     <div class="sfgov-services-container sfds-responsive-container">
@@ -143,7 +108,10 @@
     {% endfor %}
     </div>
   </div>
-{% endif %}
+{% endif %} #}
+
+<a name="services"></a>
+{{ content.field_department_services }}
 
 {% if dept_fields.spotlight %}
   <div id="sfgov-dept-spotlight" class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
