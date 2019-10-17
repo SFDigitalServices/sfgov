@@ -1,11 +1,22 @@
 .sfgov-featured-items {
   @include contain-1090;
   display: flex;
-  flex-direction: row;
-  margin-bottom: 110px;
+  flex-direction: column;
+  margin-bottom: 50px;
+  @include media($medium-screen) {
+    flex-direction: row;
+    margin-bottom: 110px;
+  }
   .sfgov-featured-item-container {
     display: block;
-    margin-right: 20px;
-    width: 33%;
+    width: 100%;
+    margin: 0 0 20px 0;
+    @include media($medium-screen) {
+      margin-right: 20px;
+      width: 33%;
+      &.last {
+        margin-right: 0;
+      }
+    }
   }
 }
