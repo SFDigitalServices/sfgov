@@ -8,14 +8,19 @@
     margin-bottom: 110px;
   }
   .sfgov-featured-item-container {
-    display: block;
+    display: flex;
+    align-items: stretch;
     width: 100%;
     margin: 0 0 20px 0;
     @include media($medium-screen) {
-      margin-right: 20px;
-      width: 33%;
+      width: 33.33%;
+      > * {
+        margin-right: 20px;
+      }
       &.last {
-        margin-right: 0;
+        > * {
+          margin-right: 0;
+        }
       }
     }
   }
