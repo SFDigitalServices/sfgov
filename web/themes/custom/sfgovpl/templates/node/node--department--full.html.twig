@@ -95,21 +95,6 @@
   style: 'department',
 } %}
 
-{# {% if dept_fields.services.values %}
-  <a name="services"></a>
-  <div id="sfgov-dept-services" class="sfgov-dept-section sfgov-dept-services-list sfds-layout-container">
-    <div class="sfgov-services-container sfds-responsive-container">
-      <h2 class="dept-heading--section">{{ dept_fields.services.label }}</h2>
-    {% for service in dept_fields.services.values %}
-        <div class="sfgov-services-section sfgov-dept-section-content-container">
-          <h3 class="dept-heading--service-title">{{ service.title }}</h3>
-          {% include '@theme/molecules/service-cards.twig' with { input_type: 'transaction' } %}
-        </div>
-    {% endfor %}
-    </div>
-  </div>
-{% endif %} #}
-
 <a name="services"></a>
 {{ content.field_department_services }}
 
@@ -318,40 +303,4 @@
   </div>
 {% endif %}
 
-  {# {% set render_content = false %}
-
-  {% if node.get('field_url').isEmpty() == false %}
-    {% set render_content = true %}
-  {% elseif node.get('field_address').isEmpty() == false %}
-    {% set render_content = true %}
-  {% elseif node.get('field_phone_numbers').isEmpty() == false %}
-    {% set render_content = true %}
-  {% endif %}
-
-  {% if render_content %}
-    {% include "@organisms/04-containers/01-sidebar.twig" with {
-      "side": "right",
-      "title": "Contact"|t,
-      "content": [content.field_url,
-        content.field_address,
-        content.field_phone_numbers]
-    } %}
-  {% endif %} #}
-
-  {# Dept Fields: <br/>
-  <pre>
-  {{ dump(dept_fields) }}
-  </pre>
-
-  Services section: <br/>
-  <pre>
-  {{ dump(dept_fields.services) }}
-  </pre>
-
-  First service section: <br/>
-  title: {{ dept_fields.services.values.0.title}}
-  <pre>
-  {{ dump(dept_fields.services.values.0.transactions) }}
-  </pre> #}
 </div>
-
