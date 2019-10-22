@@ -1,0 +1,61 @@
+uuid: 62ce5652-9489-42a4-9e0d-19cf4f0231ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.process_page.body
+    - field.field.node.process_page.field_description
+    - field.field.node.process_page.field_intro_text
+    - field.field.node.process_page.field_process_steps
+    - field.field.node.process_page.field_topics
+    - node.type.process_page
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.process_page.default
+targetEntityType: node
+bundle: process_page
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_description:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_intro_text:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_process_steps:
+    type: entity_reference_revisions_entity_view
+    weight: 3
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_topics:
+    weight: 4
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  langcode: true
+  links: true
