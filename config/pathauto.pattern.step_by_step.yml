@@ -1,0 +1,36 @@
+uuid: 353d84d2-9cb1-4851-84c3-fe7f1775b58d
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+    - node
+id: step_by_step
+label: 'Step by step'
+type: 'canonical_entities:node'
+pattern: 'step-by-step/[node:title]'
+selection_criteria:
+  abd7664e-da66-4c9c-968b-28916be9526f:
+    id: node_type
+    bundles:
+      step_by_step: step_by_step
+    negate: false
+    context_mapping:
+      node: node
+    uuid: abd7664e-da66-4c9c-968b-28916be9526f
+  a3d9042b-bc32-4a9c-a5c8-f14531d4f999:
+    id: language
+    langcodes:
+      en: en
+      es: es
+      fil: fil
+      zh-hant: zh-hant
+    negate: false
+    context_mapping:
+      language: 'node:langcode:language'
+    uuid: a3d9042b-bc32-4a9c-a5c8-f14531d4f999
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Language

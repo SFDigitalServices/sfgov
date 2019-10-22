@@ -1,0 +1,33 @@
+uuid: 80444295-ab2e-494e-9dcb-5c3b966dd062
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.step_by_step
+    - node.type.topic
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.step_by_step.field_topics
+field_name: field_topics
+entity_type: node
+bundle: step_by_step
+label: Topic(s)
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      topic: topic
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
