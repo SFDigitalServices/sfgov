@@ -51,7 +51,7 @@
     {% block content %}
       {% include "@theme/featured-item.twig" with {
         "title": content.field_feature_title,
-        "url": content.field_feature_link.0.url,
+        "url": content.field_feature_link.0['#url'].getUri(),
         "description": content.field_description
       } %}
     {% endblock %}
