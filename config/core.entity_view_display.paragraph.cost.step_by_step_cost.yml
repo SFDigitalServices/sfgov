@@ -1,0 +1,68 @@
+uuid: 82aa0796-927e-4d2f-ae9f-5f5d597fb721
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.step_by_step_cost
+    - field.field.paragraph.cost.field_cost_flat_fee
+    - field.field.paragraph.cost.field_cost_maximum
+    - field.field.paragraph.cost.field_cost_minimum
+    - field.field.paragraph.cost.field_cost_type
+    - field.field.paragraph.cost.field_text
+    - paragraphs.paragraphs_type.cost
+  module:
+    - options
+    - text
+id: paragraph.cost.step_by_step_cost
+targetEntityType: paragraph
+bundle: cost
+mode: step_by_step_cost
+content:
+  field_cost_flat_fee:
+    weight: 1
+    label: hidden
+    settings:
+      thousand_separator: ','
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_cost_maximum:
+    weight: 3
+    label: hidden
+    settings:
+      thousand_separator: ','
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_cost_minimum:
+    weight: 2
+    label: hidden
+    settings:
+      thousand_separator: ','
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_cost_type:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_text:
+    weight: 4
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden: {  }
