@@ -40,6 +40,9 @@
 #}
 
 {% set parent = paragraph.getParentEntity() %}
+{% set field_file = paragraph.field_file  %}
+{% set fileurl = file_url(paragraph.field_file.entity.field_media_file.entity.uri.value) %}
+
 {%
 set classes = [
 'paragraph',
@@ -51,15 +54,13 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
 %}
 
 {% block paragraph %}
-    <div {{ attributes.addClass(classes) }}>
-        {% block content %}
-            {% include "@atoms/09-document/09-document.twig" with {
-            "parent_bundle": parent.bundle(),
-            "field_file": paragraph.field_file,
-            "fileurl": file_url(paragraph.field_file.entity.field_media_file.entity.uri.value)
-            } %}
-
-        {% endblock %}
-    </div>
+  <div {{ attributes.addClass(classes) }}>
+    {% block content %}
+      {% if not field_file.isEmpty %}
+        <div class="document">
+          <span class="document"><a href="{{ fileurl }}">{{ field_file.entity.label }}</a></span>
+        </div>
+      {% endif %}
+    {% endblock %}
+  </div>
 {% endblock paragraph %}
-
