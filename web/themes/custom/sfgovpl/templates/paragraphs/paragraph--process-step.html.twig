@@ -43,19 +43,20 @@
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'step-container'
   ]
 %}
 {% set optional = paragraph.field_process_optional.getValue()[0].value %}
 {% block paragraph %}
-  <div class="step-container">
+  <div{{ attributes.addClass(classes) }}>
     {% block content %}
       <div class="step-left">
         <h3>{{ content.field_title }}</h3>
         <div class="step-meta">
           <div class="step-optional {{ optional == '0' ? 'hidden' : '' }}">Optional step</div>
-          <div class="step-cost">{{ content.field_cost }}</div>
-          <div class="step-time">{{ content.field_text_time }}</div>
+          <div class="step-cost">{{ paragraph.field_cost.fielddefinition.label }}: {{ content.field_cost }}</div>
+          <div class="step-time">{{ paragraph.field_text_time.fielddefinition.label }}: {{ content.field_text_time }}</div>
         </div>
       </div>
       <div class="step-right">
