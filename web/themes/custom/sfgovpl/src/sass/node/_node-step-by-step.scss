@@ -7,5 +7,40 @@
   }
   .__intro-text {
     @include fs-body-long;
+    margin-bottom: 60px;
+  }
+  .step-by-step-container {
+    @include clearfix;
+    margin-left: 23px;
+    > div {
+      display: block;
+      float: left;
+    }
+    position: relative;
+    border-left: 3px solid $c-slate;
+    &.last {
+      border-left: 3px solid $c-white;
+    }
+    .step-type {
+      @include fs-title-4;
+      position: absolute;
+      margin-left: -26px;
+      margin-top: -24px;
+      text-align: center;
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
+      &.number { 
+        // display: block;
+        background: $c-slate;
+        color: $c-white;
+        border-radius: 25px;
+      }
+      &.conjuction {
+        // display: block;
+        background: $c-white;
+        color: $c-slate;
+      }
+    }
   }
 }
