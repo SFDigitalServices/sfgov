@@ -15,5 +15,8 @@
   {% block content %}
     <div class="step-by-step-content">
       {{ content | without('field_description', 'field_topics') }}
-    </div> 
+    </div>
+    {% include '@theme/last-updated.twig' with {
+      'date': node.changedtime|date('F d, Y')
+    } %}
   {% endblock content %}
