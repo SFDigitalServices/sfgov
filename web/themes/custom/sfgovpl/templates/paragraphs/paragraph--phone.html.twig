@@ -51,7 +51,7 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
 %}
 
 {% block paragraph %}
-  <div {{ attributes.addClass(classes) }}>
+  <div {{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
     {% block content %}
       {% include "@theme/phone.twig" with {
         "phone_owner": content.field_owner,
