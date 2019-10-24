@@ -49,7 +49,7 @@ set classes = [
 ]
 %}
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
+  <div{{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
     {% block content %}
       {%  set field_address = paragraph.field_location.entity.field_address[0] %}
       {%  set org = paragraph.field_location.entity.field_text[0] %}
