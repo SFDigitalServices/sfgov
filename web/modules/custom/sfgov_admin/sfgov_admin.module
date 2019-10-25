@@ -50,8 +50,24 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
     $paragraph_type = $paragraph_instance->bundle();
 
     if ($paragraph_type == 'cost') {
-      $dependee_field_name = 'field_cost_type';
-      $selector = sprintf(':input[name="%s[%d][subform][%s]"]', $paragraph_entity_reference_field_name, $element['#delta'], $dependee_field_name);
+
+      /*
+       * States API implementation on `field_cost_type`.
+       *
+       * This controls the visibility of fields on the "Cost" paragraph based on
+       * the value of the `field_cost_type` field. The location of this
+       * Paragraph varies. On "Transactions" nodes it's a field on the node. On
+       * "Step by Step" nodes, it's nested in a Paragraph. There is lack of
+       * reliable 'class' and id 'attributes', so we're using 'name'. However,
+       * there are still differences depending on where it's located. Examples:
+       *
+       * name="field_cost[0][subform][field_cost_type]"
+       * name="field_process_steps[0][subform][field_cost][0][subform][field_cost_type]".
+       *
+       * Even though the beginning of these is potentially different, the end is
+       * reliably the same, so we're using the "ends with" attribute selector.
+       */
+      $selector = ':input[name$="[subform][field_cost_type]"]';
 
       if (!empty($element['subform']['field_cost_flat_fee'])) {
         $element['subform']['field_cost_flat_fee']['#states'] = [
