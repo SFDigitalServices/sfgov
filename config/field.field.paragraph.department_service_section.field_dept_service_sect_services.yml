@@ -4,8 +4,14 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_dept_service_sect_services
+    - node.type.step_by_step
     - node.type.transaction
     - paragraphs.paragraphs_type.department_service_section
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
 id: paragraph.department_service_section.field_dept_service_sect_services
 field_name: field_dept_service_sect_services
 entity_type: paragraph
@@ -20,9 +26,10 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
+      step_by_step: step_by_step
       transaction: transaction
     sort:
       field: _none
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: step_by_step
 field_type: entity_reference
