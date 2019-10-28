@@ -1,5 +1,4 @@
 (function($) {
-  console.log('components.js');
   var toggles = document.querySelectorAll('[data-toggle-container]');
   for(var i=0; i<toggles.length; i++) {
     (function(n) {
