@@ -104,14 +104,22 @@
       @include background-image('chevron-down.svg', 0 50%);
       padding-left: 26px;
       &:hover {
-        @include background-image('chevron-down-dark-blue.svg', 0 50%);
+        color: $c-bright-blue;
       }
+      @include media($sbs-breakpoint) {
+        &:hover {
+          @include background-image('chevron-down-dark-blue.svg', 0 50%);
+        }
+      }
+
     }
     &[data-toggle-show] {
       .show-more-link {
         @include background-image('chevron-up.svg', 0 50%);
-        &:hover {
-          @include background-image('chevron-up-dark-blue.svg', 0 50%);
+        @include media($sbs-breakpoint) {
+          &:hover {
+            @include background-image('chevron-up-dark-blue.svg', 0 50%);
+          }
         }
       }
     }
