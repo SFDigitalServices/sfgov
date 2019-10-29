@@ -2488,31 +2488,43 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   }
 }
 
-@media screen and (min-width: 768px) {
+.service-cards {
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  display: -webkit-box;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media screen and (min-width: 1280px) {
   .service-cards {
-    display: table;
-    border-spacing: 20px 10px;
+    padding: 0;
+  }
+}
+
+.service-cards > .service-card-container {
+  display: block;
+  width: 100%;
+  margin: 0 0 20px 0;
+}
+
+@media screen and (min-width: 768px) {
+  .service-cards > .service-card-container {
+    width: 33.33%;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: stretch;
+            align-items: stretch;
+  }
+  .service-cards > .service-card-container > .service-card {
+    margin-right: 20px;
     width: 100%;
   }
-}
-
-.service-cards > * {
-  display: block;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 20px;
-  width: 100%;
-}
-
-@media screen and (min-width: 768px) {
-  .service-cards > * {
-    display: table-cell;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .service-cards > * {
-    width: 33%;
+  .service-cards > .service-card-container:nth-child(3n+3) > .service-card {
+    margin-right: 0;
   }
 }
 
@@ -2548,6 +2560,9 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
   background: #fff;
   border: 3px solid #4f66ee;
   text-decoration: none;
+  display: block;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .service-card:hover {
@@ -2833,33 +2848,7 @@ header[role="banner"] .sfgov-menu-btn.is-active::before {
 }
 
 .sfgov-services-container .sfgov-services .sfgov-dept-services-section-content {
-  display: -webkit-box;
-  display: flex;
-  flex-wrap: wrap;
   margin-bottom: 40px;
-}
-
-.sfgov-services-container .sfgov-services .sfgov-dept-services-section-content > div {
-  display: block;
-  width: 100%;
-  margin: 0 0 20px 0;
-}
-
-@media screen and (min-width: 768px) {
-  .sfgov-services-container .sfgov-services .sfgov-dept-services-section-content > div {
-    width: 33.33%;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-align: stretch;
-            align-items: stretch;
-  }
-  .sfgov-services-container .sfgov-services .sfgov-dept-services-section-content > div:nth-child(3n+3) > * {
-    margin-right: 0;
-  }
-  .sfgov-services-container .sfgov-services .sfgov-dept-services-section-content > div > * {
-    width: 100%;
-    margin-right: 20px;
-  }
 }
 
 .page-node-type-page .sfgov-new-website {
