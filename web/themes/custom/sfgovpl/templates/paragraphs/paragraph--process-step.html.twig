@@ -62,7 +62,9 @@
       <div class="step-right" data-toggle-container>
         <div class="content" data-toggle-content>
           <div class="step-description">{{ content.field_process_step_description }}</div>
-          <div class="step-transaction-link">{{ content.field_transaction }}</div>
+          {% if content.field_transaction | render %}
+            <div class="step-transaction-link">{{ content.field_transaction }}</div>
+          {% endif %}
         </div>
         <a class="show-more-link" data-toggle-trigger href="javascript:void(0)">Show more</a>
       </div>
