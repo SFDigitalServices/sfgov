@@ -55,8 +55,12 @@
         <h3>{{ content.field_title }}</h3>
         <div class="step-meta">
           <div class="step-optional {{ optional == '0' ? 'hidden' : '' }}">Optional step</div>
-          <div class="step-cost">{{ content.field_cost }}</div>
-          <div class="step-time"><h4>{{ paragraph.field_text_time.fielddefinition.label }}:</h4> {{ content.field_text_time }}</div>
+          {% if content.field_cost | render %}
+            <div class="step-cost">{{ content.field_cost }}</div>
+          {% endif %}
+          {% if content.field_text_time | render %}
+            <div class="step-time"><h4>{{ paragraph.field_text_time.fielddefinition.label }}:</h4> {{ content.field_text_time }}</div>
+          {% endif %}
         </div>
       </div>
       <div class="step-right" data-toggle-container>
