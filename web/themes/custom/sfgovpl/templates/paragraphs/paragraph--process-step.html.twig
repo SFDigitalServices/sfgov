@@ -49,6 +49,8 @@
 %}
 {% set optional = paragraph.field_process_optional.getValue()[0].value %}
 {% block paragraph %}
+{# {{ kint(content.field_transaction) }} #}
+{# <a href="{{ content.field_transaction.0['#url'].toString() }}">Transaction link</a> #}
   <div{{ attributes.addClass(classes) }} data-toggle-container>
     {% block content %}
       <div class="step-left">
@@ -69,7 +71,11 @@
         <div class="content" data-toggle-content>
           <div class="step-description">{{ content.field_process_step_description }}</div>
           {% if content.field_transaction | render %}
-            <div class="step-transaction-link">{{ content.field_transaction }}</div>
+            {% set txTitle = content.field_transaction.0['#title'] %}
+            {% set txUrl = content.field_transaction.0['#url'].toString() %}
+            <div class="step-transaction-link">
+              <a href="{{ txUrl }}?from=sbs">{{ txTitle }}</a>
+            </div>
           {% endif %}
         </div>
       </div>
