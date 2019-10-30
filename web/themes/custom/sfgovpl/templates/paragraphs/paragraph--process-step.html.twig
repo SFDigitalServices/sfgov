@@ -49,29 +49,31 @@
 %}
 {% set optional = paragraph.field_process_optional.getValue()[0].value %}
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
+  <div{{ attributes.addClass(classes) }} data-toggle-container>
     {% block content %}
       <div class="step-left">
         <h3>{{ content.field_title }}</h3>
-        <div class="step-meta">
-          <div class="step-optional {{ optional == '0' ? 'hidden' : '' }}">Optional step</div>
-          {% if content.field_cost | render %}
-            <div class="step-cost">{{ content.field_cost }}</div>
-          {% endif %}
-          {% if content.field_text_time | render %}
-            <div class="step-time"><h4>{{ paragraph.field_text_time.fielddefinition.label }}:</h4> {{ content.field_text_time }}</div>
-          {% endif %}
-        </div>
+        <div class="step-optional {{ optional == '0' ? 'hidden' : '' }}">Optional step</div>
+        {% if (content.field_cost|render) or (content.field_text_time|render) %}
+          <div class="step-meta">
+            {% if content.field_cost | render %}
+              <div class="step-cost">{{ content.field_cost }}</div>
+            {% endif %}
+            {% if content.field_text_time | render %}
+              <div class="step-time"><h4>{{ paragraph.field_text_time.fielddefinition.label }}:</h4> {{ content.field_text_time }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
-      <div class="step-right" data-toggle-container>
+      <div class="step-right">
         <div class="content" data-toggle-content>
           <div class="step-description">{{ content.field_process_step_description }}</div>
           {% if content.field_transaction | render %}
             <div class="step-transaction-link">{{ content.field_transaction }}</div>
           {% endif %}
         </div>
-        <a class="show-more-link" data-toggle-trigger href="javascript:void(0)">Show more</a>
       </div>
     {% endblock %}
+    <a class="show-more-link" data-toggle-trigger href="javascript:void(0)">Show more</a>
   </div>
 {% endblock paragraph %}

@@ -1,4 +1,5 @@
 {% embed 'node--full.html.twig' %}
+
   {% block header %}
     {{ title_prefix }}
     {% set partOfProcess = 'step-by-step' in referrer ? drupal_view('transaction_step_by_step', 'block_tx_related_step_by_step', node.id()) : null %}
@@ -13,6 +14,8 @@
   {% endblock header %}
 
   {% block content %}
+    lazy builder: {{ timestamp }} <br/>
+    twig timestamp: {{ date().timestamp }}<br/>
     {% if content.field_cost|render or content.field_things_to_know|render %}
 
       {% if content %}
