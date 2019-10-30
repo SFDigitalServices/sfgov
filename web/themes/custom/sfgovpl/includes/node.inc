@@ -17,7 +17,6 @@ function sfgovpl_preprocess_node(&$variables) {
       sfgovpl_add_regions_to_node(['department_news'], $variables);
       sfgovpl_add_regions_to_node(['department_events'], $variables);
     }
-    $variables['referrer'] = \Drupal::request()->server->get('HTTP_REFERER');
   }
 }
 
