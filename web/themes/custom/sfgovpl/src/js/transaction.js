@@ -9,8 +9,8 @@
           var html = '';
           if(data && data.length > 0) {
             html += '<span>Part of </span><a href="' + data[0].url + '">Step by step: ' + data[0].title + '</a>';
+            $('.hero-banner--container').prepend('<div class="hero-banner-label">' + html + '</div>');
           }
-          $('.hero-banner--container').prepend('<div class="hero-banner-label">' + html + '</div>');
         }
       });
 
