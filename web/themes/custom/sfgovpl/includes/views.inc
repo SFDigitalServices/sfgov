@@ -1,16 +1,20 @@
 <?php
 
 use Drupal\views\Views;
-
-// $module_handler = Drupal::service('module_handler');
-// $devel_path = $module_handler->getModule('devel')->getPath();
-// require_once($devel_path.'/kint/kint/Kint.class.php');
-// Kint::$maxLevels = 4;
-
+/**
+ * Implements hook_preprocess_views_view()
+ * 
+ * Adds a twig template variable for upcoming events
+ */
 function sfgovpl_preprocess_views_view__events__page_1(&$variables) {
   $variables['upcoming_event_count'] = getUpcomingEventCount($variables['view']);
 }
 
+/**
+ * Implements hook_preprocess_views_view()
+ * 
+ * Adds a twig template variable for past events
+ */
 function sfgovpl_preprocess_views_view__events__page_2(&$variables) {
   $variables['upcoming_event_count'] = getUpcomingEventCount($variables['view']);
 }
