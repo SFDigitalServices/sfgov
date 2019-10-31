@@ -49,8 +49,6 @@
 %}
 {% set optional = paragraph.field_process_optional.getValue()[0].value %}
 {% block paragraph %}
-{# {{ kint(content.field_transaction) }} #}
-{# <a href="{{ content.field_transaction.0['#url'].toString() }}">Transaction link</a> #}
   <div{{ attributes.addClass(classes) }} data-toggle-container>
     {% block content %}
       <div class="step-left">
@@ -74,7 +72,12 @@
             {% set txTitle = content.field_transaction.0['#title'] %}
             {% set txUrl = content.field_transaction.0['#url'].toString() %}
             <div class="step-transaction-link">
-              <a href="{{ txUrl }}?from=sbs">{{ txTitle }}</a>
+              {# 
+                sbsId and txId are coming from paragraph_preprocess hook
+                these need to get passed to the linked transaction as url params, so js can populate the
+                "Part of Step by step: Step by step page title"
+              #}
+              <a href="{{ txUrl }}?from=sbs&sbsid={{ sbsId }}&txid={{ txId }}">{{ txTitle }}</a>
             </div>
           {% endif %}
         </div>
