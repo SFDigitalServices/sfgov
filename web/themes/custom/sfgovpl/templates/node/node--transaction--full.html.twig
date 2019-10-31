@@ -2,11 +2,9 @@
 
   {% block header %}
     {{ title_prefix }}
-    {% set relatedStep = drupal_view('transaction_step_by_step', 'block_tx_related_step_by_step', node.id()) %}
-    
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
-        'label': relatedStep,
+        'label': '',
         'title': node.label,
         'text': node.field_description.value
       }
