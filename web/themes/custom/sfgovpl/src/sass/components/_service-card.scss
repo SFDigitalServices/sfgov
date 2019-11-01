@@ -24,7 +24,23 @@
         }
       }
     }
-
+  }
+  &.two-column {
+    > .service-card-container {
+      @include media($medium-screen) {
+        width: 50%;
+        &:nth-child(3n+3) {
+          > .service-card {
+            margin-right: 20px;
+          }
+        }
+        &:nth-child(2n+2) {
+          > .service-card {
+            margin-right: 0;
+          }
+        }
+      }
+    }
   }
 }
 
