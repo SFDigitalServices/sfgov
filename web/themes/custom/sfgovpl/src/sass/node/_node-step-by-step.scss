@@ -1,0 +1,56 @@
+.page-node-type-step-by-step {
+  $sbs-breakpoint: $medium-screen;
+  .step-by-step-content {
+    @include contain-1090;
+    @include media($sbs-breakpoint) {
+      padding-right: calc(1090px/6);
+    }
+  }
+  header {
+    margin: 0 0 80px;
+  }
+  .__intro-text {
+    @include fs-body-long;
+    margin-bottom: 60px;
+  }
+  .step-by-step-container {
+    @include clearfix;
+    margin-left: 23px;
+    > div {
+      display: block;
+      float: left;
+    }
+    position: relative;
+    border-left: 3px solid $c-slate;
+    &.last {
+      border-left: 3px solid $c-white;
+    }
+    .step-type {
+      @include fs-title-5;
+      position: absolute;
+      text-align: center;
+      width: 35px;
+      height: 35px;
+      line-height: 35px;
+      margin-top: -17px;
+      margin-left: -19px;
+      @include media($sbs-breakpoint) {
+        @include fs-title-4;
+        margin-left: -26px;
+        margin-top: -24px;
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+      }
+      &.number { 
+        background: $c-slate;
+        color: $c-white;
+        border-radius: 25px;
+      }
+      &.conjuction {
+        background: $c-white;
+        color: $c-slate;
+      }
+    }
+  }
+}

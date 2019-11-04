@@ -1,0 +1,22 @@
+{% extends 'node--full.html.twig' %}
+
+  {% block header %}
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-color.twig' with {
+      'banner': {
+        'label': node.type.entity.label,
+        'title': node.label,
+        'text': content.field_description|render
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+  {% block content %}
+    <div class="step-by-step-content">
+      {{ content | without('field_description', 'field_topics') }}
+    </div>
+    {% include '@theme/last-updated.twig' with {
+      'date': node.changedtime|date('F d, Y')
+    } %}
+  {% endblock content %}

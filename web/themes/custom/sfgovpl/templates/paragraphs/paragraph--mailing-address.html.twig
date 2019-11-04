@@ -49,7 +49,7 @@ set classes = [
 ]
 %}
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
+  <div{{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
     {% block content %}
       {%  set field_address = paragraph.field_location.entity.field_address[0] %}
       {%  set org = paragraph.field_location.entity.field_text[0] %}
@@ -62,14 +62,21 @@ set classes = [
               {% endif %}
               {% set line2 = "#{city} #{field_address.administrative_area} #{field_address.postal_code}" %}
           {% endif %}
-          {% include "@molecules/04-cards/03-address-card.twig" with {
-            "address_card": {
-              "icon": "mail",
-              "organization": field_address.organization,
-              "line1": field_address.address_line1,
-              "line2": line2
-            }
-          } %}
+
+          {% if field_address.organization %}
+            <h4 class="address_card__line1">{{ field_address.organization }}</h4>
+          {% endif %}
+
+          {% if  field_address.address_line1 %}
+            <div class="address_card__line1">{{  field_address.address_line1 }}</div>
+          {% endif %}
+
+          {% if line2 %}
+            <div class="address_card__line2">{{ line2 }}</div>
+          {% endif %}
+
+          {{ card }}
+
         {% else %}
           {% include "@atoms/06-address/06-address.twig" with {
             "given_name": field_address.given_name,

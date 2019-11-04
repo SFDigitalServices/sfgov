@@ -5,11 +5,9 @@ dependencies:
   config:
     - field.storage.node.field_help
     - node.type.transaction
-    - paragraphs.paragraphs_type.email
     - paragraphs.paragraphs_type.email_addresses
     - paragraphs.paragraphs_type.help
     - paragraphs.paragraphs_type.in_person_location
-    - paragraphs.paragraphs_type.phone
     - paragraphs.paragraphs_type.phone_numbers
   module:
     - entity_reference_revisions
@@ -32,10 +30,8 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      email: email
       help: help
       in_person_location: in_person_location
-      phone: phone
       email_addresses: email_addresses
       phone_numbers: phone_numbers
     target_bundles_drag_drop:
@@ -58,8 +54,8 @@ settings:
         weight: -64
         enabled: false
       email:
-        enabled: true
         weight: -63
+        enabled: false
       help:
         enabled: true
         weight: -62
@@ -70,8 +66,8 @@ settings:
         weight: -60
         enabled: false
       phone:
-        enabled: true
         weight: -59
+        enabled: false
       email_addresses:
         enabled: true
         weight: -58
@@ -140,5 +136,8 @@ settings:
         enabled: false
       top_search_suggestion:
         weight: -36
+        enabled: false
+      process_step:
+        weight: 61
         enabled: false
 field_type: entity_reference_revisions

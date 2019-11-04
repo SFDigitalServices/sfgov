@@ -1,0 +1,38 @@
+.paragraph[data-contact] {
+  background-position: left 5px;
+  padding-left: 38px;
+}
+
+[data-contact="document"] {
+  @include background-image('document.svg');
+  min-height: 26px;
+}
+
+[data-contact="email"],
+[data-contact="mailing-address"] {
+  @include background-image('icons/mail-2.svg');
+}
+
+[data-contact="in-person-location"] {
+  @include background-image('icons/location-2.svg');
+
+  .eck-entity-address-field {
+    p {
+      margin: 0;
+    }
+  }
+}
+
+[data-contact="phone"] {
+  @include background-image('icons/phone-2.svg');
+}
+
+// Override contact icon appearance in where appropriate.
+.basic--right,
+.transaction--right,
+.event--content-sidebar {
+  [data-contact] {
+    background: none;
+    padding-left: 0;
+  }
+}

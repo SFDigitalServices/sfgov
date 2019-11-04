@@ -24,3 +24,16 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 
     }
 }
+
+function sfgovpl_preprocess_paragraph(&$variables) {
+    $paragraph = $variables['paragraph'];
+    $paragraph_type = $paragraph->getType();
+    if($paragraph_type == 'process_step') {
+        $variables['sbsId'] = $paragraph->getParentEntity()->id();
+        $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
+        if(count($referencedEntities) > 0) {
+            $txId = $referencedEntities[0]->id();
+            $variables['txId'] = $txId;
+        }
+    }
+}

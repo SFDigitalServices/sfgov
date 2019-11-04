@@ -1,0 +1,33 @@
+uuid: 6e85d923-ac0f-412a-95e2-58a2f793e9b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_transaction
+    - node.type.transaction
+    - paragraphs.paragraphs_type.process_step
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.process_step.field_transaction
+field_name: field_transaction
+entity_type: paragraph
+bundle: process_step
+label: 'Transaction link'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      transaction: transaction
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

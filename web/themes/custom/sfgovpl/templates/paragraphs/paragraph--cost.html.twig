@@ -48,18 +48,26 @@
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      <h3>{{ 'Cost'|t }}</h3>
-      {% if cost_type == 'flat' %}
-        {{ content.field_cost_flat_fee }}
+      {% block title %}
+        <h3>{{ 'Cost'|t }}</h3>
+      {% endblock title %}
+      {% if cost_type == 'free' %}
+        {% block costfree %}
+          <div>Free</div>
+        {% endblock costfree %}
       {% endif %}
-      {% if cost_type == 'minumum' and content.field_cost_minimum|render %}
-        {{ content.field_cost_minimum }} {{ ' and up'|t }}
+      {% if cost_type == 'flat' %}
+        {% block costflat %}
+          {{ content.field_cost_flat_fee }}
+        {% endblock costflat %}
+      {% endif %}
+      {% if cost_type == 'minimum' and content.field_cost_minimum|render %}
+        {% block costmin %}
+          {{ content.field_cost_minimum }} {{ ' and up'|t }}
+        {% endblock costmin %}
       {% endif %}
       {% if cost_type == 'range' and content.field_cost_minimum|render and content.field_cost_maximum|render %}
         {{ content.field_cost_minimum }} - {{ content.field_cost_maximum }}
-      {% endif %}
-      {% if cost_type == 'none' %}
-        <div>Free</div>
       {% endif %}
     {{ content|without(
       'field_cost_type',

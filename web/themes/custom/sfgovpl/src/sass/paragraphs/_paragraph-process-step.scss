@@ -1,0 +1,129 @@
+.step-container {
+  $sbs-breakpoint: $medium-screen;
+  margin: -15px 0 75px 32px;
+  width: calc(100% - 82px);
+  @include media($medium-screen) {
+    margin: -17px 0 80px 41px;  
+  }
+  h3 {
+    @include fs-title-3-mobile;
+    margin-bottom: 10px;
+    @include media($sbs-breakpoint) {
+      @include fs-title-4;
+      margin-bottom: 20px;
+    }
+  }
+  p {
+    margin: 0 0 10px 0;
+  }
+  .step-left {
+    display: block;
+    width: 100%;
+    word-wrap: break-word;
+  }
+  .step-right {
+    .content {
+      margin-top: 20px;
+      padding-bottom: 30px;
+      border-bottom: 3px solid $c-grey-3;
+      @include media($sbs-breakpoint) {
+        margin-top: 0;
+      }
+    }
+  }
+  ul {
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 10px;
+    list-style-type: none;
+    padding-left: 20px;
+    @include background-image('list-bullet-slate.svg', left center);
+  }
+  @include media($sbs-breakpoint) {
+    .step-left {
+      display: inline-block;
+      vertical-align: top;
+      width: 39%;
+      padding: 0 60px 0 0;
+    }
+    .step-right {
+      display: inline-block;
+      vertical-align: top;
+      width: 60%;
+      .content {
+        display: block;
+        padding: 0;
+        margin: 0;
+        border: 0;
+      }
+    }
+  }
+
+  .step-meta {
+    margin-bottom: 10px;
+    @include media($sbs-breakpoint) {
+      margin-bottom: 0;
+    }
+  }
+
+  .step-cost,
+  .step-time {
+    @include fs-body-short;
+    * {
+      display: inline;
+    }
+    h4 {
+      @include fs-body-bold;
+      display: inline;
+    }
+    .__text, p {
+      margin: 0;
+      display: inline;
+    }
+  }
+  .step-optional {
+    @include fs-small-text;
+    display: inline-block;;
+    background: $c-yellow-2;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    &.hidden {
+      display: none;
+    }
+  }
+  .step-description {
+    @include fs-body-long;
+    > p:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .step-transaction-link {
+    margin-top: 20px;
+  }
+  .show-more-link {
+    @include fs-body-bold;
+    display: inline-block;
+    text-decoration: none;
+    @include media($sbs-breakpoint) {
+      display: none;
+    }
+  }
+
+  &[data-toggle-container] {
+    .show-more-link {
+      @include background-image('chevron-down.svg', 0 50%);
+      padding-left: 28px;
+      margin-top: 20px;
+      &:hover {
+        color: $c-bright-blue;
+      }
+    }
+    &[data-toggle-show] {
+      .show-more-link {
+        @include background-image('chevron-up.svg', 0 50%);
+      }
+    }
+  }
+}

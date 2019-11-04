@@ -1,0 +1,80 @@
+uuid: 66ad1945-5f5e-4637-a3f9-2a1c75810d1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.process_step.field_cost
+    - field.field.paragraph.process_step.field_process_optional
+    - field.field.paragraph.process_step.field_process_step_description
+    - field.field.paragraph.process_step.field_process_step_type
+    - field.field.paragraph.process_step.field_text_time
+    - field.field.paragraph.process_step.field_title
+    - field.field.paragraph.process_step.field_transaction
+    - paragraphs.paragraphs_type.process_step
+  module:
+    - entity_reference_revisions
+    - options
+    - text
+id: paragraph.process_step.default
+targetEntityType: paragraph
+bundle: process_step
+mode: default
+content:
+  field_cost:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: step_by_step_cost
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_process_optional:
+    weight: 3
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_process_step_description:
+    weight: 5
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_process_step_type:
+    weight: 4
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_text_time:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_transaction:
+    weight: 6
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }

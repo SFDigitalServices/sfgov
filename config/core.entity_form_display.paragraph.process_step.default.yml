@@ -1,0 +1,105 @@
+uuid: e22a4b4a-2a39-4974-b97e-57942ddf26b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.process_step.field_cost
+    - field.field.paragraph.process_step.field_process_optional
+    - field.field.paragraph.process_step.field_process_step_description
+    - field.field.paragraph.process_step.field_process_step_type
+    - field.field.paragraph.process_step.field_text_time
+    - field.field.paragraph.process_step.field_title
+    - field.field.paragraph.process_step.field_transaction
+    - paragraphs.paragraphs_type.process_step
+  module:
+    - allowed_formats
+    - maxlength
+    - paragraphs
+    - text
+id: paragraph.process_step.default
+targetEntityType: paragraph
+bundle: process_step
+mode: default
+content:
+  field_cost:
+    type: paragraphs
+    weight: 3
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+  field_process_optional:
+    weight: 2
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_process_step_description:
+    weight: 5
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: ''
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
+    type: text_textarea
+    region: content
+  field_process_step_type:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_text_time:
+    weight: 4
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 70
+        maxlength_js_label: '<strong>@remaining</strong>/@limit'
+    type: string_textfield
+    region: content
+  field_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 65
+        maxlength_js_label: '<strong>@remaining</strong>/@limit'
+    type: string_textfield
+    region: content
+  field_transaction:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true

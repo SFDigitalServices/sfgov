@@ -50,7 +50,7 @@ set classes = [
 %}
 {% block paragraph %}
 
-  <div{{ attributes.addClass(classes) }}>
+  <div{{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
     {% block content %}
       {% if not field_address.isEmpty() %}
         {{ content }}
