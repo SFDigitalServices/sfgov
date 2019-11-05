@@ -33,6 +33,8 @@ TODO: check versions of the following:
 
 ### Install nodejs packages.
 
+run `npm install` from the libraries/sfgov-pattern-lab folder.
+
 run `npm install` from the root of the theme.
 
 the `gulp` command is going to run browserSync and it's going to watch for changes in the patter library.
