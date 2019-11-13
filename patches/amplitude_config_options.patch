@@ -1,0 +1,104 @@
+diff --git a/amplitude.module b/amplitude.module
+index 67b0f3e..da978e5 100644
+--- a/amplitude.module
++++ b/amplitude.module
+@@ -30,10 +30,12 @@ function _amplitude_add_settings_to_drupal_settings_js(array &$page) {
+   $amplitude_config = \Drupal::config('amplitude.settings');
+   $api_key = $amplitude_config->get('api_key');
+   $debug = $amplitude_config->get('debug');
++  $config_options = $amplitude_config->get('config_options');
+ 
+   $page['#attached']['drupalSettings']['amplitude'] = [
+     'api_key' => $api_key,
+     'debug' => $debug,
++    'config_options' => $config_options,
+   ];
+ }
+ 
+diff --git a/config/install/amplitude.settings.yml b/config/install/amplitude.settings.yml
+index e2ae8a0..5013a8a 100644
+--- a/config/install/amplitude.settings.yml
++++ b/config/install/amplitude.settings.yml
+@@ -1,2 +1,3 @@
+ api_key: ''
+ debug: 0
++config_options: ''
+\ No newline at end of file
+diff --git a/js/amplitude-init.js b/js/amplitude-init.js
+index f62b875..1b63ce5 100644
+--- a/js/amplitude-init.js
++++ b/js/amplitude-init.js
+@@ -25,5 +25,13 @@
+     e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+     ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
+   ;e.amplitude=n})(window,document);
++  
++var amplitude_config = {};
++if (drupalSettings.amplitude.config_options) {
++  var config = JSON.parse(drupalSettings.amplitude.config_options);
++  for(var key in config) {
++    amplitude_config[key] = config[key];
++  }
++}
+ 
+-amplitude.getInstance().init(drupalSettings.amplitude.api_key);
++amplitude.getInstance().init(drupalSettings.amplitude.api_key, null, amplitude_config);
+diff --git a/src/Form/AmplitudeConfigForm.php b/src/Form/AmplitudeConfigForm.php
+index 9443b4c..049fe77 100644
+--- a/src/Form/AmplitudeConfigForm.php
++++ b/src/Form/AmplitudeConfigForm.php
+@@ -4,6 +4,8 @@ namespace Drupal\amplitude\Form;
+ 
+ use Drupal\Core\Form\ConfigFormBase;
+ use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Link;
++use Drupal\Core\Url;
+ 
+ /**
+  * Class AmplitudeConfigForm.
+@@ -45,9 +47,37 @@ class AmplitudeConfigForm extends ConfigFormBase {
+       '#title' => $this->t('Enable debug'),
+       '#default_value' => $config->get('debug'),
+     ];
++
++    $config_options_link = Link::fromTextAndUrl(
++      $this->t('Amplitude configuration options'),
++      Url::fromUri('https://help.amplitude.com/hc/en-us/articles/115001361248#settings-configuration-options')
++    )->toString();
++    $form['config_options'] = [
++      '#type' => 'textarea',
++      '#title' => $this->t('Additional Amplitude configuration options'),
++      '#description' => $this->t(
++        'The JSON-formatted configuration options as described by the @config_options_link documentation',
++        ['@config_options_link' => $config_options_link]
++      ),
++      '#default_value' => $config->get('config_options'),
++    ];
++
+     return parent::buildForm($form, $form_state);
+   }
+ 
++  /**
++   * {@inheritdoc}
++   */
++  public function validateForm(array &$form, FormStateInterface $form_state) {
++    parent::validateForm($form, $form_state);
++
++    $config_options = $form_state->getValue('config_options');
++    if ($config_options && !json_decode($config_options)) {
++      $form_state->setErrorByName('config_options', $this->t('Entered JSON is in invalid format!'));
++    }
++  }
++
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -57,6 +87,7 @@ class AmplitudeConfigForm extends ConfigFormBase {
+     $this->config('amplitude.settings')
+       ->set('api_key', $form_state->getValue('api_key'))
+       ->set('debug', $form_state->getValue('debug'))
++      ->set('config_options', $form_state->getValue('config_options'))
+       ->save();
+   }
+ 
