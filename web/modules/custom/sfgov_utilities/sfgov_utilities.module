@@ -159,3 +159,15 @@ function sfgov_utilities_field_widget_form_alter(&$element, FormStateInterface &
     }
   }
 }
+
+/**
+ * Implements hook_entity_type_alter().
+ * refer to https://www.drupal.org/project/drupal/issues/2955321
+ */
+function sfgov_utilities_entity_type_alter(array &$entity_types) {
+  foreach ($entity_types as $entity_type) {
+    $constraints = $entity_type->getConstraints();
+    unset($constraints['EntityUntranslatableFields']);
+    $entity_type->setConstraints($constraints);
+  }
+}
