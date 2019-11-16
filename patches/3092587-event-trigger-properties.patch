@@ -1,0 +1,163 @@
+diff --git a/amplitude.module b/amplitude.module
+index 67b0f3e..95c2201 100644
+--- a/amplitude.module
++++ b/amplitude.module
+@@ -75,6 +75,8 @@ function _amplitude_get_event_js_fields(AmplitudeEvent $event) {
+     'event_trigger' => $event->get('event_trigger'),
+     'event_trigger_other' => $event->get('event_trigger_other'),
+     'event_trigger_selector' => $event->get('event_trigger_selector'),
++    'event_trigger_data_capture' => $event->get('event_trigger_data_capture'),
++    'event_trigger_data_capture_properties' => $event->get('event_trigger_data_capture_properties'),
+   ];
+ }
+ 
+diff --git a/config/schema/amplitude_event.schema.yml b/config/schema/amplitude_event.schema.yml
+index b495c89..1f8bd5c 100644
+--- a/config/schema/amplitude_event.schema.yml
++++ b/config/schema/amplitude_event.schema.yml
+@@ -25,3 +25,9 @@ amplitude.amplitude_event.*:
+     event_trigger_selector:
+       type: string
+       label: 'Event trigger selector'
++    event_trigger_data_capture:
++      type: string
++      label: 'Event trigger data capture'
++    event_trigger_data_capture_properties:
++      type: string
++      label: 'Event trigger data capture selector'
+diff --git a/js/amplitude-events.js b/js/amplitude-events.js
+index 290c770..a23add7 100644
+--- a/js/amplitude-events.js
++++ b/js/amplitude-events.js
+@@ -25,7 +25,7 @@
+   }
+ 
+   // Triggers an Amplitude event.
+-  function triggerEvent(event) {
++  function triggerEvent(event, elem) {
+     var amplitude_instance = amplitude.getInstance();
+     var event_name = event['name'];
+     var event_properties = event['properties'];
+@@ -37,6 +37,19 @@
+     }
+ 
+     var event_properties_parsed = JSON.parse(event_properties);
++
++    if (elem) {
++      var event_trigger_data_capture = event['event_trigger_data_capture'];
++      var event_trigger_data_capture_properties = event['event_trigger_data_capture_properties'];
++      if(event_trigger_data_capture == 1 && event_trigger_data_capture_properties) {
++        var event_trigger_data_capture_properties_parsed = JSON.parse(event_trigger_data_capture_properties);
++        for(var prop in event_trigger_data_capture_properties_parsed) {
++          var selector = event_trigger_data_capture_properties_parsed[prop];
++          event_properties_parsed[prop] = selector ? $(elem).find(selector).text() : $(elem).text();
++        }
++      }
++    }
++
+     amplitude_instance.logEvent(event_name, event_properties_parsed);
+     triggerEventDebug(event_name, event_properties_parsed);
+ 
+@@ -45,7 +58,7 @@
+   // Triggers an Amplitude event on a given user event.
+   function triggerEventOn(event, trigger) {
+     $(event['event_trigger_selector']).on(trigger, function () {
+-      triggerEvent(event);
++      triggerEvent(event, $(this));
+     });
+   }
+ 
+diff --git a/src/Entity/AmplitudeEvent.php b/src/Entity/AmplitudeEvent.php
+index c0feac0..3d749fd 100644
+--- a/src/Entity/AmplitudeEvent.php
++++ b/src/Entity/AmplitudeEvent.php
+@@ -98,6 +98,20 @@ class AmplitudeEvent extends ConfigEntityBase implements AmplitudeEventInterface
+    */
+   protected $event_trigger_selector;
+ 
++  /**
++   * The Amplitude event trigger data capture.
++   *
++   * @var string
++   */
++  protected $event_trigger_data_capture;
++
++  /**
++   * The Amplitude event trigger data capture properties.
++   *
++   * @var string
++   */
++  protected $event_trigger_data_capture_properties;
++
+   /**
+    * Returns the available trigger options for events.
+    *
+diff --git a/src/Form/AmplitudeEventForm.php b/src/Form/AmplitudeEventForm.php
+index 0263a33..e78bed2 100644
+--- a/src/Form/AmplitudeEventForm.php
++++ b/src/Form/AmplitudeEventForm.php
+@@ -65,9 +65,15 @@ class AmplitudeEventForm extends EntityForm {
+     parent::validateForm($form, $form_state);
+ 
+     $properties = json_decode($form_state->getValue('properties'));
++    $event_trigger_data_capture_properties = $form_state->getValue('event_trigger_data_capture_properties');
+     if (!$properties) {
+       $form_state->setErrorByName('properties', $this->t('Entered JSON is in invalid format!'));
+     }
++    if (!empty($event_trigger_data_capture_properties)) {
++      if (!json_decode($event_trigger_data_capture_properties)) {
++        $form_state->setErrorByName('event_trigger_data_capture_properties', $this->t('Entered JSON is in invalid format!'));
++      }
++    }
+   }
+ 
+   /**
+@@ -121,6 +127,8 @@ class AmplitudeEventForm extends EntityForm {
+     $event_trigger_pages = $this->entity->get('event_trigger_pages');
+     $event_trigger_other = $this->entity->get('event_trigger_other');
+     $event_trigger_selector = $this->entity->get('event_trigger_selector');
++    $event_trigger_data_capture = $this->entity->get('event_trigger_data_capture');
++    $event_trigger_data_capture_properties = $this->entity->get('event_trigger_data_capture_properties');
+ 
+     $form['trigger_settings'] = [
+       '#type' => 'fieldset',
+@@ -186,6 +194,39 @@ class AmplitudeEventForm extends EntityForm {
+       '#default_value' => $event_trigger_selector,
+     ];
+ 
++    $form['trigger_settings']['event_trigger_data_capture'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Capture text of the event trigger <em>selector</em> element'),
++      '#states' => [
++        'visible' => $selector_condition,
++      ],
++      '#default_value' => $event_trigger_data_capture,
++    ];
++
++    error_log($event_trigger_data_capture);
++
++    $selector_data_capture_condition = [
++      ':input[name="event_trigger_data_capture"]' => ['checked' => TRUE],
++    ];
++    $form['trigger_settings']['event_trigger_data_capture_properties'] = [
++      '#type' => 'textfield',
++      '#title' => $this->t('Selector for element containing desired text'),
++      '#description' => $this->t(
++        'The JSON-formatted properties associated to this event trigger.<br/>'.
++        'Use a selector as the property value to capture the desired text relative to event trigger <em>selector</em>.<br/>' .
++        'For example, if the <em>selector</em> field is <em>a[href]</em>, then <br/>' .
++        '<ul>'.
++        '  <li><em>{"prop":"h3"}</em> will capture the text for an element with the selector <em>a[href] h3</em>.</li>' .
++        '  <li><em>{"prop":""}</em> will capture the text for the selector <em>a[href]</em>' .
++        '</ul>'
++      ),
++      '#states' => [
++        'visible' => $selector_data_capture_condition,
++        'required' => $selector_data_capture_condition,
++      ],
++      '#default_value' => $event_trigger_data_capture_properties
++    ];
++
+     return $form;
+   }
+ 
