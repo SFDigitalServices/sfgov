@@ -38,6 +38,9 @@
  * @ingroup themeable
  */
 #}
+
+{% set single = content.field_person_2['#items']|length == 1 %}
+
 {%
   set classes = [
     'paragraph',
@@ -45,7 +48,7 @@
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
     'sfgov-paragraph-people',
-    content.field_person['#items']|length == 1 ? 'sfgov-paragraph-people-single' : 'sfgov-paragraph-people-multiple',
+    single ? 'sfgov-paragraph-people-single' : 'sfgov-paragraph-people-multiple',
     paragraph.field_people_title.value ? 'sfgov-title--' ~ paragraph.field_people_title.value|clean_class,
 ]
 %}
@@ -54,7 +57,11 @@
     {% block content %}
       {{ content.field_people_title }}
       <div class="sfgov-people--content">
-        {{ content.field_person_2 }}
+        {% if single %}
+          {{ drupal_entity('node', content.field_person_2.0['#node'].id(), 'card') }}
+        {% else %}
+          {{ content.field_person_2 }}
+        {% endif %}
         {{ content.field_description }}
       </div>
     {% endblock %}
