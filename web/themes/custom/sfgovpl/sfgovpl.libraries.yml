@@ -1,3 +1,4 @@
+# TODO: deprecate sfgov-pattern-lab
 sfgov-pattern-lab:
   css:
     base:
@@ -9,11 +10,21 @@ sfgov-pattern-lab:
     - core/drupal
     - core/jquery
 
+# fonts
+google-fonts:
+  header: true
+  css:
+    theme:
+      '//fonts.googleapis.com/css?family=Rubik:300,400,500,700': { type: external }
+      '//fonts.googleapis.com/css?family=Noto+Sans+TC:300,400,500,700&display=swap&subset=chinese-traditional' : { type: external }
+
+# styles
 sfgov-drupal-specific-styles:
   css:
     theme:
       'dist/css/drupal.css': {}
 
+# javascript
 sfgov-navigation:
   js:
     src/js/navigation.js: {}
@@ -54,20 +65,6 @@ sfgov-components:
   dependencies:
     - core/jquery
 
-google-fonts:
-  header: true
-  css:
-    theme:
-      '//fonts.googleapis.com/css?family=Rubik:300,400,500,700': { type: external }
-      '//fonts.googleapis.com/css?family=Noto+Sans+TC:300,400,500,700&display=swap&subset=chinese-traditional' : { type: external }
-
-fontawesome:
-  header: false
-  css:
-    theme:
-      //use.fontawesome.com/releases/v5.0.13/css/solid.css: { type: external }
-      //use.fontawesome.com/releases/v5.0.13/css/fontawesome.css: { type: external }
-
 resize-disable:
   js:
     src/js/resizeToolbarDisable.js: {}
@@ -80,4 +77,4 @@ sfgov-nowrap:
 
 twitter-feed:
   js:
-    src/js/twitter-feed.js: {}
+    src/js/twitter-feed.js: {attributes:{defer:true}}
