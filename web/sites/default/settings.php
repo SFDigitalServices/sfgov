@@ -138,21 +138,3 @@ $keys = "sites/default/files/private/settings.keys.php";
 if(file_exists($keys)) {
   include($keys);
 }
-
-/**
- * Redirect multiple subdomains to site's 404 page.
- */
-if (isset($_ENV['PANTHEON_ENVIRONMENT']) && ($_ENV['PANTHEON_ENVIRONMENT'] === 'live') && (php_sapi_name() != "cli")) {
-  // Whitelist domains
-  if (!in_array($_SERVER['HTTP_HOST'], array(
-    'www.sfgov'
-  ))) {
-    header('Location: https://sf.gov/404');
-
-    // Name transaction "redirect" in New Relic for improved reporting (optional).
-    if (extension_loaded('newrelic')) {
-      newrelic_name_transaction("redirect 404");
-    }
-    exit();
-  }
-}
