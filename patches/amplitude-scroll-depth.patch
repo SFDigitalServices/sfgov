@@ -1,28 +1,29 @@
 diff --git a/amplitude.module b/amplitude.module
-index 67b0f3e..52bc5b5 100644
+index 67b0f3e..dd8154d 100644
 --- a/amplitude.module
 +++ b/amplitude.module
-@@ -75,6 +75,8 @@ function _amplitude_get_event_js_fields(AmplitudeEvent $event) {
+@@ -74,6 +74,7 @@ function _amplitude_get_event_js_fields(AmplitudeEvent $event) {
+     'properties' => \Drupal::token()->replace($event->get('properties'), _amplitude_get_route_entities()),
      'event_trigger' => $event->get('event_trigger'),
      'event_trigger_other' => $event->get('event_trigger_other'),
-     'event_trigger_selector' => $event->get('event_trigger_selector'),
-+    'event_trigger_scroll_selector' => $event->get('event_trigger_scroll_selector'),
 +    'event_trigger_scroll_depths' => $event->get('event_trigger_scroll_depths'),
+     'event_trigger_selector' => $event->get('event_trigger_selector'),
    ];
  }
- 
 diff --git a/config/schema/amplitude_event.schema.yml b/config/schema/amplitude_event.schema.yml
-index b495c89..1c06a99 100644
+index b495c89..402e428 100644
 --- a/config/schema/amplitude_event.schema.yml
 +++ b/config/schema/amplitude_event.schema.yml
-@@ -25,3 +25,6 @@ amplitude.amplitude_event.*:
-     event_trigger_selector:
+@@ -19,6 +19,9 @@ amplitude.amplitude_event.*:
+     event_trigger_pages:
        type: string
-       label: 'Event trigger selector'
+       label: 'Event pages'
 +    event_trigger_scroll_depths:
 +      type: string
 +      label: 'Event trigger scroll depths'
-\ No newline at end of file
+     event_trigger_other:
+       type: string
+       label: 'Custom event trigger'
 diff --git a/js/amplitude-events.js b/js/amplitude-events.js
 index 290c770..2c172d8 100644
 --- a/js/amplitude-events.js
@@ -91,7 +92,7 @@ index 290c770..2c172d8 100644
    function triggerEventDebug(event_name, event_properties_parsed){
  
 diff --git a/src/Entity/AmplitudeEvent.php b/src/Entity/AmplitudeEvent.php
-index c0feac0..8c5d220 100644
+index c0feac0..b8395c6 100644
 --- a/src/Entity/AmplitudeEvent.php
 +++ b/src/Entity/AmplitudeEvent.php
 @@ -47,6 +47,8 @@ class AmplitudeEvent extends ConfigEntityBase implements AmplitudeEventInterface
@@ -103,9 +104,9 @@ index c0feac0..8c5d220 100644
    public const EVENT_TRIGGER_OTHER = 'other';
  
    /**
-@@ -98,6 +100,13 @@ class AmplitudeEvent extends ConfigEntityBase implements AmplitudeEventInterface
+@@ -91,6 +93,13 @@ class AmplitudeEvent extends ConfigEntityBase implements AmplitudeEventInterface
     */
-   protected $event_trigger_selector;
+   protected $event_trigger_other;
  
 +    /**
 +   * The Amplitude event scroll depths.
@@ -115,7 +116,7 @@ index c0feac0..8c5d220 100644
 +  protected $event_trigger_scroll_depths;
 +
    /**
-    * Returns the available trigger options for events.
+    * The Amplitude event selector.
     *
 @@ -109,6 +118,7 @@ class AmplitudeEvent extends ConfigEntityBase implements AmplitudeEventInterface
        self::EVENT_TRIGGER_PAGE_LOAD => t('Page load'),
@@ -126,17 +127,17 @@ index c0feac0..8c5d220 100644
      ];
    }
 diff --git a/src/Form/AmplitudeEventForm.php b/src/Form/AmplitudeEventForm.php
-index 0263a33..877965b 100644
+index 0263a33..e82d5b7 100644
 --- a/src/Form/AmplitudeEventForm.php
 +++ b/src/Form/AmplitudeEventForm.php
-@@ -121,6 +121,7 @@ class AmplitudeEventForm extends EntityForm {
+@@ -120,6 +120,7 @@ class AmplitudeEventForm extends EntityForm {
+     $event_trigger = $this->entity->get('event_trigger');
      $event_trigger_pages = $this->entity->get('event_trigger_pages');
      $event_trigger_other = $this->entity->get('event_trigger_other');
-     $event_trigger_selector = $this->entity->get('event_trigger_selector');
 +    $event_trigger_scroll_depths = $this->entity->get('event_trigger_scroll_depths');
+     $event_trigger_selector = $this->entity->get('event_trigger_selector');
  
      $form['trigger_settings'] = [
-       '#type' => 'fieldset',
 @@ -170,7 +171,11 @@ class AmplitudeEventForm extends EntityForm {
        Url::fromUri('https://api.jquery.com/category/selectors/')
      )->toString();
