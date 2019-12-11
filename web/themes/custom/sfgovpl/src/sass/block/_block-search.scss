@@ -7,7 +7,8 @@
 .path-search {
   .content-top-container {
     background: $c-blue-1;
-    padding: 60px 0;
+    padding: 40px 0;
+    margin-bottom: 40px;
     .sfgov-search-311-block {
       @include contain-1090;
       display: block;
@@ -16,8 +17,9 @@
         margin-bottom: 0;
       }
     }
-    @include media-max($medium-screen) {
-      padding: 40px 0;
+    @include media($medium-screen) {
+      padding: 60px 0;
+      margin-bottom: 60px;
     }
   }
 }
@@ -151,12 +153,11 @@ header[role="banner"] {
     }
   }
   > h2 {
-    font-size: 62px;
-    font-weight: 500;
-    font-family: rubik;
+    @include rubik;
+    @include fs-title-1-mobile;
     margin: 0 0 30px 0;
-    @include media-max($medium-screen) {
-      font-size: 33px;
+    @include media($medium-screen) {
+      @include fs-title-1;
     }
   }
   form {
