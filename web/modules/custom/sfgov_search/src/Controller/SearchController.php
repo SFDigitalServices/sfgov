@@ -8,8 +8,8 @@ class SearchController extends ControllerBase {
   public function content() {
     $searchKeyword = \Drupal::request()->query->get('keyword') ?: '';
     $html = '<div id="sfgov-search-results-container">' .
-            '  <div id="sfgov-search-messages" class="sfgov-search-result views-row sfgov-search-messages"></div>' . 
-            '  <div id="sfgov-search-results-count" class="sfgov-search-result views-row"></div>' .
+            '  <div id="sfgov-search-messages" class="sfgov-search-messages"></div>' . 
+            '  <div id="sfgov-search-results-count"></div>' .
             '  <div id="sfgov-search-results" class="add-height"></div>' .
             '  <div id="other-sfgov-search-results"></div>' .
             '  <div class="sfgov-search-pagination"></div>' .
