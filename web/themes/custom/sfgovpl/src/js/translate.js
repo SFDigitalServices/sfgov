@@ -75,9 +75,7 @@ function SFGovTranslate() {
   };
 
   this.getDrupalTranslation = function(lang) {
-    console.log('getDrupalTranslation:' + lang);
     var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
-    console.log(drupalTranslations);
     if(drupalTranslations) {
       for(var i=0; i<drupalTranslations.length; i++) {
         var someTranslation = drupalTranslations[i];
