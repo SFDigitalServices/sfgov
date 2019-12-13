@@ -105,8 +105,7 @@ function SFGovTranslate() {
     if(currentDrupalLanguage != 'en') {
       var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
       if(drupalTranslation) {
-        // drupal translation exists, remove the gtranslate cookie
-        that.sfgovDoGTranslate('en|en');
+        document.cookie = 'googtrans' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       } else {
         that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       }
