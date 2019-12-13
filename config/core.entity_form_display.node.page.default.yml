@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.page.field_description
     - field.field.node.page.field_sidebar
     - node.type.page
+    - workflows.workflow.editorial
   module:
     - allowed_formats
     - content_moderation
@@ -21,8 +22,10 @@ third_party_settings:
     group_content:
       children:
         - field_content
+        - field_content_bottom
+        - field_sidebar
       parent_name: ''
-      weight: 3
+      weight: 15
       format_type: html_element
       format_settings:
         id: paragraph-group-content
@@ -35,11 +38,11 @@ third_party_settings:
         effect: none
         speed: fast
       label: Content
+      region: hidden
     group_sidebar:
-      children:
-        - field_sidebar
+      children: {  }
       parent_name: ''
-      weight: 4
+      weight: 16
       format_type: html_element
       format_settings:
         id: paragraph-group-sidebar
@@ -52,11 +55,11 @@ third_party_settings:
         effect: none
         speed: fast
       label: Sidebar
+      region: hidden
     group_content_bottom:
-      children:
-        - field_content_bottom
+      children: {  }
       parent_name: ''
-      weight: 5
+      weight: 17
       format_type: html_element
       format_settings:
         id: paragraph-group-content-bottom
@@ -69,6 +72,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Content Bottom'
+      region: hidden
 _core:
   default_config_hash: sb0qCkzU_8mNq29NehYAU8jCBXWPLeX0UN8sYFVGVcw
 id: node.page.default
@@ -83,7 +87,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_content:
-    weight: 4
+    weight: 0
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -97,12 +101,13 @@ content:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
         add_above: 0
+      closed_mode_threshold: 0
     third_party_settings: {  }
     type: sfgov_paragraphs
     region: content
   field_content_bottom:
     type: sfgov_paragraphs
-    weight: 101
+    weight: 1
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -115,10 +120,11 @@ content:
       features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
+      closed_mode_threshold: 0
     third_party_settings: {  }
     region: content
   field_description:
-    weight: 1
+    weight: 4
     settings:
       rows: 3
       placeholder: ''
@@ -135,7 +141,7 @@ content:
     region: content
   field_sidebar:
     type: sfgov_paragraphs
-    weight: 5
+    weight: 2
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -149,11 +155,12 @@ content:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
         add_above: 0
+      closed_mode_threshold: 0
     third_party_settings: {  }
     region: content
   langcode:
     type: language_select
-    weight: 2
+    weight: 5
     region: content
     settings:
       include_locked: true
@@ -193,7 +200,7 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: 3
     region: content
     settings:
       size: 60
