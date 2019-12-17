@@ -156,3 +156,4 @@ Class 'Drush\Commands\DrushCommands' not found
 Temp workaround is to use Lando's helper script to import db. Refer to `.lando.yml` file, under the `tooling` section.
 
 In short, do `lando getdb` from the `/web` directory to import the db from Pantheon `dev` environment.
+
