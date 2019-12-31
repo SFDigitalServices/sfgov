@@ -1,253 +1,3 @@
-// // @todo Componetize and refactor search theming from
-// // - sfgov_search.css
-// // - _block-search.scss
-// // - _block-search-small.scss
-// // - _layout.scss
-
-// .path-search {
-//   .content-top-container {
-//     background: $c-blue-1;
-//     padding: 40px 0;
-//     margin-bottom: 40px;
-//     .sfgov-search-311-block {
-//       @include contain-1090;
-//       display: block;
-//       .sfgov-search-form-311 {
-//         display: inline-block;
-//         margin-bottom: 0;
-//       }
-//     }
-//     @include media($medium-screen) {
-//       padding: 60px 0;
-//       margin-bottom: 60px;
-//     }
-//   }
-// }
-
-// .sfgov-search-311-block {
-//   display: none;
-//   width: 250px;
-
-//   @include media($medium-screen) {
-//     display: inline-block;
-//     width: 150px;
-//   }
-
-//   @include media($narrow-screen) {
-//     display: inline-block;
-//     width: 250px;
-//   }
-
-//   &:hover {
-//     [data-drupal-selector="edit-sfgov-search-input"] {
-//       border-color: $c-dark-blue;
-//     }
-
-//     [data-drupal-selector="edit-submit"] {
-//       background-color: $c-dark-blue;
-//     }
-//   }
-
-//   [data-drupal-selector="edit-sfgov-search-input"] {
-//     border-color: $c-bright-blue;
-//     border-radius: 8px 0 0 8px;
-//     border-style: solid;
-//     border-width: 3px 0 3px 3px;
-//     height: 44px;
-//     margin: 0;
-//     max-width: initial;
-//     padding: 0 15px;
-//     display: block;
-//     float: left;
-//   }
-
-//   [data-drupal-selector="edit-actions"] {
-//     border-radius: 0 8px 8px 0;
-//     position: relative;
-//     text-align: center;
-//     width: 48px;
-//     float: left;
-//     display: block;
-//   }
-
-//   [data-drupal-selector="edit-submit"] {
-//     @include rubik;
-//     @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
-//     background-size: 22px 22px;
-//     border-radius: 0 8px 8px 0;
-//     font-size: 0;
-//     font-weight: $fw-medium;
-//     height: 44px;
-//     margin: 0;
-//     padding: 0 0 0 30px;
-//     width: 50px;
-
-//     @include media($medium-screen) {
-//       background: $c-bright-blue;
-//       width: 148px;
-//     }
-//   }
-
-//   form {
-//     @include clearfix;
-//   }
-
-//   .form-item-sfgov-search-input {
-//     display: block;
-//     float: left;
-//     width: calc(100% - 48px);
-//   }
-// }
-
-
-// // Header version only
-// header[role="banner"] {
-//   .sfgov-search-311-block {
-//     width: 250px;
-//     display: inline-block;
-//     form {
-//       margin-bottom: 0;
-//       .form-item-sfgov-search-input {
-//         &::before {
-//           display: none;
-//         }
-//         width: calc(100% - 48px);
-//       }
-//       [data-drupal-selector="edit-sfgov-search-input"] {
-//         height: 44px;
-//         margin: 0;
-//         padding: 0 15px;
-//       }
-//       [data-drupal-selector="edit-actions"] {
-//         width: 48px;
-//         [data-drupal-selector="edit-submit"] {
-//           @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
-//           font-size: 0;
-//           background-size: 22px 22px;
-//           width: 48px;
-//           height: 44px;
-//         }
-//       }
-//     }
-//     @include media($medium-screen) {
-//       width: 150px;
-//     }
-  
-//     @include media($narrow-screen) {
-//       width: 250px;
-//     }
-//   }
-
-
-// }
-
-// .sfgov-search-311-block {
-//   display: inline-block;
-//   width: auto;
-
-//   &:hover {
-//     .form-item-sfgov-search-input::before {
-//       @include media($medium-screen) {
-//         @include background-image('search-dark-blue.svg');
-//       }
-//     }
-//   }
-//   > h2 {
-//     @include rubik;
-//     @include fs-title-1-mobile;
-//     margin: 0 0 30px 0;
-//     @include media($medium-screen) {
-//       @include fs-title-1;
-//     }
-//   }
-//   form {
-//     margin-bottom: 20px;
-
-//     @include media($narrow-screen) {
-//       margin-bottom: 40px;
-//     }
-//   }
-
-//   [data-drupal-selector="edit-sfgov-search-input"] {
-//     height: 48px;
-//     margin-bottom: 20px;
-
-//     @include media($narrow-screen) {
-//       padding: 0 15px 0 54px;
-//     }
-//   }
-
-//   [data-drupal-selector="edit-actions"] {
-//     border-bottom: 0;
-//     width: 50px;
-
-//     @include media($narrow-screen) {
-//       width: 148px
-//     }
-
-//     &::before {
-//       @include media($narrow-screen) {
-//         content: none;
-//       }
-//     }
-//   }
-
-//   [data-drupal-selector="edit-submit"] {
-//     height: 48px;
-//     font-size: 0;
-//     padding: 0;
-
-//     @include media($narrow-screen) {
-//       font-size: 20px;
-//     }
-//   }
-
-//   .form-item-sfgov-search-input {
-//     width: calc(100% - 50px);
-
-//     @include media($narrow-screen) {
-//       width: calc(100% - 148px);
-//     }
-
-//     &::before {
-//       @include media($narrow-screen) {
-//         @include background-image('search-blue.svg');
-//         content: '';
-//         display: block;
-//         width: 22px;
-//         height: 22px;
-//         position: absolute;
-//         left: 15px;
-//         top: 13px;
-//       }
-//     }
-//   }
-// }
-
-// // Hover states.
-// // @todo Refactor. Organize.
-// .block-sfgov-search-form-block > #block-sfgovsearchblock-2 .sfgov-search-form-311:hover {
-//   #edit-actions {
-//     background: $c-dark-blue;
-//   }
-
-//   .js-form-item-sfgov-search-input #edit-sfgov-search-input {
-//     border-color: $c-dark-blue;
-//   }
-
-//   .js-form-item-sfgov-search-input::before {
-//     @include background-image('search-dark-blue.svg');
-//   }
-// }
-
-// .sfgov-search-form-311 {
-//   label[for="edit-sfgov-search-input"],
-//   label[for="edit-sfgov-search-input--2"] {
-//     display: none;
-//   }
-// }
-
-
 .path-frontpage {
   .sfgov-search-311-block {
     background: transparent;
@@ -275,45 +25,59 @@
   @include contain-1090;
   @include rubik;
   position: relative;
+  height: 48px;
   label[for="edit-sfgov-search-input"] {
     display: none;
   }
   .js-form-item-sfgov-search-input {
     display: inline-block;
-    height: 48px;
-    margin-right: -4px;
+    margin-right: -5px;
     position: relative;
+    height: 100%;
+    vertical-align: top;
+    width: calc(100% - 48px);
     input {
       @include fs-body-short;
-      border: 0;
-      margin: 0;
-      padding: 0 0 0 49px;
-      height: 100%;
-      border-radius: 8px 0 0 8px;
       border: 3px solid $c-bright-blue;
+      border-radius: 8px 0 0 8px;
       border-right: none;
-      @include background-image('search-blue.svg', 17px center, $c-white);
-      background-size: 18px;
+      height: 100%;
+      margin: 0;
+      padding: 0 0 0 20px;
       &:focus {
-        
         box-shadow: none;
       }
     }
   }
+  [data-drupal-selector="edit-actions"] {
+    display: inline-block;
+    height: 100%;
+    width: 48px;
+    input[data-drupal-selector="edit-submit"] {
+      @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
+      background-size: 22px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0;
+      height: 100%;
+      margin: 0;
+    }
+  }
 
   @include media($medium-screen) {
-    label[for="edit-sfgov-search-input"] {
+    .js-form-item-sfgov-search-input {
+      width: auto;
+      input {
+        @include background-image('search-blue.svg', 17px center, $c-white);
+        background-size: 18px;
+        padding: 0 0 0 49px;
+      }
     }
     [data-drupal-selector="edit-actions"] {
-      display: inline-block;
-      height: 48px;
       input[data-drupal-selector="edit-submit"] {
         @include fs-title-right;
+        background-image: none;
         border: 0;
         padding: 12px 25px;
-        margin: 0;
-        height: 100%;
-        border-radius: 0 8px 8px 0;
         &:hover {
           background: $c-bright-blue;
         }
