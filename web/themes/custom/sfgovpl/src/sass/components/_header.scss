@@ -1,6 +1,37 @@
+.path-frontpage {
+  header[role="banner"] {
+    .sfgov-mobile-nav-btn.sfgov-mobile-search {
+      display: none;
+    }
+  }
+}
+
+.sfgov-mobile_nav-active {
+  header[role="banner"] {
+    nav[role="navigation"] {
+      display: block;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      text-align: left;
+      padding-left: 60px;
+      background-color: rgba(0,0,0,0.7);
+      top: 80px;
+      z-index: 200;
+    }
+    .sfgov-nav-inner {
+      background: $c-blue-1;
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
 header[role="banner"] {
   padding-bottom: 24px;
   padding-top: 24px;
+  position: relative;
 
   @include media($medium-screen) {
     padding-top: 50px;
@@ -51,13 +82,6 @@ header[role="banner"] {
 
   .sfgov-nav-container {
     @include contain-1090;
-    position: relative;
-
-    @include media($medium-screen) {
-      .sfgov-mobile-nav-btn {
-        display: none;
-      }
-    }
   }
 
   // "top level" navigation elements
@@ -74,52 +98,107 @@ header[role="banner"] {
   }
 
   .head-right--container {
-    position: absolute;
-    top: 2px;
-    right: 0;
+    @include clearfix;
+    float: right;
+    margin-top: 2px;
+    text-align: right;
+    width: 54%;
+    .sfgov-menu-btn {
+      background: none;
+      border:0;
+      border-radius: 0;
+      color: $c-bright-blue;
+      margin:0;
+      padding:0;
+      width: auto;
+    }
+    @include media($medium-screen) {
+      margin-top: 7px;
+      width: 75%;
+    }
   }
 
   nav[role="navigation"] {
-    .sfgov-nav-close {
-      display: none;
-    }
+    display: none;
     .sfgov-main-navigation .menu {
       margin: 0;
       padding: 0;
       > li {
-        display: inline-block;
-        margin-right: 30px;
+        display: block;
+        margin: 0;
         a {
-          @include fs-nav-item;
+          @include fs-body-short;
+          color: $c-slate;
           text-decoration: none;
+          display: block;
+          margin: 0 25px;
+          padding: 20px 0;
+          border-bottom: 3px solid rgba(28,62,87,0.1);
+        }
+      }
+    }
+    @include media($medium-screen) {
+      display: inline-block;
+      .sfgov-nav-close {
+        display: none;
+      }
+      .sfgov-main-navigation .menu {
+        > li {
+          display: inline-block;
+          margin-right: 30px;
+          a {
+            @include fs-nav-item;
+            color: $c-bright-blue;
+            margin: 0;
+            padding: 0;
+            border: 0;
+          }
         }
       }
     }
   }
 
-  .sfgov-search-311-block {
-    background: transparent;
-    display: inline-block;
-    margin: -4px 0 0 -5px;
-    padding: 0;
-    width: 250px;
-    .sfgov-search-form {
-      height: 44px;
-      .js-form-item-sfgov-search-input {
-        width: calc(100% - 49px);
-        input {
-          background: none;
-          padding-left: 16px;
+  .sfgov-mobile-nav-btn {
+    vertical-align: top;
+    &.sfgov-mobile-search {
+      @include background-image('search-blue.svg');
+      border: 0;
+      display: inline-block;
+      margin: 0 18px 0 0;
+      padding: 0;
+      height: 26px;
+      width: 26px;
+    }
+    @include media($medium-screen) {
+      display: none !important;
+    }
+  }
+
+  @include media($medium-screen) {
+    .sfgov-search-311-block {
+      background: transparent;
+      display: inline-block;
+      margin: -4px 0 0 -5px;
+      padding: 0;
+      width: 250px;
+      .sfgov-search-form {
+        height: 44px;
+        .js-form-item-sfgov-search-input {
+          width: calc(100% - 49px);
+          input {
+            background: none;
+            padding-left: 16px;
+          }
         }
-      }
-      [data-drupal-selector="edit-actions"] {
-        height: 100%;
-        width: 48px;
-        input[data-drupal-selector="edit-submit"] {
-          @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
-          background-size: 20px;
-          font-size: 0;
-          width: 100%;
+        [data-drupal-selector="edit-actions"] {
+          height: 100%;
+          width: 48px;
+          input[data-drupal-selector="edit-submit"] {
+            @include background-image('search-white.svg', 50% 50%, $c-bright-blue);
+            background-size: 20px;
+            font-size: 0;
+            width: 100%;
+          }
         }
       }
     }
