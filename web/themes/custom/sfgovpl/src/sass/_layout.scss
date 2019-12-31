@@ -1,212 +1,212 @@
-// @todo Componetize and refactor search theming from
-// - sfgov_search.css
-// - _block-search.scss
-// - _block-search-small.scss
-// - _layout.scss
+// // @todo Componetize and refactor search theming from
+// // - sfgov_search.css
+// // - _block-search.scss
+// // - _block-search-small.scss
+// // - _layout.scss
 
-$not-big: 768px;
-$big: 1280px;
+// $not-big: 768px;
+// $big: 1280px;
 
-$breakpointz: (
-  'not-big': $not-big,
-  'big': $big
-) !default;
+// $breakpointz: (
+//   'not-big': $not-big,
+//   'big': $big
+// ) !default;
 
 
-@mixin less-than($breakpoint) {
-  @if map-has-key($breakpointz, $breakpoint) {
-    @media (max-width: map-get($breakpointz, $breakpoint)) {
-      @content;
-    }
-  }
-}
+// @mixin less-than($breakpoint) {
+//   @if map-has-key($breakpointz, $breakpoint) {
+//     @media (max-width: map-get($breakpointz, $breakpoint)) {
+//       @content;
+//     }
+//   }
+// }
 
-@mixin greater-than($breakpoint) {
-  @if map-has-key($breakpointz, $breakpoint) {
-    @media (min-width: map-get($breakpointz, $breakpoint)) {
-      @content;
-    }
-  }
-}
+// @mixin greater-than($breakpoint) {
+//   @if map-has-key($breakpointz, $breakpoint) {
+//     @media (min-width: map-get($breakpointz, $breakpoint)) {
+//       @content;
+//     }
+//   }
+// }
 
-.sfds-layout-container {
-  .sfds-responsive-container {
-    &.sfds-responsive-container-right-zero {
-      padding-right: 0;
-    }
-  }
-}
+// .sfds-layout-container {
+//   .sfds-responsive-container {
+//     &.sfds-responsive-container-right-zero {
+//       padding-right: 0;
+//     }
+//   }
+// }
 
-header[role="banner"] {
-  .sfgov-nav-container {
-    .sfgov-nav-container__content {
-      @include clearfix;
-      .sfgov-mobile-nav-btn {
-        display: none;
-      }
-      .sfgov-mobile-btn-close {
-        display: none;
-      }
-      .sfgov-logo__container {
-        float: left;
-        padding: 0;
-        margin: 0;
-      }
-      .head-right--container {
-        float: right;
-        width: 75%;
-        text-align: right;
-        margin-top: 7px;
-        > * {
-          vertical-align: middle;
-        }
-        nav {
-          display: inline-block;
-          .sfgov-nav-inner {
-            .sfgov-nav-close {
-              display: none;
-            }
-            .sfgov-main-navigation {
-              .menu {
-                padding: 0;
-                margin: 0;
-                list-style-type: none;
-                > li {
-                  display: inline-block;
-                  margin-right: 25px;
-                  a {
-                    color: #5168e4;
-                    text-decoration: none;
-                    @include fs-nav-link;
-                  }
-                }
-              }
-            }
-          }
-        }
-        .sfgov-search-311-block {
-          vertical-align: top;
-          margin-top: -10px;
-        }
-        @include less-than('not-big') {
-          nav.sfgov-nav {
-            display: none;
-          }
-        }
-      }
-    }
-  }
-  @include less-than('not-big') {
-    position: relative;
-    .sfgov-nav-container {
-      .sfgov-nav-container__content {
-        .sfgov-mobile-menu-container {
-          display: block;
-          float: right;
-          margin-top: 4px;
-        }
-        .sfgov-mobile-btn-close {
-          @include background-image('x-close-white.svg');
-          display: block;
-          width: 24px;
-          height: 24px;
-          background-size: cover;
-          float: right;
-          margin-top: 10px;
-        }
-        .sfgov-mobile-nav-btn {
-          @include rubik;
-          display: inline-block;
-          font-size: 17px;
-          font-weight: $fw-medium;
-          margin: 0;
-          padding: 0;
-          background: transparent;
-          color: $c-bright-blue;
-          width: auto;
-          vertical-align: middle;
-          margin-left: 15px;
-          border: 0;
-          &.sfgov-mobile-search {
-            width: 26px;
-            height: 26px;
-            @include background-image('search-blue.svg');
-            background-size: cover;
-          }
-        }
-        .head-right--container {
-          width: 54%;
-          margin-top: 3px;
-        }
-      }
-    }
-  }
-}
+// header[role="banner"] {
+//   .sfgov-nav-container {
+//     .sfgov-nav-container__content {
+//       @include clearfix;
+//       .sfgov-mobile-nav-btn {
+//         display: none;
+//       }
+//       .sfgov-mobile-btn-close {
+//         display: none;
+//       }
+//       .sfgov-logo__container {
+//         float: left;
+//         padding: 0;
+//         margin: 0;
+//       }
+//       .head-right--container {
+//         float: right;
+//         width: 75%;
+//         text-align: right;
+//         margin-top: 7px;
+//         > * {
+//           vertical-align: middle;
+//         }
+//         nav {
+//           display: inline-block;
+//           .sfgov-nav-inner {
+//             .sfgov-nav-close {
+//               display: none;
+//             }
+//             .sfgov-main-navigation {
+//               .menu {
+//                 padding: 0;
+//                 margin: 0;
+//                 list-style-type: none;
+//                 > li {
+//                   display: inline-block;
+//                   margin-right: 25px;
+//                   a {
+//                     color: #5168e4;
+//                     text-decoration: none;
+//                     @include fs-nav-link;
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//         .sfgov-search-311-block {
+//           vertical-align: top;
+//           margin-top: -10px;
+//         }
+//         @include less-than('not-big') {
+//           nav.sfgov-nav {
+//             display: none;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   @include less-than('not-big') {
+//     position: relative;
+//     .sfgov-nav-container {
+//       .sfgov-nav-container__content {
+//         .sfgov-mobile-menu-container {
+//           display: block;
+//           float: right;
+//           margin-top: 4px;
+//         }
+//         .sfgov-mobile-btn-close {
+//           @include background-image('x-close-white.svg');
+//           display: block;
+//           width: 24px;
+//           height: 24px;
+//           background-size: cover;
+//           float: right;
+//           margin-top: 10px;
+//         }
+//         .sfgov-mobile-nav-btn {
+//           @include rubik;
+//           display: inline-block;
+//           font-size: 17px;
+//           font-weight: $fw-medium;
+//           margin: 0;
+//           padding: 0;
+//           background: transparent;
+//           color: $c-bright-blue;
+//           width: auto;
+//           vertical-align: middle;
+//           margin-left: 15px;
+//           border: 0;
+//           &.sfgov-mobile-search {
+//             width: 26px;
+//             height: 26px;
+//             @include background-image('search-blue.svg');
+//             background-size: cover;
+//           }
+//         }
+//         .head-right--container {
+//           width: 54%;
+//           margin-top: 3px;
+//         }
+//       }
+//     }
+//   }
+// }
 
-@include less-than('not-big') {
-  .path-frontpage,
-  .path-search {
-    button.sfgov-mobile-search {
-      display: none !important;
-    }
-    #block-gtranslate {
-      right: 55px !important;
-    }
-  }
-}
+// @include less-than('not-big') {
+//   .path-frontpage,
+//   .path-search {
+//     button.sfgov-mobile-search {
+//       display: none !important;
+//     }
+//     #block-gtranslate {
+//       right: 55px !important;
+//     }
+//   }
+// }
 
-.sfgov-mobile_nav-active {
-  @include less-than('not-big') {
-    header[role="banner"] {
-      .sfgov-nav-container {
-        .sfgov-nav-container__content {
-          .head-right--container {
-            nav.sfgov-nav {
-              display: block;
-              position: absolute;
-              left: 0;
-              width: 100%;
-              height: 100vh;
-              text-align: left;
-              padding-left: 60px;
-              background-color: rgba(0,0,0,.7);
-              top: 80px;
-              z-index: $z-menu-mobile;
-              .sfgov-nav-inner {
-                width: 100%;
-                height: 100%;
-                background: #EDF4F7;
-                .sfgov-main-navigation {
-                  width: 100%;
-                  .menu {
-                    li {
-                      display: block;
-                      margin: 0;
-                      line-height: initial;
-                      a {
-                        @include link-colors($c-slate);
-                        @include fs-body-short;
-                        padding: 20px 0;
-                        margin: 0 25px;
-                        display: block;
-                        border-bottom: 3px solid rgba(28, 62, 87, .1);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+// .sfgov-mobile_nav-active {
+//   @include less-than('not-big') {
+//     header[role="banner"] {
+//       .sfgov-nav-container {
+//         .sfgov-nav-container__content {
+//           .head-right--container {
+//             nav.sfgov-nav {
+//               display: block;
+//               position: absolute;
+//               left: 0;
+//               width: 100%;
+//               height: 100vh;
+//               text-align: left;
+//               padding-left: 60px;
+//               background-color: rgba(0,0,0,.7);
+//               top: 80px;
+//               z-index: $z-menu-mobile;
+//               .sfgov-nav-inner {
+//                 width: 100%;
+//                 height: 100%;
+//                 background: #EDF4F7;
+//                 .sfgov-main-navigation {
+//                   width: 100%;
+//                   .menu {
+//                     li {
+//                       display: block;
+//                       margin: 0;
+//                       line-height: initial;
+//                       a {
+//                         @include link-colors($c-slate);
+//                         @include fs-body-short;
+//                         padding: 20px 0;
+//                         margin: 0 25px;
+//                         display: block;
+//                         border-bottom: 3px solid rgba(28, 62, 87, .1);
+//                       }
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 
-main[role="main"] {
-  min-height: calc(100vh - 524px);
+// main[role="main"] {
+//   min-height: calc(100vh - 524px);
 
-  @include media($medium-screen) {
-    min-height: calc(100vh - 418px);
-  }
-}
+//   @include media($medium-screen) {
+//     min-height: calc(100vh - 418px);
+//   }
+// }
