@@ -7,11 +7,14 @@
   position: absolute;
   z-index: 1000;
   background: $c-white;
-  width: calc(100% - 156px);
+  width: calc(100% - 58px);
   padding: 0;
   box-shadow: rgba(0,0,0,.25) 0px 5px 5px 2px;
   text-align: left;
   border-radius: 0 0 8px 8px;
+  @include media($medium-screen) {  
+    width: calc(100% - 129px);
+  }
 }
 
 @mixin search-suggestions-link {
@@ -33,9 +36,6 @@
   a {
     @include search-suggestions-link;
   }
-  @media screen and (max-width: 770px) {  
-    width: calc(100% - 58px);
-  }
 }
 
 #sfgov-top-search-suggestions-container {
@@ -51,12 +51,6 @@
   display: none;
   a {
     @include search-suggestions-link;
-  }
-}
-
-.sfgov-search-form {
-  &.sfgov-search-form-311 {
-    position: relative;
   }
 }
 
