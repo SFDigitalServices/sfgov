@@ -3,6 +3,7 @@
     @include contain-1090;
     .js-form-item {
       width: 50%;
+      margin-bottom: 20px;
       @include media-max($medium-screen) {
         width: auto;
       }
@@ -25,14 +26,21 @@
       border-radius: 8px;
       [data-drupal-selector="edit-submit"] {
         @include rubik;
+        @include fs-body-short;
         border-radius: 8px;
-        font-weight: $fw-medium;
+        border: 0;
         display: block;
         margin: 20px 0;
-        font-size: 20px;
-        height: 44px;
+        padding: 10px;
         width: 100%;
         background: $c-bright-blue;
+        &:hover {
+          border: 0;
+          &::before {
+            @include fs-body-short;
+            box-shadow: none;
+          }
+        }
       }
     }
   }
