@@ -85,7 +85,7 @@ function Search311(collectionName) {
               $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
               for(var i = 0; i<autocompletes.length; i++) {
-                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
+                autocompleteHtml += '<a id="aria-ac-opt-' + i + '" href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
               }
               $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
@@ -117,6 +117,7 @@ function Search311(collectionName) {
           if(focusIndex <= 0) focusIndex = 0;
         }
         $('#sfgov-search-autocomplete > a')[focusIndex].focus();
+        $('#edit-sfgov-search-input').attr('aria-activedescendant', $('#sfgov-search-autocomplete > a:focus').attr('id'));
         if((keyPressed === 40 && focusIndex !== autocompleteLength-1) || (keyPressed === 38 && focusIndex !== 0)) {
           e.preventDefault();
         }
