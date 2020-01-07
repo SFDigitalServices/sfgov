@@ -32,9 +32,14 @@ class SearchForm extends FormBase {
         'class' => array(
           'sf-gov-search-input-class',
         ),
-        'title' => 'Enter the terms you wish to search for.',
+        'title' => t('Enter the terms you wish to search for'),
+        'role' => t('combobox'),
+        'aria-autocomplete' => t('both'),
+        'aria-describedby' => t('When autocomplete results are available use up and down arrows to review and enter to select'),
+        'aria-owns' => 'sfgov-search-autocomplete',
+        'aria-activedescendant' => '',
       ),
-      '#suffix' => '<div id="sfgov-search-autocomplete"></div>',
+      '#suffix' => '<div id="sfgov-search-autocomplete" role="listbox"></div>',
     );
 
     $form['#attached']['library'][] = 'sfgov_search/search';
