@@ -67,16 +67,21 @@ function Search311(collectionName) {
   }
 
   this.autocomplete = function() {
+    var focusIndex = 0;
+    var autocompleteLength;
     $('#edit-keyword, #edit-sfgov-search-input').attr('autocomplete', 'off');
     $(this.inputSelector).on('keyup click', function(event) {
       var searchKeyword = $(_this.inputSelector).val();
-      if(searchKeyword.length >= 3) {
+      var key = event.keyCode;
+      focusIndex = 0;
+      if(searchKeyword.length >= 3 || key === 40) {
         $.ajax({
           url: _this.props.protocol + '://' + _this.props.domain + '/s/suggest.json' + '?' + 'collection=' + _this.props.parameters.collection + '&partial_query=' + searchKeyword + '&show=10&sort=0&alpha=.5&fmt=json++&profile=_default',
           dataType: 'jsonp',
           success: function(data) {
             var autocompletes = data;
             if(autocompletes.length > 0) {
+              autocompleteLength = autocompletes.length;
               $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
               for(var i = 0; i<autocompletes.length; i++) {
@@ -91,8 +96,30 @@ function Search311(collectionName) {
             });
           }
         });
-      } else {
+      } 
+      else {
         $(_this.autocompleteContainerSelector).hide();
+      }
+    });
+    $(document).on('keydown', function(e) {
+      var autosuggestVisible = $('#sfgov-search-autocomplete').is(':visible');
+      var keyPressed = e.keyCode;
+      if(autosuggestVisible && (keyPressed === 40 || keyPressed === 38)) {
+        if(keyPressed === 40) { // arrow down
+          if($('#edit-sfgov-search-input').is(':focus')) { // input is focused, set focus on first element
+            focusIndex = 0;
+          } else {
+            focusIndex = (focusIndex == autocompleteLength-1) ? (autocompleteLength-1) : focusIndex+1;
+          }
+        }
+        if(keyPressed === 38) {
+          focusIndex--;
+          if(focusIndex <= 0) focusIndex = 0;
+        }
+        $('#sfgov-search-autocomplete > a')[focusIndex].focus();
+        if((keyPressed === 40 && focusIndex !== autocompleteLength-1) || (keyPressed === 38 && focusIndex !== 0)) {
+          e.preventDefault();
+        }
       }
     });
   }
