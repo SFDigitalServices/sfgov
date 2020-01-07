@@ -35,7 +35,7 @@ class SearchForm extends FormBase {
         'title' => t('Enter the terms you wish to search for'),
         'role' => t('combobox'),
         'aria-autocomplete' => t('both'),
-        'aria-describedby' => t('When autocomplete results are available use up and down arrows to review and enter to select'),
+        'aria-describedby' => t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value'),
         'aria-owns' => 'sfgov-search-autocomplete',
         'aria-activedescendant' => '',
       ),
