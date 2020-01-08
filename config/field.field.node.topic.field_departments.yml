@@ -1,0 +1,33 @@
+uuid: 05e20d52-c0c6-49c6-83e4-ef4b74b7c2fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departments
+    - node.type.department
+    - node.type.topic
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.topic.field_departments
+field_name: field_departments
+entity_type: node
+bundle: topic
+label: 'Related Departments'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -3,9 +3,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.topic.field_department_services
+    - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
+    - field.field.node.topic.field_resources
+    - field.field.node.topic.field_spotlight
     - node.type.topic
   module:
+    - entity_reference_revisions
     - smart_trim
     - user
 id: node.topic.default
@@ -13,6 +18,23 @@ targetEntityType: node
 bundle: topic
 mode: default
 content:
+  field_department_services:
+    weight: 3
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_departments:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_description:
     weight: 0
     label: hidden
@@ -31,6 +53,24 @@ content:
       summary_handler: full
     third_party_settings: {  }
     type: smart_trim
+    region: content
+  field_resources:
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_spotlight:
+    weight: 2
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
     region: content
 hidden:
   content_moderation_control: true
