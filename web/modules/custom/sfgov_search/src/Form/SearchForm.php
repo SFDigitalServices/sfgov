@@ -32,7 +32,7 @@ class SearchForm extends FormBase {
         'class' => array(
           'sf-gov-search-input-class',
         ),
-        'title' => t('Enter the terms you wish to search for'),
+        'title' => t('Search'),
         'role' => t('combobox'),
         'aria-autocomplete' => t('both'),
         'aria-describedby' => t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value'),
