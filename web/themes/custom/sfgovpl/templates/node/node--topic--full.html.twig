@@ -1,7 +1,14 @@
 {% embed 'node--full.html.twig' %}
+{% set services_exclude = service_section_ids | join('+') %}
   {% block content %}
-    {{ drupal_view('services', 'block_1') }}
-    {{ drupal_view('departments', 'block_2') }}
+    {{ content.field_description }}
+    {{ drupal_view('departments', 'block_2') }} {# related depts #}
+    {{ content.field_spotlight }}
+    News <br/>
+    Events <br/>
+    {{ content.field_department_services }}
+    {{ services_exclude ? drupal_view('services', 'block_1', node.id, services_exclude) : drupal_view('services', 'block_1') }}
+    {{ content.field_resources }}
   {% endblock content %}
 {% endembed  %}
 
