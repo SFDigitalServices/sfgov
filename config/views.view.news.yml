@@ -8,6 +8,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - node.type.department
     - node.type.news
+    - node.type.topic
   module:
     - datetime
     - node
@@ -121,12 +122,7 @@ display:
           granularity: second
           plugin_id: datetime
       title: News
-      header:
-        area:
-          id: area
-          table: views
-          field: area
-          plugin_id: text
+      header: {  }
       footer: {  }
       empty: {  }
       relationships: {  }
@@ -262,6 +258,112 @@ display:
       header: {  }
       block_description: 'News block (no image)'
       display_description: 'A list of News content rendered with "Card compact" view mode.'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  news_block_topics:
+    display_plugin: block
+    id: news_block_topics
+    display_title: 'News Block - Topics'
+    position: 4
+    display_options:
+      display_extenders: {  }
+      arguments:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: field_topics
+          group_type: group
+          admin_label: ''
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: node
+          default_argument_options: {  }
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: 'entity:node'
+            fail: 'not found'
+          validate_options:
+            bundles:
+              topic: topic
+            operation: view
+            multiple: 0
+            access: false
+          break_phrase: false
+          not: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: node_nid
+      defaults:
+        arguments: false
+        relationships: false
+        query: false
+        pager: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
+        style: false
+        row: false
+      relationships:
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
+          relationship: none
+          group_type: group
+          admin_label: 'field_topics: Content'
+          required: true
+          plugin_id: standard
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: true
+          replica: false
+          query_comment: ''
+          query_tags: null
+      display_description: ''
+      pager:
+        type: some
+        options:
+          items_per_page: 3
+          offset: 0
+      use_more: true
+      use_more_always: true
+      use_more_text: more
+      block_description: 'News block - topics'
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: false
+          uses_fields: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: card
     cache_metadata:
       max-age: -1
       contexts:
