@@ -1,6 +1,7 @@
 {% embed 'node--full.html.twig' %}
 {% set services_exclude = service_section_ids | join('+') %}
   {% block content %}
+    {{ content.field_topics }}
     {{ content.field_department_services }}
     More services
     {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
