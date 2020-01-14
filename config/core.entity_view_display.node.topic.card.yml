@@ -1,0 +1,39 @@
+uuid: ad9cc8a6-fa1d-4e88-a9fc-b156b196f06d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.topic.field_department_services
+    - field.field.node.topic.field_departments
+    - field.field.node.topic.field_description
+    - field.field.node.topic.field_resources
+    - field.field.node.topic.field_spotlight
+    - field.field.node.topic.field_top_level_topic
+    - field.field.node.topic.field_topics
+    - node.type.topic
+  module:
+    - text
+    - user
+id: node.topic.card
+targetEntityType: node
+bundle: topic
+mode: card
+content:
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  content_moderation_control: true
+  field_department_services: true
+  field_departments: true
+  field_resources: true
+  field_spotlight: true
+  field_top_level_topic: true
+  field_topics: true
+  langcode: true
+  links: true
