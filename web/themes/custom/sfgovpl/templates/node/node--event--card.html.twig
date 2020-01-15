@@ -1,19 +1,15 @@
-{% extends 'node.html.twig' %}
+{% set start_date_time = content.field_start_date.0['#markup'] %}
+{% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
 
-{% block title %}
-{% endblock title %}
-
-{% block body %}
-
-  {% set start_date_time = content.field_start_date.0['#markup'] %}
-  {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
-
-  <div class="event--card--body">
-    <h3{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
-    {{ content | without('field_start_date','field_end_date','field_address') }}
-    <h3 class="event-date">
-      {{ start_date_time|date("l, F j") }}
-    </h3>
+<a class="sfgov-event-card date" href="{{ url }}">
+  <div class="event-date">
+    <div class="month">{{ start_date_time|date("F") }}</div>
+    <div class="date">{{ start_date_time|date("j") }}</div>
   </div>
-
-{% endblock body %}
+  <div class="event-info">
+    <h5 class="title">{{ label }}</h5>
+    <p class="description">
+      {{ start_date_time|date("l, F j") }}
+    </p>
+  </div>
+</a>
