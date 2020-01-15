@@ -1,0 +1,20 @@
+{% extends 'node.html.twig' %}
+{% block node %}
+  {% block title %}
+  {% endblock title %}
+
+  {% block body %}
+    {# {% include "@theme/atoms/service-card.twig" with {
+      "title": node.label,
+      "description": content.field_description,
+      "url": url,
+      "heading": 'h4'
+    } %} #}
+    <div class="item">
+      <a class="sfgov-topic-card">
+        {{ node.label }}<br/>
+        {{ content.field_description }}
+      </a>
+    </div>
+  {% endblock body %}
+{% endblock node %}

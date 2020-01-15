@@ -1,14 +1,44 @@
 {% embed 'node--full.html.twig' %}
 {% set services_exclude = service_section_ids | join('+') %}
   {% block content %}
-    {{ content.field_topics }}
-    {{ content.field_department_services }}
-    More services
-    {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
-    {{ content.field_spotlight }}
-    {{ drupal_view('news', 'news_block_topics') }}
-    {{ drupal_view('events', 'events_block_topics') }}
-    {{ content.field_resources }}
+    <div class="sfgov-full-bleed white">
+      <div class="sfgov-section-container">
+        <div class="sfgov-container-two-column">
+          {{ content.field_topics }}
+        </div>
+      </div>
+    </div>
+    <div class="sfgov-full-bleed light-blue">
+      <div class="sfgov-section-container">
+        {{ content.field_department_services }}
+        More services
+        <div class="sfgov-container-three-column">
+          {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
+        </div>
+      </div>
+    </div>
+    <div class="sfgov-full-bleed">
+      <div class="sfgov-section-container">
+        {{ content.field_spotlight }}
+      </div>
+    </div>
+    <div class="sfgov-full-bleed light-yellow">
+      <div class="sfgov-section-container">
+        <div class="sfgov-container-three-column">
+          {{ drupal_view('news', 'news_block_topics') }}
+        </div>
+      </div>
+    </div>
+    <div class="sfgov-full-bleed white">
+      <div class="sfgov-section-container">
+        {{ drupal_view('events', 'events_block_topics') }}
+      </div>
+    </div>
+    <div class="sfgov-full-bleed light-blue">
+      <div class="sfgov-section-container">
+        {{ content.field_resources }}
+      </div>
+    </div>
     {{ drupal_view('departments', 'block_2') }} {# related depts #}
   {% endblock content %}
 {% endembed  %}
