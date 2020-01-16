@@ -1,0 +1,17 @@
+{% block paragraph %}
+  {% set spotlight_img_url = 
+    paragraph.get('field_spotlight_img').entity ? 
+      file_url(paragraph.get('field_spotlight_img').entity.field_media_image.entity.fileuri) : null 
+  %}
+  {% set style = spotlight_img_url ? 'background-image:url(' ~ spotlight_img_url ~ ');' : '' %}
+  <div class="sfgov-spotlight">
+    {% block content %}
+    <div class="sfgov-spotlight-section content">
+      <div class="sfgov-spotlight-title">{{ content.field_title }}</div>
+      <div class="sfgov-spotlight-description">{{ content.field_description }}</div>
+      <div class="sfgov-spotlight-button">{{ content.field_spotlight_button }}</div>
+    </div>
+    <div class="sfgov-spotlight-section image" style={{ style }}></div>
+    {% endblock %}
+  </div>
+{% endblock paragraph %}
