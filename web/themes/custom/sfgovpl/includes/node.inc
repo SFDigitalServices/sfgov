@@ -32,13 +32,13 @@ function topic_page_services() {
   if($node) {
     $services = $node->get('field_department_services');
     if(!empty($services->getValue())) {
+      $txs = array();
       foreach($services as $service) {
         $serviceSectionId = $service->getValue()['target_id'];
         $serviceSectionLoaded = Paragraph::load($serviceSectionId);
         
         // load the paragraph and get the transactions
         $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
-        $txs = array();
         for($i=0; $i<count($topicTransactions); $i++) {
           $txId = $topicTransactions[$i]['target_id'];
           $txs[] = $txId;
