@@ -1,5 +1,5 @@
 {% embed 'node--full.html.twig' %}
-{% set services_exclude = service_section_ids | join('+') %}
+  {% set services_exclude = service_section_ids | join('+') %}
   {% block content %}
     <div class="sfgov-full-bleed white">
       <div class="sfgov-section-container">
@@ -11,10 +11,7 @@
     <div class="sfgov-full-bleed light-blue">
       <div class="sfgov-section-container">
         {{ content.field_department_services }}
-        More services
-        <div class="sfgov-container-three-column">
-          {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
-        </div>
+        {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
       </div>
     </div>
     <div class="sfgov-full-bleed purple-lightpurple">
