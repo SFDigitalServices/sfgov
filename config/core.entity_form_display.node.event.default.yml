@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.event.field_start_date
     - field.field.node.event.field_topics
     - node.type.event
+    - workflows.workflow.editorial
   module:
     - allowed_formats
     - content_moderation
@@ -34,7 +35,7 @@ third_party_settings:
         - field_email
         - field_phone_numbers
       parent_name: ''
-      weight: 8
+      weight: 23
       format_type: details
       format_settings:
         id: sfgov-event-contact
@@ -42,6 +43,7 @@ third_party_settings:
         open: false
         required_fields: true
       label: Contact
+      region: hidden
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -49,7 +51,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 6
+    weight: 8
     region: content
     settings:
       rows: 9
@@ -57,7 +59,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_address:
-    weight: 5
+    weight: 7
     settings:
       entity_browser: location_event_address
       field_widget_display: rendered_entity
@@ -72,7 +74,7 @@ content:
     type: entity_browser_entity_reference
     region: content
   field_call_to_action:
-    weight: 7
+    weight: 9
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -91,7 +93,7 @@ content:
     type: paragraphs
     region: content
   field_cost:
-    weight: 4
+    weight: 6
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -110,7 +112,7 @@ content:
     type: paragraphs
     region: content
   field_dept:
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -119,7 +121,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_description:
-    weight: 1
+    weight: 3
     settings:
       rows: 3
       placeholder: ''
@@ -135,7 +137,7 @@ content:
     type: text_textarea
     region: content
   field_email:
-    weight: 26
+    weight: 0
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -154,13 +156,13 @@ content:
     type: paragraphs
     region: content
   field_end_date:
-    weight: 3
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_phone_numbers:
-    weight: 27
+    weight: 1
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -179,13 +181,13 @@ content:
     type: paragraphs
     region: content
   field_start_date:
-    weight: 2
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_topics:
-    weight: 10
+    weight: 11
     settings:
       match_operator: CONTAINS
       size: 60
@@ -195,13 +197,13 @@ content:
     region: content
   moderation_state:
     type: moderation_state_default
-    weight: 11
+    weight: 13
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 13
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -209,22 +211,22 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 14
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: 2
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 10
+    weight: 12
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   field_image: true
