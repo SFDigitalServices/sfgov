@@ -23,16 +23,25 @@
         </div>
       </div>
     {% endif %}
+
+    {% set news_view = drupal_view('news', 'news_block_topics')|render  %}
+    {%  if news_view|striptags|trim %}
     <div class="sfgov-full-bleed light-yellow">
       <div class="sfgov-section-container">
-        {{ drupal_view('news', 'news_block_topics') }}
+        {{ news_view }}
       </div>
     </div>
-    <div class="sfgov-full-bleed white">
-      <div class="sfgov-section-container">
-        {{ drupal_view('events', 'events_block_topics') }}
+    {% endif %}
+
+    {% set events_view = drupal_view('events', 'events_block_topics')|render %}
+    {% if events_view|striptags|trim %}
+      <div class="sfgov-full-bleed white">
+        <div class="sfgov-section-container">
+          {{ events_view }}
+        </div>
       </div>
-    </div>
+    {% endif %}
+
     {% if content.field_resources['#items'].getValue() %}
       <div class="sfgov-full-bleed light-blue">
         <div class="sfgov-section-container">
