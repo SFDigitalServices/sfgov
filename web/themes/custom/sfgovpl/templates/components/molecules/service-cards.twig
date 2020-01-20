@@ -4,18 +4,9 @@
   {% set rows = service.transactions %}
 {% endif %}
 
-<div class="service-cards--container">
-
-  {# Count number of invisible cards we'll need to print. #}
-  {% set insivible_card_count = rows|length is divisible by(3) ? '':  3 - rows|length % 3 %}
-
-  {# Begin Loop. #}
-  {% for card in rows %}
-    {% if loop.first %}
-      <div class="service-cards" data-attr="row"> {# Start first row. #}
-    {% endif %}
-
-    {# Print cards. #}
+<div class="sfgov-container-three-column">
+{% for card in rows %}
+  <div class="sfgov-container-item">
     {% if input_type == 'link' %}
       {% include "@theme/atoms/service-card-link.twig" %}
     {% elseif input_type ==  'transaction' %}
@@ -23,19 +14,5 @@
     {% else %}
       {% include "@theme/atoms/service-card-nodes.twig" %}
     {% endif %}
-
-    {% if loop.index is divisible by(3) %}
-      </div> {# End row of three. #}
-
-      <div class="service-cards" data-attr="row"> {# Start next row of three. #}
-    {% endif %}
-
-    {% if loop.last %}
-      {% for n in 1..insivible_card_count %}
-        {% include "@theme/atoms/service-card.twig" with { invisible : 'invisible' } %}
-      {% endfor %}
-      </div> {# End all rows. #}
-    {% endif %}
-
-  {% endfor %}
-</div>
+  </div>
+{% endfor %}

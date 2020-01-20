@@ -1,24 +1,28 @@
 {% embed 'node--full.html.twig' %}
   {% set services_exclude = service_section_ids | join('+') %}
   {% block content %}
-    <div class="sfgov-full-bleed white">
-      <div class="sfgov-section-container">
-        <div class="sfgov-container-two-column">
-          {{ content.field_topics }}
+    {% if content.field_topics['#items'].getValue() %}
+      <div class="sfgov-full-bleed white">
+        <div class="sfgov-section-container">
+          <div class="sfgov-container-two-column">
+            {{ content.field_topics }}
+          </div>
         </div>
       </div>
-    </div>
+    {% endif %}
     <div class="sfgov-full-bleed light-blue">
       <div class="sfgov-section-container">
         {{ content.field_department_services }}
         {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
       </div>
     </div>
-    <div class="sfgov-full-bleed padding-zero purple-lightpurple">
-      <div class="sfgov-section-container">
-        {{ content.field_spotlight }}
+    {% if content.field_spotlight['#items'].getValue() %}
+      <div class="sfgov-full-bleed padding-zero purple-lightpurple">
+        <div class="sfgov-section-container">
+          {{ content.field_spotlight }}
+        </div>
       </div>
-    </div>
+    {% endif %}
     <div class="sfgov-full-bleed light-yellow">
       <div class="sfgov-section-container">
         {{ drupal_view('news', 'news_block_topics') }}
@@ -29,11 +33,13 @@
         {{ drupal_view('events', 'events_block_topics') }}
       </div>
     </div>
-    <div class="sfgov-full-bleed light-blue">
-      <div class="sfgov-section-container">
-        {{ content.field_resources }}
+    {% if content.field_resources['#items'].getValue() %}
+      <div class="sfgov-full-bleed light-blue">
+        <div class="sfgov-section-container">
+          {{ content.field_resources }}
+        </div>
       </div>
-    </div>
+    {% endif %}
     {{ drupal_view('departments', 'block_2') }} {# related depts #}
   {% endblock content %}
 {% endembed  %}

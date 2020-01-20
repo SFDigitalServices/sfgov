@@ -4,7 +4,9 @@
 {% set grandparent = parent.getParentEntity() %}
 {% set grandparent_title = grandparent.field_title.value %}
 {% if  grandparent_title == 'Services' %}
-  {% include '@theme/molecules/service-cards.twig' with { input_type: 'link'} %}
+  <div class="sfgov-list-services">
+    {% include '@theme/molecules/service-cards.twig' with { input_type: 'link'} %}
+  </div>
 {% else %}
   {% include 'field.html.twig' %}
 {% endif %}
