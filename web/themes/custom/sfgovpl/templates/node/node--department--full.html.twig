@@ -95,8 +95,14 @@
   style: 'department',
 } %}
 
-<a name="services"></a>
-{{ content.field_department_services }}
+{% if content.field_department_services['#items'].getValue() %}
+  <a name="services"></a>
+  <div class="sfgov-full-bleed light-blue">
+    <div class="sfgov-section-container">
+      {{ content.field_department_services }}
+    </div>
+  </div>
+{% endif %}
 
 {% if dept_fields.spotlight %}
   <div id="sfgov-dept-spotlight" class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
@@ -130,26 +136,14 @@
   {{ department_events }}
 </div>
 
-{# {% if dept_fields.resources.items %}
+{% if content.field_resources['#items'].getValue() %}
   <a name="resources"></a>
-  <div id="sfgov-dept-resources" class="sfgov-dept-section sfgov-dept-resources">
-    <h2 class="dept-heading--section">{{ dept_fields.resources.label }}</h2>
-      <div class="sfgov-dept-resources-container service-cards two-column">
-        {% for item in dept_fields.resources.items %}
-          {% include "@theme/atoms/service-card.twig" with {
-            "title": item.title,
-            "description": item.description,
-            "url": item.url
-          } %}
-        {% endfor %}
-      </div>
+  <div class="sfgov-full-bleed light-blue">
+    <div class="sfgov-section-container">
+      {{ content.field_resources }}
     </div>
   </div>
-{% endif %} #}
-<a name="resources"></a>
-<div class="sfgov-full-bleed light-blue">
-  {{ content.field_resources }}
-</div>
+{% endif %}
 
 {% if(dept_fields.about) %}
   <a name="about"></a>
