@@ -132,9 +132,23 @@
 
 {{ department_news }}
 
-<div class="sfgov-full-bleed">
-  {{ department_events }}
+{% set news_view = drupal_view('news', 'news_block_depts')|render  %}
+{%  if news_view|striptags|trim %}
+<div class="sfgov-full-bleed light-yellow">
+  <div class="sfgov-section-container">
+    {{ news_view }}
+  </div>
 </div>
+{% endif %}
+
+    {% set events_view = drupal_view('events', 'block_1')|render %}
+    {% if events_view|striptags|trim %}
+      <div class="sfgov-full-bleed white">
+        <div class="sfgov-section-container">
+          {{ events_view }}
+        </div>
+      </div>
+    {% endif %}
 
 {% if content.field_resources['#items'].getValue() %}
   <a name="resources"></a>
