@@ -17,16 +17,19 @@
 }
 
 @mixin fs-title-1 {
-  font-size: 62px;
-  font-weight: $fw-medium;
-  letter-spacing: 0;
-  line-height: 70px;
-  &.sfgov-translate-lang-zh-TW {
+  @include fs-title-1-mobile;
+  @include media($medium-screen) {
     font-size: 62px;
-    line-height: 80px;
-    letter-spacing: 2px;
-    font-weight: $fw-bold;
-    @include antialiasing;
+    font-weight: $fw-medium;
+    letter-spacing: 0;
+    line-height: 70px;
+    &.sfgov-translate-lang-zh-TW {
+      font-size: 62px;
+      line-height: 80px;
+      letter-spacing: 2px;
+      font-weight: $fw-bold;
+      @include antialiasing;
+    }
   }
 }
 
