@@ -1,5 +1,21 @@
 {% embed 'node--full.html.twig' %}
   {% set services_exclude = service_section_ids | join('+') %}
+
+  {% set parent_topics_view = drupal_view('topics', 'block_topic_parents')|render %}
+  {% set label = parent_topics_view|striptags|trim ? parent_topics_view : null %}
+
+  {% block header %}
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value,
+        'label': label
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
   {% block content %}
     {% if content.field_topics['#items'].getValue() %}
       <div class="sfgov-full-bleed white child-topics card-container">
