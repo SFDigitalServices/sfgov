@@ -13,17 +13,36 @@
   .view--departments-block-2-topic-related-depts {
     background: $c-dark-blue;
     color: $c-white;
-    padding-bottom: 80px;
-    padding-top: 80px;
+    padding: 46px 0;
+    @include media($medium-screen) {
+      padding: 80px 0
+    }
 
     .container {
       @include contain-1090;
       @include clearfix;
+      display: flex;
+      flex-wrap: wrap;
     }
 
     .views-row {
       @include background-image('building-white.svg', left 5px);
+      display: block;
       padding-left: 44px;
+      width: 100%;
+      margin-bottom: 46px;
+
+      @include media($medium-screen) {
+        width: 50%;
+        margin-bottom: 60px;
+        &:nth-child(2n+2) .department-search-result {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .department-search-result {
+      margin-right: 70px;
     }
 
     h2 {
@@ -47,8 +66,7 @@
     }
 
     p {
-      margin-bottom: 34px;
-      margin-top: 11px;
+      margin: 11px 0 0 0;
     }
   }
   .view-topic-parents-block {
