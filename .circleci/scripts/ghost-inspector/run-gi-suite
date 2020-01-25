@@ -47,7 +47,7 @@ fi
 
 # output suite tests with results
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
-echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
+echo $SUITE_TESTS | ./jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
 
 # return our passing status
 exit $PASSING
