@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.card
     - core.entity_view_mode.node.card_compact
+    - core.entity_view_mode.node.teaser
     - node.type.department
     - node.type.news
     - node.type.topic
@@ -230,20 +231,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      header:
-        entity_node:
-          id: entity_node
-          table: views
-          field: entity_node
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: true
-          target: '{{ raw_arguments.field_dept_target_id }}'
-          view_mode: title
-          bypass_access: false
-          plugin_id: entity
+      header: {  }
       defaults:
         header: false
         arguments: false
@@ -253,6 +241,8 @@ display:
         use_more_text: false
         link_display: false
         link_url: false
+        style: false
+        row: false
       arguments:
         field_dept_target_id:
           id: field_dept_target_id
@@ -304,6 +294,18 @@ display:
       use_more_text: 'See more news'
       link_display: page_1
       link_url: ''
+      block_description: 'News block - dept'
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: false
+          uses_fields: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: card
     cache_metadata:
       max-age: -1
       contexts:
@@ -447,6 +449,8 @@ display:
       defaults:
         header: false
         arguments: false
+        style: false
+        row: false
       arguments:
         field_dept_target_id:
           id: field_dept_target_id
@@ -487,6 +491,17 @@ display:
           break_phrase: false
           not: false
           plugin_id: numeric
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: false
+          uses_fields: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: teaser
     cache_metadata:
       max-age: -1
       contexts:
