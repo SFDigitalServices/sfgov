@@ -26,7 +26,7 @@ class SearchForm extends FormBase {
     );
 
     $suffix_markup = '<div id="sfgov-search-describedby" aria-hidden="true" class="visually-hidden">' . t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value') . '</div>';
-    $suffix_markup .= '<div id="sfgov-search-autocomplete" role="listbox"></div>';
+    $suffix_markup .= '<div id="sfgov-search-autocomplete" role="listbox" aria-label="' . t("Search autocomplete") . '"></div>';
 
     $form['sfgov_search_input'] = array(
       '#title' => 'Search',
