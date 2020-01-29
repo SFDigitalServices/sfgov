@@ -4,24 +4,28 @@
     @include contain-1090;
     .views-view-grid {
       &.horizontal {
-        display: table;
-        table-layout: fixed; 
-        border-collapse: separate;
-        border-spacing: 20px;
-        width: 103%;
-        margin-left: -20px;
-        margin-bottom: 100px;
+        display: flex;
+        flex-wrap: wrap;
         .l-grid__row {
-          display: table-row;
+          display: flex;
+          width: 100%;
           .l-grid__column {
-            display: table-cell;
+            display: flex;
             width: 50%;
-            padding: 20px;
-            background: #EDF4F7;
-            border-radius: 8px;
-
+            align-items: stretch;
+            padding: 0 20px 20px 0;
+            &:last-of-type {
+              padding-right: 0;
+            }
             &:hover {
               background: $c-blue-2;
+            }
+            .transaction-card--link {
+              display: block;
+              background: #EDF4F7;
+              border-radius: 8px;
+              padding: 20px;
+              width: 100%;
             }
             .transaction-card {
               @include rubik;
@@ -72,6 +76,7 @@
               display: block;
               width: auto;
               margin-bottom: 20px;
+              padding: 0;
               .transaction-card {
                 .transaction-card__title {
                   @include fs-news-title;
