@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - entity_browser.browser.location_event_address
+    - entity_browser.browser.image
     - field.field.node.event.body
     - field.field.node.event.field_address
     - field.field.node.event.field_call_to_action
@@ -35,15 +35,16 @@ third_party_settings:
         - field_email
         - field_phone_numbers
       parent_name: ''
-      weight: 23
+      weight: 9
       format_type: details
       format_settings:
+        description: ''
+        required_fields: true
         id: sfgov-event-contact
         classes: ''
         open: false
-        required_fields: true
       label: Contact
-      region: hidden
+      region: content
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -51,7 +52,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 8
+    weight: 7
     region: content
     settings:
       rows: 9
@@ -59,7 +60,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_address:
-    weight: 7
+    weight: 5
     settings:
       entity_browser: location_event_address
       field_widget_display: rendered_entity
@@ -74,7 +75,7 @@ content:
     type: entity_browser_entity_reference
     region: content
   field_call_to_action:
-    weight: 9
+    weight: 8
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -93,7 +94,7 @@ content:
     type: paragraphs
     region: content
   field_cost:
-    weight: 6
+    weight: 4
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -121,7 +122,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_description:
-    weight: 3
+    weight: 1
     settings:
       rows: 3
       placeholder: ''
@@ -137,7 +138,7 @@ content:
     type: text_textarea
     region: content
   field_email:
-    weight: 0
+    weight: 2
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -156,13 +157,28 @@ content:
     type: paragraphs
     region: content
   field_end_date:
-    weight: 5
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
+  field_image:
+    type: entity_browser_entity_reference
+    weight: 6
+    region: content
+    settings:
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: preview
+      field_widget_replace: false
+    third_party_settings: {  }
   field_phone_numbers:
-    weight: 1
+    weight: 3
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -181,7 +197,7 @@ content:
     type: paragraphs
     region: content
   field_start_date:
-    weight: 4
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -216,7 +232,7 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 2
+    weight: 0
     region: content
     settings:
       size: 60
@@ -229,7 +245,6 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_image: true
   langcode: true
   promote: true
   sticky: true
