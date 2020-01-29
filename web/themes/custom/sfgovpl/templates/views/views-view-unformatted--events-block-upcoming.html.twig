@@ -1,0 +1,23 @@
+{% block content %}
+  <div class="sfgov-full-bleed white card-container">
+    <div class="sfgov-section-container">
+      <div class="view-events-block">
+        {% block title %}
+          {% if view.getTitle() %}
+            <h2 class="title">{{ view.getTitle() }}</h3>
+          {% endif %}
+        {% endblock title %}
+
+        {% block rows %}
+          <div class="sfgov-container-three-column">
+            {% for row in rows %}
+              <div class="sfgov-container-item">
+                {{ row.content }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endblock rows %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}
