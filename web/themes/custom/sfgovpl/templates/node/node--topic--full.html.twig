@@ -65,7 +65,15 @@
         </div>
       </div>
     {% endif %}
-    {{ drupal_view('departments', 'block_2') }} {# related depts #}
+
+    {% if content.field_departments['#items'].getValue() %}
+      <div class="sfgov-full-bleed dark-blue card-container">
+        <div class="sfgov-section-container">
+          {{ content.field_departments }}
+        </div>
+      </div>
+    {% endif %}
+
   {% endblock content %}
 {% endembed  %}
 
