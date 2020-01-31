@@ -1,0 +1,57 @@
+
+    {% if content.field_topics['#items'].getValue() %}
+      <div class="sfgov-full-bleed white child-topics card-container">
+        <div class="sfgov-section-container">
+          <div class="sfgov-container-two-column">
+            {{ content.field_topics }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="sfgov-full-bleed light-blue card-container">
+      <div class="sfgov-section-container">
+        {{ content.field_department_services }}
+        {{ services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') }}
+      </div>
+    </div>
+    {% if content.field_spotlight['#items'].getValue() %}
+      <div class="sfgov-full-bleed padding-zero purple-lightpurple sfgov-spotlight-container">
+        <div class="sfgov-section-container">
+          {{ content.field_spotlight }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% set news_view = drupal_view('news', 'news_block_topics')|render  %}
+    {%  if news_view|striptags|trim %}
+    <div class="sfgov-full-bleed light-yellow card-container">
+      <div class="sfgov-section-container">
+        {{ news_view }}
+      </div>
+    </div>
+    {% endif %}
+
+    {% set events_view = drupal_view('events', 'events_block_topics')|render %}
+    {% if events_view|striptags|trim %}
+      <div class="sfgov-full-bleed white card-container">
+        <div class="sfgov-section-container">
+          {{ events_view }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.field_resources['#items'].getValue() %}
+      <div class="sfgov-full-bleed light-blue card-container">
+        <div class="sfgov-section-container">
+          {{ content.field_resources }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.field_departments['#items'].getValue() %}
+      <div class="sfgov-full-bleed dark-blue card-container">
+        <div class="sfgov-section-container">
+          {{ content.field_departments }}
+        </div>
+      </div>
+    {% endif %}
