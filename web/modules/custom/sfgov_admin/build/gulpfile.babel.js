@@ -19,6 +19,7 @@ rename = require('gulp-rename'),
 sass = require('gulp-sass'),
 sasslint = require('gulp-sass-lint'),
 sourcemaps = require('gulp-sourcemaps'),
+imagemin = require('gulp-imagemin'),
 watch = require('gulp-watch');
 
 
@@ -123,6 +124,13 @@ gulp.task('js', () => {
     .pipe(browsersync.stream({ match: '../js/dist/**/*.js' }));
 });
 
+gulp.task('images', () => {
+  return gulp
+    .src('../css/src/images/**/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest('../css/dist/images'));
+});
+
 
 // Watch
 //------------------------------------------------------------------------------
@@ -139,4 +147,4 @@ gulp.task('watch', () => {
 
 // Default task
 //------------------------------------------------------------------------------
-gulp.task('default', ['sass:css', 'js', 'watch']);
+gulp.task('default', ['sass:css', 'js', 'images', 'watch']);
