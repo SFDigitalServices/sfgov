@@ -40,10 +40,12 @@ function Search311(collectionName) {
       var containerId = this.topSearchContainerSelector.replace('#', '');
       var containerSelector = '#' + containerId;
       
-      $(topSearchSuggs[0]).before('<div id="' + containerId + '"><h4>' + Drupal.t('Top searches:') + '</h4></div>');
+      $(topSearchSuggs[0]).before('<div id="' + containerId + '" aria-label="' + Drupal.t('Search top suggestions') + '" role="listbox"><h4>' + Drupal.t('Top searches:') + '</h4></div>');
       $(this.topSearchContainerSelector).hide();
   
-      $(topSearchSuggs).each(function() {
+      $(topSearchSuggs).each(function(idx) {
+        $(this).find('a').attr('id', 'aria-ts-opt-' + idx);
+        $(this).find('a').attr('role', 'option');
         $(_this.topSearchContainerSelector).append($(this));
       });
   
@@ -67,20 +69,25 @@ function Search311(collectionName) {
   }
 
   this.autocomplete = function() {
+    var focusIndex = 0;
+    var autocompleteLength;
     $('#edit-keyword, #edit-sfgov-search-input').attr('autocomplete', 'off');
     $(this.inputSelector).on('keyup click', function(event) {
       var searchKeyword = $(_this.inputSelector).val();
-      if(searchKeyword.length >= 3) {
+      var key = event.keyCode;
+      focusIndex = 0;
+      if(searchKeyword.length >= 3 || key === 40) {
         $.ajax({
           url: _this.props.protocol + '://' + _this.props.domain + '/s/suggest.json' + '?' + 'collection=' + _this.props.parameters.collection + '&partial_query=' + searchKeyword + '&show=10&sort=0&alpha=.5&fmt=json++&profile=_default',
           dataType: 'jsonp',
           success: function(data) {
             var autocompletes = data;
             if(autocompletes.length > 0) {
+              autocompleteLength = autocompletes.length;
               $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
               for(var i = 0; i<autocompletes.length; i++) {
-                autocompleteHtml += '<a href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
+                autocompleteHtml += '<a role="option" id="aria-ac-opt-' + i + '" href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
               }
               $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
@@ -91,10 +98,12 @@ function Search311(collectionName) {
             });
           }
         });
-      } else {
+      } 
+      else {
         $(_this.autocompleteContainerSelector).hide();
       }
     });
+
   }
 
   this.makeRequest = function() {
@@ -459,5 +468,37 @@ $(document).ready(function() {
   doMobile();
   $(window).resize(function() {
     doMobile();
+  });
+
+  $(document).on('keydown', function(e) {
+    var autosuggestVisible = $('#sfgov-search-autocomplete').is(':visible');
+    var topSearchesVisible = $('#sfgov-top-search-suggestions-container').is(':visible');
+    var itemLength = 0;
+    var selector = '';
+    if(autosuggestVisible) {
+      selector = '#sfgov-search-autocomplete > a';
+    } else if(topSearchesVisible) {
+      selector = '#sfgov-top-search-suggestions-container > .sfgov-top-search-suggestion a';
+    }
+    itemLength = selector.length > 0 ? $(selector).length : 0;
+    var keyPressed = e.keyCode;
+    if((autosuggestVisible || topSearchesVisible) && (keyPressed === 40 || keyPressed === 38)) {
+      if(keyPressed === 40) { // arrow down
+        if($('#edit-sfgov-search-input').is(':focus')) { // input is focused, set focus on first element
+          focusIndex = 0;
+        } else {
+          focusIndex = (focusIndex == itemLength-1) ? (itemLength-1) : focusIndex+1;
+        }
+      }
+      if(keyPressed === 38) {
+        focusIndex--;
+        if(focusIndex <= 0) focusIndex = 0;
+      }
+      $(selector)[focusIndex].focus();
+      $('#edit-sfgov-search-input').attr('aria-activedescendant', $(selector + ':focus').attr('id'));
+      if((keyPressed === 40 && focusIndex !== itemLength-1) || (keyPressed === 38 && focusIndex !== 0)) {
+        e.preventDefault();
+      }
+    }
   });
 });
