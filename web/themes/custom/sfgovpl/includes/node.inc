@@ -17,7 +17,37 @@ function sfgovpl_preprocess_node(&$variables) {
       sfgovpl_add_regions_to_node(['department_news'], $variables);
       sfgovpl_add_regions_to_node(['department_events'], $variables);
     }
+    if($content_type == 'topic') {
+      $variables['service_section_ids'] = topic_page_services();
+    }
   }
+}
+
+/*
+* retrieve the transaction ids in field_department_services that will be excluded from "more services" section on topic page
+* send the list of ids to a twig var which will then get passed to view contextual filters via twig_tweak
+*/
+function topic_page_services() {
+  $node = \Drupal::request()->attributes->get('node');
+  if($node) {
+    $services = $node->get('field_department_services');
+    if(!empty($services->getValue())) {
+      $txs = array();
+      foreach($services as $service) {
+        $serviceSectionId = $service->getValue()['target_id'];
+        $serviceSectionLoaded = Paragraph::load($serviceSectionId);
+        
+        // load the paragraph and get the transactions
+        $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
+        for($i=0; $i<count($topicTransactions); $i++) {
+          $txId = $topicTransactions[$i]['target_id'];
+          $txs[] = $txId;
+        }
+      }
+      return $txs;
+    }
+  }
+  return null;
 }
 
 function dept_page_fields() {

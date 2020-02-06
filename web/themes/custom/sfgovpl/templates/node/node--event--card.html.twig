@@ -1,19 +1,27 @@
-{% extends 'node.html.twig' %}
-
-{% block title %}
-{% endblock title %}
-
-{% block body %}
-
-  {% set start_date_time = content.field_start_date.0['#markup'] %}
-  {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
-
-  <div class="event--card--body">
-    <h3{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
-    {{ content | without('field_start_date','field_end_date','field_address') }}
-    <h3 class="event-date">
+{% set start_date_time = content.field_start_date.0['#markup'] %}
+{% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
+{% set hasImage = false %}
+{% set eventClass = "date" %}
+{% if content.field_image|render|striptags %}
+  {% set hasImage = true %}
+  {% set thumbnail = file_url(node.field_image.entity.field_media_image.entity.uri.value|image_style('160x160')) %}
+  {% set eventClass = "image" %}
+{% endif %}
+<a class="sfgov-event-card {{ eventClass }}" href="{{ url }}">
+  {% if hasImage %}
+    <div class="event-image">
+      <img src="{{ thumbnail }}" />
+    </div>
+  {% else %}
+    <div class="event-date">
+      <div class="month">{{ start_date_time|date("F") }}</div>
+      <div class="date">{{ start_date_time|date("j") }}</div>
+    </div>
+  {% endif %}
+  <div class="event-info">
+    <h5 class="title">{{ label }}</h5>
+    <p class="description">
       {{ start_date_time|date("l, F j") }}
-    </h3>
+    </p>
   </div>
-
-{% endblock body %}
+</a>

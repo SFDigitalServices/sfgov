@@ -1,0 +1,19 @@
+{% block content %}
+  <div class="view-events-block">
+    {% block title %}
+      {% if view.getTitle() %}
+        <h2 class="title">{{ view.getTitle() }}</h3>
+      {% endif %}
+    {% endblock title %}
+
+    {% block rows %}
+      <div class="sfgov-container-three-column">
+        {% for row in rows %}
+          <div class="sfgov-container-item">
+            {{ row.content }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endblock rows %}
+  </div>
+{% endblock content %}

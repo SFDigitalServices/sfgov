@@ -3,9 +3,18 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.topic.field_department_services
+    - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
+    - field.field.node.topic.field_page_design
+    - field.field.node.topic.field_resources
+    - field.field.node.topic.field_spotlight
+    - field.field.node.topic.field_top_level_topic
+    - field.field.node.topic.field_topics
     - node.type.topic
   module:
+    - entity_reference_revisions
+    - options
     - smart_trim
     - user
 id: node.topic.default
@@ -13,6 +22,24 @@ targetEntityType: node
 bundle: topic
 mode: default
 content:
+  field_department_services:
+    weight: 3
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_departments:
+    weight: 1
+    label: above
+    settings:
+      view_mode: card
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
   field_description:
     weight: 0
     label: hidden
@@ -31,6 +58,50 @@ content:
       summary_handler: full
     third_party_settings: {  }
     type: smart_trim
+    region: content
+  field_page_design:
+    weight: 7
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_key
+    region: content
+  field_resources:
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_spotlight:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_top_level_topic:
+    weight: 5
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_topics:
+    weight: 6
+    label: hidden
+    settings:
+      view_mode: card
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
     region: content
 hidden:
   content_moderation_control: true

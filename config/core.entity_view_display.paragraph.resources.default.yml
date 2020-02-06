@@ -9,7 +9,7 @@ dependencies:
     - paragraphs.paragraphs_type.resources
   module:
     - link
-    - text
+    - smart_trim
 id: paragraph.resources.default
 targetEntityType: paragraph
 bundle: resources
@@ -18,9 +18,21 @@ content:
   field_description:
     weight: 1
     label: hidden
-    settings: {  }
+    settings:
+      trim_length: 600
+      trim_type: chars
+      trim_suffix: ''
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      trim_options:
+        text: true
+        trim_zero: false
+      wrap_output: false
+      more_link: false
+      summary_handler: full
     third_party_settings: {  }
-    type: text_default
+    type: smart_trim
     region: content
   field_link:
     weight: 2

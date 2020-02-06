@@ -26,11 +26,12 @@
   }
 
   .event--meta {
+    @include antialiasing;
     background: $c-dark-blue;
     color: $c-white;
     padding: 60px 0;
-    @include antialiasing;
     .event--meta-inner {
+      @include contain-1090;
       @include clearfix;
       @include fs-body-short;
       .event--meta-left {
@@ -78,6 +79,9 @@
       p {
         margin: 0 0 1em 0;
         @include fs-body-long;
+      }
+      @include media-max($medium-screen) {
+        padding-right: 0;
       }
     }
     .event--content-sidebar {
@@ -143,6 +147,18 @@
             }
           }
         }
+      }
+    }
+  }
+
+  article {
+    .field--type-image {
+      margin-bottom: 40px;
+      img {
+        display: block;
+        max-height: 800px;
+        width: auto;
+        height: auto;
       }
     }
   }
