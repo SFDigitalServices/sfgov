@@ -1,0 +1,15 @@
+{% extends 'node.html.twig' %}
+{% block node %}
+  {% block title %}
+  {% endblock title %}
+
+  {% block body %}
+    <div class="sfgov-container-item">
+      {% include "@theme/department-card.twig" with {
+        "title": node.label,
+        "description": content.field_description.0,
+        "url": url
+      } %}
+    </div>
+  {% endblock body %}
+{% endblock node %}

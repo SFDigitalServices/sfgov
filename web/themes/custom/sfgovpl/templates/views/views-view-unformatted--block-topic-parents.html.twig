@@ -1,0 +1,17 @@
+{% block content %}
+  <div class="view-topic-parents-block">
+    {% block title %}
+      {% if view.getTitle() %}
+        <div class="title">{{ view.getTitle() }}:</div>
+      {% endif %}
+    {% endblock title %}
+
+    {% block rows %}
+      <ul>
+      {% for row in rows %}
+        {{ row.content }}
+      {% endfor %}
+      </ul>
+    {% endblock rows %}
+  </div>
+{% endblock content %}

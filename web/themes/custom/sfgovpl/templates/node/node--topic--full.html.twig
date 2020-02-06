@@ -1,7 +1,30 @@
 {% embed 'node--full.html.twig' %}
-  {% block content %}
-    {{ drupal_view('services', 'block_1') }}
-    {{ drupal_view('departments', 'block_2') }}
-  {% endblock content %}
-{% endembed  %}
+  {% set services_exclude = service_section_ids | join('+') %}
 
+  {% set parent_topics_view = drupal_view('topics', 'block_topic_parents')|render %}
+  {% set label = parent_topics_view|striptags|trim ? parent_topics_view : null %}
+  {% set page_design = content.field_page_design['#items'].getValue() ? content.field_page_design['#items'].getValue()[0].value : null %}
+
+  {% block header %}
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value,
+        'label': label
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+  {% block content %}
+    {% if page_design == 2 %}
+      {% include 'node--topic--full-template-2.html.twig' %}
+    {% elseif page_design == 3 %}
+      {% include 'node--topic--full-template-3.html.twig' %}
+    {% else %}
+      {% include 'node--topic--full-template-1.html.twig' %}
+    {% endif %}
+  {% endblock content %}
+
+{% endembed  %}

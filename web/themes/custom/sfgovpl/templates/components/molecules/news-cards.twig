@@ -1,30 +1,7 @@
-
-<div class="news-cards--container">
-
-  {# Count number of invisible cards we'll need to print. #}
-  {% set insivible_card_count = rows|length is divisible by(3) ? '':  3 - rows|length % 3 %}
-
-  {# Begin Loop. #}
+<div class="sfgov-container-three-column">
   {% for card in rows %}
-    {% if loop.first %}
-      <div class="news-cards" data-attr="row"> {# Start first row. #}
-    {% endif %}
-
-    {# Print cards. #}
-    {{ card.content }}
-
-    {% if loop.index is divisible by(3) %}
-      </div> {# End row of three. #}
-
-      <div class="news-cards" data-attr="row"> {# Start next row of three. #}
-    {% endif %}
-
-    {% if loop.last %}
-      {% for n in 1..insivible_card_count %}
-        {% include "@theme/atoms/news-card.twig" with { invisible : 'invisible' } %}
-      {% endfor %}
-      </div> {# End all rows. #}
-    {% endif %}
-
+    <div class="sfgov-container-item">
+      {{ card.content }}
+    </div>
   {% endfor %}
 </div>

@@ -95,8 +95,14 @@
   style: 'department',
 } %}
 
-<a name="services"></a>
-{{ content.field_department_services }}
+{% if content.field_department_services['#items'].getValue() %}
+  <a name="services"></a>
+  <div class="sfgov-full-bleed light-blue card-container">
+    <div class="sfgov-section-container">
+      {{ content.field_department_services }}
+    </div>
+  </div>
+{% endif %}
 
 {% if dept_fields.spotlight %}
   <div id="sfgov-dept-spotlight" class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
@@ -124,23 +130,29 @@
   </div>
 {% endif %}
 
-{{ department_news }}
+{% set news_view = drupal_view('news', 'news_block_depts')|render  %}
+{%  if news_view|striptags|trim %}
+<div class="sfgov-full-bleed light-yellow">
+  <div class="sfgov-section-container">
+    {{ news_view }}
+  </div>
+</div>
+{% endif %}
 
-{{ department_events }}
+{% set events_view = drupal_view('events', 'block_1')|render %}
+{% if events_view|striptags|trim %}
+  <div class="sfgov-full-bleed white">
+    <div class="sfgov-section-container">
+      {{ events_view }}
+    </div>
+  </div>
+{% endif %}
 
-{% if dept_fields.resources.items %}
+{% if content.field_resources['#items'].getValue() %}
   <a name="resources"></a>
-  <div id="sfgov-dept-resources" class="sfgov-dept-section sfgov-dept-resources">
-    <h2 class="dept-heading--section">{{ dept_fields.resources.label }}</h2>
-      <div class="sfgov-dept-resources-container service-cards two-column">
-        {% for item in dept_fields.resources.items %}
-          {% include "@theme/atoms/service-card.twig" with {
-            "title": item.title,
-            "description": item.description,
-            "url": item.url
-          } %}
-        {% endfor %}
-      </div>
+  <div class="sfgov-full-bleed light-blue">
+    <div class="sfgov-section-container">
+      {{ content.field_resources }}
     </div>
   </div>
 {% endif %}

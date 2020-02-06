@@ -1,69 +1,48 @@
 .page-node-type-topic {
-
-  .lead-paragraph {
-    padding-bottom: 40px;
-
-    @include media($medium-screen) {
-      padding-bottom: 108px;
+  .hero-banner {
+    padding-top: 20px;
+    margin-bottom: 60px;
+    h1 {
+      margin-top: 40px;
     }
   }
-
-  // Services.
-  .view-services-block-1 {
-    background: $c-blue-1;
-    padding-bottom: 60px;
-    padding-top: 60px;
-
-    .container {
-      @include contain-1090-table;
-      @include clearfix;
-    }
-
-    @include media($medium-screen) {
-      padding-top: 50px;
-    }
-
-    h2 {
-      @include contain-1090;
-      @include fs-h1;
-      margin-bottom: 19px;
-
-      @include media($medium-screen) {
-        margin-bottom: 70px;
-      }
-    }
-
-    h4 {
-      @include fs-title;
-    }
-
-    .sfgov-transaction-search--container {
-      border-bottom: 0;
-      margin: 0;
-      padding: 0;
-
-      .body {
-        @include fs-body-short;
-        color: $c-slate;
-      }
-    }
+  .child-topics {
+    padding-top: 0;
   }
-
   // Related departments.
   .view--departments-block-2-topic-related-depts {
     background: $c-dark-blue;
     color: $c-white;
-    padding-bottom: 80px;
-    padding-top: 80px;
+    padding: 46px 0;
+    @include media($medium-screen) {
+      padding: 80px 0
+    }
 
     .container {
       @include contain-1090;
       @include clearfix;
+      display: flex;
+      flex-wrap: wrap;
     }
 
     .views-row {
       @include background-image('building-white.svg', left 5px);
+      display: block;
       padding-left: 44px;
+      width: 100%;
+      margin-bottom: 46px;
+
+      @include media($medium-screen) {
+        width: 50%;
+        margin-bottom: 60px;
+        &:nth-child(2n+2) .department-search-result {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .department-search-result {
+      margin-right: 70px;
     }
 
     h2 {
@@ -87,8 +66,34 @@
     }
 
     p {
-      margin-bottom: 34px;
-      margin-top: 11px;
+      margin: 11px 0 0 0;
+    }
+  }
+  .view-topic-parents-block {
+    padding: 0;
+    .title {
+      @include fs-body-long;
+      color: $c-black;
+      opacity: 0.65;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    ul {
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      li {
+        display: inline-block;
+        padding: 0;
+        margin: 0 10px 0 0;
+        &::after {
+          content: ',';
+        }
+        &:last-child::after {
+          content: '';
+        }
+      }
     }
   }
 }

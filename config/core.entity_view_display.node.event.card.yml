@@ -15,15 +15,27 @@ dependencies:
     - field.field.node.event.field_image
     - field.field.node.event.field_phone_numbers
     - field.field.node.event.field_start_date
+    - field.field.node.event.field_topics
+    - image.style.160x160
     - node.type.event
   module:
     - datetime
+    - media
     - user
 id: node.event.card
 targetEntityType: node
 bundle: event
 mode: card
 content:
+  field_image:
+    type: media_thumbnail
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      image_style: 160x160
+      image_link: ''
+    third_party_settings: {  }
   field_start_date:
     weight: 0
     label: hidden
@@ -43,7 +55,7 @@ hidden:
   field_description: true
   field_email: true
   field_end_date: true
-  field_image: true
   field_phone_numbers: true
+  field_topics: true
   langcode: true
   links: true

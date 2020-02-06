@@ -1,0 +1,17 @@
+{% block content %}
+  {% block title %}
+    {% if view.getTitle() %}
+      <h5 class="sfgov-dept-services-section-title">{{ view.getTitle() }}</h3>
+    {% endif %}
+  {% endblock title %}
+
+  {% block rows %}
+    <div class="sfgov-container-three-column">
+      {% for row in rows %}
+        <div class="sfgov-container-item">
+          {{ row.content }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endblock rows %}
+{% endblock content %}

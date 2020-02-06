@@ -1,0 +1,30 @@
+uuid: a58926ab-36ed-415d-8a8b-39d8348b6a86
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.topic
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.topic.field_topics
+field_name: field_topics
+entity_type: node
+bundle: topic
+label: 'Child topic(s)'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: topics
+      display_name: entity_reference_topics_sans_top_level
+      arguments: {  }
+field_type: entity_reference

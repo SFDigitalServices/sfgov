@@ -188,3 +188,32 @@ function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $f
   $form['field_direct_external_url_uri_op']['#default_value'] = 'All';
   $form['field_direct_external_url_uri_op']['#title'] = 'Has Start Page';
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * Disable the designate top level topic checkbox if this topic is a child of another topic
+ */
+function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $topicId = $form_state->getFormObject()->getEntity()->id();
+  $topicNids = \Drupal::entityQuery('node')->condition('type','topic')->execute();
+  $topicNodes = \Drupal\node\Entity\Node::loadMultiple($topicNids);
+  $childTopics = null;
+  $foundAsChild = false;
+  $parentTopics = [];
+  foreach($topicNodes as $topicNode) {
+    $childTopics = $topicNode->get('field_topics');
+    foreach($childTopics->getValue() as $childTopic) {
+      $childTopicId = $childTopic['target_id'];
+      if($childTopicId == $topicId) {
+        $foundAsChild = true;
+        $parentTopics[] = $topicNode->getTitle();
+        break;
+      }
+    }
+  }
+  if($foundAsChild) {
+    error_log(print_r($parentTopics, 1));
+    $form['field_top_level_topic']['widget']['value']['#description'] = t('This Topic cannot be top level because it is a child topic of the following: ' . implode(', ', $parentTopics));
+    $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';
+  }
+}

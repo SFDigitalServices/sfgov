@@ -3,10 +3,11 @@
   for variable comments and original template.
 #}
 
-{% if title %}
-  <h3>{{ title }}</h3>
-{% endif %}
-
-{% block rows %}
-  {% include '@theme/molecules/news-cards.twig' %}
-{% endblock rows %}
+<div class="view-news-block">
+  {% if view.getTitle() %}
+    <h3 class="title">{{ view.getTitle() }}</h3>
+  {% endif %}
+  {% block rows %}
+    {% include '@theme/molecules/news-cards.twig' %}
+  {% endblock rows %}
+</div>
