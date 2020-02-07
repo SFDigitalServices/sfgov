@@ -171,3 +171,14 @@ function sfgov_utilities_entity_type_alter(array &$entity_types) {
     $entity_type->setConstraints($constraints);
   }
 }
+
+function sfgov_utilities_page_attachments(array &$page) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (isset($node)) {
+    $bundle = $node->bundle();
+    if ($bundle == 'department' || $bundle == 'topic') {
+      $page['#attached']['library'][] = 'sfgov_utilities/services';
+    }  
+  }
+}
+
