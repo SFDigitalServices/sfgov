@@ -173,12 +173,29 @@ function sfgov_utilities_entity_type_alter(array &$entity_types) {
 }
 
 function sfgov_utilities_page_attachments(array &$page) {
-  $node = \Drupal::routeMatch()->getParameter('node');
-  if (isset($node)) {
-    $bundle = $node->bundle();
-    if ($bundle == 'department' || $bundle == 'topic') {
-      $page['#attached']['library'][] = 'sfgov_utilities/services';
-    }  
+  // Don't run on admin pages
+  if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if (isset($node)) {
+      $bundle = $node->bundle();
+      // Only check department and topic nodes
+      if ($bundle == 'department' || $bundle == 'topic') {
+        // Count the number of service sections and services
+        $num_sections = 0;
+        $num_services = 0;      
+        $ids = $node->get('field_department_services')->getValue();
+        $num_sections = count($ids);
+        foreach ($ids as $paragraph) {
+          $sps = \Drupal\paragraphs\Entity\Paragraph::load($paragraph['target_id'] );
+          $sids = $sps->get('field_dept_service_sect_services')->getValue();
+          $num_services += count($sids);
+        }
+        // If enough items load accordion js
+        if($num_services >= 12 && $num_sections >= 2) {
+          $page['#attached']['library'][] = 'sfgov_utilities/services';
+        }
+      }  
+    }
   }
 }
 
