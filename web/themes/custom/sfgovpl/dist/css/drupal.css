@@ -6395,24 +6395,41 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .paragraph-child--campaign {
-  background: #f4c435;
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+}
+
+@media screen and (min-width: 1280px) {
+  .paragraph-child--campaign {
+    padding: 0;
+  }
 }
 
 .paragraph--type--campaign {
-  margin: 0 auto;
-  max-width: 1280px;
-  width: 100%;
   background: #f4c435;
-  display: table;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.paragraph--type--campaign .__media {
-  margin-bottom: 39px;
+@media screen and (min-width: 950px) {
+  .paragraph--type--campaign {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+            flex-direction: row-reverse;
+  }
 }
 
 @media screen and (min-width: 950px) {
   .paragraph--type--campaign .__media {
-    margin-bottom: 0;
+    -webkit-box-flex: 0;
+            flex: 0 0 50%;
+    overflow: hidden;
+    position: relative;
   }
 }
 
@@ -6422,20 +6439,43 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 @media screen and (min-width: 950px) {
-  .paragraph--type--campaign .paragraph-campaign--text {
-    background: #f4c435;
-    display: table-cell;
+  .paragraph--type--campaign img {
+    position: absolute;
+    width: auto;
     height: 100%;
-    max-width: 444px;
+    top: 50%;
+    left: 50%;
+    min-height: 100%;
+    min-width: 100%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    max-width: unset;
+  }
+}
+
+.paragraph--type--campaign .paragraph-campaign--text {
+  padding: 20px;
+}
+
+@media screen and (min-width: 950px) {
+  .paragraph--type--campaign .paragraph-campaign--text {
+    -webkit-box-flex: 0;
+            flex: 0 0 50%;
+    height: 100%;
+    padding: 40px 60px 40px 40px;
     vertical-align: middle;
   }
+}
+
+.paragraph--type--campaign .paragraph-campaign--text p {
+  margin: 0 0 15px;
 }
 
 .paragraph--type--campaign .__title {
   font-size: 30px;
   font-weight: 500;
   line-height: 42px;
-  padding: 0 38px 39px;
+  margin-bottom: 28px;
 }
 
 .paragraph--type--campaign .__title.sfgov-translate-lang-zh-TW {
@@ -6449,14 +6489,16 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   font-smooth: always;
 }
 
-.paragraph--type--campaign .__link {
-  padding: 0 38px 39px;
+@media screen and (min-width: 950px) {
+  .paragraph--type--campaign .__title {
+    margin-bottom: 40px;
+    font-size: 40px;
+    line-height: 48px;
+  }
 }
 
-@media screen and (min-width: 950px) {
-  .paragraph--type--campaign .__link {
-    padding-bottom: 0;
-  }
+.paragraph--type--campaign .__link {
+  margin-bottom: 20px;
 }
 
 .paragraph--type--campaign .__link a {
