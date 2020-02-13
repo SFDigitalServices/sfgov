@@ -43,7 +43,7 @@ jQuery(function () {
           $(this).find('.ui-icon').css('display', 'none');
           $(this).find('.sfgov-dept-services-section-title').removeClass('ui-accordion-icons');
           $(this).find('.sfgov-dept-services-section-content').removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content');
-          $(this).find('.sfgov-dept-services-section-content').css({'display': 'block', 'height': 'auto'});
+          $(this).find('.sfgov-dept-services-section-content').css({'display': 'flex', 'height': 'auto'});
         });
         $('.views-element-container .sfgov-services').each(function(){
           $(this).removeClass('accordion ui-accordion ui-widget ui-helper-reset');
@@ -51,7 +51,7 @@ jQuery(function () {
           $(this).find('.ui-icon').css('display', 'none');
           $(this).find('.sfgov-dept-services-section-title').removeClass('ui-accordion-icons');
           $(this).find('.sfgov-dept-services-section-content').removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content');
-          $(this).find('.sfgov-container-three-column').css({'display': 'block', 'height': 'auto'});
+          $(this).find('.sfgov-container-three-column').css({'display': 'flex', 'height': 'auto'});
         });
       }
       if ($(window).width() < mobileSize) {
