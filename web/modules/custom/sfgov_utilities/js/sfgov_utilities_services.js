@@ -76,7 +76,6 @@ jQuery(function () {
           // reinstate accordion styling for mobile
           $('div.sfgov-services .sfgov-services').each(function(){
             if (!$(this).hasClass('accordion')) {
-              console.log('fix accordions 1');
               $(this).addClass('accordion ui-accordion ui-widget ui-helper-reset');
               $(this).find('h5').addClass('ui-accordion-header ui-corner-top ui-accordion-header-collapsed ui-corner-all ui-state-default ui-accordion-icons');
               $(this).find('.ui-icon').css('display', 'block');
@@ -89,7 +88,6 @@ jQuery(function () {
           });
           $('.views-element-container .sfgov-services').each(function(){
             if (!$(this).hasClass('accordion')) {
-              console.log('fix accordions 1');
               $(this).addClass('accordion ui-accordion ui-widget ui-helper-reset');
               $(this).find('h5').addClass('ui-accordion-header ui-corner-top ui-accordion-header-collapsed ui-corner-all ui-state-default ui-accordion-icons');
               $(this).find('.ui-icon').css('display', 'block');
