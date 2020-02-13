@@ -9,12 +9,14 @@ jQuery(function () {
     // Track if accordions have been activated
     var accordionActive = false;
     const mobileSize = 701;
+    const animateTime = 900;
     // activate accordions
     if ($(window).width() < mobileSize) {
       $('.sfgov-services-section .sfgov-services').each(function(){
         $(this).addClass('accordion');
         $(this).accordion({
           active: false,
+          animate: animateTime,
           collapsible: true,
           header: 'h5',
         });
@@ -24,6 +26,7 @@ jQuery(function () {
         $(this).addClass('accordion');
         $(this).accordion({
           active: false,
+          animate: animateTime,
           collapsible: true,
           header: 'h5',
         });
@@ -58,6 +61,7 @@ jQuery(function () {
             $(this).addClass('accordion');
             $(this).accordion({
               active: false,
+              animate: animateTime,
               collapsible: true,
               header: 'h5',
             });
@@ -66,6 +70,7 @@ jQuery(function () {
             $(this).addClass('accordion');
             $(this).accordion({
               active: false,
+              animate: animateTime,
               collapsible: true,
               header: 'h5',
             });
