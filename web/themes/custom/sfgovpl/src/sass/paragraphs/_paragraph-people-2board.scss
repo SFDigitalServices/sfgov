@@ -1,19 +1,35 @@
 // Board of Supervisors.
 .sfgov-title--board-of-supervisors {
-  background: $c-dark-blue;
-  color: $c-white;
-  padding-bottom: 185px;
   position: relative;
-  @include antialiasing;
+  @include contain-1090;
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  .inner {
+    position: relative;
+    background: $c-blue-1;
+    border-radius: 8px;
+    padding: 20px;
+
+    @include media($medium-screen) {
+      padding: 40px;
+    }
+  }
 
   .sfgov-people--content {
+    @include media($narrow-screen) {
+      padding-bottom: 80px;
+    }
     .__person-2 {
-      @include contain-1090;
       .field__item {
         vertical-align: top;
-        margin: 0 auto 35px;
+        margin: 0 auto 20px;
         width: auto;
         display: block;
+
+        @include media($medium-screen) {
+          margin-bottom: 40px;
+        }
       }
 
       @include media($mobile-screen) {
@@ -32,16 +48,15 @@
     }
   }
 
-  .person-name a {
-    @include link-colors($c-white, $c-white);
-  }
-
   .__people-title {
-    @include contain-1090;
     margin-bottom: 40px;
   }
 
+  .person-title {
+    opacity: .7;
+  }
+
   .__description {
-    bottom: 77px;
+    bottom: 40px;
   }
 }
