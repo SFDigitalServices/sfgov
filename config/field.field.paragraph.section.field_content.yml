@@ -14,9 +14,14 @@ dependencies:
     - paragraphs.paragraphs_type.phone
     - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.text
+    - paragraphs.paragraphs_type.timeline
     - paragraphs.paragraphs_type.top_search_suggestion
   module:
     - entity_reference_revisions
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
 id: paragraph.section.field_content
 field_name: field_content
 entity_type: paragraph
@@ -37,9 +42,10 @@ settings:
       block: block
       button: button
       campaign: campaign
-      list: list
       events: events
+      list: list
       phone: phone
+      timeline: timeline
       text: text
       news: news
     target_bundles_drag_drop:
@@ -85,19 +91,19 @@ settings:
       in_person_location:
         weight: 31
         enabled: false
-      list:
+      events:
         enabled: true
         weight: 32
-      events:
+      list:
         enabled: true
         weight: 32
       list_item:
         weight: 33
         enabled: false
-      mailing_address:
+      call_to_action:
         weight: 34
         enabled: false
-      call_to_action:
+      mailing_address:
         weight: 34
         enabled: false
       phone:
@@ -109,12 +115,15 @@ settings:
       step:
         weight: 37
         enabled: false
-      department_service_section:
-        weight: 38
-        enabled: false
+      timeline:
+        enabled: true
+        weight: 37
       text:
         enabled: true
         weight: 38
+      department_service_section:
+        weight: 38
+        enabled: false
       thing_to_know:
         weight: 39
         enabled: false
@@ -127,13 +136,25 @@ settings:
       news:
         enabled: true
         weight: 49
+      email_addresses:
+        weight: 49
+        enabled: false
       resources:
         weight: 50
+        enabled: false
+      form:
+        weight: 52
         enabled: false
       social_media:
         weight: 52
         enabled: false
       spotlight:
         weight: 54
+        enabled: false
+      phone_numbers:
+        weight: 62
+        enabled: false
+      process_step:
+        weight: 63
         enabled: false
 field_type: entity_reference_revisions
