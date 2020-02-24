@@ -1,8 +1,19 @@
-{% extends 'paragraph.html.twig' %}
-
-{% block content %}
-  {{ content.field_media }}
-  <div class="paragraph-campaign--text">
-    {{ content|without('field_media') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
+  ]
+%}
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {{ content.field_media }}
+      <div class="paragraph-campaign--text">
+        <p>{{ 'Latest'|t }}</p>
+        {{ content|without('field_media') }}
+      </div>
+    {% endblock %}
   </div>
-{% endblock %}
+{% endblock paragraph %}
