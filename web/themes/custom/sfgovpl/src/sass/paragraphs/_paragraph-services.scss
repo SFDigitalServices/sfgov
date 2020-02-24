@@ -2,7 +2,6 @@
 // See also _node-topic.scss.
 .sfgov-services.paragraph {
   @include sfgov-container--full-override;
-  background: $c-blue-1;
   padding-top: 60px;
 
   @include media($medium-screen) {
@@ -10,13 +9,8 @@
   }
 
   .sfgov-header-section {
-    @include contain-1090;
     @include fs-h1;
     margin-bottom: 19px;
-
-    @include media($medium-screen) {
-      margin-bottom: 70px;
-    }
   }
 
   .sfgov-cta-button__container {
@@ -29,7 +23,8 @@
   }
 
   .sfgov-container {
-    @include contain-1090;
+   padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -45,6 +40,47 @@
     margin-bottom: 40px;
     @include media($medium-screen) {
       margin-bottom: 60px;
+    }
+  }
+}
+
+.sfgov-services.all-top-level-topics {
+  .sfgov-container-item {
+    margin-bottom: 0;
+    padding: 20px 0;
+
+    @include media($medium-screen) {
+      padding: 30px 0;
+    }
+
+    > div {
+      @include media($medium-screen) {
+        margin-right: 60px;
+      }
+    }
+
+    &:nth-child(3n+3) {
+      @include media($medium-screen) {
+        > div {
+          margin-right: 0;
+        }
+      }
+    }
+
+    h6 {
+      @include fs-title-5;
+      margin: 0;
+    }
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    p {
+      margin: 0;
+      color: $c-blue-4;
     }
   }
 }
