@@ -1,0 +1,42 @@
+{% embed 'node--full.html.twig' %}
+  {% set label = "Part of " ~ topics %}
+  
+  {% block header %}
+    {% for item in content.field_tags %}
+      {{ item.get('value').getValue() }}
+    {% endfor %}
+        
+    {% for key, item in content.field_topics if key|first != '#' %}
+      {% if content.field_topics[key] %}
+        <div> {{ content.field_topics[key] }} </div>
+      {% endif %}
+    {% endfor %}
+    
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-color.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value,
+        'label': label
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+  {% block content %}
+    <div class="{{ bundle }}--content">
+      {{ content|without(
+        'field_abstract',
+        'field_date',
+        'field_dept',
+        'field_image',
+        'field_news_type'
+      ) }}
+    </div>
+
+    <div class="{{ bundle }}--ankle">
+      {{ content.field_dept }}
+    </div>
+  {% endblock content %}
+  
+{% endembed %}
