@@ -1,16 +1,32 @@
 // Elected Officers.
 .sfgov-title--elected-officers,
 .sfgov-title--city-officials {
-  background: $c-blue-1;
+  @include contain-1090;
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  .inner {
+    background: $c-blue-1;
+    border-radius: 8px;
+    padding: 20px;
+
+    @include media($medium-screen) {
+      padding: 40px;
+      padding-bottom: 20px;
+    }
+  }
 
   .sfgov-people--content {
     .__person-2 {
-      @include contain-1090;
       .field__item {
         vertical-align: top;
-        margin: 0 auto 35px;
+        margin: 0 auto 20px;
         width: auto;
         display: block;
+
+        @include media($medium-screen) {
+          margin-bottom: 40px;
+        }
       }
 
       @include media($mobile-screen) {
@@ -30,7 +46,6 @@
   }
 
   .__people-title {
-    @include contain-1090;
     margin-bottom: 40px;
   }
 
@@ -40,17 +55,6 @@
 
   .person-subtitle {
     opacity: .7;
-  }
-}
-
-.path-frontpage {
-  .sfgov-people {
-    > div:last-of-type {
-      .sfgov-title--city-officials,
-      .sfgov-title--elected-officers {
-        margin-bottom: 50px;
-      }
-    }
   }
 }
 

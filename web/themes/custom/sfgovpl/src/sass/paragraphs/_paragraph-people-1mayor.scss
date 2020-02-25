@@ -3,6 +3,12 @@
   background: $c-dark-blue;
   color: $c-white;
   @include antialiasing;
+  padding-bottom: 60px;
+  padding-top: 80px;
+
+  @include media($medium-screen) {
+    margin-bottom: 60px;
+  }
 
   .__people-title {
     @include contain-1090;
@@ -13,10 +19,12 @@
   }
 
   .person-container {
-    margin-bottom: 20px;
-
     @include media($medium-screen) {
       margin-bottom: 40px;
+    }
+
+    @include media($narrow-screen) {
+      width: 70%;
     }
   }
 
@@ -33,11 +41,19 @@
 
   .person-photo {
     display: inline-block;
-    width: 140px;
-    height: 140px;
+    width: 110px;
+    height: 110px;
     margin-bottom: 30px;
-    margin-right: 28px;
+    margin-right: 20px;
     vertical-align: top;
+
+    @include media($medium-screen) {
+      width: 200px;
+      height: 200px;
+      float: left;
+      margin-bottom: 50px;
+      margin-right: 40px;
+    }
 
     img {
       max-width: 1px;
@@ -51,20 +67,15 @@
     @include fs-h1;
     color: white;
     margin-bottom: 34px;
-
-    @include media($medium-screen) {
-      margin-bottom: 50px;
-    }
   }
 
   .person-bio {
     display: inline-block;
     text-align: left;
-    width: calc(100% - 194px);
+    width: auto;
 
     @include media($medium-screen) {
       vertical-align: top;
-      width: calc(100% - 194px);
     }
 
     .person-name a {
@@ -84,20 +95,12 @@
 
   .person-title {
     @include fs-title-4;
-    color: $c-blue-2;
+    color: $c-white;
+    opacity: .7;
     margin-bottom: 12px;
 
     @include media($medium-screen) {
       margin-bottom: 12px;
-    }
-  }
-
-  .person-subtitle {
-
-    @include media($narrow-screen) {
-      margin-left: 173px;
-      margin-top: -75px;
-      max-width: 373px;
     }
   }
 }
