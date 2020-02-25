@@ -3,10 +3,6 @@
     background-color: $c-slate;
     color: $c-white;
   }
-  .resource-collection--content {
-    margin: 75px auto;
-    max-width: 1090px;
-  }
   .hero-banner--container {
     h1 {
       margin-bottom: 15px;
@@ -18,6 +14,9 @@
     }
   }
   .resource-collection--content {
+    margin: 75px auto;
+    max-width: 1090px;
+    padding: 0 20px;
     h2 {
       margin-bottom: 83px;
     }
@@ -51,14 +50,53 @@
     }
     .description {
       display: inline-block;
-      width: 533px;
+      width: 520px;
       vertical-align: top;
       p {
         margin: 0;
       }
     }
   }
-  .paragraph-child--text {
-    margin: 180px 0 0 0;
+}
+
+// Mobile
+@media only screen and (max-width: $narrow-screen) {
+  .page-node-type-resource-collection {
+    .paragraph--type--document {
+      .link-date {
+        width: 30%;
+        margin-right: 5%;
+      }
+      .description {
+        width: 55%;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-screen) {
+  .page-node-type-resource-collection {
+    .resource-collection--content {
+      .field__items {
+        margin-bottom: 80px;
+        .field__item {
+          margin-bottom: 40px;
+        }
+      }
+    }
+    .paragraph--type--document {
+      .link-date {
+        width: auto;
+        margin-right: 0;
+      }
+      .description {
+        display: block;
+        margin-top: 10px;
+        width: auto;
+      }
+    }
+    .paragraph-child--text {
+      margin: 0;
+    }
   }
 }

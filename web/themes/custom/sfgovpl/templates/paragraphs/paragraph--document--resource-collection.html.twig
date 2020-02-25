@@ -58,13 +58,13 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
     {% block content %}
       {% if not field_file.isEmpty %}
         <div class="document">
-          {% if field_file.entity.field_published_date.value %}
+          {% if fileurl|length > 3 %}
             <div class="link-date"><span class="link"><a href="{{ fileurl }}">{{ field_file.entity.label }}</a></span>
           {% else %}
             <div class="link-date"><span class="no-link">{{ field_file.entity.label }}</span>
           {% endif %}
           <span class="publish-date">
-          {% if field_file.entity.field_published_date.value %}
+          {% if field_file.entity.field_published_date.value and fileurl|length > 3 %}
             {{ field_file.entity.field_published_date.value|date("F j, Y") }}
           {% else %}
             Upcoming

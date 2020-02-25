@@ -1,17 +1,21 @@
+{% if content.field_content_type[0]['#markup'] %}
+  {% set ctype = content.field_content_type[0]['#markup'] %}
+{% endif %}
 {%
   set classes = [
   'paragraph',
   'paragraph--type--' ~ paragraph.bundle|clean_class,
   view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
   not paragraph.isPublished() ? 'paragraph--unpublished',
-  'sfgov-cta-button__container'
+  'sfgov-cta-button__container',
+  ctype|lower,
 ]
 %}
 
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      {{ content }}
+      {{ content|without('field_content_type') }}
     {% endblock %}
   </div>
 {% endblock paragraph %}

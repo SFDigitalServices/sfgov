@@ -12,24 +12,14 @@ dependencies:
     - field.field.paragraph.document.field_topic
     - paragraphs.paragraphs_type.document
   module:
-    - datetime
     - entity_browser
 id: paragraph.document.default
 targetEntityType: paragraph
 bundle: document
 mode: default
 content:
-  field_department:
-    weight: 4
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_file:
-    weight: 1
+    weight: 0
     settings:
       entity_browser: file
       field_widget_display: rendered_entity
@@ -39,47 +29,17 @@ content:
       selection_mode: selection_append
       field_widget_display_settings:
         view_mode: default
+      field_widget_replace: false
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
-  field_file_description:
-    weight: 3
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_keywords:
-    weight: 6
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_published_date:
-    weight: 2
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_topic:
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  translation:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   created: true
+  field_department: true
+  field_file_description: true
+  field_keywords: true
+  field_published_date: true
+  field_topic: true
   status: true
+  translation: true
   uid: true
