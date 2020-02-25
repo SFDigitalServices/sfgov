@@ -51,7 +51,7 @@ TODO: update the following.
 
 setup.sh to generate a symbolic link between the pattern library _patterns folder and the src folder.
 
-## TODO: 
+## TODO:
 
   - Implement Javascript.
   - remove `src/fonts` and `dist/fonts` if they are going to be served via CDN or Google Fonts.
@@ -80,12 +80,12 @@ the `sfgovpl.libraries.yml` defines the library that references the css and js f
 
 ## TODO:
   - review and revise all of the above, because some of it will be irrelevant soon
-  
+
 ## What is relevant and remains true:
   - this theme uses sass
   - this theme uses the gulp task runner (v4) to compile sass to css
   - there is no gulp task to concat and minify js
-  
+
 ### Minimum node and npm versions
 ```
 node: 10.3.0
@@ -94,5 +94,5 @@ npm: 6.1.0
 ### Compile sass and watch for changes
 from this directory:
 ```
-$ gulp 
+$ gulp
 ```
