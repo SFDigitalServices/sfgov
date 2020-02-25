@@ -1,0 +1,34 @@
+uuid: 1c007bc3-7497-4a1d-b0bc-8896dd721b02
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_keywords
+    - paragraphs.paragraphs_type.document
+    - taxonomy.vocabulary.keywords
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.document.field_keywords
+field_name: field_keywords
+entity_type: paragraph
+bundle: document
+label: Keywords
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      keywords: keywords
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

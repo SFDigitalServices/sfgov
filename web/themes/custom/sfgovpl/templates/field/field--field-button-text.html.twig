@@ -1,0 +1,12 @@
+{%
+  set classes = [
+    'field',
+    'field--type-' ~ field_type|clean_class,
+    label_display == 'inline' ? 'field--inline',
+    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+  ]
+%}
+
+{% for item in items %}
+  <div{{ attributes.addClass(classes, 'field__item') }}><h2>{{ item.content }}</h2></div>
+{% endfor %}

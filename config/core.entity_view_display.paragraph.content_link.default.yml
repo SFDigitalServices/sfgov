@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.content_link.field_button_text
+    - field.field.paragraph.content_link.field_content_type
     - field.field.paragraph.content_link.field_link
     - paragraphs.paragraphs_type.content_link
   module:
@@ -15,7 +16,7 @@ mode: default
 content:
   field_button_text:
     weight: 0
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -23,7 +24,7 @@ content:
     region: content
   field_link:
     weight: 1
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -33,4 +34,5 @@ content:
     third_party_settings: {  }
     type: link
     region: content
-hidden: {  }
+hidden:
+  field_content_type: true

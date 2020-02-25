@@ -1,0 +1,33 @@
+uuid: 90c5883f-3c40-48a4-9f94-f038b471d802
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_department
+    - node.type.department
+    - paragraphs.paragraphs_type.document
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.document.field_department
+field_name: field_department
+entity_type: paragraph
+bundle: document
+label: Department
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

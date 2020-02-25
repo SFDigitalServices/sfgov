@@ -4,15 +4,30 @@ status: true
 dependencies:
   config:
     - entity_browser.browser.file
+    - field.field.paragraph.document.field_department
     - field.field.paragraph.document.field_file
+    - field.field.paragraph.document.field_file_description
+    - field.field.paragraph.document.field_keywords
+    - field.field.paragraph.document.field_published_date
+    - field.field.paragraph.document.field_topic
     - paragraphs.paragraphs_type.document
   module:
+    - datetime
     - entity_browser
 id: paragraph.document.default
 targetEntityType: paragraph
 bundle: document
 mode: default
 content:
+  field_department:
+    weight: 4
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_file:
     weight: 1
     settings:
@@ -26,6 +41,38 @@ content:
         view_mode: default
     third_party_settings: {  }
     type: entity_browser_entity_reference
+    region: content
+  field_file_description:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_keywords:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_published_date:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_topic:
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   translation:
     weight: 0

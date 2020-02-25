@@ -1,16 +1,11 @@
 {% embed 'node--full.html.twig' %}
-  {% set label = "Part of " ~ topics %}
   
   {% block header %}
     {% for item in content.field_tags %}
       {{ item.get('value').getValue() }}
     {% endfor %}
         
-    {% for key, item in content.field_topics if key|first != '#' %}
-      {% if content.field_topics[key] %}
-        <div> {{ content.field_topics[key] }} </div>
-      {% endif %}
-    {% endfor %}
+    {% set label = 'Part of Budget' %}
     
     {{ title_prefix }}
     {% include '@theme/hero-banner-color.twig' with {
@@ -25,6 +20,7 @@
 
   {% block content %}
     <div class="{{ bundle }}--content">
+      <h2>Documents</h2>
       {{ content|without(
         'field_abstract',
         'field_date',
@@ -34,9 +30,6 @@
       ) }}
     </div>
 
-    <div class="{{ bundle }}--ankle">
-      {{ content.field_dept }}
-    </div>
   {% endblock content %}
   
 {% endembed %}

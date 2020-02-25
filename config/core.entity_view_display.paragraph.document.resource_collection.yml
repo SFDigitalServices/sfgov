@@ -1,8 +1,9 @@
-uuid: 460fb74a-78da-4ce8-96c2-68c637fba478
+uuid: 5377cdca-c806-4363-825d-5e577a4822fa
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.resource_collection
     - field.field.paragraph.document.field_department
     - field.field.paragraph.document.field_file
     - field.field.paragraph.document.field_file_description
@@ -12,19 +13,11 @@ dependencies:
     - paragraphs.paragraphs_type.document
   module:
     - datetime
-id: paragraph.document.default
+id: paragraph.document.resource_collection
 targetEntityType: paragraph
 bundle: document
-mode: default
+mode: resource_collection
 content:
-  field_department:
-    weight: 3
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_file:
     weight: 0
     label: hidden
@@ -35,36 +28,30 @@ content:
     type: entity_reference_entity_view
     region: content
   field_file_description:
-    weight: 2
-    label: above
+    type: string
+    weight: 1
+    region: content
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
-    region: content
-  field_keywords:
-    weight: 5
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_published_date:
-    weight: 1
-    label: above
+    type: datetime_default
+    weight: 2
+    region: content
+    label: hidden
     settings:
       format_type: medium
       timezone_override: ''
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_topic:
-    weight: 4
-    label: above
+    type: entity_reference_label
+    weight: 3
+    region: content
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-hidden: {  }
+hidden:
+  field_department: true
+  field_keywords: true
