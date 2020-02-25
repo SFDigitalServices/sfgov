@@ -49,7 +49,9 @@
   (parent.bundle == 'landing') ? 'sfgov-container--full',
   "parent--bundle--" ~ parent.bundle,
   (paragraph.field_title.getString == 'Services') ? 'sfgov-services',
-  'paragraph-child--' ~ child
+  (paragraph.field_title.getString == 'Events') ? 'sfgov-events',
+  'paragraph-child--' ~ child,
+  not paragraph.field_title.isEmpty ? 'paragraph--title--' ~ paragraph.field_title.getString|clean_class,
 ] %}
 
 {% block paragraph %}

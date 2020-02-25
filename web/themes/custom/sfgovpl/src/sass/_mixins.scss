@@ -122,7 +122,8 @@
   width: 100%;
 
   @include media($wide-screen) {
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -295,14 +296,19 @@
 }
 
 @mixin sidebar($child-element) {
-  border-radius: 8px 0 0 8px;
-  margin-left: 20px;
-  padding: 30px;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 40px 0 20px;
+
+  @include media($medium-screen) {
+    margin: 0;
+    padding: 40px;
+  }
 
   @include media($narrow-screen) {
     margin-left: 0;
     position: absolute;
-    right: 0;
+    right: 40px;
     width: 33%;
   }
 
