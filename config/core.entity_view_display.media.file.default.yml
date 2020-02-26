@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.media.file.field_department
     - field.field.media.file.field_description
+    - field.field.media.file.field_document_url
     - field.field.media.file.field_keywords
     - field.field.media.file.field_media_file
     - field.field.media.file.field_published_date
@@ -12,6 +13,7 @@ dependencies:
     - media.type.file
   module:
     - file
+    - link
 _core:
   default_config_hash: 9s0lWIanCnW5Xrrkmedxohs9F0yk4LO8ZcmVQ9xyuu4
 id: media.file.default
@@ -19,6 +21,18 @@ targetEntityType: media
 bundle: file
 mode: default
 content:
+  field_document_url:
+    weight: 4
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
   field_keywords:
     weight: 3
     label: above

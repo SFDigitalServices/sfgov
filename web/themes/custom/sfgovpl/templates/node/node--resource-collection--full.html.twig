@@ -1,18 +1,19 @@
 {% embed 'node--full.html.twig' %}
-  
   {% block header %}
+    {% set part_of = field_topics.entity.value %}
+  
     {% for item in content.field_tags %}
       {{ item.get('value').getValue() }}
     {% endfor %}
         
-    {% set label = 'Part of Budget' %}
+    
     
     {{ title_prefix }}
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
         'title': node.label,
         'text': node.field_description.value,
-        'label': label
+        'label': 'Part of Budget'
       }
     } %}
     {{ title_suffix }}
@@ -26,7 +27,9 @@
         'field_date',
         'field_dept',
         'field_image',
-        'field_news_type'
+        'field_news_type',
+        'field_topics',
+        'field_description'
       ) }}
     </div>
 
