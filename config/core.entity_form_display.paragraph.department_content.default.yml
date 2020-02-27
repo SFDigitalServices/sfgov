@@ -1,0 +1,108 @@
+uuid: c8596f29-482f-45b5-8cf4-af8586f7a89a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.department_content.field_department
+    - field.field.paragraph.department_content.field_document
+    - field.field.paragraph.department_content.field_event
+    - field.field.paragraph.department_content.field_link_column_1
+    - field.field.paragraph.department_content.field_link_column_2
+    - field.field.paragraph.department_content.field_meeting
+    - field.field.paragraph.department_content.field_news_content
+    - paragraphs.paragraphs_type.department_content
+  module:
+    - entity_reference_revisions
+    - field_group
+    - link
+    - paragraphs
+third_party_settings:
+  field_group:
+    group_links:
+      children:
+        - field_link_column_1
+        - field_link_column_2
+      parent_name: ''
+      weight: 6
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        formatter: closed
+        required_fields: true
+        description: ''
+        open: false
+      label: 'Link Overrides'
+id: paragraph.department_content.default
+targetEntityType: paragraph
+bundle: department_content
+mode: default
+content:
+  field_department:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_autocomplete
+    region: content
+  field_document:
+    type: entity_reference_paragraphs
+    weight: 4
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
+  field_event:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_link_column_1:
+    weight: 21
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_link_column_2:
+    weight: 22
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_meeting:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_autocomplete
+    region: content
+  field_news_content:
+    weight: 3
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true
