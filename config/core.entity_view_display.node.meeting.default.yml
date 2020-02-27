@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.meeting.field_cost
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_description
+    - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_email
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_image
@@ -19,6 +20,7 @@ dependencies:
   module:
     - datetime
     - entity_reference_revisions
+    - link
     - text
     - user
 id: node.meeting.default
@@ -73,6 +75,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
+    region: content
+  field_direct_external_url:
+    weight: 113
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
     region: content
   field_email:
     weight: 106
