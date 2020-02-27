@@ -15,7 +15,7 @@
       var now = 0;
       $(window, context).once('scroll').on('scroll', function() {
         now = $(window, context).scrollTop();
-        if (then > 0 && now > then && now > 1000) {
+        if (now > then && now > 1000) {
           $('#back-to-top', context).addClass('show');
         }
         else {
