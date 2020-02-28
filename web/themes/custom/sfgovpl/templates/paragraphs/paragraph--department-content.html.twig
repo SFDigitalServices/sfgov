@@ -36,8 +36,7 @@
  * @see template_preprocess_paragraph()
  *
  * @ingroup themeable
- * {{ dump(paragraph.field_department.entity.title) }}
- */
+ */  
 #}
 {%
   set classes = [
@@ -47,6 +46,13 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
+
+{% if paragraph.field_meeting.0.entity %}
+  {% set node = paragraph.field_meeting.0.entity %}
+  {% set node_path = path('entity.node.canonical', {'node': node.id}) %}
+{% endif %}
+
+
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
@@ -55,23 +61,41 @@
       </div>
       <div class="column-1">
         <div class="document-file" data-contact="document">
-          <a href="#">Academy of Sciences: Budget proposal June 2020 to July 2021</a>
+        {% if paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value %}
+          <a href="{{ paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value }}">
+            {{ paragraph.field_document.entity.field_file.entity.label }}
+          </a>
+        {% elseif paragraph.field_document.entity.field_file.entity.field_document_url.value.0.uri %}
+          <a href="{{ paragraph.field_document.entity.field_file.entity.field_document_url.value.0.uri }}">
+            {{ paragraph.field_document.entity.field_file.entity.label }}
+          </a>
+        {% else %}
+          <span>No document available</span>
+        {% endif %}
         </div>
       </div>
       <div class="column-2">
-        {% if paragraph.field_meeting.entity.field_direct_external_url.uri %}
+        {% if node.field_direct_external_url.0.url %}
           <div class="meeting-item"  data-contact="calendar">
-            <a href=" {{ paragraph.field_meeting.entity.field_direct_external_url.uri }} ">
-            {{ paragraph.field_meeting.entity.title.value }}
+            <a href=" {{ node.field_direct_external_url.0.url }} ">
+              {{ paragraph.field_meeting.0.entity.title.value }}
             </a>
-            <div class="date">June 12, 2020 {{ paragraph.field_meeting.entity.field_start_date.0['#attributes']['datetime'] }} </div>
+            {% if node.field_start_date.value %}
+              <div class="date"> {{ node.field_start_date.value|date("F j, Y") }} </div>
+            {% else %}
+              <div class="date">Upcoming</div>
+            {% endif %}
           </div>
         {% else %}
           <div class="meeting-item"  data-contact="calendar">
-            <a href="#">
-              {{ paragraph.field_meeting.entity.title.value }}
+            <a href=" {{ node_path }} ">
+              {{ paragraph.field_meeting.0.entity.title.value }}
             </a>
-            <div class="date">June 12, 2020 {{ paragraph.field_meeting.entity.field_start_date.0['#attributes']['datetime'] }} </div>
+            {% if node.field_start_date.value %}
+              <div class="date"> {{ node.field_start_date.value|date("F j, Y") }} </div>
+            {% else %}
+              <div class="date">Upcoming</div>
+            {% endif %}
           </div>
         {% endif %}
       </div>
