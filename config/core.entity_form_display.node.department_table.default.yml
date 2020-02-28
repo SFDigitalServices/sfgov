@@ -8,11 +8,15 @@ dependencies:
     - field.field.node.department_table.field_column_two
     - field.field.node.department_table.field_column_two_type
     - field.field.node.department_table.field_department_item
+    - field.field.node.department_table.field_description
+    - field.field.node.department_table.field_topics
     - node.type.department_table
+    - workflows.workflow.editorial
   module:
     - content_moderation
     - paragraphs
     - path
+    - text
 id: node.department_table.default
 targetEntityType: node
 bundle: department_table
@@ -20,25 +24,11 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 2
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   field_column_one:
-    weight: 10
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_column_one_type:
-    weight: 11
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
-  field_column_two:
     weight: 12
     settings:
       size: 60
@@ -46,15 +36,29 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_column_two_type:
+  field_column_one_type:
     weight: 13
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_column_two:
+    weight: 14
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_column_two_type:
+    weight: 15
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_department_item:
     type: entity_reference_paragraphs
-    weight: 14
+    weight: 16
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -64,22 +68,39 @@ content:
       default_paragraph_type: ''
     third_party_settings: {  }
     region: content
+  field_description:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_topics:
+    weight: 11
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   langcode:
     type: language_select
-    weight: 15
+    weight: 17
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 8
+    weight: 9
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -87,21 +108,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 5
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 10
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 5
+    weight: 6
     region: content
     third_party_settings: {  }
   title:
@@ -113,13 +134,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 1
+    weight: 2
     settings:
       match_operator: CONTAINS
       size: 60
@@ -127,7 +148,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }

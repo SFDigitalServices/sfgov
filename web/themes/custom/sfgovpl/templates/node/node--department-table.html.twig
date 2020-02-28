@@ -1,0 +1,29 @@
+{% embed 'node--full.html.twig' %}
+  {% block header %}
+    {% set part_of = field_topics.entity.value %}
+  
+    {% for item in content.field_tags %}
+      {{ item.get('value').getValue() }}
+    {% endfor %}
+        
+    
+    
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-color.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value,
+        'label': 'Part of Budget'
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+  {% block content %}
+    <div class="{{ bundle }}--content">
+      {{ drupal_view('department_table', 'block_1')|render }}
+    </div>
+
+  {% endblock content %}
+  
+{% endembed %}
