@@ -1,10 +1,9 @@
 /**
  * Back to top button. Functionality:
- * - Appear only if the user starts to scroll down
- * - Remain sticky at the bottom right if the user continues to scroll down
- * - Appear only after 1000px
- * - Disappear if the user starts to scroll up
- * - Disappear once the page hits the height of 1000px
+ * - Appear only if the user starts to scroll up
+ * - Remain sticky at the bottom right if the user continues to scroll up
+ * - Appear only after 700px
+ * - Disappear if the user starts to scroll down
  */
 (function ($, Drupal) {
   Drupal.behaviors.backToTop = {
@@ -21,7 +20,7 @@
         var now = 0;
         $(window, context).once('scroll').on('scroll', function() {
           now = $(window, context).scrollTop();
-          if (now > then && now > 1000) {
+          if (then > now && now > 700) {
             $('#back-to-top').addClass('show');
           }
           else {
