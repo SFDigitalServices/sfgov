@@ -1,9 +1,9 @@
 {% embed 'node--full.html.twig' %}
-
+  
+  {% block header %}
     {% if content.field_topics['#items'] %}
       {% set topics = 'Part of ' %}
     {% endif %}
-    {% set topics = 'Part of ' %}
     {% for key, item in content.field_topics['#items'] %}
       {% set url = path('entity.node.canonical', {'node': item.entity.id}) %}
       {% if key > 0 %}
@@ -12,8 +12,6 @@
         {% set topics = topics ~ '<a href="' ~ url ~ '">' ~ item.entity.title.value ~ '</a>' %}
       {% endif %}
     {% endfor %}
-  
-  {% block header %}
     {% set part_of = field_topics.entity.value %}
   
     {% for item in content.field_tags %}
