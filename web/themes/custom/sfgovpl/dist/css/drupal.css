@@ -1977,10 +1977,6 @@ details[open] .details__content {
   display: none;
 }
 
-.path-search header[role="banner"] .head-right--container {
-  margin-top: 9px;
-}
-
 .sfgov-mobile_nav-active header[role="banner"] nav[role="navigation"] {
   display: block;
   position: absolute;
@@ -2085,7 +2081,7 @@ header[role="banner"] .sfgov-logo__container {
 
 header[role="banner"] .head-right--container {
   float: right;
-  margin-top: 10px;
+  margin-top: 3px;
   text-align: right;
   width: 54%;
 }
@@ -2109,6 +2105,7 @@ header[role="banner"] .head-right--container .sfgov-menu-btn {
 @media screen and (min-width: 768px) {
   header[role="banner"] .head-right--container {
     width: 70%;
+    margin-top: 10px;
   }
 }
 
@@ -2839,6 +2836,53 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .sfgov-spotlight .sfgov-spotlight-description {
     padding: 0;
   }
+}
+
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 180px;
+  height: 48px;
+  padding: 7px 17px;
+  background: #4f66ee;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 34px;
+  color: #fff;
+  cursor: pointer;
+  -webkit-transition: opacity .5s, visibility .5s;
+  transition: opacity .5s, visibility .5s;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
+}
+
+.back-to-top:hover {
+  color: #fff;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media screen and (min-width: 768px) {
+  .back-to-top.show {
+    display: none;
+  }
+}
+
+.back-to-top span {
+  background: url(/themes/custom/sfgovpl/src/img/icons/chevron-up-white.svg) no-repeat 50% 50%;
+  width: 15px;
+  height: 10px;
+  content: '';
+  display: inline-block;
+  margin-left: 20px;
+  position: relative;
+  top: -3px;
 }
 
 .sfgov-featured-items {
@@ -5421,6 +5465,19 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 1px;
+}
+
+.sfgov-event-card .event-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.sfgov-event-card .event-image img {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
 }
 
 .event--teaser {
