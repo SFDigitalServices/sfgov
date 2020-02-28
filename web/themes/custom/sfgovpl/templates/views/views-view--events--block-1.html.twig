@@ -1,16 +1,10 @@
-{% extends 'views-view--events--page-1.html.twig' %}
-
-{% block header %}
-{% endblock header %}
-
-{% block events_nav %}
-{% endblock events_nav %}
-
-{% block content %}
-  {% block rows %}
-    {{ rows }}
-  {% endblock rows %}
-{% endblock content %}
-
-{% block more %}
-{% endblock more %}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'view-events-block-container'
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ rows }}
+  {{ more }}
+</div>
