@@ -7,6 +7,7 @@ dependencies:
     - paragraphs.paragraphs_type.block
     - paragraphs.paragraphs_type.button
     - paragraphs.paragraphs_type.campaign
+    - paragraphs.paragraphs_type.document
     - paragraphs.paragraphs_type.events
     - paragraphs.paragraphs_type.list
     - paragraphs.paragraphs_type.news
@@ -14,9 +15,14 @@ dependencies:
     - paragraphs.paragraphs_type.phone
     - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.text
+    - paragraphs.paragraphs_type.timeline
     - paragraphs.paragraphs_type.top_search_suggestion
   module:
     - entity_reference_revisions
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
 id: paragraph.section.field_content
 field_name: field_content
 entity_type: paragraph
@@ -33,13 +39,15 @@ settings:
     negate: 0
     target_bundles:
       people: people
-      top_search_suggestion: top_search_suggestion
       block: block
+      top_search_suggestion: top_search_suggestion
       button: button
+      document: document
       campaign: campaign
-      list: list
       events: events
+      list: list
       phone: phone
+      timeline: timeline
       text: text
       news: news
     target_bundles_drag_drop:
@@ -52,10 +60,10 @@ settings:
       people:
         enabled: true
         weight: 21
-      top_search_suggestion:
+      block:
         enabled: true
         weight: 22
-      block:
+      top_search_suggestion:
         enabled: true
         weight: 22
       button:
@@ -71,8 +79,8 @@ settings:
         weight: 26
         enabled: false
       document:
+        enabled: true
         weight: 27
-        enabled: false
       email:
         weight: 28
         enabled: false
@@ -85,10 +93,10 @@ settings:
       in_person_location:
         weight: 31
         enabled: false
-      list:
+      events:
         enabled: true
         weight: 32
-      events:
+      list:
         enabled: true
         weight: 32
       list_item:
@@ -106,6 +114,9 @@ settings:
       special_case:
         weight: 36
         enabled: false
+      timeline:
+        enabled: true
+        weight: 37
       step:
         weight: 37
         enabled: false
@@ -124,16 +135,31 @@ settings:
       link:
         weight: 44
         enabled: false
+      content_link:
+        weight: 44
+        enabled: false
       news:
         enabled: true
         weight: 49
+      email_addresses:
+        weight: 49
+        enabled: false
       resources:
         weight: 50
+        enabled: false
+      form:
+        weight: 52
         enabled: false
       social_media:
         weight: 52
         enabled: false
       spotlight:
         weight: 54
+        enabled: false
+      phone_numbers:
+        weight: 62
+        enabled: false
+      process_step:
+        weight: 63
         enabled: false
 field_type: entity_reference_revisions

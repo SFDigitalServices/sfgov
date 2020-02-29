@@ -1,0 +1,45 @@
+uuid: bda6330c-eafa-4ac2-aab9-3e519156eb42
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.content_link.field_button_text
+    - field.field.paragraph.content_link.field_content_type
+    - field.field.paragraph.content_link.field_link
+    - paragraphs.paragraphs_type.content_link
+  module:
+    - link
+    - options
+id: paragraph.content_link.default
+targetEntityType: paragraph
+bundle: content_link
+mode: default
+content:
+  field_button_text:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_content_type:
+    type: list_default
+    weight: 2
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_link:
+    weight: 1
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden: {  }

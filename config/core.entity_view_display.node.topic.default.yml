@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.topic.field_content
     - field.field.node.topic.field_department_services
     - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
@@ -22,6 +23,15 @@ targetEntityType: node
 bundle: topic
 mode: default
 content:
+  field_content:
+    weight: 4
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
   field_department_services:
     weight: 3
     label: above
@@ -60,14 +70,14 @@ content:
     type: smart_trim
     region: content
   field_page_design:
-    weight: 7
+    weight: 8
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: list_key
     region: content
   field_resources:
-    weight: 4
+    weight: 5
     label: above
     settings:
       view_mode: default
@@ -85,7 +95,7 @@ content:
     type: entity_reference_revisions_entity_view
     region: content
   field_top_level_topic:
-    weight: 5
+    weight: 6
     label: above
     settings:
       format: default
@@ -95,7 +105,7 @@ content:
     type: boolean
     region: content
   field_topics:
-    weight: 6
+    weight: 7
     label: hidden
     settings:
       view_mode: card

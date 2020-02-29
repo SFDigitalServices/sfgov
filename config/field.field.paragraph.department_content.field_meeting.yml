@@ -1,0 +1,33 @@
+uuid: e8e86a8b-f3a1-4adf-9b7b-e40c6680adf9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_meeting
+    - node.type.meeting
+    - paragraphs.paragraphs_type.department_content
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.department_content.field_meeting
+field_name: field_meeting
+entity_type: paragraph
+bundle: department_content
+label: Meeting
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      meeting: meeting
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,50 @@
+{% embed 'node--full.html.twig' %}
+  
+  {% block header %}
+    {% if content.field_topics['#items'] %}
+      {% set topics = 'Part of ' %}
+    {% endif %}
+    {% for key, item in content.field_topics['#items'] %}
+      {% set url = path('entity.node.canonical', {'node': item.entity.id}) %}
+      {% if key > 0 %}
+        {% set topics = topics ~ ', <a href="' ~ url ~ '">' ~ item.entity.title.value ~ '</a>' %}
+      {% else %}
+        {% set topics = topics ~ '<a href="' ~ url ~ '">' ~ item.entity.title.value ~ '</a>' %}
+      {% endif %}
+    {% endfor %}
+    {% set part_of = field_topics.entity.value %}
+  
+    {% for item in content.field_tags %}
+      {{ item.get('value').getValue() }}
+    {% endfor %}
+        
+    
+    
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-color.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value,
+        'label': topics|raw
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
+  {% block content %}
+    <div class="{{ bundle }}--content">
+      <h2>Documents</h2>
+      {{ content|without(
+        'field_abstract',
+        'field_date',
+        'field_dept',
+        'field_image',
+        'field_news_type',
+        'field_topics',
+        'field_description'
+      ) }}
+    </div>
+
+  {% endblock content %}
+  
+{% endembed %}
