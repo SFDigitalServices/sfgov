@@ -48,28 +48,29 @@
 %}
 
 {% set counter = 0 %}
-{% for key, item in content.field_headings if key|first != '#' %}
+{% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
   {% set counter = counter + 1 %}
 {% endfor %}
 
 {% spaceless %}
 {% block paragraph %}
 <div class="paragraph-timeline">
+    
   {% if content.field_timeline_title[0] %}
     <h3>{{ content.field_timeline_title }}</h3>
   {% endif %}
   <div class="timeline-container items-{{ counter }}">
-  {% if content.field_headings[0] %}
-    {% for key, item in content.field_headings if key|first != '#' %}
+  {% if content.field_timeline_item['#items'] %}
+    {% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
       <div class="timeline-item">
-      {% if content.field_headings[key] %}
-        <div class="heading">{{ content.field_headings[key] }}</div>
+      {% if item.entity.field_headings.0.value %}
+        <div class="heading">{{ item.entity.field_headings.0.value }}</div>
       {% else %}
         <div class="heading">&nbsp;</div>
       {% endif %}
       <div class="separator"><span class="circle-dot"></span><span class="hline">&nbsp;</span></div>
-      {% if content.field_descriptions[key] %}
-        <div class="description">{{ content.field_descriptions[key] }}</div>
+      {% if item.entity.field_descriptions.0.value %}
+        <div class="description">{{ item.entity.field_descriptions.0.value }}</div>
       {% else %}
         <div class="description">&nbsp;</div>
       {% endif %}

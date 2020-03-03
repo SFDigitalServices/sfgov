@@ -3,34 +3,18 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.timeline.field_descriptions
-    - field.field.paragraph.timeline.field_headings
     - field.field.paragraph.timeline.field_link
+    - field.field.paragraph.timeline.field_timeline_item
     - field.field.paragraph.timeline.field_timeline_title
     - paragraphs.paragraphs_type.timeline
   module:
     - link
+    - paragraphs
 id: paragraph.timeline.default
 targetEntityType: paragraph
 bundle: timeline
 mode: default
 content:
-  field_descriptions:
-    weight: 2
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_headings:
-    weight: 1
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_link:
     weight: 3
     settings:
@@ -38,6 +22,18 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
+    region: content
+  field_timeline_item:
+    type: entity_reference_paragraphs
+    weight: 4
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
     region: content
   field_timeline_title:
     weight: 0
