@@ -1,0 +1,111 @@
+uuid: df8313b7-c30c-417e-a278-a158acf45e8b
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.image
+    - field.field.paragraph.campaign_spotlight.field_background_color
+    - field.field.paragraph.campaign_spotlight.field_description
+    - field.field.paragraph.campaign_spotlight.field_is_reversed
+    - field.field.paragraph.campaign_spotlight.field_spotlight_button
+    - field.field.paragraph.campaign_spotlight.field_spotlight_img
+    - field.field.paragraph.campaign_spotlight.field_title
+    - paragraphs.paragraphs_type.campaign_spotlight
+  module:
+    - allowed_formats
+    - color_field
+    - entity_browser
+    - field_group
+    - maxlength
+    - paragraphs
+    - text
+third_party_settings:
+  field_group:
+    group_settings:
+      children:
+        - field_background_color
+        - field_is_reversed
+      parent_name: ''
+      weight: 4
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        open: false
+        required_fields: true
+      label: Settings
+id: paragraph.campaign_spotlight.default
+targetEntityType: paragraph
+bundle: campaign_spotlight
+mode: default
+content:
+  field_background_color:
+    weight: 5
+    settings:
+      default_colors: '#212123,#F4C435,#A9D6EA,#BC4427'
+    third_party_settings: {  }
+    type: color_field_widget_box
+    region: content
+  field_description:
+    weight: 1
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+      maxlength:
+        maxlength_js: 500
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
+    type: text_textarea
+    region: content
+  field_is_reversed:
+    weight: 6
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_spotlight_button:
+    weight: 3
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    type: entity_reference_paragraphs
+    region: content
+  field_spotlight_img:
+    weight: 2
+    settings:
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+      open: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
