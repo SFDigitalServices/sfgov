@@ -1,0 +1,26 @@
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    paragraph.field_is_reversed.value == '1' ? 'is-reversed'
+  ]
+%}
+
+{% set backgroundColor = paragraph.field_background_color.value[0].color %}
+{% set attributes = attributes.setAttribute('style', 'background-color: ' ~ backgroundColor) %}
+
+
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    <div class="container">
+      <div class="group-left">
+        {{ content.field_spotlight_img }}
+      </div>
+      <div class="group-right">
+        {{ content | without('field_spotlight_img') }}
+      </div>
+    </div>
+  </div>
+{% endblock paragraph %}
