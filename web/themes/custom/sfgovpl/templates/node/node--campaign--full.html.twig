@@ -83,17 +83,7 @@
 <article{{ attributes.addClass(classes) }}>
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
-      {% if content.field_spotlight %}
-        <div class="paragraph-child--campaign">
-          {{ content.field_spotlight }}
-        </div>
-      {% endif %}
-
-
-      {{ content|without(
-        'field_spotlight',
-        'links'
-      ) }}
+      {{ content | without('links') }}
     </div>
   {% endblock content %}
 

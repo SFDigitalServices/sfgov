@@ -1,0 +1,30 @@
+// TODO: use mixins for layout with 2-3 columns
+$mq-narrow: 48.063rem;
+$rhythm: 0.5882rem;
+
+.paragraph--type--campaign-resource-section {
+  margin-bottom: 5rem;
+  .__title {
+    @include fs-big-description;
+  }
+  .__content.field__items {
+    flex-direction: column;
+    display: flex;
+    flex-wrap: wrap;
+    @media screen and (min-width: $mq-narrow) {
+      flex-direction: row;
+    }
+    .field__item {
+      width: calc(100% / 3);
+      margin-bottom: $rhythm * 2;
+      @media screen and (min-width: $mq-narrow) {
+        display: flex;
+        align-items: stretch;
+        > * {
+          margin-right: $rhythm * 2;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
