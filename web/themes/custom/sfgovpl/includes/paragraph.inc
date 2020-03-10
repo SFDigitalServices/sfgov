@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\node\NodeInterface;
 /**
  * Implements template_preprocess_paragraph().
  *
@@ -17,7 +18,7 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
         if (substr($formBuilderUrl, -1) == "/") {
             $formBuilderUrl = substr_replace($formBuilderUrl, "", -1);
         }
-        
+
         $variables['settings'] = array(
             'formbuilder_include_url' => $formBuilderUrl,
         );
@@ -36,4 +37,24 @@ function sfgovpl_preprocess_paragraph(&$variables) {
             $variables['txId'] = $txId;
         }
     }
+
+  // Inject campaign theme into paragraph campaign_spotlight and campaign_resources
+  $node = $paragraph->getParentEntity();
+  if (isset($node)
+    && $node instanceof NodeInterface
+    && $node->bundle() == 'campaign') {
+    $theme = $node->get('field_campaign_theme')->entity;
+
+    if ($paragraph_type == 'campaign_spotlight') {
+      $background_color = $theme->get('field_primary_color')->getValue();
+      $background_color_value = $background_color[0]['color'];
+    } elseif ($paragraph_type == 'campaign_resources') {
+      $background_color = $theme->get('field_background_color')->getValue();
+      $background_color_value = $background_color[0]['color'];
+    }
+
+    if (isset($background_color_value)) {
+      $variables['attributes']['style'] = "background-color: {$background_color_value}";
+    }
+  }
 }
