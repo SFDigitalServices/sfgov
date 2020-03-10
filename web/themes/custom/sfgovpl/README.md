@@ -16,7 +16,7 @@ in that folder you'll be able to place your twig template files that are going t
 
 ## Requirements:
 
-TODO: check versions of the following items:
+TODO: check versions of the following items
 
 - php-cli
 - composer
