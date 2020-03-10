@@ -3,9 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_content
-    - field.field.node.campaign.field_header
+    - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_logo
+    - field.field.node.campaign.field_spotlight
+    - field.field.node.campaign.field_top_facts
     - node.type.campaign
   module:
     - entity_reference_revisions
@@ -16,7 +19,7 @@ bundle: campaign
 mode: default
 content:
   field_content:
-    weight: 1
+    weight: 3
     label: hidden
     settings:
       view_mode: default
@@ -24,7 +27,7 @@ content:
     third_party_settings: {  }
     type: entity_reference_revisions_entity_view
     region: content
-  field_header:
+  field_header_spotlight:
     type: entity_reference_revisions_entity_view
     weight: 0
     label: hidden
@@ -33,11 +36,30 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
-  links:
+  field_spotlight:
     weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_top_facts:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_campaign_theme: true
   field_logo: true
   langcode: true

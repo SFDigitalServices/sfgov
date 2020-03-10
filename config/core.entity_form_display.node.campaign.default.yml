@@ -3,9 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_content
-    - field.field.node.campaign.field_header
+    - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_logo
+    - field.field.node.campaign.field_spotlight
+    - field.field.node.campaign.field_top_facts
     - image.style.thumbnail
     - node.type.campaign
   module:
@@ -20,12 +23,18 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 6
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_campaign_theme:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   field_content:
-    weight: 4
+    weight: 7
     settings:
       title: Content
       title_plural: Content
@@ -43,15 +52,15 @@ content:
     third_party_settings: {  }
     type: paragraphs
     region: content
-  field_header:
+  field_header_spotlight:
     type: paragraphs
-    weight: 3
+    weight: 4
     settings:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: closed
       closed_mode: summary
-      autocollapse: all
+      autocollapse: none
       closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
@@ -70,6 +79,44 @@ content:
     third_party_settings: {  }
     type: image_image
     region: content
+  field_spotlight:
+    weight: 6
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: campaign_spotlight
+      features:
+        duplicate: '0'
+        collapse_edit_all: '0'
+        add_above: '0'
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
+  field_top_facts:
+    type: paragraphs
+    weight: 5
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: facts
+      features:
+        duplicate: '0'
+        collapse_edit_all: '0'
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
   langcode:
     type: language_select
     weight: 1
@@ -79,13 +126,13 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 11
+    weight: 14
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 9
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -93,21 +140,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 10
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 15
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 11
     region: content
     third_party_settings: {  }
   title:
@@ -120,7 +167,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 8
     settings:
       match_operator: CONTAINS
       size: 60
@@ -128,7 +175,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 10
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
