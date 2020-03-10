@@ -83,7 +83,15 @@
 <article{{ attributes.addClass(classes) }}>
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
-      {{ content | without('links') }}
+      {{ content | without('links', 'field_campaign_about') }}
+
+      {% if content.field_campaign_about %}
+        <div class="__campaign-about-wrapper sfgov-full-bleed">
+          <div class="sfgov-section-container">
+            {{ content.field_campaign_about }}
+          </div>
+        </div>
+      {% endif %}
     </div>
   {% endblock content %}
 
