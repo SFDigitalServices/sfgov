@@ -1,0 +1,40 @@
+{%
+  set classes = [
+    'field',
+    'field--type-' ~ field_type|clean_class,
+    label_display == 'inline' ? 'field--inline',
+    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+  ]
+%}
+{%
+  set title_classes = [
+    'field__label',
+    label_display == 'visually_hidden' ? 'visually-hidden',
+  ]
+%}
+{% if label_hidden %}
+  {% if multiple %}
+    <div{{ attributes.addClass(classes, 'field__items') }}>
+      {% for item in items %}
+        <div{{ item.attributes.addClass('field__item') }}><h2>{{ item.content }}</h2></div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% for item in items %}
+      <div{{ attributes.addClass(classes, 'field__item') }}><h2>{{ item.content }}</h2></div>
+    {% endfor %}
+  {% endif %}
+{% else %}
+  <div{{ attributes.addClass(classes) }}>
+    <h4{{ title_attributes.addClass(title_classes) }}>{{ label }}</h4>
+    {% if multiple %}
+      <div class="field__items">
+    {% endif %}
+    {% for item in items %}
+      <div{{ item.attributes.addClass('field__item') }}><h2>{{ item.content }}</h2></div>
+    {% endfor %}
+    {% if multiple %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
