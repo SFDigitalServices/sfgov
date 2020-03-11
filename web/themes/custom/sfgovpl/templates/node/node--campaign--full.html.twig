@@ -81,6 +81,16 @@
 ] %}
 
 <article{{ attributes.addClass(classes) }}>
+  {% block header %}
+    {{ title_prefix }}
+    {% include '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': node.label
+      }
+    } %}
+    {{ title_suffix }}
+  {% endblock header %}
+
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
       {{ content | without('links', 'field_campaign_about') }}
