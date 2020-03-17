@@ -27,23 +27,23 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 }
 
 function sfgovpl_preprocess_paragraph(&$variables) {
-    $paragraph = $variables['paragraph'];
-    $paragraph_type = $paragraph->getType();
-    if($paragraph_type == 'process_step') {
-        $variables['sbsId'] = $paragraph->getParentEntity()->id();
-        $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
-        if(count($referencedEntities) > 0) {
-            $txId = $referencedEntities[0]->id();
-            $variables['txId'] = $txId;
-        }
-    }
+  $paragraph = $variables['paragraph'];
+  $paragraph_type = $paragraph->getType();
+  if($paragraph_type == 'process_step') {
+      $variables['sbsId'] = $paragraph->getParentEntity()->id();
+      $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
+      if(count($referencedEntities) > 0) {
+          $txId = $referencedEntities[0]->id();
+          $variables['txId'] = $txId;
+      }
+  }
 
   // Inject campaign theme into paragraph campaign_spotlight and campaign_resources
-  $node = $paragraph->getParentEntity();
-  if (isset($node)
-    && $node instanceof NodeInterface
-    && $node->bundle() == 'campaign') {
-    $theme = $node->get('field_campaign_theme')->entity;
+  $parent = $paragraph->getParentEntity();
+  if (isset($parent)
+    && $parent instanceof NodeInterface
+    && $parent->bundle() == 'campaign') {
+    $theme = $parent->get('field_campaign_theme')->entity;
 
     if ($paragraph_type == 'campaign_spotlight') {
       $background_color = $theme->get('field_primary_color')->getValue();
@@ -55,6 +55,11 @@ function sfgovpl_preprocess_paragraph(&$variables) {
 
     if (isset($background_color_value)) {
       $variables['attributes']['style'] = "background-color: {$background_color_value}";
+    }
+
+    // TODO: detect parent paragraph, instead of parent node.
+    if($paragraph_type == 'link') {
+      $variables['content']['field_link']['#title'] = t('Parent Program');
     }
   }
 }
