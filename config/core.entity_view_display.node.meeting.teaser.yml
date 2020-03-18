@@ -1,0 +1,43 @@
+uuid: 16be873e-2c5e-4d77-8b9b-21f233cfd74b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.meeting.body
+    - node.type.meeting
+  module:
+    - text
+    - user
+id: node.meeting.teaser
+targetEntityType: node
+bundle: meeting
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_address: true
+  field_call_to_action: true
+  field_cost: true
+  field_dept: true
+  field_description: true
+  field_direct_external_url: true
+  field_email: true
+  field_end_date: true
+  field_image: true
+  field_phone_numbers: true
+  field_start_date: true
+  field_topics: true
+  langcode: true

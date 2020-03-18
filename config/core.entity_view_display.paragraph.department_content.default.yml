@@ -1,0 +1,87 @@
+uuid: 96f7ba55-6842-4a1f-8fa9-802c8c5d9d2e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.department_content.field_department
+    - field.field.paragraph.department_content.field_document
+    - field.field.paragraph.department_content.field_event
+    - field.field.paragraph.department_content.field_link_column_1
+    - field.field.paragraph.department_content.field_link_column_2
+    - field.field.paragraph.department_content.field_meeting
+    - field.field.paragraph.department_content.field_news_content
+    - paragraphs.paragraphs_type.department_content
+  module:
+    - entity_reference_revisions
+    - link
+id: paragraph.department_content.default
+targetEntityType: paragraph
+bundle: department_content
+mode: default
+content:
+  field_department:
+    weight: 10
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_document:
+    type: entity_reference_revisions_entity_view
+    weight: 9
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_event:
+    weight: 3
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_link_column_1:
+    weight: 7
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_link_column_2:
+    weight: 6
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_meeting:
+    weight: 8
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_news_content:
+    weight: 4
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }
