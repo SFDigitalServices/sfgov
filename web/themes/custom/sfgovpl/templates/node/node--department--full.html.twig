@@ -132,15 +132,17 @@
 
 {% set news_view = drupal_view('news', 'news_block_depts')|render  %}
 {%  if news_view|striptags|trim %}
-<div id="sfgov-dept-news" class="sfgov-full-bleed light-yellow">
-  <div class="sfgov-section-container">
-    {{ news_view }}
+  <a name="news"></a>
+  <div id="sfgov-dept-news" class="sfgov-full-bleed light-yellow">
+    <div class="sfgov-section-container">
+      {{ news_view }}
+    </div>
   </div>
-</div>
 {% endif %}
 
 {% set events_view = drupal_view('events', 'block_1')|render %}
 {% if events_view|striptags|trim %}
+  <a name="events"></a>
   <div id="sfgov-dept-events" class="sfgov-full-bleed white">
     <div class="sfgov-section-container">
       {{ events_view }}
