@@ -52,8 +52,7 @@ details {
       font-weight: 500;
       &:hover {
         cursor: pointer;
-      }
-  
+      }  
       &:after {
         @include background-image('plus-blue.svg');
         content: '';
@@ -61,6 +60,15 @@ details {
         top: 18px;
         width: 30px;
       }
+      .sfgov-container-item {
+        margin-bottom: 0;
+      }
+    }
+    summary::after {
+      top: 22px;
+    }
+    .sfgov-container-item {
+      margin-bottom: 40px;
     }
     .sfgov-service-card {
       padding: 0;
@@ -71,6 +79,11 @@ details {
       summary h5 {
         color: $c-white;
       }
+    }
+  }
+  @include media-max($mobile-screen) {
+    .sfgov-services .sfgov-services-section {
+      margin-bottom: 20px;
     }
   }
 }
