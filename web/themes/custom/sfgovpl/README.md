@@ -33,7 +33,7 @@ TODO: check versions of the following items
 
 ### Install nodejs packages.
 
-run `npm install` from the libraries/sfgov-pattern-lab folder
+run `npm install` from the libraries/sfgov-pattern-lab folder.
 
 run `npm install` from the root of the theme.
 
