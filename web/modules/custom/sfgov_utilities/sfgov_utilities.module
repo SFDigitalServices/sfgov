@@ -198,6 +198,15 @@ function sfgov_utilities_page_attachments(array &$page) {
         $view->setDisplay('topics_more_services');
         $view->execute();
         $view_result = $view->result;
+        $excluded_services = topic_page_services();
+        
+        // 
+        foreach ($view_result as $key => $value) {
+          if (in_array($value->nid, $excluded_services)) {
+            unset($view_result[$key]);
+          }
+        }
+        
         $num_more_services = count($view_result);
         
         if ($num_more_services >= 1) {
@@ -207,7 +216,7 @@ function sfgov_utilities_page_attachments(array &$page) {
         $total_services = $num_services + $num_more_services;
         
         // If enough items load accordion js
-        if($total_services >= 12 && $num_sections >= 2) {
+        if ($total_services >= 12 && $num_sections >= 2) {
           $page['#attached']['library'][] = 'sfgov_utilities/services';
         }
       }  
