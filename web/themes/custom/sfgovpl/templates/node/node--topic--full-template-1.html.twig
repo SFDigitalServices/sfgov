@@ -15,7 +15,9 @@
       <div class="sfgov-full-bleed light-blue card-container">
         <div class="sfgov-section-container">
           {{ services_field }}
-          {{ services_view }}
+          {% if services_view|render|striptags|trim %}
+            {{ services_view }}
+          {% endif %}
         </div>
       </div>
     {% endif %}
