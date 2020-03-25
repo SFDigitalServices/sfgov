@@ -46,7 +46,12 @@
 {% if paragraph.field_formio_sfds_version.value %}
   {% set formio_sfds_version = paragraph.field_formio_sfds_version.value %}
 {% endif %}
-<div id="formio" data-source="{{ paragraph.field_formio_data_source.value }}"></div>
+<div id="formio"
+  data-source="{{ paragraph.field_formio_data_source.value }}"
+  {% if paragraph.field_formio_render_options.value %}
+    data-options="{{ paragraph.field_formio_render_options.value|json_encode|escape }}"
+  {% endif %}
+></div>
 <script src="https://unpkg.com/formiojs@{{ formio_js_version }}/dist/formio.full.min.js"></script>
 <script src="https://unpkg.com/formio-sfds@{{ formio_sfds_version }}/dist/formio-sfds.standalone.js"></script>
 <script>
