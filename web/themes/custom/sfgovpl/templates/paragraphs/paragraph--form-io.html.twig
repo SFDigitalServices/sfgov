@@ -50,8 +50,19 @@
 <script src="https://unpkg.com/formiojs@{{ formio_js_version }}/dist/formio.full.min.js"></script>
 <script src="https://unpkg.com/formio-sfds@{{ formio_sfds_version }}/dist/formio-sfds.standalone.js"></script>
 <script>
-  window.addEventListener('load', () => {
-    const el = document.getElementById('formio')
-    Formio.createForm(el, el.getAttribute('data-source'))
+  window.addEventListener('load', function() {
+    var el = document.getElementById('formio')
+    var options = safeJSONParse(el.getAttribute('data-options'))
+    Formio.createForm(el, el.getAttribute('data-source'), options)
+    
+    function safeJSONParse(str) {
+      var parsed = {}
+      try {
+        parsed = JSON.parse(str)
+      } catch (error) {
+        console.warn('Unable to parse form options:', str)
+      }
+      return parsed
+    }
   })
 </script>
