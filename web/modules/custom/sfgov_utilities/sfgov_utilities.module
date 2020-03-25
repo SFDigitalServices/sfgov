@@ -188,7 +188,13 @@ function sfgov_utilities_page_attachments(array &$page) {
         foreach ($ids as $paragraph) {
           $sps = \Drupal\paragraphs\Entity\Paragraph::load($paragraph['target_id'] );
           $sids = $sps->get('field_dept_service_sect_services')->getValue();
-          $num_services += count($sids);
+          foreach ($sids as $snode) {
+            // Check if service nodes are published
+            $fsnode = \Drupal\node\Entity\Node::load($snode['target_id']);
+            if ($fsnode->isPublished()) {
+              $num_services += 1;
+            }
+          }
         }
         
         //Count number of more services
@@ -200,9 +206,10 @@ function sfgov_utilities_page_attachments(array &$page) {
         $view_result = $view->result;
         $excluded_services = topic_page_services();
         
-        // 
+        // Check More Services for unpublished items
         foreach ($view_result as $key => $value) {
-          if (in_array($value->nid, $excluded_services)) {
+          $node = \Drupal\node\Entity\Node::load($value->nid);
+          if (in_array($value->nid, $excluded_services) || !$node->isPublished()) {
             unset($view_result[$key]);
           }
         }
