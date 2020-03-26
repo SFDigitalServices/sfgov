@@ -59,6 +59,15 @@
     var el = document.getElementById('formio')
     var options = safeJSONParse(el.getAttribute('data-options'))
     Formio.createForm(el, el.getAttribute('data-source'), options)
+      .then(function(form) {
+      // What to do when the submit begins.
+      form.on('submitDone', function(submission) {
+        {% if paragraph.field_formio_confirmation_url.value %}
+          window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
+        {% endif %}
+      });
+    });
+
 
     function safeJSONParse(str) {
       var parsed = {}
