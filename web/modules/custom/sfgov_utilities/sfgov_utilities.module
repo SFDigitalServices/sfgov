@@ -209,8 +209,10 @@ function sfgov_utilities_page_attachments(array &$page) {
         // Check More Services for unpublished items
         foreach ($view_result as $key => $value) {
           $node = \Drupal\node\Entity\Node::load($value->nid);
-          if (in_array($value->nid, $excluded_services) || !$node->isPublished()) {
-            unset($view_result[$key]);
+          if (is_array($excluded_services)) {
+            if (in_array($value->nid, $excluded_services) || !$node->isPublished()) {
+              unset($view_result[$key]);
+            }
           }
         }
         
