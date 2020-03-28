@@ -16,7 +16,7 @@ in that folder you'll be able to place your twig template files that are going t
 
 ## Requirements:
 
-TODO: check versions of the following items:
+TODO: check versions of the following items
 
 - php-cli
 - composer
@@ -33,7 +33,7 @@ TODO: check versions of the following items:
 
 ### Install nodejs packages.
 
-run `npm install` from the libraries/sfgov-pattern-lab folder.
+run `npm install` from the libraries/sfgov-pattern-lab folder
 
 run `npm install` from the root of the theme.
 

@@ -70,30 +70,55 @@
     }
   }
   .view-topic-parents-block {
+    display: inline-block;
+    width: 100%;
     padding: 0;
     .title {
       @include fs-body-long;
       color: $c-black;
+      float: left;
+      line-height: 25px;
       opacity: 0.65;
       display: inline-block;
-      margin-right: 5px;
+      margin-right: 10px;
     }
     ul {
-      display: inline-block;
+      display: block;
       margin: 0;
+      min-wdith: 60%;
       padding: 0;
       list-style-type: none;
       li {
-        display: inline-block;
+        display: block;
+        float: left;
         padding: 0;
-        margin: 0 5px 0 0;
+        margin: 0 6px 0 0;
+        white-space: nowrap;
+        a {
+          display: inline-block;
+        }
         &::after {
           content: ',';
           margin-left: -2px;
+          display: inline-block;
         }
         &:last-child::after {
-          content: '';
+          display: none;
         }
+        a {
+          display: inline-block;
+          line-height: 24px;
+        }
+      }
+      li:last-child::after {
+        display: none;
+      }
+    }
+  }
+  .sfgov-section-container {
+    .paragraph--type--section {
+      > h3 {
+        @include fs-title-1;
       }
     }
   }

@@ -38,52 +38,45 @@
  * @ingroup themeable
  */
 #}
-{%
-  set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
-  ]
-%}
-
-{% set counter = 0 %}
-{% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
-  {% set counter = counter + 1 %}
-{% endfor %}
-
-{% spaceless %}
-{% block paragraph %}
-<div class="paragraph-timeline">
-    
-  {% if content.field_timeline_title[0] %}
-    {{ content.field_timeline_title }}
+{% set formio_js_version = 'latest' %}
+{% set formio_sfds_version = 'latest' %}
+{% if paragraph.field_formio_js_version.value %}
+  {% set formio_js_version = paragraph.field_formio_js_version.value %}
+{% endif %}
+{% if paragraph.field_formio_sfds_version.value %}
+  {% set formio_sfds_version = paragraph.field_formio_sfds_version.value %}
+{% endif %}
+<div id="formio"
+  data-source="{{ paragraph.field_formio_data_source.value }}"
+  {% if paragraph.field_formio_render_options.value %}
+    data-options="{{ paragraph.field_formio_render_options.value|escape }}"
   {% endif %}
-  <div class="timeline-container items-{{ counter }}">
-  {% if content.field_timeline_item['#items'] %}
-    {% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
-      <div class="timeline-item">
-      {% if item.entity.field_headings.0.value %}
-        <div class="heading">{{ item.entity.field_headings.0.value }}</div>
-      {% else %}
-        <div class="heading">&nbsp;</div>
-      {% endif %}
-      <div class="separator"><span class="circle-dot"></span><span class="hline">&nbsp;</span></div>
-      {% if item.entity.field_descriptions.0.value %}
-        <div class="description">{{ item.entity.field_descriptions.0.value }}</div>
-      {% else %}
-        <div class="description">&nbsp;</div>
-      {% endif %}
-      </div>
-    {% endfor %}
-  {% endif %}
-  </div>
-  <br>
-  <div class="timeline-link">
-    {% if content.field_link[0] %}
-      {{ content.field_link }}
-    {% endif %}
-  </div>
-</div>
-{% endblock paragraph %}
-{% endspaceless %}
+></div>
+<script src="https://unpkg.com/formiojs@{{ formio_js_version }}/dist/formio.full.min.js"></script>
+<script src="https://unpkg.com/formio-sfds@{{ formio_sfds_version }}/dist/formio-sfds.standalone.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    var el = document.getElementById('formio')
+    var options = safeJSONParse(el.getAttribute('data-options'))
+    Formio.createForm(el, el.getAttribute('data-source'), options)
+      .then(function(form) {
+      // What to do when the submit begins.
+      form.on('submitDone', function(submission) {
+        {% if paragraph.field_formio_confirmation_url.value %}
+          window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
+        {% endif %}
+      });
+    });
+
+
+    function safeJSONParse(str) {
+      var parsed = {}
+      try {
+        parsed = JSON.parse(str)
+      } catch (error) {
+        console.warn('Unable to parse form options:', str)
+      }
+      return parsed
+    }
+  })
+</script>
