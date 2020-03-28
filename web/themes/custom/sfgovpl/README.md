@@ -12,7 +12,7 @@ all the source files live in the folder:
 
 after doing your work create a tag and specify it in the `composer.json` file.
 
-in that folder you'll be able to place your twig template files that are going to be part of the Pattern Library
+in that folder you'll be able to place your twig template files that are going to be part of the Pattern Library.
 
 ## Requirements:
 
