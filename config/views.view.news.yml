@@ -61,8 +61,8 @@ display:
           id: 0
           total_pages: null
           tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
+            previous: Previous
+            next: Next
             first: '« First'
             last: 'Last »'
           expose:
@@ -73,7 +73,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: 9
+          quantity: 5
       style:
         type: default
         options:
@@ -290,7 +290,7 @@ display:
           items_per_page: 3
           offset: 0
       use_more: true
-      use_more_always: false
+      use_more_always: true
       use_more_text: 'See more news'
       link_display: page_1
       link_url: ''
@@ -375,6 +375,7 @@ display:
         row: false
         link_display: false
         link_url: false
+        cache: false
       relationships:
         field_topics:
           id: field_topics
@@ -416,6 +417,13 @@ display:
           view_mode: card
       link_display: page_2
       link_url: ''
+      cache:
+        type: time
+        options:
+          results_lifespan: 1800
+          results_lifespan_custom: 0
+          output_lifespan: 1800
+          output_lifespan_custom: 0
     cache_metadata:
       max-age: -1
       contexts:

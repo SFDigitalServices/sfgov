@@ -171,3 +171,63 @@ function sfgov_utilities_entity_type_alter(array &$entity_types) {
     $entity_type->setConstraints($constraints);
   }
 }
+
+function sfgov_utilities_page_attachments(array &$page) {
+  // Don't run on admin pages
+  if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if (isset($node)) {
+      $bundle = $node->bundle();
+      // Only check department and topic nodes
+      if ($bundle == 'department' || $bundle == 'topic') {
+        // Count the number of service sections and services
+        $num_sections = 0;
+        $num_services = 0;      
+        $ids = $node->get('field_department_services')->getValue();
+        $num_sections = count($ids);
+        foreach ($ids as $paragraph) {
+          $sps = \Drupal\paragraphs\Entity\Paragraph::load($paragraph['target_id'] );
+          $sids = $sps->get('field_dept_service_sect_services')->getValue();
+          foreach ($sids as $snode) {
+            // Check if service nodes are published
+            $fsnode = \Drupal\node\Entity\Node::load($snode['target_id']);
+            if ($fsnode->isPublished()) {
+              $num_services += 1;
+            }
+          }
+        }
+        
+        //Count number of more services
+        $view = \Drupal\views\Views::getView('services');
+        $nid = $node->id();
+        $view->setArguments(array($nid));
+        $view->setDisplay('topics_more_services');
+        $view->execute();
+        $view_result = $view->result;
+        $excluded_services = topic_page_services();
+        
+        // Check More Services for unpublished items
+        foreach ($view_result as $key => $value) {
+          $node = \Drupal\node\Entity\Node::load($value->nid);
+          if (in_array($value->nid, $excluded_services) || !$node->isPublished()) {
+            unset($view_result[$key]);
+          }
+        }
+        
+        $num_more_services = count($view_result);
+        
+        if ($num_more_services >= 1) {
+          $num_sections += 1;
+        }
+        
+        $total_services = $num_services + $num_more_services;
+        
+        // If enough items load accordion js
+        if ($total_services >= 12 && $num_sections >= 2) {
+          $page['#attached']['library'][] = 'sfgov_utilities/services';
+        }
+      }  
+    }
+  }
+}
+

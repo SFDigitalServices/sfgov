@@ -1,48 +1,67 @@
 .paragraph-child--campaign {
-  background: $c-yellow-3;
+  @include contain-1090;
 }
 
 .paragraph--type--campaign {
-  @include contain-1280;
   background: $c-yellow-3;
-  display: table;
+  border-radius: 10px;
+  overflow: hidden;
 
+  @include media($narrow-screen) {
+    display: flex;
+    flex-direction: row-reverse;
+  }
 
   .__media {
-    margin-bottom: 39px;
-
     @include media($narrow-screen) {
-      margin-bottom: 0;
+      flex: 0 0 50%;
+      overflow: hidden;
+      position: relative;
     }
   }
 
   img {
     display: block;
     width: 100%;
+
+    @include media($narrow-screen) {
+      position: absolute;
+      width: auto;
+      height: 100%;
+      top: 50%;
+      left: 50%;
+      min-height: 100%;
+      min-width: 100%;
+      transform: translate(-50%, -50%);
+      max-width: unset;
+    }
   }
 
   .paragraph-campaign--text {
+    padding: 20px;
     @include media($narrow-screen) {
-      background: $c-yellow-3;
-      display: table-cell;
+      flex: 0 0 50%;
       height: 100%;
-      max-width: 444px;
+      padding: 40px 60px 40px 40px;
       vertical-align: middle;
+    }
+    p {
+      margin: 0 0 15px;
     }
   }
 
   .__title {
     @include fs-title-3;
-    padding: 0 38px 39px;
+    margin-bottom: 28px;
+    letter-spacing: 0;
+    @include media($narrow-screen) {
+      @include fs-title-2;
+      margin-bottom: 40px;
+    }
   }
 
   .__link {
-    padding: 0 38px 39px;
-
-    @include media($narrow-screen) {
-      padding-bottom: 0;
-    }
-
+    margin-bottom: 20px;
     a {
       @include button-clear;
       border: 0;
