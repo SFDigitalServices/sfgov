@@ -97,7 +97,7 @@
 
 {% if content.field_department_services['#items'].getValue() %}
   <a name="services"></a>
-  <div class="sfgov-full-bleed light-blue card-container">
+  <div id="sfgov-dept-services" class="sfgov-full-bleed light-blue card-container">
     <div class="sfgov-section-container">
       {{ content.field_department_services }}
     </div>
@@ -132,16 +132,18 @@
 
 {% set news_view = drupal_view('news', 'news_block_depts')|render  %}
 {%  if news_view|striptags|trim %}
-<div class="sfgov-full-bleed light-yellow">
-  <div class="sfgov-section-container">
-    {{ news_view }}
+  <a name="news"></a>
+  <div id="sfgov-dept-news" class="sfgov-full-bleed light-yellow">
+    <div class="sfgov-section-container">
+      {{ news_view }}
+    </div>
   </div>
-</div>
 {% endif %}
 
 {% set events_view = drupal_view('events', 'block_1')|render %}
 {% if events_view|striptags|trim %}
-  <div class="sfgov-full-bleed white">
+  <a name="events"></a>
+  <div id="sfgov-dept-events" class="sfgov-full-bleed white">
     <div class="sfgov-section-container">
       {{ events_view }}
     </div>
@@ -150,7 +152,7 @@
 
 {% if content.field_resources['#items'].getValue() %}
   <a name="resources"></a>
-  <div class="sfgov-full-bleed light-blue">
+  <div id="sfgov-dept-resources" class="sfgov-full-bleed light-blue">
     <div class="sfgov-section-container">
       {{ content.field_resources }}
     </div>
