@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.transaction.field_departments
     - field.field.node.transaction.field_description
     - field.field.node.transaction.field_direct_external_url
+    - field.field.node.transaction.field_do_not_show_on_topic_pages
     - field.field.node.transaction.field_help
     - field.field.node.transaction.field_sort_title
     - field.field.node.transaction.field_special_cases
@@ -49,7 +50,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'What to Know Before You Start'
-      region: hidden
+      region: content
     group_what_to_do:
       children:
         - group_online
@@ -68,7 +69,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'What to Do'
-      region: hidden
+      region: content
     group_related_info:
       children:
         - field_transactions
@@ -82,7 +83,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'Contact and Related Information'
-      region: hidden
+      region: content
     group_supporting_info:
       children:
         - group_special_cases
@@ -96,7 +97,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'Supporting Information'
-      region: hidden
+      region: content
     group_thing_to_know:
       children:
         - field_things_to_know
@@ -114,11 +115,11 @@ third_party_settings:
         classes: 'sf-paragraphs-group sf-paragraphs-group--things-to-know'
         required_fields: false
       label: 'Things to Know'
-      region: hidden
+      region: content
     group_cost:
       children:
         - field_cost
-        - field_do_not_show
+        - field_do_not_show_on_topic_pages
       parent_name: group_before_you_start
       weight: 20
       format_type: html_element
@@ -133,7 +134,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Cost
-      region: hidden
+      region: content
     group_phone:
       children:
         - field_step_phone
@@ -151,7 +152,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Phone
-      region: hidden
+      region: content
     group_email:
       children:
         - field_step_email
@@ -169,7 +170,7 @@ third_party_settings:
         id: ''
         classes: 'sf-paragraphs-group sf-paragraphs-group--email'
       label: Email
-      region: hidden
+      region: content
     group_in_person:
       children:
         - field_step_in_person
@@ -187,7 +188,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: In-Person
-      region: hidden
+      region: content
     group_mail:
       children:
         - field_step_mail
@@ -205,7 +206,7 @@ third_party_settings:
         id: ''
         classes: 'sf-paragraphs-group sf-paragraphs-group--mail'
       label: Mail
-      region: hidden
+      region: content
     group_online:
       children:
         - field_step_online
@@ -223,7 +224,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Online
-      region: hidden
+      region: content
     group_other:
       children: {  }
       parent_name: group_what_to_do
@@ -240,7 +241,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Other
-      region: hidden
+      region: content
     group_other_details:
       children:
         - field_step_other_title
@@ -254,7 +255,7 @@ third_party_settings:
         classes: 'sf-paragraphs-group sf-paragraphs-group--details'
         open: false
       label: Other
-      region: hidden
+      region: content
     group_service_start_page:
       children:
         - group_before_you_start
@@ -275,7 +276,7 @@ third_party_settings:
         id: ''
         classes: 'sf-paragraphs-container sf-paragraphs-container--service-start'
       label: 'Transaction page content'
-      region: hidden
+      region: content
     group_special_cases:
       children:
         - field_special_cases
@@ -293,7 +294,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Special Cases'
-      region: hidden
+      region: content
     group_custom_section:
       children:
         - field_custom_section
@@ -311,7 +312,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Custom Section'
-      region: hidden
+      region: content
     group_help:
       children:
         - field_help
@@ -329,7 +330,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Ways to Get Help'
-      region: hidden
+      region: content
     group_community:
       children:
         - field_transaction_purpose
@@ -347,7 +348,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Why is this Transaction Good for the Community?'
-      region: hidden
+      region: content
 id: node.transaction.default
 targetEntityType: node
 bundle: transaction
@@ -403,6 +404,7 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
@@ -429,6 +431,13 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
+    region: content
+  field_do_not_show_on_topic_pages:
+    weight: 4
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_help:
     type: sfgov_paragraphs
@@ -618,11 +627,12 @@ content:
     third_party_settings: {  }
     region: content
   field_topics:
-    weight: 4
+    weight: 5
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
@@ -651,6 +661,7 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
@@ -714,6 +725,7 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     region: content
     third_party_settings: {  }
   url_redirects:
