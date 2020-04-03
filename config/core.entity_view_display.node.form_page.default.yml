@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.node.form_page.field_form_id
+    - field.field.node.form_page.field_intro_text
     - node.type.form_page
   module:
     - entity_reference_revisions
+    - text
     - user
 id: node.form_page.default
 targetEntityType: node
@@ -15,15 +17,22 @@ mode: default
 content:
   field_form_id:
     type: entity_reference_revisions_entity_view
-    weight: 101
+    weight: 2
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
     region: content
+  field_intro_text:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
   links:
-    weight: 100
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
