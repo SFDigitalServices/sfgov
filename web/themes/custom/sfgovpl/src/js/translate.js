@@ -101,14 +101,13 @@ function SFGovTranslate() {
           }
         });
       }
-    } 
+    }
     if(currentDrupalLanguage != 'en') {
-      var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
-      if(drupalTranslation) {
-        document.cookie = 'googtrans' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-      } else {
-        that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
-      }
+      // var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
+      // Always translate page, even if a Drupal translation for the page exists.
+      // If translated content is being shown on the page, it should be wrapped
+      // in a container with class="notranslate".
+      that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
     }
   }

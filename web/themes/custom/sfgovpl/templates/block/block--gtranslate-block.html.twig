@@ -25,8 +25,14 @@
  * @see template_preprocess_block()
  */
 #}
+{%
+  set classes = [
+  'gtranslate_container',
+  'notranslate',
+]
+%}
 
-<div{{ attributes.addClass('gtranslate_container') }}>
+<div{{ attributes.addClass(classes) }}>
   <label for="sfgov-gtranslate-select">Select language</label>
   {{ title_prefix }}
   {% if label %}
