@@ -75,11 +75,23 @@ function SFGovTranslate() {
   };
 
   this.getDrupalTranslation = function(lang) {
+    var drupalGtranslateMap = {
+      en: 'en',
+      es: 'es',
+      'fil': 'tl',
+      'zh-hant': 'zh-TW',
+    };
     var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
-    if(drupalTranslations) {
+    if (!drupalTranslations) {
+      drupalTranslations = drupalSettings.sfgov_translations.view.translations;
+    }
+    if (drupalTranslations) {
       for(var i=0; i<drupalTranslations.length; i++) {
         var someTranslation = drupalTranslations[i];
-        if(someTranslation.lang == lang) {
+        var langCode = drupalGtranslateMap[someTranslation.lang] ?
+          drupalGtranslateMap[someTranslation.lang] :
+          someTranslation.lang;
+        if (langCode == lang) {
           return someTranslation;
         }
       }
