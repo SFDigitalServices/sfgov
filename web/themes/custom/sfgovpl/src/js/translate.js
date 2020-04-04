@@ -106,7 +106,7 @@ function SFGovTranslate() {
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
-      if(drupalTranslation) { // drupal translation exists
+      if (!drupalSettings.sfgov_translations.node.is_front && drupalTranslation) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
           if(drupalTranslation.turl != window.location.pathname) {
             window.location.href = drupalTranslation.turl;

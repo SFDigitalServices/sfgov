@@ -106,6 +106,7 @@ function sfgovpl_preprocess_html(&$variables) {
   $theNode = null;
   $nodeInfo = [];
   $nodeInfo['current_language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $nodeInfo['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
   if ($node instanceof \Drupal\node\NodeInterface) {
     $theNode = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $nodeInfo['nid'] = $theNode->id();
