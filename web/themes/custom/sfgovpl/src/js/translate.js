@@ -79,7 +79,7 @@ function SFGovTranslate() {
       en: 'en',
       es: 'es',
       'fil': 'tl',
-      'zh-hant': 'zh-TW',
+      'zh-TW': 'zh-TW',
     };
     var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
     if (!drupalTranslations) {
