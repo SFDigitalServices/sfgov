@@ -57,9 +57,23 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
   <div {{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
     {% block content %}
       {% if not field_file.isEmpty %}
-        <div class="document">
-          <span class="document"><a href="{{ fileurl }}">{{ field_file.entity.label }}</a></span>
-        </div>
+        {% if fileurl|length > 3 %}
+          <div class="document">
+            <span class="document">
+              <a href="{{ fileurl }}">{{ field_file.entity.label }}</a>
+            </span>
+          </div>
+        {% elseif field_file.entity.field_document_url %}
+          <div class="document">
+            <span class="document">
+              <a href="{{ field_file.entity.field_document_url.value.0.uri }}">{{ field_file.entity.label }}</a>
+            </span>
+          </div>
+        {% else %}
+          <div class="document">
+            <span class="document">{{ field_file.entity.label }}</span>
+          </div>
+        {% endif %}
       {% endif %}
     {% endblock %}
   </div>
