@@ -189,9 +189,20 @@
             "export-configuration": "drush config-export --yes"
         },
         "drupal-scaffold": {
-            "locations": {
-                "web-root": "./"
-            }
+            "source": "https://raw.githubusercontent.com/pantheon-systems/drops-8-scaffolding/{version}/{path}",
+            "includes": [
+                "sites/default/default.services.pantheon.preproduction.yml",
+                "sites/default/settings.pantheon.php"
+            ],
+            "excludes": [
+                ".csslintrc",
+                ".editorconfig",
+                ".eslintignore",
+                ".eslintrc.json",
+                ".htaccess",
+                "web.config",
+                "robots.txt"
+            ]
         },
         "installer-paths": {
             "core": [
