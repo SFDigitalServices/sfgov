@@ -5,6 +5,7 @@ use Drupal\node\Entity\Node;
 use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
 use Drupal\views\Views;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * Implements hook_preprocess_node().
@@ -19,6 +20,9 @@ function sfgovpl_preprocess_node(&$variables) {
     }
     if($content_type == 'topic') {
       $variables['service_section_ids'] = topic_page_services();
+    }
+    if($content_type == 'public_body') {
+      $variables['public_body_fields'] = public_body_page_fields();
     }
   }
 }
@@ -364,6 +368,131 @@ function dept_page_fields() {
       }
     }
   }           
+  return $theFields;
+}
+
+function public_body_page_fields() {
+  $styleThumbnail = ImageStyle::load('thumbnail');
+  $node = \Drupal::request()->attributes->get('node');
+  $theFields = array(
+    'featured_items' => array(),
+    'services' => array(),
+  );
+  if($node) {
+    if($node->hasField('field_people')) {
+      $aboutPeople = $node->get('field_people');
+      if($aboutPeople && !empty($aboutPeople->getValue())) {
+        $peopleId = $aboutPeople->getValue()[0]['target_id'];
+        $peopleParagraph = Paragraph::load($peopleId);
+        if(!empty($peopleParagraph->get('field_person_2')->getValue())) {
+          $people = $peopleParagraph->get('field_person_2')->getValue();
+          foreach($people as $person) {
+            $personNode = Node::load($person['target_id']);
+            $theFields['people'][] = array(
+              'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
+              'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
+              'title' => $personNode->get('field_title')->getValue()[0]['value'],
+              'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
+              'photo' => $styleThumbnail->buildUrl($personNode->get('field_photo')->entity->uri->value),
+            );
+          }
+        }
+      }
+    }
+    if($node->hasField('field_address')) {
+      $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
+      if($addressId) {
+        $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
+        if($addressEntity) {
+          $addressValues = $addressEntity->get('field_address')->getValue()[0];
+          $theFields['address']['line1'] = $addressValues['address_line1'];
+          $theFields['address']['line2'] = $addressValues['address_line2'];
+          $theFields['address']['country_code'] = $addressValues['country_code'];
+          $theFields['address']['city'] = $addressValues['locality'];
+          $theFields['address']['state'] = $addressValues['administrative_area'];
+          $theFields['address']['zip'] = $addressValues['postal_code'];
+          $theFields['address']['organization'] = $addressValues['organization'];
+          $hours = $addressEntity->get('field_operating_hours')->getValue();
+          usort($hours, function($item1, $item2) {
+            return $item1['day'] <=> $item2['day'];
+          });
+          foreach($hours as $hour) {
+            $theFields['address']['hours'][] = array(
+              'day' => jddayofweek($hour['day'], 2),
+              'start' => date("g:i a", strtotime($hour['starthours'])),
+              'end' => date("g:i a", strtotime($hour['endhours'])),
+              'comment' => $hour['comment'],
+            );
+          }
+          $theFields['map'] = _sfgov_utilities_build_map($addressValues);
+        }
+      }
+    }
+    if($node->hasField('field_phone_numbers')) {
+      $phoneNumbers = $node->get('field_phone_numbers');
+      if($phoneNumbers->getValue()) {
+        foreach($phoneNumbers->getValue() as $phoneNumber) {
+          $phoneNumberId = $phoneNumber['target_id'];
+          $phoneParagraph = Paragraph::load($phoneNumberId);
+          $number = $phoneParagraph->get('field_tel')->getValue()[0]['value'];
+          $number = preg_replace("/[^\d]/","",$number); // remove non-digit characters
+          $length = strlen($number);
+          if($length == 10) {
+            $number = preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $number);
+          }
+          $phoneDetails = $phoneParagraph->get('field_text')->getValue() ? $phoneParagraph->get('field_text')->getValue()[0]['value'] : null;
+          $phoneOwner = $phoneParagraph->get('field_owner')->getValue() ? $phoneParagraph->get('field_owner')->getValue()[0]['value'] : null;
+          $theFields['phone_numbers'][] = array(
+            'number' => $number,
+            'details' => $phoneDetails,
+            'owner' => $phoneOwner,
+          );
+        }
+      }
+    }
+    if($node->hasField('field_email')) {
+      $emailField = $node->get('field_email');
+      if($emailField->getValue()) {
+        $emailId = $emailField->getValue()[0]['target_id'];
+        $emailParagraph = Paragraph::load($emailId);
+        $email = $emailParagraph->get('field_email')->getValue() ? $emailParagraph->get('field_email')->getValue()[0]['value'] : null;
+        $emailTitle = $emailParagraph->get('field_title')->getValue() ? $emailParagraph->get('field_title')->getValue()[0]['value'] : null;
+        $theFields['email']['email_address'] = $email ? $email : null;
+        $theFields['email']['email_title'] = $emailTitle ? $emailTitle : null;
+      }
+    }
+    if($node->hasField('field_callout')) {
+      $calloutField = $node->get('field_callout');
+      if($calloutField->getValue()) {
+        $calloutId = $calloutField->getValue()[0]['target_id'];
+        $calloutParagraph = Paragraph::load($calloutId);
+        $callout = $calloutParagraph->get('field_text')->getValue() ? $calloutParagraph->get('field_text')->getValue()[0]['value'] : null;
+        $theFields['callout'] = $callout ? $callout : null;
+      }
+    }
+    if($node->hasField('field_about_description')) {
+      $aboutField = $node->get('field_about_description');
+      if($aboutField->getValue()) {
+        $aboutValue = $aboutField->getValue()[0]['value'];
+        $theFields['about'] = $aboutValue ? $aboutValue : null;
+      }
+    }
+    if($node->hasField('field_departments')) {
+      $departmentsField = $node->get('field_departments');
+      if($departmentsFieldValue = $departmentsField->getValue()) {
+        $departments = [];
+        foreach ($departmentsFieldValue as $key => $value) {
+          $dept = Node::load($value['target_id']);
+          $departments[$key] = [
+            'title' => $dept->label(),
+            'description' => $dept->field_description ? $dept->field_description->value : '',
+            'url' => $dept->toUrl()->toString(),
+          ];
+        }
+        $theFields['departments'] = count($departments) ? $departments : null;
+      }
+    }
+  }
   return $theFields;
 }
 

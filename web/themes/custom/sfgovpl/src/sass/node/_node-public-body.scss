@@ -1,0 +1,278 @@
+.page-node-type-public-body {
+  .hero-banner.default {
+    padding-top: 60px;
+
+    .lead-paragraph {
+      margin-bottom: 60px;
+    }
+  }
+
+  .sfgov-public-body-section--heading {
+    @include fs-h1;
+    @include contain-1090;
+    color: $c-slate;
+    margin-bottom: 20px;
+
+    @include media($medium-screen) {
+      margin-bottom: 40px;
+    }
+  }
+
+  .sfgov-public-body-section {
+    padding: 80px 0;
+
+    h4 {
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+
+    @include media-max($medium-screen) {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+  }
+
+  .sfgov-public-body-section-content-container {
+    @include contain-1090;
+  }
+
+  .sfgov-public-body-in-this-page {
+    @include rubik;
+    @include contain-1090;
+    margin-bottom: 60px;
+    display: none;
+    .sfgov-public-body-in-this-page-container > * {
+      display: inline-block;
+    }
+    .sfgov-public-body-in-this-page-label {
+      @include rubik;
+      @include fs-title-5;
+      margin-right: 40px;
+      margin-bottom: 15px;
+    }
+    ul {
+      padding: 0;
+      margin: 0;
+      li {
+        display: inline-block;
+        margin-left: 40px;
+        a {
+          @include rubik;
+          @include fs-title-5;
+          font-weight: $fw-regular;
+          &.sfgov-translate-lang-zh-TW {
+            @include fs-highlight;
+          }
+        }
+      }
+      li:first-child {
+        margin-left: 0;
+      }
+    }
+    @include media-max($medium-screen) {
+      .sfgov-public-body-in-this-page-label {
+        width: 100%;
+        margin-bottom: 0;
+      }
+      ul {
+        width: 100%;
+        padding-top: 24px;
+        li {
+          margin-bottom: 20px;
+          margin-left: 0;
+          margin-right: 0px;
+          width: 50%;
+        }
+      }
+    }
+  }
+
+  .sfgov-public-body-about {
+    padding: 60px 0;
+  }
+
+  .sfgov-public-body-callout {
+    background: $c-blue-2;
+    padding: 20px 0;
+
+    .sfgov-public-body-section--content {
+      padding-left: 40px;
+      position: relative;
+
+      &::after {
+        content: ' ';
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 3px;
+        left: 0;
+        background: url(../../src/img/info.svg) no-repeat;
+      }
+    }
+  }
+
+  .sfgov-public-body-board-members {
+    .sfgov-public-body-section--heading {
+      margin-bottom: 60px;
+    }
+    .sfgov-public-body-section--content {
+      background: $c-blue-1;
+      padding: 40px;
+      border-radius: 8px;
+    }
+    .sfgov-public-body-board-members-list {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      .sfgov-public-body-board-members-list-item {
+        display: inline-block;
+        width: 33%;
+        margin: 20px 0;
+        > div {
+          display: inline-block;
+          vertical-align: top;
+        }
+        .person-image {
+          width: 80px;
+          height: 80px;
+          overflow: hidden;
+          border-radius: 8px;
+          margin-right: 20px;
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: top center;
+        }
+        .person-details {
+          h5 {
+            @include rubik;
+            @include fs-body-bold;
+            text-decoration: underline;
+            color: $c-slate;
+            margin-bottom: 10px;
+          }
+          p {
+            margin: 0;
+            padding: 0;
+            @include fs-body-short;
+            color: $c-slate;
+          }
+        }
+      }
+    }
+    @include media-max($medium-screen) {
+      .sfgov-public-body-board-members-list {
+        .sfgov-public-body-board-members-list-item {
+          display: block;
+          width: auto;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+
+  .sfgov-public-body-contact {
+    .sfgov-public-body-section-content-container {
+      margin-bottom: 20px;
+      > h2 {
+        margin-bottom: 40px;
+      }
+      @include rubik;
+      .sfgov-contact-section {
+        display: inline-block;
+        width: 33%;
+        vertical-align: top;
+        padding-left: 40px;
+        line-height: 2em;
+        position: relative;
+        h5,
+        h6 {
+          @include rubik;
+          @include fs-title-5;
+          padding: 0;
+          margin: 0 0 15px 0;
+          text-transform: none;
+          text-decoration: none;
+        }
+        h6 {
+          font-weight: 300;
+          font-size: 17px;
+          padding: 0;
+          margin: 0;
+        }
+        p {
+          padding: 0;
+          margin: 0;
+          line-height: 2em;
+        }
+        &::after {
+          content: ' ';
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          top: 3px;
+          left: 0;
+        }
+        &.address {
+          width: 35%;
+          .map {
+            margin-top: 15px;
+          }
+          &::after {
+            background: url(../../src/img/icons/location-2.svg) no-repeat;
+          }
+        }
+        &.phone-numbers {
+          width: 32%;
+          .phone {
+            margin-bottom: 30px;
+            h6 {
+              @include fs-body-short;
+            }
+            .details {
+              font-style: italic;
+              color: $c-slate;
+              opacity: 0.65;
+            }
+          }
+          &::after {
+            background: url(../../src/img/icons/phone-2.svg) no-repeat;
+          }
+        }
+        &.email {
+          width: 32%;
+          h6 {
+            @include fs-body-short;
+          }
+          &::after {
+            background: url(../../src/img/icons/mail-2.svg) no-repeat;
+          }
+        }
+      }
+      @include media-max($medium-screen) {
+        .sfgov-contact-section {
+          display: block;
+          width: auto;
+          padding-left: 25px;
+          margin-top: 25px;
+          &.address,
+          &.phone-numbers,
+          &.email {
+            display: block;
+            width: auto;
+            &::after {
+              left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .sfgov-public-body-departments {
+    background: $c-dark-blue;
+
+    .sfgov-public-body-section--heading {
+      color: $c-white;
+    }
+  }
+}
