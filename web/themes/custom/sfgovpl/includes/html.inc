@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 
 function sfgovpl_preprocess_html(&$variables) {
@@ -99,15 +100,21 @@ function sfgovpl_preprocess_html(&$variables) {
   */
 
   // For translations, if it is a node page.
-  $languages = \Drupal::languageManager()->getLanguages();
+  $languageManager = \Drupal::languageManager();
+  $languages = $languageManager->getLanguages();
+  $currentLanguage = $languageManager->getCurrentLanguage()->getId();
   $currentRoute = \Drupal::service('current_route_match');
   $routeParameters = $currentRoute->getParameters()->all();
   $node = \Drupal::routeMatch()->getParameter('node');
+  $gTranslatePrefixMap = [
+    'fil' => 'tl',
+    'zh-hant' => 'zh-TW',
+  ];
   $theNode = null;
   $nodeInfo = [];
-  $nodeInfo['current_language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  $nodeInfo['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
-  if ($node instanceof \Drupal\node\NodeInterface) {
+  $nodeInfo['current_language'] = $gTranslatePrefixMap[$currentLanguage] ?: $currentLanguage;
+  $isFront = \Drupal::service('path.matcher')->isFrontPage();
+  if ($node instanceof NodeInterface) {
     $theNode = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $nodeInfo['nid'] = $theNode->id();
     $nodeInfo['nurl'] = $theNode->toUrl()->toString();
@@ -120,8 +127,10 @@ function sfgovpl_preprocess_html(&$variables) {
           'node' => $theNode->id(),
         ], ['language' => $language])->toString();
       $nodeInfo['translations'][] = [
-        'lang' => $langCode,
-        'turl' => $nodeUrl,
+        'lang' => $gTranslatePrefixMap[$langCode] ?: $langCode,
+        'turl' => $isFront ?
+          Url::fromRoute('<front>', [], ['language' => $language])->toString() :
+          $nodeUrl,
       ];
     }
   }
@@ -131,7 +140,7 @@ function sfgovpl_preprocess_html(&$variables) {
   if (substr($currentRoute->getRouteName(), 0, 5) === 'view.') {
     foreach ($languages as $langCode => $language) {
       $viewInfo['translations'][] = [
-        'lang' => $langCode,
+        'lang' => $gTranslatePrefixMap[$langCode] ?: $langCode,
         'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, ['language' => $language])->toString(),
       ];
     }
