@@ -8,15 +8,25 @@
   ]
 %}
 
-{% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    <div class="container">
-      <div class="group-left">
-        {{ content.field_spotlight_img }}
-      </div>
-      <div class="group-right">
-        {{ content | without('field_spotlight_img') }}
-      </div>
+{% set spotlight_img_url =
+  paragraph.get('field_spotlight_img').entity ?
+  file_url(paragraph.get('field_spotlight_img').entity.field_media_image.entity.fileuri) : null
+%}
+{%
+  set spotlight_img_alt =
+  paragraph.get('field_spotlight_img').entity ?
+  paragraph.get('field_spotlight_img').entity.field_media_image.alt : 'image'
+%}
+{% set spotlight_img_style = spotlight_img_url ? 'background-image: url(' ~ spotlight_img_url ~ ');background-size: cover;' : '' %}
+
+<div{{ attributes.addClass(classes) }}>
+  <div class="container">
+    <div class="group-left"
+         style="background-image: url('{{ spotlight_img_url }}')"
+         aria-label="{{ spotlight_img_alt }}">
+    </div>
+    <div class="group-right">
+      {{ content | without('field_spotlight_img') }}
     </div>
   </div>
-{% endblock paragraph %}
+</div>
