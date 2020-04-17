@@ -1,13 +1,37 @@
 .paragraph--type--campaign-spotlight {
+  position: relative;
   .container {
     @include contain-1280;
     display: flex;
     align-items: center;
+    @include media-max($medium-screen) {
+      flex-direction: column;
+    }
     .group-left {
-      flex: 70%;
+      display: block;
+      background-size: cover;
+      height: 375px;
+      width: 100%;
+      @include media($medium-screen) {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        bottom: 0;
+      }
     }
     .group-right {
-      padding: 0 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 20px;
+
+      @include media($medium-screen) {
+        width: 50%;
+        padding: 3rem;
+        min-height: 400px;
+        margin-left: 50%;
+      }
     }
   }
 
@@ -28,6 +52,16 @@
 
 .paragraph--type--campaign-spotlight.is-reversed {
   .container {
-    flex-direction: row-reverse;
+    @include media($medium-screen) {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+  }
+  .group-left {
+    right: 0;
+    left: auto;
+  }
+  .group-right {
+    margin-left: 0;
   }
 }
