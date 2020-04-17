@@ -2,8 +2,12 @@
   <a href="{{ path('<front>') }}" class="branding-link">
   <span class="sfgov-logo">
     <span class="sfgov-logo__image">
-      <img class="sfgov-logo--seal" src="{{ site_logo }}" alt="Home"/>
-      <img class="sfgov-logo--lockup" src="/{{ directory ~ '/src/img/sfgov.svg' }}" alt="Home"/>
+      {% if campaign_logo %}
+        {{ drupal_image(campaign_logo.getFileUri(), null, { class: 'sfgov-logo--campaign' }) }}
+      {% else %}
+        <img class="sfgov-logo--seal" src="{{ site_logo }}" alt="Home"/>
+        <img class="sfgov-logo--lockup" src="/{{ directory ~ '/src/img/sfgov.svg' }}" alt="Home"/>
+      {% endif %}
     </span>
   </span>
   </a>

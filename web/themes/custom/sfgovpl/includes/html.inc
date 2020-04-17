@@ -30,7 +30,7 @@ function sfgovpl_preprocess_html(&$variables) {
         $phone = Paragraph::load($paragraphPhoneId);
         $metaDeptPhone['#attributes']['content'] = $phone->field_tel->value;
       }
-      
+
       if(count($node->get('field_address')->getValue()) > 0) {
         $paragraphAddressId = $node->get('field_address')->getValue()[0]['target_id'];
         $paragraphAddress = Paragraph::load($paragraphAddressId);
@@ -64,7 +64,7 @@ function sfgovpl_preprocess_html(&$variables) {
           'content' => json_encode($transaction, JSON_HEX_QUOT),
         ],
       ];
-      
+
       $metaTxRelatedDept = [
         '#tag' => 'meta',
         '#attributes' => [

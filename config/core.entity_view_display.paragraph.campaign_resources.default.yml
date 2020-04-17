@@ -1,0 +1,33 @@
+uuid: f5be0a36-e485-4429-981b-2e4fee8ab6c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.campaign_resources.field_file
+    - field.field.paragraph.campaign_resources.field_resources
+    - paragraphs.paragraphs_type.campaign_resources
+  module:
+    - entity_reference_revisions
+id: paragraph.campaign_resources.default
+targetEntityType: paragraph
+bundle: campaign_resources
+mode: default
+content:
+  field_file:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_resources:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden: {  }
