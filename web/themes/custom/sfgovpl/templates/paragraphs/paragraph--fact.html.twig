@@ -1,0 +1,15 @@
+{%
+  set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished'
+]
+%}
+
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    <h5>{{ content.field_title }}</h5>
+    {{ content | without('field_title') }}
+  </div>
+{% endblock paragraph %}

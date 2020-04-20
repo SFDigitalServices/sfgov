@@ -1,0 +1,30 @@
+{%
+  set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished',
+  'sfgov-full-bleed',
+  'card-container'
+]
+%}
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    <div class="sfgov-section-container">
+      {% block content %}
+        <h2 class="title">{{ 'Resource' | t }}</h2>
+        {{ content|without('field_file') }}
+
+        {% if content.field_file %}
+          <h4>{{ content.field_file['#title'] }}</h4>
+          {% for item in paragraph.field_file %}
+            {% include '@atoms/09-document/09-document.twig' with {
+              'field_file': item,
+              'fileurl': file_url(item.entity.field_media_file.entity.uri.value)
+            } %}
+          {% endfor %}
+        {% endif %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock paragraph %}

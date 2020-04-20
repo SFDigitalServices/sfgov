@@ -1,0 +1,19 @@
+{%
+  set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished',
+]
+%}
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    <div class="group-left">
+      <h3>{{ content.field_title }}</h3>
+      {{ content.field_content }}
+    </div>
+    <div class="group-right">
+      {{ content.field_description }}
+    </div>
+  </div>
+{% endblock paragraph %}
