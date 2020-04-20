@@ -145,10 +145,8 @@
         "lint": "find web/modules/custom web/themes/custom -name '*.php' -exec php -l {} \\;",
         "code-sniff": "echo 'No code sniff step defined.'",
         "unit-test": "echo 'No unit test step defined.'",
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "prepare-for-pantheon": "DrupalProject\\composer\\ScriptHandler::prepareForPantheon",
         "post-install-cmd": [
-            "@drupal-scaffold",
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],
         "post-update-cmd": [
@@ -191,6 +189,10 @@
             "includes": [
                 "web/sites/default/default.services.pantheon.preproduction.yml",
                 "web/sites/default/settings.pantheon.php"
+            ],
+            "allowed-packages": [
+                "drupal/core",
+                "pantheon-systems/drupal-integrations"
             ],
             "locations": {
                 "web-root": "web/"
