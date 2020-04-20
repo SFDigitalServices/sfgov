@@ -104,7 +104,7 @@ if (defined('PANTHEON_ENVIRONMENT')) {
 /**
  * Place the config directory outside of the Drupal root.
  */
-$config_directories = array(
+$settings['config_sync_directory'] = array(
   CONFIG_SYNC_DIRECTORY => dirname(DRUPAL_ROOT) . '/config',
 );
 
