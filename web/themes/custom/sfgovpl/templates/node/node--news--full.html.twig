@@ -35,7 +35,9 @@
       ) }}
     </div>
 
-    <div class="{{ bundle }}--ankle">
-      {{ content.field_dept }}
-    </div>
+    {% if content.field_dept.0 %}
+      <div class="{{ bundle }}--ankle">
+        {{ content.field_dept }}
+      </div>
+    {% endif %}
   {% endblock content %}

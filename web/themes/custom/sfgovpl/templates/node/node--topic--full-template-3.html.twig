@@ -1,14 +1,4 @@
 
-    {% if content.field_topics['#items'].getValue() %}
-      <div class="sfgov-full-bleed white child-topics card-container">
-        <div class="sfgov-section-container">
-          <div class="sfgov-container-two-column">
-            {{ content.field_topics }}
-          </div>
-        </div>
-      </div>
-    {% endif %}
-
     {% if content.field_spotlight['#items'].getValue() %}
       <div class="sfgov-full-bleed padding-zero purple-lightpurple sfgov-spotlight-container">
         <div class="sfgov-section-container">
@@ -26,6 +16,16 @@
           {% if services_view|render|striptags|trim %}
             {{ services_view }}
           {% endif %}
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if content.field_topics['#items'].getValue() %}
+      <div class="sfgov-full-bleed white child-topics card-container template-3">
+        <div class="sfgov-section-container">
+          <div class="sfgov-container-two-column">
+            {{ content.field_topics }}
+          </div>
         </div>
       </div>
     {% endif %}
@@ -48,7 +48,7 @@
       </div>
     {% endif %}
     
-    {% if content.field_content %}
+    {% if content.field_content|render is not empty %}
       <div class="sfgov-full-bleed card-container">
         <div class="sfgov-section-container">
           {{ content.field_content }}

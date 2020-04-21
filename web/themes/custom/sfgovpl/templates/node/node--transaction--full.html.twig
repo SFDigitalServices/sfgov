@@ -78,9 +78,11 @@
 
     </div>
     <p class="updated">{{ 'Last updated'|t }} {{ node.changedtime|date('F d, Y') }}</p>
-    <div class="{{ bundle }}--ankle">
-      {{ content.group_grey_boxes.field_departments }}
-    </div>
+    {% if content.group_grey_boxes.field_departments.0 %}
+      <div class="{{ bundle }}--ankle">
+        {{ content.group_grey_boxes.field_departments }}
+      </div>
+    {% endif %}
 
   {% endblock content %}
 
