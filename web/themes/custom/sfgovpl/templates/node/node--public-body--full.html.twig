@@ -136,17 +136,22 @@
       <div class="sfgov-public-body-section--content">
         <h4>{{ info.title }}</h4>
 
-        <div class="sfgov-dept-services-section-content service-cards sfgov-container-three-column">
+        <div class="sfgov-container-three-column">
           {% for info_content in info.content %}
+          <div class="sfgov-container-item">
             {% if info_content.type == 'link' %}
-            <div class="sfgov-container-item">
               {% include "@theme/atoms/service-card.twig" with {
                 "title": info_content.title,
                 "description": info_content.description,
                 "url": info_content.url,
               } %}
-            </div>
+            {% elseif info_content.type == 'document' %}
+              {% include "@atoms/09-document/09-document.twig" with {
+                "field_file": info_content.file,
+                "fileurl": info_content.fileurl,
+              } %}
             {% endif %}
+          </div>
           {% endfor %}
         </div>
       </div>

@@ -4,6 +4,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
+use Drupal\file\Entity\File;
 use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
@@ -411,7 +412,7 @@ function public_body_page_fields() {
 
             switch ($otherInfoContent->bundle()) {
               case 'other_info_links':
-                $theFields['other_info'][$otherInfoKey]['content'][] = [
+                $values = [
                   'type' => 'link',
                   'id' => $otherInfoContent->id(),
                   'title' => $otherInfoContent->field_title->value,
@@ -419,7 +420,16 @@ function public_body_page_fields() {
                   'url' => Url::fromUri($otherInfoContent->field_link->uri)->toString(),
                 ];
                 break;
+              case 'document':
+                $values = [
+                  'type' => 'document',
+                  'file' => $otherInfoContent->field_file,
+                  'fileurl' => file_create_url($otherInfoContent->field_file->entity->field_media_file->entity->getFileUri()),
+                ];
+                break;
             }
+
+            $theFields['other_info'][$otherInfoKey]['content'][] = $values;
           }
         }
       }
