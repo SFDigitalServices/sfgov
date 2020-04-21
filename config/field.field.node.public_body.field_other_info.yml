@@ -5,7 +5,8 @@ dependencies:
   config:
     - field.storage.node.field_other_info
     - node.type.public_body
-    - paragraphs.paragraphs_type.other_info
+    - paragraphs.paragraphs_type.other_info_card
+    - paragraphs.paragraphs_type.other_info_document
   module:
     - entity_reference_revisions
     - tmgmt_content
@@ -27,7 +28,8 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      other_info: other_info
+      other_info_card: other_info_card
+      other_info_document: other_info_document
     target_bundles_drag_drop:
       accordion:
         weight: 51
@@ -129,8 +131,8 @@ settings:
         weight: 83
         enabled: false
       other_info:
-        enabled: true
         weight: 84
+        enabled: false
       other_info_links:
         weight: 85
         enabled: false
@@ -140,9 +142,15 @@ settings:
       phone:
         weight: 87
         enabled: false
+      other_info_card:
+        enabled: true
+        weight: 87
       phone_numbers:
         weight: 88
         enabled: false
+      other_info_document:
+        enabled: true
+        weight: 88
       process_step:
         weight: 89
         enabled: false
