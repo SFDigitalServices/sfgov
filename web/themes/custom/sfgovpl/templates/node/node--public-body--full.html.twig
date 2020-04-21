@@ -136,24 +136,26 @@
       <div class="sfgov-public-body-section--content">
         <h4>{{ info.title }}</h4>
 
+        {% if info.bundle == 'other_info_card' %}
         <div class="sfgov-container-three-column">
           {% for info_content in info.content %}
           <div class="sfgov-container-item">
-            {% if info_content.type == 'link' %}
-              {% include "@theme/atoms/service-card.twig" with {
-                "title": info_content.title,
-                "description": info_content.description,
-                "url": info_content.url,
-              } %}
-            {% elseif info_content.type == 'document' %}
-              {% include "@atoms/09-document/09-document.twig" with {
-                "field_file": info_content.file,
-                "fileurl": info_content.fileurl,
-              } %}
-            {% endif %}
+            {% include "@theme/atoms/service-card.twig" with {
+              "title": info_content.title,
+              "description": info_content.description,
+              "url": info_content.url,
+            } %}
           </div>
           {% endfor %}
         </div>
+        {% elseif info.bundle == 'other_info_document' %}
+          {% for info_content in info.content %}
+          {% include "@atoms/09-document/09-document.twig" with {
+            "field_file": info_content.file,
+            "fileurl": info_content.fileurl,
+          } %}
+          {% endfor %}
+        {% endif %}
       </div>
     {% endfor %}
 

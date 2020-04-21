@@ -404,33 +404,33 @@ function public_body_page_fields() {
     if ($otherInfo = $node->get('field_other_info')->getValue()) {
       foreach ($otherInfo as $otherInfoKey => $value) {
         $otherInfoParagraph = Paragraph::load($value['target_id']);
-        $theFields['other_info'][$otherInfoKey]['title'] = $otherInfoParagraph->field_other_info_title->value;
+        $theFields['other_info'][$otherInfoKey] = [
+          'bundle' => $otherInfoParagraph->bundle(),
+          'title' => $otherInfoParagraph->field_title->value,
+          'content' => [],
+        ];
 
-        if ($otherInfoContentParagraph = $otherInfoParagraph->get('field_content')->getValue()) {
-          foreach ($otherInfoContentParagraph as $otherInfoContentKey => $value) {
-            $otherInfoContent = Paragraph::load($value['target_id']);
+        switch ($otherInfoParagraph->bundle()) {
+          case 'other_info_card':
+            foreach ($otherInfoParagraph->get('field_resources')->getValue() as $value) {
+              $otherInfoContent = Paragraph::load($value['target_id']);
 
-            switch ($otherInfoContent->bundle()) {
-              case 'other_info_links':
-                $values = [
-                  'type' => 'link',
-                  'id' => $otherInfoContent->id(),
-                  'title' => $otherInfoContent->field_title->value,
-                  'description' => $otherInfoContent->field_description->value,
-                  'url' => Url::fromUri($otherInfoContent->field_link->uri)->toString(),
-                ];
-                break;
-              case 'document':
-                $values = [
-                  'type' => 'document',
-                  'file' => $otherInfoContent->field_file,
-                  'fileurl' => file_create_url($otherInfoContent->field_file->entity->field_media_file->entity->getFileUri()),
-                ];
-                break;
+              $theFields['other_info'][$otherInfoKey]['content'][] = [
+                'id' => $otherInfoContent->id(),
+                'title' => $otherInfoContent->field_title->value,
+                'description' => $otherInfoContent->field_description->value,
+                'url' => Url::fromUri($otherInfoContent->field_link->uri)->toString(),
+              ];
             }
-
-            $theFields['other_info'][$otherInfoKey]['content'][] = $values;
-          }
+            break;
+          case 'other_info_document':
+            foreach ($otherInfoParagraph->field_file as $value) {
+              $theFields['other_info'][$otherInfoKey]['content'][] = [
+                'file' => $value,
+                'fileurl' => file_create_url($value->entity->field_media_file->entity->getFileUri()),
+              ];
+            }
+            break;
         }
       }
     }
