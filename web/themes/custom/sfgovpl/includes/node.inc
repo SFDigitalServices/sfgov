@@ -418,8 +418,8 @@ function public_body_page_fields() {
               $theFields['other_info'][$otherInfoKey]['content'][] = [
                 'id' => $otherInfoContent->id(),
                 'title' => $otherInfoContent->field_title->value,
-                'description' => $otherInfoContent->field_description->value,
-                'url' => Url::fromUri($otherInfoContent->field_link->uri)->toString(),
+                'description' => $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL,
+                'url' => $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL,
               ];
             }
             break;
