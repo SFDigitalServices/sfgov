@@ -6,6 +6,7 @@ use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Entity;
 use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess_node().
@@ -395,6 +396,30 @@ function public_body_page_fields() {
               'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
               'photo' => $styleThumbnail->buildUrl($personNode->get('field_photo')->entity->uri->value),
             );
+          }
+        }
+      }
+    }
+    if ($otherInfo = $node->get('field_other_info')->getValue()) {
+      foreach ($otherInfo as $otherInfoKey => $value) {
+        $otherInfoParagraph = Paragraph::load($value['target_id']);
+        $theFields['other_info'][$otherInfoKey]['title'] = $otherInfoParagraph->field_other_info_title->value;
+
+        if ($otherInfoContentParagraph = $otherInfoParagraph->get('field_content')->getValue()) {
+          foreach ($otherInfoContentParagraph as $otherInfoContentKey => $value) {
+            $otherInfoContent = Paragraph::load($value['target_id']);
+
+            switch ($otherInfoContent->bundle()) {
+              case 'other_info_links':
+                $theFields['other_info'][$otherInfoKey]['content'][] = [
+                  'type' => 'link',
+                  'id' => $otherInfoContent->id(),
+                  'title' => $otherInfoContent->field_title->value,
+                  'description' => $otherInfoContent->field_description->value,
+                  'url' => Url::fromUri($otherInfoContent->field_link->uri)->toString(),
+                ];
+                break;
+            }
           }
         }
       }

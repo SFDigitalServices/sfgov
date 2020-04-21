@@ -127,6 +127,35 @@
 </div>
 {% endif %}
 
+{% if public_body_fields.other_info %}
+<div class="sfgov-public-body-section sfgov-public-body-other-info sfds-layout-container">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 id="other-info" class="sfgov-public-body-section--heading" role="heading">Other Information</h2>
+
+    {% for info in public_body_fields.other_info %}
+      <div class="sfgov-public-body-section--content">
+        <h4>{{ info.title }}</h4>
+
+        <div class="sfgov-dept-services-section-content service-cards sfgov-container-three-column">
+          {% for info_content in info.content %}
+            {% if info_content.type == 'link' %}
+            <div class="sfgov-container-item">
+              {% include "@theme/atoms/service-card.twig" with {
+                "title": info_content.title,
+                "description": info_content.description,
+                "url": info_content.url,
+              } %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+{% endif %}
+
 {% if public_body_fields.address or public_body_fields.phone_numbers or public_body_fields.email %}
 <div class="sfgov-public-body-section sfgov-public-body-contact sfds-layout-container">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
