@@ -1,0 +1,71 @@
+uuid: ba62a609-48e3-4d23-8c3e-b15e06473a36
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.campaign.field_campaign_about
+    - field.field.node.campaign.field_campaign_theme
+    - field.field.node.campaign.field_content
+    - field.field.node.campaign.field_header_spotlight
+    - field.field.node.campaign.field_logo
+    - field.field.node.campaign.field_spotlight
+    - field.field.node.campaign.field_top_facts
+    - node.type.campaign
+  module:
+    - entity_reference_revisions
+    - user
+id: node.campaign.default
+targetEntityType: node
+bundle: campaign
+mode: default
+content:
+  field_campaign_about:
+    type: entity_reference_revisions_entity_view
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_content:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_header_spotlight:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_spotlight:
+    weight: 3
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_top_facts:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_campaign_theme: true
+  field_logo: true
+  langcode: true
+  links: true
