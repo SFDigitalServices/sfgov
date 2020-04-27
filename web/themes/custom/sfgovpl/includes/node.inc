@@ -30,21 +30,23 @@ function sfgovpl_preprocess_node(&$variables) {
 function topic_page_services() {
   $node = \Drupal::request()->attributes->get('node');
   if($node) {
-    $services = $node->get('field_department_services');
-    if(!empty($services->getValue())) {
-      $txs = array();
-      foreach($services as $service) {
-        $serviceSectionId = $service->getValue()['target_id'];
-        $serviceSectionLoaded = Paragraph::load($serviceSectionId);
-        
-        // load the paragraph and get the transactions
-        $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
-        for($i=0; $i<count($topicTransactions); $i++) {
-          $txId = $topicTransactions[$i]['target_id'];
-          $txs[] = $txId;
+    if($node->hasField('field_department_services')) {
+      $services = $node->get('field_department_services');
+      if(!empty($services->getValue())) {
+        $txs = array();
+        foreach($services as $service) {
+          $serviceSectionId = $service->getValue()['target_id'];
+          $serviceSectionLoaded = Paragraph::load($serviceSectionId);
+
+          // load the paragraph and get the transactions
+          $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
+          for($i=0; $i<count($topicTransactions); $i++) {
+            $txId = $topicTransactions[$i]['target_id'];
+            $txs[] = $txId;
+          }
         }
+        return $txs;
       }
-      return $txs;
     }
   }
   return null;
