@@ -1,0 +1,134 @@
+tmgmt.settings:
+  path: '/admin/tmgmt/settings'
+  defaults:
+    _title: 'Settings'
+    _form: 'Drupal\tmgmt\Form\SettingsForm'
+  requirements:
+    _permission: 'administer tmgmt'
+
+entity.tmgmt_translator.collection:
+  path: '/admin/tmgmt/translators'
+  defaults:
+    _title: 'Providers'
+    _entity_list: 'tmgmt_translator'
+  requirements:
+    _permission: 'administer tmgmt'
+
+entity.tmgmt_translator.add_form:
+  path: '/admin/tmgmt/translators/add'
+  defaults:
+    _title: 'Add Provider'
+    _entity_form: tmgmt_translator.add
+  requirements:
+    _entity_create_access: tmgmt_translator
+
+entity.tmgmt_translator.delete_form:
+  path: '/admin/tmgmt/translators/manage/{tmgmt_translator}/delete'
+  defaults:
+    _entity_form: tmgmt_translator.delete
+  requirements:
+    _entity_access: tmgmt_translator.delete
+
+entity.tmgmt_translator.clone_form:
+  path: '/admin/tmgmt/translators/manage/{tmgmt_translator}/clone'
+  defaults:
+    _title: 'Clone provider'
+    _entity_form: tmgmt_translator.clone
+  requirements:
+    _entity_access: tmgmt_translator.clone
+
+entity.tmgmt_translator.edit_form:
+  path: '/admin/tmgmt/translators/manage/{tmgmt_translator}'
+  defaults:
+    _title: 'Edit provider'
+    _entity_form: tmgmt_translator.edit
+  requirements:
+    _entity_access: tmgmt_translator.update
+
+tmgmt.admin_tmgmt:
+  path: '/admin/tmgmt'
+  defaults:
+    _controller: '\Drupal\tmgmt\Controller\TMGMTController::translatorAdminMenuBlockPage'
+    _title: 'Translation'
+  requirements:
+    _permission: 'administer tmgmt+create translation jobs+accept translation jobs'
+
+entity.tmgmt_job.canonical:
+  path: '/admin/tmgmt/jobs/{tmgmt_job}'
+  defaults:
+    _entity_form: tmgmt_job.edit
+  requirements:
+    _entity_access: tmgmt_job.update
+
+entity.tmgmt_job.delete_form:
+  path: '/admin/tmgmt/jobs/{tmgmt_job}/delete'
+  defaults:
+    _entity_form: tmgmt_job.delete
+  requirements:
+    _entity_access: tmgmt_job.delete
+
+entity.tmgmt_job.resubmit_form:
+  path: '/admin/tmgmt/jobs/{tmgmt_job}/resubmit'
+  defaults:
+    _entity_form: tmgmt_job.resubmit
+  requirements:
+    _entity_access: tmgmt_job.update
+
+entity.tmgmt_job.abort_form:
+  path: '/admin/tmgmt/jobs/{tmgmt_job}/abort'
+  defaults:
+    _entity_form: tmgmt_job.abort
+  requirements:
+    _entity_access: tmgmt_job.update
+
+entity.tmgmt_job_item.canonical:
+  path: '/admin/tmgmt/items/{tmgmt_job_item}'
+  defaults:
+    _title: 'Edit Job Item'
+    _entity_form: tmgmt_job_item.edit
+  requirements:
+    _entity_access: tmgmt_job_item.update
+
+entity.tmgmt_job_item.delete_form:
+  path: '/admin/tmgmt/items/{tmgmt_job_item}/delete'
+  defaults:
+    _entity_form: tmgmt_job_item.delete
+  requirements:
+    _entity_access: tmgmt_job_item.delete
+
+entity.tmgmt_job_item.abort_form:
+  path: '/admin/tmgmt/items/{tmgmt_job_item}/abort'
+  defaults:
+    _entity_form: tmgmt_job_item.abort
+  requirements:
+    _entity_access: tmgmt_job_item.abort
+
+tmgmt.source_overview:
+  path: '/admin/tmgmt/sources/{plugin}/{item_type}'
+  defaults:
+    _form: 'Drupal\tmgmt\Form\SourceOverviewForm'
+  requirements:
+    _entity_create_access: tmgmt_job
+
+entity.tmgmt_job.continuous_add_form:
+  path: '/admin/tmgmt/continuous_jobs/continuous_add'
+  defaults:
+    _entity_form: tmgmt_job.continuous_add
+  requirements:
+    _custom_access: '\Drupal\tmgmt\Form\ContinuousJobForm::access'
+
+tmgmt.source_overview_default:
+  path: '/admin/tmgmt/sources'
+  defaults:
+    _title: 'Translation Sources'
+    _form: 'Drupal\tmgmt\Form\SourceOverviewForm'
+  requirements:
+    _entity_create_access: tmgmt_job
+
+tmgmt.cart:
+  path: '/admin/tmgmt/cart'
+  defaults:
+    _form: 'Drupal\tmgmt\Form\CartForm'
+    _title: 'Cart'
+  requirements:
+    _entity_create_access: tmgmt_job

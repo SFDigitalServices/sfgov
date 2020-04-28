@@ -1,0 +1,57 @@
+@import "../../01-atoms/01-colors/01-colors";
+@import "../../00-protons/02-mixins";
+@import "../../00-protons/01-grid";
+
+.sfgov-pagination {
+  @include clearfix;
+  margin: 60px 0;
+
+  .sfgov-grid-two-columns & {
+    grid-column-end: span 2;
+  }
+
+  @include media($narrow-screen + 1) {
+    margin: 22px 0;
+  }
+}
+
+ul.sfgov-pagination__items {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+li.sfgov-pagination__item {
+  color: $color-primary;
+  display: inline-block;
+  margin: 0 0.15rem;
+  padding: 0;
+  list-style: none;
+  &__ellipsis {
+    padding: 1.15rem 1.6rem;
+  }
+}
+
+.sfgov-pagination__link {
+  &, &:link, &:visited {
+    border-radius: 3px;
+    color: $color-primary;
+    font-weight: 600;
+    padding: 1.15rem 1.6rem;
+    margin: 0;
+    line-height: 1;
+    text-decoration: none;
+    &.is-active {
+      background: $color-primary;
+      color: #fff;
+    }
+  }
+  &:hover {
+    background: $color-primary;
+    color: #fff;
+  }
+}
+

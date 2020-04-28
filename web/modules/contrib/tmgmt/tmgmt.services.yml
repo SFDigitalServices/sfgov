@@ -1,0 +1,28 @@
+services:
+  plugin.manager.tmgmt.translator:
+    class: Drupal\tmgmt\TranslatorManager
+    parent: default_plugin_manager
+  plugin.manager.tmgmt.source:
+    class: Drupal\tmgmt\SourceManager
+    parent: default_plugin_manager
+  tmgmt.continuous:
+    class: Drupal\tmgmt\ContinuousManager
+    arguments: ['@entity_type.manager', '@plugin.manager.tmgmt.source', '@config.factory', '@plugin.manager.tmgmt.translator', '@event_dispatcher']
+  tmgmt.cart:
+    class: Drupal\tmgmt\JobItemCart
+  tmgmt.queue:
+    class: Drupal\tmgmt\JobQueue
+  tmgmt.data:
+    class: Drupal\tmgmt\Data
+    arguments: ['@config.factory']
+  tmgmt.language_matcher:
+    class: Drupal\tmgmt\LanguageMatcher
+  tmgmt.tmgmt_job_item.breadcrumb:
+    class: Drupal\tmgmt\Menu\JobItemBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 101 }
+  tmgmt.segmenter:
+      class: Drupal\tmgmt\NullSegmenter
+  tmgmt.job_checkout_manager:
+    class: Drupal\tmgmt\JobCheckoutManager
+    arguments: ['@request_stack', '@tmgmt.queue', '@module_handler', '@config.factory', '@entity_type.manager']

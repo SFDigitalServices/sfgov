@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Nothing to see here. It's all about the Field/FieldFormatter.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function smart_trim_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.smart_trim':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Smart Trim implements a new field formatter for text fields (text, text_long, and text_with_summary, if you want to get technical) that improves upon the "Summary or Trimmed" formatter.') . '</p>';
+      return $output;
+  }
+}

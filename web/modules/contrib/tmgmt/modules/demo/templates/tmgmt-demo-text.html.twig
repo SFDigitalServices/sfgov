@@ -1,0 +1,77 @@
+{#
+/**
+ * @file
+ * Default theme implementation TMGMT Demo body text of tmgmt_demo.
+ *
+ * Available variables:
+ * - content_language: Content language URL.
+ * - languages_url: Languages URL.
+ * - translatable_nodes: Translatable nodes URL.
+ * - translate_url: Translate URL.
+ * - file_translator: File translator URL.
+ * - tmgmt_local: Tmgmt local URL.
+ *
+ * @ingroup themeable
+ */
+#}
+<p>Welcome to the Translation Management Tool Demo module!</p>
+
+<p>The Translation Management Tool (TMGMT) demo module provides the configuration needed for translating predefined content types - <a href="{{ content_language }}">translatable nodes</a>.</p>
+
+<p>It enables three <a href="{{ languages_url }}">languages</a>. Besides English, it supports German and French.</p>
+
+<p>Content translation is enabled by default. This allows users to translate the content on their own. Also, Export / Import File translator enables exporting source data into a file and import the translated in return.</p>
+
+<ul>
+  <li><span>To get started with the translation, two <a href="{{ translatable_nodes }}">translatable nodes</a> are created. The steps for translation are the following:</span>
+
+  <ul>
+    <li>On the node detail view use the <a href="{{ translate_url }}">"translate" Tab</a>, choose a language and click "Request Translation" to get started.</li>
+    <li>After submitting the job, the status is changed to "In progress". In case of a machine translator, the translation is immediately returned. The status is then "Needs review".</li>
+    <li>"In progress" is the state where we are awaiting the translations from the translator.</li>
+    <li>Once the translations are provided by the translator, we can review the job items (and correct) the translated content. Some translators support feedback cycles. We can send an item that needs a better translation back to the translator with some comments. If the translation is fine, we can accept the job items (or the job). This is when the source items are updated/the translation is created.</li>
+    <li>The job is finally in the state of being published</li>
+  </ul>
+  </li>
+</ul>
+
+<ul>
+  <li><span>In the TMGMT demo module the <a href="{{ file_translator }}">File translator</a> is enabled by default. It allows users to export and import texts via xliff and HTML. The workflow is the following:</span>
+
+  <ul>
+    <li>Submit a job to the File translator. The job is in "active" state.</li>
+    <li>Export it as HTML/XLIFF format.</li>
+    <li>Translate the content by editing the XLIFF files in plaintext or with a proper CAT tool.</li>
+    <li>Import it back on the site.</li>
+    <li>Review the job items/data items. XLIFF does not support a feedback loop or commenting an item. Improvements/fixings can only be done by the reviewer (or by reimporting the improved XLIFF).</li>
+    <li>Press save as completed to accept the translation and finish the process.</li>
+  </ul>
+  </li>
+</ul>
+
+<ul>
+  <li><span>In the TMGMT demo module the <a href="{{ tmgmt_local }}">Drupal user</a> provider is also enabled by default. It allows to assign translation tasks to the users of the site that have the abilities to translate it (The demo adds all the abilities to all the users). The workflow is the following:</span>
+
+  <ul>
+    <li>Submit a job to the Drupal user provider and select translator for the job. The job is in "active" state.</li>
+    <li>The user will translate the task. Also the task items can be reviewed.</li>
+    <li>When the translation is done, the user will set the task as completed.</li>
+    <li>Review the job items. This translator does not support a feedback loop or commenting an item. Improvements/fixings can only be done by the reviewer.</li>
+    <li>Press save as completed to accept the translation and finish the process.</li>
+  </ul>
+  </li>
+</ul>
+
+<p>TMGMT demo also supports translation of paragraphs. To do this, you first need to enable paragraphs_demo and tmgmt_demo after that.</p>
+
+<ul>
+  <li><span>External translation services can be used for creating a foreign language version of the source text. These are the recommended translators:</span>
+
+  <ul>
+    <li><a href="https://www.drupal.org/project/tmgmt_microsoft">Microsoft</a></li>
+    <li><a href="https://www.drupal.org/project/tmgmt_google">Google translate</a></li>
+    <li><a href="https://www.drupal.org/project/tmgmt_mygengo">Gengo</a></li>
+    <li><a href="https://www.drupal.org/project/tmgmt_oht">One Hour Translation</a></li>
+  </ul>
+  </li>
+</ul>

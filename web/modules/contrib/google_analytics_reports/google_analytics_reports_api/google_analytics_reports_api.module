@@ -1,0 +1,261 @@
+<?php
+
+/**
+ * @file
+ * Implements the API through which Google Analytics data can be accessed.
+ */
+
+use Drupal\google_analytics_reports_api\GoogleAnalyticsReportsApiFeed;
+use Drupal\Core\Cache\CacheableRedirectResponse;
+use Drupal\Core\Url;
+
+/**
+ * Instantiate a new GoogleAnalyticsReportsApiFeed object.
+ *
+ * @return object
+ *   GoogleAnalyticsReportsApiFeed object to authorize access and request data
+ *   from the Google Analytics Core Reporting API.
+ */
+function google_analytics_reports_api_gafeed() {
+  $config = \Drupal::configFactory()->getEditable('google_analytics_reports_api.settings');
+
+  // If the access token is still valid, return an authenticated
+  // GoogleAnalyticsReportsApiFeed.
+  $access_token = $config->get('access_token');
+
+  if ($access_token && time() < $config->get('expires_at')) {
+    return new GoogleAnalyticsReportsApiFeed($access_token);
+  }
+  else {
+    // If the site has an access token and refresh token, but the access
+    // token has expired, authenticate the user with the refresh token.
+    $refresh_token = $config->get('refresh_token');
+    if ($refresh_token) {
+      try {
+        $google_analytics_reports_api_feed = new GoogleAnalyticsReportsApiFeed();
+        $google_analytics_reports_api_feed->refreshToken($config->get('client_id'), $config->get('client_secret'), $refresh_token);
+
+        $config
+          ->set('access_token', $google_analytics_reports_api_feed->accessToken)
+          ->set('expires_at', $google_analytics_reports_api_feed->expiresAt)
+          ->save();
+
+        return $google_analytics_reports_api_feed;
+      }
+      catch (\Exception $e) {
+        drupal_set_message(t('There was an authentication error. Message: @message.', ['@message' => $e->getMessage()]), 'error', FALSE);
+        \Drupal::logger('google_analytics_reports_api')->error('There was an authentication error. Message: @message.', ['@message' => $e->getMessage()]);
+        return NULL;
+      }
+    }
+    else {
+      // If there is no access token or refresh token and client is returned
+      // to the config page with an access code, complete the authentication.
+      if (isset($_GET['code'])) {
+        try {
+          $google_analytics_reports_api_feed = new GoogleAnalyticsReportsApiFeed();
+          $redirect_uri = $config->get('redirect_uri');
+
+          $google_analytics_reports_api_feed->finishAuthentication($config->get('client_id'), $config->get('client_secret'), $redirect_uri);
+
+          $config
+            ->set('access_token', $google_analytics_reports_api_feed->accessToken)
+            ->set('expires_at', $google_analytics_reports_api_feed->expiresAt)
+            ->set('refresh_token', $google_analytics_reports_api_feed->refreshToken)
+            ->clear('redirect_uri')
+            ->save();
+
+          drupal_set_message(t('You have been successfully authenticated.'));
+
+          $response = new CacheableRedirectResponse(Url::fromUri($redirect_uri)->toString());
+          $response->send();
+        }
+        catch (Exception $e) {
+          drupal_set_message(t('There was an authentication error. Message: @message.', ['@message' => $e->getMessage()]), 'error', FALSE);
+          \Drupal::logger('google_analytics_reports_api')->error('There was an authentication error. Message: @message.', ['@message' => $e->getMessage()]);
+          return NULL;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Request report data.
+ *
+ * @param array $params
+ *   An associative array containing:
+ *   - profile_id: required
+ *    [default=variable_get('google_analytics_reports_api_profile_id')].
+ *   - metrics: required.
+ *   - dimensions: optional [default=none].
+ *   - sort_metric: optional [default=none].
+ *   - filters: optional [default=none].
+ *   - segment: optional [default=none].
+ *   - start_date: optional [default=2005-01-01].
+ *   - end_date: optional [default=today].
+ *   - start_index: optional [default=1].
+ *   - max_results: optional [default=10,000].
+ * @param array $cache_options
+ *   An optional associative array containing:
+ *   - cid: optional [default=md5 hash].
+ *   - expire: optional [default=CACHE_TEMPORARY].
+ *   - refresh: optional [default=FALSE].
+ *
+ * @return object
+ *   GoogleAnalyticsReportsApiFeed object to authorize access and request data
+ *   from the Google Analytics Core Reporting API after reporting data.
+ */
+function google_analytics_reports_api_report_data($params = [], $cache_options = []) {
+  $config = \Drupal::config('google_analytics_reports_api.settings');
+  if (isset($params['profile_id'])) {
+    $params['profile_id'] = 'ga:' . $params['profile_id'];
+  }
+  else {
+    $params['profile_id'] = 'ga:' . $config->get('profile_id');
+  }
+
+  $ga_feed = google_analytics_reports_api_gafeed();
+
+  if ($ga_feed) {
+    $ga_feed->queryReportFeed($params, $cache_options);
+    return $ga_feed;
+  }
+  else {
+    drupal_set_message(t('There was an authentication error. Please check your Google Analytics API settings and try again.'), 'error', FALSE);
+    \Drupal::logger('google_analytics_reports_api')->error('There was an authentication error. Please check your Google Analytics API settings and try again.');
+    return ['error' => TRUE];
+  }
+}
+
+/**
+ * Programmatically revoke token.
+ */
+function google_analytics_reports_api_revoke() {
+  $ga_feed = google_analytics_reports_api_gafeed();
+  $ga_feed->revokeToken();
+
+  $config = \Drupal::configFactory()->getEditable('google_analytics_reports_api.settings');
+  // Delete module variables.
+  $config
+    ->clear('access_token')
+    ->clear('client_id')
+    ->clear('client_secret')
+    ->clear('default_page')
+    ->clear('expires_at')
+    ->clear('profile_id')
+    ->clear('redirect_uri')
+    ->clear('refresh_token')
+    ->save();
+
+}
+
+/**
+ * Sets the expiry timestamp for cached queries.
+ *
+ * Default is 3 days.
+ *
+ * @return int
+ *   The UNIX timestamp to expire the query at.
+ */
+function google_analytics_reports_api_cache_time() {
+  return time() + \Drupal::config('google_analytics_reports_api.settings')->get('cache_length');
+}
+
+/**
+ * Google Analytics reports profiles for current authorized user.
+ *
+ * @return array/null
+ *   An associative array containing:
+ *   - options: list of current available profiles.
+ *   - profile_id: current default profile id.
+ *   - current_profile: current default profile object.
+ */
+function google_analytics_reports_api_profiles_list() {
+  $config = \Drupal::configFactory()->getEditable('google_analytics_reports_api.settings');
+  $account = google_analytics_reports_api_gafeed();
+  if (($account) && ($account->isAuthenticated())) {
+    $web_properties = NULL;
+    $web_properties_obj = $account->queryWebProperties();
+
+    if (isset($web_properties_obj->results->items)) {
+      $web_properties = $web_properties_obj->results->items;
+    }
+
+    $profiles_obj = $account->queryProfiles();
+    $profiles = [];
+    if (isset($profiles_obj->results->items)) {
+      $profiles = $profiles_obj->results->items;
+    }
+
+    $options = [];
+    $profile_id = $config->get('profile_id');
+
+    $config_google_analytics = \Drupal::config('google_analytics.settings');
+    $google_analytics_account = $config_google_analytics->get('account') ? $config_google_analytics->get('account') : NULL;
+
+    $set_default = FALSE;
+
+    // Add optgroups for each web property.
+    if (!empty($profiles)) {
+      foreach ($profiles as $profile) {
+        $web_property = NULL;
+        foreach ($web_properties as $web_property_value) {
+          if ($web_property_value->id == $profile->webPropertyId) {
+            $web_property = $web_property_value;
+            break;
+          }
+        }
+
+        $options[$web_property->name][$profile->id] = $profile->name . ' (' . $profile->id . ')';
+        // Find current site in the account list.
+        if (empty($profile_id)) {
+          // If Google Analytics module is enabled check it first.
+          if (isset($google_analytics_account) && ($google_analytics_account == $profile->webPropertyId)) {
+            $profile_id = $profile->id;
+            $set_default = TRUE;
+          }
+          // Rough attempt to see if the current site is in the account list.
+          elseif (parse_url($web_property->websiteUrl, PHP_URL_HOST) == $_SERVER['HTTP_HOST']) {
+            $profile_id = $profile->id;
+            $set_default = TRUE;
+          }
+        }
+      }
+    }
+
+    // If no profile ID is set yet, set the first profile in the list.
+    if (empty($profile_id)) {
+      if (count($options)) {
+        $profile_id = key($options[key($options)]);
+        $set_default = TRUE;
+      }
+    }
+
+    if ($set_default) {
+      $config
+        ->set('profile_id', $profile_id)
+        ->save();
+    }
+
+    $current_profile = NULL;
+
+    // Load current profile object.
+    foreach ($profiles as $profile) {
+      if ($profile->id == $profile_id) {
+        $current_profile = $profile;
+        $config
+          ->set('default_page', isset($current_profile->defaultPage) ? '/' . $current_profile->defaultPage : '/')
+          ->save();
+        break;
+      }
+    }
+    $return = [
+      'options' => $options,
+      'profile_id' => $profile_id,
+      'current_profile' => $current_profile,
+    ];
+
+    return $return;
+  }
+}

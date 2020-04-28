@@ -1,0 +1,153 @@
+<?php
+
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\tmgmt\Entity\Job;
+use Drupal\tmgmt_xtm\Plugin\tmgmt\Translator\AbortItem;
+use Drupal\tmgmt_xtm\Plugin\tmgmt\Translator\Cart;
+use Drupal\tmgmt_xtm\Plugin\tmgmt\Translator\Connector;
+use Drupal\tmgmt_xtm\Plugin\tmgmt\Translator\JobEdit;
+use Drupal\tmgmt_xtm\XtmTranslatorUi;
+
+/**
+ * @param array $form
+ * @param FormStateInterface $formState
+ */
+function tmgmt_xtm_form_tmgmt_job_edit_form_alter(&$form, FormStateInterface $formState)
+{
+    $jobEdit = new JobEdit();
+    $jobEdit->editForm($form, $formState);
+}
+
+
+/**
+ * Form id tmgmt-job-item-abort-form
+ * @param array $form
+ * @param FormStateInterface $formState
+ */
+function tmgmt_xtm_form_tmgmt_job_item_abort_form_alter(&$form, FormStateInterface $formState)
+{
+    $abortItem = new AbortItem();
+    $abortItem->getForm($form);
+}
+
+/**
+ * Form id tmgmt-job-item-abort-form
+ * @param array $form
+ * @param FormStateInterface $formState
+ */
+function tmgmt_xtm_form_tmgmt_job_item_abort_form_submit(&$form, FormStateInterface $formState)
+{
+    $abortItem = new AbortItem();
+    $abortItem->submitForm($formState);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * tmgmt-cart-form
+ *
+ * @param $form
+ * @param FormStateInterface $formState
+ */
+function tmgmt_xtm_form_tmgmt_cart_form_alter(&$form, FormStateInterface $formState)
+{
+    $cart = new Cart();
+    $cart->getForm($form);
+}
+
+/**
+ * @param $form
+ * @param FormState $formState
+ */
+function tmgmt_xtm_cart_request_translation_form_submit($form, FormState &$formState)
+{
+    $cart = new Cart();
+    $cart->formSubmit($formState);
+}
+
+/**
+ * Ajax request for available translator's templates.
+ *
+ * @param $form
+ * @param FormState $formState
+ * @return array
+ */
+function ajax_tmgmt_xtm_cart_content_templates($form, FormState $formState)
+{
+    $cart = new Cart();
+    return $cart->getCartContentTemplates($form, $formState);
+}
+
+
+/**
+ * @param $form
+ * @param FormState $formState
+ */
+function tmgmt_xtm_cart_source_overview_validate($form, FormState &$formState)
+{
+    $multiLang = $formState->getValue('multi_lang');
+    if (empty($multiLang['xtm_translator'])) {
+        drupal_set_message(t('Please choose XTM translator.'), 'error');
+    }
+
+    if (empty($formState->getValue('target_language'))) {
+        drupal_set_message(t('Please choose target language.'), 'error');
+    }
+
+}
+
+/**
+ * Single Batch operation.
+ *
+ * @param  array $job
+ *   Job informations from XTM cart form.
+ *
+ * @param  array $job_items
+ *   Job items informations from cart form.
+ *
+ * @param  array &$context
+ *   Information about the status of the batch.
+ */
+function tmgmt_xtm_cart_request_operation($job, $job_items, &$context)
+{
+    $cart = new Cart();
+    $cart->requestOperation($job, $job_items, $context);
+}
+
+/**
+ * @param $job
+ * @param $job_items
+ * @param $context
+ */
+function tmgmt_xtm_cart_request_operation_multiple($job, $job_items, &$context)
+{
+    $cart = new Cart();
+    $cart->requestOperationMultiple($job, $job_items, $context);
+}
+
+/**
+ * @param Job $job
+ */
+function tmgmt_xtm_tmgmt_job_delete(Job $job)
+{
+    try {
+        $translator = $job->getTranslator();
+    } catch (\Drupal\tmgmt\TMGMTException $exception) {
+        return;
+    }
+    if (!$translator || $translator->getPluginId() != 'xtm') {
+        return;
+    }
+    $connector = new Connector();
+    $response = $connector->checkProjectStatus($job);
+    if ($response->activity == XtmTranslatorUi::XTM_STATE_DELETED) {
+        drupal_set_message(t('Could not delete project in XTM. It has been already deleted.'),
+            'error');
+        return;
+    }
+    if ($connector->updateProjectActivity($job)) {
+    } else {
+        drupal_set_message(t('Could not delete project in XTM. Please check settings and/or delete project manually.'),
+            'error');
+    }
+}

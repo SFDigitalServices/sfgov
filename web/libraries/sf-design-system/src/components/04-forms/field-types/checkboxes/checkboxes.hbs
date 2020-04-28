@@ -1,0 +1,16 @@
+<form>
+  <div class="form-group field-s06" data-id="{{ id }}">
+    <fieldset>
+      <legend class="control-label">{{ title }}</legend>
+      <div class="field-wrapper">
+        {{#each options}}
+          <label for="{{ ../id }}_{{ @index }}">
+            <input type="checkbox" id="{{../id }}_{{ @index }}" value="{{ @index }}" data-formtype="s06" name="{{ ../id }}" required="">
+            <span class="inline-label">{{ title }}</span>
+          </label>
+        {{/each}}
+        <div class="help-block with-errors"></div>
+      </div>
+    </fieldset>
+  </div>
+</form>

@@ -1,0 +1,56 @@
+protected_pages_list:
+  path: 'admin/config/system/protected_pages'
+  defaults:
+    _title: 'Protected Pages'
+    _controller: '\Drupal\protected_pages\Controller\ProtectedPagesController::protectedPagesList'
+  requirements:
+    _permission: 'administer protected pages configuration'
+
+protected_pages_add:
+  path: 'admin/config/system/protected_pages/add'
+  defaults:
+    _title: 'Add Protected Page'
+    _form: '\Drupal\protected_pages\Form\ProtectedPagesAddForm'
+  requirements:
+    _permission: 'administer protected pages configuration'
+
+protected_pages_edit:
+  path: 'admin/config/system/protected_pages/{pid}/edit'
+  defaults:
+    _title: 'Edit Protected Page'
+    _form: '\Drupal\protected_pages\Form\ProtectedPagesEditForm'
+  requirements:
+    _permission: 'administer protected pages configuration'
+
+protected_pages_delete:
+  path: 'admin/config/system/protected_pages/{pid}/delete'
+  defaults:
+    _title: 'Delete Protected Page'
+    _form: '\Drupal\protected_pages\Form\ProtectedPagesDeleteConfirmForm'
+  requirements:
+    _permission: 'administer protected pages configuration'
+
+protected_pages_send_email:
+  path: 'admin/config/system/protected_pages/{pid}/send_email'
+  defaults:
+    _title: 'Send protected pages details to user by email'
+    _form: '\Drupal\protected_pages\Form\ProtectedPagesSendEmailForm'
+  requirements:
+    _permission: 'administer protected pages configuration'
+
+protected_pages_settings:
+  path: 'admin/config/system/protected_pages/settings'
+  defaults:
+    _title: 'Settings'
+    _form: '\Drupal\protected_pages\Form\ProtectedPagesSettingForm'
+  requirements:
+    _permission: 'administer protected pages configuration'
+
+protected_pages_login_page:
+  path: 'protected-page'
+  defaults:
+    _title_callback: '\Drupal\protected_pages\Form\ProtectedPagesLoginForm::protectedPageTitle'
+    _title: 'Protected page - Enter Password'
+    _form: '\Drupal\protected_pages\Form\ProtectedPagesLoginForm'
+  requirements:
+    _custom_access: '\Drupal\protected_pages\Form\ProtectedPagesLoginForm::accessProtectedPageLoginScreen'

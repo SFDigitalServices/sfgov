@@ -1,0 +1,8 @@
+services:
+  protected_pages.check_protected_page:
+    class: Drupal\protected_pages\EventSubscriber\ProtectedPagesSubscriber
+    tags:
+      - {name: event_subscriber}
+  protected_pages.storage:
+    class: Drupal\protected_pages\ProtectedPagesStorage
+    arguments: ['@database']

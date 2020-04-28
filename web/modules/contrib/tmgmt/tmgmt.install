@@ -1,0 +1,147 @@
+<?php
+
+/**
+ * @file
+ * Update function for the tmgmt module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\tmgmt\Entity\Job;
+use Drupal\Component\Serialization\Yaml;
+use Drupal\tmgmt\JobItemInterface;
+
+/**
+ * Add a field for the HTML tag count.
+ */
+function tmgmt_update_8001() {
+  $storage_definition = BaseFieldDefinition::create('integer')
+    ->setLabel(t('Tags count'))
+    ->setSetting('unsigned', TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('tags_count', 'tmgmt_job_item', 'tmgmt', $storage_definition);
+
+  $storage_definition = BaseFieldDefinition::create('integer')
+    ->setLabel(t('Tags count'))
+    ->setDescription(t('HTML tags count provided by the remote service.'));
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('tags_count', 'tmgmt_remote', 'tmgmt', $storage_definition);
+}
+
+/**
+ * Update the menu parent, to move job to the new translator menu block.
+ */
+function tmgmt_update_8002() {
+  // Update views.
+  $config_factory = \Drupal::configFactory();
+  $view = $config_factory->getEditable('views.view.tmgmt_job_overview');
+  $displays = $view->get('display');
+  $displays['page_1']['display_options']['menu']['parent'] = 'tmgmt.admin_tmgmt';
+  $displays['page_1']['display_options']['menu']['title'] = 'Jobs';
+  $displays['page_1']['display_options']['menu']['description'] = 'Overview of Jobs.';
+  $view->set('display', $displays);
+  $view->save(TRUE);
+}
+
+/**
+ * Add type field to Job entity.
+ */
+function tmgmt_update_8003() {
+  $storage_definition = BaseFieldDefinition::create('list_string')
+    ->setLabel(t('Job type'))
+    ->setDescription(t('Type of job entity, can be Normal or Continuous.'))
+    ->setSetting('allowed_values', [Job::TYPE_NORMAL, Job::TYPE_CONTINUOUS])
+    ->setDefaultValue(Job::TYPE_NORMAL);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('job_type', 'tmgmt_job', 'tmgmt', $storage_definition);
+}
+
+/**
+ * Add continuous job overview.
+ */
+function tmgmt_update_8004() {
+  // Since we are not creating a separate view for continuous jobs we are
+  // removing this code. It has been replaced with a single job overview for
+  // both continuous and normal translation jobs.
+}
+
+
+/**
+ * Add job items overview.
+ */
+function tmgmt_update_8005() {
+  $overview = file_get_contents(drupal_get_path('module', 'tmgmt') . '/config/install/views.view.tmgmt_translation_all_job_items.yml');
+  $values = Yaml::decode($overview);
+  $storage_controller = \Drupal::entityTypeManager()->getStorage('view');
+  $storage_controller->create($values)->save();
+}
+
+/**
+ * Add continuous settings configuration field.
+ */
+function tmgmt_update_8006() {
+  $storage_definition = BaseFieldDefinition::create('map')
+    ->setLabel(t('Continuous settings'))
+    ->setDescription(t('Continuous sources configuration.'))
+    ->setDefaultValue(array());
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('continuous_settings', 'tmgmt_job', 'tmgmt', $storage_definition);
+}
+
+/**
+ * Updates the state to 'continuous' of all continuous translation jobs.
+ */
+function tmgmt_update_8007() {
+  $continuous_jobs = \Drupal::entityTypeManager()->getStorage('tmgmt_job')->loadByProperties(['job_type' => Job::TYPE_CONTINUOUS]);
+  /** @var \Drupal\tmgmt\JobInterface $continuous_job */
+  foreach ($continuous_jobs as $continuous_job) {
+    $continuous_job->setState(Job::STATE_CONTINUOUS);
+  }
+}
+
+/**
+ * Adds the translator state field.
+ */
+function tmgmt_update_8008() {
+  $storage_definition = BaseFieldDefinition::create('string')
+    ->setLabel(t('Provider specific state'));
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('translator_state', 'tmgmt_job_item', 'tmgmt', $storage_definition);
+}
+
+/**
+ * Update the job item overview view to use the new state filter configuration.
+ */
+function tmgmt_update_8009() {
+  \Drupal::service('plugin.manager.views.filter')->clearCachedDefinitions();
+  $config = \Drupal::configFactory()->getEditable('views.view.tmgmt_translation_all_job_items');
+
+  // Make sure that we only update it if the view exists and has a state filter.
+  $prefix = 'display.default.display_options.filters.state';
+  if (!$config->isNew() && $config->get($prefix)) {
+    $config->set($prefix . '.operator', 'job_item_state');
+    $config->set($prefix . '.value', [JobItemInterface::STATE_REVIEW => JobItemInterface::STATE_REVIEW]);
+    $config->set($prefix . '.is_grouped', FALSE);
+    $config->set($prefix . '.group_items', []);
+    $config->set($prefix . '.plugin_id', 'tmgmt_job_item_filter');
+    $config->save(TRUE);
+  }
+}
+
+
+/**
+ * Update the job messages view to use a different pager id.
+ */
+function tmgmt_update_8010() {
+  $config = \Drupal::configFactory()->getEditable('views.view.tmgmt_job_messages');
+
+  // Set the pager id to 1 to avoid conflicts with the job items view.
+  if (!$config->isNew()) {
+    $config->set('display.default.display_options.pager.options.id', 1);
+    $config->save(TRUE);
+  }
+}

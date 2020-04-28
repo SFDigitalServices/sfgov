@@ -1,0 +1,32 @@
+mandrill_template.admin:
+  path: '/admin/config/services/mandrill/templates'
+  defaults:
+    _entity_list: 'mandrill_template_map'
+    _title: 'Mandrill Template Maps'
+  requirements:
+    _permission: 'configure mandrill templates'
+    _mandrill_configuration_access_check: 'TRUE'
+
+mandrill_template.add:
+  path: '/admin/config/services/mandrill/templates/add'
+  defaults:
+    _entity_form: 'mandrill_template_map.add'
+    _title: 'Add Mandrill Template Map'
+  requirements:
+    _permission: 'configure mandrill templates'
+
+entity.mandrill_template_map.edit_form:
+  path: '/admin/config/services/mandrill/templates/{mandrill_template_map}'
+  defaults:
+    _entity_form: 'mandrill_template_map.edit'
+    _title: 'Edit Mandrill Template Map'
+  requirements:
+    _permission: 'configure mandrill templates'
+
+entity.mandrill_template_map.delete_form:
+  path: '/admin/config/services/mandrill/templates/{mandrill_template_map}/delete'
+  defaults:
+    _entity_form: 'mandrill_template_map.delete'
+    _title: 'Delete Mandrill Map'
+  requirements:
+    _permission: 'configure mandrill templates'

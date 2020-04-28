@@ -1,0 +1,10 @@
+services:
+  tmgmt_local.route_subscriber:
+    class: Drupal\tmgmt_local\Routing\RouteSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: event_subscriber }
+  tmgmt_local.tmgmt_local_task_item.breadcrumb:
+    class: Drupal\tmgmt_local\Menu\TMGMTLocalBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 101 }

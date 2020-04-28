@@ -1,0 +1,241 @@
+@import "../../../../node_modules/susy/sass/susy-prefix";
+@import "../../../../node_modules/susy/sass/plugins/svg-grid";
+@import '../../../../node_modules/mq-scss/mq';
+@import '../../../../node_modules/gutter-grid/grid-mixin';
+@import '../../../../node_modules/gutter-grid/grid-classes';
+@import "02-mixins";
+@import "00-breakpoints";
+
+@mixin media($bp) {
+  @media screen and (min-width: #{$bp}) {
+    @content;
+  }
+}
+
+@mixin media-max($bp) {
+  @media screen and (max-width: #{$bp}) {
+    @content;
+  }
+}
+
+// Basic grid settings.
+$susy: (
+  'columns': susy-repeat(12),
+  'gutters': 14px,
+  'spread': 'narrow',
+  'container-spread': 'narrow'
+);
+
+@mixin sfgov-container-full {
+  @include clearfix;
+  @include media($narrow-screen) {
+    width: 949px;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+@mixin sfgov-container-full--no-padding() {
+  @include clearfix;
+  @include media($narrow-screen) {
+    width: 949px;
+    margin: 0 auto;
+  }
+}
+
+@mixin sfgov-grid-two-columns--padding() {
+  @include clearfix;
+  @include media($narrow-screen) {
+    width: 949px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.sfgov-container--full {
+  @include clearfix;
+  padding: 0 0 40px 0;
+  @include media($narrow-screen) {
+    width: 949px;
+    margin: 0 auto;
+  }
+}
+
+.sfgov-container {
+  padding-left: susy-gutter() / 2;
+  padding-right: susy-gutter() / 2;
+  @include media($narrow-screen) {
+    width: 949px;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+.sfgov-width-one-whole {
+  width: susy-span(12 of 12);
+}
+
+.sfgov-width-one-half {
+  width: susy-span(6 wide of 12 wide);
+  float: left;
+  @include media($medium-screen) {
+    width: 100%;
+    float: inherit;
+  }
+}
+
+.sfgov-width-one-third {
+  width: susy-span(4 wide of 12 wide);
+  float: left;
+  @include media($medium-screen) {
+    width: 100%;
+    float: inherit;
+  }
+}
+
+.sfgov-width-one-fourth {
+  width: susy-span(3 wide of 12 wide);
+  float: left;
+  @include media($medium-screen) {
+    width: 100%;
+    float: inherit;
+  }
+}
+
+.sfgov-width-one-sixth {
+  width: susy-span(2 wide of 12 wide);
+  float: left;
+  @include media($medium-screen) {
+    width: susy-span(4 wide of 12 wide);
+    float: left;
+  }
+  @include media($mobile-screen) {
+    width: 100%;
+    float: inherit;
+  }
+}
+.sfgov-width-one-twelfth {
+  width: susy-span(1 wide of 12 wide);
+  float: left;
+  @include media($medium-screen) {
+    width: susy-span(4 wide of 12 wide);
+    float: left;
+  }
+  @include media($mobile-screen) {
+
+    width: 100%;
+    float: inherit;
+  }
+}
+
+.grid-example {
+  color: #fff;
+  .sfgov-grid {
+    background: svg-grid() no-repeat scroll;
+    .sfgov-width-one-whole,
+    .sfgov-width-one-half,
+    .sfgov-width-one-third,
+    .sfgov-width-one-fourth,
+    .sfgov-width-one-sixth,
+    .sfgov-width-one-twelfth {
+      background: #60585c;
+      padding: 10px;
+      text-align: center;
+      border: 1px dotted #e1f3f8;
+    }
+  }
+}
+
+// Grid Two Columns.
+
+.sfgov-grid-two-columns {
+  @include sfgov-grid-two-columns--padding;
+  @include grid($cols:2, $gutter:20px, $outerGutters:false, $resize:false);
+  min-width: initial;
+  > .views-row {
+    border-left-width: 0;
+    border-right-width: 20px;
+  }
+  @include media($narrow-screen) {
+    grid-template-columns: repeat(2, 1fr);
+    // padding: 30px 10px;
+  }
+  .transaction-card {
+    height: 100%;
+  }
+  // ****************************
+  // old grid code (not ie11 friendly)
+  // ****************************
+  // @include sfgov-grid-two-columns--padding;
+  // display: grid;
+  // grid-template-columns: repeat(1, 1fr);
+  // @include media($narrow-screen) {
+  //   grid-template-columns: repeat(2, 1fr);
+  //   // padding: 30px 10px;
+  // }
+  // grid-template-rows: auto;
+  // grid-gap: 20px 20px;
+  // justify-items: stretch;
+  // .transaction-card {
+  //   height: 100%;
+  // }
+}
+
+// Right sidebar.
+
+.sfgov-container--right-sidebar {
+  padding: 50px 0;
+  @include media-max($medium-screen) {
+    display: flex;
+    flex-direction: column;
+  }
+  @include media-max($narrow-screen) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  @include media-max($medium-screen) {
+    padding: 0;
+  }
+  .sfgov-container--content-left {
+    padding: 39px 25px 70px 25px;
+    @include media-max($medium-screen) {
+    }
+    @include media($medium-screen + 1) {
+      @include clearfix;
+      width: susy-span(7.8 narrow of 12 narrow);
+      float: left;
+      padding: 0;
+    }
+    @include media($narrow-screen) {
+      padding: 0;
+    }
+    @include media-max($medium-screen) {
+      padding: 0;
+    }
+  }
+  .sfgov-container--content-right {
+    margin-bottom: 25px;
+    @include media-max($medium-screen) {
+      margin-bottom: 0;
+    }
+    @include media($medium-screen + 1) {
+      width: susy-span(4 narrow of 12 narrow);
+      float: right;
+      @include clearfix;
+      padding: 0;
+    }
+  }
+  .sidebar-block {
+    margin-bottom: 2.6rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Preview.
+.preview {
+  @include clearfix;
+}
+
+

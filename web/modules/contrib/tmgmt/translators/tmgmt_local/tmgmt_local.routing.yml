@@ -1,0 +1,49 @@
+entity.tmgmt_local_task.canonical:
+  path: '/translate/{tmgmt_local_task}'
+  defaults:
+    _entity_form: tmgmt_local_task.edit
+  requirements:
+    _entity_access: tmgmt_local_task.update
+
+entity.tmgmt_local_task.unassign:
+  path: '/translate/{tmgmt_local_task}/unassign'
+  defaults:
+    _entity_form: tmgmt_local_task.unassign
+  requirements:
+    _entity_access: tmgmt_local_task.update
+
+entity.tmgmt_local_task.delete:
+  path: '/translate/{tmgmt_local_task}/delete'
+  defaults:
+    _entity_form: tmgmt_local_task.delete
+  requirements:
+    _entity_access: tmgmt_local_task.delete
+
+entity.tmgmt_local_task.assign:
+  path: '/translate/{tmgmt_local_task}/assign'
+  defaults:
+    _entity_form: tmgmt_local_task.assign
+  requirements:
+    _entity_access: tmgmt_local_task.update
+
+entity.tmgmt_local_task.assign_to_me:
+  path: '/translate/{tmgmt_local_task}/assign_to_me'
+  defaults:
+    _controller: '\Drupal\tmgmt_local\Controller\LocalTaskController::assignToMe'
+  requirements:
+    _entity_access: tmgmt_local_task.update
+    _permission: 'provide translation services'
+
+tmgmt_local_task.assign_multiple:
+  path: '/translate/assign-multiple'
+  defaults:
+    _form: \Drupal\tmgmt_local\Form\AssignMultiple
+  requirements:
+    _permission: 'administer translation tasks'
+
+entity.tmgmt_local_task_item.canonical:
+  path: '/translate/items/{tmgmt_local_task_item}'
+  defaults:
+    _entity_form: tmgmt_local_task_item.edit
+  requirements:
+    _entity_access: tmgmt_local_task_item.update

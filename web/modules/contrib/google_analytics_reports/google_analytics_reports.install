@@ -1,0 +1,87 @@
+<?php
+/**
+ * @file
+ * Contains install and update functions for Google Analytics Reports module.
+ */
+
+use \Drupal\google_analytics_reports\GoogleAnalyticsReports;
+
+/**
+ * Implements hook_schema().
+ */
+function google_analytics_reports_schema() {
+  $schema['google_analytics_reports_fields'] = array(
+    'description' => 'Dimensions and metrics from Google Analytics.',
+    'fields' => array(
+      'gaid' => array(
+        'description' => 'The primary identifier for a column.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'description' => 'The type of column.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data_type' => array(
+        'description' => 'The type of data this column represents.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'column_group' => array(
+        'description' => 'The dimensions/metrics group the column belongs to.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'ui_name' => array(
+        'description' => 'The name/label of the column used in user interfaces (UI).',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'The full description of the column.',
+        'type' => 'text',
+        'size' => 'medium',
+      ),
+      'calculation' => array(
+        'description' => 'This shows how the metric is calculated. Only available for calculated metrics.',
+        'type' => 'varchar',
+        'length' => 128,
+      ),
+    ),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+    'unique keys' => array(
+      'gaid' => array('gaid'),
+    ),
+    'primary key' => array('gaid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function google_analytics_reports_install() {
+  GoogleAnalyticsReports::importFields();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function google_analytics_reports_uninstall() {
+  drupal_uninstall_schema('google_analytics_reports');
+  \Drupal::configFactory()->getEditable('views.view.google_analytics_summary')->delete();
+  \Drupal::configFactory()->getEditable('views.view.google_analytics_reports_page')->delete();
+}

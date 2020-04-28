@@ -1,0 +1,203 @@
+<?php
+
+/**
+ * @file
+ * Defines an entity reference field type to display a view.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function viewfield_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.viewfield':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+
+      $output .= '<p>' . t('The Viewfield module defines an entity reference field type to display a view. Viewfield enables an administrator or content author to integrate a views display into any fieldable entity, such as content, users or paragraphs. In addition, through the use of the <em>Always use default value</em> setting, the same view may automatically be placed into all entities in a bundle. Viewfield has considerable theming support, making it easy to customize presentation. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":link_documentation">online documentation for the Viewfield module</a>.', [':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(), ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#', ':link_documentation' => 'https://www.drupal.org/node/1210138']) . '</p>';
+
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+
+      $output .= '<dt>' . t('Managing and displaying Viewfields') . '</dt>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the Viewfield can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', [':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#']) . '</dd>';
+
+      $output .= '<dt>' . t('Adding a Viewfield') . '</dt>';
+      $output .= '<dd>' . t('Edit the content or other entity type and navigate to the <em>Manage Fields</em> tab. Choose <em>+ Add Field</em> and select <em>Viewfield</em> under the <em>Reference</em> category. Choose the number of field values (distinct view displays) you want to store and press <em>Save Field Settings</em>.') . '</dd>';
+
+      $output .= '<dt>' . t('Assigning field values') . '</dt>';
+      $output .= '<dd>' . t('Assigning a value (or default value) to a Viewfield consists of selecting a View and Display from the select boxes, and providing an optional comma-delimited list of arguments (contextual filters) for the display. The argument list may contain tokens. Token help is available by clicking on the <em>Browse available tokens</em> link shown below the arguments field.') . '</dd>';
+
+      $output .= '<dt>' . t('Always use default value setting') . '</dt>';
+      $output .= '<dd>' . t('In <em>field settings</em>, checking <em>Always use default value</em> means the Viewfield will always use the provided default value(s) when rendering the field, and this field will be hidden in all entity edit forms, making it unnecessary to assign values individually to each piece of content. Nice! If this is checked, a default value <strong>must</strong> be provided.') . '</dd>';
+
+      $output .= '<dt>' . t('Allowed views setting') . '</dt>';
+      $output .= '<dd>' . t('In <em>field settings</em>, check one or more views to restrict the views available for content authors. Leave all items unchecked to allow all views.') . '</dd>';
+
+      $output .= '<dt>' . t('Allowed view display types setting') . '</dt>';
+      $output .= '<dd>' . t('In <em>field settings</em>, check one or more display types to restrict the view display types available for content authors. Leave all items unchecked to allow all display types.') . '</dd>';
+
+      $output .= '<dt>' . t('View title setting') . '</dt>';
+      $output .= '<dd>' . t('On the <em>Manage display</em> page are options to render the view display title in the output. Choose from <em>Above</em>, <em>Inline</em>, <em>Hidden</em>, <em>Visually Hidden</em>.') . '</dd>';
+
+      $output .= '<dt>' . t('Always build output setting') . '</dt>';
+      $output .= '<dd>' . t('On the <em>Manage display</em> page is a setting to produce renderable output even if the view produces no results. This option may be useful for some specialized cases, e.g., to force rendering of an attachment display even if there are no view results.') . '</dd>';
+
+      $output .= '<dt>' . t('Empty view title setting') . '</dt>';
+      $output .= '<dd>' . t('On the <em>Manage display</em> page are options to output the view display title even when the view produces no results. Choose from <em>Above</em>, <em>Inline</em>, <em>Hidden</em>, <em>Visually Hidden</em>. This option has an effect only when <em>Always build output</em> is selected.') . '</dd>';
+
+      $output .= '<dt>' . t('Twig theming') . '</dt>';
+      $output .= '<dd>' . t('Viewfield provides default theming with the <code>viewfield.html.twig</code> and <code>viewfield-item.html.twig</code> templates, which may each be overridden. Enable Twig debugging to view file name suggestions in the rendered HTML.') . '</dd>';
+
+      $output .= '<dt>' . t('CSS styling') . '</dt>';
+      $output .= '<dd>' . t('In addition to the core field CSS classes, Viewfield adds <code>field__item__label</code> for view titles. Because Drupal core does not provide default styling for fields, Viewfield likewise does not provide any CSS styles. Themes must provide their own styling for the <code>field__item__label</code> class.') . '</dd>';
+
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function viewfield_theme() {
+  return [
+    'viewfield' => [
+      'render element' => 'element',
+    ],
+    'viewfield_item' => [
+      'render element' => 'element',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for viewfield templates.
+ *
+ * Default template: viewfield.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: A render element representing the field.
+ *   - attributes: A string containing the attributes for the wrapping div.
+ *   - title_attributes: A string containing the attributes for the title.
+ *
+ * @see template_preprocess_field()
+ */
+function template_preprocess_viewfield(&$variables, $hook) {
+  $element = $variables['element'];
+
+  // Creating variables for the template.
+  $variables['entity'] = $element['#entity'];
+  $variables['entity_type'] = $element['#entity_type'];
+  $variables['bundle'] = $element['#bundle'];
+  $variables['view_mode'] = $element['#view_mode'];
+  $variables['field_name'] = $element['#field_name'];
+  $variables['field_type'] = $element['#field_type'];
+  $variables['label_display'] = isset($element['#label_display']) ? $element['#label_display'] : NULL;
+  $variables['label_hidden'] = ($variables['label_display'] == 'hidden');
+  // Always set the field label - allow themes to decide whether to display it.
+  // In addition the label should be rendered but hidden to support screen
+  // readers.
+  $variables['label'] = isset($element['#title']) ? $element['#title'] : NULL;
+
+  $variables['multiple'] = isset($element['#is_multiple']) ? $element['#is_multiple'] : NULL;
+
+  // Static $default_attributes;
+  //  if (!isset($default_attributes)) {
+  //    $default_attributes = new Attribute();
+  //  }
+  // Merge attributes when a single-value field has a hidden label.
+  //  if ($element['#label_display'] == 'hidden' && !$variables['multiple'] && !empty($element['#items'][0]->_attributes)) {
+  //    $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], (array) $element['#items'][0]->_attributes);
+  //  }
+  // We want other preprocess functions and the theme implementation to have
+  // fast access to the field item render arrays. The item render array keys
+  // (deltas) should always be numerically indexed starting from 0, and looping
+  // on those keys is faster than calling Element::children() or looping on all
+  // keys within $element, since that requires traversal of all element
+  // properties.
+  $variables['items'] = [];
+  $delta = 0;
+  while (!empty($element[$delta])) {
+    // $variables['items'][$delta]['content'] = $element[$delta];.
+    $variables['items'][$delta] = $element[$delta];
+
+    // Modules (e.g., rdf.module) can add field item attributes (to
+    // $item->_attributes) within hook_entity_prepare_view(). Some field
+    // formatters move those attributes into some nested formatter-specific
+    // element in order have them rendered on the desired HTML element (e.g., on
+    // the <a> element of a field item being rendered as a link). Other field
+    // formatters leave them within $element['#items'][$delta]['_attributes'] to
+    // be rendered on the item wrappers provided by field.html.twig.
+    //    $variables['items'][$delta]['attributes'] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
+    $delta++;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * @see system_theme_suggestions_field()
+ */
+function viewfield_theme_suggestions_viewfield(array $variables) {
+  $suggestions = [];
+  $element = $variables['element'];
+
+  $suggestions[] = 'viewfield__' . $element['#field_name'];
+  $suggestions[] = 'viewfield__' . $element['#entity_type'] . '__' . $element['#bundle'];
+  $suggestions[] = 'viewfield__' . $element['#entity_type'] . '__' . $element['#field_name'];
+  $suggestions[] = 'viewfield__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for viewfield item templates.
+ *
+ * Default template: viewfield-item.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An element to display in view mode.
+ */
+function template_preprocess_viewfield_item(&$variables) {
+  $element = &$variables['element'];
+
+  $element['#contextual_links'] = [
+    'viewfield_item' => [
+      'route_parameters' => [
+        'view' => $element['#view_id'],
+        'display_id' => $element['#display_id'],
+      ],
+    ],
+  ];
+
+  $variables['label_display'] = $element['#label_display'];
+  $variables['label_hidden'] = ($element['#label_display'] == 'hidden');
+  $variables['label'] = $element['#title'];
+  $variables['content'] = $element['#content'];
+  $variables['delta'] = $element['#delta'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function viewfield_theme_suggestions_viewfield_item(array $variables) {
+  $suggestions = [];
+  $element = $variables['element'];
+
+  $suggestions[] = 'viewfield_item__' . $element['#field_name'];
+  $suggestions[] = 'viewfield_item__' . $element['#field_name'] . '__' . ($element['#delta'] + 1);
+  $suggestions[] = 'viewfield_item__' . $element['#field_name'] . '__' . $element['#view_id'];
+  $suggestions[] = 'viewfield_item__' . $element['#field_name'] . '__' . $element['#display_id'];
+  $suggestions[] = 'viewfield_item__' . $element['#field_name'] . '__' . $element['#view_id'] . '__' . $element['#display_id'];
+  $suggestions[] = 'viewfield_item__' . $element['#view_id'];
+  $suggestions[] = 'viewfield_item__' . $element['#view_id'] . '__' . $element['#display_id'];
+  $suggestions[] = 'viewfield_item__' . $element['#display_id'];
+
+  return $suggestions;
+}

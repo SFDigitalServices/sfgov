@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function telephone_validation_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'install') {
+    if (!class_exists('\\libphonenumber\\PhoneNumberUtil')) {
+      $requirements['telephone_validation'] = [
+        'title' => t('Composer dependencies'),
+        'description' => t('This module can be only installed with Composer as it uses composer dependencies. Read more on https://www.drupal.org/node/2718229'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
+  return $requirements;
+}

@@ -1,0 +1,399 @@
+<?php
+
+/**
+ * @file
+ * Source plugin for the Translation Management system that handles entities.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Plugin\DataType\EntityReference;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\tmgmt\JobInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\tmgmt\JobItemInterface;
+use Drupal\tmgmt_content\DefaultFieldProcessor;
+use Drupal\tmgmt_content\LinkFieldProcessor;
+use Drupal\tmgmt_content\MetatagsFieldProcessor;
+use Drupal\tmgmt_content\PathFieldProcessor;
+use Drupal\tmgmt_content\Plugin\tmgmt\Source\ContentEntitySource;
+
+/**
+ * Implements hook_tmgmt_source_suggestions().
+ */
+function tmgmt_content_tmgmt_source_suggestions(array $items, JobInterface $job) {
+  $suggestions = array();
+
+  foreach ($items as $item) {
+    if ($item instanceof JobItemInterface && $item->getPlugin() == 'content') {
+      // Load the entity, skip if it can't be loaded.
+      $entity = \Drupal::entityTypeManager()->getStorage($item->getItemType())->load($item->getItemId());
+      if (!$entity || !($entity instanceof ContentEntityInterface)) {
+        continue;
+      }
+
+      // Load translatable menu items.
+      /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+      $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+      $entity_type = $entity->getEntityType()->id();
+      $menu_items = $menu_link_manager->loadLinksByRoute(
+        'entity.' . $entity_type . '.canonical',
+        [$entity_type => $entity->id()]
+      );
+
+      if (!empty($menu_items)) {
+        foreach ($menu_items as $menu_item) {
+          /** @var \Drupal\menu_link_content\MenuLinkContentInterface $target */
+          $target = \Drupal::service('entity.repository')->loadEntityByUuid($menu_item->getBaseId(), $menu_item->getDerivativeId());
+          if ($target->hasTranslation($job->getSourceLangcode())) {
+            $suggestions[] = [
+              'job_item' => tmgmt_job_item_create('content', $menu_item->getBaseId(), $target->id()),
+              'reason' => t('Menu item @label', ['@label' => $target->label()]),
+              'from_item' => $item->id(),
+            ];
+          }
+        }
+      }
+
+      $embedded_fields = ContentEntitySource::getEmbeddableFields($entity);
+
+      // Loop over all fields, check if they are NOT translatable. Only if a
+      // field is not translatable we may suggest a referenced entity.
+      $content_translation_manager = \Drupal::service('content_translation.manager');
+      foreach ($entity as $field) {
+        /* @var \Drupal\Core\Field\FieldItemListInterface $field */
+        $definition = $field->getFieldDefinition();
+
+        // Skip fields that are already embedded.
+        if (isset($embedded_fields[$definition->getName()])) {
+          continue;
+        }
+
+        // Loop over all field items.
+        foreach ($field as $field_item) {
+          // Loop over all properties of a field item.
+          foreach ($field_item->getProperties(TRUE) as $property) {
+            if ($property instanceof EntityReference && $target = $property->getValue()) {
+              $enabled = $content_translation_manager->isEnabled($target->getEntityTypeId(), $target->bundle());
+              if ($enabled && $target->hasTranslation($job->getSourceLangcode())) {
+                // Add the translation as a suggestion.
+                $suggestions[] = array(
+                  'job_item' => tmgmt_job_item_create('content', $target->getEntityTypeId(), $target->id()),
+                  'reason' => t('Field @label', array('@label' => $definition->getLabel())),
+                  'from_item' => $item->id(),
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return $suggestions;
+}
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for tmgmt_settings_form().
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   */
+function tmgmt_content_form_tmgmt_settings_form_alter(array &$form, FormStateInterface $form_state) {
+  module_load_include('inc', 'views', 'views.views');
+  $entity_types = \Drupal::entitytypeManager()->getDefinitions();
+
+  $form['content'] = array(
+    '#type' => 'details',
+    '#title' => t('Embedded references'),
+    '#description' => t('All checked reference fields will automatically add the translatable data of the reference to the job. This is only available when the target is enabled for translation. It is recommended to only use this when the targets are only used once, otherwise they might get translated multiple times.'),
+    '#open' => TRUE,
+  );
+
+  $form['content']['embedded_fields'] = array(
+    '#tree' => TRUE,
+  );
+
+  $content_translation_manager = \Drupal::service('content_translation.manager');
+
+  $always_embedded = [];
+  foreach ($entity_types as $entity_type) {
+    if ($content_translation_manager->isEnabled($entity_type->id())) {
+      $field_options = array();
+      $descriptions = [];
+      $translatable_bundles = array_filter(array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type->id())), function ($bundle) use ($entity_type, $content_translation_manager) {
+        return $content_translation_manager->isEnabled($entity_type->id(), $bundle);
+      });
+      $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type->id());
+
+      foreach ($storage_definitions as $field_name => $storage_definition) {
+
+        // Filter out storage definitions that do not have at least one
+        // field definition on a translatable bundle, flag those that are set to
+        // translatable.
+        $allowed_option = FALSE;
+        $untranslatable_option = FALSE;
+        foreach ($translatable_bundles as $bundle) {
+          $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type->id(), $bundle);
+          if (isset($field_definitions[$field_name])) {
+            $allowed_option = TRUE;
+            if (!$field_definitions[$field_name]->isTranslatable()) {
+              $untranslatable_option = TRUE;
+            }
+            break;
+          }
+        }
+
+        if (!$allowed_option) {
+          continue;
+        }
+
+        $property_definitions = $storage_definition->getPropertyDefinitions();
+        foreach ($property_definitions as $property_definition) {
+          // Look for entity_reference properties where the storage definition
+          // has a target type setting and that is enabled for content
+          // translation.
+          // @todo Support dynamic entity references and make this more flexible
+          //   in general.
+          if (in_array($property_definition->getDataType(), ['entity_reference', 'entity_revision_reference']) && $storage_definition->getSetting('target_type') && $content_translation_manager->isEnabled($storage_definition->getSetting('target_type'))) {
+            if ($storage_definition instanceof FieldStorageConfigInterface) {
+              list($label) = views_entity_field_label($entity_type->id(), $storage_definition->getName());
+              // Entity types with this key set are considered composite
+              // entities and always embedded in others. Do not expose them as
+              // their own item type.
+              $target_entity_type = \Drupal::entityTypeManager()->getDefinition($storage_definition->getSetting('target_type'));
+              // @todo: Also support translatable always embedded fields?
+              if ($target_entity_type->get('entity_revision_parent_type_field') && $untranslatable_option) {
+                $id = str_replace('.', '_', $storage_definition->id());
+                $always_embedded[$id] = $entity_type->getLabel() . ': ' . $label;
+              }
+              else {
+                $field_options[$storage_definition->getName()] = $label;
+                if (!$untranslatable_option) {
+                  $descriptions[$storage_definition->getName()]['#description'] = t('Note: This is a translatable field, embedding this will add a translation on the existing reference.');
+                }
+              }
+            }
+            else {
+              $field_options[$storage_definition->getName()] = $storage_definition->getLabel();
+              $descriptions[$storage_definition->getName()]['#description'] = t('Note: This is a translatable field, embedding this will add a translation on the existing reference.');
+            }
+            break;
+          }
+        }
+      }
+      if (!empty($field_options)) {
+        $default_value = array_keys((array) \Drupal::config('tmgmt_content.settings')->get('embedded_fields.' . $entity_type->id()));
+        $form['content']['embedded_fields'][$entity_type->id()] = array(
+          '#type' => 'checkboxes',
+          '#title' => $entity_type->getLabel(),
+          '#options' => $field_options,
+          '#default_value' => $default_value,
+        ) + $descriptions;
+
+      }
+    }
+  }
+  if (!empty($always_embedded)) {
+    $form['content']['always_embedded'] = array(
+      '#type' => 'item',
+      '#title' => t('Always embedded'),
+      '#description' => t('These references are always embedded in the translatable data.'),
+      '#description_display' => 'after',
+      'list' => array(
+        '#theme' => 'item_list',
+        '#items' => $always_embedded,
+      ),
+    );
+  }
+
+  $form['#submit'][] = 'tmgmt_content_settings_submit';
+}
+
+/**
+ * Submit function set by tmgmt_content_form_tmgmt_settings_form_alter().
+ */
+function tmgmt_content_settings_submit(array &$form, FormStateInterface $form_state) {
+  $embedded_fields = array();
+  foreach ($form_state->getValue('embedded_fields', []) as $key => $fields) {
+    foreach (array_filter($fields) as $id => $label) {
+      $embedded_fields[$key][$id] = TRUE;
+    }
+  }
+
+  \Drupal::configFactory()->getEditable('tmgmt_content.settings')
+    ->set('embedded_fields', $embedded_fields)
+    ->save();
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function tmgmt_content_entity_insert(EntityInterface $entity) {
+  if ($entity instanceof ContentEntityInterface && !$entity->getEntityType()->get('entity_revision_parent_type_field')) {
+    tmgmt_content_create_continuous_job_items($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function tmgmt_content_entity_update(EntityInterface $entity) {
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->getEntityType()->get('entity_revision_parent_type_field')) {
+    $entity = $entity->getUntranslated();
+    $source_langcode = $entity->language()->getId();
+    $current_job_items = tmgmt_job_item_load_latest('content', $entity->getEntityTypeId(), $entity->id(), $source_langcode);
+    if ($current_job_items) {
+      /** @var \Drupal\tmgmt\JobItemInterface $job_item */
+      foreach ($current_job_items as $job_item) {
+        // If the job item is not yet submitted update its data.
+        if ($job_item->getJob()->isSubmittable() || $job_item->isInactive()) {
+          $job_item->resetData();
+          $job_item->addMessage('Updated source data.');
+        }
+        elseif ($job_item->getJob()->isContinuous()) {
+          $continuous_manager = \Drupal::service('tmgmt.continuous');
+          $continuous_manager->addItem($job_item->getJob(), 'content', $entity->getEntityTypeId(), $entity->id());
+        }
+      }
+    }
+    tmgmt_content_create_continuous_job_items($entity);
+  }
+}
+
+/**
+ * Creates continuous job items for entity.
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   Entity to be inserted or updated.
+ *
+ * @return int
+ *   Number of created continuous job items.
+ */
+function tmgmt_content_create_continuous_job_items(ContentEntityInterface $entity) {
+  $job_items_count = 0;
+  $entity = $entity->getUntranslated();
+  $source_langcode = $entity->language()->getId();
+  $content_translation_manager = \Drupal::service('content_translation.manager');
+  if ($content_translation_manager->isEnabled($entity->getEntityTypeId(), $entity->bundle())) {
+    $continuous_manager = \Drupal::service('tmgmt.continuous');
+    $jobs = $continuous_manager->getContinuousJobs($source_langcode);
+    foreach ($jobs as $job) {
+      if ($continuous_manager->addItem($job, 'content', $entity->getEntityTypeId(), $entity->id())) {
+        $job_items_count++;
+      }
+    }
+  }
+  return $job_items_count;
+}
+
+/**
+ * Creates continuous job items for entity.
+ *
+ * Batch callback function.
+ */
+function tmgmt_content_create_continuous_job_items_batch_finished($success, $results, $operations) {
+  if ($success) {
+    if ($results['job_items'] !== 0) {
+      \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($results['job_items'], '1 continuous job item has been created.', '@count continuous job items have been created.'));
+    }
+    else {
+      \Drupal::messenger()->addWarning(t('None of the selected sources can be added to continuous jobs.'));
+    }
+  }
+  else {
+    // An error occurred.
+    $error_operation = reset($operations);
+    $message = t('An error occurred while processing %error_operation with arguments: @arguments', array(
+      '%error_operation' => $error_operation[0],
+      '@arguments' => print_r($error_operation[1], TRUE),
+    ));
+    \Drupal::messenger()->addError($message);
+  }
+
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function tmgmt_content_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  $result = AccessResult::neutral();
+  $key = \Drupal::request()->query->get('key');
+  if ($entity instanceof ContentEntityInterface && $operation == 'view' && $key) {
+    $entity = $entity->getUntranslated();
+    $source_langcode = $entity->language()->getId();
+    $current_job_items = tmgmt_job_item_load_latest('content', $entity->getEntityTypeId(), $entity->id(), $source_langcode);
+    /** @var \Drupal\tmgmt\JobItemInterface $job_item */
+    if ($current_job_items) {
+      foreach ($current_job_items as $job_item) {
+        $valid_key = \Drupal::service('tmgmt_content.key_access')
+          ->getKey($job_item);
+        if ($key === $valid_key && \Drupal::config('tmgmt.settings')->get('anonymous_access')) {
+          $result = AccessResult::allowed();
+        }
+        $result->addCacheableDependency($job_item);
+      }
+      $result->addCacheableDependency(\Drupal::config('tmgmt.settings'));
+    }
+  }
+  return $result->addCacheContexts(['url.query_args:key']);
+}
+
+/**
+ * Implements hook_FORM_ID_alter().
+ */
+function tmgmt_content_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+
+  /** @var \Drupal\field\Entity\FieldConfig $field_config */
+  $field_config = $form_state->getFormObject()->getEntity();
+  $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field_config->getTargetEntityTypeId(), $field_config->getTargetBundle());
+
+  $form['tmgmt_content_excluded'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Exclude from translations'),
+    '#weight' => 0,
+    '#default_value' => $field_config->getThirdPartySetting('tmgmt_content', 'excluded', 0),
+    '#description' => t('This field will no longer be exported and translated by Translation Management Tool but can still be translated manually.'),
+    '#states' => [
+      'visible' => [
+        ':input[name="translatable"]' => ['checked' => TRUE],
+      ],
+    ],
+    '#access' => $bundle_is_translatable,
+  );
+
+  $form['#entity_builders'][] = 'tmgmt_content_entity_builder';
+}
+
+/**
+ * Entity builder callback.
+ */
+function tmgmt_content_entity_builder($entity_type, FieldConfigInterface $entity, &$form, FormStateInterface $form_state) {
+  $exclude_from_translation = $form_state->getValue('tmgmt_content_excluded');
+  $entity->setThirdPartySetting('tmgmt_content', 'excluded', $exclude_from_translation);
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function tmgmt_content_field_info_alter(&$info) {
+  if (isset($info['metatag'])) {
+    $info['metatag']['tmgmt_field_processor'] = MetatagsFieldProcessor::class;
+  }
+  if (isset($info['path'])) {
+    $info['path']['tmgmt_field_processor'] = PathFieldProcessor::class;
+  }
+  if (isset($info['link'])) {
+    $info['link']['tmgmt_field_processor'] = LinkFieldProcessor::class;
+  }
+
+  // Set a default processor class for all fields that do not have one yet.
+  foreach ($info as &$field_type) {
+    if (!isset($field_type['tmgmt_field_processor'])) {
+      $field_type['tmgmt_field_processor'] = DefaultFieldProcessor::class;
+    }
+  }
+
+}

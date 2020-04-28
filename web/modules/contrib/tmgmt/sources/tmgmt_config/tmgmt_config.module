@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the TMGMT Config source module.
+ */
+
+use Drupal\tmgmt_config\WebformConfigProcessor;
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function tmgmt_config_config_schema_info_alter(&$definitions) {
+  if (isset($definitions['webform.webform.*'])) {
+    $definitions['webform.webform.*']['tmgmt_config_processor'] = WebformConfigProcessor::class;
+  }
+}

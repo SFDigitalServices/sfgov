@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks for tmgmt_local module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function tmgmt_local_install() {
+  // Assign form settings for the 'default' form mode.
+  $form_display = entity_get_form_display('user', 'user', 'default');
+  $form_display->setComponent('tmgmt_translation_skills', array(
+    'type' => 'tmgmt_language_combination_default',
+  ));
+  $form_display->save();
+  // Assign form settings for the 'register' form mode.
+  $form_display = entity_get_form_display('user', 'user', 'register');
+  $form_display->setComponent('tmgmt_translation_skills', array(
+    'type' => 'tmgmt_language_combination_default',
+  ));
+  $form_display->save();
+}
+

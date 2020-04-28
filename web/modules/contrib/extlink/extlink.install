@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install hook for the External Links module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function extlink_install() {
+  // Weight needs to be 1 for compatibility with SpamSpan.
+  module_set_weight('extlink', 1);
+}
+
+/**
+ * Add extlink and mailto icon labels to the default configuration.
+ */
+function extlink_update_8101() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('extlink.settings');
+  $config->set('extlink_label', '(link is external)');
+  $config->set('extlink_mailto_label', '(link sends email)');
+  $config->save(TRUE);
+}

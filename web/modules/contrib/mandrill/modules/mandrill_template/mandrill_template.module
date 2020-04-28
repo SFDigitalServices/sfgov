@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * @file
+ * Enables Drupal to send email using Mandrill's template system.
+ */
+
+/**
+ * Loads a single Mandrill Template Map, or all if no ID is provided.
+ *
+ * @param string $id
+ *   The ID of the Template Map to load.
+ *
+ * @return array
+ *   Array of Template Maps.
+ */
+function mandrill_template_map_load_entities($id = NULL) {
+  $query = \Drupal::entityQuery('mandrill_template_map');
+
+  if (!empty($id)) {
+    $query->condition('id', $id);
+  }
+
+  $map_ids = $query->execute();
+  $template_maps = \Drupal\mandrill_template\Entity\MandrillTemplateMap::loadMultiple($map_ids);
+
+  return (!empty($id)) ? reset($template_maps) : $template_maps;
+}
+
+/**
+ * Gets the Mandrill Template Map configured for a mailsystem key, if any.
+ *
+ * Will search for a default-system mapping if none is availble for a given key.
+ * 
+ * @param string $module_key
+ *   Module key to use when searching for a template mapping.
+ * @param string $module
+ *   Module name to use when searching for a template mapping.
+ *
+ * @return entity
+ *   The Mandrill Template Map, if found.
+ */
+function mandrill_template_map_load_by_mailsystem($module_key, $module) {
+  // Append the default-system condition as a fallback.
+  $params = array($module_key, $module, 'default-system');
+
+  $map_ids = \Drupal::entityQuery('mandrill_template_map')
+    ->condition('mailsystem_key', $params, 'IN')
+    ->execute();
+
+  $template_maps = \Drupal\mandrill_template\Entity\MandrillTemplateMap::loadMultiple($map_ids);
+
+  $module_match = FALSE;
+  if (!empty($template_maps)) {
+    /* @var $map \Drupal\mandrill_template\Entity\MandrillTemplateMap */
+    foreach ($template_maps as $template_map) {
+      switch ($template_map->mailsystem_key) {
+        case $module_key:
+          return $template_map;
+
+        case $module:
+          $module_match = $template_map;
+          break;
+      }
+    }
+
+    return $module_match ? $module_match : reset($template_maps);
+  }
+
+  return NULL;
+}
+
+/**
+ * Get all mailsystem keys pointed at mandrill and their template mappings.
+ * 
+ * @return array
+ *   Returns an array with indexes matching each module which is assigned
+ *   to use Mandrill for email sends, and values equal to the template_map_ids
+ *   that are assigned to those modules. If no template maps are assigned, the
+ *   value is set to NULL.
+ */
+function mandrill_template_map_usage() {
+  $mailsystem_config = \Drupal::service('config.factory')->getEditable('mailsystem.settings');
+  $defaults = $mailsystem_config->get('defaults');
+  $modules = $mailsystem_config->get('modules');
+
+  $system_assignments = array();
+
+  if (in_array($defaults['sender'], ['mandrill_mail', 'mandrill_test_mail'])) {
+    $system_assignments['default-system'] = NULL;
+  }
+
+  if (!empty($modules)) {
+    foreach (array_keys($modules) as $module_name) {
+      foreach ($modules[$module_name] as $key => $options) {
+        if (in_array($options['sender'], ['mandrill_mail', 'mandrill_test_mail'])) {
+          $system_assignments[$module_name . '_' . $key] = NULL;
+        }
+      }
+    }
+  }
+
+  $maps = mandrill_template_map_load_entities();
+  foreach ($maps as $map) {
+    if (isset($map->mailsystem_key) &&
+      array_key_exists($map->mailsystem_key, $system_assignments) &&
+      isset($map->mandrill_template_map_entity_id)
+    ) {
+        $system_assignments[$map->mailsystem_key] = $map->mandrill_template_map_entity_id;
+    }
+  }
+  uksort($system_assignments, '_mandrill_template_map_mailsystem_sort');
+
+  return $system_assignments;
+}
+
+/**
+ * Simple sorting algorithm to organize mailsystems arrays in a logical way.
+ * 
+ * @param string $a
+ *   a mailsystem key name
+ * @param string $b
+ *   a mailsystem key name
+ * 
+ * @return int
+ *   Negative if $a should come before $b, else positive.
+ */
+function _mandrill_template_map_mailsystem_sort($a, $b) {
+  $first = "default-system";
+  $last = "mandrill_test";
+  if ($a == $first || $b == $last) {
+    return -1;
+  }
+  if ($b == $first || $a == $last) {
+    return 1;
+  }
+  // Otherwise sort alphabetically, case-agnostic
+  return strcasecmp($a, $b);
+}

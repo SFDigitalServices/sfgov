@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains anonymous_redirect.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function anonymous_redirect_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the anonymous_redirect module.
+    case 'help.page.anonymous_redirect':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Redirects anonymous users to the /user page or another domain.');
+      return $output;
+
+    default:
+  }
+}

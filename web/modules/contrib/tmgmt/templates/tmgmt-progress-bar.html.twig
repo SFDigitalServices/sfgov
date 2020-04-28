@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the progress bar.
+ *
+ * Available variables:
+ * - title: The title of the field that will display when hover.
+ * - width_pending: The width of the pending bar.
+ * - width_translated: The width of the translated bar.
+ * - width_reviewed: The width of the reviewed bar.
+ * - width_accepted: The width of the accepted bar.
+ * - count_pending: The count value of the pending bar.
+ * - count_translated: The count value of the translated bar.
+ * - count_reviewed: The count value of the reviewed bar.
+ * - count_accepted: The count value of the accepted bar.
+ *
+ * @ingroup themeable
+ */
+#}
+<div title="{{ title }}">
+  {% for state, part in parts %}
+    {% if part.width %}
+      <div class="tmgmt-progress tmgmt-progress-{{ state }}" style="width: {{ part.width }}%">{{ part.count }}</div>
+    {% endif %}
+  {% endfor %}
+</div>

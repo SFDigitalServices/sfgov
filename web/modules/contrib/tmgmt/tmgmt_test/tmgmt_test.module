@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Module file of the translation management test module.
+ */
+
+use Drupal\tmgmt\JobInterface;
+
+/**
+ * Implements hook_tmgmt_translator_info_alter().
+ */
+function tmgmt_test_tmgmt_translator_info_alter(&$definitions) {
+  $map = \Drupal::state()->get('tmgmt_test_translator_map_languages');
+  $definitions['test_translator']['map_remote_languages'] = $map !== NULL ? $map : TRUE;
+}
+
+/**
+ * Implements hook_tmgmt_source_suggestions().
+ */
+function tmgmt_test_tmgmt_source_suggestions(array $items, JobInterface $job) {
+  $suggestions = array();
+  foreach ($items as $item) {
+    if ($item->getPlugin() == 'test_source') {
+      $suggestions[] = array(
+        'job_item' => tmgmt_job_item_create('test_source', $item->getItemType() .  '_suggestion', $item->getItemId()),
+        'reason' => t('Test suggestion for @type source @id', array('@type' => $item->getItemType(),'@id' => $item->getItemId())),
+        'from_item' => $item->id(),
+      );
+    }
+  }
+  return $suggestions;
+}
+
+/**
+ * Implements hook_tmgmt_fle_text_processor_plugin_info().
+ */
+function tmgmt_test_tmgmt_file_text_processor_plugin_info() {
+  return array(
+    'test' => array(
+      'label' => t('Test'),
+      'plugin controller class' => 'TMGMTTestTextProcessor',
+    ),
+  );
+}
+
+/**
+ * Implements hook_tmgmt_data_item_text_output_alter().
+ */
+function tmgmt_test_tmgmt_data_item_text_output_alter(&$source_text, &$translation_text, array $context) {
+  $source_text = str_replace('First', 'Second', $source_text);
+  $translation_text = str_replace('First', 'Second', $translation_text);
+}
+
+/**
+ * Implements hook_tmgmt_data_item_text_input_alter().
+ */
+function tmgmt_test_tmgmt_data_item_text_input_alter(&$translation_text, array $context) {
+  $translation_text = str_replace('Second', 'First', $translation_text);
+}
+
+/**
+ * Implements hook_tmgmt_job_item_state_definitions_alter().
+ */
+function tmgmt_test_tmgmt_job_item_state_definitions_alter(&$definitions) {
+  $definitions['tmgmt_test_generating'] = [
+    'label' => t('Translation is requested from the elders of the Internet'),
+    'type' => 'translator_state',
+    'icon' => drupal_get_path('module', 'tmgmt') . '/icons/earth.svg',
+    'show_job_filter' => TRUE,
+  ];
+}

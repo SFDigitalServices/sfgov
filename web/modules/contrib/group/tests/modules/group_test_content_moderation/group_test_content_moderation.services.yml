@@ -1,0 +1,10 @@
+services:
+  # Content moderation decorators to ensure compatibility.
+  group_test_content_moderation.state_transition_validation:
+    class: 'Drupal\group_test_content_moderation\StateTransitionValidation'
+    decorates: content_moderation.state_transition_validation
+    arguments: ['@group_test_content_moderation.state_transition_validation.inner', '@content_moderation.moderation_information']
+  group_test_content_moderation.latest_version_access:
+    class: 'Drupal\group_test_content_moderation\Access\LatestRevisionCheck'
+    decorates: access_check.latest_revision
+    arguments: ['@group_test_content_moderation.latest_version_access.inner', '@entity_type.manager']

@@ -1,0 +1,10 @@
+services:
+  tmgmt_content.subscriber:
+    class: Drupal\tmgmt_content\Routing\TmgmtContentRouteSubscriber
+    arguments: ['@content_translation.manager']
+    tags:
+      - { name: event_subscriber }
+  tmgmt_content.key_access:
+    class: Drupal\tmgmt_content\Access\KeyAccessCheck
+    tags:
+      - { name: access_check, applies_to: _key_access_check}

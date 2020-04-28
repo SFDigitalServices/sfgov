@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Office hours module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+//function office_hours_install() {
+//}
+
+/**
+ * Implements hook_uninstall().
+ */
+//function office_hours_uninstall() {
+//}
+
+/**
+ * Drupal 8 updates.
+ */
+
+/**
+ * Resaving data needed.
+ */
+function office_hours_update_8001(&$sandbox) {
+  drupal_set_message("Please review the Field, Widget and Formatter settings, and save them again.");
+}
+
+
+/**
+ * Add 'comment' column.
+ */
+function office_hours_update_8003(&$sandbox) {
+
+  $spec = [
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'description' => "Stores the comment",
+  ];
+
+  $schema = \Drupal\Core\Database\Database::getConnection()->schema();
+  $fields = \Drupal::entityManager()->getFieldMapByFieldType("office_hours");
+  foreach ($fields as $entity_type => $entity_fields) {
+    foreach ($entity_fields as $field_name => $field_properties) {
+      \Drupal::entityDefinitionUpdateManager()->getFieldStorageDefinition($field_name, $entity_type);
+
+      $table_names = $schema->findTables("%$field_name%");
+      foreach ($table_names as $table_name) {
+        $schema->addField($table_name, $field_name . '_comment', $spec);
+      }
+    }
+  }
+
+}

@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the state legend.
+ *
+ * Available variables:
+ * - title: The title of the legend.
+ * - items: Each icon with its legend.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="tmgmt-legend clearfix">
+  <div class="tmgmt-status">{{ title }}</div>
+  {% for item in items %}
+    <div class="tmgmt-legend-wrapper">
+      <div class="tmgmt-legend-icon">
+        <img width="16" height="16" src="{{ item.icon }}">
+      </div>
+      <div class="tmgmt-legend-status">{{ item.legend }}</div>
+    </div>
+  {% endfor %}
+</div>

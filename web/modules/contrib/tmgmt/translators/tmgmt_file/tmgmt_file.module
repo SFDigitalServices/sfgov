@@ -1,0 +1,136 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+use Drupal\tmgmt\Entity\Job;
+use Drupal\tmgmt\JobInterface;
+
+/**
+ * @file
+ * Module file of the translation management test module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function tmgmt_file_theme() {
+  return array(
+    'tmgmt_file_html_template' => array(
+      'path' => drupal_get_path('module', 'tmgmt_file') . '/templates',
+      'template' => 'tmgmt_file_html_template',
+      'variables' => array('tjid' => NULL, 'source_language' => NULL, 'target_language' => NULL, 'items' => NULL),
+    ),
+  );
+}
+
+/**
+ * Import form submit callback.
+ */
+function tmgmt_file_import_form_submit(array $form, FormStateInterface $form_state) {
+  // Ensure we have the file uploaded.
+  $job = $form_state->getFormObject()->getEntity();
+  $supported_formats = array_keys(Drupal::service('plugin.manager.tmgmt_file.format')->getDefinitions());
+  if ($file = file_save_upload('file', array('file_validate_extensions' => array(implode(' ', $supported_formats))), FALSE, 0)) {
+    $extension = pathinfo($file->getFileUri(), PATHINFO_EXTENSION);
+    $plugin = \Drupal::service('plugin.manager.tmgmt_file.format')->createInstance($extension);
+    if ($plugin) {
+      // Validate the file on job.
+      $validated_job = $plugin->validateImport($file->getFileUri(), $job);
+      if (!$validated_job) {
+        $job->addMessage('Failed to validate file, import aborted.', array(), 'error');
+      }
+      elseif ($validated_job->id() != $job->id()) {
+        $job->addMessage('The imported file job id @file_id does not match the job id @job_id.', array(
+          '@file_id' => $validated_job->id(),
+          '@job_id' => $job->id(),
+        ), 'error');
+      }
+      else {
+        try {
+          // Validation successful, start import.
+          $job->addTranslatedData($plugin->import($file->getFileUri()));
+          $job->addMessage('Successfully imported file.');
+        } catch (Exception $e) {
+          $job->addMessage('File import failed with the following message: @message', array('@message' => $e->getMessage()), 'error');
+        }
+      }
+    }
+  }
+  tmgmt_write_request_messages($job);
+}
+
+/**
+ * Implements hook_tmgmt_job_delete().
+ */
+function tmgmt_file_tmgmt_job_delete(JobInterface $job) {
+  // Ignore jobs that don't have a file translator.
+  if (!$job->hasTranslator() || $job->getTranslator()->getPluginId() != 'file') {
+    return;
+  }
+
+  // Check if there are any files that need to be deleted.
+  // @todo There doesn't seem to be an API function for this...
+  $args = array(
+    ':module' => 'tmgmt_file',
+    ':type' => 'tmgmt_job',
+    ':id' => $job->id(),
+  );
+  $result = db_query('SELECT fid FROM {file_usage} WHERE module = :module and type = :type and id = :id', $args);
+  $fids = $result->fetchCol();
+  if (!empty($fids)) {
+    // Remove file usage record.
+    /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
+    $file_usage = \Drupal::service('file.usage');
+    foreach (File::loadMultiple($fids) as $file) {
+      $file_usage->delete($file, 'tmgmt_file', 'tmgmt_job', $job->id());
+      // If this was the last usage, FileUsageBase marks the file as temporary
+      // for delayed deletion. Because we know it is not needed, delete the file
+      // immediately.
+      $usage = $file_usage->listUsage($file);
+      if (empty($usage)) {
+        $file->delete();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function tmgmt_file_file_download($uri) {
+  // Get the file record based on the URI. If not in the database just return.
+  $fids = \Drupal::entityQuery('file')
+    ->condition('uri', $uri)
+    ->execute();
+  if ($fids) {
+    $files = \Drupal\file\Entity\File::loadMultiple($fids);
+    foreach ($files as $item) {
+      // Since some database servers sometimes use a case-insensitive comparison
+      // by default, double check that the filename is an exact match.
+      if ($item->getFileUri() === $uri) {
+        $file = $item;
+        break;
+      }
+    }
+  }
+  if (!isset($file)) {
+    return;
+  }
+
+  // Check if this file belongs to a job.
+  $usage_list = \Drupal::service('file.usage')->listUsage($file);
+  if (!isset($usage_list['tmgmt_file']['tmgmt_job'])) {
+    return;
+  }
+
+  foreach (Job::loadMultiple(array_keys($usage_list['tmgmt_file']['tmgmt_job'])) as $job) {
+    if ($job->access('view')) {
+      // Access is granted.
+      $headers = file_get_content_headers($file);
+      return $headers;
+    }
+  }
+
+  // Returning nothing means access denied unless another module specifically
+  // grants access.
+}

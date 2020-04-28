@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Main module file for the tmgmt language combination module.
+ */
+
+use Drupal\Core\Language\LanguageManager;
+
+/**
+ * Prepares a language code list for a select form item with all languages.
+ */
+function tmgmt_language_combination_languages_predefined_list() {
+  $predefined = &drupal_static(__FUNCTION__);
+
+  if (!isset($predefined)) {
+    $predefined = LanguageManager::getStandardLanguageList();
+
+    foreach ($predefined as $key => $value) {
+
+      // Include native name in output, if possible.
+      if (count($value) > 1) {
+        $predefined[$key] = ($value[0] == $value[1]) ? $value[0] : "$value[0] ($value[1])";
+      }
+      else {
+        $predefined[$key] = $value[0];
+      }
+    }
+
+    // Add custom languages that are not part of the iso.inc definition.
+    $installed_languages = \Drupal::languageManager()->getLanguages();
+    foreach ($installed_languages as $lang => $info) {
+      if (!isset($predefined[$lang])) {
+        $predefined[$lang] = $info->getName();
+      }
+    }
+
+    asort($predefined);
+  }
+
+  return $predefined;
+}

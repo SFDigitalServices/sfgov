@@ -1,0 +1,27 @@
+<nav class="{% block class %}sfgov-footer-navigation{% endblock %}">
+
+  {% if pl_test_content and main_navigation %}
+    <ul>
+      {% for item in main_navigation %}
+        <li>
+          <a href="{{ item.link }}">{{ item.label }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {# Drupal item to be provided #}
+  {# simplified Drupal menu. #}
+  {# currently doesn't support recursive nesting #}
+
+  {% if items %}
+    <ul class="menu">
+      {% for item in items %}
+        <li{{ item.attributes.addClass(classes) }}>
+          {{ link(item.title, item.url) }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</nav>

@@ -1,0 +1,15 @@
+<div class="office-hours">
+  {% for item in items %}
+    <div class="office-hours__item">
+      <span class="office-hours__item-label" style="width: {{ label_length * 0.60 }}em;">{{ item.label }}</span>
+      <span class="office-hours__item-slots"> {{ item.slots }}</span>
+      <span class="office-hours__item-comments">{{ item.comments }}</span>
+      <br />
+    </div>
+  {% endfor %}
+  {% if schema %}
+    {% for meta in schema %}
+      <meta property="openingHours" content="{{ meta.label }}{{ meta.slots }}">
+    {% endfor %}
+  {% endif %}
+</div>

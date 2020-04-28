@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * @file
+ * Creates a field and widget for inserting working or office hours per day.
+ */
+
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function office_hours_theme() {
+
+  $theme['office_hours'] = [
+    'variables' => [
+      'office_hours' => [],
+      'item_separator' => '<br />',
+      'slot_separator' => ', ',
+      'closed_text' => NULL,
+    ],
+  ];
+
+  $theme['office_hours_table'] = [
+    'variables' => [
+      'table' => NULL,
+      'schema' => NULL,
+    ],
+  ];
+
+  $theme['office_hours_status'] = [
+    'variables' => [
+      'is_open' => FALSE,
+      'open_text' => NULL,
+      'closed_text' => NULL,
+    ],
+  ];
+
+  return $theme;
+}
+
+/**
+ * @param $variables
+ */
+function template_preprocess_office_hours_table(&$variables) {
+}
+
+/**
+ * @param $variables
+ */
+function template_preprocess_office_hours(&$variables) {
+  $office_hours = $variables['office_hours'];
+
+  // Minimum width for day labels. Adjusted when adding new labels.
+  $label_length = 3;
+  $items = [];
+
+  // Schema part.
+  // @todo: move to ..._preprocess_office_hours_schema, or use RDF module's twig.
+  if (isset($office_hours['schema'])) {
+    $schema_items = [];
+    foreach ($office_hours['schema'] as $schema) {
+      $schema_items[] = [
+        'label' => $schema['label'],
+        'slots' => ['#type' => 'markup', '#markup' => $schema['formatted_slots']],
+      ];
+    }
+    $variables['schema'] = $schema_items;
+    unset($office_hours['schema']);
+  }
+
+  foreach ($office_hours as $info) {
+    $label = $info['label'];
+    $label_length = max($label_length, \Drupal\Component\Utility\Unicode::strlen($label));
+
+    $items[] = [
+      'label' => $label,
+      'slots' => ['#type' => 'markup', '#markup' => $info['formatted_slots']],
+      'comments' => ['#type' => 'markup', '#markup' => $info['comments']],
+      'suffix' => $variables['item_separator'], // @todo, not used yet in twig.
+      // @todo: use $variables['item_separator'] in office-hours.html.twig. Do not hardcode.
+    ];
+  }
+
+  $variables['items'] = $items;
+  $variables['label_length'] = $label_length;
+}
+
+/**
+ * Prepares variables for office hours status templates.
+ *
+ * Default template: office-hours-status.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - open: A boolean indicating whether there is an open time slot right now.
+ *   - open_text: A string containing the text to display when there is an
+ *       open time slot.
+ *     - closed_text: A string containing the text to display when there is no
+ *       open time slot.
+ */
+function template_preprocess_office_hours_status(&$variables) {
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Changes the Field_storage settings form to assure unlimited cardinality.
+ */
+function office_hours_form_field_storage_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $entity = $form_state->getFormObject()->getEntity();
+  if ($entity->getType() == 'office_hours') {
+    $form['cardinality_container']['cardinality'] = [
+        '#options' => [FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED => t('Unlimited')],
+        '#default_value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+        '#description' => '<p>' . t("This is unlimited by this field's nature. See
+      'Number of slots' for limiting the number of slots per day."),
+      ]
+      + $form['cardinality_container']['cardinality'];
+  }
+}

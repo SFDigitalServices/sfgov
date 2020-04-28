@@ -1,0 +1,95 @@
+<?php
+
+/**
+ * @file
+ * Provides permanent custom content blocks.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\fixed_block_content\Entity\FixedBlockContent;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\block_content\BlockContentInterface;
+
+/**
+ * @file
+ * Fixed block content module.
+ *
+ * Provides fixed placements for custom blocks.
+ */
+
+/**
+ * {@inheritdoc}
+ */
+function fixed_block_content_block_content_delete(EntityInterface $entity) {
+  // Remove any fixed block links.
+  \Drupal::database()->delete('fixed_block_content')
+    ->condition('bid', $entity->id())
+    ->execute();
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function fixed_block_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add an option to the custom block form to update the default content in
+  // its fixed block.
+  if (preg_match('/^block_content_.+_edit_form$/', $form_id)
+    && \Drupal::currentUser()->hasPermission('administer blocks')
+    && ($form_object = $form_state->getFormObject())
+    && $form_object instanceof EntityFormInterface
+    && ($block = $form_object->getEntity())
+    && $block instanceof BlockContentInterface) {
+
+    // Search the fixed block of the edited custom block.
+    $fbids = \Drupal::database()->select('fixed_block_content', 'fbc')
+      ->fields('fbc', ['fbid'])
+      ->range(0, 1)
+      ->condition('fbc.bid', $block->id())
+      ->execute();
+
+    if ($fbid = $fbids->fetchField()) {
+      $form['fixed_block_content_update'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Update default content in the fixed block'),
+        '#default_value' => FALSE,
+        '#weight' => 99,
+      ];
+      array_unshift($form['actions']['submit']['#submit'], '_fixed_block_content_update_on_save');
+      $form_state->setTemporaryValue('fixed_block_content_fbid', $fbid);
+    }
+
+  }
+}
+
+/**
+ * Block content form submit handler. Updates default content in fixed block.
+ *
+ * @param $form
+ *   The submitted form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function _fixed_block_content_update_on_save(&$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('fixed_block_content_update')
+    && ($fbid = $form_state->getTemporaryValue('fixed_block_content_fbid'))
+    && ($fixed_block = FixedBlockContent::load($fbid))) {
+    // The operation itself is done on the custom block update hook.
+    // @see fixed_block_content_block_content_update().
+    $fbc_to_update = &drupal_static('fixed_block_content_update', []);
+    $fbc_to_update[$form_state->getFormObject()->getEntity()->id()] = $fixed_block;
+  }
+}
+
+/**
+ * {@inheritdoc}
+ */
+function fixed_block_content_block_content_update(EntityInterface $entity) {
+  // Check for any pending update of fixed block default content.
+  $fbc_to_update = &drupal_static('fixed_block_content_update', []);
+  $block_id = $entity->id();
+  if (isset($fbc_to_update[$block_id])) {
+    $fbc_to_update[$block_id]->importDefaultContent();
+    unset($fbc_to_update[$block_id]);
+  }
+}

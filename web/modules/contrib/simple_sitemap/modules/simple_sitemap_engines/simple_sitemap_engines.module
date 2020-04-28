@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Submits sitemaps to search engines.
+ */
+
+/**
+ * Implements hook_cron().
+ *
+ * If the sitemap submission interval has elapsed, adds each search engine to
+ * the submission queue to be processed.
+ *
+ * @see Drupal\simple_sitemap_engines\Plugin\QueueWorker\SitemapSubmitter
+ */
+function simple_sitemap_engines_cron() {
+
+  /** @var \Drupal\Core\Config\Config $config */
+  $config = \Drupal::config('simple_sitemap_engines.settings');
+
+  if ($config->get('enabled')) {
+    $interval = (int) $config->get('submission_interval') * 60 * 60;
+    $request_time = \Drupal::service('datetime.time')->getRequestTime();
+    $state = \Drupal::state();
+
+    if ($interval === 0
+      || $state->get('simple_sitemap_engines_last_submitted', 0) + $interval <= $request_time) {
+
+      /** @var \Drupal\Core\Queue\QueueInterface $queue */
+      $queue = \Drupal::queue('simple_sitemap_engine_submit');
+
+      $state->set('simple_sitemap_engines_last_submitted', $request_time);
+      foreach (\Drupal::entityTypeManager()
+                 ->getStorage('simple_sitemap_engine')
+                 ->loadMultiple() as $id => $engine) {
+        if (!empty($engine->sitemap_variants)) {
+          $queue->createItem($id);
+        }
+      }
+    }
+  }
+}

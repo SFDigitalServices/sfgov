@@ -1,0 +1,22 @@
+<div class="content-head">
+  <div class="content-head--container {{ (image) ? 'has-image' : 'no-image' }} ">
+    {% if pattern_lab_demo %}
+      <div class="content-head--image">
+        {% include 'atoms-image' %}
+      </div>
+    {% endif %}
+    {% if image %}
+      <div class="content-head--image">
+        {{ image }}
+      </div>
+    {% endif %}
+    <div class="content-head--content">
+      <h1>{{ title }}</h1>
+      {% if description %}
+        <h3 class="lead-paragraph">
+          {{ description }}
+        </h3>
+      {% endif %}
+    </div>
+  </div>
+</div>

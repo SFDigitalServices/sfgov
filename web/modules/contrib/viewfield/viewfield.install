@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the viewfield module.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Changes display_id data type to varchar_ascii.
+ */
+function viewfield_update_8301() {
+  $property = 'display_id';
+  $db_type = 'varchar_ascii';
+  $db_schema = Database::getConnection()->schema();
+
+  if (!$field_storage_configs = \Drupal::entityTypeManager()
+    ->getStorage('field_storage_config')
+    ->loadByProperties(['type' => 'viewfield'])) {
+    return;
+  }
+
+  foreach ($field_storage_configs as $field_storage) {
+    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage */
+    $schema = $field_storage->getSchema();
+    $field_spec = $schema['columns'][$property];
+    $field_spec['type'] = $db_type;
+    $entity_type_id = $field_storage->getTargetEntityTypeId();
+    /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $entity_storage */
+    $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = $entity_storage->getTableMapping();
+    $tables = [$table_mapping->getDedicatedDataTableName($field_storage)];
+    if ($field_storage->isRevisionable()) {
+      $tables[] = $table_mapping->getDedicatedRevisionTableName($field_storage);
+    }
+    $column = $table_mapping->getFieldColumnName($field_storage, $property);
+
+    foreach ($tables as $table) {
+      if ($db_schema->tableExists($table)) {
+        $db_schema->changeField($table, $column, $column, $field_spec);
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+<?php
+/**
+ * @file
+ * Installation hooks for tmgmt_demo module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_install().
+ */
+function tmgmt_demo_install() {
+  // Ensure the translation fields are created in the database.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+
+  // Create an introduction node.
+  $value = [
+    '#access' => TRUE,
+    '#theme' => 'tmgmt_demo_text',
+    '#content_language' => Url::fromUri('base:admin/config/regional/content-language')->toString(),
+    '#languages_url' => Url::fromUri('base:admin/config/regional/language')->toString(),
+    '#translatable_nodes' => Url::fromUri('base:admin/content')->toString(),
+    '#translate_url' => Url::fromUri('base:node/3/translations')->toString(),
+    '#file_translator' => Url::fromUri('base:admin/config/regional/tmgmt_translator/manage/file')->toString(),
+    '#tmgmt_local' => Url::fromUri('base:admin/config/regional/tmgmt_translator/manage/local')->toString(),
+  ];
+  $description_node = Node::create([
+    'title' => t('TMGMT Demo'),
+    'type' => 'translatable_node',
+    'uid' => '0',
+    'sticky' => TRUE,
+    'body' => [
+      'value' => str_replace("  ", "\t", str_replace("\n", "\r\n", \Drupal::service('renderer')->renderPlain($value))),
+      'format' => 'basic_html',
+    ],
+  ]);
+  $description_node->save();
+
+  // Set the node as the front page.
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/node');
+
+  // Add demo content.
+  $node = Node::create(array(
+    'type' => 'translatable_node',
+    'title' => t('Second node'),
+    'body' => [
+      'value' => '<p>' . t('Have another try. This text can be translated as well.') . '</p>' . "\r\n",
+      'format' => 'restricted_html',
+    ],
+    'uid' => '0',
+    'status' => 1,
+  ));
+  $node->save();
+
+  $node = Node::create(array(
+    'type' => 'translatable_node',
+    'title' => t('First node'),
+    'body' => [
+      'value' => '<p>' . t('This text can be translated with TMGMT. Use the "translate" Tab and choose "Request Translation" to get started.') . '</p>' . "\r\n",
+      'format' => 'full_html',
+    ],
+    'uid' => '0',
+    'status' => 1,
+  ));
+  $node->save();
+
+  // Allow translation to all authenticated users.
+  /** @var Role $role */
+  $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+  $role->grantPermission('provide translation services');
+  $role->grantPermission('view the administration theme');
+  $role->grantPermission('access toolbar');
+  $role->save();
+
+  // Add all skills to all users.
+  /** @var User $user */
+  foreach (User::loadMultiple() as $user) {
+    if ($user->id() != 0) {
+      $user->tmgmt_translation_skills = [
+        [
+          'language_from' => 'en',
+          'language_to' => 'de',
+        ],
+        [
+          'language_from' => 'en',
+          'language_to' => 'fr',
+        ],
+      ];
+      $user->save();
+    }
+  }
+}

@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the fixed_block_content module.
+ */
+
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
+
+/**
+ * Implements hook_schema().
+ */
+function fixed_block_content_schema() {
+  $schema['fixed_block_content'] = [
+    'description' => 'Stores custom blocks with fixed content relations.',
+    'fields' => [
+      'bid' => [
+        'description' => 'Block content entity ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'fbid' => [
+        'description' => 'Fixed block entity ID.',
+        'type' => 'varchar_ascii',
+        'length' => ConfigEntityStorage::MAX_ID_LENGTH,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'primary key' => ['bid', 'fbid'],
+    'indexes' => [
+      'bid' => ['bid'],
+      'fbid' => ['fbid'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * The simple presence of this update function clears cached field definitions.
+ */
+function fixed_block_content_update_8001() {
+
+}

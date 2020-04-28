@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Protected Pages install file.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_schema().
+ */
+function protected_pages_schema() {
+  $schema['protected_pages'] = array(
+    'fields' => array(
+      'pid' => array(
+        'description' => 'The primary key always unique.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'password' => array(
+        'type' => 'varchar',
+        'description' => 'The password of the protected page.',
+        'length' => '128',
+        'not null' => TRUE,
+      ),
+      'path' => array(
+        'type' => 'varchar',
+        'description' => 'The path of the protected page.',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'path' => array('path'),
+    ),
+    'primary key' => array('pid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function protected_pages_install() {
+
+  drupal_set_message(\Drupal::translation()->translate('The Protected Pages module has been successfully enabled.
+    Visit the <a href="@permissions">permissions</a> for your site.',
+    [
+      '@permissions' => Url::fromUri('internal:/admin/people/permissions', array('fragment' => 'module-protected_pages'))
+        ->toString(),
+    ]), 'status');
+}

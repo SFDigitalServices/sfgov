@@ -1,0 +1,147 @@
+<?php
+
+/**
+ * @file
+ * Validate telephone number.
+ */
+
+use libphonenumber\PhoneNumberFormat;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function telephone_validation_element_info_alter(array &$types) {
+  // Retrieve configuration entity.
+  $config = \Drupal::config('telephone_validation.settings');
+  // Adds default validation settings to telephone element.
+  // This is just for convenience and to improve DX. You can override following
+  // settings at any time on form definition level.
+  $types['tel']['#element_validate_settings'] = [
+    'format' => $config->get('format') ?: PhoneNumberFormat::E164,
+    'country' => $config->get('country') ?: [],
+  ];
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function telephone_validation_field_info_alter(&$info) {
+  // Add validation constraint to telephone field.
+  $info['telephone']['constraints']['Telephone'] = [];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function telephone_validation_form_field_config_edit_form_alter(&$form, FormStateInterface &$form_state) {
+  /** @var \Drupal\field\Entity\FieldConfig $field */
+  $field = $form_state->getFormObject()->getEntity();
+
+  // Check field type and add config form but only if field type is telephone.
+  if ($field->getType() == 'telephone') {
+    /** @var \Drupal\telephone_validation\Validator $validator */
+    $validator = \Drupal::service('telephone_validation.validator');
+
+    $form['telephone_validation'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Telephone validation'),
+    ];
+
+    // Let people decide if they want to have validation on or off per instance.
+    $settings = $field->getThirdPartySettings('telephone_validation');
+    $form['telephone_validation']['enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enabled'),
+      '#default_value' => !empty($settings),
+    ];
+
+    // Choose which telephone format is valid for this field.
+    $form['telephone_validation']['format'] = [
+      '#type' => 'select',
+      '#title' => t('Format'),
+      '#description' => t('Validation format. It is recommended to use E164 validation format. Validator will automatically discover country of origin. If you want to limit field instance to only one country you can change it National format and choose country in field below.'),
+      '#default_value' => $field->getThirdPartySetting('telephone_validation', 'format', PhoneNumberFormat::E164),
+      '#options' => [
+        PhoneNumberFormat::E164 => t('E164'),
+        PhoneNumberFormat::NATIONAL => t('National'),
+      ],
+      '#ajax' => [
+        'callback' => '_telephone_validation_country_ajax_callback',
+        'wrapper' => 'telephone-validation-country',
+        'method' => 'replace',
+      ],
+      '#states' => [
+        'invisible' => [
+          ':input[name="enabled"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
+
+    // Choose valid country (or many countries).
+    $val = $form_state->getValue('format') ?: $form['telephone_validation']['format']['#default_value'];
+    $form['telephone_validation']['country'] = [
+      '#type' => 'select',
+      '#title' => t('Country'),
+      '#description' => t('If no country selected all countries are valid.'),
+      '#default_value' => $field->getThirdPartySetting('telephone_validation', 'country'),
+      '#multiple' => $val != PhoneNumberFormat::NATIONAL,
+      '#options' => $validator->getCountryList(),
+      '#prefix' => '<div id="telephone-validation-country">',
+      '#suffix' => '</div>',
+      '#states' => [
+        'invisible' => [
+          ':input[name="enabled"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
+    $form['telephone_validation']['allow_emergency'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Allow emergency numbers?'),
+      '#description' => t('Check to allow emergency numbers such as 911.'),
+      '#default_value' => $field->getThirdPartySetting('telephone_validation', 'allow_emergency'),
+    ];
+    $form['telephone_validation']['allow_short'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Allow short codes?'),
+      '#description' => t('Check to allow short codes such as 311.'),
+      '#default_value' => $field->getThirdPartySetting('telephone_validation', 'allow_short'),
+    ];
+
+    // Add submit handler.
+    $form['actions']['submit']['#submit'][] = 'telephone_validation_form_field_config_edit_form_submit';
+  }
+}
+
+/**
+ * Returns valid countries field on ajax request.
+ */
+function _telephone_validation_country_ajax_callback($form, FormStateInterface $form_state) {
+  return $form['telephone_validation']['country'];
+}
+
+/**
+ * Form submit handler.
+ */
+function telephone_validation_form_field_config_edit_form_submit(&$form, FormStateInterface &$form_state) {
+  /** @var \Drupal\field\Entity\FieldConfig $field */
+  $field = $form_state->getFormObject()->getEntity();
+  if ($form_state->getValue('enabled', FALSE)) {
+    // Set format.
+    $field->setThirdPartySetting('telephone_validation', 'format', $form_state->getValue('format'));
+    $country = $form_state->getValue('country');
+    // Set country.
+    $field->setThirdPartySetting('telephone_validation', 'country', is_array($country) ? $country : [$country]);
+    // Set allow_emergency.
+    $field->setThirdPartySetting('telephone_validation', 'allow_emergency', $form_state->getValue('allow_emergency'));
+    // Set allow_short.
+    $field->setThirdPartySetting('telephone_validation', 'allow_short', $form_state->getValue('allow_short'));
+  }
+  else {
+    // Unset 3rd party settings.
+    $field->unsetThirdPartySetting('telephone_validation', 'format');
+    $field->unsetThirdPartySetting('telephone_validation', 'country');
+  }
+  // Save field definition.
+  $field->save();
+}

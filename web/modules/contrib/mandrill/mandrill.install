@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the mandrill module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function mandrill_install() {
+  // Set default values for config which require dynamic values.
+  \Drupal::configFactory()->getEditable('mandrill.settings')
+    ->set('mandrill_from_email', \Drupal::config('system.site')->get('mail'))
+    ->set('mandrill_from_name', \Drupal::config('system.site')->get('site_name'))
+    ->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function mandrill_uninstall() {
+  // Delete other variables:
+  $config = \Drupal::service('config.factory')->getEditable('mandrill.settings');
+  $config->clear('mandrill_analytics_campaign')->save();
+  $config->clear('mandrill_analytics_domains')->save();
+  $config->clear('mandrill_api_key')->save();
+  $config->clear('mandrill_filter_format')->save();
+  $config->clear('mandrill_from_email')->save();
+  $config->clear('mandrill_from_name')->save();
+  $config->clear('mandrill_mail_key_blacklist')->save();
+  $config->clear('mandrill_test_address')->save();
+  $config->clear('mandrill_test_body')->save();
+  $config->clear('mandrill_track_clicks')->save();
+  $config->clear('mandrill_track_opens')->save();
+  $config->clear('mandrill_url_strip_qs')->save();
+  $config->clear('mandrill_process_async')->save();
+
+  $queue = \Drupal::queue(MANDRILL_QUEUE);
+  $queue->deleteQueue();
+}
+
+/**
+ * Implements hook_requirements()
+ */
+function mandrill_requirements($phase) {
+  $requirements = array(
+    'mandrill' => array(
+      'title' => t('Mandrill'),
+    ),
+  );
+
+  if ($phase == 'runtime') {
+    // Check for Mandrill library.
+    if (\Doctrine\Common\ClassLoader::classExists('Mandrill')) {
+      $requirements['mandrill']['description'] = t('The Mandrill library is installed correctly.');
+      $requirements['mandrill']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['mandrill']['description'] = t('The Mandrill library has not been installed correctly.');
+      $requirements['mandrill']['severity'] = REQUIREMENT_ERROR;
+    }
+
+    // Check for the Mail System module.
+    if (\Drupal::moduleHandler()->moduleExists('mailsystem')) {
+      $requirements['mandrill']['description'] = t('The Mail System module is installed.');
+      $requirements['mandrill']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['mandrill']['description'] = t('The Mail System module is required for Mandrill.');
+      $requirements['mandrill']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+
+  return $requirements;
+}

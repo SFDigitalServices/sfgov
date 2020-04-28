@@ -1,0 +1,34 @@
+services:
+  mandrill.service:
+    class: Drupal\mandrill\MandrillService
+    arguments: ['@mandrill.api', '@config.factory', '@logger.factory']
+
+  mandrill.api:
+    class: Drupal\mandrill\MandrillAPI
+    arguments: ['@config.factory', '@logger.factory']
+
+  mandrill.test.service:
+    class: Drupal\mandrill\MandrillTestService
+    arguments: ['@mandrill.test.api', '@config.factory', '@logger.factory']
+
+  mandrill.test.api:
+    class: Drupal\mandrill\MandrillTestAPI
+    arguments: ['@config.factory', '@logger.factory']
+
+  cache.mandrill:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: ['mandrill']
+
+  access_check.mandrill.configuration:
+    class: Drupal\mandrill\Access\MandrillConfigurationAccessCheck
+    arguments: ['@current_user']
+    tags:
+      - { name: access_check, applies_to: _mandrill_configuration_access_check }
+
+  access_check.mandrill.mailer:
+    class: Drupal\mandrill\Access\MandrillMailerAccessCheck
+    tags:
+      - { name: access_check, applies_to: _mandrill_mailer_access_check }

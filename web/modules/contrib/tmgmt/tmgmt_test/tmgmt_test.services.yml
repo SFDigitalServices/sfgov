@@ -1,0 +1,6 @@
+services:
+  tmgmt_test.should_create_job:
+    class: Drupal\tmgmt_test\EventSubscriber\TestContinuousEventSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+    - { name: 'event_subscriber' }

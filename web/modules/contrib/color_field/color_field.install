@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Color Fields module.
+ */
+
+/**
+ * If the JavaScript Libraries don't exist, show a warning on the status page.
+ */
+function color_field_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    if (!file_exists(DRUPAL_ROOT . '/libraries/jquery-simple-color/jquery.simple-color.js')) {
+      $requirements['color_field_simple'] = [
+        'title' => t('Color Field library: jQuery Simple Color'),
+        'value' => t('Missing'),
+        'description' => t('Download the <a href=":url">jQuery Simple Color library</a> and copy it to :library', [
+          ':url' => 'https://github.com/recurser/jquery-simple-color',
+          ':library' => DRUPAL_ROOT . '/libraries/jquery-simple-color/',
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    else {
+      $requirements['color_field_simple'] = [
+        'title' => t('Color Field library: jQuery Simple Color'),
+        'value' => t('Installed'),
+        'severity' => REQUIREMENT_OK,
+      ];
+    }
+    if (!file_exists(DRUPAL_ROOT . '/libraries/spectrum/spectrum.js')) {
+      $requirements['color_field_spectrum'] = [
+        'title' => t('Color Field library: Spectrum'),
+        'value' => t('Missing'),
+        'description' => t('Download the <a href=":url">Spectrum library</a> and copy it to :library', [
+          ':url' => 'https://github.com/bgrins/spectrum',
+          ':library' => DRUPAL_ROOT . '/libraries/spectrum/',
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    else {
+      $requirements['color_field_spectrum'] = [
+        'title' => t('Color Field library: Spectrum'),
+        'value' => t('Installed'),
+        'severity' => REQUIREMENT_OK,
+      ];
+    }
+  }
+
+  return $requirements;
+}

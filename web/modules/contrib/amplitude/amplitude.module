@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @file
+ * Contains amplitude.module.
+ */
+
+use Drupal\amplitude\Entity\AmplitudeEvent;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function amplitude_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'amplitude/amplitude-events';
+
+  _amplitude_add_settings_to_drupal_settings_js($page);
+
+  _amplitude_add_matching_events_to_drupal_settings_js($page);
+
+}
+
+/**
+ * Exposes the Amplitude settings to JS.
+ *
+ * @param array $page
+ *   The current page render array.
+ */
+function _amplitude_add_settings_to_drupal_settings_js(array &$page) {
+  $amplitude_config = \Drupal::config('amplitude.settings');
+  $api_key = $amplitude_config->get('api_key');
+  $debug = $amplitude_config->get('debug');
+  $config_options = $amplitude_config->get('config_options');
+
+  $page['#attached']['drupalSettings']['amplitude'] = [
+    'api_key' => $api_key,
+    'debug' => $debug,
+    'config_options' => $config_options,
+  ];
+}
+
+/**
+ * Exposes the Amplitude events to the current page.
+ *
+ * @param array $page
+ *   The current page render array.
+ */
+function _amplitude_add_matching_events_to_drupal_settings_js(array &$page) {
+  /** @var \Drupal\Core\Condition\ConditionManager $condition_manager */
+  $condition_manager = \Drupal::service('plugin.manager.condition');
+
+  $events = AmplitudeEvent::loadMultiple(NULL);
+  foreach ($events as $event) {
+    $pages = $event->get('event_trigger_pages');
+    /** @var \Drupal\system\Plugin\Condition\RequestPath $condition */
+    $condition = $condition_manager->createInstance('request_path', ['pages' => $pages]);
+
+    if ($condition->execute()) {
+      $page['#attached']['drupalSettings']['amplitude']['events'][] = _amplitude_get_event_js_fields($event);
+    }
+  }
+}
+
+/**
+ * Returns the relevant fields for Amplitude event triggering.
+ *
+ * @param \Drupal\amplitude\Entity\AmplitudeEvent $event
+ *   An Amplitude event.
+ *
+ * @return array
+ *   The relevant fields for Amplitude event triggering.
+ */
+function _amplitude_get_event_js_fields(AmplitudeEvent $event) {
+  return [
+    'name' => $event->label(),
+    'properties' => \Drupal::token()->replace($event->get('properties'), _amplitude_get_route_entities()),
+    'event_trigger' => $event->get('event_trigger'),
+    'event_trigger_other' => $event->get('event_trigger_other'),
+    'event_trigger_scroll_depths' => $event->get('event_trigger_scroll_depths'),
+    'event_trigger_selector' => $event->get('event_trigger_selector'),
+    'event_trigger_data_capture' => $event->get('event_trigger_data_capture'),
+    'event_trigger_data_capture_properties' => $event->get('event_trigger_data_capture_properties'),
+  ];
+}
+
+/**
+ * Gets all entities related to this route.
+ *
+ * @return \Drupal\Core\Entity\EntityInterface[]
+ *   An array with the entities within this route.
+ */
+function _amplitude_get_route_entities() {
+  $entities = [];
+  // @todo: Implementations without paramconverter.
+  foreach (\Drupal::routeMatch()->getParameters() as $key => $param) {
+    if ($param instanceof EntityInterface) {
+      $entities[$key] = $param;
+    }
+  }
+  return $entities;
+}

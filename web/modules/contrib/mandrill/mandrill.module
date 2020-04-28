@@ -1,0 +1,264 @@
+<?php
+
+/**
+ * @file
+ * Enables Drupal to send email directly through Mandrill.
+ */
+
+define('MANDRILL_TEST_API_KEY', 'undefined');
+define('MANDRILL_QUEUE', 'mandrill_queue');
+define('MANDRILL_EMAIL_REGEX', '/^\s*(.+?)\s*<\s*([^>]+)\s*>$/');
+
+// Load Mandrill library if found in module's /lib directory.
+if (file_exists(drupal_get_path('module', 'mandrill') . '/lib/mandrill/src/Mandrill.php')) {
+  require drupal_get_path('module', 'mandrill') . '/lib/mandrill/src/Mandrill.php';
+}
+
+/**
+ * Implements hook_help().
+ */
+function mandrill_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case 'admin/help#mandrill':
+      $output = t('Allow for site emails to be sent through Mandrill.');
+  }
+  return $output;
+}
+
+/**
+ * Access callback for sending test email.
+ *
+ * @return bool
+ *   True if current user has access to send test messages
+ */
+function mandrill_test_access() {
+  $has_permission = \Drupal::currentUser()->hasPermission('administer mandrill');
+  $key = \Drupal::config('mandrill.settings')->get('mandrill_api_key');
+
+  return $has_permission & !empty($key);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function mandrill_mail($key, &$message, $params) {
+  if ($key == 'test') {
+    $message['subject'] = $params['subject'];
+    $message['body'] = $params['body'];
+    if ($params['include_attachment']) {
+      $message['attachments'][] = \Drupal::service('file_system')->realpath('misc/druplicon.png');
+      $message['body'] .= '  ' . t('The Drupal icon is included as an attachment to test the attachment functionality.');
+    }
+  }
+}
+
+/**
+ * Abstracts sending of messages, allowing queueing option.
+ *
+ * @DEPRECATED
+ */
+function mandrill_mailsend($message, $function, $args = array()) {
+  throw new \Exception('Use send() method on MandrillService instead.');
+}
+
+/**
+ * Calls the API send message.
+ *
+ * This is the default function used by mandrill_mailsend().
+ *
+ * @param array $message
+ *   Associative array containing message data.
+ *
+ * @return array
+ *   Results of sending the message.
+ *
+ * @throws Mandrill_Error
+ *
+ */
+function mandrill_sender_plain($message) {
+  $api = \Drupal::service('mandrill.api');
+  return $api->send($message);
+}
+
+/**
+ * Return Mandrill API object for communication with the mandrill server.
+ *
+ * @DEPRECATED
+ */
+function mandrill_get_api_object($reset = FALSE) {
+  throw new \Exception('This method has moved to the API service class, and is private. Use one of the abstracts for whatever call you require.');
+}
+
+/**
+ * Display the names of the modules that are using Mailsystem.
+ *
+ * This is consistent with with Mailsystem's display. In the future, if
+ * Mailsystem were to provide an API for their labeling, that should be used.
+ *
+ * @return array
+ *   Array of all module names indexing to their "display" names,
+ *   and some special items for non-module values like null, default-system,
+ *   and some clarification talked onto the end of the Mandrill module's name.
+ */
+function mandrill_get_module_key_names() {
+  $name_array = array(
+    '' => '--none--',
+    'default-system' => "Site-wide default",
+  );
+  $descriptions = array();
+  foreach (system_rebuild_module_data() as $item) {
+    if ($item->status && !empty($item->info['name'])) {
+      $descriptions[strtolower($item->getName())] = (empty($item->info['package']) ? '' : $item->info['package']) . ' » ' . t(':module module', array(':module' => $item->info['name']));
+    }
+  }
+  asort($descriptions);
+
+  $mailsystem_config = \Drupal::service('config.factory')->getEditable('mailsystem.settings');
+  $modules = $mailsystem_config->get('modules');
+
+  if (!empty($modules)) {
+    foreach (array_keys($modules) as $module_name) {
+      foreach ($modules[$module_name] as $key => $options) {
+        $id = $module_name . '_' . $key;
+
+        $title = preg_replace('/^.* » /', '', $descriptions[$module_name]);
+        $title .= " ($key key)";
+
+        $name_array[$id] = $title;
+      }
+    }
+  }
+
+  return $name_array;
+}
+
+/**
+ * Get a list of mandrill template objects.
+ */
+function mandrill_get_templates() {
+  throw new \Exception('Use the getTemplates() method on the API service class instead.');
+}
+
+/**
+ * Get a list of subaccounts.
+ */
+function mandrill_get_subaccounts() {
+  throw new \Exception('Use the getSubAccounts() method on the API service class instead.');
+}
+
+/**
+ * Get a list of webhooks.
+ */
+function mandrill_get_webhooks() {
+  throw new \Exception('Use the getWebhooks() method on the API service class instead.');
+}
+
+/**
+ * Get a list of inbound email domains.
+ */
+function mandrill_get_inbound_domains() {
+  throw new \Exception('Use the getInboundDomains() method on the API service class instead.');
+}
+
+/**
+ * Get a list of inbound email routes for a domain.
+ */
+function mandrill_get_inbound_routes($domain) {
+  throw new \Exception('Use the getInboundRoutes() method on the API service class instead.');
+}
+
+/**
+ * Create a new inbound domain.
+ */
+function mandrill_add_inbound_domain($domain) {
+  throw new \Exception('Use the addInboundDomain() method on the API service class instead.');
+}
+
+/**
+ * Create a new inbound domain.
+ */
+function mandrill_add_webhook($path, $events, $description = 'Drupal Webhook') {
+  throw new \Exception('Use the addWebhook() method on the API service class instead.');
+}
+
+/**
+ * Delete an inbound domain.
+ */
+function mandrill_delete_inbound_domain($domain) {
+  throw new \Exception('Use the deleteInboundDomain() method on the API service class instead.');
+}
+
+/**
+ * Create a new inbound route for a domain.
+ */
+function mandrill_add_inbound_route($domain, $pattern, $url) {
+  throw new \Exception('Use the addInboundRoute() method on the API service class instead.');
+}
+
+/**
+ * Helper to return a comma delimited list of mail keys to not log content for.
+ *
+ * @return string
+ *   a comma delimited list of mail keys
+ */
+function mandrill_mail_key_blacklist() {
+  return \Drupal::config('mandrill.settings')->get('mandrill_mail_key_blacklist');
+}
+
+/**
+ * Helper to generate an array of recipients.
+ *
+ * @param mixed $to
+ *   a comma delimited list of email addresses in 1 of 2 forms:
+ *   user@domain.com
+ *   any number of names <user@domain.com>
+ * 
+ * @return array
+ *   array of email addresses
+ */
+function mandrill_get_to($to) {
+  $recipients = array();
+  $to_array = explode(',', $to);
+  foreach ($to_array as $email) {
+    if (preg_match(MANDRILL_EMAIL_REGEX, $email, $matches)) {
+      $recipients[] = array(
+        'email' => $matches[2],
+        'name' => $matches[1],
+      );
+    }
+    else {
+      $recipients[] = array('email' => $email);
+    }
+  }
+  return $recipients;
+}
+
+/**
+ * Determine if mail should be processed asynchronously.
+ *
+ * @return bool
+ *   True if asyncronous processing is enabled
+ */
+function mandrill_process_async() {
+  return \Drupal::config('mandrill.settings')->get('mandrill_process_async');
+}
+
+/**
+ * Returns an array containing the from information for a Mandrill message.
+ *
+ * @return array
+ *   array(
+ *     'email' => 'admin@example.com',
+ *     'name' => 'My Site',
+ *   )
+ */
+function mandrill_from() {
+  $email = \Drupal::config('mandrill.settings')->get('mandrill_from_email');
+  $name = \Drupal::config('mandrill.settings')->get('mandrill_from_name');
+
+  return array(
+    'email' => $email,
+    'name' => $name,
+  );
+}

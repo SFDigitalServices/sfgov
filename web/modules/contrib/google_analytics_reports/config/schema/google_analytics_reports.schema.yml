@@ -1,0 +1,94 @@
+# Schema for the configuration files of the google_analytics_reports module.
+
+google_analytics_reports.settings:
+  type: config_object
+  label: 'Google Analytics Reports settings'
+  mapping:
+    metadata_etag:
+      type: string
+      label: 'ETag identifier from Google Analytics Metadata API'
+    metadata_last_time:
+      type: string
+      label: 'Lat time request for Google Analytics Metadata API'
+
+views.view.google_analytics_summary:
+  type: views_display_default
+  label: 'Default display options'
+  mapping:
+    display_options:
+      type: mapping
+      label: 'Display options'
+      mapping:
+        filters:
+          type: mapping
+          label: 'Filters'
+          mapping:
+            start_date:
+              type: mapping
+              label: 'Start Date'
+              mapping:
+                value:
+                  type: mapping
+                  label: 'Context Value'
+                  mapping:
+                    type:
+                      type: string
+                      label: 'Type'
+                    value:
+                      type: string
+                      label: 'Value'
+            end_date:
+              type: mapping
+              label: 'End Date'
+              mapping:
+                value:
+                  type: mapping
+                  label: 'Context Value'
+                  mapping:
+                    type:
+                      type: string
+                      label: 'Type'
+                    value:
+                      type: string
+                      label: 'Value'
+
+views.view.google_analytics_reports_page:
+  type: views_display
+  label: 'Default display options'
+  mapping:
+    display_options:
+      type: mapping
+      label: 'Display options'
+      mapping:
+        filters:
+          type: mapping
+          label: 'Filters'
+          mapping:
+            start_date:
+              type: mapping
+              label: 'Start Date'
+              mapping:
+                value:
+                  type: mapping
+                  label: 'Context Value'
+                  mapping:
+                    type:
+                      type: string
+                      label: 'Type'
+                    value:
+                      type: string
+                      label: 'Value'
+            end_date:
+              type: mapping
+              label: 'End Date'
+              mapping:
+                value:
+                  type: mapping
+                  label: 'Context Value'
+                  mapping:
+                    type:
+                      type: string
+                      label: 'Type'
+                    value:
+                      type: string
+                      label: 'Value'

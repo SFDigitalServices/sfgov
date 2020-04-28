@@ -1,0 +1,96 @@
+tmgmt.settings:
+  type: config_entity
+  label: 'TMGMT settings'
+  mapping:
+    quick_checkout:
+      type: boolean
+      label: 'Allow quick-checkout'
+    anonymous_access:
+      type: boolean
+      label: 'Allow access to source for translators'
+    purge_finished:
+      type: string
+      label: 'Purge finished jobs'
+    respect_text_format:
+      type: boolean
+      label: 'Respect text format'
+    allowed_formats:
+      type: sequence
+      label: 'Allowed formats'
+      sequence:
+        type: string
+        label: Format ID
+    word_count_exclude_tags:
+      type: boolean
+      label: 'Exclude tags from word count'
+    source_list_limit:
+      type: integer
+      label: 'Source list limit'
+    submit_job_item_on_cron:
+      type: boolean
+      label: 'Submit job item on cron'
+    job_items_cron_limit:
+      type: integer
+      label: 'Number of job items to process on cron'
+
+tmgmt.translator.*:
+  type: config_entity
+  label: 'Provider'
+  mapping:
+    name:
+      type: label
+      label: 'Machine readable name of the translator'
+    label:
+      type: label
+      label: 'Provider label'
+    description:
+      type: string
+      label: 'Description'
+    auto_accept:
+      type: boolean
+      label: 'Automatically accept'
+    weight:
+      type: integer
+      label: 'Weight of the translator'
+    plugin:
+      type: string
+      label: 'Provider plugin'
+    settings:
+      type: tmgmt.translator.settings.[%parent.plugin]
+    remote_languages_mappings:
+      type: sequence
+      sequence:
+        type: string
+        label: 'Language key'
+
+views.access.tmgmt_job:
+  type: mapping
+  label: 'View translation jobs'
+
+tmgmt.translator_base:
+  type: mapping
+  mapping: { }
+
+views.filter.tmgmt_job_type_filter:
+  type: views.filter.in_operator
+  label: 'Job type'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        hide_no_continuous:
+          type: boolean
+          label: 'Hide this filter if there are no continuous jobs.'
+
+views.filter.tmgmt_job_item_filter:
+  type: views.filter.in_operator
+  label: 'Job item state'
+
+views.field.tmgmt_entity_label:
+  type: views_field
+  label: 'Label'
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: Link to entity

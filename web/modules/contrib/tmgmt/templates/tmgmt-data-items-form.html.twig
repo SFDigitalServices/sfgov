@@ -1,0 +1,72 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the review form.
+ *
+ * Available variables:
+ * - element: The form element.
+ * - ajaxid: Ajax ID for the replacement wrapper.
+ * - top_label: Label for the top-level label.
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div id="{{ ajaxid }}">
+
+  <table class="tmgmt-ui-review">
+    <colgroup width="100"/>
+    <colgroup width="*" span="2"/>
+    <colgroup width="100"/>
+
+    <thead>
+    <tr>
+      <th colspan="4">{{ top_label }}</th>
+    </tr>
+    </thead>
+
+    {% for group_key, group in element if group_key|first != '#' %}
+      <tbody>
+      {% if group['#group_label'] %}
+        <tr>
+          <th colspan="4">{{ group['#group_label']|join(' > ') }}</th>
+        </tr>
+      {% endif %}
+
+      {% for key, item in group if key|first != '#' %}
+        <tr>
+          <td class="tmgmt-ui-data-item-label">
+            <div class="form-item form-type-label">
+              <label>{{ item.label }}</label>
+            </div>
+            <div class="tmgmt-ui-state">
+              {{ item.status }}
+            </div>
+          </td>
+          <td class="tmgmt-ui-data-item-source">
+            {{ item.source }}
+          </td>
+          <td class="tmgmt-ui-data-item-translation">
+            {{ item.translation }}
+          </td>
+          <td class="tmgmt-ui-data-item-actions">
+            {{ item.actions }}
+          </td>
+        </tr>
+
+        {% if item.below %}
+          <tr>
+            <td></td>
+            <td colspan="2"> {{ item.below }}</td>
+            <td>{{ item.below_actions }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+
+      </tbody>
+    {% endfor %}
+
+  </table>
+
+</div>
+

@@ -1,0 +1,42 @@
+<div class="department-search-result">
+  <div class="department-search-result--container">
+    <div class="content-type"><i class="sfgov-icon-department"></i><span>{{ content_type }}</span></div>
+    {% if url %}
+      <a class="title-url" href="{{ url }}">
+    {% endif %}
+        <h4>
+          {{ title }}
+        </h4>
+    {% if url %}
+      </a>
+    {% endif %}
+    {% if body %}
+      <p class="body">{{ body }}</p>
+    {% endif %}
+    <div class="phone-address--container">
+      {% if phone %}
+        <div class="phone--container">
+          <i class="sfgov-icon-phone"></i>
+          <span class="phone">
+            {% if phone.number %}
+              {{ phone.number }}
+            {% else %}
+              {{ phone }}
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+      {% if address %}
+        <div class="address--container">
+          <i class="sfgov-icon-location"></i><span class="address">
+            {% if address.title %}
+              {{ address.title }}
+            {% else %}
+              {{ address }}
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

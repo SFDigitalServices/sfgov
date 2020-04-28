@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * This module allows you to protect any page of the website by secure password.
+ *
+ * You can enter urls of pages to protect and set password per page.
+ *
+ * Admin (uid = 1) or user with bypass protection permission can view page.
+ */
+
+use Drupal\Component\Utility\Html;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_mail().
+ */
+function protected_pages_mail($key, &$message, $params) {
+
+  switch ($key) {
+    // Send a simple message from the contact form.
+    case 'protected_pages_details_mail':
+
+      $tokens = array('[protected-page-url]', '[site-name]');
+      $replcements = array(
+        $params['protected_page_url'],
+        \Drupal::config('system.site')->get('name'),
+      );
+
+      $body = str_replace($tokens, $replcements, $params['body']);
+
+      $subject = $params['subject'];
+      $message['subject'] = Html::escape($subject);
+      $message['body'][] = Html::escape($body);
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function protected_pages_file_download($uri) {
+  $account = \Drupal::currentUser();
+  if ($account->hasPermission('bypass pages password protection')) {
+    return;
+  }
+
+  $target = file_uri_target($uri);
+  $file_path = '/system/files/' . $target;
+
+  $fields = array('pid');
+  $conditions = array();
+  $conditions['general'][] = array(
+    'field' => 'path',
+    'value' => $file_path,
+    'operator' => '=',
+  );
+
+  $protected_pages_storage = \Drupal::service('protected_pages.storage');
+
+  $pid = $protected_pages_storage->loadProtectedPage($fields, $conditions, TRUE);
+
+  if (isset($_SESSION['_protected_page']['passwords'][$pid]['expire_time'])) {
+    if (time() >= $_SESSION['_protected_page']['passwords'][$pid]['expire_time']) {
+      unset($_SESSION['_protected_page']['passwords'][$pid]['request_time']);
+      unset($_SESSION['_protected_page']['passwords'][$pid]['expire_time']);
+    }
+  }
+  if (isset($_SESSION['_protected_page']['passwords'][$pid]['request_time'])) {
+    return NULL;
+  }
+  if ($pid) {
+    $destination_path_array = \Drupal::destination()->getAsArray();
+    $destination_path_array['destination'] = $destination_path_array['destination'] . '/' . $target;
+    $destination_path_array['protected_page'] = $pid;
+    $response = new RedirectResponse(Url::fromUri('internal:/protected-page', array('query' => $destination_path_array))
+            ->toString());
+    $response->send();
+    return;
+  }
+  else {
+    return NULL;
+  }
+}

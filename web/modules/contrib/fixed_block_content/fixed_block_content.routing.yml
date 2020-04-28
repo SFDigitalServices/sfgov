@@ -1,0 +1,59 @@
+entity.fixed_block_content.collection:
+  path: '/admin/structure/block/block-content/fixed-block-content'
+  defaults:
+    _entity_list: 'fixed_block_content'
+    _title: 'Fixed block content'
+  requirements:
+    _permission: 'administer blocks'
+  options:
+    _admin_route: TRUE
+
+fixed_block_content.form_add:
+  path: '/admin/structure/block/block-content/fixed-block-content/add'
+  defaults:
+    _entity_form: 'fixed_block_content.add'
+    _title: 'Add new fixed block content'
+  requirements:
+    _permission: 'administer blocks'
+  options:
+    _admin_route: TRUE
+
+entity.fixed_block_content.edit_form:
+  path: '/admin/structure/block/block-content/fixed-block-content/manage/{fixed_block_content}/edit'
+  defaults:
+    _entity_form: 'fixed_block_content.edit'
+    _title: 'Edit fixed block content'
+  requirements:
+    _entity_access: 'fixed_block_content.update'
+  options:
+    _admin_route: TRUE
+
+entity.fixed_block_content.delete_form:
+  path: '/admin/structure/block/block-content/fixed-block-content/manage/{fixed_block_content}/delete'
+  defaults:
+    _entity_form: 'fixed_block_content.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'fixed_block_content.delete'
+  options:
+    _admin_route: TRUE
+
+entity.fixed_block_content.export_form:
+  path: '/admin/structure/block/block-content/fixed-block-content/manage/{fixed_block_content}/export'
+  defaults:
+    _entity_form: 'fixed_block_content.export'
+    _title: 'Restore default block content'
+  requirements:
+    _entity_access: 'fixed_block_content.update'
+  options:
+    _admin_route: TRUE
+
+entity.fixed_block_content.import_form:
+  path: '/admin/structure/block/block-content/fixed-block-content/manage/{fixed_block_content}/import'
+  defaults:
+    _entity_form: 'fixed_block_content.import'
+    _title: 'Save current block content as default'
+  requirements:
+    _entity_access: 'fixed_block_content.update'
+  options:
+    _admin_route: TRUE

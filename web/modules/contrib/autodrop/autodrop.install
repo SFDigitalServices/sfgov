@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function autodrop_install() {
+  // Get all caches ids for library info.
+  $cids = db_select('cache_discovery', 'c')
+    ->condition('cid', 'library_info:%', 'like')
+    ->fields('c', ['cid'])
+    ->execute()
+    ->fetchCol(0);
+  // Clear library discovery cache for all themes.
+  \Drupal::cache('discovery')->deleteMultiple($cids);
+}

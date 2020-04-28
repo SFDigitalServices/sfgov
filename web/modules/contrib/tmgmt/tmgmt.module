@@ -1,0 +1,1306 @@
+<?php
+
+/**
+ * @file
+ * Main module file for the Translation Management module.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\tmgmt\ContinuousTranslatorInterface;
+use Drupal\tmgmt\Entity\Job;
+use Drupal\tmgmt\Entity\Message;
+use Drupal\tmgmt\Entity\Translator;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\tmgmt\Entity\JobItem;
+use Drupal\tmgmt\JobInterface;
+use Drupal\tmgmt\JobItemInterface;
+use Drupal\tmgmt\TranslatorRejectDataInterface;
+
+/**
+ * @addtogroup tmgmt_job
+ * @{
+ */
+
+/**
+ * The translation data item has not been translated.
+ */
+define('TMGMT_DATA_ITEM_STATE_PENDING', 0);
+
+/**
+ * The translation data item has been reviewed.
+ */
+define('TMGMT_DATA_ITEM_STATE_REVIEWED', 1);
+
+/**
+ * The translation data item has been translated.
+ */
+define('TMGMT_DATA_ITEM_STATE_TRANSLATED', 2);
+
+/**
+ * The translation data item has been reviewed.
+ */
+define('TMGMT_DATA_ITEM_STATE_ACCEPTED', 3);
+
+/**
+ * The translation data item has been reviewed.
+ */
+define('TMGMT_DATA_ITEM_STATE_PRELIMINARY', 4);
+
+/**
+ * @} End of "addtogroup tmgmt_job".
+ */
+
+/**
+ * Implements hook_modules_installed().
+ */
+function tmgmt_modules_installed($modules) {
+  $translator_manager = \Drupal::service('plugin.manager.tmgmt.translator');
+  $translator_manager->clearCachedDefinitions();
+  foreach ($translator_manager->getDefinitions() as $definition) {
+    // Check if this translator plugin has been added by one of the recently
+    // installed modules and doesn't prevent auto creation.
+    if ((!isset($definition['auto create']) || $definition['auto create'] == TRUE) && in_array($definition['provider'], $modules)) {
+      tmgmt_translator_auto_create($definition);
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function tmgmt_cron() {
+  $offset = \Drupal::config('tmgmt.settings')->get('purge_finished');
+  if ($offset != '_never') {
+    // Delete all finished translation jobs that haven't been changed for a
+    // time span longer than the given offset.
+    $ids = \Drupal::entityQuery('tmgmt_job')
+      ->condition('state', Job::STATE_FINISHED)
+      ->condition('changed', \Drupal::time()->getRequestTime() - $offset, '<=')
+      ->execute();
+    if (!empty($ids)) {
+      $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
+      $entities = $storage->loadMultiple($ids);
+      $storage->delete($entities);
+    }
+  }
+
+  // Submit continuous job items.
+  $tmgmt_settings = \Drupal::config('tmgmt.settings');
+  if ($tmgmt_settings->get('submit_job_item_on_cron')) {
+
+    // Look for inactive job items of continuous jobs.
+    $ids = \Drupal::entityQuery('tmgmt_job_item')
+      ->condition('tjid.entity.job_type', JobInterface::TYPE_CONTINUOUS)
+      ->condition('state', JobItemInterface::STATE_INACTIVE)
+      ->range(0, $tmgmt_settings->get('job_items_cron_limit'))
+      ->sort('tjiid')
+      ->execute();
+
+    // First, group the job items by job.
+    $job_items_by_job = [];
+    foreach (JobItem::loadMultiple($ids) as $item) {
+      $job_items_by_job[$item->getJobId()][] = $item;
+    }
+
+    // Then submit all items in a group per job.
+    foreach ($job_items_by_job as $all_items) {
+      $translator = reset($all_items)->getTranslatorPlugin();
+      // Call the hook before requesting the translation.
+      // @see hook_tmgmt_job_before_request_translation()
+      \Drupal::moduleHandler()->invokeAll('tmgmt_job_before_request_translation', [$all_items]);
+
+      // We do not want to translate the items that are already translated,
+      // so we filter them.
+      $items = array_filter($all_items, function (JobItemInterface $item) {
+        return $item->getCountPending() > 0;
+      });
+      if (!empty($items)) {
+        $translator->requestJobItemsTranslation($items);
+      }
+      // Reset it again so getData returns again all the values.
+      // @see hook_tmgmt_job_after_request_translation()
+      \Drupal::moduleHandler()->invokeAll('tmgmt_job_after_request_translation', [$all_items]);
+    }
+  }
+}
+
+/**
+ * Returns an array of languages that are available for translation.
+ *
+ * @return array
+ *   An array of languages in ISO format.
+ */
+function tmgmt_available_languages($exclude = array()) {
+  $languages = \Drupal::languageManager()->getLanguages();
+  // Remove the language in $exclude from the list of available languages and
+  // then apply a filter that only leaves the supported target languages on
+  // the list.
+  $labels = array();
+  foreach ($languages as $langcode => $language) {
+    if (!in_array($langcode, $exclude)) {
+      $labels[$langcode] = $language->getName();
+    }
+  }
+  return $labels;
+}
+
+/**
+ * @addtogroup tmgmt_job
+ * @{
+ */
+
+/**
+ * Loads active job entities that have a job item with the identifiers.
+ *
+ * @param $plugin
+ *   The source plugin.
+ * @param $item_type
+ *   The source item type.
+ * @param $item_id
+ *   The source item id.
+ * @param string $source_language
+ *   The source language of the item.
+ *
+ * @return array
+ *   An array of job entities.
+ */
+function tmgmt_job_item_load_latest($plugin, $item_type, $item_id, $source_language) {
+  $query = \Drupal::database()->select('tmgmt_job_item', 'tji');
+  $query->innerJoin('tmgmt_job', 'tj', 'tj.tjid = tji.tjid');
+  $result = $query->condition('tj.source_language', $source_language)
+    // Only query for jobs that are currently active.
+    ->condition('tj.state', [Job::STATE_UNPROCESSED, Job::STATE_ACTIVE, Job::STATE_CONTINUOUS], 'IN')
+    // And only query for job items that are not yet finished.
+    ->condition('tji.state', JobItem::STATE_ACCEPTED, '<>')
+    ->condition('tji.plugin', $plugin)
+    ->condition('tji.item_type', $item_type)
+    ->condition('tji.item_id', $item_id)
+    ->fields('tji', array('tjiid'))
+    ->fields('tj', array('target_language'))
+    ->orderBy('tji.changed', 'DESC')
+    ->groupBy('tj.target_language')
+    ->groupBy('tji.tjiid')
+    ->groupBy('tji.changed')
+    ->execute();
+  if ($items = $result->fetchAllKeyed()) {
+    $return = array();
+    foreach (JobItem::loadMultiple(array_keys($items)) as $key => $item) {
+      $return[$items[$key]] = $item;
+    }
+    return $return;
+  }
+  return FALSE;
+}
+
+/**
+ * Loads all latest job entities that have a job item with the identifiers.
+ *
+ * @param $plugin
+ *   The source plugin.
+ * @param $item_type
+ *   The source item type.
+ * @param $item_id
+ *   The source item id.
+ * @param string $source_language
+ *   The source language of the item.
+ *
+ * @return \Drupal\tmgmt\Entity\JobItem[]
+ *   An array of job item entities.
+ */
+function tmgmt_job_item_load_all_latest($plugin, $item_type, $item_id, $source_language) {
+  $query = \Drupal::database()->select('tmgmt_job_item', 'tji');
+  $query->innerJoin('tmgmt_job', 'tj', 'tj.tjid = tji.tjid');
+  $result = $query->condition('tj.source_language', $source_language)
+    ->condition('tji.state', JobItem::STATE_ACCEPTED, '<>')
+    ->condition('tji.plugin', $plugin)
+    ->condition('tji.item_type', $item_type)
+    ->condition('tji.item_id', $item_id)
+    ->fields('tji', array('tjiid'))
+    ->fields('tj', array('target_language'))
+    ->orderBy('tji.changed', 'DESC')
+    ->groupBy('tj.target_language')
+    ->groupBy('tji.tjiid')
+    ->groupBy('tji.changed')
+    ->execute();
+  if ($items = $result->fetchAllKeyed()) {
+    $return = array();
+    foreach (JobItem::loadMultiple(array_keys($items)) as $key => $item) {
+      $return[$items[$key]] = $item;
+    }
+    return $return;
+  }
+  return [];
+}
+
+/**
+ * Returns a job which matches the requested source- and target language by
+ * user. If no job exists, a new job object will be created.
+ *
+ * @param $source_language
+ *   The source language from which should be translated.
+ * @param $target_language
+ *   The target language into which should be translated.
+ * @param $account
+ *   (Optional) A user object. Defaults to the currently logged in user.
+ *
+ * @return \Drupal\tmgmt\JobInterface
+ *   The job entity.
+ */
+function tmgmt_job_match_item($source_language, $target_language, $account = NULL) {
+  $account = isset($account) ? $account : \Drupal::currentUser();
+  $tjid = \Drupal::entityQuery('tmgmt_job')
+    ->condition('source_language', $source_language)
+    ->condition('target_language', $target_language)
+    ->condition('uid', $account->id())
+    ->condition('state', Job::STATE_UNPROCESSED)
+    ->execute();
+  if (!empty($tjid)) {
+    return Job::load(reset($tjid));
+  }
+  return tmgmt_job_create($source_language, $target_language, $account->id());
+}
+
+/**
+ * Checks whether a job is finished by querying the job item table for
+ * unfinished job items.
+ *
+ * @param $tjid
+ *   The identifier of the job.
+ * @return bool
+ *   TRUE if the job is finished, FALSE otherwise.
+ */
+function tmgmt_job_check_finished($tjid) {
+  return !\Drupal::entityQuery('tmgmt_job_item')
+    ->condition('tjid', $tjid)
+    ->condition('state', [JobItem::STATE_ACCEPTED, JobItem::STATE_ABORTED], 'NOT IN')
+    ->range(0, 1)
+    ->count()
+    ->execute();
+}
+
+/**
+ * Creates a translation job.
+ *
+ * @param string $source_language
+ *   The source language from which should be translated.
+ * @param string $target_language
+ *   The target language into which should be translated.
+ * @param int $uid
+ *   The user ID.
+ * @param array $values
+ *   (Optional) An array of additional entity values.
+ *
+ * @return \Drupal\tmgmt\JobInterface The job entity.
+ *   The job entity.
+ */
+function tmgmt_job_create($source_language, $target_language, $uid = 0, array $values = array()) {
+  return Job::create(array_merge($values, array(
+    'source_language' => $source_language,
+    'target_language' => $target_language,
+    'uid' => $uid,
+  )));
+}
+
+/**
+ * Loads an array with the word and status statistics of a job.
+ *
+ * @param $tjids
+ *   An array of job ids.
+ *
+ * @return
+ *   An array of objects with the keys word_count, tags_count, count_pending,
+ *   count_accepted, count_reviewed and count_translated.
+ */
+function tmgmt_job_statistics_load(array $tjids) {
+  $statistics = &drupal_static(__FUNCTION__, array());
+
+  // First try to get the values from the cache.
+  $return = array();
+  $tjids_to_load = array();
+  foreach ($tjids as $tjid) {
+    if (isset($statistics[$tjid])) {
+      // Info exists in cache, get it from there.
+      $return[$tjid] = $statistics[$tjid];
+    }
+    else {
+      // Info doesn't exist in cache, add job to the list that needs to be
+      // fetched.
+      $tjids_to_load[] = $tjid;
+    }
+  }
+
+  // If there are remaining jobs, build a query to fetch them.
+  if (!empty($tjids_to_load)) {
+    // Build the query to fetch the statistics.
+    $query = \Drupal::database()->select('tmgmt_job_item', 'tji')
+      ->fields('tji', array('tjid'));
+    $query->addExpression('SUM(word_count)', 'word_count');
+    $query->addExpression('SUM(tags_count)', 'tags_count');
+    $query->addExpression('SUM(count_accepted)', 'count_accepted');
+    $query->addExpression('SUM(count_reviewed)', 'count_reviewed');
+    $query->addExpression('SUM(count_pending)', 'count_pending');
+    $query->addExpression('SUM(count_translated)', 'count_translated');
+    $result = $query->groupBy('tjid')
+      ->condition('tjid', (array) $tjids_to_load, 'IN')
+      ->execute();
+
+    foreach ($result as $row) {
+      $return[$row->tjid] = $statistics[$row->tjid] = $row;
+    }
+  }
+  return $return;
+}
+
+/**
+ * Returns a specific statistic of a job.
+ *
+ * @param $job
+ *   The translation job entity.
+ * @param $key
+ *   One of word_count, tags_count, count_pending, count_accepted,
+ *   count_reviewed and count_translated.
+ *
+ * @return
+ *   The requested information as an integer.
+ */
+function tmgmt_job_statistic(JobInterface $job, $key) {
+  $statistics = tmgmt_job_statistics_load(array($job->id()));
+  if (isset($statistics[$job->id()]->$key)) {
+    return $statistics[$job->id()]->$key;
+  }
+  return 0;
+}
+
+/**
+ * Creates a translation job item.
+ *
+ * @param $plugin
+ *   The plugin name.
+ * @param $item_type
+ *   The source item type.
+ * @param $item_id
+ *   The source item id.
+ * @param $values
+ *   (Optional) An array of additional entity values to be set.
+ *
+ * @return \Drupal\tmgmt\JobItemInterface
+ *   The created, not yet saved, job item entity.
+ */
+function tmgmt_job_item_create($plugin, $item_type, $item_id, array $values = array()) {
+  return JobItem::create(array_merge($values, array(
+    'plugin' => $plugin,
+    'item_type' => $item_type,
+    'item_id' => $item_id,
+  )));
+}
+
+/**
+ * Creates a translation job message.
+ *
+ * @param $message
+ *   (Optional) The message to be saved.
+ * @param $variables
+ *   (Optional) An array of variables to replace in the message on display.
+ * @param $values
+ *   (Optional) An array of additional entity values to be set.
+ *
+ * @return \Drupal\tmgmt\MessageInterface
+ *   The created, not yet saved, message entity.
+ */
+function tmgmt_message_create($message = '', $variables = array(), $values = array()) {
+  return Message::create(array_merge($values, array(
+    'message' => $message,
+    'variables' => $variables,
+    'uid' => \Drupal::currentUser()->id(),
+  )));
+}
+/**
+ * @} End of "addtogroup tmgmt_job".
+ */
+/**
+ * @addtogroup tmgmt_translator
+ * @{
+ */
+
+/**
+ * Loads all translators that are available and, if a translation job is given,
+ * support translations for that job with its current configuration.
+ *
+ * @param \Drupal\tmgmt\JobInterface $job
+ *   (Optional) A translation job.
+ *
+ * @return array
+ *   An array of translators with the machine-readable name of the translators
+ *   as array keys.
+ */
+function tmgmt_translator_load_available($job) {
+  $translators = Translator::loadMultiple();
+  foreach ($translators as $name => $translator) {
+    if (!$translator->checkAvailable()->getSuccess() || (isset($job) && !$translator->checkTranslatable($job)->getSuccess())) {
+      unset($translators[$name]);
+    }
+  }
+  return $translators;
+}
+
+/**
+ * Checks whether a translator with a certain name is busy and therefore can't
+ * be modified or deleted. A translator is considered 'busy' if there are jobs
+ * attached to it that are in an active state.
+ *
+ * @param $translator
+ *   The machine-readable name of a translator.
+ *
+ * @return bool
+ *   TRUE if the translator is busy, FALSE otherwise.
+ */
+function tmgmt_translator_busy($translator) {
+  return (bool) \Drupal::entityQuery('tmgmt_job')
+    ->condition('state', [Job::STATE_ACTIVE, Job::STATE_CONTINUOUS], 'IN')
+    ->condition('translator', $translator)
+    ->range(0, 1)
+    ->count()
+    ->execute();
+}
+
+/**
+ * Auto creates a translator from a translator plugin definition.
+ *
+ * @param array $definition
+ *   The definition of a translator plugin.
+ */
+function tmgmt_translator_auto_create(array $definition) {
+  $plugin = $definition['id'];
+  if (!Translator::load($plugin)) {
+    $translator = Translator::create([
+      'name' => $plugin,
+      'plugin' => $plugin,
+      'remote_languages_mappings' => array(),
+      'label' => $definition['label'],
+      'description' => (string) $definition['description'],
+    ]);
+    // Append default settings from the translator plugin definition.
+    $translator->setSettings($translator->getPlugin()->defaultSettings());
+    $translator->save();
+  }
+}
+
+/**
+ * Returns a list of all available translator labels.
+ *
+ * @return array
+ *   An array containing all available translator labels.
+ */
+function tmgmt_translator_labels() {
+  $labels = array();
+  foreach (Translator::loadMultiple() as $translator) {
+    $labels[$translator->id()] = $translator->label();
+  }
+  return $labels;
+}
+
+/**
+ * Returns a list of flagged translator labels.
+ *
+ * If a translator is not available it will be suffixed with a short text
+ * explaining why it is not available.
+ * This can either be because the configuration of the passed job is not
+ * supported or because the translator service can't be reached.
+ *
+ * @param \Drupal\tmgmt\JobInterface $job
+ *   (Optional) A translation job.
+ *
+ * @return array
+ *   An array of flagged translator labels.
+ */
+function tmgmt_translator_labels_flagged(JobInterface $job = NULL) {
+  $labels = array();
+  $translators = Translator::loadMultiple();
+  uasort($translators, array('Drupal\Core\Config\Entity\ConfigEntityBase', 'sort'));
+  /** @var \Drupal\tmgmt\Entity\Translator $translator */
+  foreach ($translators as $translator) {
+    if (isset($job) && $job->isContinuous() && !($translator->getPlugin() instanceof ContinuousTranslatorInterface)) {
+      continue;
+    }
+    if (!$translator->checkAvailable()->getSuccess()) {
+      $labels[$translator->id()] = t('@label (not available)', array('@label' => $translator->label()));
+    }
+    elseif (isset($job) && !$translator->checkTranslatable($job)->getSuccess()) {
+      $labels[$translator->id()] = t('@label (unsupported)', array('@label' => $translator->label()));
+    }
+    else {
+      $labels[$translator->id()] = $translator->label();
+    }
+  }
+  return $labels;
+}
+
+
+/**
+ * @} End of "addtogroup tmgmt_translator".
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function tmgmt_theme() {
+  return [
+    'tmgmt_data_items_form' => [
+      'render element' => 'element',
+    ],
+    'tmgmt_progress_bar' => [
+      'variables' => [
+        'title' => NULL,
+        'entity' => NULL,
+        'total' => 0,
+        'parts' => [],
+      ],
+    ],
+    'tmgmt_legend' => [
+      'variables' => [
+        'title' => NULL,
+        'items' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Preprocess function for tmgmt_data_items_form.
+ */
+function template_preprocess_tmgmt_data_items_form(&$variables) {
+  $element = $variables['element'];
+  $variables['ajaxid'] = $element['#ajaxid'];
+  $variables['top_label'] = $element['#top_label'];
+}
+
+/**
+ * Attempts to check out a number of jobs. Performs a number of checks on each
+ * job and also allows to alter the behavior through hooks.
+ *
+ * @param \Drupal\tmgmt\JobInterface[] $jobs
+ *   The jobs to be checked out.
+ *
+ * @return
+ *   Array of redirect url's if there are any jobs that need manual checkout.
+ *
+ * @ingroup tmgmt_job
+ *
+ * @see tmgmt_redirect_queue()
+ * @see tmgmt_job_checkout_and_redirect()
+ *
+ * @deprecated Deprecated in 8.x-1.x, use
+ *   \Drupal\tmgmt\JobCheckoutManager::checkoutMultiple() instead.
+ */
+function tmgmt_job_checkout_multiple(array $jobs) {
+  $redirects = array();
+  // Allow other modules to jump in and eg. auto-checkout with rules or use a
+  // customized checkout form.
+  \Drupal::moduleHandler()->alter('tmgmt_job_checkout_before', $redirects, $jobs);
+  $denied = 0;
+  foreach ($jobs as $job) {
+    if (!$job->isUnprocessed()) {
+      // Job is already checked out, just ignore that one. This could happen
+      // if jobs have already been submitted in the before hook.
+      continue;
+    }
+    if (!\Drupal::config('tmgmt.settings')->get('quick_checkout') || tmgmt_job_needs_checkout_form($job)) {
+
+      if (!$job->access('submit')) {
+        // Ignore jobs if the user is not allowed to submit, ignore.
+        $denied++;
+        // Make sure that the job is saved.
+        $job->save();
+        continue;
+      }
+
+      $redirects[] = $job->toUrl()->getInternalPath();
+    }
+    else {
+      // @todo this is dangerous because we don't catch request fails at all.
+      // Normally I would expect this to catch all failed requests and
+      // afterwards send the user through a multistep form which contains the
+      // failed elements.
+      // No manual checkout required. Request translations now, save the job
+      // in case someone excepts to be able to load the job and have the
+      // translator available.
+      $job->save();
+      tmgmt_job_request_translation($job);
+    }
+  }
+  // Allow other modules to jump in and eg. auto-checkout with rules or use a
+  // customized checkout form.
+  \Drupal::moduleHandler()->alter('tmgmt_job_checkout_after', $redirects, $jobs);
+
+  // Display message for created jobs that can not be checked out.
+  if ($denied) {
+    \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($denied, 'One job has been created.', '@count jobs have been created.'));
+  }
+
+  return $redirects;
+}
+
+/**
+ * Check if a job needs a checkout form. The current checks include if there is
+ * more than one translator available, if he has settings and if the job has a
+ * fixed target language.
+ *
+ * @param \Drupal\tmgmt\JobInterface $job
+ *   The job item
+ *
+ * @return
+ *   TRUE if the job needs a checkout form.
+ *
+ * @deprecated Deprecated in 8.x-1.x, use
+ *   \Drupal\tmgmt\JobCheckoutManager::needsCheckoutForm() instead.
+ */
+function tmgmt_job_needs_checkout_form(JobInterface $job) {
+  // If the job has no target language (or source language, even though this
+  // should never be the case in our use case), checkout is mandatory.
+  if (!$job->getTargetLangcode() || !$job->getSourceLangcode()) {
+    return TRUE;
+  }
+  // If no translator is pre-selected, try to pick one automatically.
+  if (!$job->hasTranslator()) {
+    // If there is more than a single translator available or if there are no
+    // translators available at all checkout is mandatory.
+    $translators = tmgmt_translator_load_available($job);
+    if (empty($translators) || count($translators) > 1) {
+      return TRUE;
+    }
+    $translator = reset($translators);
+    $job->translator = $translator->id();
+  }
+  // If that translator has settings, the checkout is mandatory.
+  if ($job->getTranslator()->hasCheckoutSettings($job)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Requests translations for a job and prints messages which have happened since
+ * then.
+ *
+ * @param \Drupal\tmgmt\JobInterface $job
+ *   The job object for which translations should be requested.
+ *
+ * @return
+ *   TRUE if it worked, FALSE if there were any errors of the type error which
+ *   means that something did go wrong.
+ *
+ * @deprecated Deprecated in 8.x-1.x, use
+ *   \Drupal\tmgmt\JobCheckoutManager::requestTranslation() instead.
+ */
+function tmgmt_job_request_translation(JobInterface $job) {
+  // Process the translation request.
+  $job->requestTranslation();
+  return tmgmt_write_request_messages($job);
+}
+
+/**
+ * Print all messages that occurred since our request to the screen.
+ *
+ * @param \Drupal\tmgmt\JobInterface|\Drupal\tmgmt\JobItemInterface $entity
+ *    The translation job or job item for which the message should be written.
+ *
+ * @return bool
+ *    FALSE if there are message with severity error, TRUE otherwise.
+ */
+function tmgmt_write_request_messages($entity) {
+  $errors = FALSE;
+  foreach ($entity->getMessagesSince() as $message) {
+    // Ignore debug messages.
+    if ($message->getType() == 'debug') {
+      continue;
+    }
+    if ($message->getType() == 'error') {
+      $errors = TRUE;
+    }
+    if ($text = $message->getMessage()) {
+      \Drupal::messenger()->addMessage($text, $message->getType());
+    }
+  }
+  return !$errors;
+}
+
+/**
+ * Helper function to output ajaxid.
+ *
+ * @param string $parent_key
+ *   Parent element key.
+ *
+ * @return string
+ *   The ajax id.
+ */
+function tmgmt_review_form_element_ajaxid($parent_key) {
+  return 'tmgmt-ui-element-' . Html::cleanCssIdentifier($parent_key) . '-wrapper';
+}
+
+/**
+ * Review form revert action callback.
+ */
+function tmgmt_translation_review_form_revert(array $form, FormStateInterface $form_state) {
+
+  /** @var \Drupal\tmgmt\JobItemInterface $item */
+  $item = $form_state->getFormObject()->getEntity();
+
+  $key = \Drupal::service('tmgmt.data')->ensureArrayKey($form_state->getTriggeringElement()['#data_item_key']);
+
+  if ($item->dataItemRevert($key)) {
+    // Update the form_state input values so that the new default vale will be
+    // shown.
+    $form_key = str_replace('][', '|', $form_state->getTriggeringElement()['#data_item_key']);
+    $user_input = $form_state->getUserInput();
+    unset($user_input[$form_key]['translation']);
+    // This will set the reverted user input to the current text area.
+    $user_input[$form_key]['translation'] = $item->getData([$key[0], '0', 'value', '#translation', '#text']);
+    $form_state->setUserInput($user_input);
+    $item->save();
+  }
+  else {
+    \Drupal::messenger()->addWarning(t('No past revision found, translation was not reverted.'));
+  }
+  $form_state->setRebuild();
+}
+
+/**
+ * Callback for the action at the job item review form.
+ */
+function tmgmt_translation_review_form_update_state(array $form, FormStateInterface $form_state) {
+  $matches = array();
+  // We should have an #name element
+  // and the name should beginn with approve-
+  // and the $matches should now contain an element with name key.
+  preg_match("/^(?P<action>[^-]+)-(?P<key>.+)/i", $form_state->getTriggeringElement()['#name'], $matches);
+  $values = $form_state->getValues();
+  $data = array();
+  $job_item = $form_state->getFormObject()->getEntity();
+
+  /** @var \Drupal\tmgmt\JobItemInterface $job_item */
+  $plugin = $job_item->getTranslatorPlugin();
+  $success = TRUE;
+  switch ($matches['action']) {
+    case 'reviewed':
+      $form_state->setRebuild();
+      $data['#status'] = TMGMT_DATA_ITEM_STATE_REVIEWED;
+      break;
+    case 'unreviewed':
+      $form_state->setRebuild();
+      $data['#status'] = TMGMT_DATA_ITEM_STATE_TRANSLATED;
+      break;
+    case 'reject':
+      if (empty($values['confirm'])) {
+        if (isset($_GET['destination'])) {
+          $destination = $_GET['destination'];
+          unset($_GET['destination']);
+        }
+        else {
+          $destination = '';
+        }
+        tmgmt_redirect_queue_set(array(Url::fromRoute('<current>')->getInternalPath()), $destination);
+        $form_state->setRedirectUrl(Url::fromUri('base:' . Url::fromRoute('<current>')->getInternalPath() . '/reject/' . $matches['key']));
+        $success = FALSE;
+      }
+      else {
+        $form_state->setRedirectUrl(Url::fromUri('base:' . tmgmt_redirect_queue_dequeue(), array('query' => array('destination' => tmgmt_redirect_queue_destination()))));
+        if ($plugin instanceof TranslatorRejectDataInterface) {
+          $success = $job_item->getTranslatorController()->rejectDataItem($job_item, \Drupal::service('tmgmt.data')->ensureArrayKey($matches['key']), $values);
+        }
+      }
+    default:
+      $data['#status'] = TMGMT_DATA_ITEM_STATE_PENDING;
+      break;
+  }
+  if ($success) {
+    $job_item->updateData($matches['key'], $data);
+    // If a data item has been rejected and the job is in needs review state,
+    // set back to active.
+    if ($matches['action'] == 'reject' && $job_item->isNeedsReview()) {
+      $job_item->active(FALSE);
+    }
+  }
+  $job_item->save();
+  tmgmt_write_request_messages($job_item);
+}
+
+/**
+ * Form callback for the reject confirm form.
+ */
+function tmgmt_translation_review_form_reject_confirm(array $form, FormStateInterface $form_state, JobItemInterface $job_item, $key) {
+  // Path of job item review form.
+  $path = explode('/', Url::fromRoute('<current>')->getInternalPath());
+  $path = implode('/', array_slice($path, 0, count($path) - 2));
+
+  $args = array(
+    '@data_item' => $job_item->getData(\Drupal::service('tmgmt.data')->ensureArrayKey($key), '#label'),
+    '@job_item' => $job_item->label(),
+  );
+
+  $form = confirm_form( $form, t('Confirm rejection of @data_item in @job_item', $args), $path, '');
+  $form_state->set('item', $job_item);
+  $form['key'] = array('#type' => 'value', '#value' => $key);
+  $form['actions']['submit']['#name'] = 'reject-' . $key;
+  $form['actions']['submit']['#submit'] = array('tmgmt_translation_review_form_update_state');
+
+  $form = $job_item->getTranslatorPlugin()->rejectForm($form, $form_state);
+
+  return $form;
+}
+
+/**
+ * @addtogroup tmgmt_redirect_queue
+ * @{
+ */
+/**
+ * Set a redirect queue that can then be worked through.
+ *
+ * @param $redirects
+ *   An array of redirect url's to be processed. For example checkout pages as
+ *   returned by tmgmt_job_checkout_multiple().
+ * @param $destination
+ *   A final destination to go to after the queue has been processed.
+ *
+ * @deprecated Deprecated in 8.x-1.x, use \Drupal\tmgmt\JobQueue::startQueue()
+ *   instead.
+ */
+function tmgmt_redirect_queue_set(array $redirects, $destination = NULL) {
+  $_SESSION['tmgmt']['redirect_queue'] = $redirects;
+  $_SESSION['tmgmt']['destination'] = $destination;
+}
+
+/**
+ * Returns the redirect queue destination.
+ *
+ * This is the final destination after all queue items have been processed.
+ *
+ * @param $destination
+ *   The default destination that should be returned if none exists.
+ *
+ * @return
+ *   The stored destination if defined, otherwise the passed in default
+ *   destination.
+ *
+ * @deprecated Deprecated in 8.x-1.x, use
+ *   \Drupal\tmgmt\JobQueue::getDestination() instead.
+ */
+function tmgmt_redirect_queue_destination($destination = NULL) {
+  if (!empty($_SESSION['tmgmt']['destination'])) {
+    $destination = $_SESSION['tmgmt']['destination'];
+    unset($_SESSION['tmgmt']['destination']);
+    return $destination;
+  }
+  return $destination;
+}
+
+/**
+ * Returns the amount of entries in the redirect queue.
+ *
+ * @return
+ *   The amount of entries in the redirect queue.
+ *
+ * @deprecated Deprecated in 8.x-1.x, use \Drupal\tmgmt\JobQueue::count()
+ *   instead.
+ */
+function tmgmt_redirect_queue_count() {
+  if (!empty($_SESSION['tmgmt']['redirect_queue'])) {
+    return count($_SESSION['tmgmt']['redirect_queue']);
+  }
+  return 0;
+}
+
+/**
+ * Dequeues one redirect in the queue and returns that.
+ *
+ * @return
+ *   A redirect URL or NULL if the queue is empty.
+ *
+ * @deprecated Deprecated in 8.x-1.x, use \Drupal\tmgmt\JobQueue::getNextJob()
+ *   instead.
+ */
+function tmgmt_redirect_queue_dequeue() {
+  if (!empty($_SESSION['tmgmt']['redirect_queue'])) {
+    return array_shift($_SESSION['tmgmt']['redirect_queue']);
+  }
+}
+/**
+ * @} End of "addtogroup tmgmt_redirect_queue".
+ */
+
+/**
+ * Provides color legends for source statuses.
+ *
+ * @return array
+ *   Color legend render array.
+ */
+function tmgmt_color_legend() {
+  $items = [
+    [
+      'icon' => file_create_url('core/misc/icons/bebebe/house.svg'),
+      'legend' => t('Original language'),
+    ],
+    [
+      'icon' => file_create_url('core/misc/icons/bebebe/ex.svg'),
+      'legend' => t('Not translated'),
+    ],
+    [
+      'icon' => file_create_url('core/misc/icons/73b355/check.svg'),
+      'legend' => t('Translated'),
+    ],
+    [
+      'icon' => file_create_url(drupal_get_path('module', 'tmgmt') . '/icons/outdated.svg'),
+      'legend' => t('Translation Outdated'),
+    ],
+  ];
+
+  $output[] = [
+    '#attached' => array('library' => ['tmgmt/admin.seven', 'tmgmt/admin']),
+    '#theme' => 'tmgmt_legend',
+    '#title' => t('Source status:'),
+    '#items' => $items,
+  ];
+
+  $items = [];
+  foreach (JobItem::getStateDefinitions() as $state_definition) {
+    if (!empty($state_definition['icon'])) {
+      $items[] = [
+        'icon' => file_url_transform_relative(file_create_url($state_definition['icon'])),
+        'legend' => $state_definition['label'],
+      ];
+    }
+  }
+
+  $output[] = [
+    '#attached' => array('library' => ['tmgmt/admin.seven', 'tmgmt/admin']),
+    '#theme' => 'tmgmt_legend',
+    '#title' => t('Item status:'),
+    '#items' => $items,
+    '#prefix' => '<div class="clear"></div>',
+  ];
+
+  $output['#prefix'] = '<div class="tmgmt-color-legend clearfix">';
+  $output['#suffix'] = '</div>';
+
+  return $output;
+}
+
+/**
+ * Provides color legends for job item states.
+ *
+ * @return array
+ *   Color legend render array.
+ */
+function tmgmt_color_job_item_legend() {
+  $items = [];
+  foreach (JobItem::getStateDefinitions() as $state_definition) {
+    if (!empty($state_definition['icon'])) {
+      $items[] = [
+        'icon' => file_url_transform_relative(file_create_url($state_definition['icon'])),
+        'legend' => $state_definition['label'],
+      ];
+    }
+  }
+
+  $output = [
+    '#attached' => array('library' => ['tmgmt/admin.seven', 'tmgmt/admin']),
+    '#theme' => 'tmgmt_legend',
+    '#title' => t('State:'),
+    '#items' => $items,
+    '#prefix' => '<div class="tmgmt-color-legend clearfix">',
+    '#suffix' => '</div>',
+  ];
+
+  return $output;
+}
+
+/**
+ * Provides color legends for job states.
+ *
+ * @return array
+ *   Color legend render array.
+ */
+function tmgmt_color_job_legend() {
+  $items = [
+    [
+      'icon' => file_create_url(drupal_get_path('module', 'tmgmt') . '/icons/rejected.svg'),
+      'legend' => t('Unprocessed'),
+    ],
+  ];
+
+  foreach (JobItem::getStateDefinitions() as $state_definition) {
+    if (!empty($state_definition['icon'])) {
+      $items[] = [
+        'icon' => file_url_transform_relative(file_create_url($state_definition['icon'])),
+        'legend' => $state_definition['label'],
+      ];
+    }
+  }
+
+  if (\Drupal::service('tmgmt.continuous')->hasContinuousJobs()) {
+    $items[] = [
+      'icon' => file_create_url(drupal_get_path('module', 'tmgmt') . '/icons/continuous.svg'),
+      'legend' => t('Continuous'),
+    ];
+  };
+
+  $output = [
+    '#attached' => array('library' => ['tmgmt/admin.seven', 'tmgmt/admin']),
+    '#theme' => 'tmgmt_legend',
+    '#title' => t('State:'),
+    '#items' => $items,
+    '#prefix' => '<div class="tmgmt-color-legend clearfix">',
+    '#suffix' => '</div>',
+  ];
+
+  return $output;
+}
+
+/**
+ * Provides color legends for job item review form.
+ *
+ * @return array
+ *   Color legend render array.
+ */
+function tmgmt_color_review_legend() {
+  $items = [
+    [
+      'icon' => file_create_url(drupal_get_path('module', 'tmgmt') . '/icons/hourglass.svg'),
+      'legend' => t('Pending'),
+    ],
+    [
+      'icon' => file_create_url(drupal_get_path('module', 'tmgmt') . '/icons/ready.svg'),
+      'legend' => t('Translated'),
+    ],
+    [
+      'icon' => file_create_url(drupal_get_path('module', 'tmgmt') . '/icons/gray-check.svg'),
+      'legend' => t('Reviewed'),
+    ],
+    [
+      'icon' => file_create_url('core/misc/icons/73b355/check.svg'),
+      'legend' => t('Accepted'),
+    ],
+  ];
+
+  $output = [
+    '#attached' => array('library' => ['tmgmt/admin.seven', 'tmgmt/admin']),
+    '#theme' => 'tmgmt_legend',
+    '#title' => t('State:'),
+    '#items' => $items,
+    '#prefix' => '<div class="tmgmt-color-legend clearfix">',
+    '#suffix' => '</div>',
+  ];
+
+  return $output;
+}
+
+/**
+ * Attempts to checkout a number of jobs and prepare the necessary redirects.
+ *
+ * @param array $form_state
+ *   Form state array, used to set the initial redirect.
+ * @param array $jobs
+ *   Array of jobs to attempt checkout
+ *
+ * @ingroup tmgmt_job
+ *
+ * @see tmgmt_job_checkout_multiple()
+ *
+ * @deprecated
+ */
+function tmgmt_job_checkout_and_redirect(FormStateInterface $form_state, array $jobs) {
+  $redirects = tmgmt_job_checkout_multiple($jobs);
+  // If necessary, do a redirect.
+  if ($redirects) {
+    $request = \Drupal::request();
+    if ($request->query->has('destination')) {
+      // Remove existing destination, as that will prevent us from being
+      // redirect to the job checkout page. Set the destination as the final
+      // redirect instead.
+      tmgmt_redirect_queue_set($redirects, $request->query->get('destination'));
+      $request->query->remove('destination');
+    }
+    else {
+      tmgmt_redirect_queue_set($redirects, Url::fromRoute('<current>')->getInternalPath());
+    }
+    $form_state->setRedirectUrl(Url::fromUri('base:' . tmgmt_redirect_queue_dequeue()));
+
+    // Count of the job messages is one less due to the final redirect.
+    \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural(count($redirects), t('One job needs to be checked out.'), t('@count jobs need to be checked out.')));
+  }
+}
+
+/**
+ * Helper function for redirecting a form after a button has been clicked.
+ */
+function tmgmt_submit_redirect(array $form, FormStateInterface $form_state) {
+  // Remove destination from the query to fix form redirects.
+  \Drupal::request()->query->remove('destination');
+  if ($form_state->getTriggeringElement()['#redirect']) {
+    $form_state->setRedirectUrl(Url::fromUri('base:' . $form_state->getTriggeringElement()['#redirect']));
+  }
+}
+
+/**
+ * @addtogroup tmgmt_cart
+ * @{
+ */
+
+/**
+ * Returns the cart service.
+ *
+ * @return \Drupal\tmgmt\JobItemCart
+ *   The cart object.
+ */
+function tmgmt_cart_get() {
+  return \Drupal::service('tmgmt.cart');
+}
+
+/**
+ * Adds add to cart form elements.
+ *
+ * There are two use cases for this function:
+ *
+ * 1) Add the "Add to cart" submit action to the source overview form. In this
+ * case the $item_id should not be provided and only the action button will be
+ * displayed. The form is expected to submit job items ids as items[] which is
+ * being validated via tmgmt_source_add_to_cart_validate().
+ *
+ * 2) Add the "Add to cart" submit action to the translate tab. For this case
+ * the $item_id is required and with the add to cart button also the cart
+ * information is displayed. In this case there is no validation as the caller
+ * needs to provide valid $item_id value.
+ *
+ * The "Add to cart" action submits the form by calling
+ * tmgmt_source_add_to_cart_submit() submit callback which processes either
+ * one job item or multiple.
+ *
+ * @param array $form
+ *   Form to which to add the add to cart form elements.
+ * @param array $form_state
+ *   The current form state object.
+ * @param string $plugin
+ *   Current plugin name.
+ * @param string $item_type
+ *   Type of the source item.
+ * @param mixed $item_id
+ *   (Optional) It is required in case a single source is being added into the
+ *   cart.
+ */
+function tmgmt_add_cart_form(&$form, FormStateInterface $form_state, $plugin, $item_type, $item_id = NULL) {
+  $form_state->set('tmgmt_cart', array(
+    'plugin' => $plugin,
+    'item_type' => $item_type,
+    'item_id' => $item_id,
+  ));
+  $form['add_to_cart'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add to cart'),
+    '#submit' => array('tmgmt_source_add_to_cart_submit'),
+    '#attributes' => array('title' => t('Add marked items to the cart for later processing')),
+  );
+
+  if (empty($item_id)) {
+    $form['add_to_cart']['#validate'] = array('tmgmt_cart_source_overview_validate');
+  }
+  else {
+    //
+    $form['add_to_cart']['#limit_validation_errors'] = array();
+    // Compose the cart info message for the translate tab.
+    $count = tmgmt_cart_get()->count();
+    if (tmgmt_cart_get()->isSourceItemAdded($plugin, $item_type, $item_id)) {
+      $form['add_to_cart']['#disabled'] = TRUE;
+      $message = \Drupal::translation()->formatPlural($count, 'There is @count item in the <a href="@url">translation cart</a> including the current item.',
+        'There are @count items in the <a href="@url">translation cart</a> including the current item.', array('@url' => Url::fromRoute('tmgmt.cart')->toString()));
+    }
+    else {
+      $message = \Drupal::translation()->formatPlural($count, 'There is @count item in the <a href="@url">translation cart</a>.',
+        'There are @count items in the <a href="@url">translation cart</a>.', array('@url' => Url::fromRoute('tmgmt.cart')->toString()));
+    }
+
+    $form['add_to_cart']['#suffix'] = '<span class="tmgmt-ui-cart-status-message">' . $message . '</span>';
+  }
+}
+
+/**
+ * Submit handler to add items into the cart.
+ *
+ * Based on the submitted data it will create job items and add them into the
+ * cart. Use it in combination with tmgmt_add_cart_form() as that function
+ * sets all the necessary values needed to crate a job an add it into the cart.
+ *
+ * @see tmgmt_add_cart_form()
+ */
+function tmgmt_source_add_to_cart_submit(array $form, FormStateInterface $form_state) {
+
+  $cart_info = $form_state->get('tmgmt_cart');
+  if (!empty($cart_info['plugin']) && !empty($cart_info['item_type']) && $form_state->getValue('items')) {
+    $source_items = array_filter($form_state->getValue('items'));
+    $item_type = $cart_info['item_type'];
+    $plugin = $cart_info['plugin'];
+  }
+  elseif (!empty($cart_info['plugin']) && !empty($cart_info['item_type']) && !empty($cart_info['item_id'])) {
+    $source_items = array($cart_info['item_id']);
+    $item_type = $cart_info['item_type'];
+    $plugin = $cart_info['plugin'];
+  }
+  else {
+    \Drupal::messenger()->addError(t('Unable to add the content into the cart.'));
+    return;
+  }
+
+  $i = 0;
+  foreach ($source_items as $source_id) {
+    if (tmgmt_cart_get()->addJobItem($plugin, $item_type, $source_id)) {
+      $i++;
+    }
+  }
+
+  \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($i, '@count content source was added into the <a href="@url">cart</a>.',
+    '@count content sources were added into the <a href="@url">cart</a>.', array('@url' => Url::fromRoute('tmgmt.cart')->toString())));
+}
+
+/**
+ * Cart form validation callback for the source overview.
+ */
+function tmgmt_cart_source_overview_validate(array $form, FormStateInterface $form_state) {
+  $items = array_filter($form_state->getValue('items'));
+  if (empty($items)) {
+    $form_state->setError($form, t("You didn't select any source items."));
+  }
+}
+
+/**
+ * @} End of "addtogroup tmgmt_cart".
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function tmgmt_page_attachments(array &$attachments) {
+  // Add CSS for the Translation icon in the toolbar if the user has access to it.
+  $permissions = ['administer tmgmt', 'create translation jobs', 'accept translation jobs'];
+  foreach ($permissions as $permission) {
+    if (\Drupal::currentUser()->hasPermission($permission) && \Drupal::currentUser()->hasPermission('access toolbar')) {
+      $attachments['#attached']['library'][] = 'tmgmt/drupal.tmgmt.toolbar';
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_help().
+ */
+function tmgmt_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.tmgmt':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("The Translation Management Tool (TMGMT) module provides a tool set for translating content from different sources. The translation can be done by people or translation services of all kinds. It builds on and uses existing language tools and data structures in Drupal and can be used in automated workflow scenarios. For more information, see the online handbook entry for the <a href=':tmgmt'>TMGMT module</a>.", array(':tmgmt' => 'https://drupal.org/project/tmgmt')) . '.</p>';
+      return $output;
+    case 'entity.tmgmt_job.continuous_add_form':
+      $output = '<p>' . t('Continuous jobs allow to automatically and continuously submit all new and updated content to the configured translator. Each job has a specific language pair, multiple jobs can be created to translate into and from different languages. Only sources that match the configuration are considered, not selecting anything means that nothing will be translated with that job.') . '</p>';
+      return $output;
+  }
+}

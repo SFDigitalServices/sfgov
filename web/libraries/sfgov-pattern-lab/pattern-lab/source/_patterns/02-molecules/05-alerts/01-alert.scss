@@ -1,0 +1,78 @@
+@import "../../01-atoms/01-colors/01-colors";
+@import "../../01-atoms/02-typography/01-fonts.scss";
+
+// Alert variables ---------- //
+$sfgov-custom-alerts: () !default;
+$sfgov-custom-alerts-bar: () !default;
+$image-path: '../images';
+
+$sfgov-alerts: (
+  success: $color-green-lightest,
+  warning: $color-gold-lightest,
+  error: $color-secondary-lightest,
+  info: $color-primary-alt-lightest
+);
+
+$sfgov-alerts-bar: (
+  success: $color-green,
+  warning: $color-gold,
+  error: $color-secondary,
+  info: $color-primary-alt
+);
+
+$alerts: map-merge($sfgov-alerts, $sfgov-custom-alerts);
+$alerts-bar: map-merge($sfgov-alerts-bar, $sfgov-custom-alerts-bar);
+
+.sfgov-alert {
+  background: $color-gray-lightest no-repeat;
+  background-size: 5.2rem;
+  background-position: 1.5rem 2.1rem;
+  position: relative;
+  padding: 2rem 2rem 1.4rem 7rem;
+
+  &::before {
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1rem;
+  }
+
+  a {
+    color: $color-primary-darker;
+
+    &:focus,
+    &:hover {
+      color: $color-primary-darkest;
+    }
+  }
+}
+
+.sfgov-alert-body {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.sfgov-alert-heading {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.sfgov-alert-text {
+  @include open-sans;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+@each $name, $bgcolor in $alerts {
+  .sfgov-alert-#{$name} {
+    background-color: $bgcolor;
+    background-image: url('#{$image-path}/alerts/#{$name}.png');
+    background-image: url('#{$image-path}/alerts/#{$name}.svg');
+
+    &::before {
+      background-color: map-get($alerts-bar, $name);
+    }
+  }
+}

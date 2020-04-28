@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the local progress bar.
+ *
+ * Available variables:
+ * - title: The title of the field that will display when hover.
+ * - width_untranslated: The width of the untranslated bar.
+ * - width_translated: The width of the translated bar.
+ * - width_completed: The width of the completed bar.
+ * - count_untranslated: The count value of the untranslated bar.
+ * - count_translated: The count value of the translated bar.
+ * - count_completed: The count value of the completed bar.
+ *
+ * @ingroup themeable
+ */
+#}
+<div title="{{ title }}">
+  {% if width_untranslated %}
+    <div class="tmgmt-local-progress-untranslated" style="width: {{ width_untranslated }}%">{{ count_untranslated }}</div>
+  {% endif %}
+  {% if width_translated %}
+    <div class="tmgmt-local-progress-translated" style="width: {{ width_translated }}%">{{ count_translated }}</div>
+  {% endif %}
+  {% if width_completed %}
+    <div class="tmgmt-local-progress-completed" style="width: {{ width_completed }}%">{{ count_completed }}</div>
+  {% endif %}
+</div>
