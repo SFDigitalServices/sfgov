@@ -7,6 +7,7 @@ dependencies:
     - paragraphs.paragraphs_type.block
     - paragraphs.paragraphs_type.button
     - paragraphs.paragraphs_type.campaign
+    - paragraphs.paragraphs_type.content_link
     - paragraphs.paragraphs_type.document
     - paragraphs.paragraphs_type.events
     - paragraphs.paragraphs_type.list
@@ -39,16 +40,17 @@ settings:
     negate: 0
     target_bundles:
       people: people
-      block: block
       top_search_suggestion: top_search_suggestion
+      block: block
       button: button
       document: document
       campaign: campaign
-      events: events
       list: list
+      events: events
       phone: phone
       timeline: timeline
       text: text
+      content_link: content_link
       news: news
     target_bundles_drag_drop:
       additional_info:
@@ -60,10 +62,10 @@ settings:
       people:
         enabled: true
         weight: 21
-      block:
+      top_search_suggestion:
         enabled: true
         weight: 22
-      top_search_suggestion:
+      block:
         enabled: true
         weight: 22
       button:
@@ -93,10 +95,10 @@ settings:
       in_person_location:
         weight: 31
         enabled: false
-      events:
+      list:
         enabled: true
         weight: 32
-      list:
+      events:
         enabled: true
         weight: 32
       list_item:
@@ -132,10 +134,13 @@ settings:
       featured_item:
         weight: 41
         enabled: false
-      link:
-        weight: 44
+      acuity_embed:
+        weight: 42
         enabled: false
       content_link:
+        enabled: true
+        weight: 44
+      link:
         weight: 44
         enabled: false
       news:
@@ -147,19 +152,28 @@ settings:
       resources:
         weight: 50
         enabled: false
-      form:
+      social_media:
         weight: 52
         enabled: false
-      social_media:
+      department_content:
+        weight: 52
+        enabled: false
+      form:
         weight: 52
         enabled: false
       spotlight:
         weight: 54
+        enabled: false
+      form_io:
+        weight: 60
         enabled: false
       phone_numbers:
         weight: 62
         enabled: false
       process_step:
         weight: 63
+        enabled: false
+      timeline_item:
+        weight: 81
         enabled: false
 field_type: entity_reference_revisions
