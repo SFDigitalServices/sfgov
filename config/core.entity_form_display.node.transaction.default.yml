@@ -8,7 +8,9 @@ dependencies:
     - field.field.node.transaction.field_departments
     - field.field.node.transaction.field_description
     - field.field.node.transaction.field_direct_external_url
+    - field.field.node.transaction.field_do_not_show_on_topic_pages
     - field.field.node.transaction.field_help
+    - field.field.node.transaction.field_related_content
     - field.field.node.transaction.field_sort_title
     - field.field.node.transaction.field_special_cases
     - field.field.node.transaction.field_step_email
@@ -49,7 +51,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'What to Know Before You Start'
-      region: hidden
+      region: content
     group_what_to_do:
       children:
         - group_online
@@ -68,11 +70,14 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'What to Do'
-      region: hidden
+      region: content
     group_related_info:
       children:
-        - field_transactions
         - group_help
+        - field_topics
+        - field_departments
+        - field_transactions
+        - field_related_content
       parent_name: group_service_start_page
       weight: 10
       format_type: fieldset
@@ -82,7 +87,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'Contact and Related Information'
-      region: hidden
+      region: content
     group_supporting_info:
       children:
         - group_special_cases
@@ -96,7 +101,7 @@ third_party_settings:
         id: ''
         classes: sf-transaction-fieldset
       label: 'Supporting Information'
-      region: hidden
+      region: content
     group_thing_to_know:
       children:
         - field_things_to_know
@@ -114,10 +119,9 @@ third_party_settings:
         classes: 'sf-paragraphs-group sf-paragraphs-group--things-to-know'
         required_fields: false
       label: 'Things to Know'
-      region: hidden
+      region: content
     group_cost:
       children:
-        - field_related_content
         - field_cost
       parent_name: group_before_you_start
       weight: 20
@@ -133,7 +137,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Cost
-      region: hidden
+      region: content
     group_phone:
       children:
         - field_step_phone
@@ -151,7 +155,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Phone
-      region: hidden
+      region: content
     group_email:
       children:
         - field_step_email
@@ -169,7 +173,7 @@ third_party_settings:
         id: ''
         classes: 'sf-paragraphs-group sf-paragraphs-group--email'
       label: Email
-      region: hidden
+      region: content
     group_in_person:
       children:
         - field_step_in_person
@@ -187,7 +191,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: In-Person
-      region: hidden
+      region: content
     group_mail:
       children:
         - field_step_mail
@@ -205,7 +209,7 @@ third_party_settings:
         id: ''
         classes: 'sf-paragraphs-group sf-paragraphs-group--mail'
       label: Mail
-      region: hidden
+      region: content
     group_online:
       children:
         - field_step_online
@@ -223,7 +227,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Online
-      region: hidden
+      region: content
     group_other:
       children: {  }
       parent_name: group_what_to_do
@@ -240,7 +244,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: Other
-      region: hidden
+      region: content
     group_other_details:
       children:
         - field_step_other_title
@@ -254,7 +258,7 @@ third_party_settings:
         classes: 'sf-paragraphs-group sf-paragraphs-group--details'
         open: false
       label: Other
-      region: hidden
+      region: content
     group_service_start_page:
       children:
         - group_before_you_start
@@ -262,7 +266,7 @@ third_party_settings:
         - group_supporting_info
         - group_related_info
       parent_name: ''
-      weight: 17
+      weight: 15
       format_type: html_element
       format_settings:
         element: div
@@ -275,7 +279,7 @@ third_party_settings:
         id: ''
         classes: 'sf-paragraphs-container sf-paragraphs-container--service-start'
       label: 'Transaction page content'
-      region: hidden
+      region: content
     group_special_cases:
       children:
         - field_special_cases
@@ -293,7 +297,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Special Cases'
-      region: hidden
+      region: content
     group_custom_section:
       children:
         - field_custom_section
@@ -311,7 +315,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Custom Section'
-      region: hidden
+      region: content
     group_help:
       children:
         - field_help
@@ -329,12 +333,12 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Ways to Get Help'
-      region: hidden
+      region: content
     group_community:
       children:
         - field_transaction_purpose
       parent_name: ''
-      weight: 18
+      weight: 16
       format_type: html_element
       format_settings:
         id: ''
@@ -347,7 +351,7 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Why is this Transaction Good for the Community?'
-      region: hidden
+      region: content
 id: node.transaction.default
 targetEntityType: node
 bundle: transaction
@@ -355,7 +359,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 8
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -398,7 +402,7 @@ content:
     third_party_settings: {  }
     region: content
   field_departments:
-    weight: 4
+    weight: 22
     settings:
       match_operator: CONTAINS
       size: 60
@@ -408,7 +412,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_description:
-    weight: 2
+    weight: 1
     settings:
       rows: 3
       placeholder: ''
@@ -424,16 +428,23 @@ content:
     type: text_textarea
     region: content
   field_direct_external_url:
-    weight: 6
+    weight: 4
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
     region: content
+  field_do_not_show_on_topic_pages:
+    weight: 2
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_help:
     type: sfgov_paragraphs
-    weight: 21
+    weight: 4
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -450,8 +461,18 @@ content:
       closed_mode_threshold: 0
     third_party_settings: {  }
     region: content
+  field_related_content:
+    weight: 24
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_sort_title:
-    weight: 16
+    weight: 14
     settings:
       size: 60
       placeholder: ''
@@ -536,7 +557,7 @@ content:
     region: content
   field_step_online:
     type: sfgov_paragraphs
-    weight: 16
+    weight: 21
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -555,7 +576,7 @@ content:
     region: content
   field_step_other:
     type: sfgov_paragraphs
-    weight: 19
+    weight: 22
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -573,7 +594,7 @@ content:
     third_party_settings: {  }
     region: content
   field_step_other_title:
-    weight: 18
+    weight: 21
     settings:
       size: 60
       placeholder: ''
@@ -582,7 +603,7 @@ content:
     region: content
   field_step_phone:
     type: sfgov_paragraphs
-    weight: 20
+    weight: 11
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -619,7 +640,7 @@ content:
     third_party_settings: {  }
     region: content
   field_topics:
-    weight: 5
+    weight: 21
     settings:
       match_operator: CONTAINS
       size: 60
@@ -648,7 +669,7 @@ content:
     third_party_settings: {  }
     region: content
   field_transactions:
-    weight: 1
+    weight: 23
     settings:
       match_operator: CONTAINS
       size: 60
@@ -666,13 +687,13 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 15
+    weight: 13
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 12
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -680,39 +701,39 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 7
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 12
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 10
+    weight: 8
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 1
+    weight: 0
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 11
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 7
+    weight: 5
     settings:
       match_operator: CONTAINS
       size: 60
@@ -721,7 +742,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 13
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
