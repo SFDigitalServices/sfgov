@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.meeting.field_email
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_image
+    - field.field.node.meeting.field_meeting_artifacts
     - field.field.node.meeting.field_meeting_cancel
     - field.field.node.meeting.field_phone_numbers
     - field.field.node.meeting.field_regulations_accessibility
@@ -181,8 +182,26 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
+  field_meeting_artifacts:
+    type: paragraphs
+    weight: 18
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+    third_party_settings: {  }
+    region: content
   field_meeting_cancel:
-    weight: 26
+    weight: 17
     settings:
       display_label: true
     third_party_settings: {  }
@@ -201,8 +220,8 @@ content:
     type: entity_reference_paragraphs
     region: content
   field_regulations_accessibility:
-    type: entity_reference_paragraphs
-    weight: 27
+    type: paragraphs
+    weight: 19
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -210,6 +229,12 @@ content:
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: ''
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
     third_party_settings: {  }
     region: content
   field_start_date:
