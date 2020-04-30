@@ -5,14 +5,14 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Add Campaign theme terms.
  */
-function sfgov_utilities_update_8701() {
+function sfgov_utilities_update_8702() {
   $themes = [
-    ['name' => 'Blue', 'primary' => '#0C1464', 'background' => '#A9D6EA'],
-    ['name' => 'Black', 'primary' => '#212123', 'background' => '#D3D3D3'],
-    ['name' => 'Purple', 'primary' => '#7D61B3', 'background' => '#CCCCED'],
-    ['name' => 'Yellow', 'primary' => '#F4C435', 'background' => '#F8F1DF'],
-    ['name' => 'Red', 'primary' => '#C9563A', 'background' => '#EFCABB'],
-    ['name' => 'Green', 'primary' => '#1B674D', 'background' => '#C0E2C5'],
+    ['name' => 'Black', 'primary' => '#212123', 'accent_l1' => '#F8F8F8', 'accent_l2' => '#F1F1F1'],
+    ['name' => 'Gold', 'primary' => '#F4C435', 'accent_l1' => '#F8F1DF', 'accent_l2' => '#F9E3A3'],
+    ['name' => 'Green', 'primary' => '#00896D', 'accent_l1' => '#E9F7EC', 'accent_l2' => '#C0E2C5'],
+    ['name' => 'Blue', 'primary' => '#A9D6EA', 'accent_l1' => '#EDF4F7', 'accent_l2' => '#A9D6EA'],
+    ['name' => 'Purple', 'primary' => '#7D61B3', 'accent_l1' => '#EDEBF6', 'accent_l2' => '#CCCCED'],
+    ['name' => 'Red', 'primary' => '#C9563A', 'accent_l1' => '#F5E9E5', 'accent_l2' => '#EFCABB'],
   ];
 
   foreach ($themes as $theme) {
@@ -22,8 +22,11 @@ function sfgov_utilities_update_8701() {
       'field_primary_color' => [
         'color' => $theme['primary']
       ],
-      'field_background_color' => [
-        'color' => $theme['background']
+      'field_accent_l1' => [
+        'color' => $theme['accent_l1']
+      ],
+      'field_accent_l2' => [
+        'color' => $theme['accent_l2']
       ]
     ])->save();
   }
