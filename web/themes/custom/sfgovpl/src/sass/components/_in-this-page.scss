@@ -1,0 +1,51 @@
+.sfgov-in-this-page {
+  @include rubik;
+  @include contain-1090;
+  margin-bottom: 60px;
+  margin-top: 60px;
+  display: none;
+  .sfgov-public-body-in-this-page-container > * {
+    display: inline-block;
+  }
+  .sfgov-public-body-in-this-page-label {
+    @include rubik;
+    @include fs-title-5;
+    margin-right: 40px;
+    margin-bottom: 15px;
+  }
+  ul {
+    padding: 0;
+    margin: 0;
+    li {
+      display: inline-block;
+      margin-left: 40px;
+      a {
+        @include rubik;
+        @include fs-title-5;
+        font-weight: $fw-regular;
+        &.sfgov-translate-lang-zh-TW {
+          @include fs-highlight;
+        }
+      }
+    }
+    li:first-child {
+      margin-left: 0;
+    }
+  }
+  @include media-max($medium-screen) {
+    .sfgov-public-body-in-this-page-label {
+      width: 100%;
+      margin-bottom: 0;
+    }
+    ul {
+      width: 100%;
+      padding-top: 24px;
+      li {
+        margin-bottom: 20px;
+        margin-left: 0;
+        margin-right: 0px;
+        width: 50%;
+      }
+    }
+  }
+}

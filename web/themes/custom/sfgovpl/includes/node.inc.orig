@@ -14,9 +14,6 @@ use Drupal\Core\Url;
  */
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
-    // kint($variables['content']['field_meeting_cancel']);
-    // die();
-
     $content_type = $variables['node']->getType();
     if($content_type == 'department') {
       $variables['dept_fields'] = dept_page_fields();

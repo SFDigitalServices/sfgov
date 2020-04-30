@@ -1,0 +1,61 @@
+<article{{ attributes.addClass(classes) }}>
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': node.label,
+      'text': content.field_description|render,
+      'label': 'Meeting'|t
+    }
+  } %}
+
+  {% if content.field_meeting_cancel[0]['#markup'] %}
+  <div class="sfgov-section sfgov-section-callout">
+    <div class="sfgov-section-container">
+      <div class="sfgov-section--content">
+        {{ 'This meeting has been cancelled'|t }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div id="sfgov-in-this-page" class="sfgov-in-this-page sfds-layout-container">
+    <div class="sfgov-public-body-in-this-page-container sfds-responsive-container">
+      <div class="sfgov-public-body-in-this-page-label">In this page:</div>
+      <ul></ul>
+    </div>
+  </div>
+
+  <div class="sfgov-section sfgov-section-overview">
+    <div class="sfgov-section-container">
+      <h2 id="overview" class="sfgov-section--heading" role="heading">Overview</h2>
+      <div class="sfgov-section--content">
+        {{ content.body }}
+      </div>
+    </div>
+  </div>
+
+  <div class="sfgov-section sfgov-section-regulations-accessibility">
+    <div class="sfgov-section-container">
+      <h2 id="regulations-accessibility" class="sfgov-section--heading" role="heading">Regulations & Accessibility</h2>
+      <div class="sfgov-section--content">
+        {{ content.field_regulations_accessibility }}
+      </div>
+    </div>
+  </div>
+
+  <div class="sfgov-section-updated">
+    <div class="sfgov-section-container">
+      Last updated {{ node.changedtime|date('F d, Y') }}
+    </div>
+  </div>
+
+  {% if content.field_dept[0] %}
+  <div class="sfgov-section sfgov-section-departments">
+    <div class="sfgov-section-container">
+      <div class="sfgov-section--content">
+        {{ content.field_dept }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</article>
+

@@ -14,10 +14,13 @@ dependencies:
     - field.field.node.meeting.field_email
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_image
+    - field.field.node.meeting.field_meeting_cancel
     - field.field.node.meeting.field_phone_numbers
+    - field.field.node.meeting.field_regulations_accessibility
     - field.field.node.meeting.field_start_date
     - field.field.node.meeting.field_topics
     - node.type.meeting
+    - workflows.workflow.editorial
   module:
     - allowed_formats
     - content_moderation
@@ -178,6 +181,13 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
+  field_meeting_cancel:
+    weight: 26
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_phone_numbers:
     weight: 11
     settings:
@@ -189,6 +199,18 @@ content:
       default_paragraph_type: _none
     third_party_settings: {  }
     type: entity_reference_paragraphs
+    region: content
+  field_regulations_accessibility:
+    type: entity_reference_paragraphs
+    weight: 27
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
     region: content
   field_start_date:
     weight: 2
