@@ -43,14 +43,18 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   if (isset($parent)
     && $parent instanceof NodeInterface
     && $parent->bundle() == 'campaign') {
+    /** @var \Drupal\taxonomy\Entity\Term $theme */
     $theme = $parent->get('field_campaign_theme')->entity;
 
     if ($paragraph_type == 'campaign_spotlight') {
       $background_color = $theme->get('field_primary_color')->getValue();
       $background_color_value = $background_color[0]['color'];
     } elseif ($paragraph_type == 'campaign_resources') {
-      $background_color = $theme->get('field_background_color')->getValue();
+      $background_color = $theme->get('field_accent_l1')->getValue();
       $background_color_value = $background_color[0]['color'];
+    } elseif ($paragraph_type == 'accordion') {
+      $background_color = $theme->get('field_accent_l1')->getValue();
+      $variables['group_right_background'] = $background_color[0]['color'];
     }
 
     if (isset($background_color_value)) {
