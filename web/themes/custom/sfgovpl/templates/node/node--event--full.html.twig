@@ -17,12 +17,12 @@
         <div class="event--meta-left">
           <div class="event--meta-date">
             <div class="event--meta-inner-content">
-              <h3>Date</h3>
+              <h3>{{ 'Date'|t }}</h3>
               <div>
                 {% set start_date_time = content.field_start_date.0['#attributes']['datetime'] %}
                 {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
                 {{ start_date_time|date("l, F j, Y") }}<br/>
-                {{ start_date_time|date("g:i a") }} to 
+                {{ start_date_time|date("g:i a") }} {{ 'to'|t }}
                 {{ end_date_time|date("g:i a") }}
               </div>
             </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="event--meta-right">
           <div class="event--meta-inner-content">
-            <h3>Location</h3>
+            <h3>{{ 'Location'|t }}</h3>
             <div>{{ content.field_address[0]['#location'].title.value }}</div>
           </div>
         </div>
@@ -72,13 +72,13 @@
             <div class="event--content-sidebar-card phone-email">
               {% if content.field_phone_numbers['#items'] is not empty %}
                 <div class="event--content-phone">
-                  <h3>Phone</h3>
+                  <h3>{{ 'Phone'|t }}</h3>
                   {{ content.field_phone_numbers }}
                 </div>
               {% endif %}
               {% if content.field_email['#items'] is not empty %}
                 <div class="event--content-email">
-                  <h3>Email</h3>
+                  <h3>{{ 'Email'|t }}</h3>
                   {# <div class="email-title">{{ content.field_email.0['#paragraph'].get('field_title').value }}</div>
                   <div class="email-addres">{{ content.field_email.0['#paragraph'].get('field_email').value }}</div> #}
                   {{ content.field_email }}
