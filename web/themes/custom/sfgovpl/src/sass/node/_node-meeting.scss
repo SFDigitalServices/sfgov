@@ -50,6 +50,65 @@
     background-color: $c-grey-1;
   }
 
+  .sfgov-section-agenda {
+    .sfgov-section--heading {
+      margin-bottom: 60px;
+    }
+    .sfgov-section--content {
+      ol {
+        margin: 0;
+        padding: 0;
+
+        li {
+          position: relative;
+          padding-left: 100px;
+          counter-increment: counter;
+          padding-bottom: 30px;
+          list-style: none;
+
+          .__title {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 50px;
+          }
+          .__file {
+            margin-top: 15px;
+          }
+
+          &:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: counter(counter);
+            font-size: 24px;
+            line-height: 50px;
+            width: 50px;
+            height: 50px;
+            background: $c-slate;
+            color: #fff;
+            border-radius: 100%;
+            text-align: center;
+          }
+
+          &:after {
+            content: '';
+            width: 3px;
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            background: $c-slate;
+            z-index: -1;
+          }
+
+          &:last-child:after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
   .sfgov-section-regulations-accessibility {
     background-color: $c-grey-1;
 
