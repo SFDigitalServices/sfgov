@@ -6,6 +6,7 @@ dependencies:
     - entity_browser.browser.image
     - field.field.node.meeting.body
     - field.field.node.meeting.field_address
+    - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_call_to_action
     - field.field.node.meeting.field_cost
     - field.field.node.meeting.field_dept
@@ -40,7 +41,7 @@ third_party_settings:
         - field_email
         - field_phone_numbers
       parent_name: ''
-      weight: 10
+      weight: 11
       format_type: details
       region: content
       format_settings:
@@ -77,6 +78,24 @@ content:
       open: false
     third_party_settings: {  }
     type: entity_browser_entity_reference
+    region: content
+  field_agenda:
+    type: paragraphs
+    weight: 10
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+    third_party_settings: {  }
     region: content
   field_call_to_action:
     weight: 9
@@ -117,7 +136,7 @@ content:
     type: paragraphs
     region: content
   field_dept:
-    weight: 11
+    weight: 12
     settings:
       match_operator: CONTAINS
       size: 60
@@ -184,7 +203,7 @@ content:
     region: content
   field_meeting_artifacts:
     type: paragraphs
-    weight: 18
+    weight: 19
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -201,7 +220,7 @@ content:
     third_party_settings: {  }
     region: content
   field_meeting_cancel:
-    weight: 17
+    weight: 18
     settings:
       display_label: true
     third_party_settings: {  }
@@ -221,7 +240,7 @@ content:
     region: content
   field_regulations_accessibility:
     type: paragraphs
-    weight: 19
+    weight: 20
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -244,7 +263,7 @@ content:
     type: datetime_default
     region: content
   field_topics:
-    weight: 12
+    weight: 13
     settings:
       match_operator: CONTAINS
       size: 60
@@ -254,13 +273,13 @@ content:
     region: content
   moderation_state:
     type: moderation_state_default
-    weight: 14
+    weight: 15
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -268,7 +287,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 16
     region: content
     third_party_settings: {  }
   title:
@@ -280,7 +299,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
