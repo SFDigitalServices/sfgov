@@ -57,3 +57,13 @@ function sfgovpl_preprocess_field__paragraph__field_file__other_info_document(&$
     $variables['items'][$key]['fileurl'] = file_create_url($value['content']['#options']['entity']->field_media_file->entity->getFileUri());
   }
 }
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgovpl_preprocess_field__paragraph__field_file__agenda_item(&$variables) {
+  foreach ($variables['items'] as $key => $value) {
+    $variables['items'][$key]['file'] = $value['content']['#options'];
+    $variables['items'][$key]['fileurl'] = file_create_url($value['content']['#options']['entity']->field_media_file->entity->getFileUri());
+  }
+}
