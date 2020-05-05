@@ -29,12 +29,14 @@
       });
 
       var scrollTo = function(elemSelector) {
+        console.log(elemSelector);
         // Get padding offset of the wrapper container.
         var elemSelectorPaddingTop = parseInt(
           $(elemSelector)
-            .closest('.sfds-layout-container')
+            .closest('.sfgov-in-this-page-target')
             .css('padding-top')
         );
+        console.log(elemSelectorPaddingTop);
 
         $('html, body').animate(
           {
