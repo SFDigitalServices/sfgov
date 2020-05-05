@@ -1,0 +1,53 @@
+uuid: 4b0a14dc-1b9e-4e11-99ee-fc1541630c96
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.file
+    - field.field.paragraph.campaign_resources.field_file
+    - field.field.paragraph.campaign_resources.field_resources
+    - paragraphs.paragraphs_type.campaign_resources
+  module:
+    - entity_browser
+    - paragraphs
+id: paragraph.campaign_resources.default
+targetEntityType: paragraph
+bundle: campaign_resources
+mode: default
+content:
+  field_file:
+    weight: 1
+    settings:
+      entity_browser: file
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_resources:
+    type: paragraphs
+    weight: 0
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: campaign_resource_section
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true

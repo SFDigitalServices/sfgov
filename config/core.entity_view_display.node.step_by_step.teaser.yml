@@ -6,35 +6,22 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.step_by_step.field_description
     - field.field.node.step_by_step.field_intro_text
-    - field.field.node.step_by_step.field_process_steps
     - field.field.node.step_by_step.field_topics
     - node.type.step_by_step
   module:
-    - text
     - user
 id: node.step_by_step.teaser
 targetEntityType: node
 bundle: step_by_step
 mode: teaser
 content:
-  content_moderation_control:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_description:
-    type: text_default
-    weight: 2
-    region: content
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
   links:
-    weight: 1
-    region: content
+    weight: 100
     settings: {  }
     third_party_settings: {  }
+    region: content
 hidden:
+  field_description: true
   field_intro_text: true
   field_process_steps: true
   field_topics: true

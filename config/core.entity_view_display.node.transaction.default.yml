@@ -8,9 +8,7 @@ dependencies:
     - field.field.node.transaction.field_departments
     - field.field.node.transaction.field_description
     - field.field.node.transaction.field_direct_external_url
-    - field.field.node.transaction.field_do_not_show_on_topic_pages
     - field.field.node.transaction.field_help
-    - field.field.node.transaction.field_related_content
     - field.field.node.transaction.field_sort_title
     - field.field.node.transaction.field_special_cases
     - field.field.node.transaction.field_step_email
@@ -29,19 +27,17 @@ dependencies:
     - entity_reference_revisions
     - field_group
     - link
-    - paragraphs
     - smart_trim
     - user
 third_party_settings:
   field_group:
     group_grey_boxes:
       children:
-        - content_moderation_control
         - field_transaction_purpose
         - field_departments
       parent_name: ''
-      weight: 14
-      format_type: tab
+      weight: 15
+      format_type: html_element
       format_settings:
         id: ''
         classes: ''
@@ -51,10 +47,7 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        formatter: closed
-        description: ''
       label: 'grey boxes'
-      region: content
 id: node.transaction.default
 targetEntityType: node
 bundle: transaction
@@ -67,8 +60,8 @@ content:
     third_party_settings: {  }
   field_cost:
     type: entity_reference_revisions_entity_view
-    weight: 1
-    label: above
+    weight: 2
+    label: hidden
     settings:
       view_mode: default
       link: ''
@@ -76,7 +69,7 @@ content:
     region: content
   field_custom_section:
     type: entity_reference_revisions_entity_view
-    weight: 11
+    weight: 12
     label: hidden
     settings:
       view_mode: default
@@ -92,8 +85,8 @@ content:
       link: true
     third_party_settings: {  }
   field_description:
-    weight: 0
-    label: above
+    weight: 1
+    label: hidden
     settings:
       trim_length: 600
       trim_type: chars
@@ -112,7 +105,7 @@ content:
     region: content
   field_direct_external_url:
     type: link
-    weight: 15
+    weight: 16
     region: content
     label: hidden
     settings:
@@ -124,25 +117,16 @@ content:
     third_party_settings: {  }
   field_help:
     type: entity_reference_revisions_entity_view
-    weight: 12
+    weight: 13
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
     region: content
-  field_related_content:
-    type: entity_reference_entity_view
-    weight: 16
-    region: content
-    label: above
-    settings:
-      view_mode: teaser_simple
-      link: false
-    third_party_settings: {  }
   field_special_cases:
     type: entity_reference_revisions_entity_view
-    weight: 10
+    weight: 11
     label: hidden
     settings:
       view_mode: default
@@ -151,7 +135,7 @@ content:
     region: content
   field_step_email:
     type: entity_reference_revisions_entity_view
-    weight: 4
+    weight: 5
     label: hidden
     settings:
       view_mode: default
@@ -160,7 +144,7 @@ content:
     region: content
   field_step_in_person:
     type: entity_reference_revisions_entity_view
-    weight: 5
+    weight: 6
     label: hidden
     settings:
       view_mode: default
@@ -169,7 +153,7 @@ content:
     region: content
   field_step_mail:
     type: entity_reference_revisions_entity_view
-    weight: 6
+    weight: 7
     label: hidden
     settings:
       view_mode: default
@@ -178,7 +162,7 @@ content:
     region: content
   field_step_online:
     type: entity_reference_revisions_entity_view
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       view_mode: default
@@ -187,7 +171,7 @@ content:
     region: content
   field_step_other:
     type: entity_reference_revisions_entity_view
-    weight: 9
+    weight: 10
     label: hidden
     settings:
       view_mode: default
@@ -195,7 +179,7 @@ content:
     third_party_settings: {  }
     region: content
   field_step_other_title:
-    weight: 8
+    weight: 9
     label: hidden
     settings:
       link_to_entity: false
@@ -204,7 +188,7 @@ content:
     region: content
   field_step_phone:
     type: entity_reference_revisions_entity_view
-    weight: 7
+    weight: 8
     label: hidden
     settings:
       view_mode: default
@@ -212,10 +196,12 @@ content:
     third_party_settings: {  }
     region: content
   field_things_to_know:
-    type: paragraph_summary
-    weight: 2
+    type: entity_reference_revisions_entity_view
+    weight: 3
     label: hidden
-    settings: {  }
+    settings:
+      view_mode: default
+      link: ''
     third_party_settings: {  }
     region: content
   field_transaction_purpose:
@@ -228,19 +214,17 @@ content:
     third_party_settings: {  }
     region: content
   field_transactions:
-    weight: 13
+    weight: 14
     label: hidden
     settings:
-      view_mode: default
+      view_mode: teaser
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
     region: content
 hidden:
-  field_do_not_show_on_topic_pages: true
   field_related_departments: true
   field_sort_title: true
   field_topics: true
   langcode: true
   links: true
-  search_api_excerpt: true
