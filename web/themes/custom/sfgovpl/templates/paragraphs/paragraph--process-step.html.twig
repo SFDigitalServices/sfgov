@@ -53,7 +53,7 @@
     {% block content %}
       <div class="step-left">
         <h3>{{ content.field_title }}</h3>
-        <div class="step-optional {{ optional == '0' ? 'hidden' : '' }}">Optional step</div>
+        <div class="step-optional {{ optional == '0' ? 'hidden' : '' }}">{{ 'Optional step'|t }}</div>
         {% if (content.field_cost|render) or (content.field_text_time|render) %}
           <div class="step-meta">
             {% if content.field_cost | render %}
@@ -72,7 +72,7 @@
             {% set txTitle = content.field_transaction.0['#title'] %}
             {% set txUrl = content.field_transaction.0['#url'].toString() %}
             <div class="step-transaction-link">
-              {# 
+              {#
                 sbsId and txId are coming from paragraph_preprocess hook
                 these need to get passed to the linked transaction as url params, so js can populate the
                 "Part of Step by step: Step by step page title"
@@ -83,6 +83,6 @@
         </div>
       </div>
     {% endblock %}
-    <a class="show-more-link" data-toggle-trigger href="javascript:void(0)">Show more</a>
+    <a class="show-more-link" data-toggle-trigger href="javascript:void(0)">{{ 'Show more'|t }}</a>
   </div>
 {% endblock paragraph %}

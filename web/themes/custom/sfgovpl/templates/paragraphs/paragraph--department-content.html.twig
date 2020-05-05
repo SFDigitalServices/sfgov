@@ -36,7 +36,7 @@
  * @see template_preprocess_paragraph()
  *
  * @ingroup themeable
- */  
+ */
 #}
 {%
   set classes = [
@@ -70,7 +70,7 @@
             {{ paragraph.field_document.entity.field_file.entity.label }}
           </a>
         {% else %}
-          <span>No document available</span>
+          <span>{{ 'No document available'|t }}</span>
         {% endif %}
         </div>
       </div>
@@ -83,7 +83,7 @@
             {% if node.field_start_date.value %}
               <div class="date"> {{ node.field_start_date.value|date("F j, Y") }} </div>
             {% else %}
-              <div class="date">Upcoming</div>
+              <div class="date">{{ 'Upcoming'|t }}</div>
             {% endif %}
           </div>
         {% else %}
@@ -94,7 +94,7 @@
             {% if node.field_start_date.value %}
               <div class="date"> {{ node.field_start_date.value|date("F j, Y") }} </div>
             {% else %}
-              <div class="date">Upcoming</div>
+              <div class="date">{{ 'Upcoming'|t }}</div>
             {% endif %}
           </div>
         {% endif %}
