@@ -44,7 +44,27 @@
       <div class="sfgov-section-meeting-info">
         <h2>Attend the meeting</h2>
         <div class="sfgov-section--content">
-          {{ content.field_address }}
+          {% if content.field_start_date or content.field_end_date %}
+          <div class="date-time">
+            <h4>Date & Time</h4>
+            {% if content.field_start_date %}
+            <div class="start-date">
+              {{ content.field_start_date }}
+            </div>
+            {% endif %}
+            {% if content.field_end_date %}
+            <div class="end-date">
+              {{ content.field_end_date }}
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if content.field_address %}
+          <div class="address">
+            {{ content.field_address }}
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -52,27 +72,33 @@
 
   <div class="sfgov-section sfgov-section-recording sfgov-in-this-page-target">
     <div class="sfgov-section-container">
-      <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
-      <div class="sfgov-section--content">
-        This is an upcoming meeting. The video and transcript will be posted after the meeting occurs.
+      <div class="group--left">
+        <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
+        <div class="sfgov-section--content">
+          This is an upcoming meeting. The video and transcript will be posted after the meeting occurs.
+        </div>
       </div>
     </div>
   </div>
 
   <div class="sfgov-section sfgov-section-meeting-artifacts sfgov-in-this-page-target">
     <div class="sfgov-section-container">
-      <h2 id="artifacts" class="sfgov-section--heading" role="heading">Meeting Artifacts</h2>
-      <div class="sfgov-section--content">
-        {{ content.field_meeting_artifacts }}
+      <div class="group--left">
+        <h2 id="artifacts" class="sfgov-section--heading" role="heading">Meeting Artifacts</h2>
+        <div class="sfgov-section--content">
+          {{ content.field_meeting_artifacts }}
+        </div>
       </div>
     </div>
   </div>
 
   <div class="sfgov-section sfgov-section-regulations-accessibility sfgov-in-this-page-target">
     <div class="sfgov-section-container">
-      <h2 id="regulations-accessibility" class="sfgov-section--heading" role="heading">Regulations & Accessibility</h2>
-      <div class="sfgov-section--content">
-        {{ content.field_regulations_accessibility }}
+      <div class="group--left">
+        <h2 id="regulations-accessibility" class="sfgov-section--heading" role="heading">Regulations & Accessibility</h2>
+        <div class="sfgov-section--content">
+          {{ content.field_regulations_accessibility }}
+        </div>
       </div>
     </div>
   </div>
