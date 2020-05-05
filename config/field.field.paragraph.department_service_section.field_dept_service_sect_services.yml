@@ -4,8 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_dept_service_sect_services
-    - node.type.step_by_step
-    - node.type.transaction
     - paragraphs.paragraphs_type.department_service_section
   module:
     - tmgmt_content
@@ -23,13 +21,10 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: views
   handler_settings:
-    target_bundles:
-      step_by_step: step_by_step
-      transaction: transaction
-    sort:
-      field: _none
-    auto_create: false
-    auto_create_bundle: step_by_step
+    view:
+      view_name: content_reference_filters
+      display_name: entity_reference_1
+      arguments: {  }
 field_type: entity_reference
