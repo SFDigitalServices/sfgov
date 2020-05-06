@@ -236,51 +236,33 @@
   {% endif %}
 {% endif %}
 
-{% if dept_fields.address or dept_fields.phone_numbers or dept_fields.email %}
+{% set hasAddress = content.field_address['#items'] is not empty %}
+{% set hasPhone = content.field_phone_numbers['#items'] is not empty %}
+{% set hasEmail = content.field_email['#items'] is not empty %}
+
+{% if hasAddress or hasPhone or hasEmail %}
   <a name="contact"></a>
   <div id="sfgov-dept-contact" class="sfgov-dept-section sfgov-dept-contact sfds-layout-container">
     <div class="sfgov-dept-contact-content sfds-responsive-container">
       <div class="sfgov-contact-container">
         <h2 class="dept-heading--section">Contact</h2>
         <div class="sfgov-dept-section-content-container">
-          {% if dept_fields.address %}
+          {% if hasAddress %}
             <div class="sfgov-contact-section address">
-            {% if dept_fields.address.organization %}
-              <h5>{{ dept_fields.address.organization }}</h5>
-            {% endif %}
-              <p>
-                {{ dept_fields.address.line1 }} <br/>
-              {% if dept_fields.address.line2 %}
-                {{ dept_fields.address.line2 }} <br/>
-              {% endif %}
-                {{ dept_fields.address.city }}, {{ dept_fields.address.state }} {{ dept_fields.address.zip }}
-              </p>
+              {{ content.field_address }}
             </div>
           {% endif %}
-          {% if dept_fields.phone_numbers %}
+          {% if hasPhone %}
             <div class="sfgov-contact-section phone-numbers">
-              <h5>Phone</h5>
-              {% for phone in dept_fields.phone_numbers %}
-                <div class="phone">
-                  <h6>{{ phone.owner }}</h6>
-                  <p><a href="tel:{{ phone.number }}">{{ phone.number }}</a></p>
-                  <div class="details">
-                    {{ phone.details | raw }}
-                  </div>
-                </div>
-              {% endfor %}
+            <h5>Phone</h5>
+              {{ content.field_phone_numbers }}
             </div>
           {% endif %}
-          {% if dept_fields.email %}
-            {% if dept_fields.email.email_address %}
-              <div class="sfgov-contact-section email">
-                <h5>Email</h5>
-                {% if dept_fields.email.email_title %}
-                  <h6>{{ dept_fields.email.email_title }}</h6>
-                {% endif %}
-                <p><a href="mailto:{{ dept_fields.email.email_address }}">{{ dept_fields.email.email_address }}</a></p>
-              </div>
-            {% endif %}
+          {% if hasEmail %}
+            <div class="sfgov-contact-section email">
+              <h5>Email</h5>
+              {{ content.field_email }}
+            </div>
           {% endif %}
         </div>
       </div>
