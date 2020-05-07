@@ -2412,6 +2412,13 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .news-front {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 .news-front h2 {
   font-size: 33px;
   font-weight: 500;
@@ -2456,21 +2463,26 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   position: relative;
 }
 
-.news-front .news-front--view {
-  padding-right: 20px;
-}
-
 @media screen and (min-width: 950px) {
-  .news-front .news-front--view {
-    padding-right: 20px;
-    width: calc(100% - 445px);
+  .news-front .news-front--container {
+    padding: 0;
   }
 }
 
-@media screen and (min-width: 1280px) {
+.news-front .news-front--view {
+  padding-right: 20px;
+  float: left;
+  display: block;
+  width: 50%;
+  padding-right: 20px;
+}
+
+@media screen and (max-width: 768px) {
   .news-front .news-front--view {
-    padding-right: 102px;
-    width: calc(100% - 445px);
+    float: none;
+    clear: both;
+    width: 100%;
+    padding-left: 20px;
   }
 }
 
@@ -2483,19 +2495,47 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   width: 100%;
 }
 
-.news-front .news-front--twitter {
-  background: #f9f9f9;
-  padding: 40px 20px 20px;
+.news-front .news-front--view .view-news-block .sfgov-container-three-column .sfgov-container-item a {
+  min-height: 160px;
+  position: relative;
 }
 
-@media screen and (min-width: 950px) {
+@media screen and (max-width: 768px) {
+  .news-front .news-front--view .view-news-block .sfgov-container-three-column .sfgov-container-item a {
+    min-height: 0;
+    padding-right: 20px;
+  }
+}
+
+.news-front .news-front--view .view-news-block .sfgov-container-three-column .sfgov-container-item .news--card h3 {
+  margin-bottom: 40px;
+}
+
+.news-front .news-front--view .view-news-block .sfgov-container-three-column .sfgov-container-item .field--type-datetime {
+  margin-top: 20px;
+  position: absolute;
+  bottom: 15px;
+}
+
+.news-front .news-front--twitter {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px 40px 20px 40px;
+  float: left;
+  display: block;
+  width: 50%;
+  position: relative;
+  top: 110px;
+}
+
+@media screen and (max-width: 768px) {
   .news-front .news-front--twitter {
-    background: #f9f9f9;
-    padding: 180px 56px 240px 59px;
-    position: absolute;
-    right: 0;
-    top: -160px;
-    width: 445px;
+    float: none;
+    clear: both;
+    padding-bottom: 45px;
+    width: 100%;
+    top: 0;
+    border-radius: 0;
   }
 }
 
@@ -2531,7 +2571,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .news-front .news-front--view-more {
-  padding-bottom: 80px;
   padding-top: 30px;
 }
 
@@ -2539,6 +2578,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   clear: both;
   content: "";
   display: block;
+}
+
+@media screen and (max-width: 950px) {
+  .news-front .news-front--view-more {
+    padding-bottom: 80px;
+  }
 }
 
 .news-front .news-front--view-more .more-link {
@@ -2836,7 +2881,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 .sfgov-spotlight .sfgov-spotlight-section.image {
   background-color: #cccced;
   background-size: cover;
-  background-position: top center;
+  background-position: center center;
   background-repeat: no-repeat;
   height: 375px;
   overflow: hidden;
@@ -10948,6 +10993,30 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .sfgov-translate-lang-zh-TW * {
   font-family: "Noto Sans TC", sans-serif;
+}
+
+.sfgov-translate-lang-zh-TW .step-type.number {
+  font-family: "Rubik", sans-serif;
+  font-size: 20px;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  width: 35px;
+  height: 35px;
+  line-height: 35px !important;
+  margin-top: -17px;
+  margin-left: -19px;
+}
+
+@media screen and (min-width: 768px) {
+  .sfgov-translate-lang-zh-TW .step-type.number {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+    margin-left: -26px;
+    margin-top: -24px;
+    width: 48px;
+    height: 48px;
+    line-height: 48px !important;
+  }
 }
 
 [data-toggle-container][data-toggle-show] [data-toggle-content] {
