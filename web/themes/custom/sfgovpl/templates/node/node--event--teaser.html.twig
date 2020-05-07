@@ -15,7 +15,7 @@
       {{ content | without('field_start_date','field_end_date','field_address') }}
       <div class="event-meta">
         <div class="event-time">
-          {{ start_date_time|date("g:i a") }} to {{ end_date_time|date("g:i a") }}
+          {{ start_date_time|date("g:i a") }} {{ 'to'|t }} {{ end_date_time|date("g:i a") }}
         </div>
         <div class="event-location">
           {{ content.field_address[0]['#location'].title.value }}

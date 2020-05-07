@@ -65,9 +65,12 @@ function SFGovTranslate() {
     if(drupalTranslation) {
       // drupal translation always wins
       // set gtranslate to english to kill the gtranslate cookie
-      $.when(that.sfgovDoGTranslate('en|en')).then(function() {
-        window.location.href = drupalTranslation.turl;
-      });
+      if (drupalTranslation.turl != window.location.pathname) {
+        $.when(that.sfgovDoGTranslate('en|en')).then(function() {
+          window.location.href = drupalTranslation.turl;
+        });
+      }
+
     } else { // no drupal translation exists, use gtranslate
       that.sfgovDoGTranslate(event.target.value);
       that.currentSelectedTranslation = event.target.value;
@@ -76,10 +79,13 @@ function SFGovTranslate() {
 
   this.getDrupalTranslation = function(lang) {
     var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
-    if(drupalTranslations) {
+    if (!drupalTranslations) {
+      drupalTranslations = drupalSettings.sfgov_translations.view.translations;
+    }
+    if (drupalTranslations) {
       for(var i=0; i<drupalTranslations.length; i++) {
         var someTranslation = drupalTranslations[i];
-        if(someTranslation.lang == lang) {
+        if (someTranslation.lang == lang) {
           return someTranslation;
         }
       }
@@ -91,25 +97,29 @@ function SFGovTranslate() {
     var currentDrupalLanguage = drupalSettings.sfgov_translations.node.current_language;
     var gTranslateCookie = getCookie('googtrans');
     var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null;
+
+    // If translation cookie lang is different fron Drupal current language,
+    // remove the cookie, as we are using language path prefixes and should
+    // always show the same language as the URL.
+    if(currentDrupalLanguage != 'en' || currentDrupalLanguage != gTranslateLang) {
+      // var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
+      // Always translate page, even if a Drupal translation for the page exists.
+      // If translated content is being shown on the page, it should be wrapped
+      // in a container with class="notranslate" to allow other elements like
+      // header and footer to be translated.
+      that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
+      that.addElementTranslationClass(currentDrupalLanguage);
+      return;
+    }
+
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
-      if(drupalTranslation) { // drupal translation exists
+      if (drupalTranslation && drupalTranslation.turl != window.location.pathname) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
-          if(drupalTranslation.turl != window.location.pathname) {
-            window.location.href = drupalTranslation.turl;
-          }
+          window.location.href = drupalTranslation.turl;
         });
       }
-    } 
-    if(currentDrupalLanguage != 'en') {
-      var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
-      if(drupalTranslation) {
-        document.cookie = 'googtrans' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-      } else {
-        that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
-      }
-      that.addElementTranslationClass(currentDrupalLanguage);
     }
   }
 
