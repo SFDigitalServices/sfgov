@@ -1,5 +1,5 @@
 {% embed 'node--full.html.twig' %}
-  
+
   {% block header %}
     {% if content.field_topics['#items'] %}
       {% set topics = 'Part of ' %}
@@ -13,13 +13,13 @@
       {% endif %}
     {% endfor %}
     {% set part_of = field_topics.entity.value %}
-  
+
     {% for item in content.field_tags %}
       {{ item.get('value').getValue() }}
     {% endfor %}
-        
-    
-    
+
+
+
     {{ title_prefix }}
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
@@ -33,7 +33,7 @@
 
   {% block content %}
     <div class="{{ bundle }}--content">
-      <h2>Documents</h2>
+      <h2>{{ 'Documents'|t }}</h2>
       {{ content|without(
         'field_abstract',
         'field_date',
@@ -46,5 +46,5 @@
     </div>
 
   {% endblock content %}
-  
+
 {% endembed %}

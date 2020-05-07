@@ -32,7 +32,7 @@
     {% set city = content.field_address[0]['locality']['#value'] %}
     {% set state = content.field_address[0]['administrative_area']['#value'] %}
     {% set zip = content.field_address[0]['postal_code']['#value'] %}
-    
+
     <h4>{{ title }}</h4>
     <p>
       {{ addressLine1 }}<br/>
@@ -42,5 +42,5 @@
       {{ city }}, {{ state }} {{ zip }}
     </p>
     <img src="{{ map_img_url }}" />
-    <a href="{{ map_directions_url }}">Get directions</a>
+    <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
 </div>
