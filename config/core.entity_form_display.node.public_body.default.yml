@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.public_body.field_other_info
     - field.field.node.public_body.field_people
     - field.field.node.public_body.field_phone_numbers
+    - field.field.node.public_body.field_subcomittees
     - node.type.public_body
   module:
     - content_moderation
@@ -29,7 +30,7 @@ third_party_settings:
         - field_phone_numbers
         - field_email
       parent_name: ''
-      weight: 15
+      weight: 16
       format_type: details
       region: content
       format_settings:
@@ -75,7 +76,7 @@ content:
     region: content
   field_callout:
     type: paragraphs
-    weight: 12
+    weight: 13
     settings:
       title: Callout
       title_plural: Callouts
@@ -93,7 +94,7 @@ content:
     third_party_settings: {  }
     region: content
   field_departments:
-    weight: 16
+    weight: 17
     settings:
       match_operator: CONTAINS
       size: 60
@@ -130,7 +131,7 @@ content:
     region: content
   field_other_info:
     type: paragraphs
-    weight: 14
+    weight: 15
     settings:
       title: Section
       title_plural: Sections
@@ -148,7 +149,7 @@ content:
     third_party_settings: {  }
     region: content
   field_people:
-    weight: 13
+    weight: 14
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -184,6 +185,15 @@ content:
         add_above: '0'
     third_party_settings: {  }
     type: paragraphs
+    region: content
+  field_subcomittees:
+    weight: 12
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   langcode:
     type: language_select
