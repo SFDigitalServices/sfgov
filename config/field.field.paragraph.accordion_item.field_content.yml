@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.paragraph.field_content
     - paragraphs.paragraphs_type.accordion_item
+    - paragraphs.paragraphs_type.in_person_location
     - paragraphs.paragraphs_type.list
     - paragraphs.paragraphs_type.mailing_address
     - paragraphs.paragraphs_type.phone_numbers
@@ -30,6 +31,7 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
+      in_person_location: in_person_location
       list: list
       mailing_address: mailing_address
       phone_numbers: phone_numbers
@@ -58,6 +60,9 @@ settings:
         enabled: false
       campaign:
         weight: 50
+        enabled: false
+      acuity_embed:
+        weight: 51
         enabled: false
       campaign_resources:
         weight: 51
@@ -89,6 +94,9 @@ settings:
       events:
         weight: 60
         enabled: false
+      content_link:
+        weight: 61
+        enabled: false
       fact:
         weight: 61
         enabled: false
@@ -101,12 +109,15 @@ settings:
       form:
         weight: 64
         enabled: false
+      department_content:
+        weight: 64
+        enabled: false
       help:
         weight: 65
         enabled: false
       in_person_location:
+        enabled: true
         weight: 66
-        enabled: false
       link:
         weight: 67
         enabled: false
@@ -127,6 +138,9 @@ settings:
         enabled: false
       phone:
         weight: 73
+        enabled: false
+      form_io:
+        weight: 74
         enabled: false
       phone_numbers:
         enabled: true
@@ -160,5 +174,11 @@ settings:
         enabled: false
       top_search_suggestion:
         weight: 84
+        enabled: false
+      timeline:
+        weight: 94
+        enabled: false
+      timeline_item:
+        weight: 95
         enabled: false
 field_type: entity_reference_revisions
