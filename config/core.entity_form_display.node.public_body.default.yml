@@ -10,10 +10,13 @@ dependencies:
     - field.field.node.public_body.field_departments
     - field.field.node.public_body.field_description
     - field.field.node.public_body.field_email
+    - field.field.node.public_body.field_meeting_location
     - field.field.node.public_body.field_other_info
     - field.field.node.public_body.field_people
     - field.field.node.public_body.field_phone_numbers
+    - field.field.node.public_body.field_recurring_meetings
     - field.field.node.public_body.field_subcommittees
+    - field.field.node.public_body.field_things_to_know
     - node.type.public_body
   module:
     - content_moderation
@@ -30,7 +33,7 @@ third_party_settings:
         - field_phone_numbers
         - field_email
       parent_name: ''
-      weight: 16
+      weight: 17
       format_type: details
       region: content
       format_settings:
@@ -40,6 +43,22 @@ third_party_settings:
         open: false
         required_fields: true
       label: Contact
+    group_meetings:
+      children:
+        - field_recurring_meetings
+        - field_meeting_location
+        - field_things_to_know
+      parent_name: ''
+      weight: 16
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        open: false
+        required_fields: true
+      label: Meetings
 id: node.public_body.default
 targetEntityType: node
 bundle: public_body
@@ -94,7 +113,7 @@ content:
     third_party_settings: {  }
     region: content
   field_departments:
-    weight: 17
+    weight: 18
     settings:
       match_operator: CONTAINS
       size: 60
@@ -111,7 +130,7 @@ content:
     type: text_textarea
     region: content
   field_email:
-    weight: 15
+    weight: 16
     settings:
       title: Email
       title_plural: Emails
@@ -128,6 +147,14 @@ content:
         add_above: '0'
     third_party_settings: {  }
     type: paragraphs
+    region: content
+  field_meeting_location:
+    weight: 22
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   field_other_info:
     type: paragraphs
@@ -186,6 +213,14 @@ content:
     third_party_settings: {  }
     type: paragraphs
     region: content
+  field_recurring_meetings:
+    weight: 21
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_subcommittees:
     weight: 12
     settings:
@@ -194,6 +229,24 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_things_to_know:
+    weight: 23
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+    third_party_settings: {  }
+    type: paragraphs
     region: content
   langcode:
     type: language_select
