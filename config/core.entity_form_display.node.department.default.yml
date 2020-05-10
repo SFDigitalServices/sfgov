@@ -31,6 +31,7 @@ dependencies:
     - field.field.node.department.field_topics
     - field.field.node.department.field_url
     - node.type.department
+    - workflows.workflow.editorial
   module:
     - allowed_formats
     - content_moderation
@@ -58,12 +59,12 @@ third_party_settings:
       weight: 7
       format_type: details
       format_settings:
-        label: About
         id: sfgov-dept-contact-group
         classes: sfgov-dept-contact-group
         open: false
         required_fields: false
       label: About
+      region: hidden
     group_contact:
       children:
         - field_address
@@ -78,6 +79,7 @@ third_party_settings:
         open: false
         required_fields: false
       label: Contact
+      region: hidden
     group_request_public_records:
       children:
         - field_req_public_records
@@ -93,6 +95,7 @@ third_party_settings:
         open: false
         required_fields: true
       label: 'Request public records'
+      region: hidden
     group_01:
       children: {  }
       parent_name: ''
@@ -103,6 +106,7 @@ third_party_settings:
         classes: ''
         direction: vertical
       label: '01'
+      region: hidden
     group_02:
       children: {  }
       parent_name: ''
@@ -114,6 +118,7 @@ third_party_settings:
         open: false
         required_fields: true
       label: '02'
+      region: hidden
     group_alert:
       children:
         - field_alert_text
@@ -122,12 +127,12 @@ third_party_settings:
       weight: 2
       format_type: details
       format_settings:
-        label: Alert
         id: ''
         classes: alert-fieldset
         open: false
         required_fields: false
       label: Alert
+      region: hidden
 id: node.department.default
 targetEntityType: node
 bundle: department
@@ -269,15 +274,16 @@ content:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
       features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
+        add_above: '0'
     third_party_settings: {  }
     region: content
   field_featured_items:
