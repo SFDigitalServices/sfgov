@@ -502,8 +502,12 @@ function public_body_page_fields() {
         $emailParagraph = Paragraph::load($emailId);
         $email = $emailParagraph->get('field_email')->getValue() ? $emailParagraph->get('field_email')->getValue()[0]['value'] : null;
         $emailTitle = $emailParagraph->get('field_title')->getValue() ? $emailParagraph->get('field_title')->getValue()[0]['value'] : null;
-        $theFields['email']['email_address'] = $email ? $email : null;
-        $theFields['email']['email_title'] = $emailTitle ? $emailTitle : null;
+        if ($email) {
+          $theFields['email']['email_address'] = $email;
+        }
+        if ($emailTitle) {
+          $theFields['email']['email_title'] = $emailTitle;
+        }
       }
     }
     if($node->hasField('field_callout')) {

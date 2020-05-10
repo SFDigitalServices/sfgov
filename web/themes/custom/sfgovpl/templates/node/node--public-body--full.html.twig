@@ -94,12 +94,31 @@
 </div>
 {% endif %}
 
-{% if public_body_fields.about %}
+{% if content.field_meeting_location|render or content.field_recurring_meetings|render or content.field_things_to_know|render %}
+<div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 id="meetings" class="sfgov-public-body-section--heading" role="heading">Meetings</h2>
+    <div class="sfgov-public-body-section--content sfgov-container-two-column">
+      <div class="sfgov-container-item">
+        {{ content.field_recurring_meetings }}
+        {{ content.field_meeting_location }}
+      </div>
+      <div class="sfgov-container-item">
+        {{ content.field_things_to_know }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if public_body_fields.about or content.field_subcommittees|render %}
 <div class="sfgov-public-body-section sfgov-public-body-about sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
     <h2 id="about" class="sfgov-public-body-section--heading" role="heading">About</h2>
     <div class="sfgov-public-body-section--content">
       {{ public_body_fields.about }}
+
+      {{ content.field_subcommittees }}
     </div>
   </div>
 </div>
