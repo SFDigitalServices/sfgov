@@ -26,33 +26,38 @@
 
   <div class="sfgov-section sfgov-section-container">
     <div class="group--left">
+      {% if content.body|render %}
       <div class="sfgov-section-overview sfgov-in-this-page-target">
         <h2 id="overview" class="sfgov-section--heading" role="heading">Overview</h2>
         <div class="sfgov-section--content">
           {{ content.body }}
         </div>
       </div>
+      {% endif %}
 
+      {% if content.field_agenda|render %}
       <div class="sfgov-section-agenda sfgov-in-this-page-target">
         <h2 id="agenda" class="sfgov-section--heading" role="heading">Agenda</h2>
         <div class="sfgov-section--content">
           {{ content.field_agenda }}
         </div>
       </div>
+      {% endif %}
     </div>
     <div class="group--right">
+      {% if content.field_start_date|render or content.field_end_date|render or content.field_address|render %}
       <div class="sfgov-section-meeting-info">
         <h2>Attend the meeting</h2>
         <div class="sfgov-section--content">
-          {% if content.field_start_date or content.field_end_date %}
+          {% if content.field_start_date|render or content.field_end_date|render %}
           <div class="date-time">
             <h4>Date & Time</h4>
-            {% if content.field_start_date %}
+            {% if content.field_start_date|render %}
             <div class="start-date">
               {{ content.field_start_date }}
             </div>
             {% endif %}
-            {% if content.field_end_date %}
+            {% if content.field_end_date|render %}
             <div class="end-date">
               {{ content.field_end_date }}
             </div>
@@ -60,13 +65,14 @@
           </div>
           {% endif %}
 
-          {% if content.field_address %}
+          {% if content.field_address|render %}
           <div class="address">
             {{ content.field_address }}
           </div>
           {% endif %}
         </div>
       </div>
+      {% endif %}
     </div>
   </div>
 
@@ -81,6 +87,7 @@
     </div>
   </div>
 
+  {% if content.field_meeting_artifacts|render %}
   <div class="sfgov-section sfgov-section-meeting-artifacts sfgov-in-this-page-target">
     <div class="sfgov-section-container">
       <div class="group--left">
@@ -91,7 +98,9 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
+  {% if content.field_regulations_accessibility|render %}
   <div class="sfgov-section sfgov-section-regulations-accessibility sfgov-in-this-page-target">
     <div class="sfgov-section-container">
       <div class="group--left">
@@ -102,6 +111,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
   <div class="sfgov-section-updated">
     <div class="sfgov-section-container">
@@ -109,7 +119,7 @@
     </div>
   </div>
 
-  {% if content.field_dept[0] %}
+  {% if content.field_dept %}
   <div class="sfgov-section sfgov-section-departments">
     <div class="sfgov-section-container">
       <div class="sfgov-section--content">
