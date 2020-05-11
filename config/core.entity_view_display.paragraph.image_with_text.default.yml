@@ -1,19 +1,17 @@
-uuid: dec53d18-8b9d-4f0f-a349-7cdf078921e1
+uuid: 356b5578-ad0f-4640-9bf5-2a5a26340b35
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.fact.field_description
-    - field.field.paragraph.fact.field_image
-    - field.field.paragraph.fact.field_title
-    - image.style.campaign_fact_image
-    - paragraphs.paragraphs_type.fact
+    - field.field.paragraph.image_with_text.field_description
+    - field.field.paragraph.image_with_text.field_image
+    - field.field.paragraph.image_with_text.field_title
+    - paragraphs.paragraphs_type.image_with_text
   module:
-    - media
     - text
-id: paragraph.fact.default
+id: paragraph.image_with_text.default
 targetEntityType: paragraph
-bundle: fact
+bundle: image_with_text
 mode: default
 content:
   field_description:
@@ -24,13 +22,13 @@ content:
     type: text_default
     region: content
   field_image:
-    type: media_thumbnail
     weight: 0
     label: hidden
     settings:
-      image_style: campaign_fact_image
-      image_link: ''
+      link: true
+      view_mode: default
     third_party_settings: {  }
+    type: entity_reference_entity_view
     region: content
   field_title:
     weight: 1

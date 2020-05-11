@@ -1,21 +1,21 @@
-uuid: 76d29e7b-ee1c-47c8-9ad6-f3a5a7fa8fd3
+uuid: 796197ab-9881-4004-9549-2026ba976482
 langcode: en
 status: true
 dependencies:
   config:
     - entity_browser.browser.image
-    - field.field.paragraph.fact.field_description
-    - field.field.paragraph.fact.field_image
-    - field.field.paragraph.fact.field_title
-    - paragraphs.paragraphs_type.fact
+    - field.field.paragraph.image_with_text.field_description
+    - field.field.paragraph.image_with_text.field_image
+    - field.field.paragraph.image_with_text.field_title
+    - paragraphs.paragraphs_type.image_with_text
   module:
     - allowed_formats
     - entity_browser
     - maxlength
     - text
-id: paragraph.fact.default
+id: paragraph.image_with_text.default
 targetEntityType: paragraph
-bundle: fact
+bundle: image_with_text
 mode: default
 content:
   field_description:
@@ -28,7 +28,7 @@ content:
         hide_help: '1'
         hide_guidelines: '1'
       maxlength:
-        maxlength_js: 500
+        maxlength_js: null
         maxlength_js_label: '<strong>@remaining</strong> left'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
@@ -41,11 +41,11 @@ content:
       field_widget_display: rendered_entity
       field_widget_edit: true
       field_widget_remove: true
-      open: true
       selection_mode: selection_append
       field_widget_display_settings:
         view_mode: preview
       field_widget_replace: false
+      open: false
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
@@ -54,10 +54,7 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings:
-      maxlength:
-        maxlength_js: 65
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+    third_party_settings: {  }
     type: string_textfield
     region: content
 hidden:

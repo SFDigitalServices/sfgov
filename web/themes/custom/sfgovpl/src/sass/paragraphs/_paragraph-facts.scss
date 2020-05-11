@@ -2,11 +2,12 @@
   margin-top: 3rem;
   margin-bottom: 3rem;
   .container {
-    @include contain-1280;
+    @include contain-1090;
   }
 
   h2 {
-    margin: 0 2rem 2rem 2rem;
+    @include fs-title-1;
+    margin-bottom: 44px;
   }
 
   .__facts.field__items {
@@ -14,12 +15,27 @@
     flex-direction: column;
     @include media($medium-screen) {
       flex-direction: row;
+      flex-wrap: wrap;
+      margin-right: -20px;
     }
-    .field__item {
-      flex: 1;
-      margin-left: 1rem;
-      margin-right: 1rem;
-      margin-bottom: 2rem;
+    > .field__item {
+      display: flex;
+      h5 {
+        @include fs-title-4;
+      }
+      .__description {
+        @include fs-body-short;
+        color: $c-slate;
+      }
+      @include media($medium-screen) {
+        align-items: stretch;
+        flex-basis: 33.333%;
+        margin-bottom: 20px;
+        > .paragraph--type--fact.paragraph--view-mode--default {
+          width: 100%;
+          margin-right: 20px;
+        }
+      }
     }
   }
 }
