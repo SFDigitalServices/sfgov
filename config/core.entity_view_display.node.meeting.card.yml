@@ -1,9 +1,9 @@
-uuid: 16be873e-2c5e-4d77-8b9b-21f233cfd74b
+uuid: caf3638c-865c-4a62-9bad-f1cc26f90e15
 langcode: en
-status: false
+status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.card
     - field.field.node.meeting.body
     - field.field.node.meeting.field_address
     - field.field.node.meeting.field_agenda
@@ -15,35 +15,36 @@ dependencies:
     - field.field.node.meeting.field_meeting_cancel
     - field.field.node.meeting.field_regulations_accessibility
     - field.field.node.meeting.field_start_date
-    - field.field.node.meeting.field_topics
     - node.type.meeting
   module:
-    - text
+    - datetime
     - user
-id: node.meeting.teaser
+id: node.meeting.card
 targetEntityType: node
 bundle: meeting
-mode: teaser
+mode: card
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
-    weight: 101
+  field_phone_numbers:
+    weight: 109
+    label: above
     settings:
-      trim_length: 600
+      view_mode: default
+      link: ''
     third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
     region: content
-  content_moderation_control:
-    weight: -20
-    settings: {  }
+  field_start_date:
+    weight: 0
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
     third_party_settings: {  }
-    region: content
-  links:
-    weight: 100
-    settings: {  }
-    third_party_settings: {  }
+    type: datetime_default
     region: content
 hidden:
+  body: true
+  content_moderation_control: true
   field_address: true
   field_agenda: true
   field_dept: true
@@ -53,6 +54,5 @@ hidden:
   field_meeting_artifacts: true
   field_meeting_cancel: true
   field_regulations_accessibility: true
-  field_start_date: true
-  field_topics: true
   langcode: true
+  links: true
