@@ -93,9 +93,18 @@
 
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
-      {{ content | without('links', 'field_campaign_about') }}
+      {{ content | without('links', 'field_social_media_embed', 'field_campaign_about') }}
 {#      {{ content | without('links', 'field_campaign_about',    'field_content', 'field_logo', 'field_spotlight', 'field_campaign_theme', 'field_top_facts') }}#}
 {#      {{ content.field_header_spotlight }}#}
+
+      {% if content.field_social_media_embed %}
+        <div class="__campaign-social-media-wrapper sfgov-full-bleed">
+          <div class="sfgov-section-container">
+            <h4 class="field__label">Follow Us On Social Media</h4>
+            {{ content.field_social_media_embed }}
+          </div>
+        </div>
+      {% endif %}
 
       {% if content.field_campaign_about %}
         <div class="__campaign-about-wrapper sfgov-full-bleed">

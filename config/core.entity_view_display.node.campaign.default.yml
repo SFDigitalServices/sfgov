@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_instagram_feed
     - field.field.node.campaign.field_logo
+    - field.field.node.campaign.field_social_media_embed
     - field.field.node.campaign.field_spotlight
     - field.field.node.campaign.field_top_facts
     - node.type.campaign
@@ -26,7 +27,7 @@ mode: default
 content:
   field_campaign_about:
     type: entity_reference_revisions_entity_view
-    weight: 5
+    weight: 6
     label: above
     settings:
       view_mode: default
@@ -44,7 +45,7 @@ content:
     region: content
   field_campaign_featured_image:
     type: entity_reference_revisions_entity_view
-    weight: 7
+    weight: 8
     label: above
     settings:
       view_mode: default
@@ -70,11 +71,20 @@ content:
     third_party_settings: {  }
     region: content
   field_instagram_feed:
-    weight: 6
+    weight: 7
     label: above
     settings: {  }
     third_party_settings: {  }
     type: block_field
+    region: content
+  field_social_media_embed:
+    type: entity_reference_revisions_entity_view
+    weight: 9
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
     region: content
   field_spotlight:
     weight: 4
