@@ -67,3 +67,13 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $variables['#attached']['library'][] = 'sfgovpl/sfgov-instagram-feed';
+  $variables['#attached']['drupalSettings']['sfgov']['instagram_feed']['paragraph_id'] = $paragraph->id();
+  $variables['#attached']['drupalSettings']['sfgov']['instagram_feed']['instagram_profile'] = $paragraph->field_instagram_profile->value;
+}
