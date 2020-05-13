@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file Contains sfgov_formio.module.
+ */
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
+  if ($entity->getEntityTypeId() === 'paragraph' && $entity->getType() === 'form_io') {
+
+    // Determine if there is a locally hosted version of form.io configuration.
+    if ($entity->field_formio_data_source->value) {
+      // Given https://sfds.form.io/feedback, look for 'data/feedback.json'.
+      $source = $entity->field_formio_data_source->value;
+      $name = substr($source, strrpos($source, '/') + 1);
+      $file = drupal_get_path('module', 'sfgov_formio') . '/data/' . $name . '.json';
+
+      // Provide the Form's ID to the template.
+      $build['field_formio_data_source']['#formio_id'] = $name;
+
+      // If it exists, provide the contents to the template.
+      if (file_exists($file)) {
+        $build['field_formio_data_source']['json_source'] = [
+          '#markup' => file_get_contents($file),
+        ];
+      }
+    }
+  }
+}
