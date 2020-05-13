@@ -79,3 +79,10 @@ function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
     'instagram_profile' => $paragraph->field_instagram_profile->value,
   ];
 }
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__twitter_embed(&$variables) {
+  $variables['#attached']['library'][] = 'sfgovpl/sfgov-twitter-feed';
+}
