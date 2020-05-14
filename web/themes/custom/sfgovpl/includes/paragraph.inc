@@ -29,6 +29,11 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 function sfgovpl_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $paragraph_type = $paragraph->getType();
+  $preprocess = __FUNCTION__ . '__' . $paragraph_type;
+  if (function_exists($preprocess)) {
+    $preprocess($variables);
+  }
+
   if($paragraph_type == 'process_step') {
       $variables['sbsId'] = $paragraph->getParentEntity()->id();
       $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
@@ -66,4 +71,20 @@ function sfgovpl_preprocess_paragraph(&$variables) {
       $variables['content']['field_link']['#title'] = t('Parent Program');
     }
   }
+}
+
+/**
+ * Preprocess paragraph video.
+ *
+ * @param $variables
+ */
+function sfgovpl_preprocess_paragraph__video(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $video_url = $paragraph->get('field_video')->value;
+
+  /** @var \Drupal\sfgov_utilities\VideoService $video_service */
+  $video_service = \Drupal::service('sfgov_utilities.video');
+  $video_id = $video_service->getVideoId($video_url);
+
+  $variables['captions'] = $video_service->getYoutubeTranscript($video_id);
 }
