@@ -17,8 +17,8 @@ dependencies:
     - field.field.node.campaign.field_top_facts
     - node.type.campaign
   module:
-    - block_field
     - entity_reference_revisions
+    - image
     - user
 id: node.campaign.default
 targetEntityType: node
@@ -34,52 +34,36 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
-  field_campaign_accordion:
-    type: entity_reference_revisions_entity_view
-    weight: 2
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_campaign_featured_image:
-    type: entity_reference_revisions_entity_view
-    weight: 8
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_campaign_resources:
+  field_content:
     type: entity_reference_revisions_entity_view
     weight: 3
+    region: content
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    region: content
   field_header_spotlight:
     type: entity_reference_revisions_entity_view
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
     region: content
-  field_instagram_feed:
-    weight: 7
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: block_field
+  field_logo:
+    type: image
+    weight: 0
     region: content
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
   field_social_media_embed:
     type: entity_reference_revisions_entity_view
-    weight: 9
+    weight: 5
     label: hidden
     settings:
       view_mode: default
@@ -97,7 +81,7 @@ content:
     region: content
   field_top_facts:
     type: entity_reference_revisions_entity_view
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       view_mode: default
@@ -105,8 +89,10 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_campaign_accordion: true
+  field_campaign_featured_image: true
+  field_campaign_resources: true
   field_campaign_theme: true
-  field_content: true
-  field_logo: true
+  field_instagram_feed: true
   langcode: true
   links: true
