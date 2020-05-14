@@ -50,3 +50,40 @@
     }
   }
 }
+
+.campaign-facts {
+  .row {
+    display: flex;
+    flex-direction: column;
+    .fact-item {
+      flex-basis: 33.333%;
+      margin-bottom: 60px;
+      .image {
+        margin-bottom: 28px;
+      }
+      .text {
+        @include fs-body-short;
+        h5 {
+          @include fs-title-4;
+          margin-bottom: 19px;
+        }
+        p {
+          @include fs-body-short;
+          margin: 0;
+        }
+      }
+    }
+    @include media($medium-screen) {
+      flex-direction: row;
+      > div {
+        &.fact-item {
+          flex-basis: 33.333%;
+          padding-right: 20px;
+        }
+        &:last-of-type {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}
