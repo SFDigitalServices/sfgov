@@ -1,0 +1,68 @@
+uuid: 59c148f8-f3c8-49e6-961f-a55dd89935d4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.accordion_campaign.field_content
+    - field.field.paragraph.accordion_campaign.field_description
+    - field.field.paragraph.accordion_campaign.field_title
+    - paragraphs.paragraphs_type.accordion_campaign
+  module:
+    - allowed_formats
+    - maxlength
+    - paragraphs
+    - text
+id: paragraph.accordion_campaign.default
+targetEntityType: paragraph
+bundle: accordion_campaign
+mode: default
+content:
+  field_content:
+    weight: 2
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: accordion_item_campaign
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
+  field_description:
+    weight: 1
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 240
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
+      allowed_formats:
+        hide_help: '0'
+        hide_guidelines: '0'
+    type: text_textarea
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 65
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 65
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
