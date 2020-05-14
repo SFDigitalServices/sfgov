@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\node\NodeInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+
 /**
  * Implements template_preprocess_paragraph().
  *
@@ -29,6 +32,11 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 function sfgovpl_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $paragraph_type = $paragraph->getType();
+  $preprocess = __FUNCTION__ . '__' . $paragraph_type;
+  if (function_exists($preprocess)) {
+    $preprocess($variables);
+  }
+
   if($paragraph_type == 'process_step') {
       $variables['sbsId'] = $paragraph->getParentEntity()->id();
       $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
@@ -85,4 +93,25 @@ function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
  */
 function sfgovpl_preprocess_paragraph__twitter_embed(&$variables) {
   $variables['#attached']['library'][] = 'sfgovpl/sfgov-twitter-feed';
+}
+
+/**
+ * Preprocess paragraph video.
+ *
+ * @param $variables
+ */
+function sfgovpl_preprocess_paragraph__video(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $video_url = $paragraph->get('field_video')->value;
+
+  /** @var \Drupal\sfgov_video\VideoService $video_service */
+  $video_service = \Drupal::service('sfgov_video.utilities');
+  $video_id = $video_service->getVideoId($video_url);
+
+  $variables['captions'] = $video_service->getYoutubeTranscript($video_id);
+
+  // Link transcript
+  $url = Url::fromUserInput('/video/' . $video_id);
+  $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
+  $variables['link_transcript'] = $link->toRenderable();
 }

@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Contains sfgov_video.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function sfgov_video_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the sfgov_video module.
+    case 'help.page.sfgov_video':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Video paragraph and transcript page.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_video_theme() {
+  return [
+    'sfgov_video_page' => [
+      'variables' => [
+        'title' => '',
+        'body' => []
+      ]
+    ],
+  ];
+}
