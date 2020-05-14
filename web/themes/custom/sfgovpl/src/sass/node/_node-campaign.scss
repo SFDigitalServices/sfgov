@@ -53,14 +53,27 @@
     }
   }
 
-  .paragraph--type--accordion-campaign {
-    @include contain-1090;
+  .paragraph--type--accordion {
+    .group-right {
+      .__description {
+        padding: 1rem 2.5rem;
+        margin-top: 3rem;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 32px;
+        color: $c-slate;
+        background-color: $c-grey-1;
+        border-radius: 8px;
+      }
+    }
   }
 
   .__campaign-locations-access-wrapper {
     @include contain-1090;
     padding-top: 60px;
     padding-bottom: 60px;
+    overflow: hidden;
 
     h2 {
       @include fs-title-1;
@@ -72,7 +85,7 @@
     }
 
     .__location-access {
-      max-width: calc((100% - 20px) / 3 * 2);
+      @include columns-720(left);
     }
   }
   .campaign-featured-image {

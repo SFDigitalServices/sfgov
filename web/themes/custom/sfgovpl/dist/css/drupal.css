@@ -3489,19 +3489,16 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   width: 100%;
 }
 
-.campaign--full .paragraph--type--accordion-campaign {
-  margin: 0 auto;
-  max-width: 1090px;
-  padding-left: 20px;
-  padding-right: 20px;
-  width: 100%;
-}
-
-@media screen and (min-width: 1280px) {
-  .campaign--full .paragraph--type--accordion-campaign {
-    padding-left: 0;
-    padding-right: 0;
-  }
+.campaign--full .paragraph--type--accordion .group-right .__description {
+  padding: 1rem 2.5rem;
+  margin-top: 3rem;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+  color: #1c3e57;
+  background-color: #f8f8f8;
+  border-radius: 8px;
 }
 
 .campaign--full .__campaign-locations-access-wrapper {
@@ -3512,6 +3509,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   width: 100%;
   padding-top: 60px;
   padding-bottom: 60px;
+  overflow: hidden;
 }
 
 @media screen and (min-width: 1280px) {
@@ -3557,8 +3555,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   margin-bottom: 50px;
 }
 
-.campaign--full .__campaign-locations-access-wrapper .__location-access {
-  max-width: calc((100% - 20px) / 3 * 2);
+@media screen and (min-width: 768px) {
+  .campaign--full .__campaign-locations-access-wrapper .__location-access {
+    float: left;
+    max-width: 720px;
+    width: calc((100% - 20px)/3*2);
+  }
 }
 
 .campaign--full .campaign-featured-image {
@@ -7373,10 +7375,9 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   }
 }
 
-.paragraph--type--accordion,
-.paragraph--type--accordion-campaign {
+.paragraph--type--accordion {
   margin: 0 auto;
-  max-width: 1210px;
+  max-width: 1090px;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;
@@ -7386,65 +7387,31 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 @media screen and (min-width: 1280px) {
-  .paragraph--type--accordion,
-  .paragraph--type--accordion-campaign {
-    padding: 0 60px 0 0;
+  .paragraph--type--accordion {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
-.paragraph--type--accordion::after,
-.paragraph--type--accordion-campaign::after {
+.paragraph--type--accordion::after {
   clear: both;
   content: "";
   display: block;
 }
 
 @media screen and (min-width: 768px) {
-  .paragraph--type--accordion .group-left,
-  .paragraph--type--accordion-campaign .group-left {
+  .paragraph--type--accordion .group-left {
     float: left;
-    max-width: 780px;
+    max-width: 720px;
     width: calc((100% - 20px)/3*2);
   }
 }
 
-.paragraph--type--accordion .group-right,
-.paragraph--type--accordion-campaign .group-right {
-  position: relative;
-  padding: 1rem 2.5rem;
-  margin-top: 3rem;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 32px;
-  color: #1c3e57;
-}
-
 @media screen and (min-width: 768px) {
-  .paragraph--type--accordion .group-right,
-  .paragraph--type--accordion-campaign .group-right {
+  .paragraph--type--accordion .group-right {
     float: right;
     max-width: 350px;
     width: calc((100% - 40px)/3);
-  }
-}
-
-.paragraph--type--accordion .group-right .group-right-bg,
-.paragraph--type--accordion-campaign .group-right .group-right-bg {
-  position: absolute;
-  display: block;
-  height: 100%;
-  width: calc(100vw - 1rem);
-  top: 0;
-  left: 0;
-  z-index: -1;
-  border-radius: 8px 0px 0px 8px;
-}
-
-@media screen and (min-width: 768px) {
-  .paragraph--type--accordion .group-right .group-right-bg,
-  .paragraph--type--accordion-campaign .group-right .group-right-bg {
-    width: 50vw;
   }
 }
 
