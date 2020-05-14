@@ -9,8 +9,10 @@ dependencies:
     - field.field.node.campaign.field_campaign_resources
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_content
+    - field.field.node.campaign.field_description
     - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_instagram_feed
+    - field.field.node.campaign.field_location_access
     - field.field.node.campaign.field_logo
     - field.field.node.campaign.field_spotlight
     - field.field.node.campaign.field_top_facts
@@ -20,9 +22,27 @@ dependencies:
   module:
     - block_field
     - content_moderation
+    - field_group
     - image
     - paragraphs
     - path
+    - text
+third_party_settings:
+  field_group:
+    group_locations_and_access:
+      children:
+        - field_description
+        - field_location_access
+      parent_name: ''
+      weight: 21
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: false
+      label: 'Locations and Access'
 id: node.campaign.default
 targetEntityType: node
 bundle: campaign
@@ -115,6 +135,14 @@ content:
     third_party_settings: {  }
     type: options_select
     region: content
+  field_description:
+    weight: 20
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
   field_header_spotlight:
     type: paragraphs
     weight: 4
@@ -142,6 +170,25 @@ content:
       settings: {  }
     third_party_settings: {  }
     type: block_field_default
+    region: content
+  field_location_access:
+    type: paragraphs
+    weight: 21
+    settings:
+      title: Accordion
+      title_plural: Accordions
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: accordion_item_campaign
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
     region: content
   field_logo:
     weight: 2
