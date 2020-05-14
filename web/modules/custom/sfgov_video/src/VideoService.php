@@ -119,7 +119,7 @@ class VideoService {
     $response = $video_info_array['player_response'];
     $json = JSON::decode($response);
 
-    $caption_tracks = $json['captions']['playerCaptionsTracklistRenderer']['captionTracks'];
+    $caption_tracks = isset($json['captions']) ? $json['captions']['playerCaptionsTracklistRenderer']['captionTracks'] : [];
 
     return [
       'captionTracks' => $this->getYoutubeCaptionTrack($caption_tracks, $languageCode),

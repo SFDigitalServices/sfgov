@@ -15,9 +15,13 @@
   <div class="video--content">
     <div class="container">
       <div class="caption">
-        {% for item in body %}
-          <p>{{ item.text|raw }}</p>
-        {% endfor %}
+        {% if body is not empty %}
+          {% for item in body %}
+            <p>{{ item.text|raw }}</p>
+          {% endfor %}
+        {% else %}
+          <p><i>{{ 'No transcript found.'|t }}</i></p>
+        {% endif %}
       </div>
     </div>
   </div>
