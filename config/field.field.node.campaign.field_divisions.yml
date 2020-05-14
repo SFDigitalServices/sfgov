@@ -1,0 +1,33 @@
+uuid: a29dec47-d297-442b-b289-b9c76acd2835
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_divisions
+    - node.type.campaign
+    - node.type.department
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.campaign.field_divisions
+field_name: field_divisions
+entity_type: node
+bundle: campaign
+label: Divisions
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
