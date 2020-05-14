@@ -10,9 +10,9 @@ dependencies:
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_content
     - field.field.node.campaign.field_dept
-    - field.field.node.campaign.field_divisions
     - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_instagram_feed
+    - field.field.node.campaign.field_links
     - field.field.node.campaign.field_logo
     - field.field.node.campaign.field_spotlight
     - field.field.node.campaign.field_top_facts
@@ -23,6 +23,7 @@ dependencies:
     - content_moderation
     - field_group
     - image
+    - link
     - paragraphs
     - path
     - text
@@ -31,8 +32,8 @@ third_party_settings:
     group_about:
       children:
         - field_campaign_about
-        - field_divisions
         - field_dept
+        - field_links
       parent_name: ''
       weight: 19
       format_type: fieldset
@@ -125,15 +126,6 @@ content:
     type: options_select
     region: content
   field_dept:
-    weight: 22
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_divisions:
     weight: 21
     settings:
       match_operator: CONTAINS
@@ -169,6 +161,14 @@ content:
       settings: {  }
     third_party_settings: {  }
     type: block_field_default
+    region: content
+  field_links:
+    weight: 22
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
     region: content
   field_logo:
     weight: 2
