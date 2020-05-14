@@ -10,9 +10,11 @@ dependencies:
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_content
     - field.field.node.campaign.field_description
+    - field.field.node.campaign.field_dept
     - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_instagram_feed
     - field.field.node.campaign.field_location_access
+    - field.field.node.campaign.field_links
     - field.field.node.campaign.field_logo
     - field.field.node.campaign.field_social_media_embed
     - field.field.node.campaign.field_spotlight
@@ -25,6 +27,7 @@ dependencies:
     - content_moderation
     - field_group
     - image
+    - link
     - paragraphs
     - path
     - text
@@ -44,6 +47,24 @@ third_party_settings:
         description: ''
         required_fields: false
       label: 'Locations and Access'
+    - text
+third_party_settings:
+  field_group:
+    group_about:
+      children:
+        - field_campaign_about
+        - field_dept
+        - field_links
+      parent_name: ''
+      weight: 19
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: false
+      label: About
 id: node.campaign.default
 targetEntityType: node
 bundle: campaign
@@ -52,27 +73,19 @@ content:
   created:
     type: datetime_timestamp
     weight: 14
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_campaign_about:
     type: paragraphs
     weight: 12
+    weight: 20
     settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: closed
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
-      features:
-        duplicate: '0'
-        collapse_edit_all: '0'
-        add_above: '0'
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
+    type: text_textarea
     region: content
   field_campaign_accordion:
     type: paragraphs
@@ -136,6 +149,15 @@ content:
     third_party_settings: {  }
     type: options_select
     region: content
+  field_dept:
+    weight: 21
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_description:
     weight: 20
     settings:
@@ -190,6 +212,14 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
+    region: content
+  field_links:
+    weight: 22
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
     region: content
   field_logo:
     weight: 2
@@ -325,7 +355,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 13
+    weight: 12
     settings:
       match_operator: CONTAINS
       size: 60
@@ -333,7 +363,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 18
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
