@@ -95,7 +95,7 @@
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
       {{ content | without('links', 'field_campaign_about', 'field_divisions', 'field_dept') }}
 
-      {% if content.field_campaign_about %}
+      {% if content.field_campaign_about|render %}
         <div class="__campaign-about-wrapper sfgov-full-bleed">
           <div class="sfgov-section-container">
             {{ content.field_campaign_about }}
