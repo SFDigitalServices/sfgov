@@ -1,0 +1,59 @@
+{#
+/**
+ * @file Feedback form.io form.
+ */
+#}
+{% extends 'paragraph--form-io.html.twig' %}
+{% block content %}
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var el = document.getElementById('formio-{{ form_id }}');
+      var options = {% if options %}safeJSONParse({{ options|json_encode|raw }}){% else %}{}{% endif %};
+      var config = {% if json %}safeJSONParse({{ json|json_encode|raw }}){% else %}"{{ endpoint }}"{% endif %};
+
+      Formio.createForm(el, config, options)
+        .then(function(form) {
+
+          // Get custom alert message from HTML 'feedbackSuccess'.
+          var feedbackSuccess = '';
+          if (!feedbackSuccess) {
+            form.components.map(function(component) {
+              if (component.key === 'feedbackSuccess' && component.component.html) {
+                feedbackSuccess = component.component.html;
+              }
+            });
+          }
+
+          // Submit the form When "yes" for "feedbackHelpful" is selected.
+          form.on('change', function(event) {
+            if (event.changed && event.changed.component.key === 'feedbackHelpful' && form.data.feedbackHelpful === 'yes') {
+              form.submit();
+            }
+          });
+
+          form.on('submitDone', function(submission) {
+            // Display custom alert message.
+            if (feedbackSuccess) {
+              form.setAlert('success', feedbackSuccess);
+            }
+
+            // Hide the form. It cannot be submitted again/updated.
+            var formContent = document.getElementById(form.id);
+            if (formContent) {
+              formContent.style.display = 'none';
+            }
+          });
+      });
+
+      function safeJSONParse(str) {
+        var parsed = {}
+        try {
+          parsed = JSON.parse(str)
+        } catch (error) {
+          console.warn('Unable to parse form options:', str)
+        }
+        return parsed;
+      }
+    });
+  </script>
+{% endblock %}
