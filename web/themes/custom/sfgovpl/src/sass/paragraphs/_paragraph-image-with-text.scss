@@ -8,14 +8,26 @@
     color: $c-white;
     padding: 40px;
     .title {
-      @include fs-title-2;
+      @include fs-title-2-mobile;
       color: $c-white;
       margin-bottom: 14px;
+      @include media($medium-screen) {
+        @include fs-title-2;
+      }
     }
     .description {
-      @include fs-big-description;
+      @include fs-big-description-mobile;
       color: $c-white;
-      margin: 0;
+      p {
+        @include fs-big-description-mobile;
+        margin: 0;
+      }
+      @include media($medium-screen) {
+        @include fs-big-description;
+        p {
+          @include fs-big-description;
+        }
+      }
     }
   }
 }

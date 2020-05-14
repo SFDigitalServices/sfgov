@@ -6,10 +6,8 @@ dependencies:
     - field.field.paragraph.fact.field_description
     - field.field.paragraph.fact.field_image
     - field.field.paragraph.fact.field_title
-    - image.style.campaign_fact_image
     - paragraphs.paragraphs_type.fact
   module:
-    - media
     - text
 id: paragraph.fact.default
 targetEntityType: paragraph
@@ -24,12 +22,12 @@ content:
     type: text_default
     region: content
   field_image:
-    type: media_thumbnail
+    type: entity_reference_entity_view
     weight: 0
     label: hidden
     settings:
-      image_style: campaign_fact_image
-      image_link: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
     region: content
   field_title:
