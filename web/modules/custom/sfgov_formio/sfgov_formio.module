@@ -24,6 +24,8 @@ function sfgov_formio_theme_suggestions_paragraph_alter(array &$suggestions, arr
 function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
   if ($entity->getEntityTypeId() === 'paragraph' && $entity->getType() === 'form_io') {
 
+    $build['#attached']['library'][] = 'sfgov_formio/formio_sfds';
+
     // Determine if there is a locally hosted version of form.io configuration.
     if ($entity->field_formio_data_source->value) {
       // Given https://sfds.form.io/feedback, look for 'data/feedback.json'.
