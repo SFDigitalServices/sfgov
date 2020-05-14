@@ -47,9 +47,6 @@ third_party_settings:
         description: ''
         required_fields: false
       label: 'Locations and Access'
-    - text
-third_party_settings:
-  field_group:
     group_about:
       children:
         - field_campaign_about
@@ -73,19 +70,16 @@ content:
   created:
     type: datetime_timestamp
     weight: 14
-    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_campaign_about:
     type: paragraphs
     weight: 12
-    weight: 20
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
     region: content
   field_campaign_accordion:
     type: paragraphs
@@ -194,6 +188,14 @@ content:
     third_party_settings: {  }
     type: block_field_default
     region: content
+  field_links:
+    weight: 22
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
   field_location_access:
     type: paragraphs
     weight: 21
@@ -212,14 +214,6 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
-    region: content
-  field_links:
-    weight: 22
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
     region: content
   field_logo:
     weight: 2
@@ -331,6 +325,23 @@ content:
     weight: 15
     region: content
     third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   status:
     type: boolean_checkbox
     settings:
@@ -361,6 +372,18 @@ content:
       size: 60
       placeholder: ''
     region: content
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings: {  }
     third_party_settings: {  }
   url_redirects:
     weight: 17
