@@ -9,11 +9,11 @@
 
 {% block paragraph %}
     {% block content %}
-      {% include "@theme/atoms/service-card.twig" with {
-        "title": content.field_title,
-        "description": content.field_description,
-        "url": content.field_link.0['#url'].getUri(),
-        "heading": 'p'
-      } %}
+      <div class="sfgov-container-item">
+        <a class="sfgov-resource-card" href="{{ content.field_link.0['#url'].getUri() }}">
+          <h2 class="title">{{ content.field_title }}</h2>
+          <p class="description">{{ content.field_description | raw}}</p>
+        </a>
+      </div>
     {% endblock %}
 {% endblock paragraph %}
