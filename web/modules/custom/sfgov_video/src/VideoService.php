@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\sfgov_utilities;
-
+namespace Drupal\sfgov_video;
+use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\UrlHelper;
 use GuzzleHttp\ClientInterface;
 use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Serialization\Json;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class VideoService.
@@ -49,6 +49,19 @@ class VideoService {
   }
 
   /**
+   * Get Video title
+   * @param $video_id
+   *
+   * @return mixed
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function getVideoTitle($video_id) {
+    $metadata = $this->getYoutubeMetadata($video_id);
+    return $metadata['videoDetails']['title'];
+  }
+
+
+  /**
    * Get transcript by language.
    * TODO: detect site language to get the right transcript.
    *
@@ -59,7 +72,8 @@ class VideoService {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getYoutubeTranscript($video_id, $languageCode = 'en') {
-    $caption = $this->getYoutubeCaptionTrack($video_id, $languageCode);
+    $metadata = $this->getYoutubeMetadata($video_id, $languageCode);
+    $caption = $metadata['captionTracks'];
     if (is_null($caption)) return [];
 
     $caption_track_url = $caption['baseUrl'];
@@ -83,33 +97,50 @@ class VideoService {
   }
 
   /**
-   * Extract video information to get caption tracks.
+   * Get Youtube metadata: video title, caption tracks.
    *
    * @param $video_id
-   * @param $languageCode
+   * @param string $languageCode
    *
-   * @return mixed|null
+   * @return array
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function getYoutubeCaptionTrack($video_id, $languageCode) {
+  public function getYoutubeMetadata($video_id, $languageCode = 'en') {
     $video_info_url = "https://www.youtube.com/get_video_info?&video_id=" . $video_id;
     $request = $this->httpClient->request('GET', $video_info_url);
     $contents = $request->getBody()->getContents();
 
     parse_str($contents, $video_info_array);
+
+    if ($video_info_array['status'] == 'fail') {
+      throw new NotFoundHttpException();
+    }
+
     $response = $video_info_array['player_response'];
     $json = JSON::decode($response);
+
     $caption_tracks = $json['captions']['playerCaptionsTracklistRenderer']['captionTracks'];
 
-    $caption_track = array_filter($caption_tracks, function($track) {
-      return $track['languageCode'];
+    return [
+      'captionTracks' => $this->getYoutubeCaptionTrack($caption_tracks, $languageCode),
+      'videoDetails' => $json['videoDetails']
+    ];
+  }
+
+  /**
+   * Get caption track of a specific language.
+   *
+   * @param $caption_tracks
+   * @param $languageCode
+   *
+   * @return mixed|null
+   */
+  private function getYoutubeCaptionTrack($caption_tracks, $languageCode) {
+    $caption_track = array_filter($caption_tracks, function($track) use ($languageCode) {
+      return $track['languageCode'] == $languageCode;
     });
 
-    if (!empty($caption_track)) {
-      return reset($caption_track);
-    } else {
-      return NULL;
-    }
+    return !empty($caption_track) ? reset($caption_track) : NULL;
   }
 
 }
