@@ -77,6 +77,25 @@ function sfgovpl_preprocess_paragraph(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $variables['#attached']['library'][] = 'sfgovpl/sfgov-instagram-feed';
+  $variables['#attached']['drupalSettings']['sfgov']['instagram_feed'][$paragraph->id()] = [
+    'paragraph_id' => $paragraph->id(),
+    'instagram_profile' => $paragraph->field_instagram_profile->value,
+  ];
+}
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__twitter_embed(&$variables) {
+  $variables['#attached']['library'][] = 'sfgovpl/sfgov-twitter-feed';
+}
+
+/**
  * Preprocess paragraph video.
  *
  * @param $variables
