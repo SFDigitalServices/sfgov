@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\node\NodeInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+
 /**
  * Implements template_preprocess_paragraph().
  *
@@ -82,9 +85,14 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $paragraph = $variables['paragraph'];
   $video_url = $paragraph->get('field_video')->value;
 
-  /** @var \Drupal\sfgov_utilities\VideoService $video_service */
-  $video_service = \Drupal::service('sfgov_utilities.video');
+  /** @var \Drupal\sfgov_video\VideoService $video_service */
+  $video_service = \Drupal::service('sfgov_video.utilities');
   $video_id = $video_service->getVideoId($video_url);
 
   $variables['captions'] = $video_service->getYoutubeTranscript($video_id);
+
+  // Link transcript
+  $url = Url::fromUserInput('/video/' . $video_id);
+  $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
+  $variables['link_transcript'] = $link->toRenderable();
 }
