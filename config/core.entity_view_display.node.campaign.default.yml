@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.campaign.field_campaign_resources
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_content
+    - field.field.node.campaign.field_contents
     - field.field.node.campaign.field_dept
     - field.field.node.campaign.field_description
     - field.field.node.campaign.field_header_spotlight
@@ -22,10 +23,8 @@ dependencies:
     - field.field.node.campaign.field_video
     - node.type.campaign
   module:
-    - block_field
     - entity_reference_revisions
     - field_group
-    - link
     - text
     - user
 third_party_settings:
@@ -35,9 +34,9 @@ third_party_settings:
         - field_description
         - field_location_access
       parent_name: ''
-      weight: 4
+      weight: 12
       format_type: html_element
-      region: content
+      region: hidden
       format_settings:
         element: div
         show_label: true
@@ -55,36 +54,28 @@ bundle: campaign
 mode: default
 content:
   content_moderation_control:
-    weight: -20
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_campaign_about:
-    weight: 8
-    type: entity_reference_revisions_entity_view
+    weight: 7
+    type: text_trimmed
     label: above
-    settings: {  }
+    settings:
+      trim_length: 600
     third_party_settings: {  }
     region: content
   field_campaign_accordion:
     type: entity_reference_revisions_entity_view
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
     region: content
-  field_campaign_featured_image:
-    type: entity_reference_revisions_entity_view
-    weight: 8
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_campaign_resources:
+  field_contents:
     type: entity_reference_revisions_entity_view
     weight: 4
     label: hidden
@@ -93,52 +84,9 @@ content:
       link: ''
     third_party_settings: {  }
     region: content
-  field_dept:
-    weight: 10
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_description:
-    weight: 9
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
   field_header_spotlight:
     type: entity_reference_revisions_entity_view
-    weight: 0
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_instagram_feed:
-    weight: 7
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: block_field
-    region: content
-  field_links:
-    weight: 11
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_location_access:
-    type: entity_reference_revisions_entity_view
-    weight: 10
+    weight: 1
     label: hidden
     settings:
       view_mode: default
@@ -147,7 +95,7 @@ content:
     region: content
   field_social_media_embed:
     type: entity_reference_revisions_entity_view
-    weight: 9
+    weight: 6
     label: hidden
     settings:
       view_mode: default
@@ -165,16 +113,7 @@ content:
     region: content
   field_top_facts:
     type: entity_reference_revisions_entity_view
-    weight: 1
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_video:
-    type: entity_reference_revisions_entity_view
-    weight: 3
+    weight: 2
     label: hidden
     settings:
       view_mode: default
@@ -182,8 +121,16 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_campaign_featured_image: true
+  field_campaign_resources: true
   field_campaign_theme: true
   field_content: true
+  field_dept: true
+  field_description: true
+  field_instagram_feed: true
+  field_links: true
+  field_location_access: true
   field_logo: true
+  field_video: true
   langcode: true
   links: true
