@@ -3,11 +3,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.image
     - field.field.paragraph.fact.field_description
+    - field.field.paragraph.fact.field_image
     - field.field.paragraph.fact.field_title
     - paragraphs.paragraphs_type.fact
   module:
     - allowed_formats
+    - entity_browser
     - maxlength
     - text
 id: paragraph.fact.default
@@ -16,7 +19,7 @@ bundle: fact
 mode: default
 content:
   field_description:
-    weight: 1
+    weight: 2
     settings:
       rows: 5
       placeholder: ''
@@ -26,17 +29,35 @@ content:
         hide_guidelines: '1'
       maxlength:
         maxlength_js: 500
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_label: '<strong>@remaining</strong> left'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
     type: text_textarea
     region: content
-  field_title:
+  field_image:
     weight: 0
+    settings:
+      entity_browser: image
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: preview
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_title:
+    weight: 1
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: 65
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
     type: string_textfield
     region: content
 hidden:

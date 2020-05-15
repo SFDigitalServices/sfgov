@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dce189071fb00801c5445a928d87decc",
+    "content-hash": "683806a5e7381a1eb89e1e4e1ebf501e",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1803,6 +1803,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "Error when updating block fields": "https://www.drupal.org/files/issues/2019-05-02/block_field-available-blocks-2861670-34.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2820,6 +2823,8 @@
                     "merge-extra": false
                 },
                 "patches_applied": {
+                    "Entity links ignore language negotiation API": "https://www.drupal.org/files/issues/2019-07-31/3061761-38.patch",
+                    "StringFormatter generates links in wrong language when linking to entity": "patches/stringformatter-ignores-language-negotiation-2648288.patch",
                     "Use hook_theme_suggestions in views": "https://www.drupal.org/files/issues/2018-04-07/2923634-35.patch"
                 }
             },
@@ -4539,6 +4544,133 @@
             }
         },
         {
+            "name": "drupal/scheduler",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/scheduler.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/scheduler-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "52ff9c778f183d970ec2d57dfc1ba45282054e97"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "require-dev": {
+                "drupal/coder": "^8.3.3",
+                "drupal/devel_generate": "^2.0",
+                "drupal/rules": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1566578555",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Eric Schaefer (Eric Schaefer)",
+                    "homepage": "https://www.drupal.org/u/eric-schaefer",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Jonathan Smith (jonathan1055)",
+                    "homepage": "https://www.drupal.org/u/jonathan1055",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Pieter Frenssen (pfrenssen)",
+                    "homepage": "https://www.drupal.org/u/pfrenssen",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Rick Manelius (rickmanelius)",
+                    "homepage": "https://www.drupal.org/u/rickmanelius",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Automatically publish and unpublish content at specified dates and times.",
+            "homepage": "https://drupal.org/project/scheduler",
+            "support": {
+                "source": "http://cgit.drupalcode.org/scheduler",
+                "issues": "https://www.drupal.org/project/issues/scheduler"
+            }
+        },
+        {
+            "name": "drupal/scheduler_content_moderation_integration",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/scheduler_content_moderation_integration.git",
+                "reference": "8.x-1.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/scheduler_content_moderation_integration-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "75e482881722c12cd8b98da209bd0d2e19b5529c"
+            },
+            "require": {
+                "drupal/core": "*",
+                "drupal/scheduler": "^1.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.2",
+                    "datestamp": "1583246174",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "daniel.bosen",
+                    "homepage": "https://www.drupal.org/user/404865"
+                },
+                {
+                    "name": "thunderbot",
+                    "homepage": "https://www.drupal.org/user/3511180"
+                },
+                {
+                    "name": "volkerk",
+                    "homepage": "https://www.drupal.org/user/57527"
+                }
+            ],
+            "description": "Scheduler Content Moderation Integration",
+            "homepage": "https://www.drupal.org/project/scheduler_content_moderation_integration",
+            "support": {
+                "source": "https://git.drupalcode.org/project/scheduler_content_moderation_integration"
+            }
+        },
+        {
             "name": "drupal/search_api",
             "version": "1.12.0",
             "source": {
@@ -4902,6 +5034,56 @@
             "homepage": "https://www.drupal.org/project/simple_gmap",
             "support": {
                 "source": "http://cgit.drupalcode.org/simple_gmap"
+            }
+        },
+        {
+            "name": "drupal/simple_instagram_feed",
+            "version": "3.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/simple_instagram_feed.git",
+                "reference": "8.x-3.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/simple_instagram_feed-8.x-3.3.zip",
+                "reference": "8.x-3.3",
+                "shasum": "8cf3d056a7e277025f7a03aadf50c54bdc4c1144"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-3.x": "3.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-3.3",
+                    "datestamp": "1584386047",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "Update field defaults for sfgov": "patches/simple-instagram-block.patch"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "awasson",
+                    "homepage": "https://www.drupal.org/user/127091"
+                }
+            ],
+            "description": "Creates a block with a dynamic Instagram Feed using https://github.com/jsanahuja/jquery.instagramFeed.",
+            "homepage": "https://www.drupal.org/project/simple_instagram_feed",
+            "support": {
+                "source": "https://git.drupalcode.org/project/simple_instagram_feed"
             }
         },
         {
@@ -5512,11 +5694,6 @@
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
                 "GPL-2.0-or-later"
             ],
             "authors": [
@@ -5530,6 +5707,64 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/user_email_textformat",
                 "issues": "https://www.drupal.org/project/issues/user_email_textformat"
+            {
+        },
+        {
+            "name": "drupal/video_embed_field",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/video_embed_field.git",
+                "reference": "8.x-2.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/video_embed_field-8.x-2.2.zip",
+                "reference": "8.x-2.2",
+                "shasum": "1e76eeefb27f4166d3d119e8c27469bbf12c0f06"
+            },
+            "require": {
+                "drupal/core": "^8.7.0"
+            },
+            "require-dev": {
+                "drupal/colorbox": "*",
+                "drupal/media_entity": "*",
+                "drupal/media_entity_embeddable_video": "*",
+                "drupal/video_embed_media": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.2",
+                    "datestamp": "1564103585",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Sam152",
+                    "homepage": "https://www.drupal.org/user/1485048"
+                },
+                {
+                    "name": "jec006",
+                    "homepage": "https://www.drupal.org/user/855980"
+                },
+                {
+                    "name": "plopesc",
+                    "homepage": "https://www.drupal.org/user/282415"
+                }
+            ],
+            "description": "A pluggable field type for storing videos from external video hosts such as Vimeo and YouTube.",
+            "homepage": "https://www.drupal.org/project/video_embed_field",
+            "support": {
+                "source": "https://git.drupalcode.org/project/video_embed_field"
             }
         },
         {
@@ -5728,16 +5963,16 @@
         },
         {
             "name": "drush/drush",
-            "version": "8.2.3",
+            "version": "8.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drush-ops/drush.git",
-                "reference": "bf2b2471b9410e0ff4adc23aee020ee1aff28610"
+                "reference": "60306a27347f6c69517dc2d91bb2fd5d1a41abec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drush-ops/drush/zipball/bf2b2471b9410e0ff4adc23aee020ee1aff28610",
-                "reference": "bf2b2471b9410e0ff4adc23aee020ee1aff28610",
+                "url": "https://api.github.com/repos/drush-ops/drush/zipball/60306a27347f6c69517dc2d91bb2fd5d1a41abec",
+                "reference": "60306a27347f6c69517dc2d91bb2fd5d1a41abec",
                 "shasum": ""
             },
             "require": {
@@ -5777,7 +6012,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "8.0.x-dev"
+                    "dev-master": "8.3.x-dev"
                 }
             },
             "autoload": {
@@ -5837,7 +6072,7 @@
             ],
             "description": "Drush is a command line shell and scripting interface for Drupal, a veritable Swiss Army knife designed to make life easier for those of us who spend some of our working hours hacking away at the command prompt.",
             "homepage": "http://www.drush.org",
-            "time": "2019-04-03T04:20:26+00:00"
+            "time": "2019-11-26T22:34:50+00:00"
         },
         {
             "name": "easyrdf/easyrdf",
@@ -6612,6 +6847,26 @@
             "description": "Highlight PHP code in terminal",
             "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
+        },
+        {
+            "name": "jqueryinstagramfeed",
+            "version": "1.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jsanahuja/jquery.instagramFeed.git",
+                "reference": "1.2.5"
+            },
+            "type": "drupal-library"
+        },
+        {
+            "name": "jsanahuja/jquery.instagramFeed",
+            "version": "1.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jsanahuja/jquery.instagramFeed.git",
+                "reference": "1.2.5"
+            },
+            "type": "drupal-library"
         },
         {
             "name": "mandrill/mandrill",
@@ -9727,12 +9982,6 @@
                 "url": "https://github.com/webflo/drupal-core-strict.git",
                 "reference": "1eb044b722ebe44bc6af86a03888415d7f31c057"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webflo/drupal-core-strict/zipball/1eb044b722ebe44bc6af86a03888415d7f31c057",
-                "reference": "1eb044b722ebe44bc6af86a03888415d7f31c057",
-                "shasum": ""
-            },
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -12463,6 +12712,5 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.0.8"
-    },
-    "plugin-api-version": "1.1.0"
+    }
 }
