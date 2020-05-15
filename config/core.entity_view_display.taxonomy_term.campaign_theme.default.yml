@@ -3,7 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.campaign_theme.field_background_color
+    - field.field.taxonomy_term.campaign_theme.field_accent_l1
+    - field.field.taxonomy_term.campaign_theme.field_accent_l2
     - field.field.taxonomy_term.campaign_theme.field_primary_color
     - taxonomy.vocabulary.campaign_theme
   module:
@@ -21,8 +22,17 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_background_color:
+  field_accent_l1:
     weight: 2
+    label: above
+    settings:
+      format: hex
+      opacity: '1'
+    third_party_settings: {  }
+    type: color_field_formatter_text
+    region: content
+  field_accent_l2:
+    weight: 3
     label: above
     settings:
       format: hex

@@ -7,6 +7,7 @@ dependencies:
     - field.field.paragraph.facts.field_title
     - paragraphs.paragraphs_type.facts
   module:
+    - maxlength
     - paragraphs
 id: paragraph.facts.default
 targetEntityType: paragraph
@@ -35,9 +36,12 @@ content:
   field_title:
     weight: 0
     settings:
-      size: 60
+      size: 65
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: 65
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
     type: string_textfield
     region: content
 hidden:
