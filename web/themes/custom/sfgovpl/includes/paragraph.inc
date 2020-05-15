@@ -113,5 +113,7 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   // Link transcript
   $url = Url::fromUserInput('/video/' . $video_id);
   $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
-  $variables['link_transcript'] = $link->toRenderable();
+  $link = $link->toRenderable();
+  $link['#attributes']['target'] = '_blank';
+  $variables['link_transcript'] = $link;
 }
