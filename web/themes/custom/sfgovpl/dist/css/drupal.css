@@ -3642,18 +3642,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   overflow: hidden;
 }
 
-.campaign--full .paragraph--type--accordion .group-right .__description {
-  padding: 1rem 2.5rem;
-  margin-top: 3rem;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 32px;
-  color: #1c3e57;
-  background-color: #f8f8f8;
-  border-radius: 8px;
-}
-
 .campaign--full .__campaign-locations-access-wrapper {
   margin: 0 auto;
   max-width: 1090px;
@@ -7625,11 +7613,39 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   }
 }
 
+.paragraph--type--accordion .group-right {
+  position: relative;
+  padding: 1rem 2.5rem;
+  margin-top: 3rem;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+  color: #1c3e57;
+}
+
 @media screen and (min-width: 768px) {
   .paragraph--type--accordion .group-right {
     float: right;
     max-width: 350px;
     width: calc((100% - 40px)/3);
+  }
+}
+
+.paragraph--type--accordion .group-right .group-right-bg {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: calc(100vw - 1rem);
+  top: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: 8px 0px 0px 8px;
+}
+
+@media screen and (min-width: 768px) {
+  .paragraph--type--accordion .group-right .group-right-bg {
+    width: 50vw;
   }
 }
 
