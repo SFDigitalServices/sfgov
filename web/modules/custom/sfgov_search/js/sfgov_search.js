@@ -36,28 +36,28 @@ function Search311(collectionName) {
     var topSearchSuggsSelector = '.sfgov-top-search-suggestion';
     var topSearchSuggs = $(topSearchSuggsSelector);
     if(topSearchSuggs.length > 0) {
-      
+
       var containerId = this.topSearchContainerSelector.replace('#', '');
       var containerSelector = '#' + containerId;
-      
+
       $(topSearchSuggs[0]).before('<div id="' + containerId + '" aria-label="' + Drupal.t('Search top suggestions') + '" role="listbox"><h4>' + Drupal.t('Top searches:') + '</h4></div>');
       $(this.topSearchContainerSelector).hide();
-  
+
       $(topSearchSuggs).each(function(idx) {
         $(this).find('a').attr('id', 'aria-ts-opt-' + idx);
         $(this).find('a').attr('role', 'option');
         $(_this.topSearchContainerSelector).append($(this));
       });
-  
+
       $('.sfgov-search-form-311').append($(containerSelector));
-      
+
       $(this.inputSelector).focus(function() {
         if($(this).val().length <= 0) {
           $(_this.topSearchContainerSelector).show();
           $(topSearchSuggsSelector).show();
         }
       });
-  
+
       $(this.inputSelector).keyup(function() {
         if($(this).val().length <= 0) {
           $(_this.topSearchContainerSelector).show();
@@ -86,8 +86,9 @@ function Search311(collectionName) {
               autocompleteLength = autocompletes.length;
               $(_this.autocompleteContainerSelector).show();
               var autocompleteHtml = '';
+              var searchPathPrefix = drupalSettings.sfgov_search_form_block.language_prefix + '/search?keyword=';
               for(var i = 0; i<autocompletes.length; i++) {
-                autocompleteHtml += '<a role="option" id="aria-ac-opt-' + i + '" href="/search?keyword=' + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
+                autocompleteHtml += '<a role="option" id="aria-ac-opt-' + i + '" href="' + searchPathPrefix + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>';
               }
               $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
@@ -98,7 +99,7 @@ function Search311(collectionName) {
             });
           }
         });
-      } 
+      }
       else {
         $(_this.autocompleteContainerSelector).hide();
       }
@@ -116,7 +117,7 @@ function Search311(collectionName) {
     options = options.substring(0, options.length-1); // remove last &
     var url = this.props.protocol + '://' + this.props.domain + this.props.path + '?' + options;
     $.ajax({
-      url: url, 
+      url: url,
       dataType: 'jsonp'
     });
   };
@@ -139,7 +140,7 @@ function Search311(collectionName) {
         } else {
           title = result.title;
         }
-  
+
         var resultSummary = '';
         var truncatedSummary = '';
         if(result.metaData.sfgovSummary) {
@@ -160,30 +161,30 @@ function Search311(collectionName) {
         }
 
         truncatedSummary = truncatedSummary.replace(hr, '<strong>$&</strong>');
-  
+
         if(isDeptSearchResult) {
           searchResultClass += ' dept-search-result';
           searchResultContainerClass = 'dept-search-result-container';
         }
-  
+
         if(isTopicSearchResult) {
           searchResultClass += ' topic-search-result';
           searchResultContainerClass = 'topic-search-result-container';
         }
-  
+
         html += '<div class="' + searchResultClass + '" data-result-page-num=' + Math.ceil(resultsSummary.currStart/resultsSummary.numRanks) + '>';
         html += '  <div class="' + searchResultContainerClass + ' sfgov-fb-search-result">';
-    
+
         if(isDeptSearchResult) {
           html += '<div class="content-type dept">' + Drupal.t('Department') + '</div>';
-          
+
           var phone = result.metaData.dp ? result.metaData.dp : null;
           var address = result.metaData.da ? result.metaData.da : null;
-  
+
           if(phone || address) {
             deptContactInfoHtml = '<div class="phone-address--container">';
             if(phone) {
-              deptContactInfoHtml += '' +  
+              deptContactInfoHtml += '' +
               '  <div class="phone--container">' +
               '    <i class="sfgov-icon-phone"></i>' +
               '    <span class="phone">' +
@@ -240,7 +241,7 @@ function Search311(collectionName) {
       var results = data.response.resultPacket.results;
       var resultsSummary = data.response.resultPacket.resultsSummary;
       var highlightRegex = data.response.resultPacket.queryHighlightRegex;
-    
+
       if(!error) {
         if(spell && getQueryParam('si') !== 'true') { // misspelled word
           messagesDiv.prepend('<div class="sfgov-search-misspelled"><span>' + Drupal.t('Showing results for') + ' </span> <a href="/search?keyword=' + Drupal.t(data.response.resultPacket.spell.text) + '" class="sfgov-spelled-keyword">' + Drupal.t(data.response.resultPacket.spell.text) + '</a><br><div class="sfgov-search-instead">Search instead for <a href="/search?keyword=' + Drupal.t(data.question.query) + '&si=true">' + Drupal.t(data.response.resultPacket.query) + '</a></div></div>');
@@ -273,7 +274,7 @@ function Search311(collectionName) {
     if(emptyResultSet) {
       resultsDiv.html('<div class="no-search-results--container">' +
       '<h2>' + Drupal.t('We don\'t have anything yet that matches your search.') + '</h2>' +
-      '<p>' + Drupal.t('Try looking through our ') + '<a href="https://sf.gov/services" target="_blank" rel="noopener noreferrer">list of services</a>.</p>' + 
+      '<p>' + Drupal.t('Try looking through our ') + '<a href="https://sf.gov/services" target="_blank" rel="noopener noreferrer">list of services</a>.</p>' +
       '</div>');
       $('#sfgov-search-overlay').hide();
       $('#sfgov-search-loading').hide();
@@ -348,7 +349,7 @@ function Search311(collectionName) {
           } else {
             $('.sfgov-search-pagination-nav .next').show();
           }
-          
+
           if(pageNum == first) {
             $('.sfgov-search-pagination-nav .previous').hide();
           } else {

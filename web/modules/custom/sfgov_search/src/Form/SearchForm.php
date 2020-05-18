@@ -4,8 +4,34 @@ namespace Drupal\sfgov_search\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SearchForm extends FormBase {
+
+  /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(LanguageManagerInterface $languageManager) {
+    $this->languageManager = $languageManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('language_manager')
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -62,6 +88,8 @@ class SearchForm extends FormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $keyword = $form_state->getValues()['sfgov_search_input'];
-    $form_state->setRedirect('sfgov_search.content', ['keyword' => $keyword]);
+    $form_state->setRedirect('sfgov_search.content', ['keyword' => $keyword], [
+      'language' => $this->languageManager->getCurrentLanguage(),
+    ]);
   }
 }
