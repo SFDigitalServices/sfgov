@@ -78,10 +78,7 @@ function SFGovTranslate() {
   };
 
   this.getDrupalTranslation = function(lang) {
-    var drupalTranslations = drupalSettings.sfgov_translations.node.translations;
-    if (!drupalTranslations) {
-      drupalTranslations = drupalSettings.sfgov_translations.view.translations;
-    }
+    var drupalTranslations = drupalSettings.sfgov_translations.page.translations;
     if (drupalTranslations) {
       for(var i=0; i<drupalTranslations.length; i++) {
         var someTranslation = drupalTranslations[i];
@@ -94,7 +91,7 @@ function SFGovTranslate() {
   };
 
   this.checkCurrentLanguage = function() {
-    var currentDrupalLanguage = drupalSettings.sfgov_translations.node.current_language;
+    var currentDrupalLanguage = drupalSettings.sfgov_translations.page.current_language;
     var gTranslateCookie = getCookie('googtrans');
     var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null;
 
