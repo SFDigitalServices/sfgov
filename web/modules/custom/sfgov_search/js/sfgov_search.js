@@ -160,6 +160,12 @@ function Search311(collectionName) {
           truncatedSummary = resultSummary;
         }
 
+        // Exclude certain strings from translation.
+        // @see web/themes/custom/sfgovpl/src/js/exclude-from-gtranslate.js
+        if (typeof(SfGovExcludeFromTranslate) == 'function') {
+          truncatedSummary = SfGovExcludeFromTranslate(truncatedSummary);
+        }
+
         truncatedSummary = truncatedSummary.replace(hr, '<strong>$&</strong>');
 
         if(isDeptSearchResult) {
