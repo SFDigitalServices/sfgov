@@ -53,7 +53,6 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     && $parent->bundle() == 'campaign') {
     /** @var \Drupal\taxonomy\Entity\Term $theme */
     $theme = $parent->get('field_campaign_theme')->entity;
-    error_log('----'.$paragraph_type);
     if ($paragraph_type == 'campaign_spotlight' || $paragraph_type == 'image_with_text') {
       $background_color = $theme->get('field_primary_color')->getValue();
       $background_color_value = $background_color[0]['color'];
