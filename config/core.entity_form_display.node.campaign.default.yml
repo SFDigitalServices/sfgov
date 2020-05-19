@@ -5,18 +5,58 @@ dependencies:
   config:
     - field.field.node.campaign.field_campaign_about
     - field.field.node.campaign.field_campaign_theme
-    - field.field.node.campaign.field_content
+    - field.field.node.campaign.field_contents
+    - field.field.node.campaign.field_dept
     - field.field.node.campaign.field_header_spotlight
+    - field.field.node.campaign.field_links
     - field.field.node.campaign.field_logo
+    - field.field.node.campaign.field_social_media_embed
     - field.field.node.campaign.field_spotlight
     - field.field.node.campaign.field_top_facts
     - image.style.thumbnail
     - node.type.campaign
+    - workflows.workflow.editorial
   module:
     - content_moderation
+    - field_group
     - image
+    - link
     - paragraphs
     - path
+    - scheduler
+    - scheduler_content_moderation_integration
+    - text
+third_party_settings:
+  field_group:
+    group_locations_and_access:
+      children:
+        - field_description
+        - field_location_access
+      parent_name: ''
+      weight: 27
+      format_type: fieldset
+      region: hidden
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: false
+      label: 'Locations and Access'
+    group_about:
+      children:
+        - field_campaign_about
+        - field_dept
+        - field_links
+      parent_name: ''
+      weight: 9
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: false
+      label: About
 id: node.campaign.default
 targetEntityType: node
 bundle: campaign
@@ -24,13 +64,27 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   field_campaign_about:
+    type: text_textarea
+    weight: 12
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  field_campaign_theme:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_contents:
     type: paragraphs
-    weight: 8
+    weight: 6
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -42,35 +96,19 @@ content:
       form_display_mode: default
       default_paragraph_type: _none
       features:
-        duplicate: '0'
-        collapse_edit_all: '0'
-        add_above: '0'
-    third_party_settings: {  }
-    region: content
-  field_campaign_theme:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
-  field_content:
-    weight: 6
-    settings:
-      title: Content
-      title_plural: Content
-      edit_mode: closed
-      closed_mode: summary
-      autocollapse: all
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: section
-      features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
-    type: paragraphs
+    region: content
+  field_dept:
+    weight: 21
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_header_spotlight:
     type: paragraphs
@@ -91,6 +129,14 @@ content:
         add_above: '0'
     third_party_settings: {  }
     region: content
+  field_links:
+    weight: 22
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
   field_logo:
     weight: 2
     settings:
@@ -98,6 +144,25 @@ content:
       progress_indicator: throbber
     third_party_settings: {  }
     type: image_image
+    region: content
+  field_social_media_embed:
+    type: paragraphs
+    weight: 8
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: '0'
+    third_party_settings: {  }
     region: content
   field_spotlight:
     weight: 7
@@ -146,13 +211,13 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 15
+    weight: 16
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 13
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -160,21 +225,38 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 12
     region: content
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 18
+    region: content
+    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 17
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 13
     region: content
     third_party_settings: {  }
   title:
@@ -187,13 +269,25 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
       match_limit: 10
     region: content
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 19
+    region: content
+    settings: {  }
     third_party_settings: {  }
   url_redirects:
     weight: 14

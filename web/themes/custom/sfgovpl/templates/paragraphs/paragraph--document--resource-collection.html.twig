@@ -71,10 +71,10 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
           {% elseif field_file.entity.field_published_date.value and field_file.entity.field_document_url %}
             {{ field_file.entity.field_published_date.value|date("F j, Y") }}
           {% else %}
-            Upcoming
+            {{ 'Upcoming'|t }}
           {% endif %}
           </span>
-          
+
           </div>
           <span class="description">{{ field_file.entity.field_description.value|raw }}</span>
         </div>

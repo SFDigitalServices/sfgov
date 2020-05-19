@@ -20,6 +20,13 @@ function sfgovpl_preprocess_node(&$variables) {
     if($content_type == 'topic') {
       $variables['service_section_ids'] = topic_page_services();
     }
+
+    // If the node being displayed is a translation, add a "notranslate" wrapper
+    // class, to exclude it from gtranslate (the rest of the page, navigation,
+    // footer, etc., will be translated this way).
+    if ('en' != $variables['node']->language()->getId()) {
+      $variables['attributes']['class'][] = 'notranslate';
+    }
   }
 }
 
@@ -30,20 +37,18 @@ function sfgovpl_preprocess_node(&$variables) {
 function topic_page_services() {
   $node = \Drupal::request()->attributes->get('node');
   if($node) {
-    if($node->hasField('field_department_services')) {
-      $services = $node->get('field_department_services');
-      if(!empty($services->getValue())) {
-        $txs = array();
-        foreach($services as $service) {
-          $serviceSectionId = $service->getValue()['target_id'];
-          $serviceSectionLoaded = Paragraph::load($serviceSectionId);
+    $services = $node->get('field_department_services');
+    if(!empty($services->getValue())) {
+      $txs = array();
+      foreach($services as $service) {
+        $serviceSectionId = $service->getValue()['target_id'];
+        $serviceSectionLoaded = Paragraph::load($serviceSectionId);
 
-          // load the paragraph and get the transactions
-          $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
-          for($i=0; $i<count($topicTransactions); $i++) {
-            $txId = $topicTransactions[$i]['target_id'];
-            $txs[] = $txId;
-          }
+        // load the paragraph and get the transactions
+        $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
+        for($i=0; $i<count($topicTransactions); $i++) {
+          $txId = $topicTransactions[$i]['target_id'];
+          $txs[] = $txId;
         }
         return $txs;
       }
@@ -83,7 +88,7 @@ function dept_page_fields() {
           $deptServiceSectionId = $deptService->getValue()['target_id'];
           $deptServiceSectionLoaded = Paragraph::load($deptServiceSectionId);
           $deptServiceSectionTitle = $deptServiceSectionLoaded->get('field_dept_service_section_title')->getValue()[0]['value'];
-          
+
           // load the paragraph and get the transactions
           $deptTransactions = $deptServiceSectionLoaded->get('field_dept_service_sect_services')->getValue();
           $txs = array();
@@ -287,7 +292,7 @@ function dept_page_fields() {
           $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
           $ctaButtonUrl = $ctaButtonParagraph->get('field_link')->getValue()[0]['uri'];
           $theFields['about']['cta']['title'] = $ctaTitle;
-          $theFields['about']['cta']['button_text'] = $ctaButtonText; 
+          $theFields['about']['cta']['button_text'] = $ctaButtonText;
           $theFields['about']['cta']['url'] = $ctaButtonUrl;
         }
       }
@@ -365,7 +370,7 @@ function dept_page_fields() {
         }
       }
     }
-  }           
+  }
   return $theFields;
 }
 

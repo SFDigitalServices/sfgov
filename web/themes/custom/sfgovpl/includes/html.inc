@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 
 function sfgovpl_preprocess_html(&$variables) {
@@ -80,26 +82,76 @@ function sfgovpl_preprocess_html(&$variables) {
       $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
       $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
     }
+
+    // add class page-campaign-[theme] to body tag.
+    if($nodeType == 'campaign') {
+      $node = \Drupal::request()->attributes->get('node');
+      $theme = $node->field_campaign_theme->entity;
+      $theme_class = 'page-campaign-' . \Drupal::service('pathauto.alias_cleaner')->cleanString($theme->label());
+      $variables['attributes']['class'][] = $theme_class;
+    }
   }
 
-  // for translations
+  /*   Translations logic.
+
+     Add the URLs of the current page translations (or URL in different languages
+     if no translation available). The script "translate.js" would then redirect
+     to the given URL instead of translating on the fly.
+     This is needed because translated nodes are wrapped in a "notranslate"
+     class, but the rest of the page is ran through Gtranslate to translate
+     header, footer, etc. If we just translated on the fly we could end up,
+     for example, with a translated node in spanish (wrapped in "notranslate",
+     and if the user translated into an non-existing translation the node would
+     not be translated.
+     Redirecting to the correct URL for the translation ensures the scenario
+     described above never happens.
+  */
+
+  // For translations, if it is a node page.
+  $languageManager = \Drupal::languageManager();
+  $languages = $languageManager->getLanguages();
+  $currentLanguage = $languageManager->getCurrentLanguage()->getId();
+  $currentRoute = \Drupal::service('current_route_match');
+  $routeParameters = $currentRoute->getParameters()->all();
   $node = \Drupal::routeMatch()->getParameter('node');
+  $gTranslatePrefixMap = [
+    'fil' => 'tl',
+    'zh-hant' => 'zh-TW',
+  ];
   $theNode = null;
   $nodeInfo = [];
-  $nodeInfo['current_language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  if ($node instanceof \Drupal\node\NodeInterface) {
-    $theNode = node_load($node->id());
+  $nodeInfo['current_language'] = isset($gTranslatePrefixMap[$currentLanguage]) ? $gTranslatePrefixMap[$currentLanguage] : $currentLanguage;
+  $isFront = \Drupal::service('path.matcher')->isFrontPage();
+  if ($node instanceof NodeInterface) {
+    $theNode = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $nodeInfo['nid'] = $theNode->id();
-    $nodeInfo['nurl'] = $theNode->url();
+    $nodeInfo['nurl'] = $theNode->toUrl()->toString();
     $langs = $theNode->getTranslationLanguages();
     $nodeInfo['translations'] = [];
-    foreach($langs as $lang) {
-      $langId = $lang->getId();
+    foreach ($languages as $langCode => $language) {
+      $nodeUrl = isset($langs[$langCode]) ?
+        $theNode->getTranslation($langCode)->toUrl()->toString() :
+        Url::fromRoute($currentRoute->getRouteName(), [
+          'node' => $theNode->id(),
+        ], ['language' => $language])->toString();
       $nodeInfo['translations'][] = [
-        'lang' => $langId,
-        'turl' => $theNode->getTranslation($langId)->url(),
+        'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
+        'turl' => $isFront ?
+          Url::fromRoute('<front>', [], ['language' => $language])->toString() :
+          $nodeUrl,
       ];
     }
   }
   $variables['page']['#attached']['drupalSettings']['sfgov_translations']['node'] = $nodeInfo;
+
+  // For translations, if it is a views page.
+  if (substr($currentRoute->getRouteName(), 0, 5) === 'view.') {
+    foreach ($languages as $langCode => $language) {
+      $viewInfo['translations'][] = [
+        'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
+        'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, ['language' => $language])->toString(),
+      ];
+    }
+    $variables['page']['#attached']['drupalSettings']['sfgov_translations']['view'] = $viewInfo;
+  }
 }

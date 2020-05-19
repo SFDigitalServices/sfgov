@@ -17,13 +17,9 @@
   } %}
   
   <div class="info--content">
-    <div class="info--left">
-
-      {{ content.field_information_section }}
-      <div class="info--last-updated">
-        Last updated {{ node.changedtime|date('F d, Y') }}
-      </div>
-      
+    {{ content.field_information_section }}
+    <div class="info--last-updated">
+      {{ 'Last updated'|t }} {{ node.changedtime|date('F d, Y') }}
     </div>
 
     {% if content.field_related_content|render|striptags %}

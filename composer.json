@@ -34,6 +34,19 @@
                 }
             }
         },
+        "jqueryinstagramfeed": {
+            "type": "package",
+            "package": {
+                "name": "jqueryinstagramfeed",
+                "version": "1.2.5",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/jsanahuja/jquery.instagramFeed.git",
+                    "type": "git",
+                    "reference": "1.2.5"
+                }
+            }
+        },
         "asset-packagist": {
             "type": "composer",
             "url": "https://asset-packagist.org"
@@ -85,6 +98,7 @@
         "drupal/mandrill": "^1.0",
         "drupal/maxlength": "1.x-dev",
         "drupal/metatag": "^1.5",
+        "drupal/mimemail": "^1.0@alpha",
         "drupal/multiple_fields_remove_button": "^1.0@alpha",
         "drupal/node_edit_protection": "1.x-dev",
         "drupal/office_hours": "^1.1",
@@ -92,9 +106,13 @@
         "drupal/pathauto": "^1.6",
         "drupal/protected_pages": "^1.1",
         "drupal/redirect": "^1.2",
+        "drupal/scheduler": "^1.1",
+        "drupal/scheduler_content_moderation_integration": "^1.2",
         "drupal/search_api_pantheon": "~1.0",
+        "drupal/sendgrid_integration": "^1.2",
         "drupal/simple_block": "^1.0@beta",
         "drupal/simple_gmap": "^1.4",
+        "drupal/simple_instagram_feed": "^3.1",
         "drupal/simple_sitemap": "^3.4",
         "drupal/simplesamlphp_auth": "^3.2",
         "drupal/smart_trim": "^1.1",
@@ -103,10 +121,15 @@
         "drupal/tmgmt_xtm": "5.x-dev",
         "drupal/twig_tweak": "^2.0",
         "drupal/twig_vardumper": "^1.1",
+        "drupal/user_email_textformat": "^1.5",
+        "drupal/video_embed_field": "2.2",
         "drupal/viewfield": "^3.0@alpha",
         "drupal/views_conditional": "^1.0",
         "drupal/views_infinite_scroll": "^1.5",
-        "drush-ops/behat-drush-endpoint": ">=0.0.5",
+        "drush-ops/behat-drush-endpoint": "^0.0.5",
+        "drush/drush": "^8",
+        "jqueryinstagramfeed": "^1.2",
+        "jsanahuja/jquery.instagramFeed": "^1.2",
         "oomphinc/composer-installers-extender": "^1.1",
         "pantheon-systems/quicksilver-pushback": "^2",
         "rvtraveller/qs-composer-installer": "^1.1",
@@ -223,12 +246,20 @@
                 "Edits some strings on the select options and removes unecessary code": "patches/gtranslate_sfgov.patch"
             },
             "drupal/core": {
+                "Entity links ignore language negotiation API": "https://www.drupal.org/files/issues/2019-07-31/3061761-38.patch",
+                "StringFormatter generates links in wrong language when linking to entity": "patches/stringformatter-ignores-language-negotiation-2648288.patch",
                 "Use hook_theme_suggestions in views": "https://www.drupal.org/files/issues/2018-04-07/2923634-35.patch"
             },
             "drupal/amplitude": {
                 "Capture additional data on event trigger": "patches/3092587-event-trigger-properties.patch",
                 "Amplitude additional configuration options": "patches/3096305-amplitude-config-options.patch",
                 "Page scroll depth": "patches/amplitude-scroll-depth.patch"
+            },
+            "drupal/block_field": {
+                "Error when updating block fields": "https://www.drupal.org/files/issues/2019-05-02/block_field-available-blocks-2861670-34.patch"
+            },
+            "drupal/simple_instagram_feed": {
+                "Update field defaults for sfgov": "patches/simple-instagram-block.patch"
             }
         }
     },

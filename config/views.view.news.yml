@@ -108,9 +108,44 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
           expose:
-            operator_limit_selection: false
-            operator_list: {  }
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
       sorts:
         field_date_value:
           id: field_date_value
@@ -177,6 +212,7 @@ display:
       header: {  }
       block_description: 'News block'
       display_description: 'A list of News content rendered with "Card" view mode.'
+      rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1
       contexts:
@@ -221,6 +257,7 @@ display:
       header: {  }
       block_description: 'News block (no image)'
       display_description: 'A list of News content rendered with "Card compact" view mode.'
+      rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1
       contexts:
@@ -310,6 +347,7 @@ display:
         options:
           relationship: none
           view_mode: card
+      rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1
       contexts:
@@ -379,7 +417,6 @@ display:
         row: false
         link_display: false
         link_url: false
-        cache: false
       relationships:
         field_topics:
           id: field_topics
@@ -421,13 +458,7 @@ display:
           view_mode: card
       link_display: page_2
       link_url: ''
-      cache:
-        type: time
-        options:
-          results_lifespan: 1800
-          results_lifespan_custom: 0
-          output_lifespan: 1800
-          output_lifespan_custom: 0
+      rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1
       contexts:
@@ -514,6 +545,7 @@ display:
         options:
           relationship: none
           view_mode: teaser
+      rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1
       contexts:

@@ -1,0 +1,28 @@
+{% set attributes = create_attribute() %}
+{% set classes = [
+  'video',
+  'video-full'
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': title,
+      'text': 'Video transcript'|t
+    }
+  } %}
+
+  <div class="video--content">
+    <div class="container">
+      <div class="caption">
+        {% if body is not empty %}
+          {% for item in body %}
+            <p>{{ item.text|raw }}</p>
+          {% endfor %}
+        {% else %}
+          <p><i>{{ 'No transcript found.'|t }}</i></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</article>
