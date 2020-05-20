@@ -13,21 +13,21 @@ dependencies:
     - field.field.node.campaign.field_social_media_embed
     - field.field.node.campaign.field_spotlight
     - field.field.node.campaign.field_top_facts
+    - image.style.campaign_logo
     - node.type.campaign
   module:
     - entity_reference_revisions
     - field_group
+    - image
     - link
     - text
     - user
 third_party_settings:
   field_group:
     group_locations_and_access:
-      children:
-        - field_description
-        - field_location_access
+      children: {  }
       parent_name: ''
-      weight: 19
+      weight: 14
       format_type: html_element
       region: hidden
       format_settings:
@@ -47,7 +47,7 @@ bundle: campaign
 mode: default
 content:
   content_moderation_control:
-    weight: 0
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -78,7 +78,7 @@ content:
     third_party_settings: {  }
   field_header_spotlight:
     type: entity_reference_revisions_entity_view
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       view_mode: default
@@ -96,6 +96,15 @@ content:
       url_plain: false
       rel: ''
       target: ''
+    third_party_settings: {  }
+  field_logo:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: campaign_logo
+      image_link: ''
     third_party_settings: {  }
   field_social_media_embed:
     type: entity_reference_revisions_entity_view
@@ -117,7 +126,7 @@ content:
     region: content
   field_top_facts:
     type: entity_reference_revisions_entity_view
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       view_mode: default
@@ -126,6 +135,6 @@ content:
     region: content
 hidden:
   field_campaign_theme: true
-  field_logo: true
   langcode: true
   links: true
+  search_api_excerpt: true
