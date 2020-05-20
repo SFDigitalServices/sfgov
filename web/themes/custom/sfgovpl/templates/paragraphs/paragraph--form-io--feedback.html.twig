@@ -11,6 +11,16 @@
       var options = {% if options %}safeJSONParse({{ options|json_encode|raw }}){% else %}{}{% endif %};
       var config = {% if json %}safeJSONParse({{ json|json_encode|raw }}){% else %}"{{ endpoint }}"{% endif %};
 
+      // Get the properties defined in the Amplitude event for "Feedback form".
+      var amplitudeData = {};
+      if (typeof amplitude != 'undefined' && drupalSettings.amplitude.events.length > 0) {
+        drupalSettings.amplitude.events.find(function(obj) {
+          if (obj.name === 'Feedback form') {
+            amplitudeData = JSON.parse(obj.properties);
+          }
+        });
+      }
+
       Formio.createForm(el, config, options)
         .then(function(form) {
 
@@ -24,10 +34,26 @@
             });
           }
 
-          // Submit the form When "yes" for "feedbackHelpful" is selected.
           form.on('change', function(event) {
-            if (event.changed && event.changed.component.key === 'feedbackHelpful' && form.data.feedbackHelpful === 'yes') {
-              form.submit();
+            if (event.changed) {
+              var key = event.changed.component.key;
+
+              // Log an event to Amplitude with Drupal data and form data. Note:
+              // Limiting this because change events fire a lot.
+              if ((key === 'feedbackHelpful' && event.data.feedbackHelpful == 'no') || key === 'feedbackReportIssueLink') {
+                amplitudeData.feedback = {
+                  'type': 'change',
+                  'trigger': key,
+                  'value': event.data[key],
+                  'data': event.data,
+                }
+                amplitude.getInstance().logEvent('Feedback Form Interaction', amplitudeData);
+              }
+
+              // Submit the form When "yes" for "feedbackHelpful" is selected.
+              if (event.changed.component.key === 'feedbackHelpful' && form.data.feedbackHelpful === 'yes') {
+                form.submit();
+              }
             }
           });
 
@@ -38,10 +64,16 @@
             }
 
             // Hide the form. It cannot be submitted again/updated.
-            var formContent = document.getElementById(form.id);
-            if (formContent) {
-              formContent.style.display = 'none';
+            document.getElementById(form.id).style.display = 'none';
+
+            // Log event with Drupal and form submission data to Amplitude.
+            amplitudeData.feedback = {
+              'type': 'submitDone',
+              'trigger': 'submit',
+              'value': true,
+              'data': submission.data,
             }
+            amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
           });
       });
 
