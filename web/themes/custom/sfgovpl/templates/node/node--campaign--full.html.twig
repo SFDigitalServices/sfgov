@@ -81,24 +81,6 @@
 ] %}
 
 <article{{ attributes.addClass(classes) }}>
-  {% block header %}
-    {{ title_prefix }}
-    {% if node.field_logo|raw is not empty %}
-      {% include '@theme/hero-banner-logo.twig' with {
-        'banner': {
-          'logo': node.field_logo|view
-        }
-      } %}
-    {% else %}
-      {% include '@theme/hero-banner-default.twig' with {
-        'banner': {
-          'title': node.label
-        }
-      } %}
-    {% endif %}
-    {{ title_suffix }}
-  {% endblock header %}
-
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
       {{ content | without('links', 'field_logo', 'field_social_media_embed', 'field_campaign_about', 'field_campaign_about', 'field_links', 'field_dept') }}
