@@ -1,0 +1,16 @@
+diff --git a/core/lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/StringFormatter.php b/core/lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/StringFormatter.php
+index ef2f43c283..0854dd6b31 100644
+--- a/core/lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/StringFormatter.php
++++ b/core/lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/StringFormatter.php
+@@ -175,8 +175,10 @@ protected function getEntityUrl(EntityInterface $entity) {
+     // For the default revision, the 'revision' link template falls back to
+     // 'canonical'.
+     // @see \Drupal\Core\Entity\Entity::toUrl()
++    $languageManager =  \Drupal::languageManager();
+     $rel = $entity->getEntityType()->hasLinkTemplate('revision') ? 'revision' : 'canonical';
+-    return $entity->toUrl($rel);
++    return $entity->toUrl($rel)
++      ->setOption('language', $languageManager->getCurrentLanguage());
+   }
+ 
+ }

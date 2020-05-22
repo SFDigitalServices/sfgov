@@ -1,0 +1,38 @@
+uuid: dab50cc8-0c3c-4111-aca9-770872e75130
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_content
+    - node.type.information_page
+    - node.type.step_by_step
+    - node.type.topic
+    - node.type.transaction
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.transaction.field_related_content
+field_name: field_related_content
+entity_type: node
+bundle: transaction
+label: Related
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      information_page: information_page
+      step_by_step: step_by_step
+      topic: topic
+      transaction: transaction
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: information_page
+field_type: entity_reference

@@ -9,7 +9,12 @@
 
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
-    <h5>{{ content.field_title }}</h5>
-    {{ content | without('field_title') }}
+    <div class="image">
+      {{ content.field_image }}
+    </div>
+    <div class="text">
+      <h5>{{ content.field_title }}</h5>
+      {{ content.field_description }}
+    </div>
   </div>
 {% endblock paragraph %}

@@ -6,6 +6,7 @@
   not paragraph.isPublished() ? 'paragraph--unpublished',
 ]
 %}
+
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% if content.field_description[0] %}
@@ -23,6 +24,10 @@
       <h3>{{ content.field_title }}</h3>
       {% endif %}
       {{ content.field_content }}
-    {% endif %}
+    </div>
+    <div class="group-right">
+      {{ content.field_description }}
+      <div{{ create_attribute().addClass('group-right-bg').setAttribute('style', 'background-color:' ~ group_right_background) }}></div>
+    </div>
   </div>
 {% endblock paragraph %}

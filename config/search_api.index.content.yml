@@ -3,9 +3,9 @@ langcode: en
 status: true
 dependencies:
   module:
+    - node
     - search_api_solr
     - search_api
-    - node
   config:
     - search_api.server.pantheon
 id: content
@@ -39,12 +39,18 @@ field_settings:
     type: boolean
     indexed_locked: true
     type_locked: true
+    dependencies:
+      module:
+        - node
   title:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
     type: solr_text_wstoken
     boost: !!float 21
+    dependencies:
+      module:
+        - node
   uid:
     label: uid
     datasource_id: 'entity:node'
@@ -52,6 +58,9 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+    dependencies:
+      module:
+        - node
 datasource_settings:
   'entity:node':
     bundles:
@@ -65,24 +74,6 @@ datasource_settings:
       selected: {  }
 processor_settings:
   add_url: {  }
-  aggregated_field: {  }
-  content_access:
-    weights:
-      preprocess_query: -30
-  entity_status: {  }
-  highlight:
-    highlight: always
-    highlight_partial: false
-    excerpt: true
-    excerpt_length: 160
-    exclude_fields:
-      - location_title
-      - name
-      - title
-    prefix: '<strong>'
-    suffix: '</strong>'
-    weights:
-      postprocess_query: 0
   html_filter:
     all_fields: true
     fields:
@@ -99,6 +90,9 @@ processor_settings:
     weights:
       preprocess_index: -15
       preprocess_query: -15
+  content_access:
+    weights:
+      preprocess_query: -30
   ignorecase:
     all_fields: true
     fields:
@@ -107,7 +101,23 @@ processor_settings:
     weights:
       preprocess_index: -20
       preprocess_query: -20
+  aggregated_field: {  }
   rendered_item: {  }
+  language_with_fallback: {  }
+  entity_status: {  }
+  highlight:
+    highlight: always
+    highlight_partial: false
+    excerpt: true
+    excerpt_length: 160
+    exclude_fields:
+      - location_title
+      - name
+      - title
+    prefix: '<strong>'
+    suffix: '</strong>'
+    weights:
+      postprocess_query: 0
 tracker_settings:
   default:
     indexing_order: fifo

@@ -82,6 +82,14 @@ function sfgovpl_preprocess_html(&$variables) {
       $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
       $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
     }
+
+    // add class page-campaign-[theme] to body tag.
+    if($nodeType == 'campaign') {
+      $node = \Drupal::request()->attributes->get('node');
+      $theme = $node->field_campaign_theme->entity;
+      $theme_class = 'page-campaign-' . \Drupal::service('pathauto.alias_cleaner')->cleanString($theme->label());
+      $variables['attributes']['class'][] = $theme_class;
+    }
   }
 
   /*   Translations logic.
@@ -112,7 +120,7 @@ function sfgovpl_preprocess_html(&$variables) {
   ];
   $theNode = null;
   $nodeInfo = [];
-  $nodeInfo['current_language'] = $gTranslatePrefixMap[$currentLanguage] ?: $currentLanguage;
+  $nodeInfo['current_language'] = isset($gTranslatePrefixMap[$currentLanguage]) ? $gTranslatePrefixMap[$currentLanguage] : $currentLanguage;
   $isFront = \Drupal::service('path.matcher')->isFrontPage();
   if ($node instanceof NodeInterface) {
     $theNode = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
@@ -127,7 +135,7 @@ function sfgovpl_preprocess_html(&$variables) {
           'node' => $theNode->id(),
         ], ['language' => $language])->toString();
       $nodeInfo['translations'][] = [
-        'lang' => $gTranslatePrefixMap[$langCode] ?: $langCode,
+        'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
         'turl' => $isFront ?
           Url::fromRoute('<front>', [], ['language' => $language])->toString() :
           $nodeUrl,
@@ -140,7 +148,7 @@ function sfgovpl_preprocess_html(&$variables) {
   if (substr($currentRoute->getRouteName(), 0, 5) === 'view.') {
     foreach ($languages as $langCode => $language) {
       $viewInfo['translations'][] = [
-        'lang' => $gTranslatePrefixMap[$langCode] ?: $langCode,
+        'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
         'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, ['language' => $language])->toString(),
       ];
     }
