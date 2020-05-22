@@ -29,7 +29,7 @@ $video_height_desktop: 405px;
         display: inline-block;
         height: 20px;
         width: 20px;
-        background-image: url("../../src/img/chevron-up.svg");
+        background-image: url('../../src/img/chevron-up.svg');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -65,6 +65,7 @@ $video_height_desktop: 405px;
         @include media-max($medium-screen) {
           height: 0; // $video_height_mobile;
           opacity: 0;
+          overflow: hidden;
           transition: all 0.3s ease-in-out;
         }
 
@@ -72,12 +73,10 @@ $video_height_desktop: 405px;
           height: $video_height_desktop;
         }
         .inner {
-          padding: 27px 22px;
+          transition: all 0.3s ease-in-out;
+          padding: 0 22px;
           height: 100%;
           overflow: scroll;
-          @include media-max($medium-screen) {
-            padding: 0;
-          }
           .link-video {
             margin-bottom: 2rem;
           }
