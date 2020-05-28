@@ -30,36 +30,46 @@
  * @see template_preprocess_views_view()
  */
 #}
-
 {%
   set classes = [
-    dom_id ? 'js-view-dom-id-' ~ dom_id,
-  ]
+  dom_id ? 'js-view-dom-id-' ~ dom_id,
+]
 %}
 
+{% block header %}
+{% include "@theme/hero-banner-color.twig" with {
+  "banner": {
+    'title': title,
+    'text': header['area']['#text'],
+  }
+}
+%}
+{% endblock header %}
+
 <div{{ attributes.addClass(classes) }}>
-  {% include '@theme/hero-banner-color.twig' with {
-    'banner': {
-      'title': title,
-      'text': header['area']['#text'],
-    }
-  } %}
+  <div class="sfgov-section-container">
+    {{ exposed }}
+    {{ attachment_before }}
 
-  {{ exposed }}
-  {{ attachment_before }}
+    {% block rows %}
+      {{ rows }}
+    {% endblock rows %}
 
-  {{ rows }}
-  {{ empty }}
-  {{ pager }}
+    {{ empty }}
+    {{ pager }}
 
-  {{ attachment_after }}
-  {{ more }}
+    {{ attachment_after }}
+    {% block more %}
+      {{ more }}
+    {% endblock more %}
 
-  {% if footer %}
-    <footer>
-      {{ footer }}
-    </footer>
-  {% endif %}
+    {% if footer %}
+      <footer>
+        {{ footer }}
+      </footer>
+    {% endif %}
 
-  {{ feed_icons }}
+    {{ feed_icons }}
+  </div>
 </div>
+
