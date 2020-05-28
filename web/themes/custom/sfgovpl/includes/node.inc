@@ -50,8 +50,8 @@ function topic_page_services() {
           $txId = $topicTransactions[$i]['target_id'];
           $txs[] = $txId;
         }
+        return $txs;
       }
-      return $txs;
     }
   }
   return null;

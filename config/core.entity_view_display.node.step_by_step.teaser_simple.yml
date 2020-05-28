@@ -1,0 +1,56 @@
+uuid: a3854b1e-c235-4859-9744-e8dde6b9ddf8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser_simple
+    - field.field.node.step_by_step.field_description
+    - field.field.node.step_by_step.field_intro_text
+    - field.field.node.step_by_step.field_process_steps
+    - field.field.node.step_by_step.field_topics
+    - node.type.step_by_step
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.step_by_step.teaser_simple
+targetEntityType: node
+bundle: step_by_step
+mode: teaser_simple
+content:
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_intro_text:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_process_steps:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_topics:
+    weight: 3
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  content_moderation_control: true
+  langcode: true
+  links: true
+  search_api_excerpt: true
