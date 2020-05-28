@@ -6,9 +6,11 @@ dependencies:
     - entity_browser.browser.file
     - field.field.paragraph.campaign_resources.field_file
     - field.field.paragraph.campaign_resources.field_resources
+    - field.field.paragraph.campaign_resources.field_title
     - paragraphs.paragraphs_type.campaign_resources
   module:
     - entity_browser
+    - maxlength
     - paragraphs
 id: paragraph.campaign_resources.default
 targetEntityType: paragraph
@@ -16,7 +18,7 @@ bundle: campaign_resources
 mode: default
 content:
   field_file:
-    weight: 1
+    weight: 2
     settings:
       entity_browser: file
       field_widget_display: label
@@ -31,7 +33,7 @@ content:
     region: content
   field_resources:
     type: paragraphs
-    weight: 0
+    weight: 1
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -47,6 +49,17 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: '0'
     third_party_settings: {  }
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 65
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+    type: string_textfield
     region: content
 hidden:
   created: true
