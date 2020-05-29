@@ -33,20 +33,21 @@
 {%
   set classes = [
   dom_id ? 'js-view-dom-id-' ~ dom_id,
+  'views--meetings',
 ]
 %}
 
-{% block header %}
-{% include "@theme/hero-banner-color.twig" with {
-  "banner": {
-    'title': title,
-    'text': header['area']['#text'],
-  }
-}
-%}
-{% endblock header %}
-
 <div{{ attributes.addClass(classes) }}>
+  {% block header %}
+  {% include "@theme/hero-banner-color.twig" with {
+    "banner": {
+      'title': title,
+      'text': header['area']['#text'],
+    }
+  }
+  %}
+  {% endblock header %}
+
   <div class="sfgov-section-container">
     {{ exposed }}
     {{ attachment_before }}
