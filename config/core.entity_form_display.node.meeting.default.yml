@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_meeting_artifacts
     - field.field.node.meeting.field_meeting_cancel
+    - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accessibility
     - field.field.node.meeting.field_start_date
     - node.type.meeting
@@ -27,6 +28,8 @@ dependencies:
     - maxlength
     - paragraphs
     - path
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 third_party_settings:
   field_group:
@@ -173,6 +176,16 @@ content:
     third_party_settings: {  }
     type: entity_reference_paragraphs
     region: content
+  field_public_body:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_regulations_accessibility:
     type: paragraphs
     weight: 7
@@ -212,13 +225,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -244,13 +257,13 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
