@@ -167,7 +167,7 @@ function getCookie(cookieName) {
         $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
         t.checkCurrentLanguage(); // check the current language of the page AFTER english has been added
-      }, 500);
+      }, 1000);
       // add aria attributes
       $(elem)[0].setAttribute('id', 'sfgov-gtranslate-select');
       $(elem)[0].setAttribute('aria-label', 'Language Translate Widget');
