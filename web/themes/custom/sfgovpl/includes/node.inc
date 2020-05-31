@@ -14,9 +14,6 @@ use Drupal\Core\Url;
  */
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
-    // kint($variables['content']['field_meeting_cancel']);
-    // die();
-
     $content_type = $variables['node']->getType();
     if($content_type == 'department') {
       $variables['dept_fields'] = dept_page_fields();
@@ -36,6 +33,31 @@ function sfgovpl_preprocess_node(&$variables) {
     if ('en' != $variables['node']->language()->getId()) {
       $variables['attributes']['class'][] = 'notranslate';
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
+  $node = $variables['node'];
+
+  // Date time.
+  $date_settings = ['timezone' => drupal_get_user_timezone()];
+  $meeting_time = [$node->field_start_date->date->format('h:ia', $date_settings)];
+  if ($node->field_end_date->value) {
+    $meeting_time[] = $node->field_end_date->date->format('h:ia', $date_settings);
+  }
+  $variables['meeting_time'] = [
+    '#markup' => implode(' - ', $meeting_time)
+  ];
+
+  // Address field.
+  if ($node->field_address->entity) {
+    $variables['meeting_address'] = $node->field_address->entity->field_address->view([
+      'type' => 'address_default',
+      'label' => 'hidden',
+    ]);
   }
 }
 

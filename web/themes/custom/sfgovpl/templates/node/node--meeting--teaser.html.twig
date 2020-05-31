@@ -93,6 +93,14 @@
       <div{{ content_attributes.addClass(bundle ~ '__content') }}>
         {% block body %}
         {{ content|without('links', 'field_start_date', 'field_end_date', 'field_address') }}
+
+        <div class="__footer">
+          <div class="field __time field__item">{{ meeting_time }}</div>
+
+          {% if meeting_address %}
+          {{ meeting_address }}
+          {% endif %}
+        </div>
         {% endblock body %}
       </div>
 

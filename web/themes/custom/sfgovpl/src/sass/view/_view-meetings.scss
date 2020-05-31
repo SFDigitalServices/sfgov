@@ -34,8 +34,47 @@
     padding-left: 30px;
     margin-bottom: 40px;
 
-    .views-field-title {
-      @include fs-title-5;
+    article {
+      .article--teaser__title {
+        @include fs-title-5;
+      }
+      .meeting__content {
+        .__footer {
+          display: flex;
+          margin-top: 1rem;
+
+          .__time,
+          .__address {
+            width: 50%;
+            position: relative;
+            padding-left: 35px;
+
+            &:before {
+              content: ' ';
+              width: 20px;
+              height: 20px;
+              position: absolute;
+              top: 3px;
+              left: 0;
+            }
+
+            p {
+              margin: 0;
+            }
+
+            .country {
+              display: none;
+            }
+          }
+
+          .__time:before {
+            @include background-image('icons/clock_1-outlined.svg');
+          }
+          .__address:before {
+            @include background-image('icons/location-2.svg');
+          }
+        }
+      }
     }
   }
 
