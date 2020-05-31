@@ -1,8 +1,15 @@
+{%
+  set header_text = 
+    meeting_is_past
+    ? 'This meeting took place on @date'|t({'@date': node.field_start_date.date|date('M d, Y')})
+    : 'This meeting will be taking place on @date'|t({'@date': node.field_start_date.date|date('M d, Y')})
+%}
+
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {
       'title': node.label,
-      'text': content.field_description|render,
+      'text': header_text,
       'label': 'Meeting'|t
     }
   } %}

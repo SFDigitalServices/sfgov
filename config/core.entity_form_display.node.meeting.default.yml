@@ -8,7 +8,6 @@ dependencies:
     - field.field.node.meeting.field_address
     - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
-    - field.field.node.meeting.field_description
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_meeting_artifacts
@@ -19,13 +18,11 @@ dependencies:
     - node.type.meeting
     - workflows.workflow.editorial
   module:
-    - allowed_formats
     - content_moderation
     - datetime
     - entity_browser
     - field_group
     - link
-    - maxlength
     - paragraphs
     - path
     - scheduler
@@ -107,22 +104,6 @@ content:
       match_limit: 10
     third_party_settings: {  }
     type: entity_reference_autocomplete
-    region: content
-  field_description:
-    weight: 1
-    settings:
-      rows: 3
-      placeholder: ''
-    third_party_settings:
-      maxlength:
-        maxlength_js: 280
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
-        maxlength_js_enforce: true
-        maxlength_js_truncate_html: false
-      allowed_formats:
-        hide_help: '0'
-        hide_guidelines: '0'
-    type: text_textarea
     region: content
   field_direct_external_url:
     weight: 9
