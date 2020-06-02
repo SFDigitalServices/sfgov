@@ -66,6 +66,19 @@
  * @see template_preprocess_node()
 #}
 
+{%
+  set meetings_block = {
+    upcoming: {
+      render: drupal_view('meetings', 'block_upcoming', node.id),
+      result: drupal_view_result('meetings', 'block_upcoming', node.id)
+    },
+    past: {
+      render: drupal_view('meetings', 'block_past', node.id),
+      result: drupal_view_result('meetings', 'block_past', node.id)
+    }
+  }
+%}
+
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
     {% include '@theme/hero-banner-default.twig' with {
@@ -111,20 +124,27 @@
 </div>
 {% endif %}
 
+{% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) %}
 <div class="sfgov-public-body-section sfgov-public-body-meetings-list sfds-layout-container">
+  {% if meetings_block.upcoming.result is not empty %}
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
     <h3>Upcoming Meetings</h3>
     <div class="sfgov-section--content">
-      {{ drupal_view('meetings', 'block_upcoming', node.id) }}
+      {{ meetings_block.upcoming.render }}
     </div>
   </div>
+  {% endif %}
+
+  {% if meetings_block.past.result is not empty %}
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
     <h3>Past Meetings</h3>
     <div class="sfgov-section--content">
-      {{ drupal_view('meetings', 'block_past', node.id) }}
+      {{ meetings_block.past.render }}
     </div>
   </div>
+  {% endif %}
 </div>
+{% endif %}
 
 {% if public_body_fields.about or content.field_subcommittees|render %}
 <div class="sfgov-public-body-section sfgov-public-body-about sfds-layout-container sfgov-in-this-page-target">
