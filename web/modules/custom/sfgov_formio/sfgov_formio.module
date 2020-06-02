@@ -45,3 +45,32 @@ function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
     }
   }
 }
+
+/**
+ * Implements hook_library_info_build().
+ */
+function sfgov_formio_library_info_alter(&$libraries, $extension) {
+
+  // Apply any library overrides defined at /admin/config/services/sfgov_formio.
+  if ($extension === 'sfgov_formio') {
+    $settings = \Drupal::config('sfgov_formio.settings');
+
+    if (isset($libraries['formio'])) {
+      $formio_version = $settings->get('formio_version');
+      if (!empty($formio_version)) {
+        $libraries['formio']['js'] = [
+          $formio_version => ['type' => 'external']
+        ];
+      }
+    }
+
+    if (isset($libraries['formio_sfds'])) {
+      $formio_sfds_version = $settings->get('formio_sfds_version');
+      if (!empty($formio_sfds_version)) {
+        $libraries['formio_sfds']['js'] = [
+          $formio_sfds_version => ['type' => 'external'
+        ]];
+      }
+    }
+  }
+}
