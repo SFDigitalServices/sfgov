@@ -61,7 +61,6 @@ class Settings extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Retrieve and save the configuration.
     $this->configFactory->getEditable('sfgov_formio.settings')
-      ->set('debug', $form_state->getValue('debug'))
       ->set('formio_version', trim($form_state->getValue('formio_version')))
       ->set('formio_sfds_version', trim($form_state->getValue('formio_sfds_version')))
       ->save();
