@@ -1152,6 +1152,7 @@ display:
         header: false
         fields: true
         relationships: true
+        footer: false
       display_description: ''
       title: 'Past Meetings'
       header:
@@ -1328,6 +1329,20 @@ display:
         operator: AND
         groups:
           1: AND
+      footer:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: true
+          content:
+            value: "<h5>Upcoming Meetings</h5>\r\n\r\n<p>See upcoming scheduled meetings for this public body.</p>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See calendar</a>"
+            format: full_html
+          plugin_id: text
     cache_metadata:
       max-age: -1
       contexts:
@@ -1419,6 +1434,7 @@ display:
         header: false
         fields: true
         relationships: true
+        footer: false
       display_description: ''
       title: 'Upcoming Meetings'
       header:
@@ -1429,7 +1445,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          empty: true
+          empty: false
           tokenize: true
           content:
             value: 'Upcoming meetings for {{ field_public_body }}'
@@ -1595,6 +1611,20 @@ display:
         operator: AND
         groups:
           1: AND
+      footer:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: true
+          content:
+            value: "<h5>Meeting Archive</h5>\r\n\r\n<p>View all past meetings from this public body</p>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See archive</a>"
+            format: full_html
+          plugin_id: text
     cache_metadata:
       max-age: -1
       contexts:

@@ -54,25 +54,24 @@
       {{ exposed }}
       {{ attachment_before }}
 
-      {% block rows %}
-        {{ rows }}
-      {% endblock rows %}
+      <div class="group--left">
+        {% block rows %}
+          {{ rows }}
+        {% endblock rows %}
 
-      {{ empty }}
-      {{ pager }}
+        {{ empty }}
+        {{ pager }}
 
-      {{ attachment_after }}
-      {% block more %}
-        {{ more }}
-      {% endblock more %}
-
-      {% if footer %}
-        <footer>
+        {{ attachment_after }}
+        {% block more %}
+          {{ more }}
+        {% endblock more %}
+      </div>
+      <div class="group--right">
+        <div class="inner">
           {{ footer }}
-        </footer>
-      {% endif %}
-
-      {{ feed_icons }}
+        </div>
+      </div>
     </div>
   </div>
 </div>
