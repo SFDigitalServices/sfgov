@@ -104,6 +104,20 @@ jobs:
             - run:
                 name: build assets
                 command: composer -n build-assets
+                
+            - run:
+                name: build pattern-lab assets
+                command: |
+                    cd ./web/libraries/sfgov-pattern-lab
+                    npm install
+                    ./node_modules/gulp/bin/gulp.js generate:pl
+                    
+            - run:
+                name: build theme assets
+                command: |
+                    cd ./web/themes/custom/sfgovpl
+                    npm install
+                    ./node_modules/gulp/bin/gulp.js css
 
             - run:
                 name: create simplesamlphp symlink
