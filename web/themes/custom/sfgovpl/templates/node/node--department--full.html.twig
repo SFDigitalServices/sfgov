@@ -225,7 +225,7 @@
             <li class="sfgov-dept-about-people-list-item">
               <div class="person-image" style="background-image: url({{ person.photo }})"><img alt="{{ person.alt }}" /></div>
               <div class="person-details">
-                <h5>{{ person.first_name }} {{ person.last_name }}</h5>
+                <p class="person-name">{{ person.first_name }} {{ person.last_name }}</p>
                 <p>{{ person.title }}</p>
               </div>
             </li>
@@ -254,13 +254,13 @@
           {% endif %}
           {% if hasPhone %}
             <div class="sfgov-contact-section phone-numbers">
-            <h5>{{ 'Phone'|t }}</h5>
+            <p class="sfgov-contact-section-title">{{ 'Phone'|t }}</p>
               {{ content.field_phone_numbers }}
             </div>
           {% endif %}
           {% if hasEmail %}
             <div class="sfgov-contact-section email">
-              <h5>{{ 'Email'|t }}</h5>
+              <p class="sfgov-contact-section-title">{{ 'Email'|t }}</p>
               {{ content.field_email }}
             </div>
           {% endif %}
@@ -274,7 +274,7 @@
   <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
     <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
       <div class="sfgov-dept-public-records-content">
-        <h5>{{ 'Request public records'|t }}</h5>
+        <p class="title">{{ 'Request public records'|t }}</p>
         <p>
         {% if dept_fields.public_records.method == "phone" %}
           <a href="tel:{{ dept_fields.public_records.value }}">{% trans %}Call {{ dept_fields.public_records.value }}</a> to submit a request.{% endtrans %}
