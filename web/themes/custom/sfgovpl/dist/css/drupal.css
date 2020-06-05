@@ -1266,15 +1266,15 @@ header[role="banner"] [data-drupal-selector="edit-actions"] input[data-drupal-se
 }
 
 .block-simple-instagram-block .instagram_gallery > a {
-  align-items: stretch;
   display: flex;
-  flex-basis: 33.333%;
+  width: 33.333%;
   margin-bottom: 20px;
   padding-right: 20px;
 }
 
 .block-simple-instagram-block .instagram_gallery > a > img {
   width: 100%;
+  align-self: center;
 }
 
 .alert {
@@ -3407,53 +3407,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
     font-smoothing: antialiased;
     font-smooth: always;
   }
-}
-
-.campaign--full .__instagram-feed .instagram-account-name,
-.campaign--full .paragraph--type--instagram-feed .instagram-account-name {
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 36px;
-  margin-bottom: 49px;
-}
-
-.campaign--full .__instagram-feed .instagram-account-name.sfgov-translate-lang-zh-TW,
-.campaign--full .paragraph--type--instagram-feed .instagram-account-name.sfgov-translate-lang-zh-TW {
-  font-size: 26px;
-  line-height: 42px;
-  letter-spacing: 2px;
-}
-
-.campaign--full .__instagram-feed .instagram-feed .instagram_gallery,
-.campaign--full .paragraph--type--instagram-feed .instagram-feed .instagram_gallery {
-  display: flex;
-  flex-direction: column;
-}
-
-@media screen and (min-width: 768px) {
-  .campaign--full .__instagram-feed .instagram-feed .instagram_gallery,
-  .campaign--full .paragraph--type--instagram-feed .instagram-feed .instagram_gallery {
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-right: -20px;
-  }
-  .campaign--full .__instagram-feed .instagram-feed .instagram_gallery > a,
-  .campaign--full .paragraph--type--instagram-feed .instagram-feed .instagram_gallery > a {
-    padding-right: 20px;
-  }
-}
-
-.campaign--full .__instagram-feed .instagram-feed .instagram_gallery > a,
-.campaign--full .paragraph--type--instagram-feed .instagram-feed .instagram_gallery > a {
-  display: flex;
-  flex-basis: 33.333%;
-  margin-bottom: 20px;
-  align-items: stretch;
-}
-
-.campaign--full .__instagram-feed .instagram-feed .instagram_gallery > a > img,
-.campaign--full .paragraph--type--instagram-feed .instagram-feed .instagram_gallery > a > img {
-  width: 100%;
 }
 
 .campaign--full .__campaign-social-media-wrapper {
@@ -8139,7 +8092,18 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .campaign-facts .row .fact-item .image {
+  display: flex;
   margin-bottom: 28px;
+}
+
+@media screen and (max-width: 768px) {
+  .campaign-facts .row .fact-item .image {
+    height: auto !important;
+  }
+}
+
+.campaign-facts .row .fact-item .image img {
+  margin-top: auto;
 }
 
 .campaign-facts .row .fact-item .text {
@@ -8577,21 +8541,28 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   background: #0c1464;
 }
 
-.image-with-text {
-  background: #212123;
+.image-with-text-container .image-with-text {
   border-radius: 8px;
 }
 
-.image-with-text .image img {
+.image-with-text-container .image-with-text .image img {
   border-radius: 8px 8px 0 0;
+  width: 100%;
+  vertical-align: bottom;
 }
 
-.image-with-text .text {
+.image-with-text-container .image-with-text .text {
   color: #fff;
-  padding: 40px;
+  padding: 20px;
 }
 
-.image-with-text .text .title {
+@media screen and (min-width: 768px) {
+  .image-with-text-container .image-with-text .text {
+    padding: 40px;
+  }
+}
+
+.image-with-text-container .image-with-text .text .title {
   font-size: 30px;
   font-weight: 500;
   line-height: 36px;
@@ -8600,65 +8571,72 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 @media screen and (min-width: 768px) {
-  .image-with-text .text .title {
+  .image-with-text-container .image-with-text .text .title {
     font-size: 40px;
     font-weight: 500;
     line-height: 47px;
   }
-  .image-with-text .text .title.sfgov-translate-lang-zh-TW {
+  .image-with-text-container .image-with-text .text .title.sfgov-translate-lang-zh-TW {
     font-size: 40px;
     line-height: 59px;
     letter-spacing: 2px;
   }
 }
 
-.image-with-text .text .description {
+.image-with-text-container .image-with-text .text .description {
   font-size: 20px;
   font-weight: 400;
   line-height: 29px;
   color: #fff;
 }
 
-.image-with-text .text .description.sfgov-translate-lang-zh-TW {
+.image-with-text-container .image-with-text .text .description.sfgov-translate-lang-zh-TW {
   font-size: 20px;
   line-height: 36px;
   letter-spacing: 2px;
 }
 
-.image-with-text .text .description p {
+.image-with-text-container .image-with-text .text .description p {
   font-size: 20px;
   font-weight: 400;
   line-height: 29px;
   margin: 0;
 }
 
-.image-with-text .text .description p.sfgov-translate-lang-zh-TW {
+.image-with-text-container .image-with-text .text .description p.sfgov-translate-lang-zh-TW {
   font-size: 20px;
   line-height: 36px;
   letter-spacing: 2px;
 }
 
 @media screen and (min-width: 768px) {
-  .image-with-text .text .description {
+  .image-with-text-container .image-with-text .text .description {
     font-size: 24px;
     font-weight: 400;
     line-height: 36px;
   }
-  .image-with-text .text .description.sfgov-translate-lang-zh-TW {
+  .image-with-text-container .image-with-text .text .description.sfgov-translate-lang-zh-TW {
     font-size: 26px;
     line-height: 42px;
     letter-spacing: 2px;
   }
-  .image-with-text .text .description p {
+  .image-with-text-container .image-with-text .text .description p {
     font-size: 24px;
     font-weight: 400;
     line-height: 36px;
   }
-  .image-with-text .text .description p.sfgov-translate-lang-zh-TW {
+  .image-with-text-container .image-with-text .text .description p.sfgov-translate-lang-zh-TW {
     font-size: 26px;
     line-height: 42px;
     letter-spacing: 2px;
   }
+}
+
+.page-campaign-gold .image-with-text .__title,
+.page-campaign-gold .image-with-text .__description,
+.page-campaign-blue .image-with-text .__title,
+.page-campaign-blue .image-with-text .__description {
+  color: #1c3e57;
 }
 
 .sfgov-title--elected-officials {
@@ -9830,7 +9808,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 @media screen and (min-width: 768px) {
-  .paragraph--type--video .container .video-wrapper .group-left {
+  .paragraph--type--video .container .video-wrapper .group-left.has-captions {
     height: 405px;
   }
 }
