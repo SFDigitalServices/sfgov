@@ -16,26 +16,24 @@
       {{ content.field_description }}
 
       <div class="video-wrapper">
-        <div class="group-left">
+        <div class="group-left {{ captions ? 'has-captions' : 'no-captions' }}">
           {{ content.field_video }}
         </div>
-        <div class="group-right">
-          <div class="inner">
-            <div class="link-video">
-              {{ link_transcript }}
-            </div>
-            {% if captions %}
+        {% if captions %}
+          <div class="group-right">
+            <div class="inner">
+              <div class="link-video">
+                {{ link_transcript }}
+              </div>
               <h5>{{ 'Transcript:'|t }}</h5>
               <div class="transcript">
                 {% for caption in captions %}
                   <p>{{ caption.text|raw }}</p>
                 {% endfor %}
               </div>
-            {% else %}
-              <p><i>{{ 'No transcript found.'|t }}</i></p>
-            {% endif %}
+            </div>
           </div>
-        </div>
+        {% endif %}
       </div>
       <a href="#" class="toggle-transcript">
         <span>{{ 'View transcript'|t }}</span>
