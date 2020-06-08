@@ -40,10 +40,14 @@ function sfgovpl_preprocess_node(&$variables) {
  * Implements hook_preprocess_node().
  */
 function sfgovpl_preprocess_node__meeting__full(&$variables) {
+  $node = $variables['node'];
+
   // Determine if the meeting is past.
-  $date_start = $variables['node']->field_start_date->date->getPhpDateTime();
-  $date_now = new DateTime();
-  $variables['meeting_is_past'] = $date_now > $date_start;
+  if ($date_start = $node->field_start_date->date) {
+    $date_start = $date_start->getPhpDateTime();
+    $date_now = new DateTime();
+    $variables['meeting_is_past'] = $date_now > $date_start;
+  }
 }
 
 /**
