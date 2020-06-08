@@ -12,11 +12,18 @@
   }
 
   .hero-banner--container {
+    display: block;
     height: 450px;
     .logo {
       width: 250px;
       height: 75%;
-      margin-left: 40%;
+      margin-left: 15%;
+      @include media($medium-screen) {
+        display: inline-block;
+          width: 250px;
+          height: 75%;
+          margin-left: 40%;
+      }
     }
     .banner-text{
       padding-top: 20px;
@@ -24,37 +31,6 @@
       font-size: 3em;
     }
   }
-  // Banner Subheader.
-  .banner-subheader {
-    @include antialiasing;
-    background: $c-dark-blue;
-    color: $c-white;
-    padding-top: 40px;
-
-    @include media($narrow-screen) {
-      @include clearfix;
-      padding: 40px 0;
-    }
-
-    .banner-subheader__container {
-      @include contain-1090;
-    }
-
-    h3 {
-      @include fs-title-5;
-      color: $c-white;
-    }
-
-    h4 {
-      margin-top: 0;
-    }
-
-    p {
-      @include fs-body-short;
-      margin: 0;
-    }
-  }
-
   // Content.
   .confirmation--content {
     @include contain-1150;
@@ -69,13 +45,6 @@
 .confirmation--left {
   @include columns-780(left);
 
-  > details {
-    max-width: 697px;
-    @include media($narrow-screen) {
-      margin-left: 60px;
-    }
-  }
-
   .paragraph--type--step {
     margin: 0 0 60px;
 
@@ -87,16 +56,6 @@
       .field__item {
         margin-bottom: 30px;
       }
-    }
-  }
-
-  .sfgov-alert-info {
-    margin-bottom: 30px;
-  }
-
-  .sfgov-section__content {
-    @include media($narrow-screen) {
-      margin-left: 60px;
     }
   }
 
