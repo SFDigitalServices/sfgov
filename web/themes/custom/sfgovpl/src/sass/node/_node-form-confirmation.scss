@@ -1,3 +1,149 @@
-.form-confirmation-page__content {
+.page-node-type-form-confirmation-page {
   @include contain-1090;
+
+  .sfgov-section__title {
+    @include fs-title-3;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 60px;
+    @media only screen and (max-width: $narrow-screen) {
+      margin-left: 0;
+    }
+  }
+
+  .hero-banner--container {
+    height: 450px;
+    .logo {
+      width: 250px;
+      height: 75%;
+      margin-left: 40%;
+    }
+    .banner-text{
+      padding-top: 20px;
+      text-align: center;
+      font-size: 3em;
+    }
+  }
+  // Banner Subheader.
+  .banner-subheader {
+    @include antialiasing;
+    background: $c-dark-blue;
+    color: $c-white;
+    padding-top: 40px;
+
+    @include media($narrow-screen) {
+      @include clearfix;
+      padding: 40px 0;
+    }
+
+    .banner-subheader__container {
+      @include contain-1090;
+    }
+
+    h3 {
+      @include fs-title-5;
+      color: $c-white;
+    }
+
+    h4 {
+      margin-top: 0;
+    }
+
+    p {
+      @include fs-body-short;
+      margin: 0;
+    }
+  }
+
+  // Content.
+  .confirmation--content {
+    @include contain-1150;
+    @include clearfix;
+    margin-top: 60px;
+    position: relative;
+  }
+
+}
+
+// Content left.
+.confirmation--left {
+  @include columns-780(left);
+
+  > details {
+    max-width: 697px;
+    @include media($narrow-screen) {
+      margin-left: 60px;
+    }
+  }
+
+  .paragraph--type--step {
+    margin: 0 0 60px;
+
+    h4 {
+      @include fs-title-5;
+    }
+
+    .__content {
+      .field__item {
+        margin-bottom: 30px;
+      }
+    }
+  }
+
+  .sfgov-alert-info {
+    margin-bottom: 30px;
+  }
+
+  .sfgov-section__content {
+    @include media($narrow-screen) {
+      margin-left: 60px;
+    }
+  }
+
+  .field--type-entity-reference-revisions .field__label{
+    display: none;
+  }
+}
+
+// Content right.
+.confirmation--right {
+  @include columns-350(right);
+
+  .eck-entity-address-field {
+    margin-bottom: 23px;
+  }
+
+  .simple-gmap-static-map {
+    padding-bottom: 20px;
+    padding-top: 29px;
+  }
+
+  .simple-gmap-link {
+    padding-bottom: 20px;
+  }
+
+  .__text {
+    font-style: italic;
+  }
+}
+
+.confirmation--right-content {
+  background: $c-blue-1;
+  border-radius: 8px;
+  margin-bottom: 20px;
+
+  h2 {
+    @include fs-title-3-mobile;
+    margin-bottom: 34px;
+
+    @include media($medium-screen) {
+      @include fs-title-3;
+    }
+  }
+
+  .confirmation--right-para {
+    margin-bottom: 40px;
+    padding: 40px;
+  }
+
 }
