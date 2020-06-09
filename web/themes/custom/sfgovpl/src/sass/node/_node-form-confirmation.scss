@@ -1,48 +1,8 @@
 .page-node-type-form-confirmation-page {
-  @include contain-1090;
 
-  .hero-banner--container {
-    display: block; max-width: 1090px; padding: 35px 0; margin: 0 auto;
-    .logo{
-      display: inline-block;
-      margin-left: 45%;
-      width: 60px;
-      height: auto;
-      @include media($medium-screen) {
-        display: inline-block; width: 60px; height: auto; margin-right: 20px; margin-left: 15%;
-      }
-    }
-    .logo img {
-      display: block;
-      width: 80px;
-      height: 60px;
-      @include media($medium-screen) {
-          display: inline-block;
-          width: 60px;
-          height: 60px;
-      }
-    }
-    .banner-text{
-      display: inline-block;
-      width: 490px;
-      height: 74px;
-      left: 196px;
-      top: 208px;
-      font-family: Rubik;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 33px;
-      line-height: 73px;
-      margin-left: 20%;
-      @include media($medium-screen) {
-        font-size: 50px;
-        margin-left: 0;
-      }
-    }
-  }
   // Content.
   .confirmation--content {
-    @include contain-1150;
+    @include contain-1090;
     @include clearfix;
     margin-top: 60px;
     position: relative;
@@ -77,30 +37,8 @@
 .confirmation--right {
   @include columns-350(right);
 
-  .eck-entity-address-field {
-    margin-bottom: 23px;
-  }
-
-  .simple-gmap-static-map {
-    padding-bottom: 20px;
-    padding-top: 29px;
-  }
-
-  .simple-gmap-link {
-    padding-bottom: 20px;
-  }
-
   .__text {
     font-style: italic;
-  }
-
-  .field.field--type-entity-reference-revisions.__confirmation-sidebar h4.field__label{
-    height: 54px;
-    padding-left: 38px;
-    padding-top: 15px;
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 42px;
   }
 }
 
@@ -123,4 +61,36 @@
     padding: 40px;
   }
 
+  .paragraph--type--in-person-location,
+  .paragraph--type--email,
+  .paragraph--type--phone {
+    background: none;
+    padding: 0;
+  }
+}
+
+.__confirmation-sidebar {
+  padding: 40px;
+  .field__label {
+    @include fs-title-3;
+    margin-bottom: 30px;
+  }
+  
+  .eck-entity-address-field {
+    margin-bottom: 20px;
+    p {
+      @include fs-body-short;
+    }
+    .field__label {
+      @include fs-title-5;
+      margin-bottom: 10px;
+    }
+    .simple-gmap-static-map {
+      margin-bottom: 20px;
+    }
+  
+    .simple-gmap-link {
+      padding-bottom: 10px;
+    }
+  }
 }
