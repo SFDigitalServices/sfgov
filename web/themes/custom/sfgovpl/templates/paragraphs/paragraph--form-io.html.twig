@@ -47,7 +47,7 @@
   {% set formio_sfds_version = paragraph.field_formio_sfds_version.value %}
 {% endif %}
 <div id="formio"
-  data-source="{{ paragraph.field_formio_data_source.value|trim }}"
+  data-source="{{ paragraph.field_formio_data_source.value }}"
   {% if paragraph.field_formio_render_options.value %}
     data-options="{{ paragraph.field_formio_render_options.value|escape }}"
   {% endif %}
@@ -62,6 +62,16 @@
       .then(function(form) {
       // What to do when the submit begins.
       form.on('submitDone', function(submission) {
+          // custom options defined in Form.io render options field
+          if(options.redirects instanceof Object){
+            for (var key in options.redirects) {
+              var value = options.redirects[key]
+               // only one "redirect" should be "yes", this is set in the form.io form
+              if(submission.data[key] && submission.data[key] === "yes")
+                window.location = value;
+            }
+          }
+
         {% if paragraph.field_formio_confirmation_url.value %}
           window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
         {% endif %}
