@@ -85,11 +85,15 @@
 
   <div class="sfgov-section sfgov-section-recording sfgov-in-this-page-target">
     <div class="sfgov-section-container">
-      <div class="group--left">
-        <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
-        <div class="sfgov-section--content">
-          This is an upcoming meeting. The video and transcript will be posted after the meeting occurs.
-        </div>
+      <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
+      <div class="sfgov-section--content">
+        {{ content.field_intro_text }}
+
+        {% if content.field_video_option['#items'][0].value %}
+          {{ content.field_url }}
+        {% else %}
+          {{ content.field_video_embed }}
+        {% endif %}
       </div>
     </div>
   </div>
