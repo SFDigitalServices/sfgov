@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.topic.field_content
-    - field.field.node.topic.field_content_top
     - field.field.node.topic.field_department_services
     - field.field.node.topic.field_departments
     - field.field.node.topic.field_description
@@ -21,8 +20,6 @@ dependencies:
     - maxlength
     - paragraphs
     - path
-    - scheduler
-    - scheduler_content_moderation_integration
     - sfgov_admin
     - text
 id: node.topic.default
@@ -32,12 +29,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 13
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_content:
-    weight: 7
+    weight: 6
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -55,27 +52,8 @@ content:
     third_party_settings: {  }
     type: sfgov_paragraphs
     region: content
-  field_content_top:
-    type: paragraphs
-    weight: 4
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
-      features:
-        add_above: '0'
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-    region: content
   field_department_services:
-    weight: 5
+    weight: 4
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -94,7 +72,7 @@ content:
     type: paragraphs
     region: content
   field_departments:
-    weight: 9
+    weight: 8
     settings:
       match_operator: CONTAINS
       size: 60
@@ -120,13 +98,13 @@ content:
     type: text_textarea
     region: content
   field_page_design:
-    weight: 10
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_resources:
-    weight: 8
+    weight: 7
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -145,7 +123,7 @@ content:
     type: paragraphs
     region: content
   field_spotlight:
-    weight: 6
+    weight: 5
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -182,20 +160,20 @@ content:
     region: content
   langcode:
     type: language_select
-    weight: 11
+    weight: 10
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 20
+    weight: 19
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -203,18 +181,18 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 14
     region: content
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 23
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 21
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -222,14 +200,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 17
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 15
     region: content
     third_party_settings: {  }
   title:
@@ -241,13 +219,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 14
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 12
+    weight: 11
     settings:
       match_operator: CONTAINS
       size: 60
@@ -257,18 +235,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 22
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 24
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 19
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
