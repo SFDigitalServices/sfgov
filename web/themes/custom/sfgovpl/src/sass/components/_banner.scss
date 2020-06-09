@@ -117,25 +117,41 @@
 
   .hero-banner--container {
     @include contain-1090;
+    @include media($medium-screen) {
+
+    }
   }
 
   .logo, .banner-text {
-    display: inline-block;
+    display: block;
     vertical-align: middle;
+    @include media($medium-screen) {
+      display: inline-block;
+    }
   }
 
   .logo {
-    margin-right: 40px;
+    margin-bottom: 33px;
     img {
       display: block;
-      width: 60px;
+      margin: 0 auto;
+      width: 80px;
+    }
+    @include media($medium-screen) {
+      margin-bottom: 0;
+      margin-right: 40px;
+      img {
+        width: 60px;
+      }
     }
   }
 
   .banner-text{
     @include fs-title-1-mobile;
+    text-align: center;
     @include media($medium-screen) {
       @include fs-title-1;
+      text-align: left;
     }
   }
 

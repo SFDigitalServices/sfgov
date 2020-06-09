@@ -1683,23 +1683,41 @@ header[role="banner"] [data-drupal-selector="edit-actions"] input[data-drupal-se
 }
 
 .hero-banner.image .logo, .hero-banner.image .banner-text {
-  display: inline-block;
+  display: block;
   vertical-align: middle;
 }
 
+@media screen and (min-width: 768px) {
+  .hero-banner.image .logo, .hero-banner.image .banner-text {
+    display: inline-block;
+  }
+}
+
 .hero-banner.image .logo {
-  margin-right: 40px;
+  margin-bottom: 33px;
 }
 
 .hero-banner.image .logo img {
   display: block;
-  width: 60px;
+  margin: 0 auto;
+  width: 80px;
+}
+
+@media screen and (min-width: 768px) {
+  .hero-banner.image .logo {
+    margin-bottom: 0;
+    margin-right: 40px;
+  }
+  .hero-banner.image .logo img {
+    width: 60px;
+  }
 }
 
 .hero-banner.image .banner-text {
   font-size: 33px;
   font-weight: 500;
   line-height: 43px;
+  text-align: center;
 }
 
 .hero-banner.image .banner-text.sfgov-translate-lang-zh-TW {
@@ -1713,6 +1731,7 @@ header[role="banner"] [data-drupal-selector="edit-actions"] input[data-drupal-se
     font-size: 33px;
     font-weight: 500;
     line-height: 43px;
+    text-align: left;
   }
   .hero-banner.image .banner-text.sfgov-translate-lang-zh-TW {
     font-size: 34px;
