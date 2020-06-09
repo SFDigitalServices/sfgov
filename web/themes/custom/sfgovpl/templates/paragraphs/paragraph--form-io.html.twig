@@ -63,11 +63,11 @@
       // What to do when the submit begins.
       form.on('submitDone', function(submission) {
           // custom options defined in Form.io render options field
-          if(options['redirects'] !== undefined){
-            for (var key in options['redirects']) {
-              var value = options['redirects'][key]
+          if(options.redirects instanceof Object){
+            for (var key in options.redirects) {
+              var value = options.redirects[key]
                // only one "redirect" should be "yes", this is set in the form.io form
-              if(submission['data'][key] !== undefined && submission['data'][key] === "yes")
+              if(submission.data[key] && submission.data[key] === "yes")
                 window.location = value;
             }
           }
