@@ -87,12 +87,31 @@
     <div class="sfgov-section-container">
       <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
       <div class="sfgov-section--content">
-        {{ content.field_intro_text }}
-
-        {% if content.field_video_option['#items'][0].value %}
-          {{ content.field_url }}
+        {# If meeting is cancelled #}
+        {% if content.field_meeting_cancel[0]['#markup'] %}
+          <p>This meeting has been cancelled. There will be no video recording for this meeting.</p>
+        {# If meeting is not cancelled #}
         {% else %}
-          {{ content.field_video_embed }}
+          {# If it's an upcomming meeting #}
+          {% if not meeting_is_past %}
+            <p>This is an upcoming meeting. The video and transcript will be posted after the meeting occurs.</p>
+          {# If it's a past meeting #}
+          {% else %}
+            {# Render description field #}
+            {{ content.field_intro_text }}
+
+            {# If external video is chosen #}
+            {% if content.field_video_option['#items'][0].value %}
+              {# Render external link button #}
+              {{ content.field_url }}
+            {# If Youtube is chosen #}
+            {% else %}
+              {# Render Youtube video component #}
+              {{ content.field_video_embed }}
+            {% endif %}
+
+          {% endif %}
+
         {% endif %}
       </div>
     </div>
