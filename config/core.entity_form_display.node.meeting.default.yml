@@ -10,11 +10,15 @@ dependencies:
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
+    - field.field.node.meeting.field_intro_text
     - field.field.node.meeting.field_meeting_artifacts
     - field.field.node.meeting.field_meeting_cancel
     - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accessibility
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_url
+    - field.field.node.meeting.field_video_embed
+    - field.field.node.meeting.field_video_option
     - node.type.meeting
     - workflows.workflow.editorial
   module:
@@ -28,6 +32,7 @@ dependencies:
     - scheduler
     - scheduler_content_moderation_integration
     - text
+    - video_embed_field
 third_party_settings:
   field_group:
     group_meeting_info:
@@ -37,7 +42,7 @@ third_party_settings:
         - field_end_date
         - field_address
       parent_name: ''
-      weight: 3
+      weight: 2
       format_type: fieldset
       region: content
       format_settings:
@@ -46,6 +51,22 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Meeting info'
+    group_recording:
+      children:
+        - field_intro_text
+        - field_video_option
+        - field_video_embed
+        - field_url
+      parent_name: ''
+      weight: 5
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: true
+      label: Recording
 id: node.meeting.default
 targetEntityType: node
 bundle: meeting
@@ -53,7 +74,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 4
+    weight: 3
     settings:
       rows: 9
       summary_rows: 3
@@ -78,7 +99,7 @@ content:
     region: content
   field_agenda:
     type: paragraphs
-    weight: 5
+    weight: 4
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -106,7 +127,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_direct_external_url:
-    weight: 9
+    weight: 10
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -118,6 +139,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
+    region: content
+  field_intro_text:
+    weight: 12
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
     region: content
   field_meeting_artifacts:
     type: paragraphs
@@ -158,7 +187,7 @@ content:
     type: entity_reference_paragraphs
     region: content
   field_public_body:
-    weight: 2
+    weight: 1
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -192,27 +221,47 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
+  field_url:
+    weight: 15
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_video_embed:
+    weight: 14
+    settings: {  }
+    third_party_settings: {  }
+    type: video_embed_field_textfield
+    region: content
+  field_video_option:
+    weight: 13
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
   moderation_state:
     type: moderation_state_default
-    weight: 12
+    weight: 13
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -220,7 +269,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 12
     region: content
     third_party_settings: {  }
   title:
@@ -232,19 +281,19 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -9,18 +9,24 @@ dependencies:
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
+    - field.field.node.meeting.field_intro_text
     - field.field.node.meeting.field_meeting_artifacts
     - field.field.node.meeting.field_meeting_cancel
     - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accessibility
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_url
+    - field.field.node.meeting.field_video_embed
+    - field.field.node.meeting.field_video_option
     - node.type.meeting
   module:
     - datetime
     - entity_reference_revisions
     - link
+    - options
     - text
     - user
+    - video_embed_field
 id: node.meeting.default
 targetEntityType: node
 bundle: meeting
@@ -29,17 +35,17 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 0
+    weight: 1
     settings: {  }
     third_party_settings: {  }
     region: content
   content_moderation_control:
-    weight: -20
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
   field_address:
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       link: true
@@ -57,7 +63,7 @@ content:
     third_party_settings: {  }
     region: content
   field_dept:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       link: true
@@ -77,13 +83,20 @@ content:
     type: link
     region: content
   field_end_date:
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       timezone_override: ''
       date_format: 'F d, Y l h:iA'
     third_party_settings: {  }
     type: datetime_custom
+    region: content
+  field_intro_text:
+    weight: 14
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
     region: content
   field_meeting_artifacts:
     type: entity_reference_revisions_entity_view
@@ -114,7 +127,7 @@ content:
     type: entity_reference_revisions_entity_view
     region: content
   field_public_body:
-    weight: 110
+    weight: 11
     label: above
     settings:
       link: true
@@ -139,6 +152,36 @@ content:
     third_party_settings: {  }
     type: datetime_custom
     region: content
+  field_url:
+    weight: 13
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_video_embed:
+    weight: 12
+    label: hidden
+    settings:
+      responsive: true
+      width: 854
+      height: 480
+      autoplay: true
+    third_party_settings: {  }
+    type: video_embed_field_video
+    region: content
+  field_video_option:
+    type: list_default
+    weight: 15
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   langcode: true
   links: true

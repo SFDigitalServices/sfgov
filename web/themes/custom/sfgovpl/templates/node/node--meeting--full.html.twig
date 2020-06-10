@@ -107,7 +107,11 @@
             {# If Youtube is chosen #}
             {% else %}
               {# Render Youtube video component #}
-              {{ content.field_video_embed }}
+              {% include '@theme/video-embed.twig' with {
+                "video": content.field_video_embed,
+                "captions": video_captions,
+                "captions_link": video_captions_link
+              } %}
             {% endif %}
 
           {% endif %}
