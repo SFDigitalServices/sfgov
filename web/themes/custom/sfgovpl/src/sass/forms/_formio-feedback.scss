@@ -3,8 +3,10 @@
 .paragraph--formio--feedback {
   background-color: #424244;
   padding: 20px 0;
+  color: #fff;
+  font-size: 1rem;
 
-  &, a, label {
+  a, label {
    color: #fff;
    font-size: 1rem;
   }
@@ -28,14 +30,11 @@
     display: none;
   }
 
-
   .formio-form {
-    @media (min-width: 740px) {
-      align-items: center;
-      align-content: center;
-      display: flex;
-      flex-flow: row wrap;
-    }
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-flow: row wrap;
   }
 
   .formio-hidden {
@@ -53,6 +52,10 @@
   .btn-primary {
     @include button-clear;
     font-weight: bold;
+
+    @media (max-width: 739px) {
+      width: auto;
+    }
   }
 
   .btn-default {
@@ -60,6 +63,8 @@
     font-size: 1rem;
     background: transparent;
     text-decoration: underline;
+    text-align: left;
+    padding: 0;
   }
 
   .alert {
@@ -92,20 +97,31 @@
     margin: 0;
   }
 
-  .formio-component-wasThisPageHelpful,
+  .formio-component-wasThisPageHelpful {
+     flex: 1 0 100%;
+
+     @media (min-width: 740px) {
+      flex-grow: 0;
+      flex-basis: auto;
+      margin: 0 20px 0 0;
+    }
+  }
   .formio-component-helpfulNo,
   .formio-component-helpfulYes {
+    flex: 0 0 auto;
     margin: 10px 20px 0 0;
+
+    @media (min-width: 740px) {
+      margin-top: 0;
+    }
   }
 
-
   .formio-component-reportIssue {
+    display: flex;
+    flex-grow: 1;
     margin-top: 20px;
 
     @media (min-width: 740px) {
-      align-items: center;
-      display: flex;
-      flex: 1 0 50%;
       justify-content: flex-end;
       margin-top: 0;
     }
