@@ -47,7 +47,7 @@
   {% set formio_sfds_version = paragraph.field_formio_sfds_version.value %}
 {% endif %}
 <div id="formio"
-  data-source="{{ paragraph.field_formio_data_source.value }}"
+  data-source="{{ paragraph.field_formio_data_source.value|trim }}"
   {% if paragraph.field_formio_render_options.value %}
     data-options="{{ paragraph.field_formio_render_options.value|escape }}"
   {% endif %}
@@ -76,7 +76,7 @@
             for (var key in options.redirects) {
               var value = options.redirects[key]
                // only one "redirect" should be "yes", this is set in the form.io form
-              if(submission.data[key] === "yes")
+              if(submission.data[key] !== "no")
                 window.location = value;
             }
           }
