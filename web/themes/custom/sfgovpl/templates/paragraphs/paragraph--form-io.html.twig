@@ -72,14 +72,16 @@
       // What to do when the submit begins.
       form.on('submitDone', function(submission) {
           // custom options defined in Form.io render options field
+          console.log(submission.data)
           if(options.redirects instanceof Object){
             for (var key in options.redirects) {
               var value = options.redirects[key]
                // only one "redirect" should be "yes", this is set in the form.io form
-              if(submission.data[key] !== "no")
-                window.location = value;
+              if(submission.data[key] === "yes")
+                window.location = value
             }
           }
+          return false;
         {% if paragraph.field_formio_confirmation_url.value %}
           window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
         {% endif %}
