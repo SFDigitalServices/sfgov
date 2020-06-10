@@ -6,7 +6,7 @@
 {% extends 'paragraph--form-io.html.twig' %}
 {% block content %}
   <script>
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('load', function() {
       var el = document.getElementById('formio-{{ form_id }}');
       var options = {% if options %}safeJSONParse({{ options|json_encode|raw }}){% else %}{}{% endif %};
       var config = {% if json %}safeJSONParse({{ json|json_encode|raw }}){% else %}"{{ endpoint }}"{% endif %};
@@ -32,7 +32,7 @@
                 feedbackSuccess = component.component.html;
               }
               // Find the message field, so we can focus it later.
-              if (component.key === 'feedbackMessage') {
+              if (component.key === 'message') {
                 messageComponent = component;
               }
             });
@@ -42,24 +42,22 @@
             if (event.changed) {
               var key = event.changed.component.key;
 
-              /**
-               * The value of 'isHelpful' (hidden field, default value "Yes") is
-               * set via field Logic, where it listens for a custom event named
-               * 'notHelpfulEvent'. The event is triggered when the "No"
-               * (feedbackHelpfulNo) or "Report issue" (feedbackReportIssueLink)
-               * buttons are clicked, which changes the value "No".
-               */
+              // The value of 'isHelpful' (hidden field, default value "Yes") is
+              // set via field Logic. It listens for a custom event named
+              // 'notHelpfulEvent', which is triggered on click for the "No"
+              // (helpfulNo) and "Report a problem..." (reportIssue) buttons,
+              // and changes the value of isHelpful to "No".
               if (key === 'isHelpful') {
                 // Focus the next field.
                 $(messageComponent.element).find('textarea').focus();
 
                 // Capture which button was clicked and log to Amplitude.
                 var eventDescription = '';
-                if (form.data.feedbackHelpfulNo === true) {
+                if (form.data.helpfulNo === true) {
                   eventDescription = 'No button clicked';
                 }
-                if (form.data.feedbackReportIssueLink === true) {
-                  eventDescription = 'Report issue link clicked';
+                if (form.data.reportIssue === true) {
+                  eventDescription = 'Report issue button clicked';
                 }
                 amplitudeData.feedback = {
                   'type': 'change',
