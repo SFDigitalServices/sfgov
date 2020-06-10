@@ -83,6 +83,13 @@
     </div>
   </div>
 
+  {%
+    if content.field_meeting_cancel[0]['#markup'] or 
+    ( not content.field_meeting_cancel[0]['#markup'] and not meeting_is_past) or
+    ( not content.field_meeting_cancel[0]['#markup'] and meeting_is_past and ( 
+      content.field_intro_text[0] is not empty or content.field_video_option[0] is not empty )
+    )
+  %}
   <div class="sfgov-section sfgov-section-recording sfgov-in-this-page-target">
     <div class="sfgov-section-container">
       <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
@@ -113,13 +120,12 @@
                 "captions_link": video_captions_link
               } %}
             {% endif %}
-
           {% endif %}
-
         {% endif %}
       </div>
     </div>
   </div>
+  {% endif %}
 
   {% if content.field_meeting_artifacts|render %}
   <div class="sfgov-section sfgov-section-meeting-artifacts sfgov-in-this-page-target">
