@@ -1,10 +1,11 @@
+{% if banner.text or banner.image != "/" %}
 <header class="hero-banner image" style="background-color: {{ banner.backgroundcolor }}">
   <div class="hero-banner--container">
-    {% if banner.image %}
+    {% if banner.image != "/" %}
       <div class="logo">
         <img src="{{ banner.image }}"/>
     </div>
-    {% endif %}
+     {% endif %}
     {% if banner.text %}
     <div class="banner-text">
       <p>{{ banner.text }}</p>
@@ -12,3 +13,4 @@
      {% endif %}
   </div>
 </header>
+{% endif %}
