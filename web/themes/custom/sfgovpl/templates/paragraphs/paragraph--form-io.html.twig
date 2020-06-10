@@ -60,6 +60,15 @@
     var options = safeJSONParse(el.getAttribute('data-options'))
     Formio.createForm(el, el.getAttribute('data-source'), options)
       .then(function(form) {
+        //perform sfoptions
+      if(options.sfoptions && options.sfoptions["hide"]){
+        options.sfoptions["hide"].forEach(function(item, index){
+          var hide = (document.getElementsByClassName(item))
+          for (var i=0; i<hide.length;i++){
+            hide[i].style.display = "none";
+          }
+        })
+      }
       // What to do when the submit begins.
       form.on('submitDone', function(submission) {
           // custom options defined in Form.io render options field
@@ -71,7 +80,6 @@
                 window.location = value;
             }
           }
-
         {% if paragraph.field_formio_confirmation_url.value %}
           window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
         {% endif %}
