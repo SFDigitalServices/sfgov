@@ -24,12 +24,16 @@
       Formio.createForm(el, config, options)
         .then(function(form) {
 
-          // Get custom alert message from HTML 'feedbackSuccess'.
-          var feedbackSuccess = '';
-          if (!feedbackSuccess) {
+          var feedbackSuccess, messageComponent = '';
+          if (!feedbackSuccess || !messageComponent) {
             form.components.map(function(component) {
+              // Get custom alert message from HTML 'feedbackSuccess'.
               if (component.key === 'feedbackSuccess' && component.component.html) {
                 feedbackSuccess = component.component.html;
+              }
+              // Find the message field, so we can focus it later.
+              if (component.key === 'feedbackMessage') {
+                messageComponent = component;
               }
             });
           }
@@ -38,21 +42,31 @@
             if (event.changed) {
               var key = event.changed.component.key;
 
-              // Log an event to Amplitude with Drupal data and form data. Note:
-              // Limiting this because change events fire a lot.
-              if ((key === 'feedbackHelpful' && event.data.feedbackHelpful == 'no') || key === 'feedbackReportIssueLink') {
+              /**
+               * The value of 'isHelpful' (hidden field, default value "Yes") is
+               * set via field Logic, where it listens for a custom event named
+               * 'notHelpfulEvent'. The event is triggered when the "No"
+               * (feedbackHelpfulNo) or "Report issue" (feedbackReportIssueLink)
+               * buttons are clicked, which changes the value "No".
+               */
+              if (key === 'isHelpful') {
+                // Focus the next field.
+                $(messageComponent.element).find('textarea').focus();
+
+                // Capture which button was clicked and log to Amplitude.
+                var eventDescription = '';
+                if (form.data.feedbackHelpfulNo === true) {
+                  eventDescription = 'No button clicked';
+                }
+                if (form.data.feedbackReportIssueLink === true) {
+                  eventDescription = 'Report issue link clicked';
+                }
                 amplitudeData.feedback = {
                   'type': 'change',
-                  'trigger': key,
-                  'value': event.data[key],
+                  'description': eventDescription,
                   'data': event.data,
                 }
                 amplitude.getInstance().logEvent('Feedback Form Interaction', amplitudeData);
-              }
-
-              // Submit the form When "yes" for "feedbackHelpful" is selected.
-              if (event.changed.component.key === 'feedbackHelpful' && form.data.feedbackHelpful === 'yes') {
-                form.submit();
               }
             }
           });
@@ -68,9 +82,8 @@
 
             // Log event with Drupal and form submission data to Amplitude.
             amplitudeData.feedback = {
-              'type': 'submitDone',
-              'trigger': 'submit',
-              'value': true,
+              'type': 'submit',
+              'description': submission.data.isHelpful === 'Yes' ? 'Helpful' : 'Not Helpful',
               'data': submission.data,
             }
             amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);

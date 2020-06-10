@@ -2,8 +2,12 @@
 
 .paragraph--formio--feedback {
   background-color: #424244;
-  color: #fff;
   padding: 20px 0;
+
+  &, a, label {
+   color: #fff;
+   font-size: 1rem;
+  }
 
   .formio-sfds {
     @include contain-1090;
@@ -24,14 +28,10 @@
     display: none;
   }
 
-  label, legend, a {
-    color: #fff;
-    font-size: 1rem;
-  }
 
   .formio-form {
     @media (min-width: 740px) {
-      align-items: stretch;
+      align-items: center;
       align-content: center;
       display: flex;
       flex-flow: row wrap;
@@ -53,7 +53,13 @@
   .btn-primary {
     @include button-clear;
     font-weight: bold;
-    margin-bottom: 50px;
+  }
+
+  .btn-default {
+    color: #fff;
+    font-size: 1rem;
+    background: transparent;
+    text-decoration: underline;
   }
 
   .alert {
@@ -79,63 +85,20 @@
     }
   }
 
-  // Field: Feedback helpful (Radio input, options appear as buttons).
-  .formio-component-feedbackHelpful {
-    margin-bottom: 0;
-
-    @media (min-width: 740px) {
-      align-items: center;
-      display: flex;
-      flex-flow: row wrap;
-      flex: 1 0 50%;
-    }
-
-    .form-group {
-      width: 100%;
-      &.mt-2 {
-        margin-top: 0 !important;
-      }
-    }
-
-    legend {
-      margin-bottom: 0;
-
-      @media (min-width: 740px) {
-        float: left;
-        margin: 10px 20px 0 0;
-      }
-    }
-
-    .field-wrapper {
-      float: left;
-      display: flex;
-
-      label {
-        margin: 0 20px 0 0 !important;
-      }
-
-      .flex-shrink-0 { // input container
-        margin-bottom: 0;
-        opacity: 0;
-        position: fixed;
-        width: 0;
-      }
-
-      .flex-auto { // label text
-        @include button-clear;
-        cursor: pointer;
-        display: inline-block;
-        line-height: 1.2;
-        margin-top: 20px;
-
-        @media (min-width: 740px) {
-          margin-top: 0;
-        }
-      }
-    }
+  .formio-component-wasThisPageHelpful h2#feedback-helpful-label {
+    color: inherit;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
   }
 
-  // Field: Report issue checkbox (appears as link)
+  .formio-component-wasThisPageHelpful,
+  .formio-component-feedbackHelpfulNo,
+  .formio-component-feedbackHelpfulYes {
+    margin: 10px 20px 0 0;
+  }
+
+
   .formio-component-feedbackReportIssueLink {
     margin-top: 20px;
 
@@ -146,22 +109,9 @@
       justify-content: flex-end;
       margin-top: 0;
     }
-
-    .flex-shrink-0 { // input container
-      appearance: none;
-      opacity: 0;
-      position: absolute;
-    }
-
-    label {
-      cursor: pointer;
-      margin: 0;
-      text-decoration: underline;
-    }
   }
 
-  // Field: Feedback text
-  .formio-component-feedbackText {
+  .formio-component-feedbackMessage {
     margin: 10px 0 15px 0;
     flex: 1 0 100%;
 
@@ -173,5 +123,9 @@
     textarea {
       max-width: 534px;
     }
+  }
+
+  .formio-component-sendFeedback {
+    margin-bottom: 50px;
   }
 }
