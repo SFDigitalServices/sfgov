@@ -62,8 +62,10 @@ function sfgov_video_paragraph_presave(EntityInterface $entity) {
         }
 
         // Set the transcript as value for field_text.
-        $entity->field_text = $transcript_plain;
-        $entity->field_text->format = 'sf_restricted_html';
+        $entity->set('field_text', [
+          'value' => $transcript_plain,
+          'format' => 'sf_restricted_html',
+        ]);
       }
     }
   }
