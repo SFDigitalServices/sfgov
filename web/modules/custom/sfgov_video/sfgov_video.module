@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -35,4 +36,35 @@ function sfgov_video_theme() {
       ]
     ],
   ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function sfgov_video_paragraph_presave(EntityInterface $entity) {
+  if ($entity->bundle() == 'video') {
+    $video_previous = !$entity->isNew() ? $entity->original->field_video->value : NULL;
+    $video_current = $entity->field_video->value;
+
+    // If the vide is updated.
+    if ($video_previous != $video_current) {
+      /** @var \Drupal\sfgov_video\VideoService $video_service */
+      $video_service = \Drupal::service('sfgov_video.utilities');
+      $video_id = $video_service->getVideoId($video_current);
+      $transcript = $video_service->getYoutubeTranscript($video_id);
+
+      // If there is a transcript for the given video.
+      if ($transcript) {
+        // Convert array into plain text.
+        $transcript_plain = '';
+        foreach ($transcript as $value) {
+          $transcript_plain .= "<p>" . $value['text'] . "</p>";
+        }
+
+        // Set the transcript as value for field_text.
+        $entity->field_text = $transcript_plain;
+        $entity->field_text->format = 'sf_restricted_html';
+      }
+    }
+  }
 }

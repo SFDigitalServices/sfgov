@@ -24,12 +24,13 @@
             <div class="link-video">
               {{ link_transcript }}
             </div>
-            {% if captions %}
+
+            {# <p>{{ caption.text|raw }}</p> #}
+
+            {% if content.field_text is not empty %}
               <h5>{{ 'Transcript:'|t }}</h5>
               <div class="transcript">
-                {% for caption in captions %}
-                  <p>{{ caption.text|raw }}</p>
-                {% endfor %}
+                {{ content.field_text.0|raw }}
               </div>
             {% else %}
               <p><i>{{ 'No transcript found.'|t }}</i></p>
