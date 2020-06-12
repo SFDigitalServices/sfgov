@@ -8,8 +8,7 @@
   <script>
     window.addEventListener('load', function() {
       var el = document.getElementById('formio-{{ form_id }}');
-      var options = {% if options %}safeJSONParse({{ options|json_encode|raw }}){% else %}{}{% endif %};
-      var config = {% if json %}safeJSONParse({{ json|json_encode|raw }}){% else %}"{{ endpoint }}"{% endif %};
+      var options = safeJSONParse(el.getAttribute('data-options'));
 
       // Get the properties defined in the Amplitude event for "Feedback form".
       var amplitudeData = {};
@@ -21,8 +20,12 @@
         });
       }
 
-      Formio.createForm(el, config, options)
+      Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
+          // Perform sfoptions.
+          if (options.sfoptions && options.sfoptions["hide"]) {
+            customHideElements(options)
+          }
 
           var feedbackSuccess, messageComponent = '';
           if (!feedbackSuccess || !messageComponent) {
@@ -87,6 +90,15 @@
             amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
           });
       });
+
+      function customHideElements(options) {
+        options.sfoptions["hide"].forEach(function(item, index) {
+          var hide = (document.getElementsByClassName(item))
+          for (var i = 0; i < hide.length; i++) {
+            hide[i].style.display = "none";
+          }
+        })
+      }
 
       function safeJSONParse(str) {
         var parsed = {}
