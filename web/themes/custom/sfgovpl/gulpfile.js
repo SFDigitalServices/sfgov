@@ -3,7 +3,6 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
-const imagemin = require('gulp-imagemin');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const browsersync = require('browser-sync').create();
@@ -22,14 +21,6 @@ function css() {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(config.css.dest))
     .pipe(browsersync.stream());
-}
-
-// not currently doing anything with images
-function images() {
-  return gulp
-    .src(config.images.source)
-    .pipe(imagemin())
-    .pipe(gulp.dest(config.images.dest));
 }
 
 function serve() {
