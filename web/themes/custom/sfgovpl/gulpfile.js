@@ -5,7 +5,6 @@ const sass = require('gulp-sass');
 const sassLint = require('gulp-sass-lint');
 const sourcemaps = require('gulp-sourcemaps');
 const imagemin = require('gulp-imagemin');
-const concat = require('gulp-concat');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const browsersync = require('browser-sync').create();
