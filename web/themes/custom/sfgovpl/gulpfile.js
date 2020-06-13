@@ -2,7 +2,6 @@
 
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const sassLint = require('gulp-sass-lint');
 const sourcemaps = require('gulp-sourcemaps');
 const imagemin = require('gulp-imagemin');
 const postcss = require('gulp-postcss');
@@ -17,9 +16,6 @@ function css() {
   ];
   return gulp
     .src(config.css.source)
-    // .pipe(sassLint())
-    // .pipe(sassLint.format())
-    // .pipe(sassLint.failOnError())
     .pipe(sourcemaps.init())
     .pipe(sass({ outputStyle: 'expanded'}))
     .pipe(postcss(plugins))
