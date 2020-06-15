@@ -7,6 +7,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -37,6 +38,39 @@ function sfgov_video_theme() {
     ],
   ];
 }
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function sfgov_video_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  /** @var \Drupal\field\Entity\FieldConfig $field_definition */
+  $field_definition = $context['items']->getFieldDefinition();
+  $paragraph_entity_reference_field_name = $field_definition->getName();
+
+  if ($paragraph_entity_reference_field_name == 'field_contents') {
+    /** @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::formElement() */
+    $widget_state = \Drupal\Core\Field\WidgetBase::getWidgetState($element['#field_parents'], $paragraph_entity_reference_field_name, $form_state);
+
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    $paragraph_instance = $widget_state['paragraphs'][$element['#delta']]['entity'];
+    $paragraph_type = $paragraph_instance->bundle();
+
+    // Determine which paragraph type is being embedded.
+    if ($paragraph_type == 'video') {
+      if (isset($element['subform']['field_text'])) {
+        $element['subform']['field_text_help'] = [
+          '#type' => 'container',
+          '#title' => t('Video transcript'),
+          '#prefix' => '<div class="messages messages--warning">',
+          '#suffix' => '</div>',
+          '#weight' => 3,
+          '#markup' => t('When you add a new video and save this page, the transcript will be automatically imported from Youtube. After it is imported, you can edit the transcript.'),
+        ];
+      }
+    }
+  }
+}
+
 
 /**
  * Implements hook_ENTITY_TYPE_update().
