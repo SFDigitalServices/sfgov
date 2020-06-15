@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.public_body.field_other_info
     - field.field.node.public_body.field_people
     - field.field.node.public_body.field_phone_numbers
+    - field.field.node.public_body.field_public_body
     - field.field.node.public_body.field_recurring_meetings
     - field.field.node.public_body.field_subcommittees
     - field.field.node.public_body.field_things_to_know
@@ -24,6 +25,8 @@ dependencies:
     - field_group
     - paragraphs
     - path
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 third_party_settings:
   field_group:
@@ -214,6 +217,16 @@ content:
     third_party_settings: {  }
     type: paragraphs
     region: content
+  field_public_body:
+    weight: 12
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_recurring_meetings:
     weight: 21
     settings:
@@ -221,16 +234,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_subcommittees:
-    weight: 12
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_things_to_know:
     weight: 23
@@ -278,13 +281,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -322,13 +325,13 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -337,4 +340,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_subcommittees: true
