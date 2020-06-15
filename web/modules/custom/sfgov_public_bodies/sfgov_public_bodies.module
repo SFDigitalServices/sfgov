@@ -34,6 +34,8 @@ function sfgov_public_bodies_preprocess_views_view__meetings__page(&$variables) 
   $view_id = $variables['id'];
   $view_display_id = $variables['display_id'];
 
+  $variables['filters'] = \Drupal::formBuilder()->getForm('Drupal\sfgov_public_bodies\Form\MeetingListFiltersForm');
+
   $title = $view->storage->getDisplay($view_display_id)['display_options']['title'];
   $variables['title'] = $title;
 }
