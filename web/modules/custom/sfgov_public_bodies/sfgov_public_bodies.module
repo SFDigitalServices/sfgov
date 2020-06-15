@@ -22,3 +22,25 @@ function sfgov_public_bodies_help($route_name, RouteMatchInterface $route_match)
     default:
   }
 }
+
+function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
+  if ($view->id() == 'meetings' && ($view->getDisplay()->display['id'] == 'page_upcoming' || $view->getDisplay()->display['id'] == 'page_past')) {
+    $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($view->args[0]);
+
+    // Add subcommittees into the views query.
+    if (!empty($public_body->field_subcommittees->getValue())) {
+      foreach ($query->where as $group => $where) {
+        if (count($where['conditions']) == 1) {
+          // Change query type.
+          $query->where[$group]['type'] = 'OR';
+
+          // Add subcommittees.
+          foreach ($public_body->field_subcommittees->getValue() as $value) {
+            $query->addWhere($group, 'node__field_public_body.field_public_body_target_id', $value['target_id'], '=');
+          }
+        }
+      }
+    }
+  }
+}
+
