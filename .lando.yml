@@ -4,7 +4,10 @@ config:
   framework: drupal8
   site: sfgov
   id: 91d50373-c4cf-40e4-a646-cb73e16a140c
-  xdebug: true
+  # Note: xDebug negatively impacts performance. Leaving it off globally, and
+  # enabling it as needed, is recommended. The custom tooling commands (below)
+  # can be used toggle it on (lando xdebug-on) /off (lando xdebug-off).
+  # xdebug: true
   webroot: web
 services:
   appserver:
@@ -34,3 +37,13 @@ tooling:
       - appserver: terminus backup:create sfgov.dev --element=db
       - appserver: terminus backup:get sfgov.dev --element=db --to=/app/web/database.sql.gz
       - database: /helpers/sql-import.sh database.sql.gz # this is relative to current working dir, be sure to run this command from `web` dir
+  xdebug-on:
+    service: appserver
+    description: 'Enable xdebug for nginx.'
+    cmd: docker-php-ext-enable xdebug && pkill -o -USR2 php-fpm
+    user: root
+  xdebug-off:
+    service: appserver
+    description: 'Disable xdebug for nginx.'
+    cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm
+    user: root
