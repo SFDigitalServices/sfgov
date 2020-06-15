@@ -22,7 +22,12 @@ class MeetingListFiltersForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['month'] = [
+    $form['container'] = [
+      '#type' => 'fieldset',
+      '#title' => 'Filters (' . $this->countActiveFilters() . ')',
+    ];
+
+    $form['container']['month'] = [
       '#type' => 'select',
       '#options' => [
         '' => $this->t('Select a month'),
@@ -42,23 +47,23 @@ class MeetingListFiltersForm extends FormBase {
       '#default_value' => \Drupal::request()->query->get('month'),
     ];
 
-    $form['year'] = [
+    $form['container']['year'] = [
       '#type' => 'select',
       '#options' => $this->getYearOptions(),
       '#default_value' => \Drupal::request()->query->get('year'),
     ];
 
     if ($this->getCommittees()) {
-      $form['committees'] = [
+      $form['container']['committees'] = [
         '#type' => 'select',
         '#multiple' => TRUE,
-        '#title' => $this->t('Select one or more committees'),
+        // '#title' => $this->t('Select one or more committees'),
         '#options' => $this->getCommittees(),
         '#default_value' => \Drupal::request()->query->get('committees'),
       ];
     }
 
-    $form['submit'] = [
+    $form['container']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply filters'),
     ];
@@ -70,19 +75,19 @@ class MeetingListFiltersForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $query = [];
+    $filters = [];
 
     $inputs = $form_state->getUserInput();
     foreach ($inputs as $key => $value) {
       if (!in_array($key, $form_state->getCleanValueKeys())) {
         if (!empty($value)) {
-          $query[$key] = $value;
+          $filters[$key] = $value;
         }
       }
     }
 
     $uri = \Drupal::request()->getRequestUri();
-    $redirect = Url::fromUserInput($uri, ['query' => $query]);
+    $redirect = Url::fromUserInput($uri, ['query' => $filters]);
     $form_state->setRedirectUrl($redirect);
   }
 
@@ -124,6 +129,13 @@ class MeetingListFiltersForm extends FormBase {
     }
 
     return $subcommittees;
+  }
+
+  /**
+   * Count active filters.
+   */
+  public function countActiveFilters() {
+    return count(\Drupal::request()->query->all());
   }
 
 }
