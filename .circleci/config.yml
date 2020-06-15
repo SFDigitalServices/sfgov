@@ -138,8 +138,8 @@ jobs:
                 command: ./.circleci/scripts/pantheon/03-post-test
 
             - run:
-                name: handle merge to master (if needed)
-                command: ./.circleci/scripts/pantheon/04-merge-master
+                name: handle merge to main (if needed)
+                command: ./.circleci/scripts/pantheon/04-merge-main
 
             - run:
                 name: remove transient test fixtures
@@ -148,10 +148,6 @@ jobs:
             - run:
                 name: run ghost inspector test suite
                 command: ./.circleci/scripts/ghost-inspector/run-gi-suite
-
-    # TODO:
-    # 04-merge-master
-    # 09-cleanup-fixtures
 
 workflows:
   version: 2
@@ -166,4 +162,4 @@ experimental:
   notify:
     branches:
       only:
-        - master
+        - main
