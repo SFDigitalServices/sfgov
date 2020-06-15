@@ -11,7 +11,7 @@ const config = require('./config');
 
 function css() {
   const plugins = [
-    autoprefixer()
+    autoprefixer(config.autoprefixer)
   ];
   return gulp
     .src(config.css.source)
