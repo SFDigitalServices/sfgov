@@ -55,7 +55,7 @@ function sfgov_video_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\
     $paragraph_instance = $widget_state['paragraphs'][$element['#delta']]['entity'];
     $paragraph_type = $paragraph_instance->bundle();
 
-    // Determine which paragraph type is being embedded.
+    // Add a disclaimer message about the video transcript workflow.
     if ($paragraph_type == 'video') {
       if (isset($element['subform']['field_text'])) {
         $element['subform']['field_text_help'] = [
