@@ -155,5 +155,21 @@
       reqPublicRecords();
     }
   };
+
+  Drupal.behaviors.sfgovEventLocation = {
+    attach: function (context, settings) {
+      var onlineCheck = $('input[name^="field_location_online"]');
+      var onlineHelpText = $('#edit-field-location-online-value--description');
+      if (!onlineCheck.is(':checked')) {
+        $(onlineHelpText).hide();
+      }
+
+      $(onlineCheck).click(function () {
+        var checked = $(this).is(':checked');
+        console.log(checked);
+        $(onlineHelpText).toggle(checked);
+      });
+    }
+  };
 })(jQuery, Drupal, document, window);
 //# sourceMappingURL=sfgov-admin.js.map

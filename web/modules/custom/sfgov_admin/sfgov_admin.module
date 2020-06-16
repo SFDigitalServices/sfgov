@@ -33,6 +33,31 @@ function sfgov_admin_page_attachments(array &$page) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  error_log('\n\n----> ' . $form_id . "\n\n");
+  if($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
+    $selector = ':input[name^="field_location_in_person"]';
+    $form['field_address']['#states'] = [
+      'visible' => [
+        $selector => ['checked' => TRUE],
+      ],
+      'required' => [
+        $selector => ['checked' => TRUE],
+      ],
+    ];
+    $form['buttons']['save']['#validate'][] = 'sfgov_admin_custom_validate';
+  }
+}
+
+function sfgov_admin_custom_validate($form, &$form_state) {
+  if((isset($form_state['values']['field_location_in_person']) && (empty($form_state['values']['field_address'])))) {
+    form_set_error('field_address', 'Field cannot be left blank');
+  }
+}
+
+/**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  *
  * Alters the Paragraphs Classic widget.
