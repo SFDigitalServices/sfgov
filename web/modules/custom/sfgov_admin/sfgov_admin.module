@@ -36,7 +36,6 @@ function sfgov_admin_page_attachments(array &$page) {
  * Implements hook_form_alter().
  */
 function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  error_log('\n\n----> ' . $form_id . "\n\n");
   if($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
     $selector_condition = [
       ':input[name^="field_location_in_person"]' => ['checked' => TRUE]
