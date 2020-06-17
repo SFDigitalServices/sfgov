@@ -165,11 +165,22 @@
 
   Drupal.behaviors.sfgovEventLocation = {
     attach: function (context, settings) {
-      var onlineCheck = $('input[name^="field_location_online"]');
-      var onlineHelpText = $('#edit-field-location-online-value--description')
+      var inPersonCheck = $('#edit-field-location-in-person-value');
+      var inPersonAddressLabel = $('#edit-field-address > summary');
+      var onlineCheck = $('#edit-field-location-online-value');
+      var onlineHelpText = $('#edit-field-location-online-value--description');
+
+      if(inPersonCheck.is(':checked')) {
+        $(inPersonAddressLabel).addClass('form-required');
+      }
+
       if(!onlineCheck.is(':checked')) {
         $(onlineHelpText).hide();
       }
+
+      $(inPersonCheck).click(function() {
+        $(inPersonAddressLabel).addClass('form-required');
+      });
 
       $(onlineCheck).click(function() {
         var checked = $(this).is(':checked');
