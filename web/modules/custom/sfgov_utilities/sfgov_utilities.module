@@ -121,39 +121,6 @@ function sfgov_utilities_preprocess_eck_entity(&$variables) {
   }
 }
 
-
-/**
- * Implements hook_form_alter().
- */
-function sfgov_utilities_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  switch ($form_id) {
-    case 'node_meeting_form':
-    case 'node_meeting_edit_form':
-      // Conditionally display `Video Embed` or `Video URL` fields.
-      $form['field_video_embed']['#states'] = [
-        'visible' => [
-          'input[name=field_video_option]' => ['value' => 0],
-        ],
-      ];
-      $form['field_video_embed']['widget'][0]['value']['#states'] = [
-        'required' => [
-          'input[name=field_video_option]' => ['value' => 0],
-        ],
-      ];
-      $form['field_url']['#states'] = [
-        'visible' => [
-          'input[name=field_video_option]' => ['value' => 1],
-        ],
-      ];
-      $form['field_url']['widget'][0]['uri']['#states'] = [
-        'required' => [
-          'input[name=field_video_option]' => ['value' => 1],
-        ],
-      ];
-      break;
-  }
-}
-
 /**
  * Implements hook_field_widget_form_alter().
  */
