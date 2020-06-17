@@ -3,10 +3,9 @@
 
   Drupal.behaviors.multipleSelect = {
     attach: function(context, settings) {
-      $('select[data-multiple-select]').multipleSelect({
-        // displayValues: true,
-        // multipleWidth: 60,
-      });
+      $('select[data-multiple-select]')
+        .once('multiple-select')
+        .multipleSelect();
     },
   };
 })(jQuery, Drupal);
