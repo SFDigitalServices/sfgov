@@ -66,6 +66,12 @@
  * @see template_preprocess_node()
 #}
 
+{% set hero_banner_label =
+    content.field_public_body.0 is not empty
+    ? 'Part of <a href="@url">@public_body</a>'|t({'@public_body': content.field_public_body[0]['#node'].label(), '@url': path('entity.node.canonical', {node: content.field_public_body[0]['#node'].id() })})
+    : ''
+%}
+
 {%
   set meetings_block = {
     upcoming: {
@@ -84,7 +90,8 @@
     {% include '@theme/hero-banner-default.twig' with {
       'banner': {
         'title': node.label,
-        'text': node.field_description.value
+        'text': node.field_description.value,
+        'label': hero_banner_label
       }
     } %}
   </div>
