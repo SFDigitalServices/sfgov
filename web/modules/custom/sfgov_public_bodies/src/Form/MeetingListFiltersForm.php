@@ -57,7 +57,10 @@ class MeetingListFiltersForm extends FormBase {
       $form['container']['committees'] = [
         '#type' => 'select',
         '#multiple' => TRUE,
-        // '#title' => $this->t('Select one or more committees'),
+        '#attributes' => [
+          'data-multiple-select' => TRUE,
+          'placeholder' =>  $this->t('Select one or more committees'),
+        ],
         '#options' => $this->getCommittees(),
         '#default_value' => \Drupal::request()->query->get('committees'),
       ];
