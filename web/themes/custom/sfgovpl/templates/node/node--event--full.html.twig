@@ -34,7 +34,21 @@
         <div class="event--meta-right">
           <div class="event--meta-inner-content">
             <h3>{{ 'Location'|t }}</h3>
-            <div>{{ content.field_address[0]['#location'].title.value }}</div>
+
+            {% set in_person = node.field_location_in_person.value %}
+            {% set online = node.field_location_online.value %}
+
+            {% if in_person or online %}
+              <ul class="event--location {{ in_person and online ? 'all' : '' }}">
+              {% if in_person %}
+                <li>{{ content.field_address[0]['#location'].title.value }}</li>
+              {% endif %}
+              {% if online %}
+                <li>{{ 'Online'|t }}</li>
+              {% endif %}
+              </ul>
+            {% endif %}
+            
           </div>
         </div>
       </div>
@@ -54,7 +68,9 @@
             'field_email',
             'field_phone_numbers',
             'field_dept',
-            'field_description'
+            'field_description',
+            'field_location_in_person',
+            'field_location_online'
           ) }}
         </div>
         <div class="event--content-sidebar">
