@@ -83,44 +83,26 @@
     </div>
   </div>
 
-  {%
-    if content.field_meeting_cancel[0]['#markup'] or 
-    ( not content.field_meeting_cancel[0]['#markup'] and not meeting_is_past) or
-    ( not content.field_meeting_cancel[0]['#markup'] and meeting_is_past and ( 
-      content.field_intro_text[0] is not empty or content.field_video_option[0] is not empty )
-    )
-  %}
+  {% if content.field_video_option[0] is not empty %}
   <div class="sfgov-section sfgov-section-recording sfgov-in-this-page-target">
     <div class="sfgov-section-container">
       <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
       <div class="sfgov-section--content">
-        {# If meeting is cancelled #}
-        {% if content.field_meeting_cancel[0]['#markup'] %}
-          <p>This meeting has been cancelled. There will be no video recording for this meeting.</p>
-        {# If meeting is not cancelled #}
-        {% else %}
-          {# If it's an upcomming meeting #}
-          {% if not meeting_is_past %}
-            <p>This is an upcoming meeting. The video and transcript will be posted after the meeting occurs.</p>
-          {# If it's a past meeting #}
-          {% else %}
-            {# Render description field #}
-            {{ content.field_intro_text }}
+        {# Render description field #}
+        {{ content.field_intro_text }}
 
-            {# If external video is chosen #}
-            {% if content.field_video_option['#items'][0].value %}
-              {# Render external link button #}
-              {{ content.field_url }}
-            {# If Youtube is chosen #}
-            {% else %}
-              {# Render Youtube video component #}
-              {% include '@theme/video-embed.twig' with {
-                "video": content.field_video_embed,
-                "captions": video_captions,
-                "captions_link": video_captions_link
-              } %}
-            {% endif %}
-          {% endif %}
+        {# If external video is chosen #}
+        {% if content.field_video_option['#items'][0].value %}
+          {# Render external link button #}
+          {{ content.field_url }}
+        {# If Youtube is chosen #}
+        {% else %}
+          {# Render Youtube video component #}
+          {% include '@theme/video-embed.twig' with {
+            "video": content.field_video_embed,
+            "captions": video_captions,
+            "captions_link": video_captions_link
+          } %}
         {% endif %}
       </div>
     </div>
