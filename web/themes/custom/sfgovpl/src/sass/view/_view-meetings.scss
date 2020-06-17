@@ -48,26 +48,41 @@
       @include fs-title-3;
     }
 
+    form {
+      max-width: 100%;
+    }
+
     .fieldset-wrapper {
-      display: flex;
-
       .form-item {
-        margin-right: 30px;
+        margin-bottom: 1rem;
+      }
 
-        select {
-          min-width: 200px;
-        }
+      @include media($narrow-screen) {
+        display: flex;
 
-        &-subcommittees {
+        .form-item {
+          margin-right: 30px;
+          margin-bottom: 0;
+
           select {
-            width: 400px;
+            min-width: 200px;
+          }
+
+          &-subcommittees {
+            select {
+              width: 400px;
+            }
           }
         }
       }
+
       .button {
         @include button-clear;
-        margin: 0;
-        line-height: 0;
+        @include media($narrow-screen) {
+          margin: 0;
+          line-height: 0;
+        }
+        width: auto;
 
         &:hover {
           border: 3px solid $c-dark-blue;
