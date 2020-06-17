@@ -4,11 +4,22 @@
  * @file
  * Contains sfgov_video.install.
  */
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Programmatically import config field.field.paragraph.video.field_text.
+ */
+function sfgov_video_update_8700() {
+  $config_name = 'field.field.paragraph.video.field_text';
+  $config_path = drupal_get_path('module', 'sfgov_video') . '/config/update/' . $config_name . '.yml';
+  $data = Yaml::parseFile($config_path);
+  \Drupal::configFactory()->getEditable($config_name)->setData($data)->save(TRUE);
+}
 
 /**
  * Import video transcript for older content.
  */
-function sfgov_video_update_8700() {
+function sfgov_video_update_8701() {
   /** @var \Drupal\sfgov_video\VideoService $video_service */
   $video_service = \Drupal::service('sfgov_video.utilities');
 
