@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.paragraph.campaign_resources.field_file
     - field.field.paragraph.campaign_resources.field_resources
+    - field.field.paragraph.campaign_resources.field_title
     - paragraphs.paragraphs_type.campaign_resources
   module:
     - entity_reference_revisions
@@ -14,7 +15,7 @@ bundle: campaign_resources
 mode: default
 content:
   field_file:
-    weight: 1
+    weight: 2
     label: above
     settings:
       link: true
@@ -23,11 +24,20 @@ content:
     region: content
   field_resources:
     type: entity_reference_revisions_entity_view
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
     region: content
-hidden: {  }
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  search_api_excerpt: true
