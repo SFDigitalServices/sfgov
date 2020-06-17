@@ -107,8 +107,6 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $video_service = \Drupal::service('sfgov_video.utilities');
   $video_id = $video_service->getVideoId($video_url);
 
-  $variables['captions'] = $video_service->getYoutubeTranscript($video_id);
-
   // Link transcript
   $url = Url::fromUserInput('/video/' . $video_id);
   $link = Link::fromTextAndUrl(t('Open in another tab'), $url);

@@ -1,4 +1,45 @@
-.campaign--full {
+.page-node-type-campaign {
+  .campaign-alert {
+    background-color: $c-slate;
+    color: $c-white;
+
+    .container {
+      @include contain-1090;
+
+      p {
+        margin: 1.5rem 0;
+        font-weight: normal;
+        font-size: 17px;
+        line-height: 28px;
+      }
+    }
+  }
+
+  header {
+    .sfgov-logo__container {
+      h1 {
+        @include fs-title-2;
+      }
+      img {
+        width: auto;
+        height: 47px;
+      }
+    }
+    .head-right--container {
+      width: auto;
+    }
+  }
+
+  .document-file--container {
+    .sfgov-icon-filefilled {
+      &:before {
+        background: url(/themes/custom/sfgovpl/src/img/document.svg) no-repeat
+          50% 50% transparent;
+        min-height: 26px;
+      }
+    }
+  }
+
   .hero-banner {
     margin-bottom: 2.5rem;
   }
@@ -14,6 +55,12 @@
       > .field__label {
         @include fs-h1;
         color: white;
+      }
+      > .field__item {
+        @include fs-big-description;
+        a {
+          color: #fff;
+        }
       }
     }
 
@@ -55,10 +102,7 @@
     background-color: $c-grey-2;
 
     .field__label {
-      font-size: 62px;
-      font-weight: 500;
-      letter-spacing: 0;
-      line-height: 70px;
+      @include fs-title-1;
     }
 
     .__social-media-embed {
@@ -86,6 +130,18 @@
           }
         }
       }
+    }
+  }
+
+  .paragraph--type--in-person-location {
+    h4 {
+      @include fs-title-5;
+    }
+  }
+
+  .paragraph--type--campaign-spotlight {
+    .__title {
+      @include fs-title-1;
     }
   }
 
