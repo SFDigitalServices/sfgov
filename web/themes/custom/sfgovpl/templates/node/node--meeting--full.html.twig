@@ -1,16 +1,16 @@
-{%
-  set header_text = 
+{% set meeting_list_label = content.field_public_body[0]['#node'].label() %}
+{% set hero_banner_label = 
     meeting_is_past
-    ? 'This meeting took place on @date'|t({'@date': node.field_start_date.date|date('M d, Y')})
-    : 'This meeting will be taking place on @date'|t({'@date': node.field_start_date.date|date('M d, Y')})
+    ? 'Part of <a href="@url">@public_body Archive</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_past', {arg_0: content.field_public_body[0]['#node'].id() })})
+    : 'Part of <a href="@url">@public_body Calendar</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
 %}
 
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {
       'title': node.label,
-      'text': header_text,
-      'label': 'Meeting'|t
+      'text': node.field_start_date.date|date('M d, Y'),
+      'label': hero_banner_label
     }
   } %}
 
