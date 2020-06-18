@@ -114,28 +114,12 @@
 </div>
 {% endif %}
 
-<!-- FILE NAME SUGGESTIONS:
-   * field--node--field-public-body-meetings--public-body.html.twig
-   * field--node--field-public-body-meetings.html.twig
-   * field--node--public-body.html.twig
-   * field--field-public-body-meetings.html.twig
-   * field--entity-reference-revisions.html.twig
-   x field.html.twig
--->
-
 {% if content.field_public_body_meetings|render %}
 <div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
     <h2 id="meetings" class="sfgov-public-body-section--heading" role="heading">Meetings</h2>
     <div class="sfgov-public-body-section--content">
       {{ content.field_public_body_meetings }}
-      {# <div class="sfgov-container-item">
-        {{ content.field_recurring_meetings }}
-        {{ content.field_meeting_location }}
-      </div>
-      <div class="sfgov-container-item">
-        {{ content.field_things_to_know }}
-      </div> #}
     </div>
   </div>
 </div>
@@ -176,23 +160,12 @@
 </div>
 {% endif %}
 
-{% if public_body_fields.people %}
+{% if content.field_board_members|render %}
 <div class="sfgov-public-body-section sfgov-public-body-board-members sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
     <h2 id="board-members" class="sfgov-public-body-section--heading" role="heading">People</h2>
     <div class="sfgov-public-body-section--content">
-      <h4>Members</h4>
-      <ul class="sfgov-public-body-board-members-list">
-        {% for person in public_body_fields.people %}
-          <li class="sfgov-public-body-board-members-list-item">
-            <div class="person-image" style="background-image: url({{ person.photo }})"><img alt="{{ person.alt }}" /></div>
-            <div class="person-details">
-              <h5>{{ person.first_name }} {{ person.last_name }}</h5>
-              <p>{{ person.title }}</p>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+      {{ content.field_board_members }}
     </div>
   </div>
 </div>

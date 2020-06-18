@@ -173,9 +173,53 @@
     }
     .sfgov-public-body-section--content {
       background: $c-blue-1;
-      padding: 40px;
+      padding: 40px 40px 0 40px;
       border-radius: 8px;
     }
+
+    .__board-members {
+      & > .field__item {
+        margin-bottom: 60px;
+
+        &:last-child {
+          margin: 0;
+        }
+
+        .__people-title {
+          margin-bottom: 40px;
+        }
+
+        .sfgov-people--content {
+          .__person-2 {
+            .field__item {
+              vertical-align: top;
+              margin: 0 auto 20px;
+              width: auto;
+              display: block;
+
+              @include media($medium-screen) {
+                margin-bottom: 40px;
+              }
+            }
+
+            @include media($mobile-screen) {
+              .field__item {
+                display: inline-block;
+                width: 49%;
+              }
+            }
+
+            @include media($medium-screen) {
+              .field__item {
+                display: inline-block;
+                width: 32%;
+              }
+            }
+          }
+        }
+      }
+    }
+
     .sfgov-public-body-board-members-list {
       list-style-type: none;
       margin: 0;
