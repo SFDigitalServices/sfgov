@@ -121,13 +121,15 @@
   </div>
   {% endif %}
 
-  {% if content.field_regulations_accessibility|render %}
+  {% if content.field_regulations_accordions|render %}
   <div class="sfgov-section sfgov-section-regulations-accessibility sfgov-in-this-page-target">
     <div class="sfgov-section-container">
       <div class="group--left">
-        <h2 id="regulations-accessibility" class="sfgov-section--heading" role="heading">Regulations & Accessibility</h2>
+        {% if content.field_regulations_title.0 is not empty %}
+        <h2 id="regulations-accessibility" class="sfgov-section--heading" role="heading">{{ content.field_regulations_title.0 }}</h2>
+        {% endif %}
         <div class="sfgov-section--content">
-          {{ content.field_regulations_accessibility }}
+          {{ content.field_regulations_accordions }}
         </div>
       </div>
     </div>
