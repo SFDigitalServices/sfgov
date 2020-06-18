@@ -52,54 +52,11 @@
     data-options="{{ paragraph.field_formio_render_options.value|escape }}"
   {% endif %}
 ></div>
+
 <script src="https://unpkg.com/formiojs@{{ formio_js_version }}/dist/formio.full.min.js"></script>
 <script src="https://unpkg.com/formio-sfds@{{ formio_sfds_version }}/dist/formio-sfds.standalone.js"></script>
 <script>
-  window.addEventListener('load', function() {
-    var el = document.getElementById('formio')
-    var options = safeJSONParse(el.getAttribute('data-options'))
-    Formio.createForm(el, el.getAttribute('data-source'), options)
-      .then(function(form) {
-      //perform sfoptions
-      if(options.sfoptions && options.sfoptions["hide"]){
-         customHideElements(options)
-      }
-      // What to do when the submit begins.
-      form.on('submitDone', function(submission) {
-          // custom options defined in Form.io render options field
-          if(options.redirects instanceof Object){
-            customHideElements(options)
-            for (var key in options.redirects) {
-              var value = options.redirects[key]
-               // only one "redirect" should be "yes", this is set in the form.io form
-              if(submission.data[key] === "yes"){
-                window.location = value
-                break
-              }
-            }
-          }
-        {% if paragraph.field_formio_confirmation_url.value %}
-          window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
-        {% endif %}
-      });
-    });
-
-    function customHideElements(options){
-      options.sfoptions["hide"].forEach(function(item, index){
-          var hide = (document.getElementsByClassName(item))
-          for (var i=0; i<hide.length;i++){
-            hide[i].style.display = "none";
-          }
-        })
-    }
-    function safeJSONParse(str) {
-      var parsed = {}
-      try {
-        parsed = JSON.parse(str)
-      } catch (error) {
-        console.warn('Unable to parse form options:', str)
-      }
-      return parsed
-    }
-  })
+  // pass parameters to the library js file. Ideally pass in the entire paragraph object, unfortunately there's no good way to do that
+  var confirmation_url = "{{ paragraph.field_formio_confirmation_url.value }}"
 </script>
+{{ attach_library('sfgovpl/sfgov-formio') }}

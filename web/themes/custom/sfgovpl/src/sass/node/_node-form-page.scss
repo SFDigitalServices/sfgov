@@ -1,6 +1,7 @@
 .page-node-type-form-page {
   // some overrides for formbuilder/sf-design-system-integration
   // TODO: clean this up as part of deprecating old pattern lab library
+  $form-type: normal;
   input, textarea, select {
     height: auto;
   }
@@ -16,9 +17,16 @@
   }
   [data-source*="checkyourhealthforcitystaff"] .col-md-2 {
     display: none;
+    $form-type: checkyourhealthforcitystaff;
   }
   [data-source*="checkyourhealthforcitystaff"] .col-md-3{
     width: 100% !important;
   }
 }
-
+.sf-custom-block-gtranslate {
+    float: right;
+    right: 0px;
+    @include media($medium-screen) {
+      margin-right: 0px;
+    }
+}
