@@ -62,7 +62,7 @@
           margin: 0;
         }
         .simple-gmap-static-map {
-          margin: 10px 0;
+          margin: 15px 0;
         }
 
         &[data-contact] {
@@ -144,6 +144,15 @@
       h2 {
         margin-bottom: 75px;
       }
+
+      .sfgov-container-item {
+        a {
+          p {
+            color: $c-slate;
+            opacity: 0.65;
+          }
+        }
+      }
     }
   }
 
@@ -173,7 +182,7 @@
     }
     .sfgov-public-body-section--content {
       background: $c-blue-1;
-      padding: 40px 40px 0 40px;
+      padding: 40px;
       border-radius: 8px;
     }
 
@@ -186,19 +195,26 @@
         }
 
         .__people-title {
-          margin-bottom: 40px;
+          margin-bottom: 20px;
+        }
+
+        .person {
+          margin-top: 40px;
         }
 
         .sfgov-people--content {
           .__person-2 {
             .field__item {
               vertical-align: top;
-              margin: 0 auto 20px;
+              margin: 0;
               width: auto;
               display: block;
 
-              @include media($medium-screen) {
-                margin-bottom: 40px;
+              .person-bio {
+                .person-title,
+                .person-subtitle {
+                  opacity: 0.65;
+                }
               }
             }
 
@@ -216,55 +232,6 @@
               }
             }
           }
-        }
-      }
-    }
-
-    .sfgov-public-body-board-members-list {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      .sfgov-public-body-board-members-list-item {
-        display: inline-block;
-        width: 33%;
-        margin: 20px 0;
-        > div {
-          display: inline-block;
-          vertical-align: top;
-        }
-        .person-image {
-          width: 80px;
-          height: 80px;
-          overflow: hidden;
-          border-radius: 8px;
-          margin-right: 20px;
-          background-repeat: no-repeat;
-          background-size: cover;
-          background-position: top center;
-        }
-        .person-details {
-          h5 {
-            @include rubik;
-            @include fs-body-bold;
-            text-decoration: underline;
-            color: $c-slate;
-            margin-bottom: 10px;
-          }
-          p {
-            margin: 0;
-            padding: 0;
-            @include fs-body-short;
-            color: $c-slate;
-          }
-        }
-      }
-    }
-    @include media-max($medium-screen) {
-      .sfgov-public-body-board-members-list {
-        .sfgov-public-body-board-members-list-item {
-          display: block;
-          width: auto;
-          margin-bottom: 20px;
         }
       }
     }
