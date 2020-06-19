@@ -4,9 +4,16 @@ status: true
 dependencies:
   config:
     - field.field.node.form_confirmation_page.body
+    - field.field.node.form_confirmation_page.field_bann
+    - field.field.node.form_confirmation_page.field_banner_color
+    - field.field.node.form_confirmation_page.field_banner_image
+    - field.field.node.form_confirmation_page.field_confirmation_sidebar
     - field.field.node.form_confirmation_page.field_form_confirm_page_slug
+    - field.field.node.form_confirmation_page.field_step
     - node.type.form_confirmation_page
   module:
+    - entity_reference_revisions
+    - image
     - text
     - user
 id: node.form_confirmation_page.default
@@ -26,7 +33,50 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_bann:
+    weight: 6
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_banner_color:
+    weight: 7
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_banner_image:
+    weight: 5
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  field_confirmation_sidebar:
+    type: entity_reference_revisions_entity_view
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_step:
+    type: entity_reference_revisions_entity_view
+    weight: 3
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
 hidden:
   field_form_confirm_page_slug: true
   langcode: true
   links: true
+  search_api_excerpt: true

@@ -53,8 +53,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     && $parent->bundle() == 'campaign') {
     /** @var \Drupal\taxonomy\Entity\Term $theme */
     $theme = $parent->get('field_campaign_theme')->entity;
-
-    if ($paragraph_type == 'campaign_spotlight') {
+    if ($paragraph_type == 'campaign_spotlight' || $paragraph_type == 'image_with_text') {
       $background_color = $theme->get('field_primary_color')->getValue();
       $background_color_value = $background_color[0]['color'];
     } elseif ($paragraph_type == 'campaign_resources') {
@@ -107,8 +106,6 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   /** @var \Drupal\sfgov_video\VideoService $video_service */
   $video_service = \Drupal::service('sfgov_video.utilities');
   $video_id = $video_service->getVideoId($video_url);
-
-  $variables['captions'] = $video_service->getYoutubeTranscript($video_id);
 
   // Link transcript
   $url = Url::fromUserInput('/video/' . $video_id);

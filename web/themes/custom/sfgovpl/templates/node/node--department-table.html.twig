@@ -27,9 +27,15 @@
   {% block content %}
     <div>{{ topics }}</div>
     <div class="{{ bundle }}--content">
-      {{ drupal_view('department_table', 'block_1')|render }}
+      <div class="column-labels">
+        <span class="department-name">&nbsp;</span>
+        <span class="column-1">{{ content.field_column_one }}</span>
+        <span class="column-2">{{ content.field_column_two }}</span>
+      </div>
+      <div class="department-table-items">
+        {{ content.field_department_item }}
+      </div>
     </div>
-
   {% endblock content %}
   
 {% endembed %}

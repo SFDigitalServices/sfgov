@@ -59,10 +59,23 @@
     <div{{ attributes.addClass(classes, 'field__items') }}>
       {% for item in items %}
         {% set multipleItemClasses = ['field__item'] %}
-        {% if item.content['#paragraph'].getType() == "top_search_suggestion" %}
-          {% set multipleItemClasses = multipleItemClasses|merge(['sfgov-top-search-suggestion']) %}
+        {% set paragraph_type = item.content['#paragraph'].bundle() %}
+
+        {% if paragraph_type == 'top_search_suggestion' %}
+          <div{{ item.attributes.addClass(multipleItemClasses, 'sfgov-top-search-suggestion') }}>
+            {{ item.content }}
+          </div>
+
+        {% elseif paragraph_type == 'spotlight' %}
+          <div{{ item.attributes.addClass('sfgov-full-bleed', 'sfgov-full-bleed--breakout', 'padding-zero', 'purple-lightpurple', 'sfgov-spotlight-container', 'sfgov-spotlight-container--nested', multipleItemClasses) }}>
+            <div class="sfgov-section-container">
+              {{ item.content }}
+            </div>
+          </div>
+
+        {% else %}
+          <div{{ item.attributes.addClass(multipleItemClasses) }}>{{ item.content }}</div>
         {% endif %}
-        <div{{ item.attributes.addClass(multipleItemClasses) }}>{{ item.content }}</div>
       {% endfor %}
     </div>
   {% else %}
