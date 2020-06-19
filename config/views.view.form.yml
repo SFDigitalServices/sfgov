@@ -3,20 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_form_id
+    - field.storage.paragraph.field_form_id
+    - field.storage.paragraph.field_form_type
     - field.storage.paragraph.field_formio_confirmation_url
     - field.storage.paragraph.field_formio_data_source
     - field.storage.paragraph.field_formio_js_version
     - field.storage.paragraph.field_formio_render_options
     - field.storage.paragraph.field_formio_sfds_version
+    - field.storage.paragraph.field_token_field_name
+    - field.storage.paragraph.field_unauthorized_url
+    - field.storage.paragraph.field_verification_url
     - node.type.form_page
   module:
     - node
     - paragraphs
     - rest
     - rest_views
-    - rest_views_revisions
     - serialization
+    - sfgov_utilities
     - user
 id: form
 label: Form
@@ -132,73 +136,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_form_id_export:
-          id: field_form_id_export
-          table: node__field_form_id
-          field: field_form_id_export
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_revisions_export
-          settings:
-            view_mode: default
-            extra:
-              id: 0
-              title: 0
-              url: 0
-              type: 0
-              bundle: 0
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          field_api_classes: 0
-          plugin_id: field_export
         field_formio_confirmation_url_export:
           id: field_formio_confirmation_url_export
           table: paragraph__field_formio_confirmation_url
@@ -209,8 +146,8 @@ display:
           label: ''
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ field_formio_confirmation_url_export__value }}'
             make_link: false
             path: ''
             absolute: false
@@ -503,6 +440,310 @@ display:
           delta_first_last: false
           field_api_classes: 0
           plugin_id: field_export
+        field_form_id_export_1:
+          id: field_form_id_export_1
+          table: paragraph__field_form_id
+          field: field_form_id_export
+          relationship: field_form_id
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_export
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          field_api_classes: 0
+          plugin_id: field_export
+        field_form_type_export:
+          id: field_form_type_export
+          table: paragraph__field_form_type
+          field: field_form_type_export
+          relationship: field_form_id
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: false
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          field_api_classes: 0
+          plugin_id: field_export
+        field_token_field_name_export:
+          id: field_token_field_name_export
+          table: paragraph__field_token_field_name
+          field: field_token_field_name_export
+          relationship: field_form_id
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: false
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          field_api_classes: 0
+          plugin_id: field_export
+        field_unauthorized_url_export:
+          id: field_unauthorized_url_export
+          table: paragraph__field_unauthorized_url
+          field: field_unauthorized_url_export
+          relationship: field_form_id
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: false
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          field_api_classes: 0
+          plugin_id: field_export
+        field_verification_url_export:
+          id: field_verification_url_export
+          table: paragraph__field_verification_url
+          field: field_verification_url_export
+          relationship: field_form_id
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: false
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          field_api_classes: 0
+          plugin_id: field_export
       filters:
         status:
           value: '1'
@@ -567,6 +808,24 @@ display:
           admin_label: 'field_form_id: Paragraph'
           required: true
           plugin_id: standard
+        field_form_id_1:
+          id: field_form_id_1
+          table: node__field_form_id
+          field: field_form_id
+          relationship: none
+          group_type: group
+          admin_label: 'field_form_id: Paragraph'
+          required: true
+          plugin_id: standard
+        field_form_id_export_1:
+          id: field_form_id_export_1
+          table: node__field_form_id
+          field: field_form_id_export
+          relationship: none
+          group_type: group
+          admin_label: 'field_form_id: Paragraph'
+          required: true
+          plugin_id: standard
       arguments:
         nid:
           id: nid
@@ -616,12 +875,16 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_form_id'
+        - 'config:field.storage.paragraph.field_form_id'
+        - 'config:field.storage.paragraph.field_form_type'
         - 'config:field.storage.paragraph.field_formio_confirmation_url'
         - 'config:field.storage.paragraph.field_formio_data_source'
         - 'config:field.storage.paragraph.field_formio_js_version'
         - 'config:field.storage.paragraph.field_formio_render_options'
         - 'config:field.storage.paragraph.field_formio_sfds_version'
+        - 'config:field.storage.paragraph.field_token_field_name'
+        - 'config:field.storage.paragraph.field_unauthorized_url'
+        - 'config:field.storage.paragraph.field_verification_url'
   rest_export_1:
     display_plugin: rest_export
     id: rest_export_1
@@ -635,7 +898,7 @@ display:
         options:
           offset: 0
       style:
-        type: serializer
+        type: sfgov_custom_serializer
         options:
           formats:
             json: json
@@ -648,9 +911,6 @@ display:
               raw_output: true
             field_form_id_export:
               alias: field_form_id
-              raw_output: true
-            field_form_id_export_1:
-              alias: ''
               raw_output: true
             field_formio_confirmation_url_export:
               alias: field_formio_confirmation_url
@@ -667,6 +927,21 @@ display:
             field_formio_sfds_version_export:
               alias: field_formio_sfds_version
               raw_output: true
+            field_form_id_export_1:
+              alias: field_acuity_owner_id
+              raw_output: true
+            field_form_type_export:
+              alias: field_acuity_form_type
+              raw_output: true
+            field_token_field_name_export:
+              alias: field_acuity_token_field_name
+              raw_output: true
+            field_unauthorized_url_export:
+              alias: field_acuity_unauthorized_url
+              raw_output: true
+            field_verification_url_export:
+              alias: field_acuity_verification_url
+              raw_output: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -677,9 +952,13 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_form_id'
+        - 'config:field.storage.paragraph.field_form_id'
+        - 'config:field.storage.paragraph.field_form_type'
         - 'config:field.storage.paragraph.field_formio_confirmation_url'
         - 'config:field.storage.paragraph.field_formio_data_source'
         - 'config:field.storage.paragraph.field_formio_js_version'
         - 'config:field.storage.paragraph.field_formio_render_options'
         - 'config:field.storage.paragraph.field_formio_sfds_version'
+        - 'config:field.storage.paragraph.field_token_field_name'
+        - 'config:field.storage.paragraph.field_unauthorized_url'
+        - 'config:field.storage.paragraph.field_verification_url'
