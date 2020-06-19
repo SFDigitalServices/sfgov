@@ -18,7 +18,10 @@ dependencies:
     - field_group
     - image
     - path
+    - scheduler
+    - scheduler_content_moderation_integration
     - sfgov_admin
+    - text
 third_party_settings:
   field_group:
     group_what_to_do:
@@ -127,6 +130,16 @@ targetEntityType: node
 bundle: form_confirmation_page
 mode: default
 content:
+  body:
+    type: text_textarea_with_summary
+    weight: 9
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 3
@@ -228,6 +241,18 @@ content:
     weight: 4
     region: content
     third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
@@ -260,6 +285,17 @@ content:
       match_limit: 10
     region: content
     third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  body: true
   url_redirects: true
