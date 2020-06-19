@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Contains sfgov_video.install.
+ */
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Programmatically import config field.field.paragraph.video.field_text.
+ */
+function sfgov_video_update_8700() {
+  $config_path = drupal_get_path('module', 'sfgov_video') . '/config/optional';
+  $config_source = new FileStorage($config_path);
+  \Drupal::service('config.installer')->installOptionalConfig($config_source);
+}
+
+/**
+ * Import video transcript for older content.
+ */
+function sfgov_video_update_8701() {
+  /** @var \Drupal\sfgov_video\VideoService $video_service */
+  $video_service = \Drupal::service('sfgov_video.utilities');
+
+  // Get database connection.
+  $connection = \Drupal\Core\Database\Database::getConnection();
+
+  // Query all video fields.
+  $entries = $connection->select('paragraph__field_video', 'pv')
+    ->fields('pv', ['entity_id', 'field_video_value'])
+    ->condition('pv.bundle', 'video')
+    ->execute()
+    ->fetchAll();
+
+  // Loop through each field to perform the entity update.
+  foreach ($entries as $entry) {
+    $paragraph = \Drupal::entityTypeManager()
+      ->getStorage('paragraph')
+      ->load($entry->entity_id);
+
+    // Get video id.
+    $video_id = $video_service->getVideoId($entry->field_video_value);
+
+    if ($video_id) {
+      // Get video transcript.
+      $transcript = $video_service->getYoutubeTranscript($video_id);
+
+      // If there is a transcript for the given video.
+      if ($transcript) {
+        // Convert array into plain text.
+        $transcript_plain = '';
+        foreach ($transcript as $value) {
+          $transcript_plain .= "<p>" . $value['text'] . "</p>";
+        }
+
+        // Update field.
+        $paragraph->set('field_text', [
+          'value' => $transcript_plain,
+          'format' => 'sf_restricted_html',
+        ]);
+        $paragraph->save();
+      }
+    }
+  }
+}
