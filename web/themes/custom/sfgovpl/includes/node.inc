@@ -70,15 +70,16 @@ function dept_page_fields() {
       $featuredItems = $node->get('field_featured_items');
       foreach($featuredItems as $featuredItem) {
         $featuredItemParagraphId = $featuredItem->getValue()['target_id'];
-        $featuredItemLoaded = Paragraph::load($featuredItemParagraphId);
-        $featuredItemTitle = $featuredItemLoaded->get('field_feature_title')->getValue()[0]['value'];
-        $featuredItemDescription = $featuredItemLoaded->get('field_description')->getValue()[0]['value'];
-        $featuredItemUrl = $featuredItemLoaded->get('field_feature_link')->getValue()[0]['uri'];
-        $theFields['featured_items'][] = array(
-          'title' => $featuredItemTitle,
-          'description' => $featuredItemDescription,
-          'url' => $featuredItemUrl,
-        );
+        if ($featuredItemLoaded = Paragraph::load($featuredItemParagraphId)) {
+          $featuredItemTitle = $featuredItemLoaded->get('field_feature_title')->getValue()[0]['value'];
+          $featuredItemDescription = $featuredItemLoaded->get('field_description')->getValue()[0]['value'];
+          $featuredItemUrl = $featuredItemLoaded->get('field_feature_link')->getValue()[0]['uri'];
+          $theFields['featured_items'][] = array(
+            'title' => $featuredItemTitle,
+            'description' => $featuredItemDescription,
+            'url' => $featuredItemUrl,
+          );
+        }
       }
     }
     if($node->hasField('field_department_services')) {
@@ -96,12 +97,13 @@ function dept_page_fields() {
           $txs = array();
           for($i=0; $i<count($deptTransactions); $i++) {
             $txId = $deptTransactions[$i]['target_id'];
-            $tx = Node::load($txId);
-            $txs[] = array(
-              'tx_title' => $tx->get('title')->getValue()[0]['value'],
-              'tx_description' => $tx->get('field_description')->getValue()[0]['value'],
-              'tx_url' => $tx->toUrl('canonical', ['absolute'=>true])->toString(),
-            );
+            if ($tx = Node::load($txId)) {
+              $txs[] = array(
+                'tx_title' => $tx->get('title')->getValue()[0]['value'],
+                'tx_description' => $tx->get('field_description')->getValue()[0]['value'],
+                'tx_url' => $tx->toUrl('canonical', ['absolute'=>true])->toString(),
+              );
+            }
           }
           $theFields['services']['values'][] = array(
             'title' => $deptServiceSectionTitle,
@@ -133,27 +135,26 @@ function dept_page_fields() {
       $deptSpotlight = $node->get('field_spotlight');
       if(!empty($deptSpotlight) && !empty($deptSpotlight->getValue())) {
         $deptSpotlightParagraphId = $deptSpotlight->getValue()[0]['target_id'];
-        $deptSpotlightParagraph = Paragraph::load($deptSpotlightParagraphId);
-        $spotlightTitle = $deptSpotlightParagraph->get('field_title')->getValue()[0]['value'];
-        $spotlightDescription = $deptSpotlightParagraph->get('field_description')->getValue()[0]['value'];
-        $spotlightButtonId = $deptSpotlightParagraph->get('field_spotlight_button')->getValue()[0]['target_id'];
-        $spotlightButtonParagraph = Paragraph::load($spotlightButtonId);
-        $spotlightButtonTitle = $spotlightButtonParagraph->get('field_link')->getValue()[0]['title'];
-        $spotlightButtonUri = $spotlightButtonParagraph->get('field_link')->getValue()[0]['uri'];
-        $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_img');
-        $spotlightImageUrl = null;
-        if($spotlightImage) {
-          if($spotlightImage->entity) {
-            $spotlightImageUrl = file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri());
+        if ($deptSpotlightParagraph = Paragraph::load($deptSpotlightParagraphId)) {
+          $spotlightTitle = $deptSpotlightParagraph->get('field_title')->getValue()[0]['value'];
+          $spotlightDescription = $deptSpotlightParagraph->get('field_description')->getValue()[0]['value'];
+          $spotlightButtonId = $deptSpotlightParagraph->get('field_spotlight_button')->getValue()[0]['target_id'];
+          $spotlightButtonParagraph = Paragraph::load($spotlightButtonId);
+          if ($spotlightButtonParagraph && ($fieldLink = $spotlightButtonParagraph->get('field_link')->getValue())) {
+            $spotlightButtonTitle = $fieldLink[0]['title'];
+            $spotlightButtonUri = $fieldLink[0]['uri'];
           }
-        }
-        // $spotlightImageUrl = $spotlightImage ? file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri()) : null;
-        $theFields['spotlight']['title'] = $spotlightTitle;
-        $theFields['spotlight']['description'] = $spotlightDescription;
-        $theFields['spotlight']['button_text'] = $spotlightButtonTitle;
-        $theFields['spotlight']['button_uri'] = $spotlightButtonUri;
-        if($spotlightImageUrl) {
-          $theFields['spotlight']['image_url'] = $spotlightImageUrl;
+          $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_img');
+          $spotlightImageUrl = ($spotlightImage && $spotlightImage->entity) ?
+            file_create_url($spotlightImage->entity->field_media_image->entity->getFileUri()) :
+            NULL;
+          $theFields['spotlight']['title'] = $spotlightTitle;
+          $theFields['spotlight']['description'] = $spotlightDescription;
+          $theFields['spotlight']['button_text'] = empty($spotlightButtonTitle) ? '' : $spotlightButtonTitle;
+          $theFields['spotlight']['button_uri'] = empty($spotlightButtonUri) ? '' : $spotlightButtonUri;
+          if($spotlightImageUrl) {
+            $theFields['spotlight']['image_url'] = $spotlightImageUrl;
+          }
         }
       }
     }
@@ -163,15 +164,16 @@ function dept_page_fields() {
       $theFields['resources']['label'] = $resourcesLabel;
       foreach($resources as $resource) {
         $resourceParagraphId = $resource->getValue()['target_id'];
-        $resourceParagraph = Paragraph::load($resourceParagraphId);
-        $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
-        $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
-        $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
-        $theFields['resources']['items'][] = array(
-          'title' => $resourceItemTitle,
-          'description' => $resourceItemDescription,
-          'url' => $resourceItemUrl,
-        );
+        if ($resourceParagraph = Paragraph::load($resourceParagraphId)) {
+          $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
+          $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
+          $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
+          $theFields['resources']['items'][] = array(
+            'title' => $resourceItemTitle,
+            'description' => $resourceItemDescription,
+            'url' => $resourceItemUrl,
+          );
+        }
       }
     }
     if($node->hasField('field_url')) {
@@ -212,20 +214,21 @@ function dept_page_fields() {
       if($phoneNumbers->getValue()) {
         foreach($phoneNumbers->getValue() as $phoneNumber) {
           $phoneNumberId = $phoneNumber['target_id'];
-          $phoneParagraph = Paragraph::load($phoneNumberId);
-          $number = $phoneParagraph->get('field_tel')->getValue()[0]['value'];
-          $number = preg_replace("/[^\d]/","",$number); // remove non-digit characters
-          $length = strlen($number);
-          if($length == 10) {
-            $number = preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $number);
+          if ($phoneParagraph = Paragraph::load($phoneNumberId)) {
+            $number = $phoneParagraph->get('field_tel')->getValue()[0]['value'];
+            $number = preg_replace("/[^\d]/","",$number); // remove non-digit characters
+            $length = strlen($number);
+            if($length == 10) {
+              $number = preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $number);
+            }
+            $phoneDetails = $phoneParagraph->get('field_text')->getValue() ? $phoneParagraph->get('field_text')->getValue()[0]['value'] : null;
+            $phoneOwner = $phoneParagraph->get('field_owner')->getValue() ? $phoneParagraph->get('field_owner')->getValue()[0]['value'] : null;
+            $theFields['phone_numbers'][] = array(
+              'number' => $number,
+              'details' => $phoneDetails,
+              'owner' => $phoneOwner,
+            );
           }
-          $phoneDetails = $phoneParagraph->get('field_text')->getValue() ? $phoneParagraph->get('field_text')->getValue()[0]['value'] : null;
-          $phoneOwner = $phoneParagraph->get('field_owner')->getValue() ? $phoneParagraph->get('field_owner')->getValue()[0]['value'] : null;
-          $theFields['phone_numbers'][] = array(
-            'number' => $number,
-            'details' => $phoneDetails,
-            'owner' => $phoneOwner,
-          );
         }
       }
     }
@@ -233,11 +236,12 @@ function dept_page_fields() {
       $emailField = $node->get('field_email');
       if($emailField->getValue()) {
         $emailId = $emailField->getValue()[0]['target_id'];
-        $emailParagraph = Paragraph::load($emailId);
-        $email = $emailParagraph->get('field_email')->getValue() ? $emailParagraph->get('field_email')->getValue()[0]['value'] : null;
-        $emailTitle = $emailParagraph->get('field_title')->getValue() ? $emailParagraph->get('field_title')->getValue()[0]['value'] : null;
-        $theFields['email']['email_address'] = $email ? $email : null;
-        $theFields['email']['email_title'] = $emailTitle ? $emailTitle : null;
+        if ($emailParagraph = Paragraph::load($emailId)) {
+          $email = $emailParagraph->get('field_email')->getValue() ? $emailParagraph->get('field_email')->getValue()[0]['value'] : null;
+          $emailTitle = $emailParagraph->get('field_title')->getValue() ? $emailParagraph->get('field_title')->getValue()[0]['value'] : null;
+          $theFields['email']['email_address'] = $email ? $email : null;
+          $theFields['email']['email_title'] = $emailTitle ? $emailTitle : null;
+        }
       }
     }
 
@@ -252,11 +256,12 @@ function dept_page_fields() {
       $aboutDivisions = $node->get('field_divisions')->getValue();
       if($aboutDivisions) {
         foreach($aboutDivisions as $aboutDivision) {
-          $divisionDept = Node::load($aboutDivision['target_id']);
-          $theFields['about']['divisions'][] = array(
-            'dept_name' => $divisionDept->get('title')->getValue()[0]['value'],
-            'dept_url' => $divisionDept->toUrl('canonical', ['absolute'=>true])->toString(),
-          );
+          if ($divisionDept = Node::load($aboutDivision['target_id'])) {
+            $theFields['about']['divisions'][] = array(
+              'dept_name' => $divisionDept->get('title')->getValue()[0]['value'],
+              'dept_url' => $divisionDept->toUrl('canonical', ['absolute'=>true])->toString(),
+            );
+          }
         }
       }
     }
@@ -265,13 +270,14 @@ function dept_page_fields() {
       if($aboutPublicBodies) {
         foreach($aboutPublicBodies as $publicBody) {
           $publicBodyId = $publicBody['target_id'];
-          $publicBodyParagraph = Paragraph::load($publicBodyId);
-          $publicBodyLink = $publicBodyParagraph->get('field_link');
-          $publicBodyValue = $publicBodyLink->getValue();
-          $theFields['about']['public_bodies'][] = array(
-            'name' => $publicBodyValue[0]['title'],
-            'url' => $publicBodyValue[0]['uri'],
-          );
+          if ($publicBodyParagraph = Paragraph::load($publicBodyId)) {
+            $publicBodyLink = $publicBodyParagraph->get('field_link');
+            $publicBodyValue = $publicBodyLink->getValue();
+            $theFields['about']['public_bodies'][] = array(
+              'name' => $publicBodyValue[0]['title'],
+              'url' => $publicBodyValue[0]['uri'],
+            );
+          }
         }
       }
     }
@@ -286,16 +292,16 @@ function dept_page_fields() {
       $aboutCta = $node->get('field_call_to_action');
       if($aboutCta && $aboutCta->getValue()) {
         $aboutCtaId = $aboutCta->getValue()[0]['target_id'];
-        $aboutCtaParagraph = Paragraph::load($aboutCtaId);
-        $ctaTitle = $aboutCtaParagraph->get('field_title')->getValue()[0]['value'];
-        $ctaButtonId = $aboutCtaParagraph->get('field_button')->getValue() ? $aboutCtaParagraph->get('field_button')->getValue()[0]['target_id'] : null;
-        if($ctaButtonId) {
-          $ctaButtonParagraph = Paragraph::load($ctaButtonId);
-          $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
-          $ctaButtonUrl = $ctaButtonParagraph->get('field_link')->getValue()[0]['uri'];
-          $theFields['about']['cta']['title'] = $ctaTitle;
-          $theFields['about']['cta']['button_text'] = $ctaButtonText;
-          $theFields['about']['cta']['url'] = $ctaButtonUrl;
+        if ($aboutCtaParagraph = Paragraph::load($aboutCtaId)) {
+          $ctaTitle = $aboutCtaParagraph->get('field_title')->getValue()[0]['value'];
+          $ctaButtonId = $aboutCtaParagraph->get('field_button')->getValue() ? $aboutCtaParagraph->get('field_button')->getValue()[0]['target_id'] : null;
+          if($ctaButtonId && ($ctaButtonParagraph = Paragraph::load($ctaButtonId))) {
+            $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
+            $ctaButtonUrl = $ctaButtonParagraph->get('field_link')->getValue()[0]['uri'];
+            $theFields['about']['cta']['title'] = $ctaTitle;
+            $theFields['about']['cta']['button_text'] = $ctaButtonText;
+            $theFields['about']['cta']['url'] = $ctaButtonUrl;
+          }
         }
       }
     }
@@ -305,18 +311,19 @@ function dept_page_fields() {
         $socialMediaLabel = $aboutSocial->getFieldDefinition()->getLabel();
         $theFields['about']['social']['title'] = $socialMediaLabel;
         $aboutSocialId = $aboutSocial->getValue()[0]['target_id'];
-        $aboutSocialParagraph = Paragraph::load($aboutSocialId);
-        $socialFields = $aboutSocialParagraph->getFields();
-        foreach($socialFields as $socialField) {
-          if($socialField->getFieldDefinition()->getType() == 'link') {
-            $socialFieldKey = $socialField->getFieldDefinition()->getName();
-            $socialLabel = $socialField->getFieldDefinition()->getLabel();
-            $socialUrl = $aboutSocialParagraph->get($socialFieldKey)->getValue() ? $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'] : null;
-            if($socialUrl) {
-              $theFields['about']['social']['values'][] = array(
-                'label' => $socialLabel,
-                'url' => $socialUrl,
-              );
+        if ($aboutSocialParagraph = Paragraph::load($aboutSocialId)) {
+          $socialFields = $aboutSocialParagraph->getFields();
+          foreach($socialFields as $socialField) {
+            if($socialField->getFieldDefinition()->getType() == 'link') {
+              $socialFieldKey = $socialField->getFieldDefinition()->getName();
+              $socialLabel = $socialField->getFieldDefinition()->getLabel();
+              $socialUrl = $aboutSocialParagraph->get($socialFieldKey)->getValue() ? $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'] : null;
+              if($socialUrl) {
+                $theFields['about']['social']['values'][] = array(
+                  'label' => $socialLabel,
+                  'url' => $socialUrl,
+                );
+              }
             }
           }
         }
@@ -327,17 +334,18 @@ function dept_page_fields() {
       if($aboutPeople && !empty($aboutPeople->getValue())) {
         $peopleId = $aboutPeople->getValue()[0]['target_id'];
         $peopleParagraph = Paragraph::load($peopleId);
-        if(!empty($peopleParagraph->get('field_person_2')->getValue())) {
+        if($peopleParagraph && !empty($peopleParagraph->get('field_person_2')->getValue())) {
           $people = $peopleParagraph->get('field_person_2')->getValue();
           foreach($people as $person) {
-            $personNode = Node::load($person['target_id']);
-            $theFields['about']['people'][] = array(
-              'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
-              'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
-              'title' => $personNode->get('field_title')->getValue()[0]['value'],
-              'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
-              'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
-            );
+            if ($personNode = Node::load($person['target_id'])) {
+              $theFields['about']['people'][] = array(
+                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
+                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
+                'title' => $personNode->get('field_title')->getValue()[0]['value'],
+                'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
+                'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
+              );
+            }
           }
         }
       }
