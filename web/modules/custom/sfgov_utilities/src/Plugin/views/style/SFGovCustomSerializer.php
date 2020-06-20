@@ -25,7 +25,11 @@
         $this->view->row_index = $row_index;
         $row_render = $this->view->rowPlugin->render($row);
         foreach($row_render as $key => $value) {
-          $the_row[$key] = trim(preg_replace('/\s+/', '', $value)); // remove newlines
+          if($key == 'field_formio_render_options') {
+            $the_row[$key] = trim(preg_replace('/\r\n\s+/', '', $value)); // remove newline and whitespace
+          } else {
+            $the_row[$key] = $value;
+          }
         }
         $rows[] = $the_row;
       }
