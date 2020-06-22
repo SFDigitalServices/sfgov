@@ -156,7 +156,7 @@ fieldset.sf-transaction-fieldset:not(.fieldgroup) {
   }
 
   // Hide the actual label.
-  .field-multiple-table {
+  [data-level="1"] .field-multiple-table {
     margin: 0 !important;
 
     thead {
@@ -164,8 +164,11 @@ fieldset.sf-transaction-fieldset:not(.fieldgroup) {
     }
   }
 
-  .paragraphs-nested .field-multiple-table thead {
-    display: table-header-group;
+  // Revert above for nested.
+  [data-level="2"] .field-multiple-table {
+    thead {
+      display: table-header-group;
+    }
   }
 }
 
