@@ -107,6 +107,9 @@ function SFGovTranslate() {
       // If translated content is being shown on the page, it should be wrapped
       // in a container with class="notranslate" to allow other elements like
       // header and footer to be translated.
+      if(that.getDrupalTranslation(currentDrupalLanguage)) {
+        $('main[role="main"]').addClass('notranslate').attr('translate', 'no');
+      }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
       return;
