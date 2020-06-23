@@ -1,4 +1,5 @@
 function SFGovTranslate() {
+  $ = jQuery;
   this.currentSelectedTranslation = null;
   this.sfgovGTranslateFireEvent = function (a, b) {
     try {
