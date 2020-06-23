@@ -1,33 +1,49 @@
-.image-with-text {
-  background: $c-black;
-  border-radius: 8px;
-  .image img {
-    border-radius: 8px 8px 0 0;
-  }
-  .text {
-    color: $c-white;
-    padding: 40px;
-    .title {
-      @include fs-title-2-mobile;
-      color: $c-white;
-      margin-bottom: 14px;
-      @include media($medium-screen) {
-        @include fs-title-2;
-      }
+.image-with-text-container {
+  .image-with-text {
+    border-radius: 8px;
+    .image img {
+      border-radius: 8px 8px 0 0;
+      width: 100%;
+      vertical-align: bottom;
     }
-    .description {
-      @include fs-big-description-mobile;
+    .text {
       color: $c-white;
-      p {
-        @include fs-big-description-mobile;
-        margin: 0;
-      }
+      padding: 20px;
       @include media($medium-screen) {
-        @include fs-big-description;
-        p {
-          @include fs-big-description;
+        padding: 40px;
+      }
+      .title {
+        @include fs-title-2-mobile;
+        color: $c-white;
+        margin-bottom: 14px;
+        @include media($medium-screen) {
+          @include fs-title-2;
         }
       }
+      .description {
+        @include fs-big-description-mobile;
+        color: $c-white;
+        p {
+          @include fs-big-description-mobile;
+          margin: 0;
+        }
+        @include media($medium-screen) {
+          @include fs-big-description;
+          p {
+            @include fs-big-description;
+          }
+        }
+      }
+    }
+  }
+}
+
+.page-campaign-gold,
+.page-campaign-blue {
+  .image-with-text {
+    .__title,
+    .__description {
+      color: $c-slate;
     }
   }
 }

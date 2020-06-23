@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.campaign.field_alert_text
     - field.field.node.campaign.field_campaign_about
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_contents
@@ -13,21 +14,21 @@ dependencies:
     - field.field.node.campaign.field_social_media_embed
     - field.field.node.campaign.field_spotlight
     - field.field.node.campaign.field_top_facts
+    - image.style.campaign_logo
     - node.type.campaign
   module:
     - entity_reference_revisions
     - field_group
+    - image
     - link
     - text
     - user
 third_party_settings:
   field_group:
     group_locations_and_access:
-      children:
-        - field_description
-        - field_location_access
+      children: {  }
       parent_name: ''
-      weight: 19
+      weight: 15
       format_type: html_element
       region: hidden
       format_settings:
@@ -46,13 +47,15 @@ targetEntityType: node
 bundle: campaign
 mode: default
 content:
-  content_moderation_control:
-    weight: 0
+  field_alert_text:
+    type: text_default
+    weight: 9
     region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
   field_campaign_about:
-    weight: 7
+    weight: 6
     type: text_trimmed
     label: above
     settings:
@@ -61,7 +64,7 @@ content:
     region: content
   field_contents:
     type: entity_reference_revisions_entity_view
-    weight: 4
+    weight: 3
     label: hidden
     settings:
       view_mode: default
@@ -70,7 +73,7 @@ content:
     region: content
   field_dept:
     type: entity_reference_label
-    weight: 8
+    weight: 7
     region: content
     label: above
     settings:
@@ -87,7 +90,7 @@ content:
     region: content
   field_links:
     type: link
-    weight: 9
+    weight: 8
     region: content
     label: above
     settings:
@@ -97,9 +100,18 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
+  field_logo:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: campaign_logo
+      image_link: ''
+    third_party_settings: {  }
   field_social_media_embed:
     type: entity_reference_revisions_entity_view
-    weight: 6
+    weight: 5
     label: hidden
     settings:
       view_mode: default
@@ -107,7 +119,7 @@ content:
     third_party_settings: {  }
     region: content
   field_spotlight:
-    weight: 5
+    weight: 4
     label: hidden
     settings:
       view_mode: default
@@ -125,8 +137,8 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  content_moderation_control: true
   field_campaign_theme: true
-  field_logo: true
   langcode: true
   links: true
   search_api_excerpt: true

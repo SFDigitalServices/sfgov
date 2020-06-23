@@ -59,7 +59,14 @@
       flex-basis: 33.333%;
       margin-bottom: 60px;
       .image {
+        display: flex;
         margin-bottom: 28px;
+        @include media-max($medium-screen) {
+          height: auto !important;
+        }
+        img {
+          margin-top: auto;
+        }
       }
       .text {
         @include fs-body-short;
@@ -70,6 +77,10 @@
         p {
           @include fs-body-short;
           margin: 0;
+
+          strong {
+            font-weight: $fw-medium;
+          }
         }
       }
     }

@@ -1,0 +1,61 @@
+uuid: 15ed2e3a-c94e-4021-8540-33e7dfea88c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.form_confirmation_page.body
+    - field.field.node.form_confirmation_page.field_bann
+    - field.field.node.form_confirmation_page.field_banner_color
+    - field.field.node.form_confirmation_page.field_banner_image
+    - field.field.node.form_confirmation_page.field_confirmation_sidebar
+    - field.field.node.form_confirmation_page.field_form_confirm_page_slug
+    - field.field.node.form_confirmation_page.field_step
+    - node.type.form_confirmation_page
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.form_confirmation_page.full
+targetEntityType: node
+bundle: form_confirmation_page
+mode: full
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  content_moderation_control:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_confirmation_sidebar:
+    type: entity_reference_revisions_entity_view
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_step:
+    type: entity_reference_revisions_entity_view
+    weight: 3
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_bann: true
+  field_banner_color: true
+  field_banner_image: true
+  field_form_confirm_page_slug: true
+  langcode: true
+  links: true
+  search_api_excerpt: true
