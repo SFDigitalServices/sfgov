@@ -54,6 +54,7 @@ class MeetingListFiltersForm extends FormBase {
     ];
 
     if ($this->getSubcommittees()) {
+      $query_subcommittees = \Drupal::request()->query->get('subcommittees');
       $form['container']['subcommittees'] = [
         '#type' => 'select',
         '#multiple' => TRUE,
@@ -62,7 +63,7 @@ class MeetingListFiltersForm extends FormBase {
           'placeholder' =>  $this->t('Select one or more committees'),
         ],
         '#options' => $this->getSubcommittees(),
-        '#default_value' => \Drupal::request()->query->get('subcommittees'),
+        '#default_value' => $query_subcommittees ? $query_subcommittees : array_keys($this->getSubcommittees()),
       ];
     }
 
@@ -87,6 +88,10 @@ class MeetingListFiltersForm extends FormBase {
           $filters[$key] = $value;
         }
       }
+    }
+
+    if (!isset($filters['subcommittees'])) {
+      $filters['subcommittees'][] = 0;
     }
 
     $uri = \Drupal::request()->getPathInfo();
@@ -124,7 +129,7 @@ class MeetingListFiltersForm extends FormBase {
   public function getSubcommittees() {
     $route = \Drupal::routeMatch();
     $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
-    $subcommittees = [];
+    $subcommittees = [$public_body->id() => $public_body->label()];
 
     foreach ($public_body->field_subcommittees->getValue() as $value) {
       $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);

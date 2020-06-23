@@ -53,14 +53,31 @@ function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $vie
     foreach ($query->where as $group => $where) {
       // If it's a contextual filter group.
       if (count($where['conditions']) == 1) {
-        // Add subcommittees into the views query.
-        if ($query_subcommittees) {
-          // Change query type.
-          $query->where[$group]['type'] = 'OR';
+        // Unset default condition.
+        unset($query->where[$group]['conditions']);
 
-          // Add subcommittees.
+        // Change query type.
+        $query->where[$group]['type'] = 'OR';
+
+        // Add committees to the views query.
+        if ($query_subcommittees) {
+          // Add committees.
           foreach ($query_subcommittees as $value) {
             $query->addWhere($group, 'node__field_public_body.field_public_body_target_id', $value, '=');
+          }
+        }
+        else {
+          $route = \Drupal::routeMatch();
+          $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
+          $subcommittees = [$public_body->id() => $public_body->label()];
+
+          foreach ($public_body->field_subcommittees->getValue() as $value) {
+            $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
+            $subcommittees[$subcommittee->id()] = $subcommittee->label();
+          }
+
+          foreach ($subcommittees as $key => $value) {
+            $query->addWhere($group, 'node__field_public_body.field_public_body_target_id', $key, '=');
           }
         }
       }
