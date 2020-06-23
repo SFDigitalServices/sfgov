@@ -13,6 +13,7 @@
     @include contain-1090;
     color: $c-slate;
     margin-bottom: 20px;
+    padding-left: 0;
 
     @include media($medium-screen) {
       margin-bottom: 40px;
@@ -22,53 +23,68 @@
   .sfgov-public-body-meetings {
     background-color: $c-dark-blue;
     color: $c-white;
-
-    [data-contact='in-person-location'] {
-      background-image: url(../../src/img/icons/location-2-white.svg);
-    }
+    -webkit-font-smoothing: antialiased;
 
     .sfgov-public-body-section--heading {
       color: $c-white;
     }
 
-    .sfgov-container-item {
-      flex-direction: column;
+    .__public-body-meetings {
+      margin: 0 -30px;
 
-      .field {
-        margin-bottom: 37px;
+      .sfgov-container-item {
+        flex-direction: column;
+        padding: 0 30px;
 
-        &:last-child {
-          margin: 0;
-        }
-      }
+        .field {
+          margin-bottom: 37px;
 
-      .paragraph {
-        padding-right: 1rem;
-
-        h3,
-        h4 {
-          margin: 0 0 0.5rem;
-          font-weight: 500;
-          font-size: 1.17647rem;
-          line-height: 1.58824rem;
-          color: #fff;
-        }
-        p {
-          margin-top: 0;
-        }
-        a {
-          color: white !important;
-        }
-        .simple-gmap-link {
-          margin: 0;
-        }
-        .simple-gmap-static-map {
-          margin: 15px 0;
+          &:last-child {
+            margin: 0;
+          }
         }
 
-        &[data-contact] {
-          padding: 0;
-          background: none;
+        .__location {
+          &:before {
+            content: 'Location';
+            margin: 0 0 0.5rem;
+            font-weight: 500;
+            font-size: 1.17647rem;
+            line-height: 1.58824rem;
+            color: #fff;
+            display: block;
+          }
+
+          h4 {
+            font-weight: inherit;
+            font-size: inherit;
+            margin: 0;
+          }
+        }
+
+        .paragraph {
+          h3 {
+            margin: 0 0 0.5rem;
+            font-weight: 500;
+            font-size: 1.17647rem;
+            line-height: 1.58824rem;
+            color: #fff;
+          }
+          p {
+            margin-top: 0;
+          }
+          a {
+            color: white !important;
+          }
+          .simple-gmap-link,
+          .simple-gmap-static-map {
+            display: none;
+          }
+
+          &[data-contact] {
+            padding: 0;
+            background: none;
+          }
         }
       }
     }
