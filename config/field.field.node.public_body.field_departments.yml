@@ -1,31 +1,31 @@
-uuid: c5b51786-9354-4e74-82b4-f6a503627fc3
+uuid: c8b1d7d7-2235-40d9-a3a6-964466295a5d
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_image
-    - media.type.image
-    - node.type.meeting
+    - field.storage.node.field_departments
+    - node.type.department
+    - node.type.public_body
   module:
     - tmgmt_content
 third_party_settings:
   tmgmt_content:
     excluded: false
-id: node.meeting.field_image
-field_name: field_image
+id: node.public_body.field_departments
+field_name: field_departments
 entity_type: node
-bundle: meeting
-label: Image
+bundle: public_body
+label: 'Related departments'
 description: ''
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:media'
+  handler: 'default:node'
   handler_settings:
     target_bundles:
-      image: image
+      department: department
     sort:
       field: _none
     auto_create: false

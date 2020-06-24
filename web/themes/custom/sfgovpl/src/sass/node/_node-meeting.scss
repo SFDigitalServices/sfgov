@@ -1,0 +1,210 @@
+.page-node-type-meeting {
+  .hero-banner {
+    background-color: $c-green-3;
+    color: $c-white;
+    a {
+      color: $c-white;
+    }
+    .hero-banner--container {
+      h1 {
+        margin-bottom: 0;
+        color: $c-white;
+      }
+      .lead-paragraph {
+        margin-top: 20px;
+        color: $c-white;
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .sfgov-in-this-page {
+    margin-bottom: 0;
+  }
+
+  .group--left {
+    @include columns-780(left);
+  }
+  .group--right {
+    @include columns-350(right);
+
+    .sfgov-section-meeting-info {
+      background: $c-green-1;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 40px;
+
+      h2 {
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 42px;
+      }
+
+      h4 {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 27px;
+        margin-bottom: 20px;
+      }
+
+      .date-time {
+        .start-date,
+        .end-date {
+          width: 150px;
+          margin-bottom: 10px;
+        }
+      }
+
+      .address {
+        margin-top: 40px;
+      }
+    }
+  }
+
+  .sfgov-section {
+    padding: 60px 0;
+    margin: 0;
+  }
+
+  .sfgov-section-callout {
+    background: $c-yellow-3;
+    padding: 20px 0;
+
+    .sfgov-section--content {
+      padding-left: 40px;
+      position: relative;
+
+      &::after {
+        content: ' ';
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 3px;
+        left: 0;
+        background: url(../../src/img/info.svg) no-repeat;
+      }
+    }
+  }
+
+  .sfgov-section-overview {
+    padding: 0 70px 60px 0;
+  }
+
+  .sfgov-section-recording {
+    padding-top: 0;
+
+    .__intro-text {
+      @include fs-body-long;
+    }
+    .__url {
+      display: flex;
+      a {
+        @include button;
+      }
+    }
+  }
+
+  .sfgov-section-agenda {
+    .sfgov-section--heading {
+      margin-bottom: 60px;
+    }
+    .sfgov-section--content {
+      ol {
+        margin: 0;
+        padding: 0;
+
+        li {
+          position: relative;
+          padding-left: 100px;
+          counter-increment: counter;
+          padding-bottom: 30px;
+          list-style: none;
+
+          .__title {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 50px;
+          }
+          .__file {
+            margin-top: 15px;
+          }
+
+          &:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: counter(counter);
+            font-size: 24px;
+            line-height: 50px;
+            width: 50px;
+            height: 50px;
+            background: $c-slate;
+            color: #fff;
+            border-radius: 100%;
+            text-align: center;
+          }
+
+          &:after {
+            content: '';
+            width: 3px;
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            background: $c-slate;
+            z-index: -1;
+          }
+
+          &:last-child:after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .sfgov-section-regulations-accessibility {
+    .paragraph--type--accordion {
+      margin-bottom: 0;
+    }
+  }
+
+  .sfgov-section-meeting-artifacts {
+    background-color: $c-grey-1;
+
+    .sfgov-section--content {
+      & > .field {
+        & > .field__item {
+          margin-top: 40px;
+        }
+      }
+    }
+  }
+
+  .sfgov-section-departments {
+    padding: 50px 0;
+    margin-bottom: 0;
+    background: $c-blue-1;
+
+    h4 {
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 24px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .sfgov-section-updated {
+    font-style: italic;
+    color: #697f8f;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  .sfgov-section-container {
+    @include contain-1090;
+    overflow: hidden;
+  }
+}
