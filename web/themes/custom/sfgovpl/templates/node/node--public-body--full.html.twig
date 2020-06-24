@@ -178,7 +178,7 @@
 
     {% for info in public_body_fields.other_info %}
       <div class="sfgov-public-body-section--content">
-        <h4>{{ info.title }}</h4>
+        <h3>{{ info.title }}</h3>
 
         {% if info.bundle == 'other_info_card' %}
         <div class="sfgov-container-three-column">
@@ -216,7 +216,7 @@
       {% if public_body_fields.address %}
         <div class="sfgov-contact-section address">
         {% if public_body_fields.address.organization %}
-          <h5>{{ public_body_fields.address.organization }}</h5>
+          <p class="title">{{ public_body_fields.address.organization }}</p>
         {% endif %}
           <p>
             {{ public_body_fields.address.line1 }} <br/>
@@ -244,7 +244,7 @@
       {% endif %}
       {% if public_body_fields.phone_numbers %}
         <div class="sfgov-contact-section phone-numbers">
-          <h5>Phone</h5>
+          <p class="title">Phone</p>
           {% for phone in public_body_fields.phone_numbers %}
             <div class="phone">
               <h6>{{ phone.owner }}</h6>
@@ -259,7 +259,7 @@
       {% if public_body_fields.email %}
         {% if public_body_fields.email.email_address %}
           <div class="sfgov-contact-section email">
-            <h5>Email</h5>
+            <p class="title">Email</p>
             {% if public_body_fields.email.email_title %}
               <h6>{{ public_body_fields.email.email_title }}</h6>
             {% endif %}

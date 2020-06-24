@@ -1,8 +1,9 @@
 {% extends 'node.html.twig' %}
 {% block node %}
-  {% include "@theme/topic-card.twig" with {
-    "title": node.label,
-    "description": content.field_description.0,
-    "url": url
-  } %}
+  <a class="sfgov-topic-card" href="{{ url }}">
+    <p class="title">{{ node.label }}</p>
+    <div class="description">
+      {{ content.field_description.0 }}
+    </div>
+  </a>
 {% endblock node %}
