@@ -26,7 +26,7 @@
         $row_render = $this->view->rowPlugin->render($row);
         foreach($row_render as $key => $value) {
           if($key == 'field_formio_render_options') {
-            $the_row[$key] = trim(preg_replace('/\r\n?(\s+)/', '', $value)); // remove newline and whitespace
+            $the_row[$key] = json_decode($value, TRUE);
           } else {
             $the_row[$key] = $value;
           }
