@@ -1,0 +1,37 @@
+{{ attach_library('sfgovpl/sfgov-video') }}
+
+<div class="video-embed-component">
+  {% if captions %}
+    <div class="video-wrapper">
+      <div class="group-left">
+        {{ video }}
+      </div>
+      <div class="group-right">
+        <div class="inner">
+          {% if captions_link %}
+            <div class="link-video">
+              {{ captions_link }}
+            </div>
+          {% endif %}
+
+          {% if captions %}
+            <h5>{{ 'Transcript:'|t }}</h5>
+            <div class="transcript">
+              {% for caption in captions %}
+                <p>{{ caption.text|raw }}</p>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p><i>{{ 'No transcript found.'|t }}</i></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <a href="#" class="toggle-transcript">
+      <span>{{ 'View transcript'|t }}</span>
+      <span class="is-hidden">{{ 'Hide transcript'|t }}</span>
+    </a>
+  {% else %}
+    {{ video }}
+  {% endif %}
+</div>

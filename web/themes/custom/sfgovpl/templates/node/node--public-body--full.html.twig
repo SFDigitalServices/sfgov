@@ -1,0 +1,294 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - metadata: Metadata for this node.
+ * - date: Themed creation date field.
+ * - author_name: Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+ *     teaser would result in: "node--view-mode-teaser", and
+ *     full: "node--view-mode-full".
+ *   The following are controlled through the node publishing options.
+ *   - node--promoted: Appears on nodes promoted to the front page.
+ *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+ *     teaser listings.
+ *   - node--unpublished: Appears on unpublished nodes visible only to site
+ *     admins.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ * - readmore: Flag for more state. Will be true if the teaser content of the
+ *   node cannot hold the main body content.
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_node()
+#}
+
+{% set hero_banner_label =
+    content.field_public_body.0 is not empty
+    ? 'Part of <a href="@url">@public_body</a>'|t({'@public_body': content.field_public_body[0]['#node'].label(), '@url': path('entity.node.canonical', {node: content.field_public_body[0]['#node'].id() })})
+    : ''
+%}
+
+{%
+  set meetings_block = {
+    upcoming: {
+      render: drupal_view('meetings', 'block_upcoming', node.id),
+      result: drupal_view_result('meetings', 'block_upcoming', node.id)
+    },
+    past: {
+      render: drupal_view('meetings', 'block_past', node.id),
+      result: drupal_view_result('meetings', 'block_past', node.id)
+    }
+  }
+%}
+
+<div class="sfds-layout-container">
+  <div class="sfds-responsive-container">
+    {% include '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value,
+        'label': hero_banner_label
+      }
+    } %}
+  </div>
+</div>
+
+<div id="sfgov-in-this-page" class="sfgov-in-this-page sfds-layout-container ">
+  <div class="sfgov-public-body-in-this-page-container sfds-responsive-container">
+    <div class="sfgov-public-body-in-this-page-label">In this page:</div>
+    <ul></ul>
+  </div>
+</div>
+
+{% if public_body_fields.callout %}
+<div class="sfgov-public-body-section sfgov-public-body-callout sfds-layout-container">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <div class="sfgov-public-body-section--content">
+      {{ public_body_fields.callout|raw }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if content.field_public_body_meetings|render %}
+<div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 id="meetings" class="sfgov-public-body-section--heading" role="heading">Meetings</h2>
+    <div class="sfgov-public-body-section--content">
+      {{ content.field_public_body_meetings }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) %}
+<div class="sfgov-public-body-section sfgov-public-body-meetings-list sfds-layout-container">
+  {% if meetings_block.upcoming.result is not empty %}
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h3>Upcoming meetings</h3>
+    <div class="sfgov-section--content">
+      {{ meetings_block.upcoming.render }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if meetings_block.past.result is not empty %}
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h3>Past meetings</h3>
+    <div class="sfgov-section--content">
+      {{ meetings_block.past.render }}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if public_body_fields.about or content.field_subcommittees|render %}
+<div class="sfgov-public-body-section sfgov-public-body-about sfds-layout-container sfgov-in-this-page-target">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 id="about" class="sfgov-public-body-section--heading" role="heading">About</h2>
+    <div class="sfgov-public-body-section--content">
+      {{ public_body_fields.about }}
+
+      {{ content.field_subcommittees }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if content.field_board_members|render %}
+<div class="sfgov-public-body-section sfgov-public-body-board-members sfds-layout-container sfgov-in-this-page-target">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 id="board-members" class="sfgov-public-body-section--heading" role="heading">People</h2>
+    <div class="sfgov-public-body-section--content">
+      {{ content.field_board_members }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if public_body_fields.other_info %}
+<div class="sfgov-public-body-section sfgov-public-body-other-info sfds-layout-container sfgov-in-this-page-target">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 id="other-info" class="sfgov-public-body-section--heading" role="heading">Resources</h2>
+
+    {% for info in public_body_fields.other_info %}
+      <div class="sfgov-public-body-section--content">
+        <h3>{{ info.title }}</h3>
+
+        {% if info.bundle == 'other_info_card' %}
+        <div class="sfgov-container-three-column">
+          {% for info_content in info.content %}
+          <div class="sfgov-container-item">
+            {% include "@theme/atoms/service-card.twig" with {
+              "title": info_content.title,
+              "description": info_content.description,
+              "url": info_content.url,
+              "heading": 'p',
+            } %}
+          </div>
+          {% endfor %}
+        </div>
+        {% elseif info.bundle == 'other_info_document' %}
+          {% for info_content in info.content %}
+          {% include "@atoms/09-document/09-document.twig" with {
+            "field_file": info_content.file,
+            "fileurl": info_content.fileurl,
+          } %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+{% endif %}
+
+{% if public_body_fields.address or public_body_fields.phone_numbers or public_body_fields.email %}
+<div class="sfgov-public-body-section sfgov-public-body-contact sfds-layout-container sfgov-in-this-page-target">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 class="sfgov-public-body-section--heading" role="heading" id="contact">Contact</h2>
+    <div class="sfgov-public-body-section--content">
+      {% if public_body_fields.address %}
+        <div class="sfgov-contact-section address">
+        {% if public_body_fields.address.organization %}
+          <p class="title">{{ public_body_fields.address.organization }}</p>
+        {% endif %}
+          <p>
+            {{ public_body_fields.address.line1 }} <br/>
+          {% if public_body_fields.address.line2 %}
+            {{ public_body_fields.address.line2 }} <br/>
+          {% endif %}
+            {{ public_body_fields.address.city }}, {{ public_body_fields.address.state }} {{ public_body_fields.address.zip }}
+          </p>
+
+          {% if public_body_fields.map %}
+          <div class="map">
+            {% if public_body_fields.map.map_img_url %}
+              <div class="simple-gmap-static-map">
+                <a href="{{ public_body_fields.map.map_site_url }}"><img src="{{ public_body_fields.map.map_img_url }}" /></a>
+              </div>
+            {% endif %}
+            {% if public_body_fields.map.map_directions_url %}
+              <p class="simple-gmap-link">
+                <a href="{{ public_body_fields.map.map_directions_url }}">Get directions</a>
+              </p>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if public_body_fields.phone_numbers %}
+        <div class="sfgov-contact-section phone-numbers">
+          <p class="title">Phone</p>
+          {% for phone in public_body_fields.phone_numbers %}
+            <div class="phone">
+              <h6>{{ phone.owner }}</h6>
+              <p><a href="tel:{{ phone.number }}">{{ phone.number }}</a></p>
+              <div class="details">
+                {{ phone.details | raw }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if public_body_fields.email %}
+        {% if public_body_fields.email.email_address %}
+          <div class="sfgov-contact-section email">
+            <p class="title">Email</p>
+            {% if public_body_fields.email.email_title %}
+              <h6>{{ public_body_fields.email.email_title }}</h6>
+            {% endif %}
+            <p><a href="mailto:{{ public_body_fields.email.email_address }}">{{ public_body_fields.email.email_address }}</a></p>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if public_body_fields.departments %}
+<div class="sfgov-public-body-section sfgov-public-body-departments sfds-layout-container sfgov-in-this-page-target">
+  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
+    <h2 class="sfgov-public-body-section--heading" role="heading" id="departments">Related departments</h2>
+    <div class="sfgov-public-body-section--content sfgov-container-two-column">
+      {% for dept in public_body_fields.departments %}
+      <div class="sfgov-container-item">
+        {% include "@theme/department-card.twig" with {
+          "title": dept.title,
+          "description": dept.description,
+          "url": dept.url
+        } %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{{ attach_library('sfgovpl/sfgov-public-body-homepage') }}

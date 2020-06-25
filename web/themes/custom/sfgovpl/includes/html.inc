@@ -139,6 +139,7 @@ function sfgovpl_preprocess_html(&$variables) {
         'turl' => $isFront ?
           Url::fromRoute('<front>', [], ['language' => $language])->toString() :
           $nodeUrl,
+          'status' => isset($langs[$langCode]) ?  $theNode->getTranslation($langCode)->isPublished() : false,
       ];
     }
   }
@@ -150,6 +151,7 @@ function sfgovpl_preprocess_html(&$variables) {
       $viewInfo['translations'][] = [
         'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
         'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, ['language' => $language])->toString(),
+        'status' => isset($langs[$langCode]) ?  $theNode->getTranslation($langCode)->isPublished() : false,
       ];
     }
     $variables['page']['#attached']['drupalSettings']['sfgov_translations']['view'] = $viewInfo;

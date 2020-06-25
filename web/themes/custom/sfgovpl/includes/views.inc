@@ -1,6 +1,19 @@
 <?php
 
 use Drupal\views\Views;
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_preprocess_views_view()
+ * 
+ * Adds a twig template variable for past events
+ */
+function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
+  $nid = \Drupal::routeMatch()->getParameter('arg_0');
+  $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+  $variables['public_body'] = $node->toLink()->toString()->getGeneratedLink();
+}
+
 /**
  * Implements hook_preprocess_views_view()
  * 

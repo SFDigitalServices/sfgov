@@ -1,4 +1,5 @@
 function SFGovTranslate() {
+  $ = jQuery;
   this.currentSelectedTranslation = null;
   this.sfgovGTranslateFireEvent = function (a, b) {
     try {
@@ -102,11 +103,14 @@ function SFGovTranslate() {
     // remove the cookie, as we are using language path prefixes and should
     // always show the same language as the URL.
     if(currentDrupalLanguage != 'en' || currentDrupalLanguage != gTranslateLang) {
-      // var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
+      var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
       // Always translate page, even if a Drupal translation for the page exists.
       // If translated content is being shown on the page, it should be wrapped
       // in a container with class="notranslate" to allow other elements like
       // header and footer to be translated.
+      if(drupalTranslation && drupalTranslation.status) {
+        $('main[role="main"]').addClass('notranslate').attr('translate', 'no');
+      }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
       return;

@@ -296,6 +296,11 @@ class SFgovDepartment {
     $sf_gov_department = new self($department);
     $group = $sf_gov_department->getDepartmentGroup();
 
+    // Temporarily escape for node type `public_body`.
+    if ($node->bundle() == 'public_body') {
+      return;
+    }
+
     /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
     $plugin = $group->getGroupType()->getContentPlugin('group_node:' . $node->bundle());
 
