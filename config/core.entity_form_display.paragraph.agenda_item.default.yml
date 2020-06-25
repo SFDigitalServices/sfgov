@@ -1,0 +1,42 @@
+uuid: 6b47d482-5541-4e0a-96c8-19506fcfa900
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.file
+    - field.field.paragraph.agenda_item.field_file
+    - field.field.paragraph.agenda_item.field_title
+    - paragraphs.paragraphs_type.agenda_item
+  module:
+    - entity_browser
+id: paragraph.agenda_item.default
+targetEntityType: paragraph
+bundle: agenda_item
+mode: default
+content:
+  field_file:
+    weight: 2
+    settings:
+      entity_browser: file
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

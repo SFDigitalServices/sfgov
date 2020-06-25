@@ -47,6 +47,18 @@
                 }
             }
         },
+        "wenzhixin/multiple-select": {
+            "type": "package",
+            "package": {
+                "name": "wenzhixin/multiple-select",
+                "version": "1.15.2",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/wenzhixin/multiple-select/archive/1.5.2.zip",
+                    "type": "zip"
+                }
+            }
+        },
         "asset-packagist": {
             "type": "composer",
             "url": "https://asset-packagist.org"
@@ -71,6 +83,7 @@
         "drupal/autodrop": "~1.0",
         "drupal/block_field": "^1.0@alpha",
         "drupal/bulk_update_fields": "^2.0@alpha",
+        "drupal/cer": "^4.0@alpha",
         "drupal/color_field": "^2.2",
         "drupal/components": "^1.0",
         "drupal/config_direct_save": "^1.0",
@@ -117,13 +130,14 @@
         "drupal/simple_sitemap": "^3.4",
         "drupal/simplesamlphp_auth": "^3.2",
         "drupal/smart_trim": "^1.1",
+        "drupal/subpathauto": "^1.1",
         "drupal/telephone_formatter": "~1.0",
         "drupal/telephone_validation": "2.1.0",
         "drupal/tmgmt_xtm": "5.x-dev",
         "drupal/twig_tweak": "^2.0",
         "drupal/twig_vardumper": "^1.1",
         "drupal/user_email_textformat": "^1.5",
-        "drupal/video_embed_field": "2.2",
+        "drupal/video_embed_field": "^2.4",
         "drupal/viewfield": "^3.0@alpha",
         "drupal/views_conditional": "^1.0",
         "drupal/views_infinite_scroll": "^1.5",
@@ -136,7 +150,8 @@
         "rvtraveller/qs-composer-installer": "^1.1",
         "sf-digital-services/sf-design-system": "^1.2",
         "sf-digital-services/sfgov-pattern-lab": "dev-retheme",
-        "symfony/css-selector": "^3.4.0"
+        "symfony/css-selector": "^3.4.0",
+        "wenzhixin/multiple-select": "^1.15"
     },
     "require-dev": {
         "behat/behat": "3.*",
@@ -194,10 +209,18 @@
             "npm-asset"
         ],
         "installer-paths": {
-            "web/core": ["type:drupal-core"],
-            "web/modules/contrib/{$name}": ["type:drupal-module"],
-            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
             "web/libraries/{$name}": [
                 "type:drupal-library",
                 "type:bower-asset",

@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @file
+ * Contains sfgov_public_bodies.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function sfgov_public_bodies_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the sfgov_public_bodies module.
+    case 'help.page.sfgov_public_bodies':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('SF Gov Public Bodies') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_preprocess_views().
+ *
+ * Workaround to display the Views title.
+ * See https://www.drupal.org/project/drupal/issues/2887071#comment-13554107
+ */
+function sfgov_public_bodies_preprocess_views_view__meetings__page(&$variables) {
+  $view = $variables['view'];
+  $view_id = $variables['id'];
+  $view_display_id = $variables['display_id'];
+
+  $variables['filters'] = \Drupal::formBuilder()->getForm('Drupal\sfgov_public_bodies\Form\MeetingListFiltersForm');
+
+  $title = $view->storage->getDisplay($view_display_id)['display_options']['title'];
+  $variables['title'] = $title;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
+  if ($view->id() == 'meetings' && ($view->getDisplay()->display['id'] == 'page_upcoming' || $view->getDisplay()->display['id'] == 'page_past')) {
+    $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($view->args[0]);
+    $query_month = \Drupal::request()->query->get('month');
+    $query_year = \Drupal::request()->query->get('year');
+    $query_subcommittees = \Drupal::request()->query->get('subcommittees');
+
+    foreach ($query->where as $group => $where) {
+      // If it's a contextual filter group.
+      if (count($where['conditions']) == 1) {
+        // Unset default condition.
+        unset($query->where[$group]['conditions']);
+
+        // Change query type.
+        $query->where[$group]['type'] = 'OR';
+
+        // Add committees to the views query.
+        if ($query_subcommittees) {
+          // Add committees.
+          foreach ($query_subcommittees as $value) {
+            $query->addWhere($group, 'node__field_public_body.field_public_body_target_id', $value, '=');
+          }
+        }
+        else {
+          $route = \Drupal::routeMatch();
+          $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
+          $subcommittees = [$public_body->id() => $public_body->label()];
+
+          foreach ($public_body->field_subcommittees->getValue() as $value) {
+            $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
+            $subcommittees[$subcommittee->id()] = $subcommittee->label();
+          }
+
+          foreach ($subcommittees as $key => $value) {
+            $query->addWhere($group, 'node__field_public_body.field_public_body_target_id', $key, '=');
+          }
+        }
+      }
+      else {
+        if (!empty($query_month)) {
+          $field = "DATE_FORMAT((node__field_start_date.field_start_date_value + INTERVAL -25200 SECOND), '%m') = :month";
+          $value = [':month' => $query_month];
+          $query->addWhere($group, $field, $value, 'formula');
+        }
+
+        if (!empty($query_year)) {
+          $field = "DATE_FORMAT((node__field_start_date.field_start_date_value + INTERVAL -25200 SECOND), '%Y') = :year";
+          $value = [':year' => $query_year];
+          $query->addWhere($group, $field, $value, 'formula');
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_public_bodies_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_meeting_form':
+    case 'node_meeting_edit_form':
+      // Rename "none" option.
+      $form['field_video_option']['widget']['#options']['_none'] = t('No video');
+
+      // Conditionally display `Video Embed` or `Video URL` fields.
+      $form['field_video_embed']['#states'] = [
+        'visible' => [
+          'input[name=field_video_option]' => ['value' => 0],
+        ],
+      ];
+      $form['field_video_embed']['widget'][0]['value']['#states'] = [
+        'required' => [
+          'input[name=field_video_option]' => ['value' => 0],
+        ],
+      ];
+      $form['field_url']['#states'] = [
+        'visible' => [
+          'input[name=field_video_option]' => ['value' => 1],
+        ],
+      ];
+      $form['field_url']['widget'][0]['uri']['#states'] = [
+        'required' => [
+          'input[name=field_video_option]' => ['value' => 1],
+        ],
+      ];
+      break;
+  }
+}
