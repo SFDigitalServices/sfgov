@@ -16,32 +16,44 @@
   }
 
   header {
+    .sfgov-nav-container__content {
+      align-items: center;
+      display: flex;
+      flex-flow: row nowrap;
+    }
+
     .sfgov-logo__container {
+      max-width: 80%;
+
       h1 {
         @include fs-title-2;
+        margin-bottom: 0;
       }
       img {
         width: auto;
-        height: 90px;
         margin: -30px 0;
 
         @include media-max($medium-screen) {
-          height: 47px;
           margin: 0;
         }
       }
-      @include media-max($medium-screen) {
-        width: 80%;
-      }
     }
     .head-right--container {
+      display: flex;
+      align-self: flex-start;
+      justify-content: flex-end;
+      margin-left: auto;
+      padding-left: 20px;
       width: auto;
+
       @include media-max($medium-screen) {
-        width: 16%;
+        flex-basis: 20%;
+
         .gtranslate_container {
-          position: absolute;
-          right: 0;
-          top: 35px;
+          margin-right: 0;
+          position: relative;
+          right: unset;
+          top: unset;
         }
       }
     }
