@@ -150,19 +150,23 @@
 
 .grid {
   -gutter-grid-: grid;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   list-style: none;
   margin: 0;
   padding: 0;
   min-width: 100%;
   border: 0 solid transparent;
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-content: stretch;
+  -ms-flex-line-pack: stretch;
+      align-content: stretch;
 }
 
 .grid[class*="grid--cols"]:not(.grid--noWrap) {
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 .grid__wrapper {
@@ -171,12 +175,14 @@
 
 .grid:not([class*="grid--cols"]):not(.grid--noStretch):not([class*="grid--align-"]):not([class*="grid--space-"]):not(.grid--noResize) > .grid__cell:not(.grid__cell--noStretch):not(.grid__cell--noResize) {
   -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
 .grid__cell {
   -gutter-grid-: cell;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   min-width: 0%;
   max-width: 100%;
   display: block;
@@ -188,23 +194,27 @@
 
 .grid__cell[class*="cell--span-"] {
   -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
 .grid__cell.grid {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
 .grid__cell, .grid__cell * > {
   max-width: 100%;
-  flex-shrink: 1;
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
 }
 
 .grid__inner {
   -gutter-grid-: inner;
   display: block;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .grid--outerGutters {
@@ -239,8 +249,10 @@
 
 .grid--hasInners > * {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
           align-items: stretch;
 }
 
@@ -251,47 +263,57 @@
 
 .grid--hasInners > * > *.grid {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
 .grid--vAlign-center {
   -webkit-box-align: center;
+      -ms-flex-align: center;
           align-items: center;
 }
 
 .grid--vAlign-top {
   -webkit-box-align: start;
+      -ms-flex-align: start;
           align-items: flex-start;
 }
 
 .grid--vAlign-bottom {
   -webkit-box-align: end;
+      -ms-flex-align: end;
           align-items: flex-end;
 }
 
 .grid--vertical {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
 }
 
 .grid--stretch > * {
   -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
 .grid--noStretch > * {
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
 .grid--noShrink > * {
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 .grid--noResize > * {
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
@@ -301,92 +323,113 @@
 
 @media (max-width: 1200px) {
   .grid {
-    flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
   }
 }
 
 .grid--wrap {
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 .grid--noWrap {
-  flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
 }
 
 .grid--space-between > *, .grid--space-around > * {
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
 .grid--space-between {
   -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
           justify-content: space-between;
 }
 
 .grid--space-around {
-  justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
 }
 
 .grid--space-evenly {
-  justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
 }
 
 .grid--align-left > *, .grid--align-center > *, .grid--align-right > * {
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
 .grid--align-left {
   -webkit-box-pack: start;
+      -ms-flex-pack: start;
           justify-content: flex-start;
 }
 
 .grid--align-center {
   -webkit-box-pack: center;
+      -ms-flex-pack: center;
           justify-content: center;
 }
 
 .grid--align-right {
   -webkit-box-pack: end;
+      -ms-flex-pack: end;
           justify-content: flex-end;
 }
 
 .grid--align-stretch > * {
   -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
 .grid__cell--vAlign-center {
-  align-self: center;
+  -ms-flex-item-align: center;
+      align-self: center;
 }
 
 .grid__cell--vAlign-top {
-  align-self: flex-start;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
 }
 
 .grid__cell--vAlign-bottom {
-  align-self: flex-end;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
 }
 
 .grid__cell--stretch {
   -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
 .grid__cell--noStretch {
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
 .grid__cell--noShrink {
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 .grid__cell--noResize {
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
@@ -520,15 +563,19 @@
 
 .sfgov-grid-two-columns {
   -gutter-grid-: grid;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   list-style: none;
   margin: 0;
   padding: 0;
   display: -webkit-box !important;
+  display: -ms-flexbox !important;
   display: flex !important;
-  align-content: stretch;
+  -ms-flex-line-pack: stretch;
+      align-content: stretch;
   border-color: transparent;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   min-width: 100%;
   border-style: solid;
   margin: 0 -20px -20px -20px;
@@ -552,7 +599,8 @@
 
 .sfgov-grid-two-columns > * {
   -gutter-grid-: cell;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   min-width: 0%;
   max-width: 100%;
   display: block;
@@ -561,8 +609,10 @@
   background-clip: padding-box !important;
   border: 0 solid transparent;
   -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
           flex-grow: 0;
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   width: calc(99.9999% / 2);
 }
 
@@ -598,9 +648,11 @@
 @media screen and (max-width: 768px) {
   .sfgov-container--right-sidebar {
     display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
+        -ms-flex-direction: column;
             flex-direction: column;
   }
 }
@@ -949,15 +1001,18 @@ img {
 
 .layout-container {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
   min-height: 100vh;
 }
 
 .layout-container main {
   -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
@@ -1157,7 +1212,8 @@ img {
 }
 
 .sfgov-search-form .js-form-item-sfgov-search-input input:focus {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .sfgov-search-form [data-drupal-selector="edit-actions"] {
@@ -1308,16 +1364,20 @@ header[role="banner"] [data-drupal-selector="edit-actions"] input[data-drupal-se
 
 .block-simple-instagram-block .instagram_gallery {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
+      -ms-flex-direction: row;
           flex-direction: row;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   margin-right: -20px;
 }
 
 .block-simple-instagram-block .instagram_gallery > a {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   width: 33.333%;
   margin-bottom: 20px;
@@ -1326,7 +1386,8 @@ header[role="banner"] [data-drupal-selector="edit-actions"] input[data-drupal-se
 
 .block-simple-instagram-block .instagram_gallery > a > img {
   width: 100%;
-  align-self: center;
+  -ms-flex-item-align: center;
+      align-self: center;
 }
 
 .alert {
@@ -2222,7 +2283,8 @@ details[open] .details__content {
 }
 
 .gtranslate_container .gtranslate > select:focus {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .gtranslate_container label[for="sfgov-gtranslate-select"] {
@@ -2968,9 +3030,11 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .sfgov-spotlight {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
           flex-direction: column-reverse;
 }
 
@@ -3046,6 +3110,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .sfgov-spotlight {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
+        -ms-flex-direction: row;
             flex-direction: row;
   }
   .sfgov-spotlight .sfgov-spotlight-section {
@@ -3161,6 +3226,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 .sfgov-pagination ul.sfgov-pagination__items {
   display: block;
   -webkit-box-pack: unset;
+      -ms-flex-pack: unset;
           justify-content: unset;
   list-style-type: none;
   padding: 0;
@@ -3276,8 +3342,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .video-embed-component .toggle-transcript {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
+      -ms-flex-align: center;
           align-items: center;
   margin-top: 28px;
   text-decoration: none;
@@ -3307,9 +3375,11 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .video-embed-component .video-wrapper {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
 }
 
@@ -3317,12 +3387,14 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .video-embed-component .video-wrapper {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
+        -ms-flex-direction: row;
             flex-direction: row;
   }
 }
 
 .video-embed-component .video-wrapper .group-left {
   -webkit-box-flex: 2;
+      -ms-flex: 2;
           flex: 2;
 }
 
@@ -3342,10 +3414,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .video-embed-component .video-wrapper .group-right {
   -webkit-box-flex: 1;
+      -ms-flex: 1;
           flex: 1;
   max-height: 100%;
   border: 2px solid #e9e9e9;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 @media screen and (max-width: 768px) {
@@ -6156,6 +6230,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-meeting .sfgov-section-recording .__url {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
@@ -6365,6 +6440,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 .page-node-type-public-body .sfgov-public-body-meetings .__public-body-meetings .sfgov-container-item {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
   padding: 0 30px;
 }
@@ -6614,9 +6690,11 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-public-body .sfgov-public-body-board-members .__board-members > .field__item .sfgov-people--content {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
 }
 
@@ -6626,6 +6704,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   background: none;
   padding: 0;
   -webkit-box-ordinal-group: 0;
+      -ms-flex-order: -1;
           order: -1;
 }
 
@@ -7458,7 +7537,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   width: 50%;
 }
 
-.page-node-type-event .event--meta .event--meta-inner h3 {
+.page-node-type-event .event--meta .event--meta-inner .title {
   font-size: 17px;
   font-weight: 500;
   line-height: 24px;
@@ -7472,6 +7551,20 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   margin: 0;
 }
 
+.page-node-type-event .event--meta .event--meta-inner ul {
+  margin: 0;
+  padding: 0;
+}
+
+.page-node-type-event .event--meta .event--meta-inner ul li {
+  list-style-type: none;
+}
+
+.page-node-type-event .event--meta .event--meta-inner ul.all li {
+  background: url("/themes/custom/sfgovpl/src/img/list-bullet-white.svg") no-repeat 10px 9px transparent;
+  padding-left: 30px;
+}
+
 .page-node-type-event .event--meta .event--meta-inner .event--meta-inner-content,
 .page-node-type-event .event--meta .event--meta-inner .paragraph--type--cost {
   margin-bottom: 25px;
@@ -7479,7 +7572,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-event .event--meta .event--meta-inner .event--meta-inner-content > div,
 .page-node-type-event .event--meta .event--meta-inner .paragraph--type--cost > div {
-  margin: 0 0 0 40px;
   font-size: 17px;
   font-weight: 400;
   line-height: 24px;
@@ -8089,8 +8181,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   padding-right: 20px;
   width: 100%;
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 @media screen and (min-width: 1280px) {
@@ -8388,8 +8482,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-transaction .banner-subheader .sfgov-things-to-know {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 @media screen and (min-width: 950px) {
@@ -9162,7 +9258,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .region-fourofour .sfgov-search-311-block form input {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 @media screen and (min-width: 950px) {
@@ -9364,9 +9461,11 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 @media screen and (min-width: 950px) {
   .paragraph--type--campaign {
     display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: reverse;
+        -ms-flex-direction: row-reverse;
             flex-direction: row-reverse;
   }
 }
@@ -9374,6 +9473,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 @media screen and (min-width: 950px) {
   .paragraph--type--campaign .__media {
     -webkit-box-flex: 0;
+        -ms-flex: 0 0 50%;
             flex: 0 0 50%;
     overflow: hidden;
     position: relative;
@@ -9409,6 +9509,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 @media screen and (min-width: 950px) {
   .paragraph--type--campaign .paragraph-campaign--text {
     -webkit-box-flex: 0;
+        -ms-flex: 0 0 50%;
             flex: 0 0 50%;
     height: 100%;
     padding: 40px 60px 40px 40px;
@@ -9489,8 +9590,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   max-width: 1280px;
   width: 100%;
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
+      -ms-flex-align: center;
           align-items: center;
 }
 
@@ -9498,6 +9601,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .paragraph--type--campaign-spotlight .container {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
+        -ms-flex-direction: column;
             flex-direction: column;
   }
 }
@@ -9522,11 +9626,14 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .paragraph--type--campaign-spotlight .container .group-right {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
   -webkit-box-pack: center;
+      -ms-flex-pack: center;
           justify-content: center;
   padding: 40px 20px;
 }
@@ -9598,8 +9705,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .paragraph--type--campaign-spotlight.is-reversed .container {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: reverse;
+        -ms-flex-direction: row-reverse;
             flex-direction: row-reverse;
     -webkit-box-pack: end;
+        -ms-flex-pack: end;
             justify-content: flex-end;
   }
 }
@@ -9690,9 +9799,11 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .paragraph--type--facts .__facts.field__items {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
 }
 
@@ -9700,14 +9811,17 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .paragraph--type--facts .__facts.field__items {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
+        -ms-flex-direction: row;
             flex-direction: row;
-    flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     margin-right: -20px;
   }
 }
 
 .paragraph--type--facts .__facts.field__items > .field__item {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin-bottom: 60px;
 }
@@ -9760,8 +9874,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 @media screen and (min-width: 768px) {
   .paragraph--type--facts .__facts.field__items > .field__item {
     -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
             align-items: stretch;
-    flex-basis: 33.333%;
+    -ms-flex-preferred-size: 33.333%;
+        flex-basis: 33.333%;
   }
   .paragraph--type--facts .__facts.field__items > .field__item > .paragraph--type--fact.paragraph--view-mode--default {
     width: 100%;
@@ -9771,19 +9887,23 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .campaign-facts .row {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+      -ms-flex-direction: column;
           flex-direction: column;
 }
 
 .campaign-facts .row .fact-item {
-  flex-basis: 33.333%;
+  -ms-flex-preferred-size: 33.333%;
+      flex-basis: 33.333%;
   margin-bottom: 60px;
 }
 
 .campaign-facts .row .fact-item .image {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin-bottom: 28px;
 }
@@ -9849,10 +9969,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   .campaign-facts .row {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
+        -ms-flex-direction: row;
             flex-direction: row;
   }
   .campaign-facts .row > div.fact-item {
-    flex-basis: 33.333%;
+    -ms-flex-preferred-size: 33.333%;
+        flex-basis: 33.333%;
     padding-right: 20px;
   }
   .campaign-facts .row > div:last-of-type {
@@ -12482,6 +12604,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 @media screen and (min-width: 950px) {
   .views--meetings .sfgov-filters .fieldset-wrapper {
     display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
   }
   .views--meetings .sfgov-filters .fieldset-wrapper .form-item {
@@ -12553,6 +12676,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .views--meetings .views-row article .meeting__content .__footer {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin-top: 1rem;
 }
@@ -12917,7 +13041,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   font-size: 17px;
   font-weight: 400;
   line-height: 24px;
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .path-user .user-login-form [data-drupal-selector="edit-actions"] [data-drupal-selector="edit-submit"]:hover::before.sfgov-translate-lang-zh-TW,
@@ -12971,7 +13096,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   margin-top: 10px;
   border-radius: 8px;
   border: none;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
 }
 
 .ms-parent .ms-drop ul {
@@ -13049,7 +13175,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   background: #fff;
   width: calc(100% - 58px);
   padding: 0;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
   text-align: left;
   border-radius: 0 0 8px 8px;
 }
@@ -13108,7 +13235,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   background: #fff;
   width: calc(100% - 58px);
   padding: 0;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
   text-align: left;
   border-radius: 0 0 8px 8px;
 }
@@ -13502,7 +13630,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 .loader {
   color: #ff0000;
   position: fixed;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   left: -9999px;
   top: -9999px;
   width: 0;
@@ -13512,7 +13641,8 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .loader:after, .loader:before {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   display: none;
 }
 

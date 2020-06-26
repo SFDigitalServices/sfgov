@@ -20,3 +20,19 @@ function sfgovpl_preprocess_block__system_branding_block(&$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgovpl_preprocess_gtranslate(&$variables) {
+  // Language picker should always reflect each option in the language
+  // it signifies.
+  $replace = [
+    'Translate' => t('Translate'),
+    'English' => 'English',
+    'Spanish' => 'Español',
+    'Filipino' => 'Filipino',
+    'Chinese (Traditional)' => '繁體中文',
+  ];
+  $variables['gtranslate_html'] = str_replace(array_keys($replace), $replace, $variables['gtranslate_html']);
+}

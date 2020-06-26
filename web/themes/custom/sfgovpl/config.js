@@ -8,5 +8,10 @@ module.exports = {
   images: {
     source: './src/img/**',
     dest: './dist/img',
-  }
+  },
+  autoprefixer: [
+    'last 2 versions',
+    '> 1%',
+    'ie 11'
+  ]
 };
