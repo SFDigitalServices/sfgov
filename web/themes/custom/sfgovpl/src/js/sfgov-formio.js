@@ -8,11 +8,11 @@
       }
     }
 
-    var customHideElements = function(options){
-      options.sfoptions["hide"].forEach(function(item, index){
-          var hide = $('.'+item)
-          for (var i=0; i<hide.length;i++){
-            hide[i].style.display = "none";
+    function customHideElements(elements) {
+      elements.forEach(function(klass, index) {
+          var hide = document.getElementsByClassName(klass)
+          for (var i = 0; i < hide.length; i++){
+            hide[i].style.display = "none"
           }
         })
     }
