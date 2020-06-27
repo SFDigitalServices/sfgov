@@ -123,7 +123,7 @@
               }
             }
           // if confirmation url is set, this is for backward compatibility
-          if(confirmation_url)
+          if (window.formioConfirmationURL)
             window.location = confirmation_url
         });
       });
