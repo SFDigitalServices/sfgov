@@ -1,6 +1,6 @@
 "use strict";
 (function($) {
-    var customAddCssClassById = function(classes){
+    function customAddCssClassById(classes) {
       for (var key in classes) {
         var el = $('#'+key)
         var value = classes[key]
