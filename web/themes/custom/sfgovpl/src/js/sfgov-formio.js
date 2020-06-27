@@ -2,9 +2,8 @@
 (function($) {
     function customAddCssClassById(classes) {
       for (var key in classes) {
-        var el = $('#'+key)
-        var value = classes[key]
-        el.addClass(value);
+        var el = document.getElementById(key)
+        el.classList.add(classes[key])
       }
     }
 
