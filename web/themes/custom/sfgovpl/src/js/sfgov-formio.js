@@ -93,8 +93,8 @@
           customHideElements(options)
         }
         // add css class to element(by id)
-        if(options.sfoptions && options.sfoptions["addClass"]){
-          customAddCssClassById(options.sfoptions["addClass"])
+        if (options.sfoptions && options.sfoptions.addClass) {
+          customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
         if(options.sfoptions["cookies"]){
