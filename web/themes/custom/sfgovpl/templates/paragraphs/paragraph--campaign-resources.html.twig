@@ -12,8 +12,8 @@
   <div{{ attributes.addClass(classes) }}>
     <div class="sfgov-section-container">
       {% block content %}
-        <h2 class="title">{{ 'Resources' | t }}</h2>
-        {{ content|without('field_file') }}
+        <h2 class="title">{{ content.field_title.0|default('Resource') }}</h2>
+        {{ content|without('field_file', 'field_title') }}
 
         {% if content.field_file %}
           <h4>{{ content.field_file['#title'] }}</h4>

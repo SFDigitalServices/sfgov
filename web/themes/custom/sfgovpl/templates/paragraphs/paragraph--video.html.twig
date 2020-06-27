@@ -4,7 +4,8 @@
   'paragraph--type--' ~ paragraph.bundle|clean_class,
   view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
   not paragraph.isPublished() ? 'paragraph--unpublished',
-  'container'
+  'container',
+  'video-embed-component'
 ]
 %}
 {% block paragraph %}
@@ -16,25 +17,24 @@
       {{ content.field_description }}
 
       <div class="video-wrapper">
-        <div class="group-left {{ captions ? 'has-captions' : 'no-captions' }}">
+        <div class="group-left {{ content.field_text.0 is not empty ? 'has-captions' : 'no-captions' }}">
           {{ content.field_video }}
         </div>
-        {% if captions %}
-          <div class="group-right">
-            <div class="inner">
-              <div class="link-video">
-                {{ link_transcript }}
-              </div>
-              <h5>{{ 'Transcript:'|t }}</h5>
-              <div class="transcript">
-                {% for caption in captions %}
-                  <p>{{ caption.text|raw }}</p>
-                {% endfor %}
-              </div>
+        {% if content.field_text.0 is not empty %}
+        <div class="group-right">
+          <div class="inner">
+            <div class="link-video">
+              {{ link_transcript }}
+            </div>
+
+            <h5>{{ 'Transcript:'|t }}</h5>
+            <div class="transcript">
+              {{ content.field_text.0|raw }}
             </div>
           </div>
-        {% endif %}
+        </div>
       </div>
+      {% endif %}
       <a href="#" class="toggle-transcript">
         <span>{{ 'View transcript'|t }}</span>
         <span class="is-hidden">{{ 'Hide transcript'|t }}</span>

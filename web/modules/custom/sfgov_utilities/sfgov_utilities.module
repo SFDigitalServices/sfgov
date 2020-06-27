@@ -114,37 +114,10 @@ function sfgov_utilities_preprocess_eck_entity(&$variables) {
   $bundle = $variables['bundle'];
   if($bundle && ($bundle == 'event_address' || $bundle == 'physical')) {
     $address = $variables['eck_entity']->get('field_address')->getValue()[0];
-    $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
-    $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
-
-    $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
-    // options for the map image
-    $options = [
-      'zoom' => 15,
-      'size' => '250x140'
-    ];
-    // options for markers
-    $markers = [
-      'color' => 'red', // {black, brown, green, purple, yellow, blue, gray, orange, red, white}
-      'size' => 'mid', // {tiny, mid, small}
-    ];
-
-    // construct the query params
-    $params = '';
-    foreach($options as $key => $value) {
-      $params .= $key . '=' . $value . '&';
-    }
-    $params .= 'markers=';
-    foreach($markers as $key => $value) {
-      $params .= $key . ':' . $value . '|';
-    }
-    $params .= $singleLineAddress;
-    $imgUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $singleLineAddress . '&' . $params . '&key=' . $apiKey;
-    $directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' . $singleLineAddress;
-    $mapSiteUrl = 'https://www.google.com/maps/search/?api=1&query=' . $singleLineAddress;
-    $variables['map_img_url'] = $imgUrl;
-    $variables['map_site_url'] = $mapSiteUrl;
-    $variables['map_directions_url'] = $directionsUrl;
+    $map = _sfgov_utilities_build_map($address);
+    $variables['map_img_url'] = $map['map_img_url'];
+    $variables['map_site_url'] = $map['map_site_url'];
+    $variables['map_directions_url'] = $map['map_directions_url'];
   }
 }
 
@@ -233,3 +206,42 @@ function sfgov_utilities_page_attachments(array &$page) {
   }
 }
 
+/**
+ * Custom function to build the attributes needed for rendering a Map.
+ */
+function _sfgov_utilities_build_map($address) {
+  $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
+  $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
+
+  $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
+  // options for the map image
+  $options = [
+    'zoom' => 15,
+    'size' => '250x140'
+  ];
+  // options for markers
+  $markers = [
+    'color' => 'red', // {black, brown, green, purple, yellow, blue, gray, orange, red, white}
+    'size' => 'mid', // {tiny, mid, small}
+  ];
+
+  // construct the query params
+  $params = '';
+  foreach($options as $key => $value) {
+    $params .= $key . '=' . $value . '&';
+  }
+  $params .= 'markers=';
+  foreach($markers as $key => $value) {
+    $params .= $key . ':' . $value . '|';
+  }
+  $params .= $singleLineAddress;
+  $imgUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $singleLineAddress . '&' . $params . '&key=' . $apiKey;
+  $directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' . $singleLineAddress;
+  $mapSiteUrl = 'https://www.google.com/maps/search/?api=1&query=' . $singleLineAddress;
+
+  return [
+    'map_img_url' => $imgUrl,
+    'map_site_url' => $mapSiteUrl,
+    'map_directions_url' => $directionsUrl,
+  ];
+}

@@ -5,24 +5,29 @@ dependencies:
   config:
     - field.field.node.meeting.body
     - field.field.node.meeting.field_address
-    - field.field.node.meeting.field_call_to_action
-    - field.field.node.meeting.field_cost
+    - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
-    - field.field.node.meeting.field_description
     - field.field.node.meeting.field_direct_external_url
-    - field.field.node.meeting.field_email
     - field.field.node.meeting.field_end_date
-    - field.field.node.meeting.field_image
-    - field.field.node.meeting.field_phone_numbers
+    - field.field.node.meeting.field_intro_text
+    - field.field.node.meeting.field_meeting_artifacts
+    - field.field.node.meeting.field_meeting_cancel
+    - field.field.node.meeting.field_public_body
+    - field.field.node.meeting.field_regulations_accordions
+    - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
-    - field.field.node.meeting.field_topics
+    - field.field.node.meeting.field_url
+    - field.field.node.meeting.field_video_embed
+    - field.field.node.meeting.field_video_option
     - node.type.meeting
   module:
     - datetime
     - entity_reference_revisions
     - link
+    - options
     - text
     - user
+    - video_embed_field
 id: node.meeting.default
 targetEntityType: node
 bundle: meeting
@@ -31,59 +36,44 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 101
+    weight: 1
     settings: {  }
     third_party_settings: {  }
     region: content
   content_moderation_control:
-    weight: -20
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_address:
-    weight: 102
-    label: above
+    weight: 2
+    label: hidden
     settings:
       link: true
+      view_mode: default
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_entity_view
     region: content
-  field_call_to_action:
-    weight: 103
-    label: above
+  field_agenda:
+    type: entity_reference_revisions_entity_view
+    weight: 10
+    label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
-    region: content
-  field_cost:
-    weight: 104
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
     region: content
   field_dept:
-    weight: 105
-    label: above
+    weight: 3
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_description:
-    weight: 110
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
   field_direct_external_url:
-    weight: 113
-    label: above
+    weight: 6
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -93,31 +83,40 @@ content:
     third_party_settings: {  }
     type: link
     region: content
-  field_email:
-    weight: 106
-    label: above
+  field_end_date:
+    weight: 4
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F d, Y l h:iA'
+    third_party_settings: {  }
+    type: datetime_custom
+    region: content
+  field_intro_text:
+    weight: 14
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_meeting_artifacts:
+    type: entity_reference_revisions_entity_view
+    weight: 9
+    label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
     region: content
-  field_end_date:
-    weight: 107
-    label: above
+  field_meeting_cancel:
+    weight: 7
+    label: hidden
     settings:
-      format_type: medium
-      timezone_override: ''
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_image:
-    weight: 108
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
+    type: boolean
     region: content
   field_phone_numbers:
     weight: 109
@@ -128,27 +127,72 @@ content:
     third_party_settings: {  }
     type: entity_reference_revisions_entity_view
     region: content
-  field_start_date:
+  field_public_body:
+    weight: 11
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_regulations_accordions:
+    type: entity_reference_revisions_entity_view
     weight: 111
-    label: above
+    label: hidden
     settings:
-      format_type: medium
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_regulations_title:
+    weight: 110
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_start_date:
+    weight: 5
+    label: hidden
+    settings:
       timezone_override: ''
+      date_format: 'F d, Y l h:iA'
     third_party_settings: {  }
-    type: datetime_default
+    type: datetime_custom
     region: content
-  field_topics:
-    weight: 112
-    label: above
+  field_url:
+    weight: 13
+    label: hidden
     settings:
-      link: true
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
     third_party_settings: {  }
-    type: entity_reference_label
+    type: link
     region: content
-  links:
-    weight: 100
+  field_video_embed:
+    weight: 12
+    label: hidden
+    settings:
+      responsive: true
+      width: 854
+      height: 480
+      autoplay: true
+    third_party_settings: {  }
+    type: video_embed_field_video
+    region: content
+  field_video_option:
+    type: list_default
+    weight: 15
+    region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   langcode: true
+  links: true
+  search_api_excerpt: true

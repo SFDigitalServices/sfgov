@@ -31,3 +31,28 @@ function sfgov_utilities_update_8702() {
     ])->save();
   }
 }
+
+/**
+ * Update Campaign theme name from Gold to Yellow.
+ */
+function sfgov_utilities_update_8703() {
+  $connection = \Drupal\Core\Database\Database::getConnection();
+
+  $tid = $connection->select('taxonomy_term_field_data', 't')
+    ->fields('t', ['tid'])
+    ->condition('t.name', 'Gold')
+    ->condition('t.vid', 'campaign_theme')
+    ->execute()
+    ->fetchField();
+
+  if ($tid) {
+    foreach (['taxonomy_term_field_data', 'taxonomy_term_field_revision'] as $table) {
+      $connection->update($table)
+        ->fields([
+          'name' => 'Yellow',
+        ])
+        ->condition('tid', $tid)
+        ->execute();
+      }
+  }
+}

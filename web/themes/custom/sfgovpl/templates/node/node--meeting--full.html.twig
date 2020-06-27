@@ -1,0 +1,155 @@
+{% set meeting_list_label = content.field_public_body[0]['#node'].label() %}
+{% set hero_banner_label = 
+    meeting_is_past
+    ? 'Part of <a href="@url">@public_body Archive</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_past', {arg_0: content.field_public_body[0]['#node'].id() })})
+    : 'Part of <a href="@url">@public_body Calendar</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': node.label,
+      'text': node.field_start_date.date|date('M d, Y'),
+      'label': hero_banner_label
+    }
+  } %}
+
+  {% if content.field_meeting_cancel[0]['#markup'] %}
+  <div class="sfgov-section sfgov-section-callout">
+    <div class="sfgov-section-container">
+      <div class="sfgov-section--content">
+        {{ 'This meeting has been cancelled'|t }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div id="sfgov-in-this-page" class="sfgov-in-this-page sfds-layout-container">
+    <div class="sfgov-public-body-in-this-page-container sfds-responsive-container">
+      <div class="sfgov-public-body-in-this-page-label">In this page:</div>
+      <ul></ul>
+    </div>
+  </div>
+
+  <div class="sfgov-section sfgov-section-container">
+    <div class="group--left">
+      {% if content.body|render %}
+      <div class="sfgov-section-overview sfgov-in-this-page-target">
+        <h2 id="overview" class="sfgov-section--heading" role="heading">Overview</h2>
+        <div class="sfgov-section--content">
+          {{ content.body }}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if content.field_agenda|render %}
+      <div class="sfgov-section-agenda sfgov-in-this-page-target">
+        <h2 id="agenda" class="sfgov-section--heading" role="heading">Agenda</h2>
+        <div class="sfgov-section--content">
+          {{ content.field_agenda }}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="group--right">
+      {% if content.field_start_date|render or content.field_end_date|render or content.field_address|render %}
+      <div class="sfgov-section-meeting-info">
+        <div class="sfgov-section--content">
+          {% if content.field_start_date|render or content.field_end_date|render %}
+          <div class="date-time">
+            <h4>Date</h4>
+            {% if content.field_start_date|render %}
+            <div class="start-date">
+              {{ content.field_start_date }}
+            </div>
+            {% endif %}
+            {% if content.field_end_date|render %}
+            <div class="end-date">
+              {{ content.field_end_date }}
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if content.field_address|render %}
+          <div class="address">
+            {{ content.field_address }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if content.field_video_option[0] is not empty %}
+  <div class="sfgov-section sfgov-section-recording sfgov-in-this-page-target">
+    <div class="sfgov-section-container">
+      <h2 id="recording" class="sfgov-section--heading" role="heading">Recording</h2>
+      <div class="sfgov-section--content">
+        {# Render description field #}
+        {{ content.field_intro_text }}
+
+        {# If external video is chosen #}
+        {% if content.field_video_option['#items'][0].value %}
+          {# Render external link button #}
+          {{ content.field_url }}
+        {# If Youtube is chosen #}
+        {% else %}
+          {# Render Youtube video component #}
+          {% include '@theme/video-embed.twig' with {
+            "video": content.field_video_embed,
+            "captions": video_captions,
+            "captions_link": video_captions_link
+          } %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if content.field_meeting_artifacts|render %}
+  <div class="sfgov-section sfgov-section-meeting-artifacts sfgov-in-this-page-target">
+    <div class="sfgov-section-container">
+      <div class="group--left">
+        <h2 id="artifacts" class="sfgov-section--heading" role="heading">Documents</h2>
+        <div class="sfgov-section--content">
+          {{ content.field_meeting_artifacts }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if content.field_regulations_accordions|render %}
+  <div class="sfgov-section sfgov-section-regulations-accessibility sfgov-in-this-page-target">
+    <div class="sfgov-section-container">
+      <div class="group--left">
+        {% if content.field_regulations_title.0 is not empty %}
+        <h2 id="regulations-accessibility" class="sfgov-section--heading" role="heading">{{ content.field_regulations_title.0 }}</h2>
+        {% endif %}
+        <div class="sfgov-section--content">
+          {{ content.field_regulations_accordions }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="sfgov-section-updated">
+    <div class="sfgov-section-container">
+      Last updated {{ node.changedtime|date('F d, Y') }}
+    </div>
+  </div>
+
+  {% if content.field_dept['#items'] is not empty %}
+  <div class="sfgov-section sfgov-section-departments">
+    <div class="sfgov-section-container">
+      <div class="sfgov-section--content">
+        {{ content.field_dept }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</article>
+

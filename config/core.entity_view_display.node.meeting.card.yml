@@ -1,0 +1,69 @@
+uuid: caf3638c-865c-4a62-9bad-f1cc26f90e15
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.meeting.body
+    - field.field.node.meeting.field_address
+    - field.field.node.meeting.field_agenda
+    - field.field.node.meeting.field_dept
+    - field.field.node.meeting.field_direct_external_url
+    - field.field.node.meeting.field_end_date
+    - field.field.node.meeting.field_intro_text
+    - field.field.node.meeting.field_meeting_artifacts
+    - field.field.node.meeting.field_meeting_cancel
+    - field.field.node.meeting.field_public_body
+    - field.field.node.meeting.field_regulations_accordions
+    - field.field.node.meeting.field_regulations_title
+    - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_url
+    - field.field.node.meeting.field_video_embed
+    - field.field.node.meeting.field_video_option
+    - node.type.meeting
+  module:
+    - datetime
+    - user
+id: node.meeting.card
+targetEntityType: node
+bundle: meeting
+mode: card
+content:
+  field_phone_numbers:
+    weight: 109
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_start_date:
+    weight: 0
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'l, M 4, Y - h:ia'
+    third_party_settings: {  }
+    type: datetime_custom
+    region: content
+hidden:
+  body: true
+  content_moderation_control: true
+  field_address: true
+  field_agenda: true
+  field_dept: true
+  field_direct_external_url: true
+  field_end_date: true
+  field_intro_text: true
+  field_meeting_artifacts: true
+  field_meeting_cancel: true
+  field_public_body: true
+  field_regulations_accordions: true
+  field_regulations_title: true
+  field_url: true
+  field_video_embed: true
+  field_video_option: true
+  langcode: true
+  links: true
+  search_api_excerpt: true
