@@ -89,8 +89,8 @@
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
         //perform sfoptions, hide certain elements
-        if(options.sfoptions && options.sfoptions["hide"]){
-          customHideElements(options)
+        if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+          customHideElements(options.sfoptions.hide)
         }
         // add css class to element(by id)
         if (options.sfoptions && options.sfoptions.addClass) {
