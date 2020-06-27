@@ -111,7 +111,9 @@
         form.on('submitDone', function(submission) {
             // custom options defined in Form.io render options field
             if(options.redirects instanceof Object){
-              customHideElements(options)
+              if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+                customHideElements(options.sfoptions.hide)
+              }
               console.log(submission.data)
               for (var key in options.redirects) {
                 var value = options.redirects[key]
