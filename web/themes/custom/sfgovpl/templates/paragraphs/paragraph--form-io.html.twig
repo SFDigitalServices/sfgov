@@ -60,7 +60,6 @@
    window.addEventListener('load', function() {
       var el = document.getElementById('formio') // keeping this as a DOM for patch.js
       var options = safeJSONParse(el.getAttribute('data-options'))
-      console.log(options)
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
         //perform sfoptions, hide certain elements
@@ -100,8 +99,9 @@
               }
             }
           // if confirmation url is set, this is for backward compatibility
-          if (window.formioConfirmationURL)
-            window.location = confirmation_url
+          {% if paragraph.field_formio_confirmation_url.value %}
+            window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
+          {% endif %}
         });
       });
       function customAddCssClassById(classes) {
