@@ -1,0 +1,33 @@
+uuid: af8f7715-6c97-441e-bd72-6bd3b101cfc3
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.location.physical
+    - field.storage.node.field_address
+    - node.type.public_body
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.public_body.field_address
+field_name: field_address
+entity_type: node
+bundle: public_body
+label: Address
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:location'
+  handler_settings:
+    target_bundles:
+      physical: physical
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,170 @@
+.views--meetings {
+  .sfgov-section-container {
+    @include contain-1090;
+    overflow: hidden;
+  }
+
+  .hero-banner {
+    background-color: $c-green-3;
+    a {
+      color: $c-white;
+    }
+    .hero-banner--container {
+      h1 {
+        margin-bottom: 0;
+        color: $c-white;
+      }
+      .lead-paragraph {
+        margin-top: 20px;
+        color: $c-white;
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .content {
+    padding: 60px 0;
+  }
+
+  h2.group {
+    @include fs-title-2;
+    margin-bottom: 60px;
+  }
+
+  h3.group {
+    @include fs-title-4;
+    margin-bottom: 20px;
+  }
+
+  .sfgov-filters {
+    background-color: $c-green-1;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    .sfgov-section-container {
+      overflow: inherit;
+    }
+
+    legend {
+      @include fs-title-3;
+    }
+
+    form {
+      max-width: 100%;
+    }
+
+    .fieldset-wrapper {
+      .form-item {
+        margin-bottom: 1rem;
+      }
+
+      @include media($narrow-screen) {
+        display: flex;
+
+        .form-item {
+          margin-right: 30px;
+          margin-bottom: 0;
+
+          select {
+            min-width: 200px;
+          }
+
+          &-subcommittees {
+            select {
+              width: 400px;
+            }
+          }
+        }
+      }
+
+      .button {
+        @include button-clear;
+        @include media($narrow-screen) {
+          margin: 0;
+          line-height: 0;
+        }
+        width: auto;
+
+        &:hover {
+          border: 3px solid $c-dark-blue;
+        }
+      }
+    }
+  }
+
+  .views-row {
+    padding-left: 30px;
+    margin-bottom: 40px;
+
+    article {
+      .article--teaser__title {
+        @include fs-title-5;
+      }
+      .meeting__content {
+        .__footer {
+          display: flex;
+          margin-top: 1rem;
+
+          .__time,
+          .__address {
+            width: 50%;
+            position: relative;
+            padding-left: 35px;
+
+            &:before {
+              content: ' ';
+              width: 20px;
+              height: 20px;
+              position: absolute;
+              top: 3px;
+              left: 0;
+            }
+
+            p {
+              margin: 0;
+            }
+
+            .country {
+              display: none;
+            }
+          }
+
+          .__time:before {
+            @include background-image('icons/clock_1-outlined.svg');
+          }
+          .__address:before {
+            @include background-image('icons/location-2.svg');
+          }
+        }
+      }
+    }
+  }
+
+  .group--left {
+    @include columns-780(left);
+  }
+  .group--right {
+    @include columns-350(right);
+
+    .inner {
+      background: $c-green-1;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 40px;
+
+      a {
+        @include button;
+        margin-top: 20px;
+        display: inline-block;
+      }
+    }
+  }
+
+  &--page_past {
+    .meeting__content .__footer {
+      display: none !important;
+    }
+  }
+}

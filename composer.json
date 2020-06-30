@@ -37,13 +37,25 @@
         "jqueryinstagramfeed": {
             "type": "package",
             "package": {
-                "name": "jqueryinstagramfeed",
+                "name": "jsanahuja/jquery.instagramfeed",
                 "version": "1.2.5",
                 "type": "drupal-library",
                 "source": {
                     "url": "https://github.com/jsanahuja/jquery.instagramFeed.git",
                     "type": "git",
-                    "reference": "1.2.5"
+                    "reference": "master"
+                }
+            }
+        },
+        "wenzhixin/multiple-select": {
+            "type": "package",
+            "package": {
+                "name": "wenzhixin/multiple-select",
+                "version": "1.15.2",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/wenzhixin/multiple-select/archive/1.5.2.zip",
+                    "type": "zip"
                 }
             }
         },
@@ -57,7 +69,7 @@
         }
     },
     "require": {
-        "php": ">=7.0.8",
+        "php": ">=7.2",
         "composer/installers": "^1.0.20",
         "cweagans/composer-patches": "^1.0",
         "drupal-composer/drupal-scaffold": "^2.0.1",
@@ -71,6 +83,7 @@
         "drupal/autodrop": "~1.0",
         "drupal/block_field": "^1.0@alpha",
         "drupal/bulk_update_fields": "^2.0@alpha",
+        "drupal/cer": "^4.0@alpha",
         "drupal/color_field": "^2.2",
         "drupal/components": "^1.0",
         "drupal/config_direct_save": "^1.0",
@@ -116,26 +129,27 @@
         "drupal/simple_sitemap": "^3.4",
         "drupal/simplesamlphp_auth": "^3.2",
         "drupal/smart_trim": "^1.1",
+        "drupal/subpathauto": "^1.1",
         "drupal/telephone_formatter": "~1.0",
         "drupal/telephone_validation": "2.1.0",
         "drupal/tmgmt_xtm": "5.x-dev",
         "drupal/twig_tweak": "^2.0",
         "drupal/twig_vardumper": "^1.1",
         "drupal/user_email_textformat": "^1.5",
-        "drupal/video_embed_field": "2.2",
+        "drupal/video_embed_field": "^2.4",
         "drupal/viewfield": "^3.0@alpha",
         "drupal/views_conditional": "^1.0",
         "drupal/views_infinite_scroll": "^1.5",
         "drush-ops/behat-drush-endpoint": "^0.0.5",
         "drush/drush": "^8",
-        "jqueryinstagramfeed": "^1.2",
-        "jsanahuja/jquery.instagramFeed": "^1.2",
+        "jsanahuja/jquery.instagramfeed": "^1.2",
         "oomphinc/composer-installers-extender": "^1.1",
         "pantheon-systems/quicksilver-pushback": "^2",
         "rvtraveller/qs-composer-installer": "^1.1",
         "sf-digital-services/sf-design-system": "^1.2",
         "sf-digital-services/sfgov-pattern-lab": "dev-retheme",
-        "symfony/css-selector": "^3.4.0"
+        "symfony/css-selector": "^3.4.0",
+        "wenzhixin/multiple-select": "^1.15"
     },
     "require-dev": {
         "behat/behat": "3.*",
@@ -193,15 +207,22 @@
             "npm-asset"
         ],
         "installer-paths": {
-            "web/core": ["type:drupal-core"],
-            "web/modules/contrib/{$name}": ["type:drupal-module"],
-            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
             "web/libraries/{$name}": [
                 "type:drupal-library",
                 "type:bower-asset",
-                "type:npm-asset",
-                "type:github"
+                "type:npm-asset"
             ]
         },
         "build-env": {
@@ -258,6 +279,9 @@
             },
             "drupal/simple_instagram_feed": {
                 "Update field defaults for sfgov": "patches/simple-instagram-block.patch"
+            },
+            "drupal/scheduler_content_moderation_integration": {
+                "Widget error when field is overridden - undefined offset 0 in $form['publish_state']": "https://www.drupal.org/files/issues/2020-04-28/undefined_offset-3077147-19.patch"
             }
         }
     },
@@ -269,7 +293,7 @@
         },
         "sort-packages": true,
         "platform": {
-            "php": "7.0.8"
+            "php": "7.2"
         }
     }
 }
