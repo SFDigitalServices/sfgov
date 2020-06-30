@@ -36,6 +36,7 @@ function SFGovTranslate() {
         that.sfgovGTranslateFireEvent(c, 'change');
         $('body').show();
         that.addElementTranslationClass(b);
+        that.updateSelectedLangDropdown(b);
         deferred.resolve();
     }
     return deferred.promise();
@@ -44,6 +45,11 @@ function SFGovTranslate() {
   this.addElementTranslationClass = function(translationVal) {
     var elementClass = 'sfgov-translate-lang-' + translationVal;
     $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').addClass(elementClass);
+  }
+
+  this.updateSelectedLangDropdown = function(translationVal) {
+    // Show the currently active language <option> as selected.
+    $('#sfgov-gtranslate-select').find('option[value*="|'+ translationVal +'"]').attr('selected', 'selected');
   }
 
   this.sfgovGTranslate = function(event) {
@@ -113,11 +119,13 @@ function SFGovTranslate() {
       }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
+      that.updateSelectedLangDropdown(currentDrupalLanguage);
       return;
     }
 
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang);
+      that.updateSelectedLangDropdown(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
       if (drupalTranslation && drupalTranslation.turl != window.location.pathname) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
