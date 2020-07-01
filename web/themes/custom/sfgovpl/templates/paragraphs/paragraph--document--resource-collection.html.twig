@@ -44,19 +44,22 @@
 {% set fileurl = file_url(paragraph.field_file.entity.field_media_file.entity.uri.value) %}
 
 {%
-set classes = [
-'paragraph',
-'paragraph--type--' ~ paragraph.bundle|clean_class,
-view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-not paragraph.isPublished() ? 'paragraph--unpublished',
-"parent--bundle--" ~ parent.bundle
-]
+  set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished',
+  "parent--bundle--" ~ parent.bundle
+  ]
 %}
 
 {% block paragraph %}
-  <div {{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
-    {% block content %}
-      {% if not field_file.isEmpty %}
+  {# Make sure there is a file field available to render. This will ensure
+  referenced entities that have been deleted don't end up printing with
+  incorrect info. #}
+  {% if content.field_file|render %}
+    <div {{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
+      {% block content %}
         <div class="document">
           {% if fileurl|length > 3 and field_file.entity.field_published_date.value %}
             <div class="link-date"><span class="link"><a href="{{ fileurl }}">{{ field_file.entity.label }}</a></span>
@@ -65,20 +68,20 @@ not paragraph.isPublished() ? 'paragraph--unpublished',
           {% else %}
             <div class="link-date"><span class="no-link">{{ field_file.entity.label }}</span>
           {% endif %}
-          <span class="publish-date">
-          {% if field_file.entity.field_published_date.value and fileurl|length > 3 %}
-            {{ field_file.entity.field_published_date.value|date("F j, Y") }}
-          {% elseif field_file.entity.field_published_date.value and field_file.entity.field_document_url %}
-            {{ field_file.entity.field_published_date.value|date("F j, Y") }}
-          {% else %}
-            {{ 'Upcoming'|t }}
-          {% endif %}
-          </span>
 
-          </div>
-          <span class="description">{{ field_file.entity.field_description.value|raw }}</span>
+          <span class="publish-date">
+            {% if field_file.entity.field_published_date.value and fileurl|length > 3 %}
+              {{ field_file.entity.field_published_date.value|date("F j, Y") }}
+            {% elseif field_file.entity.field_published_date.value and field_file.entity.field_document_url %}
+              {{ field_file.entity.field_published_date.value|date("F j, Y") }}
+            {% else %}
+              {{ 'Upcoming'|t }}
+            {% endif %}
+          </span>
         </div>
-      {% endif %}
+        <span class="description">{{ field_file.entity.field_description.value|raw }}</span>
+      </div>
     {% endblock %}
   </div>
+  {% endif %}
 {% endblock paragraph %}
