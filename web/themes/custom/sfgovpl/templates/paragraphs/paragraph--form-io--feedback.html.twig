@@ -54,19 +54,21 @@
                 $(messageComponent.element).find('textarea').focus();
 
                 // Capture which button was clicked and log to Amplitude.
-                var eventDescription = '';
-                if (form.data.helpfulNo === true) {
-                  eventDescription = 'No button clicked';
+                if (typeof amplitude != 'undefined') {
+                  var eventDescription = '';
+                  if (form.data.helpfulNo === true) {
+                    eventDescription = 'No button clicked';
+                  }
+                  if (form.data.reportIssue === true) {
+                    eventDescription = 'Report issue button clicked';
+                  }
+                  amplitudeData.feedback = {
+                    'type': 'change',
+                    'description': eventDescription,
+                    'data': event.data,
+                  }
+                  amplitude.getInstance().logEvent('Feedback Form Interaction', amplitudeData);
                 }
-                if (form.data.reportIssue === true) {
-                  eventDescription = 'Report issue button clicked';
-                }
-                amplitudeData.feedback = {
-                  'type': 'change',
-                  'description': eventDescription,
-                  'data': event.data,
-                }
-                amplitude.getInstance().logEvent('Feedback Form Interaction', amplitudeData);
               }
             }
           });
@@ -81,12 +83,14 @@
             document.getElementById(form.id).style.display = 'none';
 
             // Log event with Drupal and form submission data to Amplitude.
-            amplitudeData.feedback = {
-              'type': 'submit',
-              'description': submission.data.isHelpful === 'Yes' ? 'Helpful' : 'Not Helpful',
-              'data': submission.data,
+            if (typeof amplitude != 'undefined') {
+              amplitudeData.feedback = {
+                'type': 'submit',
+                'description': submission.data.isHelpful === 'Yes' ? 'Helpful' : 'Not Helpful',
+                'data': submission.data,
+              }
+              amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
             }
-            amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
           });
       });
 
