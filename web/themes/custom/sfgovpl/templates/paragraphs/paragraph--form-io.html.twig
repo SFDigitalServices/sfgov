@@ -71,14 +71,14 @@
           customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
-        if(options.sfoptions["cookies"]){
+        if(options.sfoptions instanceof Object && options.sfoptions.cookies){
           manageFormCookies(options.sfoptions["cookies"], form, true)
         }
         // perform custom action on nextPage event
         form.on('nextPage', function(){
           // set form cookies, if there are any
-          if(options.sfoptions["cookies"]){
-            manageFormCookies(options.sfoptions["cookies"], form, false)
+          if(options.sfoptions instanceof Object && options.sfoptions.cookies){
+            manageFormCookies(options.sfoptions.cookies, form, false)
           }
         })
         // What to do when the submit begins.
@@ -88,7 +88,6 @@
               if (options.sfoptions && options.sfoptions.hide instanceof Object) {
                 customHideElements(options.sfoptions.hide)
               }
-              console.log(submission.data)
               for (var key in options.redirects) {
                 var value = options.redirects[key]
                 // only one "redirect" should be "yes", this is set in the form.io form
