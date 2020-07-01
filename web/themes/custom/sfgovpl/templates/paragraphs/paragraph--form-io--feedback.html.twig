@@ -8,6 +8,9 @@
   <script>
     window.addEventListener('load', function() {
       var el = document.getElementById('formio-{{ form_id }}');
+      // Note: The Feedback form requires opting out of formio-sfds. This is set
+      // in the admin UI, via render options, by adding:
+      // "formioSFDSOptOut": true
       var options = safeJSONParse(el.getAttribute('data-options'));
 
       // Get the properties defined in the Amplitude event for "Feedback form".
