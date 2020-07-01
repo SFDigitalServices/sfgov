@@ -25,10 +25,6 @@
 
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
-          // Perform sfoptions.
-          if (options.sfoptions && options.sfoptions["hide"]) {
-            customHideElements(options)
-          }
 
           var feedbackSuccess, messageComponent = '';
           if (!feedbackSuccess || !messageComponent) {
@@ -93,15 +89,6 @@
             amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
           });
       });
-
-      function customHideElements(options) {
-        options.sfoptions["hide"].forEach(function(item, index) {
-          var hide = (document.getElementsByClassName(item))
-          for (var i = 0; i < hide.length; i++) {
-            hide[i].style.display = "none";
-          }
-        })
-      }
 
       function safeJSONParse(str) {
         var parsed = {}
