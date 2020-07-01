@@ -1,41 +1,40 @@
-uuid: a8ea776c-33d7-457e-9329-aa6b6801ae66
+uuid: ec1d0458-26c1-4822-a475-2feddc282f66
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.block
     - field.field.paragraph.form_io.field_formio_confirmation_url
     - field.field.paragraph.form_io.field_formio_data_source
     - field.field.paragraph.form_io.field_formio_render_options
     - paragraphs.paragraphs_type.form_io
-id: paragraph.form_io.default
+id: paragraph.form_io.block
 targetEntityType: paragraph
 bundle: form_io
-mode: default
+mode: block
 content:
   field_formio_confirmation_url:
     weight: 4
+    label: hidden
     settings:
-      size: 60
-      placeholder: ''
+      link_to_entity: false
     third_party_settings: {  }
-    type: string_textfield
+    type: string
     region: content
   field_formio_data_source:
     weight: 0
+    label: hidden
     settings:
-      size: 60
-      placeholder: ''
+      link_to_entity: false
     third_party_settings: {  }
-    type: string_textfield
+    type: string
     region: content
   field_formio_render_options:
     weight: 3
-    settings:
-      rows: 5
-      placeholder: ''
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
-    type: string_textarea
+    type: basic_string
     region: content
 hidden:
-  created: true
-  status: true
+  search_api_excerpt: true
