@@ -9,18 +9,35 @@ use Drupal\job_scheduler\Entity\JobSchedule;
  */
 function sfgov_campaigns_entity_update(EntityInterface $entity) {
   if ($entity->bundle() == 'campaign') {
-    $job = [
-      'name' => 'sfgov_campaigns_archiving_notification',
-      'type' => 'mail_notification',
-      'id' => time(),
-      'period' => 1,
-      'data' => [
-        'campaign_name' => 'COVID-19',
-        'campaign_expiration_date' => '[[Thursday, May 20]]'
-      ],
-    ];
-    $service = \Drupal::service('job_scheduler.manager');
-    $service->set($job);
+    if ($unpublish_on = $entity->unpublish_on->value) {
+      // Formatted `unpublish_on`.
+      $unpublish_on_formatted = \Drupal::service('date.formatter')->format($unpublish_on, 'custom', 'D, M j, Y - H:i:s');
+
+      // Set parameters to be sent to the email template.
+      $data = [
+        'campaign_name' => $entity->label(),
+        'campaign_expiration_date' => $unpublish_on_formatted,
+      ];
+
+      // If the node is new.
+      if ($entity->isNew()) {
+        // Add new job.
+        _sfgov_campaigns_archiving_notification_job_add($entity->id(), $unpublish_on, $data);
+      }
+      else {
+        if ($entity->unpublish_on->value != $entity->original->unpublish_on->value) {
+          // Remove existing job.
+          _sfgov_campaigns_archiving_notification_job_remove($entity->id());
+
+          // Add new job.
+          _sfgov_campaigns_archiving_notification_job_add($entity->id(), $unpublish_on, $data);
+        }
+      }
+    }
+  }
+  else {
+    // Remove existing job.
+    _sfgov_campaigns_archiving_notification_job_remove($entity->id());
   }
 }
 
@@ -35,6 +52,43 @@ function sfgov_campaigns_cron_job_scheduler_info() {
   ];
 
   return $schedulers;
+}
+
+/**
+ *
+ */
+function _sfgov_campaigns_archiving_notification_job_remove($id) {
+  $job = [
+    'name' => 'sfgov_campaigns_archiving_notification',
+    'type' => 'mail_notification',
+    'id' => $id,
+  ];
+  $service = \Drupal::service('job_scheduler.manager');
+  $service->remove($job);
+}
+
+/**
+ *
+ */
+function _sfgov_campaigns_archiving_notification_job_add($id, $unpublish_on, $data) {
+  // Get period timestamp from `unpublish_on`.
+  $period_timestamp = strtotime('-2 weeks', $unpublish_on);
+
+  // Get period interval in seconds.
+  $period = $period_timestamp - time();
+
+  // Add job only if period is greater than zero.
+  if ($period > 0) {
+    $job = [
+      'name' => 'sfgov_campaigns_archiving_notification',
+      'type' => 'mail_notification',
+      'id' => $id,
+      'period' => $period,
+      'data' => $data,
+    ];
+    $service = \Drupal::service('job_scheduler.manager');
+    $service->set($job);
+  }
 }
 
 /**
@@ -78,10 +132,4 @@ function sfgov_campaigns_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
-}
-
-/**
- * Implements hook_form_alter().
- */
-function sfgov_campaigns_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 }
