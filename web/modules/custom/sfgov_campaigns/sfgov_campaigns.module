@@ -1,6 +1,70 @@
 <?php
 
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\job_scheduler\Entity\JobSchedule;
+
+/**
+ * Implements hook_entity_update().
+ */
+function sfgov_campaigns_entity_update(EntityInterface $entity) {
+  if ($entity->bundle() == 'campaign') {
+    $job = [
+      'name' => 'sfgov_campaigns_archiving_notification',
+      'type' => 'mail_notification',
+      'id' => time(),
+      'period' => 1,
+      'data' => [
+        'campaign_name' => 'COVID-19',
+        'campaign_expiration_date' => '[[Thursday, May 20]]'
+      ],
+    ];
+    $service = \Drupal::service('job_scheduler.manager');
+    $service->set($job);
+  }
+}
+
+/**
+ * Implements hook_cron_job_scheduler_info().
+ */
+function sfgov_campaigns_cron_job_scheduler_info() {
+  $schedulers = [];
+
+  $schedulers['sfgov_campaigns_archiving_notification'] = [
+    'worker callback' => '_sfgov_campaigns_archiving_notification',
+  ];
+
+  return $schedulers;
+}
+
+/**
+ *
+ */
+function _sfgov_campaigns_archiving_notification(JobSchedule $job) {
+  $mail_manager = \Drupal::service('plugin.manager.mail');
+  $module = 'sfgov_campaigns';
+  $key = 'sfgov_campaigns__archiving_notification';
+  $to = 'test@example.com';
+  $params = $job->getData();
+  $mail_manager->mail($module, $key, $to, 'en', $params);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function sfgov_campaigns_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'sfgov_campaigns__archiving_notification':
+      $message['subject'] = 'Your campaign, '. $params['campaign_name'] .', is about to expire.';
+      $body_render = [
+        '#theme' => 'sfgov_campaigns__archiving_notification_message',
+        '#campaign_name' => $params['campaign_name'],
+        '#campaign_expiration_date' => $params['campaign_expiration_date'],
+      ];
+      $message['body'][] = \Drupal::service('renderer')->render($body_render);
+      break;
+  }
+}
 
 /**
  * Implements hook_theme().
@@ -17,33 +81,7 @@ function sfgov_campaigns_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_mail().
- */
-function sfgov_campaigns_mail($key, &$message, $params) {
-  switch ($key) {
-    case 'sfgov_campaigns__archiving_notification':
-      $message['subject'] = "Test Mail";
-      $body_render = [
-        '#theme' => 'sfgov_campaigns__archiving_notification_message',
-        '#campaign_name' => $params['campaign_name'],
-        '#campaign_expiration_date' => $params['campaign_expiration_date'],
-      ];
-      $message['body'][] = \Drupal::service('renderer')->render($body_render);
-      break;
-  }
-}
-
-/**
  * Implements hook_form_alter().
  */
 function sfgov_campaigns_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $mail_manager = \Drupal::service('plugin.manager.mail');
-  $module = 'sfgov_campaigns';
-  $key = 'sfgov_campaigns__archiving_notification';
-  $to = 'test@example.com';
-  $params = [
-    'campaign_name' => 'COVID',
-    'campaign_expiration_date' => '[[day, date]]',
-  ];
-  // $mail_manager->mail($module, $key, $to, 'en', $params);
 }
