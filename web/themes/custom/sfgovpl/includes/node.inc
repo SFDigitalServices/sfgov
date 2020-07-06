@@ -500,12 +500,10 @@ function public_body_page_fields() {
             break;
           case 'other_info_document':
             foreach ($otherInfoParagraph->field_file as $value) {
-              if ($value->entity->field_media_file->entity) {
-                $theFields['other_info'][$otherInfoKey]['content'][] = [
-                  'file' => $value,
-                  'fileurl' => file_create_url($value->entity->field_media_file->entity->getFileUri()),
-                ];
-              }
+              $theFields['other_info'][$otherInfoKey]['content'][] = [
+                'label' => $value->entity->label(),
+                'url' => $value->entity->field_media_file->entity ? file_create_url($value->entity->field_media_file->entity->getFileUri()) : NULL,
+              ];
             }
             break;
         }

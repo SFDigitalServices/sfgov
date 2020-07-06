@@ -195,9 +195,14 @@
         </div>
         {% elseif info.bundle == 'other_info_document' %}
           {% for info_content in info.content %}
-          {% include "@atoms/09-document/09-document.twig" with {
+          {# {% include "@atoms/09-document/09-document.twig" with {
             "field_file": info_content.file,
             "fileurl": info_content.fileurl,
+          } %} #}
+
+          {% include "@theme/document.twig" with {
+            "url": info_content.url,
+            "label": info_content.label,
           } %}
           {% endfor %}
         {% endif %}
