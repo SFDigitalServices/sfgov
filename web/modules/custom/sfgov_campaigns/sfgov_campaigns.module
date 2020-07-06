@@ -68,7 +68,7 @@ function _sfgov_campaigns_archiving_notification_job_remove($id) {
 }
 
 /**
- *
+ * Custom callback for schedule the "archiving email notification" job.
  */
 function _sfgov_campaigns_archiving_notification_job_add($id, $unpublish_on, $data) {
   // Get period timestamp from `unpublish_on`.
@@ -92,7 +92,7 @@ function _sfgov_campaigns_archiving_notification_job_add($id, $unpublish_on, $da
 }
 
 /**
- *
+ * Custom callback for sending email when a node is archived.
  */
 function _sfgov_campaigns_archiving_notification(JobSchedule $job) {
   $mail_manager = \Drupal::service('plugin.manager.mail');
