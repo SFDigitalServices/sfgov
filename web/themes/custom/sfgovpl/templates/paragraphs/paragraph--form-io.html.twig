@@ -38,27 +38,26 @@
  * @ingroup themeable
  */
 #}
-{% set formio_js_version = 'latest' %}
-{% set formio_sfds_version = 'latest' %}
-{% if paragraph.field_formio_js_version.value %}
-  {% set formio_js_version = paragraph.field_formio_js_version.value %}
-{% endif %}
-{% if paragraph.field_formio_sfds_version.value %}
-  {% set formio_sfds_version = paragraph.field_formio_sfds_version.value %}
-{% endif %}
-<div id="formio"
-  data-source="{{ paragraph.field_formio_data_source.value|trim }}"
-  {% if paragraph.field_formio_render_options.value %}
-    data-options="{{ paragraph.field_formio_render_options.value|escape }}"
-  {% endif %}
-></div>
+{% set endpoint = paragraph.field_formio_data_source.value|trim %}
+{% set form_id = content.field_formio_data_source['#formio_id']|clean_id %}
+{% set options = paragraph.field_formio_render_options.value|default('{}') %}
 
-<script src="https://unpkg.com/formiojs@{{ formio_js_version }}/dist/formio.full.min.js"></script>
-<script src="https://unpkg.com/formio-sfds@{{ formio_sfds_version }}/dist/formio-sfds.standalone.js"></script>
+{% set classes = [
+  'paragraph--formio',
+  'paragraph--formio--view-mode--' ~ view_mode|clean_class,
+  'paragraph--formio--' ~ form_id,
+]%}
 
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    <div id="formio-{{ form_id }}"
+      data-source="{{- endpoint -}}" data-options="{{ options|escape }}">
+    </div>
+
+{% block content %}
 <script>
    window.addEventListener('load', function() {
-      var el = document.getElementById('formio') // keeping this as a DOM for patch.js
+      var el = document.getElementById('formio-{{ form_id }}'); // keeping this as a DOM for patch.js
       var options = safeJSONParse(el.getAttribute('data-options'))
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
@@ -71,14 +70,14 @@
           customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
-        if(options.sfoptions["cookies"]){
+        if(options.sfoptions instanceof Object && options.sfoptions.cookies){
           manageFormCookies(options.sfoptions["cookies"], form, true)
         }
         // perform custom action on nextPage event
         form.on('nextPage', function(){
           // set form cookies, if there are any
-          if(options.sfoptions["cookies"]){
-            manageFormCookies(options.sfoptions["cookies"], form, false)
+          if(options.sfoptions instanceof Object && options.sfoptions.cookies){
+            manageFormCookies(options.sfoptions.cookies, form, false)
           }
         })
         // What to do when the submit begins.
@@ -88,7 +87,6 @@
               if (options.sfoptions && options.sfoptions.hide instanceof Object) {
                 customHideElements(options.sfoptions.hide)
               }
-              console.log(submission.data)
               for (var key in options.redirects) {
                 var value = options.redirects[key]
                 // only one "redirect" should be "yes", this is set in the form.io form
@@ -187,7 +185,10 @@
         }
         return parsed
       }
-  })
+  });
 
 </script>
+{% endblock content %}
 
+</div>
+{% endblock paragraph %}
