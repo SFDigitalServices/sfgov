@@ -104,15 +104,11 @@
   </div>
 </div>
 
-{% if public_body_fields.callout %}
-<div class="sfgov-public-body-section sfgov-public-body-callout sfds-layout-container">
-  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <div class="sfgov-public-body-section--content">
-      {{ public_body_fields.callout|raw }}
-    </div>
-  </div>
-</div>
-{% endif %}
+{# Alert #}
+{% include '@theme/alert.twig' with {
+  date_exp: node.field_alert_expiration_date.0.value,
+  style: 'department',
+} %}
 
 {% if content.field_public_body_meetings|render %}
 <div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">

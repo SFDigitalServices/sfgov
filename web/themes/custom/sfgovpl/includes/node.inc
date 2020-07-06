@@ -575,15 +575,6 @@ function public_body_page_fields() {
         }
       }
     }
-    if($node->hasField('field_callout')) {
-      $calloutField = $node->get('field_callout');
-      if($calloutField->getValue()) {
-        $calloutId = $calloutField->getValue()[0]['target_id'];
-        $calloutParagraph = Paragraph::load($calloutId);
-        $callout = $calloutParagraph->get('field_text')->getValue() ? $calloutParagraph->get('field_text')->getValue()[0]['value'] : null;
-        $theFields['callout'] = $callout ? $callout : null;
-      }
-    }
     if($node->hasField('field_about_description')) {
       $aboutField = $node->get('field_about_description');
       if($aboutField->getValue()) {
