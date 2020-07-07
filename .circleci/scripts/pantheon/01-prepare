@@ -16,3 +16,7 @@ terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
 
 # Delete leftover CI environments
 terminus -n build:env:delete:ci "$TERMINUS_SITE" --keep=2 --yes
+
+# Delete old multidev environments associated with a PR that has been
+# merged or closed.
+terminus -n build:env:delete:pr "$TERMINUS_SITE" --yes
