@@ -6,13 +6,17 @@ dependencies:
     - core.entity_view_mode.media.full
     - field.field.media.file.field_department
     - field.field.media.file.field_description
+    - field.field.media.file.field_document_url
     - field.field.media.file.field_keywords
     - field.field.media.file.field_media_file
     - field.field.media.file.field_published_date
     - field.field.media.file.field_topic
     - media.type.file
   module:
+    - datetime
     - file
+    - link
+    - text
 _core:
   default_config_hash: 9s0lWIanCnW5Xrrkmedxohs9F0yk4LO8ZcmVQ9xyuu4
 id: media.file.full
@@ -20,8 +24,35 @@ targetEntityType: media
 bundle: file
 mode: full
 content:
-  field_keywords:
+  field_department:
+    type: entity_reference_label
+    weight: 5
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_description:
+    type: text_default
     weight: 3
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  field_document_url:
+    type: link
+    weight: 2
+    region: content
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  field_keywords:
+    weight: 7
     label: above
     settings:
       link: true
@@ -36,8 +67,17 @@ content:
     type: file_default
     weight: 1
     region: content
+  field_published_date:
+    type: datetime_default
+    weight: 4
+    region: content
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
   field_topic:
-    weight: 2
+    weight: 6
     label: above
     settings:
       link: true
@@ -54,10 +94,7 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_department: true
-  field_description: true
-  field_document_url: true
-  field_published_date: true
   langcode: true
+  search_api_excerpt: true
   thumbnail: true
   uid: true
