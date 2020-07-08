@@ -24,7 +24,7 @@ class MeetingListFiltersForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['container'] = [
       '#type' => 'fieldset',
-      '#title' => 'Filters (' . $this->countActiveFilters() . ')',
+      '#title' => $this->t('Filters'),
     ];
 
     $form['container']['month'] = [
@@ -137,13 +137,6 @@ class MeetingListFiltersForm extends FormBase {
     }
 
     return $subcommittees;
-  }
-
-  /**
-   * Count active filters.
-   */
-  public function countActiveFilters() {
-    return count(\Drupal::request()->query->all());
   }
 
 }
