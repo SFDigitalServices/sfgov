@@ -7,12 +7,7 @@ UUID=$(terminus site:lookup $TERMINUS_SITE)
 
 sftp -o PORT=$PORT $TERMINUS_ENV.$UUID@appserver.$TERMINUS_ENV.$UUID.drush.in <<EOF
 get -r files/private/saml
-exit
-EOF
-
-cd saml
-sftp -o PORT=$PORT $TERMINUS_ENV.$UUID@appserver.$TERMINUS_ENV.$UUID.drush.in <<EOF
 cd code/web/private
-put -r *
+put -r ./saml/*
 exit
 EOF
