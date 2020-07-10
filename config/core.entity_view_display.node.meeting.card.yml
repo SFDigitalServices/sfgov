@@ -5,14 +5,19 @@ dependencies:
   config:
     - core.entity_view_mode.node.card
     - field.field.node.meeting.body
+    - field.field.node.meeting.field_abstract
     - field.field.node.meeting.field_address
     - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_intro_text
+    - field.field.node.meeting.field_link
+    - field.field.node.meeting.field_location_in_person
+    - field.field.node.meeting.field_location_online
     - field.field.node.meeting.field_meeting_artifacts
     - field.field.node.meeting.field_meeting_cancel
+    - field.field.node.meeting.field_phone_numbers
     - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
@@ -23,6 +28,7 @@ dependencies:
     - node.type.meeting
   module:
     - datetime
+    - entity_reference_revisions
     - user
 id: node.meeting.card
 targetEntityType: node
@@ -50,12 +56,16 @@ content:
 hidden:
   body: true
   content_moderation_control: true
+  field_abstract: true
   field_address: true
   field_agenda: true
   field_dept: true
   field_direct_external_url: true
   field_end_date: true
   field_intro_text: true
+  field_link: true
+  field_location_in_person: true
+  field_location_online: true
   field_meeting_artifacts: true
   field_meeting_cancel: true
   field_public_body: true
