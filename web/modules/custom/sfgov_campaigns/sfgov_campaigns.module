@@ -17,6 +17,7 @@ function sfgov_campaigns_entity_update(EntityInterface $entity) {
       $data = [
         'campaign_name' => $entity->label(),
         'campaign_expiration_date' => $unpublish_on_formatted,
+        'recipient' => $entity->uid->entity->mail->value,
       ];
 
       // If the node is new.
@@ -25,6 +26,7 @@ function sfgov_campaigns_entity_update(EntityInterface $entity) {
         _sfgov_campaigns_archiving_notification_job_add($entity->id(), $unpublish_on, $data);
       }
       else {
+        // If the unpublish date changes.
         if ($entity->unpublish_on->value != $entity->original->unpublish_on->value) {
           // Remove existing job.
           _sfgov_campaigns_archiving_notification_job_remove($entity->id());
@@ -32,12 +34,14 @@ function sfgov_campaigns_entity_update(EntityInterface $entity) {
           // Add new job.
           _sfgov_campaigns_archiving_notification_job_add($entity->id(), $unpublish_on, $data);
         }
+
+        // If the node is manually unpublished.
+        if (($entity->status->value != $entity->original->status->value) && !$entity->status->value) {
+          // Remove existing job.
+          _sfgov_campaigns_archiving_notification_job_remove($entity->id());
+        }
       }
     }
-  }
-  else {
-    // Remove existing job.
-    _sfgov_campaigns_archiving_notification_job_remove($entity->id());
   }
 }
 
@@ -55,7 +59,7 @@ function sfgov_campaigns_cron_job_scheduler_info() {
 }
 
 /**
- *
+ * Custom callback to remove a job schedule for "archiving email notification".
  */
 function _sfgov_campaigns_archiving_notification_job_remove($id) {
   $job = [
@@ -68,7 +72,7 @@ function _sfgov_campaigns_archiving_notification_job_remove($id) {
 }
 
 /**
- * Custom callback for schedule the "archiving email notification" job.
+ * Custom callback to add a job schedule for "archiving email notification".
  */
 function _sfgov_campaigns_archiving_notification_job_add($id, $unpublish_on, $data) {
   // Get period timestamp from `unpublish_on`.
@@ -77,18 +81,19 @@ function _sfgov_campaigns_archiving_notification_job_add($id, $unpublish_on, $da
   // Get period interval in seconds.
   $period = $period_timestamp - time();
 
-  // Add job only if period is greater than zero.
-  if ($period > 0) {
-    $job = [
-      'name' => 'sfgov_campaigns_archiving_notification',
-      'type' => 'mail_notification',
-      'id' => $id,
-      'period' => $period,
-      'data' => $data,
-    ];
-    $service = \Drupal::service('job_scheduler.manager');
-    $service->set($job);
-  }
+  // Workarund for when the unpublish date is in less than 2 weeks.
+  $period = $period < 0 ? 0 : $period;
+
+  // Schedule a job.
+  $job = [
+    'name' => 'sfgov_campaigns_archiving_notification',
+    'type' => 'mail_notification',
+    'id' => $id,
+    'period' => $period,
+    'data' => $data,
+  ];
+  $service = \Drupal::service('job_scheduler.manager');
+  $service->set($job);
 }
 
 /**
@@ -98,9 +103,8 @@ function _sfgov_campaigns_archiving_notification(JobSchedule $job) {
   $mail_manager = \Drupal::service('plugin.manager.mail');
   $module = 'sfgov_campaigns';
   $key = 'sfgov_campaigns__archiving_notification';
-  $to = 'test@example.com';
   $params = $job->getData();
-  $mail_manager->mail($module, $key, $to, 'en', $params);
+  $mail_manager->mail($module, $key, $params['recipient'], 'en', $params);
 }
 
 /**
