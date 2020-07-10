@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Contains sfgov_public_bodies.install.
+ */
+
+/**
+ * Update all meetings to set the "In-person" meeting location by default.
+ */
+function sfgov_public_bodies_update_8001() {
+  $nids = \Drupal::entityQuery('node')->condition('type','meeting')->execute();
+  $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+
+  foreach ($nodes as $node) {
+    $node->set('field_location_in_person', TRUE);
+    $node->save();
+  }
+}
