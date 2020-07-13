@@ -63,7 +63,7 @@ class MeetingListFiltersForm extends FormBase {
           'placeholder' =>  $this->t('Select one or more committees'),
         ],
         '#options' => $this->getSubcommittees(),
-        '#default_value' => $query_subcommittees ? $query_subcommittees : array_keys($this->getSubcommittees()),
+        '#default_value' => $query_subcommittees ? $query_subcommittees : [],
       ];
     }
 
@@ -88,10 +88,6 @@ class MeetingListFiltersForm extends FormBase {
           $filters[$key] = $value;
         }
       }
-    }
-
-    if (!isset($filters['subcommittees'])) {
-      $filters['subcommittees'][] = 0;
     }
 
     $uri = \Drupal::request()->getPathInfo();
