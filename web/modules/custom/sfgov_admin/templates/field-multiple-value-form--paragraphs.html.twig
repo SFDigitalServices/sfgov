@@ -48,7 +48,16 @@
       <div{{ description.attributes.addClass('description') }} >{{ description.content }}</div>
     {% endif %}
     {% if button %}
-      <div class="paragraphs-add-more{{ nested ? ' is-nested' }}"{{ level ? ' data-level=' ~ level ~ ''}}>{{ button }}</div>
+      <div class="paragraphs-add-more{{ nested ? ' is-nested' }}"{{ level ? ' data-level=' ~ level ~ ''}}>
+        {% if button['#suffix'] %}
+          {% set prefix, suffix = button['#prefix'], button['#suffix'] %}
+          {% set button = button|merge({
+            '#prefix': prefix ? '<span class="paragraphs-add-more-prefix">' ~ prefix ~ '</span>': '',
+            '#suffix': suffix ? '<span class="paragraphs-add-more-suffix">' ~ suffix ~ '</span>': '',
+          }) %}
+        {% endif %}
+        {{ button }}
+      </div>
     {% endif %}
   </div>
 {% else %}

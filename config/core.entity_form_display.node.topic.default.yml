@@ -18,6 +18,7 @@ dependencies:
   module:
     - allowed_formats
     - content_moderation
+    - field_group
     - maxlength
     - paragraphs
     - path
@@ -25,6 +26,103 @@ dependencies:
     - scheduler_content_moderation_integration
     - sfgov_admin
     - text
+third_party_settings:
+  field_group:
+    group_content_top:
+      children:
+        - field_content_top
+      parent_name: ''
+      weight: 4
+      format_type: html_element
+      region: content
+      format_settings:
+        id: sf-paragraph-group-content-top
+        classes: 'sf-paragraphs-group sf-paragraphs-group--content-top'
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Content top'
+    group_services:
+      children:
+        - field_department_services
+      parent_name: ''
+      weight: 5
+      format_type: html_element
+      region: content
+      format_settings:
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: sf-paragraph-group-services
+        classes: 'sf-paragraphs-group sf-paragraphs-group--services'
+      label: Services
+    group_spotlight:
+      children:
+        - field_spotlight
+      parent_name: ''
+      weight: 6
+      format_type: html_element
+      region: content
+      format_settings:
+        id: sf-paragraph-group-spotlight
+        classes: 'sf-paragraphs-group sf-paragraphs-group--spotlight'
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Spotlight
+    group_content:
+      children:
+        - field_content
+      parent_name: ''
+      weight: 7
+      format_type: html_element
+      region: content
+      format_settings:
+        id: sf-paragraph-group-content
+        classes: 'sf-paragraphs-group sf-paragraphs-group--content'
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Content
+    group_resources:
+      children:
+        - field_resources
+      parent_name: ''
+      weight: 8
+      format_type: html_element
+      region: content
+      format_settings:
+        id: sf-paragraph-group-resources
+        classes: 'sf-paragraphs-group sf-paragraphs-group--resources'
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Resources
 id: node.topic.default
 targetEntityType: node
 bundle: topic
@@ -32,12 +130,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   field_content:
-    weight: 7
+    weight: 8
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -47,7 +145,7 @@ content:
       closed_mode_threshold: '0'
       add_mode: dropdown_custom
       form_display_mode: default
-      default_paragraph_type: section
+      default_paragraph_type: _none
       features:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
@@ -57,7 +155,7 @@ content:
     region: content
   field_content_top:
     type: paragraphs
-    weight: 4
+    weight: 5
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -75,7 +173,7 @@ content:
     third_party_settings: {  }
     region: content
   field_department_services:
-    weight: 5
+    weight: 6
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -94,7 +192,7 @@ content:
     type: paragraphs
     region: content
   field_departments:
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -120,13 +218,13 @@ content:
     type: text_textarea
     region: content
   field_page_design:
-    weight: 10
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_resources:
-    weight: 8
+    weight: 9
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -145,7 +243,7 @@ content:
     type: paragraphs
     region: content
   field_spotlight:
-    weight: 6
+    weight: 7
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -182,20 +280,20 @@ content:
     region: content
   langcode:
     type: language_select
-    weight: 11
+    weight: 12
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 20
+    weight: 21
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -203,18 +301,18 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 16
     region: content
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -222,14 +320,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 19
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 17
     region: content
     third_party_settings: {  }
   title:
@@ -241,13 +339,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 12
+    weight: 13
     settings:
       match_operator: CONTAINS
       size: 60
@@ -257,18 +355,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 25
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 19
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
