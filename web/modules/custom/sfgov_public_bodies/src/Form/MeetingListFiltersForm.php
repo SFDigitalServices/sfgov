@@ -66,11 +66,12 @@ class MeetingListFiltersForm extends FormBase {
     if ($this->getSubcommittees()) {
       $query_subcommittees = \Drupal::request()->query->get('subcommittees');
       $form['container']['details']['items']['subcommittees'] = [
-        '#type' => 'select',
-        '#multiple' => TRUE,
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Select a committee'),
         '#attributes' => [
-          'data-multiple-select' => TRUE,
-          'placeholder' => $this->t('Select one or more committees'),
+          'data-multiselect' => TRUE,
+          'data-multiselect-item-singular' => 'committee',
+          'data-multiselect-item-plural' => 'committees',
         ],
         '#options' => $this->getSubcommittees(),
         '#default_value' => $query_subcommittees ? $query_subcommittees : [],
