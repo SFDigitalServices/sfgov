@@ -159,7 +159,7 @@
         $('#' + associations[checkedVal.toLowerCase()]).show();
       }
       reqPublicRecords();
-      
+
     }
   }
 
@@ -170,17 +170,17 @@
       var onlineCheck = $('#edit-field-location-online-value');
       var onlineHelpText = $('#edit-field-location-online-value--description');
 
-      if(inPersonCheck.is(':checked')) {
-        $(inPersonAddressLabel).addClass('form-required');
-      }
+      // if(inPersonCheck.is(':checked')) {
+      //   $(inPersonAddressLabel).addClass('form-required');
+      // }
 
       if(!onlineCheck.is(':checked')) {
         $(onlineHelpText).hide();
       }
 
-      $(inPersonCheck).click(function() {
-        $(inPersonAddressLabel).addClass('form-required');
-      });
+      // $(inPersonCheck).click(function() {
+      //   $(inPersonAddressLabel).addClass('form-required');
+      // });
 
       $(onlineCheck).click(function() {
         var checked = $(this).is(':checked');
