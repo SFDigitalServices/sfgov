@@ -7,9 +7,7 @@ dependencies:
     - field.storage.paragraph.field_form_type
     - field.storage.paragraph.field_formio_confirmation_url
     - field.storage.paragraph.field_formio_data_source
-    - field.storage.paragraph.field_formio_js_version
     - field.storage.paragraph.field_formio_render_options
-    - field.storage.paragraph.field_formio_sfds_version
     - field.storage.paragraph.field_token_field_name
     - field.storage.paragraph.field_unauthorized_url
     - field.storage.paragraph.field_verification_url
@@ -47,7 +45,7 @@ display:
         type: views_query
         options:
           disable_sql_rewrite: false
-          distinct: false
+          distinct: true
           replica: false
           query_comment: ''
           query_tags: {  }
@@ -89,6 +87,72 @@ display:
           hide_empty: false
           default_field_elements: true
       fields:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -258,67 +322,6 @@ display:
           delta_first_last: false
           field_api_classes: 0
           plugin_id: field_export
-        field_formio_js_version_export:
-          id: field_formio_js_version_export
-          table: paragraph__field_formio_js_version
-          field: field_formio_js_version_export
-          relationship: field_form_id
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: true
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: true
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: false
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: 0
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          field_api_classes: 0
-          plugin_id: field_export
         field_formio_render_options_export:
           id: field_formio_render_options_export
           table: paragraph__field_formio_render_options
@@ -329,66 +332,6 @@ display:
           label: ''
           exclude: false
           alter:
-            alter_text: true
-            text: '{{ field_formio_render_options_export }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: true
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: true
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: false
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: basic_string
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          field_api_classes: 0
-          plugin_id: field_export
-        field_formio_sfds_version_export:
-          id: field_formio_sfds_version_export
-          table: paragraph__field_formio_sfds_version
-          field: field_formio_sfds_version_export
-          relationship: field_form_id
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
             alter_text: false
             text: ''
             make_link: false
@@ -397,7 +340,7 @@ display:
             external: false
             replace_spaces: false
             path_case: none
-            trim_whitespace: true
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
@@ -411,7 +354,7 @@ display:
             more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: true
+            strip_tags: false
             trim: false
             preserve_tags: ''
             html: false
@@ -422,15 +365,14 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: false
+          element_default_classes: true
           empty: ''
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: 0
+          type: basic_string
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -744,6 +686,72 @@ display:
           delta_first_last: false
           field_api_classes: 0
           plugin_id: field_export
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: language
+          settings:
+            link_to_entity: false
+            native_language: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: langcode
+          plugin_id: field
       filters:
         status:
           value: '1'
@@ -864,6 +872,7 @@ display:
           entity_field: nid
           plugin_id: node_nid
       display_extenders: {  }
+      group_by: false
     cache_metadata:
       max-age: -1
       contexts:
@@ -879,9 +888,7 @@ display:
         - 'config:field.storage.paragraph.field_form_type'
         - 'config:field.storage.paragraph.field_formio_confirmation_url'
         - 'config:field.storage.paragraph.field_formio_data_source'
-        - 'config:field.storage.paragraph.field_formio_js_version'
         - 'config:field.storage.paragraph.field_formio_render_options'
-        - 'config:field.storage.paragraph.field_formio_sfds_version'
         - 'config:field.storage.paragraph.field_token_field_name'
         - 'config:field.storage.paragraph.field_unauthorized_url'
         - 'config:field.storage.paragraph.field_verification_url'
@@ -918,14 +925,8 @@ display:
             field_formio_data_source_export:
               alias: field_formio_data_source
               raw_output: true
-            field_formio_js_version_export:
-              alias: field_formio_js_version
-              raw_output: true
             field_formio_render_options_export:
               alias: field_formio_render_options
-              raw_output: true
-            field_formio_sfds_version_export:
-              alias: field_formio_sfds_version
               raw_output: true
             field_form_id_export_1:
               alias: field_acuity_owner_id
@@ -956,9 +957,7 @@ display:
         - 'config:field.storage.paragraph.field_form_type'
         - 'config:field.storage.paragraph.field_formio_confirmation_url'
         - 'config:field.storage.paragraph.field_formio_data_source'
-        - 'config:field.storage.paragraph.field_formio_js_version'
         - 'config:field.storage.paragraph.field_formio_render_options'
-        - 'config:field.storage.paragraph.field_formio_sfds_version'
         - 'config:field.storage.paragraph.field_token_field_name'
         - 'config:field.storage.paragraph.field_unauthorized_url'
         - 'config:field.storage.paragraph.field_verification_url'
