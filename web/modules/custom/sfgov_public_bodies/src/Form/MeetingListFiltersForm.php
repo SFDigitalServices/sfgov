@@ -27,7 +27,17 @@ class MeetingListFiltersForm extends FormBase {
       '#title' => $this->t('Filters'),
     ];
 
-    $form['container']['month'] = [
+    $form['container']['details'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Hide Filters'),
+      '#open' => TRUE,
+    ];
+
+    $form['container']['details']['items'] = [
+      '#type' => 'container',
+    ];
+
+    $form['container']['details']['items']['month'] = [
       '#type' => 'select',
       '#options' => [
         '' => $this->t('Select a month'),
@@ -47,7 +57,7 @@ class MeetingListFiltersForm extends FormBase {
       '#default_value' => \Drupal::request()->query->get('month'),
     ];
 
-    $form['container']['year'] = [
+    $form['container']['details']['items']['year'] = [
       '#type' => 'select',
       '#options' => $this->getYearOptions(),
       '#default_value' => \Drupal::request()->query->get('year'),
@@ -55,19 +65,19 @@ class MeetingListFiltersForm extends FormBase {
 
     if ($this->getSubcommittees()) {
       $query_subcommittees = \Drupal::request()->query->get('subcommittees');
-      $form['container']['subcommittees'] = [
+      $form['container']['details']['items']['subcommittees'] = [
         '#type' => 'select',
         '#multiple' => TRUE,
         '#attributes' => [
           'data-multiple-select' => TRUE,
-          'placeholder' =>  $this->t('Select one or more committees'),
+          'placeholder' => $this->t('Select one or more committees'),
         ],
         '#options' => $this->getSubcommittees(),
         '#default_value' => $query_subcommittees ? $query_subcommittees : [],
       ];
     }
 
-    $form['container']['submit'] = [
+    $form['container']['details']['items']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply filters'),
     ];
