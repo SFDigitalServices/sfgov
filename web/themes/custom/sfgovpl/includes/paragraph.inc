@@ -80,10 +80,27 @@ function sfgovpl_preprocess_paragraph(&$variables) {
  */
 function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
   $paragraph = $variables['paragraph'];
+  $parent_field_name = $paragraph->parent_field_name->value;
+  $items = 12;
+  $items_per_row = 4;
+  $image_size = 150;
+  $styling = TRUE;
+
+  if($parent_field_name == 'field_contents') {
+    $items = 9;
+    $items_per_row = 3;
+    $image_size = 480;
+    $styling = FALSE;
+  }
+
   $variables['#attached']['library'][] = 'sfgovpl/sfgov-instagram-feed';
   $variables['#attached']['drupalSettings']['sfgov']['instagram_feed'][$paragraph->id()] = [
     'paragraph_id' => $paragraph->id(),
     'instagram_profile' => $paragraph->field_instagram_profile->value,
+    'items' => $items,
+    'items_per_row' => $items_per_row,
+    'image_size' => $image_size,
+    'styling' => $styling,
   ];
 }
 
