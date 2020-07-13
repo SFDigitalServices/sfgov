@@ -28,7 +28,6 @@ function sfgovpl_preprocess_gtranslate(&$variables) {
   // Language picker should always reflect each option in the language
   // it signifies.
   $replace = [
-    'Translate' => t('Translate'),
     'English' => 'English',
     'Spanish' => 'Español',
     'Filipino' => 'Filipino',

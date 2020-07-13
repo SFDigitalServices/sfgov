@@ -43,7 +43,7 @@
     {% set stepTypeValue = stepNumber %}
     {% set stepTypeClass = 'number' %}
   {% else %}
-    {% set stepTypeValue = stepType %}
+    {% set stepTypeValue = stepType is not empty ? stepType : 'and'|t %}
     {% set stepTypeClass = 'conjuction' %}
     {% set stepNumber = stepNumber - 1 %}
   {% endif %}
