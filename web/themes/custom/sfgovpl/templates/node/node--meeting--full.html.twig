@@ -71,9 +71,21 @@
           </div>
           {% endif %}
 
-          {% if content.field_address|render %}
-          <div class="address">
+          {% if node.field_location_online.value and content.field_address|render %}
+          <div class="location--in-person">
             {{ content.field_address }}
+          </div>
+          {% endif %}
+
+          {% if node.field_location_online.value %}
+          <div class="location--online">
+            <h4>Online</h4>
+            {{ content.field_abstract }}
+            {{ content.field_link }}
+            <div class="location--online--phone">
+              <h4>Phone</h4>
+              {{ content.field_phone_numbers }}
+            </div>
           </div>
           {% endif %}
         </div>
