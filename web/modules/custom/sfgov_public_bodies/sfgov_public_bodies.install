@@ -4,6 +4,16 @@
  * @file
  * Contains sfgov_public_bodies.install.
  */
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Programmatically import config field.field.paragraph.video.field_text.
+ */
+function sfgov_public_bodies_update_8000() {
+  $config_path = drupal_get_path('module', 'sfgov_public_bodies') . '/config/optional';
+  $config_source = new FileStorage($config_path);
+  \Drupal::service('config.installer')->installOptionalConfig($config_source);
+}
 
 /**
  * Update all meetings to set the "In-person" meeting location by default.
@@ -13,7 +23,9 @@ function sfgov_public_bodies_update_8001() {
   $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
 
   foreach ($nodes as $node) {
-    $node->set('field_location_in_person', TRUE);
-    $node->save();
+    if ($node->hasField('field_location_in_person')) {
+      $node->set('field_location_in_person', TRUE);
+      $node->save();
+    }
   }
 }
