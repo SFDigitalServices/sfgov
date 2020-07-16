@@ -125,7 +125,10 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $video_id = $video_service->getVideoId($video_url);
 
   // Link transcript
-  $url = Url::fromUserInput('/video/' . $video_id . '/' . $paragraph->id());
+  $url = Url::fromRoute('sfgov_video.video_controller_page_41', [
+    'video_id' => $video_id,
+    'paragraph_id' => $paragraph->id()
+  ]);
   $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
   $link = $link->toRenderable();
   $link['#attributes']['target'] = '_blank';
