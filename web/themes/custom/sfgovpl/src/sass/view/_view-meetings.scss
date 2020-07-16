@@ -1,4 +1,8 @@
 .views--meetings {
+  .ms-parent {
+    width: 100%;
+  }
+
   .sfgov-section-container {
     @include contain-1090;
     overflow: hidden;
@@ -26,6 +30,24 @@
 
   .content {
     padding: 60px 0;
+    @media (max-width: $mobile-screen) {
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: $mobile-screen) {
+    .view-grouping {
+      padding: 60px 20px;
+      margin: 0 -20px;
+
+      &:nth-child(even) {
+        background-color: #F6F7F8;
+      }
+
+      &:last-child {
+        margin-bottom: 60px;
+      }
+    }
   }
 
   h2.group {
@@ -47,8 +69,48 @@
       overflow: inherit;
     }
 
+    .fieldset-wrapper {
+      transition: all 0.3s ease-in-out;
+      overflow: hidden;
+    }
+
+    .form-wrapper {
+      .meeting-list-filters-toggle {
+        display: none;
+      }
+      @media (max-width: $mobile-screen) {
+        .meeting-list-filters-toggle {
+          display: block;
+          &::before {
+            content: "Show less";
+            padding-left: 30px;
+            background-image: url(../../src/img/chevron-up.svg);
+            background-size: 18px;
+            background-position: left;
+            background-repeat: no-repeat;
+            color: $c-bright-blue;
+          }
+        }
+        &.closed {
+          .meeting-list-filters-toggle::before {
+            content: "Show more";
+            background-image: url(../../src/img/chevron-down.svg);
+          }
+          .fieldset-wrapper {
+            height: 0;
+            opacity: 0;
+          }
+        }
+      }
+    }
+
     legend {
-      @include fs-title-3;
+      @media (max-width: $mobile-screen) {
+        @include fs-title-4;
+      }
+      @media (min-width: $mobile-screen) {
+        @include fs-title-3;
+      }
     }
 
     form {
@@ -95,8 +157,15 @@
   }
 
   .views-row {
-    padding-left: 30px;
+    @media (min-width: $mobile-screen) {
+      padding-left: 30px;
+    }
     margin-bottom: 40px;
+    @media (max-width: $mobile-screen) {
+      &:last-child {
+        margin: 0;
+      }
+    }
 
     article {
       .article--teaser__title {
@@ -106,10 +175,18 @@
         .__footer {
           display: flex;
           margin-top: 1rem;
+          @media (max-width: $mobile-screen) {
+            flex-direction: column;
+          }
 
           .__time,
           .__address {
-            width: 50%;
+            @media (min-width: $mobile-screen) {
+              width: 50%;
+            }
+            @media (max-width: $mobile-screen) {
+              margin-bottom: 10px;
+            }
             position: relative;
             padding-left: 35px;
 

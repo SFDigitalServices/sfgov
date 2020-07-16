@@ -12626,6 +12626,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   max-width: 100%;
 }
 
+.views--meetings .ms-parent {
+  width: 100%;
+}
+
 .views--meetings .sfgov-section-container {
   margin: 0 auto;
   max-width: 1090px;
@@ -12666,6 +12670,25 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .views--meetings .content {
   padding: 60px 0;
+}
+
+@media (max-width: 700px) {
+  .views--meetings .content {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .views--meetings .view-grouping {
+    padding: 60px 20px;
+    margin: 0 -20px;
+  }
+  .views--meetings .view-grouping:nth-child(even) {
+    background-color: #F6F7F8;
+  }
+  .views--meetings .view-grouping:last-child {
+    margin-bottom: 60px;
+  }
 }
 
 .views--meetings h2.group {
@@ -12709,21 +12732,73 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   overflow: inherit;
 }
 
-.views--meetings .sfgov-filters legend {
-  font-size: 30px;
-  font-weight: 500;
-  line-height: 42px;
+.views--meetings .sfgov-filters .fieldset-wrapper {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
-.views--meetings .sfgov-filters legend.sfgov-translate-lang-zh-TW {
-  font-size: 30px;
-  line-height: 42px;
-  letter-spacing: 2px;
-  font-weight: 700;
-  /* antialiased, none, subpixel-antialiased*/
-  -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  font-smooth: always;
+.views--meetings .sfgov-filters .form-wrapper .meeting-list-filters-toggle {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .views--meetings .sfgov-filters .form-wrapper .meeting-list-filters-toggle {
+    display: block;
+  }
+  .views--meetings .sfgov-filters .form-wrapper .meeting-list-filters-toggle::before {
+    content: "Show less";
+    padding-left: 30px;
+    background-image: url(../../src/img/chevron-up.svg);
+    background-size: 18px;
+    background-position: left;
+    background-repeat: no-repeat;
+    color: #4f66ee;
+  }
+  .views--meetings .sfgov-filters .form-wrapper.closed .meeting-list-filters-toggle::before {
+    content: "Show more";
+    background-image: url(../../src/img/chevron-down.svg);
+  }
+  .views--meetings .sfgov-filters .form-wrapper.closed .fieldset-wrapper {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .views--meetings .sfgov-filters legend {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 34px;
+  }
+  .views--meetings .sfgov-filters legend.sfgov-translate-lang-zh-TW {
+    font-size: 24px;
+    line-height: 36px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    /* antialiased, none, subpixel-antialiased*/
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    font-smooth: always;
+  }
+}
+
+@media (min-width: 700px) {
+  .views--meetings .sfgov-filters legend {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 42px;
+  }
+  .views--meetings .sfgov-filters legend.sfgov-translate-lang-zh-TW {
+    font-size: 30px;
+    line-height: 42px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    /* antialiased, none, subpixel-antialiased*/
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    font-smooth: always;
+  }
 }
 
 .views--meetings .sfgov-filters form {
@@ -12787,8 +12862,19 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .views--meetings .views-row {
-  padding-left: 30px;
   margin-bottom: 40px;
+}
+
+@media (min-width: 700px) {
+  .views--meetings .views-row {
+    padding-left: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .views--meetings .views-row:last-child {
+    margin: 0;
+  }
 }
 
 .views--meetings .views-row article .article--teaser__title {
@@ -12814,11 +12900,33 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   margin-top: 1rem;
 }
 
+@media (max-width: 700px) {
+  .views--meetings .views-row article .meeting__content .__footer {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
 .views--meetings .views-row article .meeting__content .__footer .__time,
 .views--meetings .views-row article .meeting__content .__footer .__address {
-  width: 50%;
   position: relative;
   padding-left: 35px;
+}
+
+@media (min-width: 700px) {
+  .views--meetings .views-row article .meeting__content .__footer .__time,
+  .views--meetings .views-row article .meeting__content .__footer .__address {
+    width: 50%;
+  }
+}
+
+@media (max-width: 700px) {
+  .views--meetings .views-row article .meeting__content .__footer .__time,
+  .views--meetings .views-row article .meeting__content .__footer .__address {
+    margin-bottom: 10px;
+  }
 }
 
 .views--meetings .views-row article .meeting__content .__footer .__time:before,
