@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Theme override to display a media item.
+ *
+ * Available variables:
+ * - name: Name of the media.
+ * - content: Media content.
+ *
+ * @see template_preprocess_media()
+ */
+#}
+<article{{ attributes }}>
+  <div class="sfgov-media">
+    {{ title_suffix.contextual_links }}
+    {{ content.name }}
+    {% if content %}
+      {{ content }}
+    {% endif %}
+  </div>
+</article>
