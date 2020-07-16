@@ -125,7 +125,7 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $video_id = $video_service->getVideoId($video_url);
 
   // Link transcript
-  $url = Url::fromRoute('sfgov_video.video_controller_page_41', [
+  $url = Url::fromRoute('sfgov_video.video_controller_page', [
     'video_id' => $video_id,
     'paragraph_id' => $paragraph->id()
   ]);
