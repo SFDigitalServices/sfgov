@@ -35,7 +35,10 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $node = $event->getRequest()->attributes->get('node'); 
+    $redirect_url = NULL;
+    $node = $event->getRequest()->attributes->get('node');
+    $media = $event->getRequest()->attributes->get('media');
+
     if($node && $node->isPublished()) {
       $node_type = strtolower($node->type->entity->label());
       if($node->hasField('field_direct_external_url') ){
@@ -43,8 +46,6 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         if( !empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
           // This is where you set the destination.
           $redirect_url = $field_external_url[0]['uri'];
-          $response = new TrustedRedirectResponse($redirect_url);
-          $event->setResponse($response);
         }
       }
       if($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
@@ -53,11 +54,29 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
           $field_dept_url = $node->get('field_url')->getValue();
           if(!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
             $redirect_url = $field_dept_url[0]['uri'];
-            $response = new TrustedRedirectResponse($redirect_url);
-            $event->setResponse($response);
           }
         }
       }
+    }
+    else if($media) {      
+      if($media->hasField('field_document_url') || $media->hasField('field_media_file')) {
+        $field_file = $media->get('field_media_file')->getValue();
+        $field_doc_url = $media->get('field_document_url')->getValue();
+        if(!empty($field_file)) {
+          $file_id = $field_file[0]['target_id'];
+          $file_url = \Drupal\file\Entity\File::load($file_id)->url();
+          error_log($file_url);
+          $redirect_url = $file_url;
+        }
+        else if(!empty($field_doc_url)) {
+          $redirect_url = $field_doc_url[0]['uri'];
+        }
+      }
+    }
+
+    if(!empty($redirect_url)) {
+      $response = new TrustedRedirectResponse($redirect_url);
+      $event->setResponse($response);
     }
 
   }
