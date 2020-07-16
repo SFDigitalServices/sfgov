@@ -95,15 +95,14 @@
       this.$allToggle = null;
     }
 
-    var toggleAllLabel = Drupal.t('Select all @label', {
-      '@label': this.$element.attr('data-multiselect-item-plural') ? this.$element.attr('data-multiselect-item-plural') : 'items',
-    });
+    var toggleAllLabel = Drupal.t('Select all');
 
-    this.$allToggle = $('<li><label><input type="checkbox"/>' + toggleAllLabel + '</label><li>');
+    this.$allToggle = $('<li class="multi-select__list-item toggle-all"><label class="multi-select__label"><input type="checkbox" class="multi-select__input" /><span class="multi-select__label-text">' + toggleAllLabel + '</span></label><li>');
 
     this.$element
       .children('ul:first')
-      .prepend(this.$allToggle);
+      .prepend(this.$allToggle)
+      .find('li:empty').remove();
   }
 
   function initAria() {
@@ -190,7 +189,6 @@
       .on(getNamespacedEvents(['change']), ':checkbox', function() {
         if (that.$allToggle && $(this).is(that.$allToggle.find(':checkbox'))) {
           var allChecked = that.$allToggle.find(':checkbox').prop('checked');
-
           that.$element
             .find(':checkbox')
             .not(that.$allToggle.find(':checkbox'))
@@ -326,13 +324,20 @@ $.fn.toMultiSelect = function() {
   const fieldset_id = $element.attr('id');
   const legend = $element.find('> legend').text().trim()
 
-  const $list = $('<ul>')
+  const $list = $('<ul class="multi-select__list">')
   $element.find('.form-checkboxes .js-form-type-checkbox').each(function() {
     var $label = $(this).find('label')
       .clone()
-      .prepend($(this).find('input').clone());
+      .addClass('multi-select__label')
+      .wrapInner('<span class="multi-select__label-text"></span>')
+      .prepend(
+        $(this).find('input')
+          .clone()
+          .addClass('multi-select__input')
+          .removeAttr('data-multiselect data-multiselect-item-singular data-multiselect-item-plural')
+      );
 
-    var $item = $('<li>').append($label);
+    var $item = $('<li class="multi-select__list-item">').append($label);
     $list.append($item);
   });
 
@@ -343,7 +348,7 @@ $.fn.toMultiSelect = function() {
   });
 
   $multiSelect.prepend('<legend class="visually-hidden" id="' + fieldset_id + '-multi-select-label">' + legend +'</legend>');
-  $multiSelect.append('<span class="toggle"><label>' + legend + '</label><span class="chevron">&lt;</span></span>');
+  $multiSelect.append('<span class="toggle"><label>' + legend + '</label><span class="icon"></span></span>');
   $multiSelect.append($list);
 
   $multiSelect.MultiSelect();

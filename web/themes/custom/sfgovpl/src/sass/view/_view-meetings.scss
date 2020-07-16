@@ -62,8 +62,13 @@
 
   .sfgov-filters {
     background-color: $c-green-1;
-    padding-top: 40px;
+    padding-top: 30px;
     padding-bottom: 40px;
+
+    @include media($narrow-screen) {
+      padding-top: 32px;
+      padding-bottom: 94px;
+    }
 
     .sfgov-section-container {
       overflow: inherit;
@@ -72,6 +77,11 @@
     .fieldset-wrapper {
       transition: all 0.3s ease-in-out;
       overflow: hidden;
+    }
+
+   legend {
+      @include fs-title-4;
+      margin-bottom: 25px;
     }
 
     .form-wrapper {
@@ -108,8 +118,9 @@
       @media (max-width: $mobile-screen) {
         @include fs-title-4;
       }
-      @media (min-width: $mobile-screen) {
+      @include media($narrow-screen) {
         @include fs-title-3;
+        margin-bottom: 15px;
       }
     }
 
@@ -122,30 +133,28 @@
         margin-bottom: 1rem;
       }
 
-      @include media($narrow-screen) {
-        display: flex;
+      .form-wrapper {
+        @include media($narrow-screen) {
+          display: flex;
 
-        .form-item {
-          margin-right: 30px;
-          margin-bottom: 0;
-
-          select {
-            min-width: 200px;
-          }
-
-          &-subcommittees {
-            select {
-              width: 400px;
-            }
+          .form-item {
+            margin-right: 20px;
+            margin-bottom: 0;
           }
         }
       }
 
       .button {
         @include button-clear;
+        @include rubik;
+        padding: 7px 20px;
+        line-height: 24px;
+        margin-top: 9px;
+        margin-bottom: 30px;
+
+
         @include media($narrow-screen) {
           margin: 0;
-          line-height: 0;
         }
         width: auto;
 
@@ -242,6 +251,76 @@
   &--page_past {
     .meeting__content .__footer {
       display: none !important;
+    }
+  }
+}
+
+
+
+[data-filter-toggle-container] {
+  position: relative;
+  padding-bottom: 29px; // Height of trigger button.
+}
+
+button[data-filter-toggle-trigger] {
+  @include rubik;
+  color: $c-bright-blue;
+  border: 0;
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  background: transparent;
+  text-align: left;
+  // Positioned abs bottom to keep tab order of this button logical: Form
+  // elements are directly after the toggle, not before.
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  bottom: 0;
+
+  span {
+    text-decoration: none;
+  }
+
+
+  &:focus{
+    box-shadow: 0;
+    border: 0;
+    outline: 0;
+
+    span {
+      text-decoration: underline;
+    }
+  }
+}
+
+@include media($narrow-screen) {
+  [data-filter-toggle-container] {
+    [data-filter-toggle-trigger] {
+      display: none;
+    }
+    [data-filter-toggle-content] {
+      display: block !important;
+    }
+  }
+}
+
+.filter-toggle__text {
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  position: relative;
+
+  &::before {
+    background: transparent url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE3LjQ2IDE0Ljc1NWExLjI0NSAxLjI0NSAwIDAxLS44ODUtLjM2NUw5Ljk2IDcuNzc1IDMuMzQ1IDE0LjM5YTEuMjUyIDEuMjUyIDAgMDEtMS43Ny0xLjc3bDcuNS03LjVhMS4yNiAxLjI2IDAgMDExLjc3IDBsNy41IDcuNWExLjI2IDEuMjYgMCAwMTAgMS43NyAxLjI0NiAxLjI0NiAwIDAxLS44ODUuMzY1eiIgZmlsbD0iIzRGNjZFRSIvPjwvc3ZnPg==) no-repeat;
+    content: '';
+    display: inline-flex;
+    height: 20px;
+    margin-right: 12px;
+    width: 20px;
+
+    .filter-toggle-collapsed & {
+      transform: rotate(180deg);
     }
   }
 }
