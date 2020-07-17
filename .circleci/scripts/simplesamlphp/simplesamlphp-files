@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eo pipefail
+
+PORT=2222
+UUID=$(terminus site:lookup $TERMINUS_SITE)
+
+sftp -o PORT=$PORT $TERMINUS_ENV.$UUID@appserver.$TERMINUS_ENV.$UUID.drush.in <<EOF
+get -r files/private/saml
+cd code/web/private
+put -r ./saml/*
+exit
+EOF
