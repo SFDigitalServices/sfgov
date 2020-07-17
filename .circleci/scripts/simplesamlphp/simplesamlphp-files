@@ -4,8 +4,13 @@ set -eo pipefail
 
 PORT=2222
 UUID=$(terminus site:lookup $TERMINUS_SITE)
+SAML_ENV=TERMINUS_ENV
 
-sftp -o PORT=$PORT $TERMINUS_ENV.$UUID@appserver.$TERMINUS_ENV.$UUID.drush.in <<EOF
+if [[ $CIRCLE_BRANCH != "main" ]] ; then
+  SAML_ENV=dev
+fi
+
+sftp -o PORT=$PORT $SAML_ENV.$UUID@appserver.$SAML_ENV.$UUID.drush.in <<EOF
 get -r files/private/saml
 cd code/web/private
 mkdir metadata
