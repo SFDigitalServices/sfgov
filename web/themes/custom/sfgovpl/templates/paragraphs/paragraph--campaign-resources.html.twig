@@ -16,7 +16,7 @@
         {{ content|without('field_file', 'field_title') }}
 
         {% if content.field_file %}
-          <h4>{{ content.field_file['#title'] }}</h4>
+          <h3 class="campaign-downloadable-resource-title">{{ content.field_file['#title'] }}</h3>
           {% for item in paragraph.field_file %}
             {% include '@atoms/09-document/09-document.twig' with {
               'field_file': item,
