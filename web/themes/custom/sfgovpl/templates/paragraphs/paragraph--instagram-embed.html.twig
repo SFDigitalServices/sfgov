@@ -38,20 +38,29 @@
  * @ingroup themeable
  */
 #}
+
+{% set class_prefix = 'paragraph--type--' ~ paragraph.bundle|clean_class %}
+{% set parent_field_name = paragraph.parent_field_name.value %}
+{% set instagram_profile = paragraph.field_instagram_profile.value %}
 {%
   set classes = [
     'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    'paragraph--type--' ~ paragraph.bundle|clean_class ~ '--' ~paragraph.id(),
+    class_prefix,
+    class_prefix ~ '--' ~paragraph.id(),
+    parent_field_name == 'field_contents' ? class_prefix ~ '--large' : class_prefix ~ '--small',
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
   ]
 %}
+
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      <h4>Instagram</h4>
+      <h3 class="instagram-embed-title">Instagram</h3>
       {{ content }}
+      {% if parent_field_name == "field_social_media_embed" %}
+        <a class="instagram-view-posts" href="https://instagram.com/{{ instagram_profile }}">View posts from @{{ instagram_profile }}</a>
+      {% endif %}
     {% endblock %}
   </div>
 {% endblock paragraph %}

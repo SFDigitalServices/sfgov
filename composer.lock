@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65798b25ee5f22c488f0eb9c9f58f2bc",
+    "content-hash": "1c26ed73f35cbd56a1f8babfcd775de4",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -2203,9 +2203,6 @@
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-2.x": "2.x-dev"
-                },
                 "drupal": {
                     "version": "8.x-2.2",
                     "datestamp": "1576528386",
@@ -2621,20 +2618,20 @@
         },
         {
             "name": "drupal/content_lock",
-            "version": "1.0.0-alpha8",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/content_lock.git",
-                "reference": "8.x-1.0-alpha8"
+                "reference": "8.x-2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/content_lock-8.x-1.0-alpha8.zip",
-                "reference": "8.x-1.0-alpha8",
-                "shasum": "dbb5986dbfbe325eb869a4ac42b88b266dc089c6"
+                "url": "https://ftp.drupal.org/files/projects/content_lock-8.x-2.1.zip",
+                "reference": "8.x-2.1",
+                "shasum": "a83983c8deb697cf19863153b2b8c0e1a2452c2f"
             },
             "require": {
-                "drupal/core": "~8"
+                "drupal/core": "^8.8|^9.0"
             },
             "require-dev": {
                 "drupal/conflict": "dev-2.x",
@@ -2642,15 +2639,12 @@
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.0-alpha8",
-                    "datestamp": "1520356080",
+                    "version": "8.x-2.1",
+                    "datestamp": "1591342900",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -2660,22 +2654,26 @@
             ],
             "authors": [
                 {
-                    "name": "Joseph Zhao",
-                    "homepage": "https://www.drupal.org/user/1987218"
-                },
-                {
                     "name": "chr.fritsch",
                     "homepage": "https://www.drupal.org/user/2103716"
                 },
                 {
                     "name": "ergonlogic",
                     "homepage": "https://www.drupal.org/user/368613"
+                },
+                {
+                    "name": "mfb",
+                    "homepage": "https://www.drupal.org/user/12302"
+                },
+                {
+                    "name": "pandaski",
+                    "homepage": "https://www.drupal.org/user/1987218"
                 }
             ],
             "description": "Prevents multiple users from trying to edit a content entity simultaneously to prevent edit conflicts.",
             "homepage": "https://www.drupal.org/project/content_lock",
             "support": {
-                "source": "http://cgit.drupalcode.org/content_lock"
+                "source": "https://git.drupalcode.org/project/content_lock"
             }
         },
         {
@@ -4838,6 +4836,116 @@
             }
         },
         {
+            "name": "drupal/rest_views",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/rest_views.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/rest_views-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "ec95fa1743e33c9ee8501cef3ab2abeb7c8fe6eb"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/entity_reference_revisions": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1590866203",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Burschka",
+                    "homepage": "https://drupal.org/u/cburschka",
+                    "email": "christoph@burschka.de",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Expose fields and entity references in REST view displays.",
+            "homepage": "https://www.drupal.org/project/rest_views",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/rest_views",
+                "error": "Invalid dependency: \"reversegeofield\" is an unknown drupal 8 package name",
+                "issues": "https://www.drupal.org/project/issues/rest_views"
+            }
+        },
+        {
+            "name": "drupal/restui",
+            "version": "1.18.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/restui.git",
+                "reference": "8.x-1.18"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/restui-8.x-1.18.zip",
+                "reference": "8.x-1.18",
+                "shasum": "40edbe907d5ec6d6c6a00abd219c7305d90d19e5"
+            },
+            "require": {
+                "drupal/core": "^8.7.7 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.18",
+                    "datestamp": "1586170645",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "-enzo-",
+                    "homepage": "https://www.drupal.org/user/294937"
+                },
+                {
+                    "name": "clemens.tolboom",
+                    "homepage": "https://www.drupal.org/user/125814"
+                },
+                {
+                    "name": "juampynr",
+                    "homepage": "https://www.drupal.org/user/682736"
+                },
+                {
+                    "name": "klausi",
+                    "homepage": "https://www.drupal.org/user/262198"
+                }
+            ],
+            "description": "Provides a user interface to manage REST resources.",
+            "homepage": "https://www.drupal.org/project/restui",
+            "support": {
+                "source": "https://git.drupalcode.org/project/restui"
+            }
+        },
+        {
             "name": "drupal/scheduler",
             "version": "1.1.0",
             "source": {
@@ -4928,15 +5036,12 @@
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
                     "version": "8.x-1.2",
                     "datestamp": "1583246174",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 },
                 "patches_applied": {
@@ -4948,6 +5053,10 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "chr.fritsch",
+                    "homepage": "https://www.drupal.org/user/2103716"
+                },
                 {
                     "name": "daniel.bosen",
                     "homepage": "https://www.drupal.org/user/404865"
@@ -5282,29 +5391,29 @@
         },
         {
             "name": "drupal/simple_gmap",
-            "version": "1.4.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/simple_gmap.git",
-                "reference": "8.x-1.4"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_gmap-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "364d59f318052ab8094b25e52b43f7f7deda9259"
+                "url": "https://ftp.drupal.org/files/projects/simple_gmap-3.0.0.zip",
+                "reference": "3.0.0",
+                "shasum": "ad74aaec5a1eec64cc72a8d4a272564c53ee7594"
             },
             "require": {
-                "drupal/core": "*"
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/address": "*"
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1504630143",
+                    "version": "3.0.0",
+                    "datestamp": "1591439940",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5328,7 +5437,7 @@
             "description": "Provides a Google Maps link/map formatter for simple Text fields.",
             "homepage": "https://www.drupal.org/project/simple_gmap",
             "support": {
-                "source": "http://cgit.drupalcode.org/simple_gmap"
+                "source": "https://git.drupalcode.org/project/simple_gmap"
             }
         },
         {
@@ -5350,9 +5459,6 @@
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-3.x": "3.x-dev"
-                },
                 "drupal": {
                     "version": "8.x-3.3",
                     "datestamp": "1584386047",
@@ -5360,9 +5466,6 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
-                },
-                "patches_applied": {
-                    "Update field defaults for sfgov": "patches/simple-instagram-block.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5383,17 +5486,17 @@
         },
         {
             "name": "drupal/simple_sitemap",
-            "version": "3.6.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/simple_sitemap.git",
-                "reference": "8.x-3.6"
+                "reference": "8.x-3.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_sitemap-8.x-3.6.zip",
-                "reference": "8.x-3.6",
-                "shasum": "37fc0ae98a4ccb23316cb089ae4839913e80cbf6"
+                "url": "https://ftp.drupal.org/files/projects/simple_sitemap-8.x-3.7.zip",
+                "reference": "8.x-3.7",
+                "shasum": "7b23930cc71d37f332c1e836bc18c29ed2ae8cde"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -5402,8 +5505,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.6",
-                    "datestamp": "1586469908",
+                    "version": "8.x-3.7",
+                    "datestamp": "1592298918",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5417,7 +5520,7 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -5425,10 +5528,6 @@
                     "homepage": "https://www.drupal.org/u/gbyte.co",
                     "email": "contact@gbyte.co",
                     "role": "Maintainer"
-                },
-                {
-                    "name": "gbyte.co",
-                    "homepage": "https://www.drupal.org/user/2381352"
                 }
             ],
             "description": "Creates a standard conform hreflang XML sitemap of the site content and provides a framework for developing other sitemap types.",
@@ -7095,12 +7194,12 @@
             "time": "2016-03-16T23:24:34+00:00"
         },
         {
-            "name": "jsanahuja/jquery.instagramfeed",
+            "name": "jsanahuja/jquery.instagramFeed",
             "version": "1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsanahuja/jquery.instagramFeed.git",
-                "reference": "master"
+                "reference": "1.2.5"
             },
             "type": "drupal-library"
         },
@@ -8495,7 +8594,7 @@
                 "reference": "retheme"
             },
             "type": "drupal-library",
-            "time": "2020-01-22T23:05:06+00:00"
+            "time": "2019-05-29T01:03:08+00:00"
         },
         {
             "name": "simplesamlphp/composer-module-installer",
@@ -16193,7 +16292,6 @@
         "drupal/bulk_update_fields": 15,
         "drupal/cer": 15,
         "drupal/config_exclude": 20,
-        "drupal/content_lock": 15,
         "drupal/eck": 20,
         "drupal/group": 5,
         "drupal/inline_entity_form": 10,
