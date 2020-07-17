@@ -34,7 +34,9 @@
       <div{{ description.attributes.addClass('description') }} >{{ description.content }}</div>
     {% endif %}
     {% if button %}
-      <div class="autocomplete-add-more"{{ level ? ' data-level=' ~ level ~ ''}}>{{ button }}</div>
+      <div class="autocomplete-add-more{{ nested ? ' is-nested' }}"{{ level ? ' data-level=' ~ level ~ ''}}>
+        {{ button }}
+      </div>
     {% endif %}
   </div>
 {% else %}

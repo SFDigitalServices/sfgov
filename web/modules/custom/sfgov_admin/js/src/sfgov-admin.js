@@ -159,7 +159,7 @@
         $('#' + associations[checkedVal.toLowerCase()]).show();
       }
       reqPublicRecords();
-      
+
     }
   }
 

@@ -35,11 +35,11 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Get node object.
+    $redirect_url = NULL;
     $node = $event->getRequest()->attributes->get('node');
+    $media = $event->getRequest()->attributes->get('media');
 
-    // If node is published.
-    if ($node && $node->isPublished()) {
+    if($node && $node->isPublished()) {
       // Add cache context to make sure the request won't be cached for authenticated users.
       $node->addCacheContexts(['user.roles:anonymous']);
 
@@ -73,6 +73,26 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
           }
         }
       }
+    }
+    else if($media) {      
+      if($media->hasField('field_document_url') || $media->hasField('field_media_file')) {
+        $field_file = $media->get('field_media_file')->getValue();
+        $field_doc_url = $media->get('field_document_url')->getValue();
+        if(!empty($field_file)) {
+          $file_id = $field_file[0]['target_id'];
+          $file_url = \Drupal\file\Entity\File::load($file_id)->url();
+          error_log($file_url);
+          $redirect_url = $file_url;
+        }
+        else if(!empty($field_doc_url)) {
+          $redirect_url = $field_doc_url[0]['uri'];
+        }
+      }
+    }
+
+    if(!empty($redirect_url)) {
+      $response = new TrustedRedirectResponse($redirect_url);
+      $event->setResponse($response);
     }
 
   }
