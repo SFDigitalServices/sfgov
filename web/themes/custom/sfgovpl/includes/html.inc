@@ -157,17 +157,4 @@ function sfgovpl_preprocess_html(&$variables) {
     }
     $variables['page']['#attached']['drupalSettings']['sfgov_translations']['view'] = $viewInfo;
   }
-
-  // Inline critical css in head
-  // critical css is determined by /sfgovpl/sass/critical.scss
-  $criticalCss = drupal_get_path('theme', 'sfgovpl') . '/dist/css/critical.css';
-  $content = file_get_contents($criticalCss);
-  $style = [
-    '#tag' => 'style',
-    '#attributes' => [
-      'type' => 'text/css',
-    ],
-    '#value' => $content,
-  ];
-  $variables['page']['#attached']['html_head'][] = [$style, 'style'];
 }
