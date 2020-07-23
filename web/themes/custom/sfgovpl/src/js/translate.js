@@ -1,4 +1,5 @@
 function SFGovTranslate() {
+  $ = jQuery;
   this.currentSelectedTranslation = null;
   this.sfgovGTranslateFireEvent = function (a, b) {
     try {
@@ -35,6 +36,7 @@ function SFGovTranslate() {
         that.sfgovGTranslateFireEvent(c, 'change');
         $('body').show();
         that.addElementTranslationClass(b);
+        that.updateSelectedLangDropdown(b);
         deferred.resolve();
     }
     return deferred.promise();
@@ -43,6 +45,11 @@ function SFGovTranslate() {
   this.addElementTranslationClass = function(translationVal) {
     var elementClass = 'sfgov-translate-lang-' + translationVal;
     $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').addClass(elementClass);
+  }
+
+  this.updateSelectedLangDropdown = function(translationVal) {
+    // Show the currently active language <option> as selected.
+    $('#sfgov-gtranslate-select').find('option[value*="|'+ translationVal +'"]').attr('selected', 'selected');
   }
 
   this.sfgovGTranslate = function(event) {
@@ -99,18 +106,23 @@ function SFGovTranslate() {
     // remove the cookie, as we are using language path prefixes and should
     // always show the same language as the URL.
     if(currentDrupalLanguage != 'en' || currentDrupalLanguage != gTranslateLang) {
-      // var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
+      var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage);
       // Always translate page, even if a Drupal translation for the page exists.
       // If translated content is being shown on the page, it should be wrapped
       // in a container with class="notranslate" to allow other elements like
       // header and footer to be translated.
+      if(drupalTranslation && drupalTranslation.status) {
+        $('main[role="main"]').addClass('notranslate').attr('translate', 'no');
+      }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
+      that.updateSelectedLangDropdown(currentDrupalLanguage);
       return;
     }
 
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang);
+      that.updateSelectedLangDropdown(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
       if (drupalTranslation && drupalTranslation.turl != window.location.pathname) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
@@ -164,7 +176,7 @@ function getCookie(cookieName) {
         $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
         t.checkCurrentLanguage(); // check the current language of the page AFTER english has been added
-      }, 500);
+      }, 1000);
       // add aria attributes
       $(elem)[0].setAttribute('id', 'sfgov-gtranslate-select');
       $(elem)[0].setAttribute('aria-label', 'Language Translate Widget');

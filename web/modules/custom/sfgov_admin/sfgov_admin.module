@@ -33,6 +33,29 @@ function sfgov_admin_page_attachments(array &$page) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
+    $selector_condition = [
+      ':input[name^="field_location_in_person"]' => ['checked' => TRUE]
+    ];
+    $form['field_address']['#states'] = [
+      'visible' => $selector_condition,
+      'required' => $selector_condition,
+    ];
+
+    $form['buttons']['save']['#validate'][] = 'sfgov_admin_custom_validate';
+  }
+}
+
+function sfgov_admin_custom_validate($form, &$form_state) {
+  if((isset($form_state['values']['field_location_in_person'])) && (empty($form_state['values']['field_address']))) {
+    form_set_error('field_address', 'Field cannot be left blank');
+  }
+}
+
+/**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  *
  * Alters the Paragraphs Classic widget.
@@ -107,19 +130,6 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
 function sfgov_admin_field_widget_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
   return sfgov_admin_field_widget_entity_reference_paragraphs_form_alter($element, $form_state, $context);
 }
-
-/**
- * Implements hook_preprocess_form_element().
- */
-function sfgov_admin_preprocess_form_element(&$variables) {
-  // Make sure attributes is pluggable.
-  $variables['attributes'] = empty($variables['attributes']) ? new Attribute() : new Attribute($variables['attributes']);
-
-  if (isset($variables['element']['#maxlength_js'])) {
-    $variables['attributes']->addClass('form-type-maxlength');
-  }
-}
-
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().

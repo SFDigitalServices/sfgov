@@ -1,4 +1,29 @@
-{% extends 'node--full.html.twig' %}
+ {% block header %}
+    {% include '@theme/hero-banner-with-image.twig' with {
+      'banner': {
+        'image': file_url(node.field_banner_image.entity.uri.value | striptags),
+        'text': node.field_bann.value,
+        'backgroundcolor': node.field_banner_color.value
+      }
+    } %}
+   {% endblock header %}
+ <div class="confirmation--content">
+  {% block content %}
+      <div class="confirmation--left">
+        {{ content|without(
+          'field_confirmation_sidebar',
+          'field_banner_color',
+          'field_banner_image',
+          'field_bann'
+        ) }}
+      </div>
 
-{% block footer %}
-{% endblock footer %}
+      {% if content.field_confirmation_sidebar|render|striptags %}
+        <div class="confirmation--right">
+         <div class="confirmation--right-content">
+            {{ content.field_confirmation_sidebar }}
+          </div>
+        </div>
+      {% endif %}
+  </div>
+  {% endblock content %}

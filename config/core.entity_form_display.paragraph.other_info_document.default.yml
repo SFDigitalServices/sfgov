@@ -1,0 +1,42 @@
+uuid: 04ddaa1f-a77b-4f16-a8f6-e4366cc2077e
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.file
+    - field.field.paragraph.other_info_document.field_file
+    - field.field.paragraph.other_info_document.field_title
+    - paragraphs.paragraphs_type.other_info_document
+  module:
+    - entity_browser
+id: paragraph.other_info_document.default
+targetEntityType: paragraph
+bundle: other_info_document
+mode: default
+content:
+  field_file:
+    weight: 1
+    settings:
+      entity_browser: file
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

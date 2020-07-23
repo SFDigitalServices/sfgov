@@ -63,16 +63,19 @@
           'field_help',
           'field_transactions',
           'group_grey_boxes',
-          'field_direct_external_url'
+          'field_direct_external_url',
+          'field_related_content'
         ) }}
 
         {{ content.group_grey_boxes.field_transaction_purpose }}
       </div>
 
-      {% if content.field_help|render|striptags or content.field_transactions|render|striptags %}
+      {% if content.field_help|render|striptags or 
+        content.field_transactions|render|striptags or 
+        content.field_related_content|render|striptags %}
         <div class="transaction--right">
           {{ content.field_help }}
-          {{ content.field_transactions }}
+          {{ content.field_related_content }}
         </div>
       {% endif %}
 

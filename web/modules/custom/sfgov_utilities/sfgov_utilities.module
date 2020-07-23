@@ -114,37 +114,10 @@ function sfgov_utilities_preprocess_eck_entity(&$variables) {
   $bundle = $variables['bundle'];
   if($bundle && ($bundle == 'event_address' || $bundle == 'physical')) {
     $address = $variables['eck_entity']->get('field_address')->getValue()[0];
-    $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
-    $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
-
-    $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
-    // options for the map image
-    $options = [
-      'zoom' => 15,
-      'size' => '250x140'
-    ];
-    // options for markers
-    $markers = [
-      'color' => 'red', // {black, brown, green, purple, yellow, blue, gray, orange, red, white}
-      'size' => 'mid', // {tiny, mid, small}
-    ];
-
-    // construct the query params
-    $params = '';
-    foreach($options as $key => $value) {
-      $params .= $key . '=' . $value . '&';
-    }
-    $params .= 'markers=';
-    foreach($markers as $key => $value) {
-      $params .= $key . ':' . $value . '|';
-    }
-    $params .= $singleLineAddress;
-    $imgUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $singleLineAddress . '&' . $params . '&key=' . $apiKey;
-    $directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' . $singleLineAddress;
-    $mapSiteUrl = 'https://www.google.com/maps/search/?api=1&query=' . $singleLineAddress;
-    $variables['map_img_url'] = $imgUrl;
-    $variables['map_site_url'] = $mapSiteUrl;
-    $variables['map_directions_url'] = $directionsUrl;
+    $map = _sfgov_utilities_build_map($address);
+    $variables['map_img_url'] = $map['map_img_url'];
+    $variables['map_site_url'] = $map['map_site_url'];
+    $variables['map_directions_url'] = $map['map_directions_url'];
   }
 }
 
@@ -182,21 +155,25 @@ function sfgov_utilities_page_attachments(array &$page) {
       if ($bundle == 'department' || $bundle == 'topic') {
         // Count the number of service sections and services
         $num_sections = 0;
-        $num_services = 0;      
+        $num_services = 0;
         $ids = $node->get('field_department_services')->getValue();
         $num_sections = count($ids);
         foreach ($ids as $paragraph) {
-          $sps = \Drupal\paragraphs\Entity\Paragraph::load($paragraph['target_id'] );
-          $sids = $sps->get('field_dept_service_sect_services')->getValue();
+          $sps = \Drupal::entityTypeManager()
+            ->getStorage('paragraph')
+            ->load($paragraph['target_id']);
+          $sids = $sps ? $sps->get('field_dept_service_sect_services')->getValue() : [];
           foreach ($sids as $snode) {
             // Check if service nodes are published
-            $fsnode = \Drupal\node\Entity\Node::load($snode['target_id']);
-            if ($fsnode->isPublished()) {
+            $fsnode = \Drupal::entityTypeManager()
+              ->getStorage('node')
+              ->load($snode['target_id']);
+            if ($fsnode && $fsnode->isPublished()) {
               $num_services += 1;
             }
           }
         }
-        
+
         //Count number of more services
         $view = \Drupal\views\Views::getView('services');
         $nid = $node->id();
@@ -205,31 +182,72 @@ function sfgov_utilities_page_attachments(array &$page) {
         $view->execute();
         $view_result = $view->result;
         $excluded_services = topic_page_services();
-        
+
         // Check More Services for unpublished items
         foreach ($view_result as $key => $value) {
-          $node = \Drupal\node\Entity\Node::load($value->nid);
+          $node = \Drupal::entityTypeManager()
+            ->getStorage('node')
+            ->load($value->nid);
           if (is_array($excluded_services)) {
-            if (in_array($value->nid, $excluded_services) || !$node->isPublished()) {
+            if (in_array($value->nid, $excluded_services) || empty($node) || !$node->isPublished()) {
               unset($view_result[$key]);
             }
           }
         }
-        
+
         $num_more_services = count($view_result);
-        
+
         if ($num_more_services >= 1) {
           $num_sections += 1;
         }
-        
+
         $total_services = $num_services + $num_more_services;
-        
+
         // If enough items load accordion js
         if ($total_services >= 12 && $num_sections >= 2) {
           $page['#attached']['library'][] = 'sfgov_utilities/services';
         }
-      }  
+      }
     }
   }
 }
 
+/**
+ * Custom function to build the attributes needed for rendering a Map.
+ */
+function _sfgov_utilities_build_map($address) {
+  $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
+  $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
+
+  $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
+  // options for the map image
+  $options = [
+    'zoom' => 15,
+    'size' => '250x140'
+  ];
+  // options for markers
+  $markers = [
+    'color' => 'red', // {black, brown, green, purple, yellow, blue, gray, orange, red, white}
+    'size' => 'mid', // {tiny, mid, small}
+  ];
+
+  // construct the query params
+  $params = '';
+  foreach($options as $key => $value) {
+    $params .= $key . '=' . $value . '&';
+  }
+  $params .= 'markers=';
+  foreach($markers as $key => $value) {
+    $params .= $key . ':' . $value . '|';
+  }
+  $params .= $singleLineAddress;
+  $imgUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $singleLineAddress . '&' . $params . '&key=' . $apiKey;
+  $directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' . $singleLineAddress;
+  $mapSiteUrl = 'https://www.google.com/maps/search/?api=1&query=' . $singleLineAddress;
+
+  return [
+    'map_img_url' => $imgUrl,
+    'map_site_url' => $mapSiteUrl,
+    'map_directions_url' => $directionsUrl,
+  ];
+}

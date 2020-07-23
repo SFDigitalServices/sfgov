@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file Contains sfgov_formio.module.
+ */
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function sfgov_formio_theme_suggestions_paragraph_alter(array &$suggestions, array $variables) {
+  $paragraph = $variables['elements']['#paragraph'];
+
+  if ($paragraph->bundle() === 'form_io') {
+    if (!empty($variables['elements']['field_formio_data_source']['#formio_id'])) {
+      $formio_id = str_replace('-', '_', $variables['elements']['field_formio_data_source']['#formio_id']);
+      $suggestions[] = 'paragraph__form_io__' . $formio_id;
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
+  if ($entity->getEntityTypeId() === 'paragraph' && $entity->getType() === 'form_io') {
+
+    $build['#attached']['library'][] = 'sfgov_formio/formio_sfds';
+
+    // Get the form ID from the endpoint URL.
+    if ($entity->field_formio_data_source->value) {
+      // Given https://sfds.form.io/feedback, look for 'feedback'.
+      $source = $entity->field_formio_data_source->value;
+      $name = substr($source, strrpos($source, '/') + 1);
+
+      // Provide the Form's ID to the template.
+      $build['field_formio_data_source']['#formio_id'] = $name;
+    }
+  }
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function sfgov_formio_library_info_alter(&$libraries, $extension) {
+
+  // Apply any library overrides defined at /admin/config/services/sfgov_formio.
+  if ($extension === 'sfgov_formio') {
+    $settings = \Drupal::config('sfgov_formio.settings');
+
+    if (isset($libraries['formio'])) {
+      $formio_version = $settings->get('formio_version');
+      if (!empty($formio_version)) {
+        $libraries['formio']['js'] = [
+          $formio_version => ['type' => 'external']
+        ];
+      }
+    }
+
+    if (isset($libraries['formio_sfds'])) {
+      $formio_sfds_version = $settings->get('formio_sfds_version');
+      if (!empty($formio_sfds_version)) {
+        $libraries['formio_sfds']['js'] = [
+          $formio_sfds_version => ['type' => 'external'
+        ]];
+      }
+    }
+  }
+}

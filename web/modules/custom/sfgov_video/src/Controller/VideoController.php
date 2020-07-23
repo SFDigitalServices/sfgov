@@ -4,6 +4,8 @@ namespace Drupal\sfgov_video\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\node\Entity\Node;
 use Drupal\sfgov_video\VideoService;
 
 /**
@@ -49,11 +51,13 @@ class VideoController extends ControllerBase {
    * @return array
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function page($video_id) {
+  public function page($video_id, $paragraph_id) {
+    $paragraph = Paragraph::load($paragraph_id);
+    $transcript_text = !empty($paragraph->get('field_text')->value) ? $paragraph->get('field_text')->value : "";
     return [
       '#theme' => 'sfgov_video_page',
       '#title' => $this->sfgovVideoUtilities->getVideoTitle($video_id),
-      '#body' => $this->sfgovVideoUtilities->getYoutubeTranscript($video_id)
+      '#body' => $transcript_text
     ];
   }
 

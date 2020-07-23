@@ -53,8 +53,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     && $parent->bundle() == 'campaign') {
     /** @var \Drupal\taxonomy\Entity\Term $theme */
     $theme = $parent->get('field_campaign_theme')->entity;
-
-    if ($paragraph_type == 'campaign_spotlight') {
+    if ($paragraph_type == 'campaign_spotlight' || $paragraph_type == 'image_with_text') {
       $background_color = $theme->get('field_primary_color')->getValue();
       $background_color_value = $background_color[0]['color'];
     } elseif ($paragraph_type == 'campaign_resources') {
@@ -81,10 +80,27 @@ function sfgovpl_preprocess_paragraph(&$variables) {
  */
 function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
   $paragraph = $variables['paragraph'];
+  $parent_field_name = $paragraph->parent_field_name->value;
+  $items = 12;
+  $items_per_row = 4;
+  $image_size = 150;
+  $styling = TRUE;
+
+  if($parent_field_name == 'field_contents') {
+    $items = 9;
+    $items_per_row = 3;
+    $image_size = 480;
+    $styling = FALSE;
+  }
+
   $variables['#attached']['library'][] = 'sfgovpl/sfgov-instagram-feed';
   $variables['#attached']['drupalSettings']['sfgov']['instagram_feed'][$paragraph->id()] = [
     'paragraph_id' => $paragraph->id(),
     'instagram_profile' => $paragraph->field_instagram_profile->value,
+    'items' => $items,
+    'items_per_row' => $items_per_row,
+    'image_size' => $image_size,
+    'styling' => $styling,
   ];
 }
 
@@ -108,10 +124,11 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $video_service = \Drupal::service('sfgov_video.utilities');
   $video_id = $video_service->getVideoId($video_url);
 
-  $variables['captions'] = $video_service->getYoutubeTranscript($video_id);
-
   // Link transcript
-  $url = Url::fromUserInput('/video/' . $video_id);
+  $url = Url::fromRoute('sfgov_video.video_controller_page', [
+    'video_id' => $video_id,
+    'paragraph_id' => $paragraph->id()
+  ]);
   $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
   $link = $link->toRenderable();
   $link['#attributes']['target'] = '_blank';

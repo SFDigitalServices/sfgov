@@ -9,13 +9,26 @@
 
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
-    <div class="group-left">
+    {% if content.field_description[0] %}
+      <div class="group-left">
+        {% if content.field_title %}
+        <h3>{{ content.field_title }}</h3>
+        {% endif %}
+        {{ content.field_content }}
+      </div>
+      <div class="group-right">
+        {{ content.field_description }}
+      </div>
+    {% else %}
+      {% if content.field_title %}
       <h3>{{ content.field_title }}</h3>
+      {% endif %}
       {{ content.field_content }}
     </div>
     <div class="group-right">
       {{ content.field_description }}
       <div{{ create_attribute().addClass('group-right-bg').setAttribute('style', 'background-color:' ~ group_right_background) }}></div>
     </div>
+    {% endif %}
   </div>
 {% endblock paragraph %}

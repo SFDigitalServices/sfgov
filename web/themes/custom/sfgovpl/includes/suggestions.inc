@@ -15,5 +15,10 @@ function sfgovpl_theme_suggestions_page_alter(array &$suggestions, array $variab
     $suggestions[] = $http_error_suggestions[$route_name];
   }
 
+  // Add content type suggestions.
+  if ($node = \Drupal::request()->attributes->get('node')) {
+    array_splice($suggestions, 1, 0, 'page__node__' . $node->getType());
+  }
+
   return $suggestions;
 }

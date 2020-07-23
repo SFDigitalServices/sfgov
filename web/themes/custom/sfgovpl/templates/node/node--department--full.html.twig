@@ -104,28 +104,10 @@
   </div>
 {% endif %}
 
-{% if dept_fields.spotlight %}
-  <div id="sfgov-dept-spotlight" class="sfgov-dept-spotlight sfgov-dept-section sfds-layout-container">
-    <div class="sfds-responsive-container sfds-responsive-container-right-zero">
-      <div class="sfgov-spotlight">
-        <div class="sfgov-spotlight-text sfgov-spotlight-section">
-          <h3>
-            {{ dept_fields.spotlight.title }}
-          </h3>
-          <p>
-            {{ dept_fields.spotlight.description }}
-          </p>
-          {% if dept_fields.spotlight.button_text and dept_fields.spotlight.button_uri %}
-            <a class="sfgov-spotlight-button" href="{{ dept_fields.spotlight.button_uri }}">{{ dept_fields.spotlight.button_text }}</a>
-          {% endif %}
-        </div>
-        {% if dept_fields.spotlight.image_url %}
-          <div class="sfgov-spotlight-image sfgov-spotlight-section" style="background-image: url({{ dept_fields.spotlight.image_url }})">
-            <img alt="{{ node.field_spotlight.entity.field_spotlight_img.entity.field_media_image.alt }}" src="{{ dept_fields.spotlight.image_url }}"/>
-          </div>
-        {% endif %}
-      </div>
-
+{% if content.field_spotlight['#items'].getValue() %}
+  <div class="sfgov-full-bleed padding-zero purple-lightpurple sfgov-spotlight-container">
+    <div class="sfgov-section-container">
+      {{ content.field_spotlight }}
     </div>
   </div>
 {% endif %}
@@ -171,7 +153,7 @@
           </div>
           {% if dept_fields.about.divisions %}
             <div class="sfgov-dept-about-divisions">
-              <h4>{{ 'Divisions'|t }}</h4>
+              <h3>{{ 'Divisions'|t }}</h3>
               <ul>
               {% for division in dept_fields.about.divisions %}
                 <li><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
@@ -181,7 +163,7 @@
           {% endif %}
           {% if dept_fields.about.public_bodies %}
             <div class="sfgov-dept-about-public-bodies">
-              <h4>{{ 'Public Bodies'|t }}</h4>
+              <h3>{{ 'Public Bodies'|t }}</h3>
               <ul>
               {% for publicBody in dept_fields.about.public_bodies %}
                 <li><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
@@ -198,13 +180,13 @@
           {% endif %}
           {% if dept_fields.about.cta %}
             <div class="sfgov-dept-about-cta sfgov-cta">
-              <h5>{{ dept_fields.about.cta.title }}</h5>
+              <p class="title">{{ dept_fields.about.cta.title }}</p>
               <a href="{{ dept_fields.about.cta.url }}">{{ dept_fields.about.cta.button_text }}</a>
             </div>
           {% endif %}
           {% if dept_fields.about.social.values %}
             <div class="sfgov-dept-about-social sfgov-social">
-              <h5>{{ dept_fields.about.social.title }}</h5>
+              <p class="title">{{ dept_fields.about.social.title }}</p>
               <ul class="sfgov-social-list">
               {% for socialMedia in dept_fields.about.social.values %}
                 <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
@@ -225,7 +207,7 @@
             <li class="sfgov-dept-about-people-list-item">
               <div class="person-image" style="background-image: url({{ person.photo }})"><img alt="{{ person.alt }}" /></div>
               <div class="person-details">
-                <h5>{{ person.first_name }} {{ person.last_name }}</h5>
+                <p class="person-name">{{ person.first_name }} {{ person.last_name }}</p>
                 <p>{{ person.title }}</p>
               </div>
             </li>
@@ -254,13 +236,13 @@
           {% endif %}
           {% if hasPhone %}
             <div class="sfgov-contact-section phone-numbers">
-            <h5>{{ 'Phone'|t }}</h5>
+            <p class="sfgov-contact-section-title">{{ 'Phone'|t }}</p>
               {{ content.field_phone_numbers }}
             </div>
           {% endif %}
           {% if hasEmail %}
             <div class="sfgov-contact-section email">
-              <h5>{{ 'Email'|t }}</h5>
+              <p class="sfgov-contact-section-title">{{ 'Email'|t }}</p>
               {{ content.field_email }}
             </div>
           {% endif %}
@@ -274,7 +256,7 @@
   <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
     <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
       <div class="sfgov-dept-public-records-content">
-        <h5>{{ 'Request public records'|t }}</h5>
+        <p class="title">{{ 'Request public records'|t }}</p>
         <p>
         {% if dept_fields.public_records.method == "phone" %}
           <a href="tel:{{ dept_fields.public_records.value }}">{% trans %}Call {{ dept_fields.public_records.value }}</a> to submit a request.{% endtrans %}

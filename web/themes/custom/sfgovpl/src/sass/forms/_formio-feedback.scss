@@ -1,0 +1,154 @@
+// Form.io Feedback form
+
+.paragraph--formio--feedback {
+  background-color: #424244;
+  padding: 20px 0;
+  color: #fff;
+  font-size: 1rem;
+
+  a, label {
+   color: #fff;
+   font-size: inherit;
+  }
+}
+
+#formio-feedback {
+  @include contain-1090;
+
+  .formio-component {
+    margin-bottom: 0;
+  }
+
+  .formio-component-form > label,
+  .formio-component-button label {
+    display: none;
+  }
+
+  .formio-form {
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .formio-hidden {
+    margin: 0 !important;
+    min-height: 0;
+  }
+
+  .field-description {
+    color: #fff;
+    font-size: 0.824rem;
+    line-height: 1.3;
+    margin: 13px 0;
+  }
+
+  .btn-primary {
+    @include button-clear;
+    @include rubik;
+    margin: 0;
+
+    @media (max-width: 739px) {
+      width: auto;
+    }
+  }
+
+  .btn-default {
+    @include rubik;
+    color: #fff;
+    border-radius: 0;
+    font-size: 1rem;
+    font-weight: normal;
+    background: transparent;
+    text-decoration: underline;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+  }
+
+  .alert {
+    font-size: 1rem;
+    margin: 1rem 0;
+    line-height: 28px;
+
+    * {
+      font-size: inherit;
+      line-height: inherit;
+    }
+  }
+
+  .alert-error {
+    background: $c-red-3;
+    color: $c-white;
+  }
+
+  // Success message appears as normal text.
+  .alert-success {
+    @include background-image('icons/check-white.svg', left center);
+    border: 0;
+    color: #fff;
+    margin: 0;
+    padding: 10px 0 10px 40px;
+
+    p {
+      margin-left: 0;
+    }
+  }
+
+  .formio-component-wasThisPageHelpful h2 {
+    color: inherit;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  .formio-component-wasThisPageHelpful {
+     flex: 1 0 100%;
+
+     @media (min-width: 740px) {
+      flex-grow: 0;
+      flex-basis: auto;
+      margin: 0 20px 0 0;
+    }
+  }
+  .formio-component-helpfulNo,
+  .formio-component-helpfulYes {
+    flex: 0 0 auto;
+    margin: 10px 20px 0 0;
+
+    @media (min-width: 740px) {
+      margin-top: 0;
+    }
+  }
+
+  .formio-component-reportIssue {
+    display: flex;
+    flex: 1 0 100%;
+    margin-top: 20px;
+
+     @media (min-width: 740px) {
+      flex: 0 0 auto;
+      justify-content: flex-end;
+      margin-left: auto;
+      margin-top: 0;
+    }
+  }
+
+  .formio-component-message {
+    margin: 10px 0 15px 0;
+    flex: 1 0 100%;
+
+    label {
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+
+    textarea {
+      max-width: 534px;
+    }
+  }
+
+  .formio-component-submit {
+    margin-bottom: 50px;
+  }
+}
