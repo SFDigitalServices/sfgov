@@ -146,6 +146,7 @@ function sfgovpl_preprocess_html(&$variables) {
 
   // For translations, if it is a views page.
   if ($currentRoute->getRouteName() != 'entity.node.canonical') {
+    $routeParameters = $currentRoute->getRawParameters()->all();
     foreach ($languages as $langCode => $language) {
       $pageInfo['translations'][] = [
         'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
