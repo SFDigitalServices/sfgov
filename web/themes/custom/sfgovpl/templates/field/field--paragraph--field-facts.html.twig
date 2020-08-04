@@ -4,8 +4,11 @@
     <div class="fact-item">{{ item.content }}</div>
     {% if loop.index is divisible by(3) %}
       </div>
-      <div class="row">
+      {% if loop.last == true %}
+        </div>
+      {% else %}
+        <div class="row">
+      {% endif %}
     {% endif %}
   {% endfor %}
-  </div>
 </div>
