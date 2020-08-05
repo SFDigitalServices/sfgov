@@ -104,15 +104,11 @@
   </div>
 </div>
 
-{% if public_body_fields.callout %}
-<div class="sfgov-public-body-section sfgov-public-body-callout sfds-layout-container">
-  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <div class="sfgov-public-body-section--content">
-      {{ public_body_fields.callout|raw }}
-    </div>
-  </div>
-</div>
-{% endif %}
+{# Alert #}
+{% include '@theme/alert.twig' with {
+  date_exp: node.field_alert_expiration_date.0.value,
+  style: 'department',
+} %}
 
 {% if content.field_public_body_meetings|render %}
 <div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">
@@ -195,9 +191,9 @@
         </div>
         {% elseif info.bundle == 'other_info_document' %}
           {% for info_content in info.content %}
-          {% include "@atoms/09-document/09-document.twig" with {
-            "field_file": info_content.file,
-            "fileurl": info_content.fileurl,
+          {% include "@theme/document.twig" with {
+            "url": info_content.url,
+            "label": info_content.label,
           } %}
           {% endfor %}
         {% endif %}
