@@ -2,6 +2,7 @@
 
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\sfgov_utilities\Utility;
+use Drupal\tmgmt\JobItemInterface;
 
 /**
  * Implements hook_template_preprocess_default_variables_alter().
@@ -208,6 +209,24 @@ function sfgov_utilities_page_attachments(array &$page) {
           $page['#attached']['library'][] = 'sfgov_utilities/services';
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function sfgov_utilities_cron() {
+  // This task loads tmgmt jobs with JobItemInterface::STATE_REVIEW state
+  // and approves (publishes) automatically.
+  // @see SG-1102 ticket for details.
+  if (\Drupal::moduleHandler()->moduleExists('tmgmt')) {
+    $tmgmt_job_items = \Drupal::entityTypeManager()
+      ->getStorage('tmgmt_job_item')
+      ->loadByProperties(['state' => JobItemInterface::STATE_REVIEW]);
+    foreach ($tmgmt_job_items as $item) {
+      $item->set('state', JobItemInterface::STATE_ACCEPTED);
+      $item->save();
     }
   }
 }
