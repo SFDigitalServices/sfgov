@@ -1,6 +1,8 @@
 <?php
 
 use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\pathauto\PathautoState;
 use Drupal\sfgov_utilities\Utility;
 use Drupal\tmgmt\JobItemInterface;
 
@@ -228,6 +230,30 @@ function sfgov_utilities_cron() {
       $item->set('state', JobItemInterface::STATE_ACCEPTED);
       $item->save();
     }
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function sfgov_utilities_entity_insert(EntityInterface $entity) {
+  // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
+  // This will make sure to apply transliteration cleanup and appropirate URL patterns.
+  // @see SG-1154
+  if ($entity->path->pathauto == PathautoState::SKIP) {
+    \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function sfgov_utilities_entity_update(EntityInterface $entity) {
+  // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
+  // This will make sure to apply transliteration cleanup and appropirate URL patterns.
+  // @see SG-1154
+  if ($entity->path->pathauto == PathautoState::SKIP) {
+    \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
   }
 }
 
