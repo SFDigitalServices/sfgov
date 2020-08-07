@@ -52,16 +52,15 @@
   %}
   {% endblock header %}
 
-  <div class="sfgov-filters">
-    <div class="sfgov-section-container">
-      {{ exposed }}
-      {{ filters }}
-      {{ attachment_before }}
-    </div>
-  </div>
-
   <div class="content">
     <div class="sfgov-section-container">
+      <div class="group--right">
+        <div class="inner sfgov-filters">
+          {{ exposed }}
+          {{ filters }}
+          {{ attachment_before }}
+        </div>
+      </div>
       <div class="group--left">
         {% block rows %}
           {{ rows }}
@@ -75,7 +74,7 @@
           {{ more }}
         {% endblock more %}
       </div>
-      <div class="group--right">
+      <div class="group--right sfgov-upcoming-meetings">
         <div class="inner">
           {{ footer }}
         </div>
