@@ -28,6 +28,11 @@ class MeetingListFiltersForm extends FormBase {
       '#attributes' => [
         'data-filter-toggle-container' => TRUE,
       ],
+      '#attached' => [
+        'library' => [
+          'sfgovpl/meetings',
+        ],
+      ],
     ];
 
     $form['container']['toggle'] = [
