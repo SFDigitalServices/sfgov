@@ -154,7 +154,9 @@ jobs:
     steps:
       - run:
           name: create gh release
-          command: echo "create gh release for $CIRCLE_TAG"
+          command: |
+            echo "create gh release for $CIRCLE_TAG"
+            curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"target_commitish\":\"$CIRCLE_BRANCH\",\"name\":\"$CIRCLE_TAG\",\"body\":\"release created via api, add release notes\",\"draft\":false,\"prerelease\":false}" https://api.github.com/repos/sfdigitalservices/sfgov/releases 
 
 workflows:
   version: 2
