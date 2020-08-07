@@ -100,7 +100,16 @@ class MeetingListFiltersForm extends FormBase {
     foreach ($inputs as $key => $value) {
       if (!in_array($key, $form_state->getCleanValueKeys())) {
         if (!empty($value)) {
-          $filters[$key] = $value;
+          if (is_array($value)) {
+            // Check that there are actual values in the array. Submitting the
+            // filter form without any selections should still work, e.g.
+            // subcommittees[1126]&subcommittees[1119] = returns no results
+            // whereas an empty array results all.
+            $filters[$key] = array_filter($value) ? $value : [];
+          }
+          else {
+            $filters[$key] = $value;
+          }
         }
       }
     }
