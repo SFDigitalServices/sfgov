@@ -134,3 +134,13 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $link['#attributes']['target'] = '_blank';
   $variables['link_transcript'] = $link;
 }
+
+/**
+ * Preprocess paragraph document.
+ *
+ * @param $variables
+ */
+function sfgovpl_preprocess_paragraph__document(&$variables) {
+  // Don't translate document paragraphs by gtranslate.
+  $variables['attributes']['class'][] = 'notranslate';
+}
