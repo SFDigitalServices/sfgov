@@ -68,17 +68,13 @@
 }
 
 .sidebar-toggle {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   background-color: transparent;
   border: solid 1px transparent;
   display: none;
   float: right;
   height: 50px;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   margin: 1px 1px 0;
   overflow: hidden;
   padding: 0;
@@ -99,8 +95,6 @@
 
 @media only screen and (min-width: 780px), (min-device-height: 780px) and (orientation: landscape) {
   .sidebar-toggle {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
   }
 }
@@ -111,8 +105,7 @@
 }
 
 .sidebar-toggle, .sidebar-toggle *, .sidebar-toggle *::after, .sidebar-toggle *::before {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .sidebar-toggle .sidebar-toggle__icon {
@@ -122,7 +115,6 @@
   position: absolute;
   right: 0;
   top: 50%;
-  -webkit-transition: background 0.2s;
   transition: background 0.2s;
 }
 
@@ -139,14 +131,9 @@
   background: #585858;
   content: '';
   right: 0;
-  -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-  -webkit-transform-origin: 0% 50%;
-          transform-origin: 0% 50%;
-  -webkit-transition: -webkit-transform 0.2s;
-  transition: -webkit-transform 0.2s;
+  transform: translateZ(0);
+  transform-origin: 0% 50%;
   transition: transform 0.2s;
-  transition: transform 0.2s, -webkit-transform 0.2s;
 }
 
 .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon, .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::before, .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::after {
@@ -155,24 +142,20 @@
 
 .sidebar-toggle .sidebar-toggle__icon::before {
   top: -6px;
-  -webkit-transform: translateX(4px) translateY(-3px) rotate(45deg);
-          transform: translateX(4px) translateY(-3px) rotate(45deg);
+  transform: translateX(4px) translateY(-3px) rotate(45deg);
 }
 
 .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::before {
-  -webkit-transform: none;
-          transform: none;
+  transform: none;
 }
 
 .sidebar-toggle .sidebar-toggle__icon::after {
   top: 6px;
-  -webkit-transform: translateX(4px) translateY(2px) rotate(-45deg);
-          transform: translateX(4px) translateY(2px) rotate(-45deg);
+  transform: translateX(4px) translateY(2px) rotate(-45deg);
 }
 
 .sidebar-toggle-active .sidebar-toggle .sidebar-toggle__icon::after {
-  -webkit-transform: none;
-          transform: none;
+  transform: none;
 }
 
 .sidebar-toggle:focus .sidebar-toggle__icon::before, .sidebar-toggle:focus .sidebar-toggle__icon::after, .sidebar-toggle:hover .sidebar-toggle__icon::before, .sidebar-toggle:hover .sidebar-toggle__icon::after {
@@ -193,48 +176,6 @@
     float: left;
     width: 50px;
   }
-}
-
-.field--name-field-description .text-format-wrapper {
-  display: grid;
-  grid-template-columns: auto 26px;
-}
-
-.field--name-field-description .text-format-wrapper textarea {
-  border-radius: 2px 0 0 2px;
-}
-
-.field--name-field-description .text-format-wrapper .counter {
-  -ms-flex-item-align: end;
-      align-self: end;
-  background: #f3faef;
-  border: solid 1px #c9e1bd;
-  border-color: #c9e1bd;
-  border-left-color: #77b259;
-  border-width: 1px 1px 1px 5px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  color: #325e1c;
-  font-size: 11px;
-  grid-column: 2 / 2;
-  grid-row: 1 / -1;
-  height: 58px;
-  padding: 0;
-  text-align: center;
-  -webkit-writing-mode: tb-rl;
-      -ms-writing-mode: tb-rl;
-          writing-mode: tb-rl;
-}
-
-.field--name-field-description .text-format-wrapper .counter.warning {
-  background: #fdf8ed;
-  border-color: #f4daa6;
-  color: #734c00;
-}
-
-.field--name-field-description .text-format-wrapper .description {
-  grid-column: 1 / -1;
-  grid-row: 2;
 }
 
 .form-item-custom-autocomplete {
@@ -332,10 +273,7 @@
 
 .form-item-custom-autocomplete .draggable a.tabledrag-handle,
 .form-item-custom-paragraph .draggable a.tabledrag-handle {
-  -ms-flex-item-align: stretch;
-      align-self: stretch;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  align-self: stretch;
   display: flex;
   float: none;
   margin: 0;
@@ -344,12 +282,8 @@
 
 .form-item-custom-autocomplete .draggable a.tabledrag-handle div.handle,
 .form-item-custom-paragraph .draggable a.tabledrag-handle div.handle {
-  -webkit-box-align: stretch;
-      -ms-flex-align: stretch;
-          align-items: stretch;
+  align-items: stretch;
   background: none;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   margin: 0;
   padding: 0;
@@ -360,6 +294,10 @@
 .form-item-custom-paragraph .draggable a.tabledrag-handle svg {
   fill: #889;
   position: relative;
+}
+
+.form-item table thead th h4 {
+  text-transform: none;
 }
 
 .form-item-custom-paragraph {
@@ -442,13 +380,23 @@ fieldset.sf-transaction-fieldset:not(.fieldgroup) > legend {
   top: 0;
 }
 
+.sf-paragraphs-group .paragraphs-add-more:not(.is-nested) .paragraphs-add-more-prefix,
+.sf-paragraphs-group .paragraphs-add-more:not(.is-nested) .paragraphs-add-more-suffix {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal;
+}
+
 .sf-paragraphs-group .paragraphs-add-more:not(.is-nested) > input.field-add-more-submit {
   line-height: normal;
-  margin-top: 0.6em;
 }
 
 .sf-paragraphs-group .paragraphs-add-more:not(.is-nested) input.field-add-more-submit {
   font-size: 13px;
+  margin-top: 0;
 }
 
 .sf-paragraphs-group .paragraphs-add-more:not(.is-nested) .sfgov-admin-paragraph-add-link {
@@ -459,15 +407,15 @@ fieldset.sf-transaction-fieldset:not(.fieldgroup) > legend {
   margin-top: 0.6em;
 }
 
-.sf-paragraphs-group .field-multiple-table {
+.sf-paragraphs-group [data-level="1"] .field-multiple-table {
   margin: 0 !important;
 }
 
-.sf-paragraphs-group .field-multiple-table thead {
+.sf-paragraphs-group [data-level="1"] .field-multiple-table thead {
   display: none;
 }
 
-.sf-paragraphs-group .paragraphs-nested .field-multiple-table thead {
+.sf-paragraphs-group [data-level="2"] .field-multiple-table thead {
   display: table-header-group;
 }
 
@@ -480,16 +428,9 @@ fieldset.sf-transaction-fieldset:not(.fieldgroup) > legend {
 }
 
 .field--name-field-cost-type .form-radios, .field--name-field-cost-type .form-chexboxes {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  align-items: center;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
+  flex-flow: row wrap;
   margin: 0.5em 0 0 0;
 }
 
@@ -537,22 +478,17 @@ fieldset.sf-transaction-fieldset:not(.fieldgroup) > legend {
 
 .node-topic-edit-form [data-drupal-selector="edit-field-page-design-1"] + label.option::after,
 .node-topic-form [data-drupal-selector="edit-field-page-design-1"] + label.option::after {
-  background-image: url(images/Services.png);
+  background-image: url("../../images/dist/Services.png");
 }
 
 .node-topic-edit-form [data-drupal-selector="edit-field-page-design-2"] + label.option::after,
 .node-topic-form [data-drupal-selector="edit-field-page-design-2"] + label.option::after {
-  background-image: url(images/Events.png);
+  background-image: url("../../images/dist/Events.png");
 }
 
 .node-topic-edit-form [data-drupal-selector="edit-field-page-design-3"] + label.option::after,
 .node-topic-form [data-drupal-selector="edit-field-page-design-3"] + label.option::after {
-  background-image: url(images/Spotlight.png);
+  background-image: url("../../images/dist/Spotlight.png");
 }
 
 /*# sourceMappingURL=sfgov-admin.css.map */
-
-/* Table / Field label styling */
-.form-item table thead th h4 {
-  text-transform: none;
-}

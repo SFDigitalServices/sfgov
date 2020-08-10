@@ -120,12 +120,33 @@
     }
   }
   .__instagram-feed,
-  .paragraph--type--instagram-feed {
+  .paragraph--type--instagram-embed--large {
     @include contain-1090;
     padding: 80px 20px 60px 20px;
-    h4 {
+    .instagram-embed-title {
       @include fs-title-1;
       margin-bottom: 61px;
+    }
+    .instagram_gallery {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-right: -20px;
+      > a {
+        display: flex;
+        width: 33.333%;
+        margin-bottom: 20px;
+        padding-right: 20px;
+        > img {
+          width: 100%;
+          align-self: center;
+        }
+      }
+    }
+  }
+  .paragraph--type--instagram-embed--small {
+    .instagram_gallery {
+      margin-bottom: 10px;
     }
   }
 
@@ -148,7 +169,8 @@
         margin: 0 15px;
 
         &.paragraph--type--instagram-embed {
-          h4 {
+          h4,
+          .instagram-embed-title {
             font-weight: 500;
             font-size: 30px;
             line-height: 42px;

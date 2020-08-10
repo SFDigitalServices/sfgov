@@ -80,10 +80,27 @@ function sfgovpl_preprocess_paragraph(&$variables) {
  */
 function sfgovpl_preprocess_paragraph__instagram_embed(&$variables) {
   $paragraph = $variables['paragraph'];
+  $parent_field_name = $paragraph->parent_field_name->value;
+  $items = 12;
+  $items_per_row = 4;
+  $image_size = 150;
+  $styling = TRUE;
+
+  if($parent_field_name == 'field_contents') {
+    $items = 9;
+    $items_per_row = 3;
+    $image_size = 480;
+    $styling = FALSE;
+  }
+
   $variables['#attached']['library'][] = 'sfgovpl/sfgov-instagram-feed';
   $variables['#attached']['drupalSettings']['sfgov']['instagram_feed'][$paragraph->id()] = [
     'paragraph_id' => $paragraph->id(),
     'instagram_profile' => $paragraph->field_instagram_profile->value,
+    'items' => $items,
+    'items_per_row' => $items_per_row,
+    'image_size' => $image_size,
+    'styling' => $styling,
   ];
 }
 
@@ -108,9 +125,22 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
   $video_id = $video_service->getVideoId($video_url);
 
   // Link transcript
-  $url = Url::fromUserInput('/video/' . $video_id);
+  $url = Url::fromRoute('sfgov_video.video_controller_page', [
+    'video_id' => $video_id,
+    'paragraph_id' => $paragraph->id()
+  ]);
   $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
   $link = $link->toRenderable();
   $link['#attributes']['target'] = '_blank';
   $variables['link_transcript'] = $link;
+}
+
+/**
+ * Preprocess paragraph document.
+ *
+ * @param $variables
+ */
+function sfgovpl_preprocess_paragraph__document(&$variables) {
+  // Don't translate document paragraphs by gtranslate.
+  $variables['attributes']['class'][] = 'notranslate';
 }

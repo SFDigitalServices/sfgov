@@ -4,7 +4,6 @@
  * all pages where the administrative theme is in use.
  */
 (function ($, Drupal, document, window) {
-
   /**
    * Prevents the Administrative Toolbar from popping out as a sidebar when
    * screen width is reduced.
@@ -16,15 +15,13 @@
       });
     }
   };
-
   /**
    * Adds a button that Toggles the Node edit form sidebar.
    */
+
   Drupal.behaviors.sfgovAdminSidebarToggle = {
     attach: function (context) {
-
       $('.layout-region-node-secondary', context).once('sidebarToggle').wrapInner('<div id="sidebar-toggle-content"/>').prepend('<button id="sidebar-toggle" class="sidebar-toggle"><span class="sidebar-toggle__text">' + Drupal.t('Toggle sidebar') + '</span><span class="sidebar-toggle__icon"></span></button>');
-
       $('#sidebar-toggle', context).once().on('click', function (event) {
         event.preventDefault();
         var $container = $('.layout-node-form', context);
@@ -37,12 +34,11 @@
           $sidebar.hide();
           $container.addClass('sidebar-toggle-active');
         }
-      });
-
-      // This media query maps to the Seven theme's breakpoint for when the
+      }); // This media query maps to the Seven theme's breakpoint for when the
       // sidebar appears in the right column. When the screen resized from a
       // large width, to a smaller width, and the sidebar appears below the
       // content, this initiates a click on the toggle to show the sidebar.
+
       window.matchMedia('screen and (max-width: 780px), (max-device-height: 780px) and (orientation: landscape)').addListener(function (event) {
         if (event.matches && $('#sidebar-toggle-content', context).not(':visible')) {
           $('#sidebar-toggle', context).click();
@@ -50,10 +46,10 @@
       });
     }
   };
-
   /**
    * Enables Dropbutton functionality on the custom "Add Drop Button" widget.
    */
+
   Drupal.behaviors.sfgovParagraphAddDropbutton = {
     attach: function (context) {
       // The add button is just a placeholder for the add buttons. Clicking it should have no affect.
@@ -63,10 +59,10 @@
       });
     }
   };
-
   /**
    * Add SVG icon to tabledrag handle.
    */
+
   Drupal.behaviors.sfgovTabledragHandle = {
     attach: function (context, settings) {
       $('.form-item-custom-paragraph div.handle, .form-item-custom-autocomplete div.handle', context).once('tabledrag-handle-override').each(function (index, el) {
@@ -74,7 +70,6 @@
       });
     }
   };
-
   Drupal.behaviors.sfgovPersonContentTypeName = {
     attach: function (context) {
       $('.node-person-form #edit-submit, .node-person-edit-form').click(function () {
@@ -85,16 +80,19 @@
         });
       });
     }
+  }; // Enforce telephone numbers have format XXX-XXX-XXXX
 
-    // Enforce telephone numbers have format XXX-XXX-XXXX
-  };Drupal.behaviors.sfgovFormatTelephone = {
+  Drupal.behaviors.sfgovFormatTelephone = {
     attach: function (context, settings) {
       $('#edit-submit').once().on('click', function (e) {
         var phoneField = $('.form-tel');
+
         if (phoneField.length > 0) {
           var regex = new RegExp("\\d+", "g");
+
           if (phoneField.val().length > 0) {
             var number = phoneField.val().match(regex).join("");
+
             if (number.length == 10) {
               phoneField.val(number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6));
             }
@@ -102,25 +100,29 @@
         }
       });
     }
+  }; // populate the sort title for transactions based on the title (excluding stop words at the beginning of a title)
+  // for example, sort title for "Apply for a loan to repair your home" would be "Loan to repair your home"
+  // this sort title is used in the services a-z view to group and sort the transaction titles
+  // refer to:
+  //  - transaction content type
+  //  - services page view a-z
 
-    // populate the sort title for transactions based on the title (excluding stop words at the beginning of a title)
-    // for example, sort title for "Apply for a loan to repair your home" would be "Loan to repair your home"
-    // this sort title is used in the services a-z view to group and sort the transaction titles
-    // refer to:
-    //  - transaction content type
-    //  - services page view a-z
-  };Drupal.behaviors.sfgovTransactionSortTitle = {
+  Drupal.behaviors.sfgovTransactionSortTitle = {
     attach: function (context, settings) {
       var stripStopWords = function (str) {
         var strArray = str.split(' ');
         var stopWords = ["a", "an", "apply", "as", "be", "find", "for", "get", "have", "register", "the", "to", "your"];
+
         while ($.inArray(strArray[0].toLowerCase(), stopWords) >= 0) {
           strArray.splice(0, 1);
         }
+
         strArray[0] = strArray[0].charAt(0).toUpperCase() + strArray[0].slice(1);
         return strArray.join(' ');
       };
+
       var isTransactionEdit = $('form.node-transaction-edit-form').length > 0 || $('form.node-transaction-form').length > 0 ? true : false;
+
       if (isTransactionEdit) {
         $('#edit-submit').on('click', function () {
           var sortTitle = stripStopWords($('#edit-title-0-value').val());
@@ -129,7 +131,6 @@
       }
     }
   };
-
   Drupal.behaviors.sfgovDeptReqRecords = {
     attach: function (context, settings) {
       var associations = {
@@ -137,6 +138,7 @@
         "link": "edit-field-req-public-records-link-wrapper",
         "email": "edit-field-req-public-records-email-wrapper"
       };
+
       var reqPublicRecords = function () {
         // a key value pair of radio buttons values and wrapper id's for show/hide
         $('#edit-field-req-public-records-none').parent().hide();
@@ -144,18 +146,21 @@
           for (var key in associations) {
             $('#' + associations[key]).hide();
           }
+
           var radioVal = $(this).val().toLowerCase();
           $('#' + associations[radioVal]).show();
         });
       };
+
       var checkedVal = $('input[name="field_req_public_records"]:checked').val();
+
       if (checkedVal) {
         $('#' + associations[checkedVal.toLowerCase()]).show();
       }
+
       reqPublicRecords();
     }
   };
-
   Drupal.behaviors.sfgovEventLocation = {
     attach: function (context, settings) {
       var inPersonCheck = $('#edit-field-location-in-person-value');
@@ -163,18 +168,17 @@
       var onlineCheck = $('#edit-field-location-online-value');
       var onlineHelpText = $('#edit-field-location-online-value--description');
 
-      // if(inPersonCheck.is(':checked')) {
-      //   $(inPersonAddressLabel).addClass('form-required');
-      // }
+      if (inPersonCheck.is(':checked')) {
+        $(inPersonAddressLabel).addClass('form-required');
+      }
 
       if (!onlineCheck.is(':checked')) {
         $(onlineHelpText).hide();
       }
 
-      // $(inPersonCheck).click(function() {
-      //   $(inPersonAddressLabel).addClass('form-required');
-      // });
-
+      $(inPersonCheck).click(function () {
+        $(inPersonAddressLabel).addClass('form-required');
+      });
       $(onlineCheck).click(function () {
         var checked = $(this).is(':checked');
         $(onlineHelpText).toggle(checked);

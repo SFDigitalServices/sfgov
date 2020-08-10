@@ -4,14 +4,19 @@ status: true
 dependencies:
   config:
     - field.field.node.meeting.body
+    - field.field.node.meeting.field_abstract
     - field.field.node.meeting.field_address
     - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_intro_text
+    - field.field.node.meeting.field_link
+    - field.field.node.meeting.field_location_in_person
+    - field.field.node.meeting.field_location_online
     - field.field.node.meeting.field_meeting_artifacts
     - field.field.node.meeting.field_meeting_cancel
+    - field.field.node.meeting.field_phone_numbers
     - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
@@ -45,6 +50,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_abstract:
+    weight: 114
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
   field_address:
     weight: 2
     label: hidden
@@ -99,6 +111,38 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
+  field_link:
+    weight: 115
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_location_in_person:
+    weight: 113
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_location_online:
+    weight: 112
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
   field_meeting_artifacts:
     type: entity_reference_revisions_entity_view
     weight: 9
@@ -119,8 +163,8 @@ content:
     type: boolean
     region: content
   field_phone_numbers:
-    weight: 109
-    label: above
+    weight: 116
+    label: hidden
     settings:
       view_mode: default
       link: ''
