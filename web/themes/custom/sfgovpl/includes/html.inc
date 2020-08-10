@@ -3,6 +3,7 @@
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use org\bovigo\vfs\content\FileContent;
 
 function sfgovpl_preprocess_html(&$variables) {
 
