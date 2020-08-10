@@ -2,10 +2,10 @@
 
 // Run a Drush Site Audit in case someone made a boo boo on Deploy
 // @TODO: Duplicate to Hipchat
-ob_start();
-passthru('drush aa --strict=0'); // Run the drush command for site audit
-$site_audit_all = ob_get_contents();
-ob_end_clean();
+// ob_start();
+// passthru('drush aa --strict=0'); // Run the drush command for site audit
+// $site_audit_all = ob_get_contents();
+// ob_end_clean();
 
 // Important constants :)
 $pantheon_yellow = '#EFD01B';
@@ -13,13 +13,13 @@ $pantheon_yellow = '#EFD01B';
 // Default values for parameters
 $defaults = array(
   'slack_channel' => '#proj-sfdotgov-eng',
-  'slack_username' => 'Pantheon-Quicksilver',
+  'slack_username' => 'pantheon-quicksilver',
   'always_show_text' => false,
 );
 
 // Load our hidden credentials.
 // See the README.md for instructions on storing secrets.
-$secrets = _get_secrets(array('slack_url'), $defaults);
+$secrets = _get_secrets(array('slack_url','github'), $defaults);
 
 // Build an array of fields to be rendered with Slack Attachments as a table
 // attachment-style formatting:
@@ -53,7 +53,7 @@ $fields = array(
 );
 
 // Set a Slack Attachments title
-$title = 'Post-Deploy Site Audit :drupalparty:';
+$title = 'Post-Deploy Site Audit';
 
 // Prepare the slack payload as per:
 // https://api.slack.com/incoming-webhooks
@@ -64,16 +64,76 @@ $text .= "\n\n*SITE AUDIT REPORT*: \n\n$site_audit_all";
 // No need to render Site Audit All as a slack attachment,
 // full report is cut off due to character limit
 
+// get the latest release
+$latestRelease = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/releases/latest', [
+  'User-Agent: SFDigitalServices/sfgov',
+  'Authorization: token ' . $secrets['github'],
+]);
+
+// use the tag name to compare
+$tagName = $latestRelease->tag_name;
+
+$pretext = ':drupal: deployed to `' . $_ENV['PANTHEON_ENVIRONMENT'] . '`'. "\n\n";
+$pretext .= '<https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEON_ENVIRONMENT .'/deploys|pantheon dashboard>' . ' | ';
+$pretext .= 'http://' . $_ENV['PANTHEON_ENVIRONMENT'] . '-' . $_ENV['PANTHEON_SITE_NAME'] . '.pantheonsite.io' . "\n\n";
+$pretext .= 'commits since tag/release `'. $tagName . '` :' . "\n\n";
+
+// get commits since last release
+$compare = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/compare/' . $tagName . '...HEAD', [
+  'User-Agent: SFDigitalServices/sfgov',
+  'Authorization: token ' . $secrets['github'],
+]);
+
+$commits = $compare->commits;
+$commitsStr = '```';
+
+foreach($commits as $commit) {
+  $sha = substr($commit->sha, 0, 7);
+  $message = $commit->commit->message;
+  $author = $commit->commit->author->name;
+  $commitsStr .= $sha . ' ' . $message . ' (' . $author . ')' . "\n";
+}
+
+$commitsStr .= '```' . "\n";
+$commitsStr .= ':yolo:';
+$commitsStr .= ' :all_the_things:';
+$commitsStr .= ' :ahhhhhhhhh:';
+
+$pretext .= $commitsStr;
+
 $attachment = array(
-  'fallback' => $text,
-  'title' => $title,
-  'color' => $pantheon_yellow, // Can either be one of 'good', 'warning', 'danger', or any hex color code
-  'fields' => $fields,
-  'text' => $site_audit_all
+  'pretext' => $pretext,
+  // 'fallback' => $text,
+  // 'color' => $pantheon_yellow, // Can either be one of 'good', 'warning', 'danger', or any hex color code
+  // 'fields' => $fields,
+  'text' => '```'. $commitsStr . '```'
 );
 
-_slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['slack_username'], $text, $attachment, $secrets['always_show_text']);
+_slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['slack_username'], $pretext, $attachment, $secrets['always_show_text']);
 
+/**
+ * Make a curl request
+ * 
+ * @param string $url  url to curl
+ * @param array $headers  headers needed to make the request
+ */
+function _curl($url, $headers = []) {
+  // create curl resource
+  $ch = curl_init();
+  // set url
+  curl_setopt($ch, CURLOPT_URL, $url);
+  if(!empty($headers)) {
+    // set headers
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  }
+  //return the transfer as a string
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  // $output contains the output string
+  $output = curl_exec($ch);
+  return json_decode($output);
+  // close curl resource to free up system resources
+  curl_close($ch);
+}
 
 /**
  * Get secrets from secrets file.
@@ -83,6 +143,7 @@ _slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['
 function _get_secrets($requiredKeys, $defaults)
 {
   $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
+  // $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
   if (!file_exists($secretsFile)) {
     die('No secrets file found. Aborting!');
   }
@@ -108,8 +169,9 @@ function _slack_notification($slack_url, $channel, $username, $text, $attachment
   $post = array(
     'username' => $username,
     'channel' => $channel,
-    'icon_emoji' => ':pantheon:',
-    'attachments' => array($attachment)
+    'icon_emoji' => ':pantheon2:',
+    // 'attachments' => array($attachment) // uncomment to send attachment
+    'text' => $text,
   );
   if ($alwaysShowText) {
     $post['text'] = $text;
