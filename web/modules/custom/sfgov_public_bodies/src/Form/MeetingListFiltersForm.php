@@ -48,6 +48,8 @@ class MeetingListFiltersForm extends FormBase {
 
     $form['container']['toggle']['items']['month'] = [
       '#type' => 'select',
+      '#title' => $this->t('Month'),
+      '#title_display' => 'invisible',
       '#options' => [
         '' => $this->t('Select a month'),
         '01' => $this->t('January'),
@@ -68,6 +70,8 @@ class MeetingListFiltersForm extends FormBase {
 
     $form['container']['toggle']['items']['year'] = [
       '#type' => 'select',
+      '#title' => $this->t('Year'),
+      '#title_display' => 'invisible',
       '#options' => $this->getYearOptions(),
       '#default_value' => \Drupal::request()->query->get('year'),
     ];
