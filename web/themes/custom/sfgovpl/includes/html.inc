@@ -150,7 +150,10 @@ function sfgovpl_preprocess_html(&$variables) {
     foreach ($languages as $langCode => $language) {
       $pageInfo['translations'][] = [
         'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
-        'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, ['language' => $language])->toString(),
+        'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, [
+          'language' => $language,
+          'query' => \Drupal::request()->query->all(),
+        ])->toString(),
         'status' => isset($langs[$langCode]) ?  $theNode->getTranslation($langCode)->isPublished() : false,
       ];
     }
