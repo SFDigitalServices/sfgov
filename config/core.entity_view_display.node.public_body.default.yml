@@ -5,8 +5,9 @@ dependencies:
   config:
     - field.field.node.public_body.field_about_description
     - field.field.node.public_body.field_address
+    - field.field.node.public_body.field_alert_expiration_date
+    - field.field.node.public_body.field_alert_text
     - field.field.node.public_body.field_board_members
-    - field.field.node.public_body.field_callout
     - field.field.node.public_body.field_departments
     - field.field.node.public_body.field_description
     - field.field.node.public_body.field_email
@@ -17,6 +18,7 @@ dependencies:
     - field.field.node.public_body.field_subcommittees
     - node.type.public_body
   module:
+    - datetime
     - entity_reference_revisions
     - text
     - user
@@ -40,19 +42,26 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_alert_expiration_date:
+    weight: 18
+    label: hidden
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_alert_text:
+    weight: 17
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
   field_board_members:
     type: entity_reference_revisions_entity_view
     weight: 16
     label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_callout:
-    type: entity_reference_revisions_entity_view
-    weight: 5
-    label: above
     settings:
       view_mode: default
       link: ''

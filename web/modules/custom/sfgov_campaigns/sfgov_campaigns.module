@@ -1,0 +1,139 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\job_scheduler\Entity\JobSchedule;
+
+/**
+ * Implements hook_entity_update().
+ */
+function sfgov_campaigns_entity_update(EntityInterface $entity) {
+  if ($entity->bundle() == 'campaign') {
+    if ($unpublish_on = $entity->unpublish_on->value) {
+      // Formatted `unpublish_on`.
+      $unpublish_on_formatted = \Drupal::service('date.formatter')->format($unpublish_on, 'custom', 'D, M j, Y - H:i:s');
+
+      // Set parameters to be sent to the email template.
+      $data = [
+        'campaign_name' => $entity->label(),
+        'campaign_expiration_date' => $unpublish_on_formatted,
+        'recipient' => $entity->uid->entity->mail->value,
+      ];
+
+      // If the node is new.
+      if ($entity->isNew()) {
+        // Add new job.
+        _sfgov_campaigns_archiving_notification_job_add($entity->id(), $unpublish_on, $data);
+      }
+      else {
+        // If the unpublish date changes.
+        if ($entity->unpublish_on->value != $entity->original->unpublish_on->value) {
+          // Remove existing job.
+          _sfgov_campaigns_archiving_notification_job_remove($entity->id());
+
+          // Add new job.
+          _sfgov_campaigns_archiving_notification_job_add($entity->id(), $unpublish_on, $data);
+        }
+
+        // If the node is manually unpublished.
+        if (($entity->status->value != $entity->original->status->value) && !$entity->status->value) {
+          // Remove existing job.
+          _sfgov_campaigns_archiving_notification_job_remove($entity->id());
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_cron_job_scheduler_info().
+ */
+function sfgov_campaigns_cron_job_scheduler_info() {
+  $schedulers = [];
+
+  $schedulers['sfgov_campaigns_archiving_notification'] = [
+    'worker callback' => '_sfgov_campaigns_archiving_notification',
+  ];
+
+  return $schedulers;
+}
+
+/**
+ * Custom callback to remove a job schedule for "archiving email notification".
+ */
+function _sfgov_campaigns_archiving_notification_job_remove($id) {
+  $job = [
+    'name' => 'sfgov_campaigns_archiving_notification',
+    'type' => 'mail_notification',
+    'id' => $id,
+  ];
+  $service = \Drupal::service('job_scheduler.manager');
+  $service->remove($job);
+}
+
+/**
+ * Custom callback to add a job schedule for "archiving email notification".
+ */
+function _sfgov_campaigns_archiving_notification_job_add($id, $unpublish_on, $data) {
+  // Get period timestamp from `unpublish_on`.
+  $period_timestamp = strtotime('-2 weeks', $unpublish_on);
+
+  // Get period interval in seconds.
+  $period = $period_timestamp - time();
+
+  // Workarund for when the unpublish date is in less than 2 weeks.
+  $period = $period < 0 ? 0 : $period;
+
+  // Schedule a job.
+  $job = [
+    'name' => 'sfgov_campaigns_archiving_notification',
+    'type' => 'mail_notification',
+    'id' => $id,
+    'period' => $period,
+    'data' => $data,
+  ];
+  $service = \Drupal::service('job_scheduler.manager');
+  $service->set($job);
+}
+
+/**
+ * Custom callback for sending email when a node is archived.
+ */
+function _sfgov_campaigns_archiving_notification(JobSchedule $job) {
+  $mail_manager = \Drupal::service('plugin.manager.mail');
+  $module = 'sfgov_campaigns';
+  $key = 'sfgov_campaigns__archiving_notification';
+  $params = $job->getData();
+  $mail_manager->mail($module, $key, $params['recipient'], 'en', $params);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function sfgov_campaigns_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'sfgov_campaigns__archiving_notification':
+      $message['subject'] = 'Your campaign, '. $params['campaign_name'] .', is about to expire.';
+      $body_render = [
+        '#theme' => 'sfgov_campaigns__archiving_notification_message',
+        '#campaign_name' => $params['campaign_name'],
+        '#campaign_expiration_date' => $params['campaign_expiration_date'],
+      ];
+      $message['body'][] = \Drupal::service('renderer')->render($body_render);
+      break;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_campaigns_theme($existing, $type, $theme, $path) {
+  return [
+    'sfgov_campaigns__archiving_notification_message' => [
+      'variables' => [
+        'campaign_name' => NULL,
+        'campaign_expiration_date' => NULL,
+      ],
+    ],
+  ];
+}

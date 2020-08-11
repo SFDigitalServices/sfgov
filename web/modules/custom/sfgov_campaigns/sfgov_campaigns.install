@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * Implements hook_install().
+ *
+ * Install missing fields publish_on and unpublish_on from module scheduler.
+ */
+function sfgov_campaigns_install() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $changes = $definition_update_manager->getChangeList();
+
+  // As a good practice, check that the field is missing actually.
+  if ($changes['node']['field_storage_definitions']['publish_on'] ?? 0) {
+    $entity_type = $definition_update_manager->getEntityType('node');
+
+    // Get fields definition from the scheduler module.
+    module_load_include('module', 'scheduler');
+    $fields = scheduler_entity_base_field_info($entity_type);
+
+    foreach ($fields as $field_name => $field_definition) {
+      $definition_update_manager->installFieldStorageDefinition($field_name, $entity_type->id(),
+        $entity_type->id(), $field_definition);
+    }
+  }
+}
