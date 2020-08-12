@@ -112,12 +112,12 @@ function sfgov_public_bodies_form_alter(&$form, \Drupal\Core\Form\FormStateInter
       $form['field_video_option']['widget']['#options']['_none'] = t('No video');
 
       // Conditionally display `Video Embed` or `Video URL` fields.
-      $form['field_video_embed']['#states'] = [
+      $form['field_video_embed_pr']['#states'] = [
         'visible' => [
           'input[name=field_video_option]' => ['value' => 0],
         ],
       ];
-      $form['field_video_embed']['widget'][0]['value']['#states'] = [
+      $form['field_video_embed_pr']['widget'][0]['value']['#states'] = [
         'required' => [
           'input[name=field_video_option]' => ['value' => 0],
         ],
