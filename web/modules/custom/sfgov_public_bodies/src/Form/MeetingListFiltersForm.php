@@ -90,6 +90,9 @@ class MeetingListFiltersForm extends FormBase {
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
+      // There is a bug where Drupal is generating duplicate ids:
+      // https://www.drupal.org/project/drupal/issues/1852090
+      '#id' => 'meeting-list-filters-form--submit',
     ];
 
     return $form;
