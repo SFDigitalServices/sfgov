@@ -1,3 +1,5 @@
+@import 'view-meetings-filters';
+
 .views--meetings {
   .ms-parent {
     width: 100%;
@@ -60,107 +62,12 @@
     margin-bottom: 20px;
   }
 
-  .sfgov-filters {
-    background-color: $c-green-1;
-    padding-top: 40px;
-    padding-bottom: 40px;
-
-    .sfgov-section-container {
-      overflow: inherit;
-    }
-
-    .fieldset-wrapper {
-      transition: all 0.3s ease-in-out;
-      overflow: hidden;
-    }
-
-    .form-wrapper {
-      .meeting-list-filters-toggle {
-        display: none;
-      }
-      @media (max-width: $mobile-screen) {
-        .meeting-list-filters-toggle {
-          display: block;
-          &::before {
-            content: "Show less";
-            padding-left: 30px;
-            background-image: url(../../src/img/chevron-up.svg);
-            background-size: 18px;
-            background-position: left;
-            background-repeat: no-repeat;
-            color: $c-bright-blue;
-          }
-        }
-        &.closed {
-          .meeting-list-filters-toggle::before {
-            content: "Show more";
-            background-image: url(../../src/img/chevron-down.svg);
-          }
-          .fieldset-wrapper {
-            height: 0;
-            opacity: 0;
-          }
-        }
-      }
-    }
-
-    legend {
-      @media (max-width: $mobile-screen) {
-        @include fs-title-4;
-      }
-      @media (min-width: $mobile-screen) {
-        @include fs-title-3;
-      }
-    }
-
-    form {
-      max-width: 100%;
-    }
-
-    .fieldset-wrapper {
-      .form-item {
-        margin-bottom: 1rem;
-      }
-
-      @include media($narrow-screen) {
-        display: flex;
-
-        .form-item {
-          margin-right: 30px;
-          margin-bottom: 0;
-
-          select {
-            min-width: 200px;
-          }
-
-          &-subcommittees {
-            select {
-              width: 400px;
-            }
-          }
-        }
-      }
-
-      .button {
-        @include button-clear;
-        @include media($narrow-screen) {
-          margin: 0;
-          line-height: 0;
-        }
-        width: auto;
-
-        &:hover {
-          border: 3px solid $c-dark-blue;
-        }
-      }
-    }
-  }
-
   .views-row {
+    margin-bottom: 40px;
+
     @media (min-width: $mobile-screen) {
       padding-left: 30px;
     }
-    margin-bottom: 40px;
     @media (max-width: $mobile-screen) {
       &:last-child {
         margin: 0;
@@ -225,11 +132,19 @@
   .group--right {
     @include columns-350(right);
 
+    &.sfgov-upcoming-meetings {
+      clear: right;
+    }
+
     .inner {
       background: $c-green-1;
       border-radius: 8px;
       margin-bottom: 20px;
-      padding: 40px;
+      padding: 30px 20px;
+
+      @include media($narrow-screen) {
+        padding: 40px;
+      }
 
       a {
         @include button;
