@@ -25,7 +25,7 @@ $config = array(
 
         // The entity ID of the IdP this should SP should contact.
         // Can be NULL/unset, in which case the user will be shown a list of available IdPs.
-        'idp' => 'https://idcs-28d2cb948ab8484aaeb29f302ed52c7d.identity.oraclecloud.com/fed',
+        'idp' => 'https://idcs-ca539ea1fd594989a4092f20a320c255.identity.oraclecloud.com:443/fed',
 
         // The URL to the discovery service.
         // Can be NULL/unset, in which case a builtin discovery service will be used.
