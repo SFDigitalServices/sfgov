@@ -6,9 +6,10 @@ const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const browsersync = require('browser-sync').create();
+const path = require('path');
 
 const config = require('./config');
-
+const drupalLibraries = path.resolve(__dirname, '../../../libraries'); // drupal libraries which include sass source files
 function css() {
   const plugins = [
     autoprefixer(config.autoprefixer)
@@ -16,7 +17,10 @@ function css() {
   return gulp
     .src(config.css.source)
     .pipe(sourcemaps.init())
-    .pipe(sass({ outputStyle: 'expanded'}))
+    .pipe(sass({ 
+      outputStyle: 'expanded',
+      includePaths: [drupalLibraries]
+    }))
     .pipe(postcss(plugins))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(config.css.dest))
