@@ -191,10 +191,26 @@
         </div>
         {% elseif info.bundle == 'other_info_document' %}
           {% for info_content in info.content %}
+          {% if info_content.url %}
           {% include "@theme/document.twig" with {
             "url": info_content.url,
             "label": info_content.label,
           } %}
+          {% elseif info_content.link %}
+          {% include "@theme/document.twig" with {
+            "url": info_content.link,
+            "label": info_content.label,
+          } %}
+          {% else %}
+          <div class="document-file--container">
+            <i class="sfgov-icon-filefilled"></i>
+            <span class="document">
+            {{ info_content.label }}
+            <br>
+            {{ '(upcoming)'|t }}
+            </span>
+           </div>
+          {% endif %}
           {% endfor %}
         {% endif %}
       </div>
