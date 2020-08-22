@@ -47,7 +47,7 @@ function sfgov_video_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\
   $field_definition = $context['items']->getFieldDefinition();
   $paragraph_entity_reference_field_name = $field_definition->getName();
 
-  if ($paragraph_entity_reference_field_name == 'field_contents') {
+  if ($paragraph_entity_reference_field_name == 'field_contents' || $paragraph_entity_reference_field_name == 'field_video_embed_pr') {
     /** @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::formElement() */
     $widget_state = \Drupal\Core\Field\WidgetBase::getWidgetState($element['#field_parents'], $paragraph_entity_reference_field_name, $form_state);
 
