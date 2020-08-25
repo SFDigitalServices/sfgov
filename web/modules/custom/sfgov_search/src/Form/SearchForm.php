@@ -66,6 +66,7 @@ class SearchForm extends FormBase {
         'role' => t('combobox'),
         'aria-autocomplete' => t('both'),
         'aria-describedby' => 'sfgov-search-describedby',
+        'aria-expanded' => 'false',
         'aria-owns' => 'sfgov-search-autocomplete',
         'aria-activedescendant' => '',
       ),
