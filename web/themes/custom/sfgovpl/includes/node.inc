@@ -501,9 +501,9 @@ function public_body_page_fields() {
           case 'other_info_document':
             foreach ($otherInfoParagraph->field_file as $value) {
               $theFields['other_info'][$otherInfoKey]['content'][] = [
-                'label' => $value->entity->label(),
-                'url' => $value->entity->field_media_file->entity ? file_create_url($value->entity->field_media_file->entity->getFileUri()) : NULL,
-                'link' => $value->entity->field_document_url->uri ? Url::fromUri($value->entity->field_document_url->uri)->toString() : NULL,
+                'label' => !empty($value->entity) ? $value->entity->label() : '',
+                'url' => !empty($value->entity->field_media_file->entity) ? file_create_url($value->entity->field_media_file->entity->getFileUri()) : NULL,
+                'link' => !empty($value->entity->field_document_url->uri) ? Url::fromUri($value->entity->field_document_url->uri)->toString() : NULL,
               ];
             }
             break;
