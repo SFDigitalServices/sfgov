@@ -166,7 +166,9 @@ class MeetingListFiltersForm extends FormBase {
 
     foreach ($public_body->field_subcommittees->getValue() as $value) {
       $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-      $subcommittees[$subcommittee->id()] = $subcommittee->label();
+      if (!empty($subcommittee)) {
+          $subcommittees[$subcommittee->id()] = $subcommittee->label();
+      }
     }
 
     return $subcommittees;
