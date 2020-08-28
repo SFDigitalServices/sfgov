@@ -26,15 +26,20 @@ function Search311(collectionName) {
     var clickTarget = $(e.target);
     if(clickTarget.attr('id') != 'edit-sfgov-search-input') {
       $(_this.autocompleteContainerSelector).hide();
+      $(_this.inputSelector).attr('aria-expanded', false);
       $(_this.topSearchContainerSelector).hide();
     }
   });
 
-  $(this.inputSelector).attr('autocomplete', 'off');
+  $(this.inputSelector).attr({
+    'autocomplete': 'off',
+    'aria-expanded': false,
+  });
 
   this.topSearchSuggestions = function() {
     var topSearchSuggsSelector = '.sfgov-top-search-suggestion';
     var topSearchSuggs = $(topSearchSuggsSelector);
+
     if(topSearchSuggs.length > 0) {
 
       var containerId = this.topSearchContainerSelector.replace('#', '');
@@ -85,6 +90,7 @@ function Search311(collectionName) {
             if(autocompletes.length > 0) {
               autocompleteLength = autocompletes.length;
               $(_this.autocompleteContainerSelector).show();
+              $(_this.inputSelector).attr('aria-expanded', true);
               var autocompleteHtml = '';
               var searchPathPrefix = drupalSettings.sfgov_search_form_block.language_prefix + '/search?keyword=';
               for(var i = 0; i<autocompletes.length; i++) {
@@ -93,6 +99,7 @@ function Search311(collectionName) {
               $(_this.autocompleteContainerSelector).html(autocompleteHtml);
             } else {
               $(_this.autocompleteContainerSelector).hide();
+              $(_this.inputSelector).attr('aria-expanded', false);
             }
             $(_this.autocompleteContainerSelector + ' a').click(function() {
               $(_this.inputSelector).val($(this).text());
@@ -102,6 +109,7 @@ function Search311(collectionName) {
       }
       else {
         $(_this.autocompleteContainerSelector).hide();
+        $(_this.inputSelector).attr('aria-expanded', false);
       }
     });
 

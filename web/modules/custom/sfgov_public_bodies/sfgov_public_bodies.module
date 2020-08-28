@@ -154,3 +154,18 @@ function sfgov_public_bodies_field_group_form_process_build_alter(&$element) {
     ];
   }
 }
+
+/**
+ * Implements template_preprocess_fieldset().
+ */
+function sfgov_public_bodies_preprocess_fieldset(&$variables) {
+  $element = $variables['element'];
+
+  if (!empty($element['#form_id']) && $element['#form_id'] == 'meeting_list_filters_form') {
+    // Manually set 'aria-describedby' to subcommittees #suffix. See comments in
+    // web/modules/custom/sfgov_public_bodies/src/Form/MeetingListFiltersForm.php
+    if (!empty($element['#name']) && $element['#name'] == 'subcommittees') {
+      $variables['attributes']['aria-describedby'] = 'subcommittees-description';
+    }
+  }
+}
