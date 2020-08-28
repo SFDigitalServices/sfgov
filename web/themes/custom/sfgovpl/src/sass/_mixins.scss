@@ -391,3 +391,22 @@
 @mixin focus-outline {
   outline: 2px dotted #aeb0b5;
 }
+
+// visually-hidden
+//
+// Hide elements visually, but keep them available for screen readers. Don't use
+// this for elements that need to be focusable (e.g. a, button, input, select,
+// textarea). For those, please use `visually-hidden-focusable` instead.
+//
+// Usage: `@include visually-hidden;`
+
+@mixin visually-hidden {
+  & {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute !important;
+    width: 1px;
+    word-wrap: normal;
+  }
+}
