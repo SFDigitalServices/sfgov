@@ -4,8 +4,8 @@
 {% endblock title %}
 
 {% block body %}
-  {% set start_date_time = content.field_start_date.0['#attributes']['datetime'] %}
-  {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
+  {% set start_date_time = node.field_start_date.date|date('U') %}
+  {% set end_date_time = node.field_end_date.date|date('U') %}
   <div class="event--teaser--body">
     <h2 class="event-date">
       {{ start_date_time|date("l, F j") }}
