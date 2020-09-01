@@ -164,7 +164,7 @@ function dept_page_fields() {
             if ($tx = Node::load($txId)) {
               $txs[] = array(
                 'tx_title' => $tx->get('title')->getValue()[0]['value'],
-                'tx_description' => $tx->get('field_description')->getValue()[0]['value'],
+                'tx_description' => $tx->get('field_description')->getValue() ? $tx->get('field_description')->getValue()[0]['value'] : '',
                 'tx_url' => $tx->toUrl('canonical', ['absolute'=>true])->toString(),
               );
             }
