@@ -71,6 +71,29 @@ function sfgov_video_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\
   }
 }
 
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() Single Item.
+ */
+function sfgov_video_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  /** @var \Drupal\field\Entity\FieldConfig $field_definition */
+  $field_definition = $context['items']->getFieldDefinition();
+  $paragraph_entity_reference_field_name = $field_definition->getName();
+
+  if ($paragraph_entity_reference_field_name == 'field_contents' || $paragraph_entity_reference_field_name == 'field_video_embed_pr') {
+      if ($element['#paragraph_type'] == 'video') {
+          if (isset($element['subform']['field_text'])) {
+              $element['subform']['field_text_help'] = [
+                '#type' => 'container',
+                '#title' => t('Video transcript'),
+                '#prefix' => '<div class="messages messages--warning">',
+                '#suffix' => '</div>',
+                '#weight' => 3,
+                '#markup' => t('When you add a new video and save this page, the transcript will be automatically imported from Youtube. After it is imported, you can edit the transcript.'),
+              ];
+          }
+      }
+  }
+}
 
 /**
  * Implements hook_ENTITY_TYPE_update().
