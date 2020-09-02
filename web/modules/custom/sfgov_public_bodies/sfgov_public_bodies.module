@@ -73,7 +73,9 @@ function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $vie
 
           foreach ($public_body->field_subcommittees->getValue() as $value) {
             $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-            $subcommittees[$subcommittee->id()] = $subcommittee->label();
+            if (!empty($subcommittee)) {
+                $subcommittees[$subcommittee->id()] = $subcommittee->label();
+            }
           }
 
           foreach ($subcommittees as $key => $value) {
