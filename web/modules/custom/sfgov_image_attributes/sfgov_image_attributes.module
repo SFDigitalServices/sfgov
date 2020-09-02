@@ -1,0 +1,85 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use \Drupal\Core\Entity\EntityInterface;
+use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function sfgov_image_attributes_entity_extra_field_info() {
+  $extra = [];
+  $extra['media']['image']['display']['image_attributes'] = [
+    'label' => t('Image attributes'),
+    'description' => t('Display image attributes (Author, URL, license)'),
+    'weight' => 100,
+    'visible' => TRUE,
+  ];
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function sfgov_image_attributes_media_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('image_attributes')) {
+    $build['image_attributes'] = [
+      '#theme' => 'sfgov_image_attributes',
+      '#name' => $entity->getName(),
+      '#author' => $entity->get('field_artist_or_photographer')->value,
+      '#url' => $entity->get('field_link_to_original_source')->uri,
+      '#license' => $entity->get('field_type_of_license')->value,
+    ];
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_image_attributes_theme($existing, $type, $theme, $path) {
+  return [
+    'sfgov_image_attributes' => [
+      'variables' => ['name' => NULL, 'author' => NULL, 'url' => NULL, 'license' => NULL],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_image_attributes_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'media_image_edit_form') {
+    _sfgov_image_attributes_license_type_field($form);
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function sfgov_image_attributes_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] == 'media' && $entity_form['#bundle'] == 'image') {
+    _sfgov_image_attributes_license_type_field($entity_form);
+  }
+}
+
+/**
+ * Helper function to set image license types and turn textfield into select.
+ */
+function _sfgov_image_attributes_license_type_field(&$form) {
+  $license_types = [
+    '',
+    'CC BY',
+    'CC BY-SA',
+    'CC BY-NC',
+    'CC BY-NC-SA',
+    'CC BY-ND',
+    'CC BY-NC-ND',
+    'CC0',
+  ];
+  $element = $form['field_type_of_license']['widget'][0]['value'];
+  $element['#type'] = 'select';
+  unset($element['#size']);
+  $element['#options'] = array_combine($license_types, $license_types);
+  $element['#description'] = t('Read more about licenses here: <a href="https://creativecommons.org/about/cclicenses/" target="_blank">https://creativecommons.org/about/cclicenses/</a>');
+  $form['field_type_of_license']['widget'][0]['value'] = $element;
+}
