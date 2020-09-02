@@ -1,0 +1,52 @@
+// Mixins
+
+@mixin input-border {
+  border-color: $c-slate;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 8px;
+  background-color: $c-white;
+}
+
+@mixin input-border-focus {
+  border-color: $c-bright-blue;
+  box-shadow: inset 0 0 0 2px $c-bright-blue;
+  outline: none;
+}
+
+// Base styles
+
+input,
+textarea,
+select,
+button {
+  @include rubik;
+  @include fs-body-short;
+  color: $c-slate;
+  font-weight: $fw-regular;
+}
+
+// removing this will cause the search box to break.
+input,
+textarea,
+select {
+  width: 100%;
+  @include input-border;
+  border-radius: 8px;
+  &:focus {
+    @include input-border-focus;
+  }
+}
+
+label,
+legend {
+  @include rubik;
+  color: $c-slate;
+  font-weight: $fw-regular;
+  font-size: px-to-rem(24);
+  letter-spacing: -0.016em;
+  line-height: 1.5;
+  @include antialiasing;
+  margin-bottom: 0.5rem;
+  display: block;
+}
