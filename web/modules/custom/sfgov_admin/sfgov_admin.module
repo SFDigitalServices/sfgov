@@ -47,18 +47,6 @@ function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     $form['buttons']['save']['#validate'][] = 'sfgov_admin_custom_validate';
   }
-  if ($form_id == 'media_image_edit_form') {
-    _sfgov_admin_license_type_field($form);
-  }
-}
-
-/**
- * Implements hook_inline_entity_form_entity_form_alter().
- */
-function sfgov_admin_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
-  if ($entity_form['#entity_type'] == 'media' && $entity_form['#bundle'] == 'image') {
-    _sfgov_admin_license_type_field($entity_form);
-  }
 }
 
 function sfgov_admin_custom_validate($form, &$form_state) {
@@ -238,24 +226,4 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
     $form['field_top_level_topic']['widget']['value']['#description'] = t('This Topic cannot be top level because it is a child topic of the following: ' . implode(', ', $parentTopics));
     $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';
   }
-}
-
-/**
- * Helper function to set image license types and turn textfield into select.
- */
-function _sfgov_admin_license_type_field(&$form) {
-  $license_types = [
-    '',
-    'CC BY',
-    'CC BY-SA',
-    'CC BY-NC',
-    'CC BY-NC-SA',
-    'CC BY-ND',
-    'CC BY-NC-ND',
-    'CC0',
-  ];
-  $form['field_type_of_license']['widget'][0]['value']['#type'] = 'select';
-  unset($form['field_type_of_license']['widget'][0]['value']['#size']);
-  $form['field_type_of_license']['widget'][0]['value']['#options'] = array_combine($license_types, $license_types);
-  $form['field_type_of_license']['widget'][0]['value']['#description'] = t('Read more about licenses here: <a href="https://creativecommons.org/about/cclicenses/" target="_blank">https://creativecommons.org/about/cclicenses/</a>');
 }
