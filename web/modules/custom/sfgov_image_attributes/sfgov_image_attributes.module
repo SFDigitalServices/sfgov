@@ -77,10 +77,13 @@ function _sfgov_image_attributes_license_type_field(&$form) {
     'CC0',
   ];
   $form['revision_information']['#access'] = FALSE;
+  $form['translation']['#access'] = FALSE;
   $element = $form['field_type_of_license']['widget'][0]['value'];
   $element['#type'] = 'select';
   unset($element['#size']);
   $element['#options'] = array_combine($license_types, $license_types);
   $element['#description'] = t('Read more about licenses here: <a href="https://creativecommons.org/about/cclicenses/" target="_blank">https://creativecommons.org/about/cclicenses/</a>');
+  // Temporarily hide (All languages) option while still keeping Translaton option enabled for the Image (media) entity.
+  $element['#attached']['library'][] = 'sfgov_image_attributes/sfgov_image_attributes';
   $form['field_type_of_license']['widget'][0]['value'] = $element;
 }
