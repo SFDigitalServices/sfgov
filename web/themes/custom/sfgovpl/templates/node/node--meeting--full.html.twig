@@ -2,7 +2,7 @@
 {% set hero_banner_label =
     meeting_is_past
     ? 'Part of <a href="@url">@public_body Archive</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_past', {arg_0: content.field_public_body[0]['#node'].id() })})
-    : 'Part of <a href="@url">@public_body Calendar</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
+    : 'Part of <a href="@url">@public_body meetings</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
 %}
 
 <article{{ attributes.addClass(classes) }}>

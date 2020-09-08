@@ -9,6 +9,7 @@
 
 // Important constants :)
 $pantheon_yellow = '#EFD01B';
+$slack_cutoff = 4000; // slack has a message size cutoff of 16kb (include json syntax), recommended message size is 4000 chars
 
 // Default values for parameters
 $defaults = array(
@@ -76,7 +77,7 @@ $tagName = $latestRelease->tag_name;
 $pretext = ':drupal: deployed to `' . $_ENV['PANTHEON_ENVIRONMENT'] . '`'. "\n\n";
 $pretext .= '<https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEON_ENVIRONMENT .'/deploys|pantheon dashboard>' . ' | ';
 $pretext .= 'http://' . $_ENV['PANTHEON_ENVIRONMENT'] . '-' . $_ENV['PANTHEON_SITE_NAME'] . '.pantheonsite.io' . "\n\n";
-$pretext .= 'commits since tag/release `'. $tagName . '` :' . "\n\n";
+$pretext .= 'a brief and truncated summary of commits since tag/release `'. $tagName . '` :' . "\n\n";
 
 // get commits since last release
 $compare = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/compare/' . $tagName . '...HEAD', [
@@ -85,21 +86,30 @@ $compare = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/compare/'
 ]);
 
 $commits = $compare->commits;
-$commitsStr = '```';
+$commitsStr = '';
 
 foreach($commits as $commit) {
-  $sha = substr($commit->sha, 0, 7);
+  $sha = substr($commit->sha, 0, 5);
+  $author = $commit->author ? $commit->author->login : $commit->commit->author->name;
   $message = $commit->commit->message;
-  $author = $commit->commit->author->name;
-  $commitsStr .= $sha . ' ' . $message . ' (' . $author . ')' . "\n";
+  $linebreak = strpos($message, "\n\n");
+  $trimmedMessage = $linebreak !== false ? substr($message, 0, $linebreak) : $message;
+  $commitsStr .= $sha . ' ' . $trimmedMessage . ' (' . $author . ')' . "\n";
 }
 
-$commitsStr .= '```' . "\n";
-$commitsStr .= ':yolo:';
-$commitsStr .= ' :all_the_things:';
-$commitsStr .= ' :ahhhhhhhhh:';
+$prefix = '```';
+$suffix = '```' . "\n\n";
+$suffix .= '<https://github.com/sfdigitalservices/sfgov/compare/' . $tagName . '...HEAD|Click here for the full comparison>' . "\n\n";
+$suffix .= ':yolo: :all_the_things: :ahhhhhhhhh:';
 
-$pretext .= $commitsStr;
+$charCount = strlen($pretext) + strlen($prefix) + strlen($suffix); // keep count of essential parts of message
+$commitsStrLen = strlen($commitsStr); // commits character count
+
+if(($commitsStrLen + $charCount) > $slack_cutoff) { // cutoff exceeded
+  $commitsStr = substr($commitsStr, 0, ($slack_cutoff-$charCount)); // truncate commits message
+}
+
+$pretext .= $prefix . $commitsStr . $suffix; // put it all together
 
 $attachment = array(
   'pretext' => $pretext,
