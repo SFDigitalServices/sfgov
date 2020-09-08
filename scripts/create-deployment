@@ -1,0 +1,27 @@
+#!/bin/bash
+
+project="$1"
+sha="$2"
+target_url="$3"
+token="$(composer config --global github-oauth.github.com)"
+
+env=test
+transient=true
+auto_inactive=true
+
+statuses_url=$(
+  curl -s \
+    -H "Accept: application/vnd.github.ant-man-preview+json" \
+    -d '{ "ref": "'"$sha"'", "environment": "'"$env"'", "transient_environment": '$transient' }' \
+    -X POST "https://api.github.com/repos/$project/deployments?access_token=$token" \
+    | jq -r .statuses_url
+)
+
+if [ -n "$statuses_url" ]; then
+  echo "No statuses_url found; bailing on deployment status"
+else
+  curl -s \
+    -H "Accept: application/vnd.github.flash-preview+json" \
+    -d '{ "state": "success", "target_url": "'"$target_url"'", "environment": "'"$env"'", "auto_inactive": '$auto_inactive' }' \
+    -X POST "$statuses_url?access_token=$token"
+fi
