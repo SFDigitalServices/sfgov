@@ -1,13 +1,19 @@
 #!/bin/bash
 
-project="$1"
-sha="$2"
-target_url="$3"
+project="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+sha="$CIRCLE_SHA1"
+target_url="https://pr-${CIRCLE_PR_NUMBER}-sfgov.pantheonsite.io"
 token="$(composer config --global github-oauth.github.com)"
 
 env=test
 transient=true
 auto_inactive=true
+
+if [ "$CIRCLE_BRANCH" = "main" ]; then
+  env=production
+  transient=false
+  auto_inactive=false
+fi
 
 statuses_url=$(
   curl -s \
