@@ -31,8 +31,6 @@
         $buttonShow.on('click', function(e) {
           e.preventDefault();
           toggleFilters($content, 'show');
-          // Find the first focusable element and focus it.
-          $content.find('input, select, textarea, a, button').first().focus();
         });
 
         // Breakpoint at which sidebar becomes visible, and toggle functionality

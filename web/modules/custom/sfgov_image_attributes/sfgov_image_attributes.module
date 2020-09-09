@@ -1,0 +1,47 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_image_attributes_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'media_image_edit_form') {
+    _sfgov_image_attributes_license_type_field($form);
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function sfgov_image_attributes_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] == 'media' && $entity_form['#bundle'] == 'image') {
+    _sfgov_image_attributes_license_type_field($entity_form);
+  }
+}
+
+/**
+ * Helper function to set image license types and turn textfield into select.
+ */
+function _sfgov_image_attributes_license_type_field(&$form) {
+  $license_types = [
+    '',
+    'CC BY',
+    'CC BY-SA',
+    'CC BY-NC',
+    'CC BY-NC-SA',
+    'CC BY-ND',
+    'CC BY-NC-ND',
+    'CC0',
+  ];
+  $form['revision_information']['#access'] = FALSE;
+  $form['translation']['#access'] = FALSE;
+  $element = $form['field_type_of_license']['widget'][0]['value'];
+  $element['#type'] = 'select';
+  unset($element['#size']);
+  $element['#options'] = array_combine($license_types, $license_types);
+  $element['#description'] = t('Read more about licenses here: <a href="https://creativecommons.org/about/cclicenses/" target="_blank">https://creativecommons.org/about/cclicenses/</a>');
+  // Temporarily hide (All languages) option while still keeping Translaton option enabled for the Image (media) entity.
+  $element['#attached']['library'][] = 'sfgov_image_attributes/sfgov_image_attributes';
+  $form['field_type_of_license']['widget'][0]['value'] = $element;
+}
