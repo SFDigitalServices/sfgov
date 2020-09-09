@@ -30,8 +30,6 @@ defaults: &defaults
     # See: https://discuss.circleci.com/t/environment-variable-expansion-in-working-directory/11322
     # See: https://discuss.circleci.com/t/circle-2-0-global-environment-variables/8681
     #======================================================================================================================================
-
-    NOTIFY: 'scripts/github/create-deployment {project} {sha} {site-url}'
     ADMIN_USERNAME: admin
     # BUILD_TOOLS_VERSION: ^2.0.0-alpha4
     TERM: dumb
@@ -80,6 +78,10 @@ jobs:
       - run:
           name: run unit tests
           command: composer -n unit-test
+
+      - run:
+          name: create github deployment
+          command: scripts/github/create-deployment
 
   build_deploy_and_test:
     <<: *defaults
