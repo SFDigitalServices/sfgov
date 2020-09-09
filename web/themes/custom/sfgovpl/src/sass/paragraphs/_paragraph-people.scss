@@ -1,6 +1,4 @@
 .paragraph--type--people {
-  @include contain-1090;
-
   .title {
     @include fs-title-3-mobile;
     margin-top: 20px;
@@ -17,6 +15,9 @@
 
   .description {
     margin-bottom: 10px;
+    &.bottom { 
+      display: none;
+    }
     p {
       margin: 0;
     }
@@ -93,30 +94,5 @@
 
   .person-subtitle {
     @include fs-body-short;
-  }
-
-  .__description {
-    @include sidebar('p');
-    background: $c-white;
-
-    @include media($wide-screen) {
-      width: calc(50% - 160px);
-    }
-
-    p {
-      @include fs-body-bold;
-      color: $c-slate;
-      margin: 0;
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    a {
-      @include button;
-      display: inline-block;
-      font-style: normal;
-      margin-top: 20px;
-    }
   }
 }

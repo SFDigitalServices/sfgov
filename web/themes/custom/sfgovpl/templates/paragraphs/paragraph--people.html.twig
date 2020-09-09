@@ -71,6 +71,11 @@
             {{ content.field_person_2 }}
           {% endif %}
         </div>
+        {% if content.field_description.0 is not empty %} {# exception for front page people sections #}
+          <div class="description bottom">
+            {{ content.field_description }}
+          </div>
+        {% endif %}
       </div>
     {% endblock %}
   </div>
