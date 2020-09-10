@@ -1,28 +1,40 @@
 // Mayor
-.sfgov-title--elected-officials {
+.paragraph--type--people.sfgov-title--elected-officials {
   background: $c-dark-blue;
   color: $c-white;
   @include antialiasing;
-  padding-bottom: 60px;
   padding-top: 80px;
+  padding-bottom: 40px;
 
   @include media($medium-screen) {
     margin-bottom: 60px;
+    padding-bottom: 0;
   }
 
-  .__people-title {
+  .title {
     @include contain-1090;
+    @include fs-h1;
+    color: white;
+    margin-bottom: 34px;
+  }
+
+  .inner {
+    padding: 0;
   }
 
   .sfgov-people--content {
     position: relative;
+    @include contain-1090;
+    padding-top: 0;
+  }
+
+  .person-card {
+    display: block;
+    margin: 0;
   }
 
   .person-container {
-    @include media($medium-screen) {
-      margin-bottom: 40px;
-    }
-
+    margin-bottom: 20px;
     @include media($narrow-screen) {
       width: 70%;
     }
@@ -61,12 +73,6 @@
       position: relative;
       left: -999px;
     }
-  }
-
-  .__people-title {
-    @include fs-h1;
-    color: white;
-    margin-bottom: 34px;
   }
 
   .person-bio {
