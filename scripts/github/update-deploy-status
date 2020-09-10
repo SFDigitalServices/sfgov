@@ -5,16 +5,15 @@ slug="${CIRCLE_PROJECT_USERNAME}/${repo}"
 sha="$CIRCLE_SHA1"
 token="$GITHUB_TOKEN"
 target_url="https://pr-${CIRCLE_PR_NUMBER}-${repo}.pantheonsite.io"
-required_contexts='["ci/circleci: build_deploy_and_test"]'
 
-env=test
-transient=true
-auto_inactive=true
+env='test'
+transient='true'
+auto_inactive='true'
 
 if [ "$CIRCLE_BRANCH" = "main" ]; then
-  env=production
-  transient=false
-  auto_inactive=false
+  env='production'
+  transient='false'
+  auto_inactive='false'
   target_url="https://sf.gov"
 fi
 
@@ -23,13 +22,15 @@ echo "Hi! Here is the state of things:
   repo: '$repo'
   slug: '$slug'
   sha: '$sha'
-  token: '(masked)'
   target_url: '$target_url'"
+
+data='{ "ref": "'"$sha"'", "environment": "'"$env"'", "transient_environment": '$transient', "required_contexts": [] }'
+echo "deployment payload: $data"
 
 deployment=$(
   curl -s \
+    -d "$data" \
     -H "Accept: application/vnd.github.ant-man-preview+json" \
-    -d '{ "ref": "'"$sha"'", "environment": "'"$env"'", "transient_environment": '$transient', "required_contexts": '$required_contexts' }' \
     -X POST "https://api.github.com/repos/$slug/deployments?access_token=$token" \
 )
 
@@ -38,9 +39,11 @@ echo "deployment: $deployment"
 statuses_url="$(echo "$deployment" | jq -r .statuses_url)"
 if [ -n "$statuses_url" ]; then
   echo "Got statuses_url: '$statuses_url'; setting status..."
+  data='{ "state": "success", "target_url": "'"$target_url"'", "environment": "'"$env"'", "auto_inactive": '$auto_inactive' }'
+  echo "status payload: $data"
   curl -s \
     -H "Accept: application/vnd.github.flash-preview+json" \
-    -d '{ "state": "success", "target_url": "'"$target_url"'", "environment": "'"$env"'", "auto_inactive": '$auto_inactive' }' \
+    -d "$data" \
     -X POST "$statuses_url?access_token=$token"
   echo
 else
