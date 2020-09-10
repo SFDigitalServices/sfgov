@@ -32,15 +32,16 @@ deployment=$(
     -X POST "https://api.github.com/repos/$slug/deployments?access_token=$token" \
 )
 
-statuses_url=$(echo "$deployments" | jq -r .statuses_url)
+echo "deployment: $deployment"
+
+statuses_url="$(echo "$deployment" | jq -r .statuses_url)"
 if [ -n "$statuses_url" ]; then
-  echo "No statuses_url found; skipping deploy status. Deployment:"
-  echo "$deployment"
-else
   echo "Got statuses_url: '$statuses_url'; setting status..."
   curl -s \
     -H "Accept: application/vnd.github.flash-preview+json" \
     -d '{ "state": "success", "target_url": "'"$target_url"'", "environment": "'"$env"'", "auto_inactive": '$auto_inactive' }' \
     -X POST "$statuses_url?access_token=$token"
   echo
+else
+  echo "No statuses_url found; skipping deploy status"
 fi
