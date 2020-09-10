@@ -96,11 +96,6 @@ jobs:
           command: /build-tools-ci/scripts/set-environment
 
       - run:
-          name: export DEPLOY_URL
-          command: |
-            echo "export DEPLOY_URL='https://$TERMINUS_ENV-$TERMINUS_SITE.pantheonsite.io'" >> $BASH_ENV
-
-      - run:
           name: install dev dependencies, build assets, etc.
           command: ./.circleci/scripts/pantheon/01-prepare
 
