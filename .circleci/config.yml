@@ -79,10 +79,6 @@ jobs:
           name: run unit tests
           command: composer -n unit-test
 
-      - run:
-          name: create github deployment
-          command: scripts/github/create-deployment
-
   build_deploy_and_test:
     <<: *defaults
     steps:
@@ -151,6 +147,14 @@ jobs:
           name: run ghost inspector test suite
           command: ./.circleci/scripts/ghost-inspector/run-gi-suite
 
+  update_deploy_status:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - run:
+          name: update deployment status
+          command: ./scripts/github/update-deploy-status
+
   create_gh_release:
     docker:
       - image: cimg/base:2020.01
@@ -169,6 +173,7 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
+      - update_deploy_status
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:
