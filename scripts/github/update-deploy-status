@@ -3,7 +3,7 @@
 rep="$CIRCLE_PROJECT_REPONAME"
 slug="${CIRCLE_PROJECT_USERNAME}/${repo}"
 sha="$CIRCLE_SHA1"
-token="$GITHUB_TOKEN"
+token="$(composer config --global github-oauth.github.com)"
 target_url="https://pr-${CIRCLE_PR_NUMBER}-${repo}.pantheonsite.io"
 
 env=test
@@ -17,16 +17,17 @@ if [ "$CIRCLE_BRANCH" = "main" ]; then
   target_url="https://sf.gov"
 fi
 
-statuses_url=$(
+deployment=$(
   curl -s \
     -H "Accept: application/vnd.github.ant-man-preview+json" \
     -d '{ "ref": "'"$sha"'", "environment": "'"$env"'", "transient_environment": '$transient' }' \
     -X POST "https://api.github.com/repos/$slug/deployments?access_token=$token" \
-    | jq -r .statuses_url
 )
 
+statuses_url=$(echo "$deployments" | jq -r .statuses_url)
 if [ -n "$statuses_url" ]; then
-  echo "No statuses_url found; skipping deploy status"
+  echo "No statuses_url found; skipping deploy status. Deployment:"
+  echo "$deployment"
 else
   curl -s \
     -H "Accept: application/vnd.github.flash-preview+json" \
