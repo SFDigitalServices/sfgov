@@ -96,6 +96,10 @@ jobs:
           command: /build-tools-ci/scripts/set-environment
 
       - run:
+          name: export DEPLOY_URL
+          command: export DEPLOY_URL="https://$TERMINUS_ENV-$TERMINUS_SITE.pantheonsite.io"
+
+      - run:
           name: install dev dependencies, build assets, etc.
           command: ./.circleci/scripts/pantheon/01-prepare
 
@@ -144,16 +148,12 @@ jobs:
           command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
 
       - run:
-          name: run ghost inspector test suite
-          command: ./.circleci/scripts/ghost-inspector/run-gi-suite
-
-  update_deploy_status:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
           name: update deployment status
           command: ./scripts/github/update-deploy-status
+
+      - run:
+          name: run ghost inspector test suite
+          command: ./.circleci/scripts/ghost-inspector/run-gi-suite
 
   create_gh_release:
     docker:
@@ -173,9 +173,6 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
-      - update_deploy_status:
-          requires:
-            - build_deploy_and_test
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:
