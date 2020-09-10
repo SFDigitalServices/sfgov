@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rep="$CIRCLE_PROJECT_REPONAME"
+repo="$CIRCLE_PROJECT_REPONAME"
 slug="${CIRCLE_PROJECT_USERNAME}/${repo}"
 sha="$CIRCLE_SHA1"
 token="$GITHUB_TOKEN"
@@ -17,6 +17,14 @@ if [ "$CIRCLE_BRANCH" = "main" ]; then
   target_url="https://sf.gov"
 fi
 
+echo "Hi! Here is the state of things:
+
+  repo: '$repo'
+  slug: '$slug'
+  sha: '$sha'
+  token: '(masked)'
+  target_url: '$target_url'"
+
 deployment=$(
   curl -s \
     -H "Accept: application/vnd.github.ant-man-preview+json" \
@@ -29,8 +37,10 @@ if [ -n "$statuses_url" ]; then
   echo "No statuses_url found; skipping deploy status. Deployment:"
   echo "$deployment"
 else
+  echo "Got statuses_url: '$statuses_url'; setting status..."
   curl -s \
     -H "Accept: application/vnd.github.flash-preview+json" \
     -d '{ "state": "success", "target_url": "'"$target_url"'", "environment": "'"$env"'", "auto_inactive": '$auto_inactive' }' \
     -X POST "$statuses_url?access_token=$token"
+  echo
 fi
