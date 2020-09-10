@@ -17,15 +17,15 @@ if [ "$CIRCLE_BRANCH" = "main" ]; then
   target_url="https://sf.gov"
 fi
 
-echo "Hi! Here is the state of things:
-
-  repo: '$repo'
-  slug: '$slug'
-  sha: '$sha'
-  target_url: '$target_url'"
-
-data='{ "ref": "'"$sha"'", "environment": "'"$env"'", "required_contexts": [] }'
-echo "deployment payload: $data"
+data='{
+  "ref": "'"$sha"'",
+  "environment": "'"$env"'",
+  "auto_merge": false,
+  "payload": {
+  },
+  "required_contexts": []
+}'
+echo "deployment JSON: $data"
 
 deployment=$(
   curl -s \
@@ -39,8 +39,13 @@ echo "deployment: $deployment"
 statuses_url="$(echo "$deployment" | jq -r .statuses_url)"
 if [ -n "$statuses_url" ]; then
   echo "Got statuses_url: '$statuses_url'; setting status..."
-  data='{ "state": "success", "target_url": "'"$target_url"'", "environment": "'"$env"'", "auto_inactive": '$auto_inactive' }'
-  echo "status payload: $data"
+  data='{
+    "state": "success",
+    "target_url": "'"$target_url"'",
+    "environment": "'"$env"'",
+    "auto_inactive": '$auto_inactive'
+  }'
+  echo "status JSON: $data"
   curl -s \
     -H "Accept: application/vnd.github.flash-preview+json" \
     -d "$data" \
