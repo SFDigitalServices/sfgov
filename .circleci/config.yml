@@ -173,7 +173,9 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
-      - update_deploy_status
+      - update_deploy_status:
+          requires:
+            - build_deploy_and_test
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:
