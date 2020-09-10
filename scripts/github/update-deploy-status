@@ -6,13 +6,14 @@ sha="$CIRCLE_SHA1"
 token="$GITHUB_TOKEN"
 target_url="$MULTIDEV_SITE_URL"
 
-env='test'
+env='multidev'
 transient='true'
 auto_inactive='true'
 
 if [ "$CIRCLE_BRANCH" = "main" ]; then
   env='production'
   transient='false'
+  production='true'
   auto_inactive='false'
   target_url="https://sf.gov"
 fi
@@ -21,8 +22,7 @@ data='{
   "ref": "'"$sha"'",
   "environment": "'"$env"'",
   "auto_merge": false,
-  "payload": {
-  },
+  "transient_environment": '$transient',
   "required_contexts": []
 }'
 echo "deployment JSON: $data"
@@ -43,14 +43,14 @@ if [ -n "$statuses_url" ]; then
     "state": "success",
     "target_url": "'"$target_url"'",
     "environment": "'"$env"'",
+    "environment_url": "'"$target_url"'",
     "auto_inactive": '$auto_inactive'
   }'
-  echo "status JSON: $data"
+  echo "status data: $data\nresponse:"
   curl -s \
     -H "Accept: application/vnd.github.flash-preview+json" \
     -d "$data" \
     -X POST "$statuses_url?access_token=$token"
-  echo
 else
   echo "No statuses_url found; skipping deploy status"
 fi
