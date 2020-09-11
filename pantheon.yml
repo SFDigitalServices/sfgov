@@ -4,25 +4,33 @@ php_version: 7.2
 workflows:
   deploy_product:
     after:
-      -
-        type: webphp
+      - type: webphp
         description: 'Run composer prepare-for-pantheon'
         script: private/scripts/deploy_product/prepare-for-pantheon.php
-      -
-        type: webphp
+      - type: webphp
         description: 'Run composer install & drupal-scaffold'
         script: private/scripts/deploy_product/composer-install.php
-      -
-        type: webphp
+      - type: webphp
         description: 'Notify in slack when deployed'
         script: private/scripts/slack-notify/slack_notify_drush_site_audit.php
+      - type: webphp
+        description: 'Update deployment status (after deploy_product)'
+        script: private/scripts/deploy_status/update.php
   sync_code:
     after:
       - type: webphp
         description: Push changes back to GitHub if needed
         script: private/scripts/quicksilver/quicksilver-pushback/push-back-to-github.php
+  create_cloud_development_environment:
+    after:
+      - type: webphp
+        description: 'Update deployment status (after create_cloud_development_environment)'
+        script: private/scripts/deploy_status/update.php
   deploy:
     after:
       - type: webphp
         description: 'Notify in slack when deployed'
         script: private/scripts/slack-notify/slack_notify_drush_site_audit.php      
+      - type: webphp
+        description: 'Update deployment status (after deploy)'
+        script: private/scripts/deploy_status/update.php
