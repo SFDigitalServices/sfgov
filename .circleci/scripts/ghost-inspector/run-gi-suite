@@ -43,6 +43,8 @@ else
   PASSING=0
 fi
 
+curl -X POST -H 'Content-type: application/json' --data '{"text":":ghost: suite executed for '$GI_START_URL'\n\n:camera: <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/'$RESULT_ID'|screenshots here>"}' $RONBOT_WEBHOOK_URL
+
 # output suite tests with results
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
 echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
