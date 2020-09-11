@@ -1,5 +1,7 @@
 <?php
 
+require '../shared.php';
+
 // Run a Drush Site Audit in case someone made a boo boo on Deploy
 // @TODO: Duplicate to Hipchat
 // ob_start();
@@ -143,31 +145,6 @@ function _curl($url, $headers = []) {
   return json_decode($output);
   // close curl resource to free up system resources
   curl_close($ch);
-}
-
-/**
- * Get secrets from secrets file.
- *
- * @param array $requiredKeys  List of keys in secrets file that must exist.
- */
-function _get_secrets($requiredKeys, $defaults)
-{
-  $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
-  // $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
-  if (!file_exists($secretsFile)) {
-    die('No secrets file found. Aborting!');
-  }
-  $secretsContents = file_get_contents($secretsFile);
-  $secrets = json_decode($secretsContents, 1);
-  if ($secrets == FALSE) {
-    die('Could not parse json in secrets file. Aborting!');
-  }
-  $secrets += $defaults;
-  $missing = array_diff($requiredKeys, array_keys($secrets));
-  if (!empty($missing)) {
-    die('Missing required keys in json secrets file: ' . implode(',', $missing) . '. Aborting!');
-  }
-  return $secrets;
 }
 
 /**
