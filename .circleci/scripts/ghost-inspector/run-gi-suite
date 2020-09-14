@@ -18,6 +18,8 @@ echo "Execute url: $EXECUTE_URL"
 
 RESULT_ID=$(curl -s $EXECUTE_URL | jq -r '.data._id')
 
+echo "Result id: $RESULT_ID" 
+
 # Poll for the suite result, sleep for a few seconds if it hasn't changed
 echo "Polling for suite results (ID: $RESULT_ID)"
 while [ "$STATUS" = 'null' ]; do
@@ -41,8 +43,12 @@ else
   PASSING=0
 fi
 
-# output suite tests with results
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
+SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if (.screenshotComparePassing!=true) then "> :orangedash: " elif(.passing) then "> :greencheck: " else "> :redx: " end + " \(.name)"')
+
+curl -X POST -H 'Content-type: application/json' --data '{"text":":ghost: suite executed for '$GI_START_URL'\n\n:git: `'$CIRCLE_BRANCH'`\n\n'"$SUITE_TEST_RESULTS_SLACK"' \n\n :camera: <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/'$RESULT_ID'|screenshots here>"}' $RONBOT_WEBHOOK_URL
+
+# output suite tests with results
 echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
 
 # return our passing status
