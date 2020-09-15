@@ -48,7 +48,7 @@ class SearchForm extends FormBase {
         'sfgov-search-form-311',
       ),
       'role' => 'search',
-      'novalidate' => 'true',
+      'novalidate' => 'novalidate',
     );
 
     $suffix_markup = '<div id="sfgov-search-describedby" aria-hidden="true" class="visually-hidden">' . t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value') . '</div>';
@@ -66,6 +66,7 @@ class SearchForm extends FormBase {
         'role' => t('combobox'),
         'aria-autocomplete' => t('both'),
         'aria-describedby' => 'sfgov-search-describedby',
+        'aria-expanded' => 'false',
         'aria-owns' => 'sfgov-search-autocomplete',
         'aria-activedescendant' => '',
       ),

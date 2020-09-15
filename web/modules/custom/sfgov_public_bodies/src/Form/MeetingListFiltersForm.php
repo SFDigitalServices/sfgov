@@ -82,16 +82,21 @@ class MeetingListFiltersForm extends FormBase {
         '#type' => 'checkboxes',
         '#title' => $this->t('Committees'),
         '#options' => $this->getSubcommittees(),
-        '#description' => $this->t('Select one or more committees'),
         '#default_value' => $query_subcommittees ? $query_subcommittees : [0],
+        // BUG: Drupal core: Broken aria-describedby IDREF in radios and
+        // checkboxes elements: https://www.drupal.org/node/2839344
+        // Note: When this is fixed, we can delete '#suffix' and the
+        // corresponding code in sfgov_public_bodies_preprocess_fieldset() and
+        // just use '#description'.
+        '#suffix' => '<div id="subcommittees-description" class="visually-hidden">'. t('Select one or more committees') . '</div>',
       ];
     }
 
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
-      // There is a bug where Drupal is generating duplicate ids:
-      // https://www.drupal.org/project/drupal/issues/1852090
+      // BUG: Drupal core: Cached forms can have duplicate HTML IDs, which
+      // disrupts accessible form labels: https://www.drupal.org/node/1852090
       '#id' => 'meeting-list-filters-form--submit',
     ];
 
@@ -161,7 +166,9 @@ class MeetingListFiltersForm extends FormBase {
 
     foreach ($public_body->field_subcommittees->getValue() as $value) {
       $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-      $subcommittees[$subcommittee->id()] = $subcommittee->label();
+      if (!empty($subcommittee)) {
+          $subcommittees[$subcommittee->id()] = $subcommittee->label();
+      }
     }
 
     return $subcommittees;
