@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "932ad36bf393c9c3003c932250130e34",
+    "content-hash": "e5b285b0a6309e2265cb0f75b1816de4",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -4664,6 +4664,87 @@
                 "source": "http://cgit.drupalcode.org/office_hours",
                 "issues": "http://drupal.org/project/office_hours",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/pantheon_advanced_page_cache",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/pantheon_advanced_page_cache.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/pantheon_advanced_page_cache-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "faef7abc7814c47dc0ba5cdb2c5a01f7386627ce"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/coder": "^8.2",
+                "drupal/drupal-extension": "^3.3",
+                "phpunit/phpunit": "^6.3"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1589904160",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PantheonSystems\\CDNBehatHelpers\\": "tests/behat/helper_classes/"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "scripts": {
+                "codesniff": [
+                    "phpcs --report=full --extensions=php,module,inc,theme,info,install --standard=vendor/drupal/coder/coder_sniffer/Drupal src",
+                    "phpcs --report=full --extensions=php,module,inc,theme,info,install --standard=vendor/drupal/coder/coder_sniffer/Drupal tests/modules",
+                    "phpcs  tests/behat  --standard=PSR2"
+                ],
+                "phpcbf": [
+                    "phpcbf --report=full --extensions=php,module,inc,theme,info,install --standard=vendor/drupal/coder/coder_sniffer/Drupal src",
+                    "phpcbf --report=full --extensions=php,module,inc,theme,info,install --standard=vendor/drupal/coder/coder_sniffer/Drupal tests/modules",
+                    "phpcbf  tests/behat  --standard=PSR2"
+                ],
+                "phpunit": [
+                    "phpunit tests --colors=always"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ari Gold",
+                    "homepage": "https://www.drupal.org/user/329006"
+                },
+                {
+                    "name": "David Strauss",
+                    "homepage": "https://www.drupal.org/user/93254"
+                },
+                {
+                    "name": "Fabianx",
+                    "homepage": "https://www.drupal.org/user/693738"
+                },
+                {
+                    "name": "stevector",
+                    "homepage": "https://www.drupal.org/user/179805"
+                }
+            ],
+            "description": "Advanced page cache capabilities for Pantheon.",
+            "homepage": "https://www.drupal.org/project/pantheon_advanced_page_cache",
+            "support": {
+                "source": "https://git.drupalcode.org/project/pantheon_advanced_page_cache"
             }
         },
         {

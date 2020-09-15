@@ -3,12 +3,15 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.image.field_artist_or_photographer
+    - field.field.media.image.field_link_to_original_source
     - field.field.media.image.field_media_image
+    - field.field.media.image.field_type_of_license
     - image.style.thumbnail
     - media.type.image
   module:
     - image
-    - path
+    - link
 _core:
   default_config_hash: nZlttO4YMwMCpkhYMz7bQ1ZMjABGc59YY1us3eSfvTY
 id: media.image.default
@@ -16,27 +19,38 @@ targetEntityType: media
 bundle: image
 mode: default
 content:
-  created:
-    type: datetime_timestamp
-    weight: 10
-    region: content
-    settings: {  }
+  field_artist_or_photographer:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_link_to_original_source:
+    weight: 3
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
   field_media_image:
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
     type: image_image
-    weight: 0
+    weight: 1
     region: content
-  langcode:
-    type: language_select
-    weight: 2
-    region: content
+  field_type_of_license:
+    weight: 4
     settings:
-      include_locked: true
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   moderation_state:
     type: moderation_state_default
     weight: 100
@@ -45,38 +59,22 @@ content:
     third_party_settings: {  }
   name:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  path:
-    type: path
-    weight: 30
-    region: content
-    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 100
-    region: content
-    third_party_settings: {  }
-  translation:
-    weight: 10
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  uid:
-    type: entity_reference_autocomplete
     weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
     region: content
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  created: true
+  langcode: true
+  path: true
+  translation: true
+  uid: true
