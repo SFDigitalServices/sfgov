@@ -30,8 +30,6 @@ defaults: &defaults
     # See: https://discuss.circleci.com/t/environment-variable-expansion-in-working-directory/11322
     # See: https://discuss.circleci.com/t/circle-2-0-global-environment-variables/8681
     #======================================================================================================================================
-
-    NOTIFY: 'scripts/github/add-commit-comment {project} {sha} "Created multidev environment [{site}#{env}]({dashboard-url})." {site-url}'
     ADMIN_USERNAME: admin
     # BUILD_TOOLS_VERSION: ^2.0.0-alpha4
     TERM: dumb
@@ -144,6 +142,10 @@ jobs:
       - run:
           name: remove transient test fixtures
           command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
+
+      - run:
+          name: update deployment status
+          command: ./scripts/github/update-deploy-status
 
       - run:
           name: run ghost inspector test suite
