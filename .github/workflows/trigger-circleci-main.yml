@@ -10,7 +10,7 @@ name: Trigger main build for circleci
 # only run on push to main
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
         env:
           CIRCLECI_API_TOKEN: ${{ secrets.CIRCLECI_API_TOKEN }}
         run: |
-          curl --data "{\"branch\":\"main\"}" \
+          curl --data "{\"branch\":\"develop\"}" \
             --header "Circle-Token: $CIRCLECI_API_TOKEN" \
             --request POST \
             https://circleci.com/api/v2/project/github/SFDigitalServices/sfgov/pipeline
