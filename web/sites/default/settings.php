@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Load services definition file.
+ * Load services definition file
  */
 $settings['container_yamls'][] = __DIR__ . '/services.yml';
 
@@ -130,7 +130,7 @@ if (file_exists($local_settings)) {
 $settings['install_profile'] = 'standard';
 
 # Provide universal absolute path to simplesamlphp installation.
-$settings['simplesamlphp_dir'] = $_ENV['HOME'] .'/code/web/private/simplesamlphp-1.17.0-rc3';
+$settings['simplesamlphp_dir'] = $_ENV['HOME'] .'private/simplesamlphp-1.17.0-rc3';
 
 $keys = "sites/default/files/private/settings.keys.php";
 if(file_exists($keys)) {
