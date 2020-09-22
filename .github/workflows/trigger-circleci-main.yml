@@ -16,11 +16,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger circleci build via api
+      - name: Trigger main build via circleci api
         env:
           CIRCLECI_API_TOKEN: ${{ secrets.CIRCLECI_API_TOKEN }}
         run: |
           curl --data "{\"branch\":\"main\"}" \
+            --header "Content-Type: application/json" \
             --header "Circle-Token: $CIRCLECI_API_TOKEN" \
             --request POST \
             https://circleci.com/api/v2/project/github/SFDigitalServices/sfgov/pipeline
