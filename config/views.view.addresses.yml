@@ -10,7 +10,9 @@ dependencies:
     - address
     - csv_serialization
     - eck
+    - node
     - office_hours
+    - paragraphs
     - rest
     - serialization
     - text
@@ -88,6 +90,8 @@ display:
           summary: ''
           description: ''
           columns:
+            id: id
+            view_location: view_location
             title: title
             type: type
             field_address_organization: field_address_organization
@@ -100,8 +104,37 @@ display:
             field_text: field_text
             created: created
             changed: changed
+            title_1: title_1
+            nid: nid
+            type_1: type_1
+            status: status
+            content_translation_source: content_translation_source
+            langcode: langcode
+            id_1: id_1
+            parent_id: parent_id
+            parent_type: parent_type
+            parent_field_name: parent_field_name
+            type_2: type_2
+            nothing: nothing
+            nothing_1: nothing_1
+            nothing_2: nothing_2
+            nothing_3: nothing_3
             operations: operations
           info:
+            id:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            view_location:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             title:
               sortable: true
               default_sort_order: asc
@@ -180,6 +213,111 @@ display:
             changed:
               sortable: true
               default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            title_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nid:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            type_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            status:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            content_translation_source:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            langcode:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            id_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            parent_id:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            parent_type:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            parent_field_name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            type_2:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing_2:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing_3:
+              sortable: true
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -738,7 +876,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: address_line1
-          type: address_default
+          type: address_plain
           settings: {  }
           group_column: ''
           group_columns: {  }
@@ -758,7 +896,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Hours/days Open'
+          label: 'Address Hours/Days Open'
           exclude: false
           alter:
             alter_text: false
@@ -769,7 +907,7 @@ display:
             external: false
             replace_spaces: false
             path_case: none
-            trim_whitespace: false
+            trim_whitespace: true
             alt: ''
             rel: ''
             link_class: ''
@@ -810,7 +948,7 @@ display:
             grouped: true
             closed_format: Closed
             separator:
-              days: '<br />'
+              days: '<br>'
               grouped_days: ' - '
               day_hours: ': '
               hours_hours: '-'
@@ -1028,6 +1166,919 @@ display:
           entity_type: location
           entity_field: changed
           plugin_id: field
+        title_1:
+          id: title_1
+          table: node_field_data
+          field: title
+          relationship: reverse__node__field_address
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node (field_address)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: reverse__node__field_address
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node ID (field_address)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_unformatted
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: field
+        type_1:
+          id: type_1
+          table: node_field_data
+          field: type
+          relationship: reverse__node__field_address
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node Type (field_address)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: type
+          plugin_id: field
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          relationship: reverse__node__field_address
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node Published? (field_address)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: boolean
+          settings:
+            format: yes-no
+            format_custom_true: ''
+            format_custom_false: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: status
+          plugin_id: field
+        content_translation_source:
+          id: content_translation_source
+          table: node_field_data
+          field: content_translation_source
+          relationship: reverse__node__field_address
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node Translation Source (field_address)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: language
+          settings:
+            link_to_entity: false
+            native_language: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: content_translation_source
+          plugin_id: field
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: reverse__node__field_address
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node Translation Lang (field_address)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: language
+          settings:
+            link_to_entity: false
+            native_language: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: langcode
+          plugin_id: field
+        id_1:
+          id: id_1
+          table: paragraphs_item_field_data
+          field: id
+          relationship: reverse__paragraph__field_location
+          group_type: group
+          admin_label: ''
+          label: 'Paragraph ID (field location)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_unformatted
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: paragraph
+          entity_field: id
+          plugin_id: field
+        parent_id:
+          id: parent_id
+          table: paragraphs_item_field_data
+          field: parent_id
+          relationship: reverse__paragraph__field_location
+          group_type: group
+          admin_label: ''
+          label: 'Paragraph Parent Entity ID (field_location)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: paragraph
+          entity_field: parent_id
+          plugin_id: field
+        parent_type:
+          id: parent_type
+          table: paragraphs_item_field_data
+          field: parent_type
+          relationship: reverse__paragraph__field_location
+          group_type: group
+          admin_label: ''
+          label: 'Paragraph Parent Entity Type (field_location)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: paragraph
+          entity_field: parent_type
+          plugin_id: field
+        parent_field_name:
+          id: parent_field_name
+          table: paragraphs_item_field_data
+          field: parent_field_name
+          relationship: reverse__paragraph__field_location
+          group_type: group
+          admin_label: ''
+          label: 'Paragraph Parent Field Name (field_location)'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: paragraph
+          entity_field: parent_field_name
+          plugin_id: field
+        type_2:
+          id: type_2
+          table: paragraphs_item_field_data
+          field: type
+          relationship: reverse__paragraph__field_location
+          group_type: group
+          admin_label: ''
+          label: 'Paragraph type'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: paragraph
+          entity_field: type
+          plugin_id: field
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node Title'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{# Get data from field_location on Paragraphs. #}\r\n{% if parent_type and parent_id %}\r\n  {% set parent_id = parent_id|trim %}\r\n\r\n  {# Level 1: field_location on Node. #}\r\n  {% if parent_type == 'node' %}\r\n    {% set src_node = drupal_entity('node', parent_id) %}\r\n    {% set parent_node = src_node['#node'] %}\r\n    {% if parent_node.id %}\r\n      <a href=\"{{ path('entity.node.canonical', { 'node': parent_node.id }) }}\">{{ parent_node.label }}</a>\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n  {# Level 2+: field_location on Paragraph. #}\r\n  {% if parent_type == 'paragraph' %}\r\n    {# Get the source Paragraph entity and its parent. #}\r\n    {% set src_paragraph = drupal_entity('paragraph', parent_id) %}\r\n    {% set parent_paragraph_1 = src_paragraph['#paragraph'].getParentEntity %}\r\n    {% if parent_paragraph_1 and parent_paragraph_1.getEntityTypeID == 'node' and parent_paragraph_1.id %}\r\n      {# Level 2 confirmed. #}\r\n      <a href=\"{{ path('entity.node.canonical', { 'node': parent_paragraph_1.id }) }}\">{{ parent_paragraph_1.label }}</a>\r\n    {% else %}\r\n      {# Proceed to Level 3. #}\r\n      {% set parent_paragraph_2 = parent_paragraph_1.getParentEntity %}\r\n      {% if parent_paragraph_2 and parent_paragraph_2.getEntityTypeID == 'node' and parent_paragraph_2.id %}\r\n        {# Level 3 confirmed. #}\r\n        <a href=\"{{ path('entity.node.canonical', { 'node': parent_paragraph_2.id }) }}\">{{ parent_paragraph_2.label }}</a>\r\n      {% else %}\r\n        {# Proceed to Level 4. #}\r\n        {% set parent_paragraph_3 = parent_paragraph_2.getParentEntity %}\r\n        {% if parent_paragraph_3 and parent_paragraph_3.getEntityTypeID == 'node' and parent_paragraph_3.id %}\r\n          {# Level 4 confirmed. #}\r\n          <a href=\"{{ path('entity.node.canonical', { 'node': parent_paragraph_3.id }) }}\">{{ parent_paragraph_3.label }}</a>\r\n        {% else %}\r\n          {# Proceed to Level 5. #}\r\n          {% set parent_paragraph_4 = parent_paragraph_3.getParentEntity %}\r\n          {% if parent_paragraph_4 and parent_paragraph_4.getEntityTypeID == 'node' and parent_paragraph_4.id %}\r\n            {# Level 5 confirmed. #}\r\n            <a href=\"{{ path('entity.node.canonical', { 'node': parent_paragraph_4.id }) }}\">{{ parent_paragraph_4.label }}</a>\r\n          {% else %}\r\n            Nested 5+ levels deep.\r\n          {% endif %}\r\n        {% endif %}\r\n      {% endif %}\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n{# Or, get data from node on field_address. #}\r\n{% elseif nid %}\r\n  {% set nid = nid|trim %}\r\n  {% set src_node = drupal_entity('node', nid) %}\r\n  {% set parent_node = src_node['#node'] %}\r\n  {% if parent_node.id %}\r\n    <a href=\"{{ path('entity.node.canonical', { 'node': parent_node.id }) }}\">{{ parent_node.label }}</a>\r\n  {% endif %}\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
+        nothing_1:
+          id: nothing_1
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node ID'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{# Get data from field_location on Paragraphs. #}\r\n{% if parent_type and parent_id %}\r\n  {% set parent_id = parent_id|trim %}\r\n\r\n  {# Level 1: field_location on Node. #}\r\n  {% if parent_type == 'node' %}\r\n    {% set src_node = drupal_entity('node', parent_id) %}\r\n    {% set parent_node = src_node['#node'] %}\r\n    {% if parent_node.id %}\r\n      {{ parent_node.id }}\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n  {# Level 2+: field_location on Paragraph. #}\r\n  {% if parent_type == 'paragraph' %}\r\n    {# Get the source Paragraph entity and its parent. #}\r\n    {% set src_paragraph = drupal_entity('paragraph', parent_id) %}\r\n    {% set parent_paragraph_1 = src_paragraph['#paragraph'].getParentEntity %}\r\n    {% if parent_paragraph_1 and parent_paragraph_1.getEntityTypeID == 'node' and parent_paragraph_1.id %}\r\n      {# Level 2 confirmed. #}\r\n      {{ parent_paragraph_1.id }}\r\n    {% else %}\r\n      {# Proceed to Level 3. #}\r\n      {% set parent_paragraph_2 = parent_paragraph_1.getParentEntity %}\r\n      {% if parent_paragraph_2 and parent_paragraph_2.getEntityTypeID == 'node' and parent_paragraph_2.id %}\r\n        {# Level 3 confirmed. #}\r\n        {{ parent_paragraph_2.id }}\r\n      {% else %}\r\n        {# Proceed to Level 4. #}\r\n        {% set parent_paragraph_3 = parent_paragraph_2.getParentEntity %}\r\n        {% if parent_paragraph_3 and parent_paragraph_3.getEntityTypeID == 'node' and parent_paragraph_3.id %}\r\n          {# Level 4 confirmed. #}\r\n          {{ parent_paragraph_3.id }}\r\n        {% else %}\r\n          {# Proceed to Level 5. #}\r\n          {% set parent_paragraph_4 = parent_paragraph_3.getParentEntity %}\r\n          {% if parent_paragraph_4 and parent_paragraph_4.getEntityTypeID == 'node' and parent_paragraph_4.id %}\r\n            {# Level 5 confirmed. #}\r\n            {{ parent_paragraph_4.id }}\r\n          {% else %}\r\n            Nested 5+ levels deep.\r\n          {% endif %}\r\n        {% endif %}\r\n      {% endif %}\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n{# Or, get data from node on field_address. #}\r\n{% elseif nid %}\r\n  {% set nid = nid|trim %}\r\n  {% set src_node = drupal_entity('node', nid) %}\r\n  {% set parent_node = src_node['#node'] %}\r\n  {% if parent_node.id %}\r\n    {{ parent_node.id }}\r\n  {% endif %}\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
+        nothing_2:
+          id: nothing_2
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Parent Node Type'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{# Get data from field_location on Paragraphs. #}\r\n{% if parent_type and parent_id %}\r\n  {% set parent_id = parent_id|trim %}\r\n\r\n  {# Level 1: field_location on Node. #}\r\n  {% if parent_type == 'node' %}\r\n    {% set src_node = drupal_entity('node', parent_id) %}\r\n    {% set parent_node = src_node['#node'] %}\r\n    {% if parent_node.id %}\r\n      {{ parent_node.bundle }}\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n  {# Level 2+: field_location on Paragraph. #}\r\n  {% if parent_type == 'paragraph' %}\r\n    {# Get the source Paragraph entity and its parent. #}\r\n    {% set src_paragraph = drupal_entity('paragraph', parent_id) %}\r\n    {% set parent_paragraph_1 = src_paragraph['#paragraph'].getParentEntity %}\r\n    {% if parent_paragraph_1 and parent_paragraph_1.getEntityTypeID == 'node' and parent_paragraph_1.id %}\r\n      {# Level 2 confirmed. #}\r\n      {{ parent_paragraph_1.bundle }}\r\n    {% else %}\r\n      {# Proceed to Level 3. #}\r\n      {% set parent_paragraph_2 = parent_paragraph_1.getParentEntity %}\r\n      {% if parent_paragraph_2 and parent_paragraph_2.getEntityTypeID == 'node' and parent_paragraph_2.id %}\r\n        {# Level 3 confirmed. #}\r\n        {{ parent_paragraph_2.bundle }}\r\n      {% else %}\r\n        {# Proceed to Level 4. #}\r\n        {% set parent_paragraph_3 = parent_paragraph_2.getParentEntity %}\r\n        {% if parent_paragraph_3 and parent_paragraph_3.getEntityTypeID == 'node' and parent_paragraph_3.id %}\r\n          {# Level 4 confirmed. #}\r\n          {{ parent_paragraph_3.bundle }}\r\n        {% else %}\r\n          {# Proceed to Level 5. #}\r\n          {% set parent_paragraph_4 = parent_paragraph_3.getParentEntity %}\r\n          {% if parent_paragraph_4 and parent_paragraph_4.getEntityTypeID == 'node' and parent_paragraph_4.id %}\r\n            {# Level 5 confirmed. #}\r\n            {{ parent_paragraph_4.bundle }}\r\n          {% else %}\r\n            Nested 5+ levels deep.\r\n          {% endif %}\r\n        {% endif %}\r\n      {% endif %}\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n{# Or, get data from node on field_address. #}\r\n{% elseif nid %}\r\n  {% set nid = nid|trim %}\r\n  {% set src_node = drupal_entity('node', nid) %}\r\n  {% set parent_node = src_node['#node'] %}\r\n  {% if parent_node.id %}\r\n    {{ parent_node.bundle }}\r\n  {% endif %}\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
+        nothing_3:
+          id: nothing_3
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Location Nesting Level'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{# Get data from field_location on Paragraphs. #}\r\n{% if parent_type and parent_id %}\r\n  {% set parent_id = parent_id|trim %}\r\n\r\n  {# Level 1: field_location on Node. #}\r\n  {% if parent_type == 'node' %}\r\n    {% set src_node = drupal_entity('node', parent_id) %}\r\n    {% set parent_node = src_node['#node'] %}\r\n    {% if parent_node.id %}\r\n      1\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n  {# Level 2+: field_location on Paragraph. #}\r\n  {% if parent_type == 'paragraph' %}\r\n    {# Get the source Paragraph entity and its parent. #}\r\n    {% set src_paragraph = drupal_entity('paragraph', parent_id) %}\r\n    {% set parent_paragraph_1 = src_paragraph['#paragraph'].getParentEntity %}\r\n    {% if parent_paragraph_1 and parent_paragraph_1.getEntityTypeID == 'node' and parent_paragraph_1.id %}\r\n      {# Level 2 confirmed. #}\r\n      2\r\n    {% else %}\r\n      {# Proceed to Level 3. #}\r\n      {% set parent_paragraph_2 = parent_paragraph_1.getParentEntity %}\r\n      {% if parent_paragraph_2 and parent_paragraph_2.getEntityTypeID == 'node' and parent_paragraph_2.id %}\r\n        {# Level 3 confirmed. #}\r\n        3\r\n      {% else %}\r\n        {# Proceed to Level 4. #}\r\n        {% set parent_paragraph_3 = parent_paragraph_2.getParentEntity %}\r\n        {% if parent_paragraph_3 and parent_paragraph_3.getEntityTypeID == 'node' and parent_paragraph_3.id %}\r\n          {# Level 4 confirmed. #}\r\n          4\r\n        {% else %}\r\n          Nested 5+ levels deep.\r\n        {% endif %}\r\n      {% endif %}\r\n    {% endif %}\r\n  {% endif %}\r\n\r\n{# Or, get data from node on field_address. #}\r\n{% elseif nid %}\r\n  {# Level 1: field_address on Node. #}\r\n  1\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
         operations:
           id: operations
           table: location
@@ -1138,7 +2189,7 @@ display:
           exposed: true
           expose:
             operator_id: type_op
-            label: Type
+            label: 'Address Type'
             description: ''
             use_operator: false
             operator: type_op
@@ -1183,7 +2234,7 @@ display:
           exposed: true
           expose:
             operator_id: field_address_organization_op
-            label: Organization
+            label: 'Address Organization'
             description: ''
             use_operator: true
             operator: field_address_organization_op
@@ -1358,12 +2409,32 @@ display:
           empty: false
           tokenize: false
           content:
-            value: '<a href="/admin/content/addresses/export" class="button--primary">Download Addresses</a>'
+            value: "<a href=\"/admin/content/address/export\" class=\"button\">Download Addresses</a>\r\n<a href=\"/admin/content/address-data/export\" class=\"button\">Download Addresses + Usage Data</a>"
             format: full_html
           plugin_id: text
       footer: {  }
       empty: {  }
-      relationships: {  }
+      relationships:
+        reverse__node__field_address:
+          id: reverse__node__field_address
+          table: location_field_data
+          field: reverse__node__field_address
+          relationship: none
+          group_type: group
+          admin_label: field_address
+          required: false
+          entity_type: location
+          plugin_id: entity_reverse
+        reverse__paragraph__field_location:
+          id: reverse__paragraph__field_location
+          table: location_field_data
+          field: reverse__paragraph__field_location
+          relationship: none
+          group_type: group
+          admin_label: field_location
+          required: false
+          entity_type: location
+          plugin_id: entity_reverse
       arguments: {  }
       display_extenders: {  }
       filter_groups:
@@ -1385,11 +2456,11 @@ display:
   data_export_1:
     display_plugin: data_export
     id: data_export_1
-    display_title: 'Data export'
+    display_title: 'Address Export'
     position: 2
     display_options:
       display_extenders: {  }
-      path: admin/content/addresses/export
+      path: admin/content/address/export
       filename: addresses.csv
       automatic_download: true
       store_in_public_file_directory: false
@@ -1415,10 +2486,18 @@ display:
         filters: false
         filter_groups: false
         fields: false
+        relationships: false
       filter_groups:
         operator: AND
         groups:
           1: AND
+      export_method: standard
+      export_batch_size: 1000
+      display_description: ''
+      displays:
+        page_2: page_2
+        default: '0'
+        page_1: '0'
       fields:
         id:
           id: id
@@ -1493,11 +2572,11 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: URL
+          label: ID
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ id }}'
             make_link: false
             path: ''
             absolute: false
@@ -1535,8 +2614,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           text: view
-          output_url_as_text: true
-          absolute: true
+          output_url_as_text: false
+          absolute: false
           entity_type: location
           plugin_id: entity_link
         title:
@@ -1964,7 +3043,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: address_line1
-          type: address_default
+          type: address_plain
           settings: {  }
           group_column: ''
           group_columns: {  }
@@ -1984,7 +3063,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Hours/days Open'
+          label: 'Address Hours/Days Open'
           exclude: false
           alter:
             alter_text: false
@@ -1995,7 +3074,7 @@ display:
             external: false
             replace_spaces: false
             path_case: none
-            trim_whitespace: false
+            trim_whitespace: true
             alt: ''
             rel: ''
             link_class: ''
@@ -2009,7 +3088,7 @@ display:
             more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: false
+            strip_tags: true
             trim: false
             preserve_tags: ''
             html: false
@@ -2030,13 +3109,13 @@ display:
           settings:
             show_closed: all
             office_hours_first_day: ''
-            day_format: long
+            day_format: two_letter
             time_format: g
             compress: true
             grouped: true
             closed_format: Closed
             separator:
-              days: '<br />'
+              days: '<br>'
               grouped_days: ' - '
               day_hours: ': '
               hours_hours: '-'
@@ -2254,6 +3333,58 @@ display:
           entity_type: location
           entity_field: changed
           plugin_id: field
+        operations:
+          id: operations
+          table: location
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: true
+          entity_type: location
+          plugin_id: entity_operations
+      relationships: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -2265,25 +3396,996 @@ display:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_operating_hours'
         - 'config:field.storage.location.field_text'
+  data_export_2:
+    display_plugin: data_export
+    id: data_export_2
+    display_title: 'Address + Data Export'
+    position: 4
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      path: admin/content/address-data/export
+      filename: address_data.csv
+      automatic_download: true
+      store_in_public_file_directory: false
+      redirect_to_display: page_1
+      custom_redirect_path: false
+      include_query_params: false
+      style:
+        type: data_export
+        options:
+          formats:
+            csv: csv
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+            utf8_bom: '0'
+            use_serializer_encode_only: false
+      displays:
+        page_1: page_1
+        default: '0'
+        page_2: '0'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - url
+        - user.permissions
+      tags:
+        - 'config:field.storage.location.field_address'
+        - 'config:field.storage.location.field_operating_hours'
+        - 'config:field.storage.location.field_text'
   page_1:
     display_plugin: page
     id: page_1
-    display_title: Page
+    display_title: 'Addresses + Data'
+    position: 3
+    display_options:
+      display_extenders: {  }
+      path: admin/content/address-data
+      menu:
+        type: tab
+        title: 'Address Data'
+        description: ''
+        expanded: false
+        parent: system.admin_content
+        weight: 2
+        context: '0'
+        menu_name: admin
+      defaults:
+        fields: true
+      display_description: ''
+      tab_options:
+        type: tab
+        title: /admin/content/addresses
+        description: ''
+        weight: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags:
+        - 'config:field.storage.location.field_address'
+        - 'config:field.storage.location.field_operating_hours'
+        - 'config:field.storage.location.field_text'
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Address
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/addresses
+      path: admin/content/address
       menu:
         type: tab
         title: Addresses
         description: ''
         expanded: false
         parent: system.admin_content
-        weight: 0
+        weight: 1
         context: '0'
         menu_name: admin
       defaults:
-        fields: true
+        fields: false
+        relationships: false
+      display_description: ''
+      fields:
+        id:
+          id: id
+          table: location_field_data
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ID
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: location
+          entity_field: id
+          plugin_id: field
+        view_location:
+          id: view_location
+          table: location
+          field: view_location
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ID
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{ id }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: false
+          absolute: false
+          entity_type: location
+          plugin_id: entity_link
+        title:
+          id: title
+          table: location_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Address name'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: null
+          entity_field: title
+          plugin_id: field
+        type:
+          id: type
+          table: location_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Type
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: location
+          entity_field: type
+          plugin_id: field
+        field_address_organization:
+          id: field_address_organization
+          table: location__field_address
+          field: field_address_organization
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Organization
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: standard
+        field_address_address_line1:
+          id: field_address_address_line1
+          table: location__field_address
+          field: field_address_address_line1
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Address Line 1'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: standard
+        field_address_address_line2:
+          id: field_address_address_line2
+          table: location__field_address
+          field: field_address_address_line2
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Address Line 2'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: standard
+        field_address_locality:
+          id: field_address_locality
+          table: location__field_address
+          field: field_address_locality
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: City
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+          plugin_id: subdivision
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: location__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Zip code'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: standard
+        field_address:
+          id: field_address
+          table: location__field_address
+          field: field_address
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Rendered Address'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: address_line1
+          type: address_plain
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_operating_hours:
+          id: field_operating_hours
+          table: location__field_operating_hours
+          field: field_operating_hours
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Address Hours/Days Open'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: day
+          type: office_hours
+          settings:
+            show_closed: all
+            office_hours_first_day: ''
+            day_format: two_letter
+            time_format: g
+            compress: true
+            grouped: true
+            closed_format: Closed
+            separator:
+              days: '<br>'
+              grouped_days: ' - '
+              day_hours: ': '
+              hours_hours: '-'
+              more_hours: ', '
+            current_status:
+              position: ''
+              open_text: 'Currently open!'
+              closed_text: 'Currently closed'
+            schema:
+              enabled: 0
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_text:
+          id: field_text
+          table: location__field_text
+          field: field_text
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Notes
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        created:
+          id: created
+          table: location_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Created
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: location
+          entity_field: created
+          plugin_id: field
+        changed:
+          id: changed
+          table: location_field_data
+          field: changed
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Updated
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: location
+          entity_field: changed
+          plugin_id: field
+        operations:
+          id: operations
+          table: location
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: true
+          entity_type: location
+          plugin_id: entity_operations
+      relationships: {  }
     cache_metadata:
       max-age: -1
       contexts:
