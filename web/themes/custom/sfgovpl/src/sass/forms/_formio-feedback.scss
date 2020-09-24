@@ -1,14 +1,24 @@
 // Form.io Feedback form
 
 .paragraph--formio--feedback {
+  align-items: center;
   background-color: #424244;
-  padding: 20px 0;
   color: #fff;
+  display: flex;
   font-size: 1rem;
+  min-height: 81px;
+  padding: 20px 0;
 
   a, label {
-   color: #fff;
    font-size: inherit;
+  }
+
+  label {
+    color: #fff;
+  }
+
+  a {
+    @include link-colors(#fff, #fff);
   }
 }
 
@@ -127,6 +137,10 @@
     display: flex;
     flex: 1 0 100%;
     margin-top: 20px;
+
+    .page-node-type-form-page & {
+      margin-top: 0;
+    }
 
      @media (min-width: 740px) {
       flex: 0 0 auto;
