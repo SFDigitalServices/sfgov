@@ -1,12 +1,100 @@
 <?php
 
+use Drupal\node\Entity\Node;
+
 /**
  * @file
  * Contains sfgov_departments.module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\sfgov_departments\SFgovDepartment;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_transaction_form':
+    case 'node_transaction_edit_form':
+      // Form wrapper.
+      $form['#prefix'] = '<div id="node-transaction-form-wrapper">';
+      $form['#suffix'] = '</div>';
+
+      // Debug info.
+      $form['debug'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'id' => ['debug-out'],
+        ],
+        '#weight' => 23,
+      ];
+
+      $items_count = $form_state->getStorage()['field_storage']['#parents']['#fields']['field_departments']['items_count'];
+      for ($i=0; $i <= $items_count; $i++) { 
+        $form['field_departments']['widget'][$i]['target_id']['#ajax'] = [
+          'callback' => '_parent_departments',
+          'wrapper' => 'node-transaction-form-wrapper',
+          'event' => 'autocompleteselect',
+        ];
+      }
+
+      $form['field_departments_fetch'] = [
+        '#type' => 'submit',
+        '#value' => t('Departments Fetch'),
+        '#submit' => ['_parent_departments_fetch'],
+        '#ajax' => [
+          'callback' => '_parent_departments_fetch',
+          'wrapper' => 'node-transaction-form-wrapper',
+        ],
+        '#weight' => 1000,
+      ];
+
+      if ($form_state->get('field_departments_ids')) {
+        $form['field_departments']['widget']['#description'] = $form_state->get('field_departments_ids');
+      }
+
+      break;
+  }
+}
+
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @return \Drupal\Core\Ajax\AjaxResponse
+ */
+function _parent_departments_fetch(array &$form, FormStateInterface $form_state) {
+  // https://www.drupal.org/forum/support/module-development-and-code-questions/2019-05-21/ajax-form-prepopulate-an-entity
+  
+  $form_state->set('field_departments_ids', time());
+  $form_state->setRebuild();
+  return $form;
+}
+
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @return \Drupal\Core\Ajax\AjaxResponse
+ */
+function _parent_departments(array &$form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+
+  // Kint
+  $debugOut = @Kint::dump($form_state->getValue('field_departments'));
+  $response->addCommand(new ReplaceCommand('#debug-out', '<div id="debug-out">'.$debugOut.'</div>'));
+  
+  // Loading..
+  $response->addCommand(new InvokeCommand('.field--name-field-departments .description', 'css', ['color', 'red']));
+
+  // Trigger fetch button.
+  $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-field-departments-fetch"]', 'trigger', ['mousedown']));
+  return $response;
+}
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
