@@ -1,0 +1,38 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_about_form':
+      // Set placeholder value for Title.
+      $form['title']['widget'][0]['value']['#value'] = 'About';
+
+      // Hide title field.
+      $form['title']['#access'] = FALSE;
+      break;
+
+    case 'node_about_edit_form':
+      // Hide title field.
+      $form['title']['#access'] = FALSE;
+
+      // Disable field_parent_department.
+      $form['field_parent_department']['#disabled'] = TRUE;
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function sfgov_about_node_insert(EntityInterface $entity) {
+  if ($entity->bundle() == 'about') {
+    // Update entity title based on `field_parent_department`.
+    $entity->setTitle('About the ' . $entity->field_parent_department->entity->label());
+    $entity->save();
+  }
+}
