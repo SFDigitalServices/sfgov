@@ -2,6 +2,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_form_alter().
@@ -34,5 +35,24 @@ function sfgov_about_node_insert(EntityInterface $entity) {
     // Update entity title based on `field_parent_department`.
     $entity->setTitle('About the ' . $entity->field_parent_department->entity->label());
     $entity->save();
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function sfgov_about_preprocess_node(&$variables) {
+  $node = $variables['node'];
+
+  switch ($node->getType()) {
+    case 'department':
+    case 'public_body':
+      // Add link to the About page for Departments and Public Bodies.
+      $variables['about_page_link'] = [
+        '#type' => 'link',
+        '#url' => $node->toUrl(),
+        '#title' => "Learn More About The {$node->label()}"
+      ];
+      break;
   }
 }
