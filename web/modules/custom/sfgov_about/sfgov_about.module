@@ -101,12 +101,12 @@ function sfgov_about_preprocess_node(&$variables) {
         ->fetchField();
 
       if ($about_nid) {
-        $node = \Drupal::entityTypeManager()->getStorage('node')->load($about_nid);
+        $about_node = \Drupal::entityTypeManager()->getStorage('node')->load($about_nid);
 
         // Add link to the About page for Departments and Public Bodies.
         $variables['about_page_link'] = [
           '#type' => 'link',
-          '#url' => $node->toUrl(),
+          '#url' => $about_node->toUrl(),
           '#title' => "Learn More About The {$node->label()}"
         ];
       }
