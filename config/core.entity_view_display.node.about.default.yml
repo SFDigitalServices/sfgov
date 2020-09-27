@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.about.field_about_resources
     - field.field.node.about.field_custom_sections
     - field.field.node.about.field_parent_department
     - node.type.about
@@ -14,6 +15,15 @@ targetEntityType: node
 bundle: about
 mode: default
 content:
+  field_about_resources:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
   field_custom_sections:
     type: entity_reference_revisions_entity_view
     weight: 0
