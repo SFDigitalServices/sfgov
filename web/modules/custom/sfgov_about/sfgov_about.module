@@ -47,12 +47,26 @@ function sfgov_about_preprocess_node(&$variables) {
   switch ($node->getType()) {
     case 'department':
     case 'public_body':
-      // Add link to the About page for Departments and Public Bodies.
-      $variables['about_page_link'] = [
-        '#type' => 'link',
-        '#url' => $node->toUrl(),
-        '#title' => "Learn More About The {$node->label()}"
-      ];
+      // Query for the About page entity.
+      $database = \Drupal::database();
+      $about_nid = $database->select('node__field_parent_department', 'p')
+        ->fields('p', ['entity_id'])
+        ->condition('p.field_parent_department_target_id', $node->id())
+        ->condition('p.bundle', 'about')
+        ->execute()
+        ->fetchField();
+
+      if ($about_nid) {
+        $node = \Drupal::entityTypeManager()->getStorage('node')->load($about_nid);
+
+        // Add link to the About page for Departments and Public Bodies.
+        $variables['about_page_link'] = [
+          '#type' => 'link',
+          '#url' => $node->toUrl(),
+          '#title' => "Learn More About The {$node->label()}"
+        ];
+      }
+
       break;
   }
 }
