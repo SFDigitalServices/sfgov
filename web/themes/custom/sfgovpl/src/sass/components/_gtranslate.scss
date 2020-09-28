@@ -1,61 +1,44 @@
+
+
+.sfgov-top-container {
+  background: $c-grey-1;
+  padding: 10px 0;
+
+  @include media($medium-screen) {
+    padding: 15px 0;
+  }
+}
+
 .gtranslate_container {
-  display: inline-block;
-  margin-right: 20px;
+  @include contain-1090;
+}
 
-  @include media($narrow-screen) {
-    margin-right: 30px;
+.gtranslate {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+
+}
+.gtranslate-link {
+  @include fs-small-text;
+  @include link-colors($c-slate, $c-slate);
+  line-height: 22px;
+  margin-left: 30px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 
-  @include media-max($medium-screen - 1px) {
-    position: absolute;
-    right: 105px;
+  &[data-gt*="|zh-TW"] {
+    @include noto-sans-tc;
   }
 
-  .gtranslate {
-    @include background-image('/icons/globe-blue.svg', center left);
-    background-size: 20px 20px;
+  &.is-active {
+    font-weight: 500;
 
-    @include media-max($medium-screen) {
-      background-size: 26px 26px;
-      padding: 4px 0;
+    .sfgov-translate-lang-zh-TW & {
+      font-weight: bold;
     }
-
-    @include ie-only {
-      background-position-x: -40px;
-    }
-
-    > select {
-      @include fs-nav-item;
-      border: 0;
-      appearance: none;
-      padding: 0 0 0 30px;
-      margin: -2px 0 0 0;
-      height: auto;
-      line-height: normal;
-      background: none;
-      color: $c-bright-blue;
-
-      @include media-max($medium-screen) {
-        margin-top: 0;
-        padding-left: 27px;
-        width: 1px;
-      }
-
-      @include media($medium-screen) {
-        width: 125px;
-      }
-
-      @include ie-only {
-        width: 107px;
-      }
-
-      &:focus {
-        box-shadow: none;
-        outline: 2px dotted #aeb0b5;
-      }
-    }
-  }
-  label[for="sfgov-gtranslate-select"] {
-    @include visually-hidden;
   }
 }
