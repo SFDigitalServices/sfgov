@@ -36,7 +36,7 @@ function SFGovTranslate() {
         that.sfgovGTranslateFireEvent(c, 'change');
         $('body').show();
         that.addElementTranslationClass(b);
-        that.updateSelectedLangDropdown(b);
+        that.updateSelectedLang(b);
         deferred.resolve();
     }
     return deferred.promise();
@@ -47,18 +47,17 @@ function SFGovTranslate() {
     $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').addClass(elementClass);
   }
 
-  this.updateSelectedLangDropdown = function(translationVal) {
-    // Show the currently active language <option> as selected.
-    $('#sfgov-gtranslate-select').find('option[value*="|'+ translationVal +'"]').attr('selected', 'selected');
+  this.updateSelectedLang = function(translationVal) {
+    // Set the current language as active.
+    $('.gtranslate-link').removeClass('is-active');
+    $('.gtranslate').find('a[data-sfgov-translate*="|'+ translationVal +'"]').addClass('is-active');
   }
 
   this.sfgovGTranslate = function(event) {
-    var lang = event.target.value.split('|')[1];
-    if(!lang) {
-      $(event.target).val(that.currentSelectedTranslation);
-      return;
-    }
+    var args = event.target.getAttribute('data-sfgov-translate');
+    var lang = args.split('|')[1];
     var drupalTranslation = that.getDrupalTranslation(lang);
+
     $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').removeClass(function(i, classNames) {
       var classes = classNames.split(' ');
       var classesToRemove = [];
@@ -69,6 +68,7 @@ function SFGovTranslate() {
       }
       return classesToRemove.join(' ');
     });
+
     if(drupalTranslation) {
       // drupal translation always wins
       // set gtranslate to english to kill the gtranslate cookie
@@ -79,8 +79,8 @@ function SFGovTranslate() {
       }
 
     } else { // no drupal translation exists, use gtranslate
-      that.sfgovDoGTranslate(event.target.value);
-      that.currentSelectedTranslation = event.target.value;
+      that.sfgovDoGTranslate(args);
+      that.currentSelectedTranslation = args;
     }
   };
 
@@ -102,7 +102,7 @@ function SFGovTranslate() {
     var gTranslateCookie = getCookie('googtrans');
     var gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null;
 
-    // If translation cookie lang is different fron Drupal current language,
+    // If translation cookie lang is different from Drupal current language,
     // remove the cookie, as we are using language path prefixes and should
     // always show the same language as the URL.
     if(currentDrupalLanguage != 'en' || currentDrupalLanguage != gTranslateLang) {
@@ -116,13 +116,13 @@ function SFGovTranslate() {
       }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
-      that.updateSelectedLangDropdown(currentDrupalLanguage);
+      that.updateSelectedLang(currentDrupalLanguage);
       return;
     }
 
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang);
-      that.updateSelectedLangDropdown(gTranslateLang);
+      that.updateSelectedLang(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
       if (drupalTranslation && drupalTranslation.turl != window.location.pathname) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
@@ -151,35 +151,32 @@ function getCookie(cookieName) {
 (function($) {
   // watch for dom mutations
   var t = new SFGovTranslate();
-  var observeElement = $('.head-right--container')[0];
+  var observeElement = $('.sfgov-top-container')[0];
   var config = { attributes: true, childList: true, subtree: true };
   var callback = function(mutationsList, observer) {
     var elem = null;
-    for(var i = 0; i < mutationsList.length; i++) {
+    for (var i = 0; i < mutationsList.length; i++) {
       var mutation = mutationsList[i];
       if (mutation.type == 'childList') {
-          if(mutation.target.id == ':0.targetLanguage') {
-            elem = $('#block-gtranslate .gtranslate > select'); // catch the gtranslate dropdown
-            break;
-          }
+        if (mutation.target.id == ':0.targetLanguage') {
+          // catch the gtranslate dropdown
+          elem = $('.gtranslate-link');
+          break;
+        }
       }
     }
-    if(elem) { // muck around with the gtranslate dropdown
-      $(elem)[0].setAttribute('onchange', ''); // take over onchange
-      $(elem)[0].onchange = t.sfgovGTranslate;
-      $(elem)[0].setAttribute('data-gtranslate', 'sfgov');
       // this dropdown list that gets added doesn't always have the english option
       // if a language option doesn't exist in this drop down, the first option is always
       // selected by default, which is problematic
       // so, always add the english option
+    if (elem) {
+      // Attach click event.
+      $(elem).on('click', t.sfgovGTranslate);
+
       setTimeout(function() {
-        $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
         t.checkCurrentLanguage(); // check the current language of the page AFTER english has been added
       }, 1000);
-      // add aria attributes
-      $(elem)[0].setAttribute('id', 'sfgov-gtranslate-select');
-      $(elem)[0].setAttribute('aria-label', 'Language Translate Widget');
     }
   }
 
