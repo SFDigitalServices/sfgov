@@ -60,7 +60,9 @@
             <h4>Date & Time</h4>
             {% if content.field_start_date|render %}
             <div class="start-date">
-              {{ node.field_start_date.date|date('l, F d, Y  g:i a') }}
+              {{ node.field_start_date.date|date('l, F d, Y') }}
+              <br>
+              {{ node.field_start_date.date|date('g:i a') }}
               {% if content.field_end_date|render %}
                 to {{ node.field_end_date.date|date('g:i a') }}
               {% endif %}
