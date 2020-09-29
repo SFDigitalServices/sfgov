@@ -161,6 +161,7 @@ function getCookie(cookieName) {
         if (mutation.target.id == ':0.targetLanguage') {
           // catch the gtranslate dropdown
           elem = $('.gtranslate-link');
+          $(elem).attr('data-gtranslate', 'sfgov');
           break;
         }
       }
@@ -174,6 +175,7 @@ function getCookie(cookieName) {
       $(elem).on('click', t.sfgovGTranslate);
 
       setTimeout(function() {
+        $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
         t.checkCurrentLanguage(); // check the current language of the page AFTER english has been added
       }, 1000);
