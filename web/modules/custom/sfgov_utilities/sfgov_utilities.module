@@ -296,3 +296,30 @@ function _sfgov_utilities_build_map($address) {
     'map_directions_url' => $directionsUrl,
   ];
 }
+
+/**
+ * Attach a form id to all form elements.
+ *
+ * @param $form
+ *   The form or form element which children should have form id attached.
+ * @param $form_id
+ *   The form id attached to form elements.
+ *
+ * @return array
+ */
+function sfgov_utilities_attach_form_id(&$form, $form_id) {
+  foreach (Element::children($form) as $child) {
+    if (!isset($form[$child]['#form_id'])) {
+      $form[$child]['#form_id'] = $form_id;
+    }
+    sfgov_utilities_attach_form_id($form[$child], $form_id);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Attach #form_id to all form elements.
+  sfgov_utilities_attach_form_id($form, $form_id);
+}

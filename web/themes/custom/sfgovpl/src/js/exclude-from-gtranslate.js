@@ -21,4 +21,25 @@
       });
     }
   };
+
 })(jQuery, Drupal, drupalSettings);
+
+function SfGovExcludeFromTranslate(old_value) {
+  var do_not_translate = [
+    'Mayor London Breed',
+    'Mayor London N. Breed',
+    'London Nicole Breed',
+    'Mayor Breed',
+    'London Breed',
+    'Breed',
+  ];
+
+  do_not_translate.forEach(function(value) {
+    if (old_value.includes(value)) {
+      var regex = new RegExp('(?!<span class="notranslate\>)' + value + '(?!<\/span>)', 'g');
+      old_value = old_value.replace(regex, '<span class="notranslate">' + value + '</span>');
+    }
+  });
+
+  return old_value;
+}

@@ -3,6 +3,7 @@
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use org\bovigo\vfs\content\FileContent;
 
 function sfgovpl_preprocess_html(&$variables) {
 
@@ -118,23 +119,22 @@ function sfgovpl_preprocess_html(&$variables) {
     'fil' => 'tl',
     'zh-hant' => 'zh-TW',
   ];
-  $theNode = null;
-  $nodeInfo = [];
-  $nodeInfo['current_language'] = isset($gTranslatePrefixMap[$currentLanguage]) ? $gTranslatePrefixMap[$currentLanguage] : $currentLanguage;
+  $pageInfo = [];
+  $pageInfo['current_language'] = isset($gTranslatePrefixMap[$currentLanguage]) ? $gTranslatePrefixMap[$currentLanguage] : $currentLanguage;
   $isFront = \Drupal::service('path.matcher')->isFrontPage();
   if ($node instanceof NodeInterface) {
     $theNode = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
-    $nodeInfo['nid'] = $theNode->id();
-    $nodeInfo['nurl'] = $theNode->toUrl()->toString();
+    $pageInfo['nid'] = $theNode->id();
+    $pageInfo['nurl'] = $theNode->toUrl()->toString();
     $langs = $theNode->getTranslationLanguages();
-    $nodeInfo['translations'] = [];
+    $pageInfo['translations'] = [];
     foreach ($languages as $langCode => $language) {
       $nodeUrl = isset($langs[$langCode]) ?
         $theNode->getTranslation($langCode)->toUrl()->toString() :
         Url::fromRoute($currentRoute->getRouteName(), [
           'node' => $theNode->id(),
         ], ['language' => $language])->toString();
-      $nodeInfo['translations'][] = [
+      $pageInfo['translations'][] = [
         'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
         'turl' => $isFront ?
           Url::fromRoute('<front>', [], ['language' => $language])->toString() :
@@ -143,17 +143,21 @@ function sfgovpl_preprocess_html(&$variables) {
       ];
     }
   }
-  $variables['page']['#attached']['drupalSettings']['sfgov_translations']['node'] = $nodeInfo;
+  $variables['page']['#attached']['drupalSettings']['sfgov_translations']['page'] = $pageInfo;
 
   // For translations, if it is a views page.
-  if (substr($currentRoute->getRouteName(), 0, 5) === 'view.') {
+  if ($currentRoute->getRouteName() != 'entity.node.canonical') {
+    $routeParameters = $currentRoute->getRawParameters()->all();
     foreach ($languages as $langCode => $language) {
-      $viewInfo['translations'][] = [
+      $pageInfo['translations'][] = [
         'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
-        'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, ['language' => $language])->toString(),
+        'turl' => Url::fromRoute($currentRoute->getRouteName(), $routeParameters, [
+          'language' => $language,
+          'query' => \Drupal::request()->query->all(),
+        ])->toString(),
         'status' => isset($langs[$langCode]) ?  $theNode->getTranslation($langCode)->isPublished() : false,
       ];
     }
-    $variables['page']['#attached']['drupalSettings']['sfgov_translations']['view'] = $viewInfo;
+    $variables['page']['#attached']['drupalSettings']['sfgov_translations']['page'] = $pageInfo;
   }
 }

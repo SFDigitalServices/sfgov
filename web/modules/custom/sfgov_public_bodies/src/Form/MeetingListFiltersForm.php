@@ -24,11 +24,32 @@ class MeetingListFiltersForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['container'] = [
       '#type' => 'fieldset',
-      '#title' => 'Filters (' . $this->countActiveFilters() . ')',
+      '#title' => $this->t('Filters'),
+      '#attributes' => [
+        'data-filter-toggle-container' => TRUE,
+      ],
+      '#attached' => [
+        'library' => [
+          'sfgovpl/meetings',
+        ],
+      ],
     ];
 
-    $form['container']['month'] = [
+    $form['container']['toggle'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'data-filter-toggle-content' => TRUE,
+      ],
+    ];
+
+    $form['container']['toggle']['items'] = [
+      '#type' => 'container',
+    ];
+
+    $form['container']['toggle']['items']['month'] = [
       '#type' => 'select',
+      '#title' => $this->t('Month'),
+      '#title_display' => 'invisible',
       '#options' => [
         '' => $this->t('Select a month'),
         '01' => $this->t('January'),
@@ -47,29 +68,36 @@ class MeetingListFiltersForm extends FormBase {
       '#default_value' => \Drupal::request()->query->get('month'),
     ];
 
-    $form['container']['year'] = [
+    $form['container']['toggle']['items']['year'] = [
       '#type' => 'select',
+      '#title' => $this->t('Year'),
+      '#title_display' => 'invisible',
       '#options' => $this->getYearOptions(),
       '#default_value' => \Drupal::request()->query->get('year'),
     ];
 
     if ($this->getSubcommittees()) {
       $query_subcommittees = \Drupal::request()->query->get('subcommittees');
-      $form['container']['subcommittees'] = [
-        '#type' => 'select',
-        '#multiple' => TRUE,
-        '#attributes' => [
-          'data-multiple-select' => TRUE,
-          'placeholder' =>  $this->t('Select one or more committees'),
-        ],
+      $form['container']['toggle']['items']['subcommittees'] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Committees'),
         '#options' => $this->getSubcommittees(),
-        '#default_value' => $query_subcommittees ? $query_subcommittees : array_keys($this->getSubcommittees()),
+        '#default_value' => $query_subcommittees ? $query_subcommittees : [0],
+        // BUG: Drupal core: Broken aria-describedby IDREF in radios and
+        // checkboxes elements: https://www.drupal.org/node/2839344
+        // Note: When this is fixed, we can delete '#suffix' and the
+        // corresponding code in sfgov_public_bodies_preprocess_fieldset() and
+        // just use '#description'.
+        '#suffix' => '<div id="subcommittees-description" class="visually-hidden">'. t('Select one or more committees') . '</div>',
       ];
     }
 
-    $form['container']['submit'] = [
+    $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Apply filters'),
+      '#value' => $this->t('Apply'),
+      // BUG: Drupal core: Cached forms can have duplicate HTML IDs, which
+      // disrupts accessible form labels: https://www.drupal.org/node/1852090
+      '#id' => 'meeting-list-filters-form--submit',
     ];
 
     return $form;
@@ -85,13 +113,18 @@ class MeetingListFiltersForm extends FormBase {
     foreach ($inputs as $key => $value) {
       if (!in_array($key, $form_state->getCleanValueKeys())) {
         if (!empty($value)) {
-          $filters[$key] = $value;
+          if (is_array($value)) {
+            // Check that there are actual values in the array. Submitting the
+            // filter form without any selections should still work, e.g.
+            // subcommittees[1126]&subcommittees[1119] = returns no results
+            // whereas an empty array results all.
+            $filters[$key] = array_filter($value) ? $value : [];
+          }
+          else {
+            $filters[$key] = $value;
+          }
         }
       }
-    }
-
-    if (!isset($filters['subcommittees'])) {
-      $filters['subcommittees'][] = 0;
     }
 
     $uri = \Drupal::request()->getPathInfo();
@@ -133,17 +166,12 @@ class MeetingListFiltersForm extends FormBase {
 
     foreach ($public_body->field_subcommittees->getValue() as $value) {
       $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-      $subcommittees[$subcommittee->id()] = $subcommittee->label();
+      if (!empty($subcommittee)) {
+          $subcommittees[$subcommittee->id()] = $subcommittee->label();
+      }
     }
 
     return $subcommittees;
-  }
-
-  /**
-   * Count active filters.
-   */
-  public function countActiveFilters() {
-    return count(\Drupal::request()->query->all());
   }
 
 }

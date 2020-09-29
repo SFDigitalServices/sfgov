@@ -13,7 +13,7 @@ _core:
 id: media
 label: Media
 module: views
-description: ''
+description: 'Find and manage media.'
 tag: ''
 base_table: media_field_data
 base_field: mid
@@ -136,6 +136,59 @@ display:
       row:
         type: fields
       fields:
+        media_bulk_form:
+          id: media_bulk_form
+          table: media
+          field: media_bulk_form
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          action_title: Action
+          include_exclude: exclude
+          selected_actions: {  }
+          entity_type: media
+          plugin_id: bulk_form
         thumbnail__target_id:
           id: thumbnail__target_id
           table: media_field_data
@@ -698,6 +751,45 @@ display:
           plugin_id: boolean
           entity_type: media
           entity_field: status
+        status_extra:
+          id: status_extra
+          table: media_field_data
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: media
+          plugin_id: media_status
         langcode:
           id: langcode
           table: media_field_data
@@ -741,45 +833,6 @@ display:
           entity_type: media
           entity_field: langcode
           plugin_id: language
-        status_extra:
-          group_info:
-            widget: select
-            group_items: {  }
-            multiple: false
-            description: ''
-            default_group_multiple: {  }
-            default_group: All
-            label: ''
-            identifier: ''
-            optional: true
-            remember: false
-          group: 1
-          relationship: none
-          exposed: false
-          expose:
-            use_operator: false
-            remember: false
-            operator_id: ''
-            multiple: false
-            description: ''
-            required: false
-            label: ''
-            operator_limit_selection: false
-            operator: ''
-            identifier: ''
-            operator_list: {  }
-            remember_roles:
-              authenticated: authenticated
-          entity_type: media
-          value: ''
-          field: status_extra
-          is_grouped: false
-          admin_label: ''
-          operator: '='
-          table: media_field_data
-          plugin_id: media_status
-          id: status_extra
-          group_type: group
       sorts:
         created:
           id: created
@@ -809,13 +862,13 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'No content available.'
+          content: 'No media available.'
           plugin_id: text_custom
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -843,7 +896,7 @@ display:
         menu_name: main
       display_description: ''
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'

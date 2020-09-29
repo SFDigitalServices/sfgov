@@ -1,0 +1,27 @@
+# circleci is the primary ci tool for sfgov, but it is currently set to build on pr's only (with develop being the default branch)
+# because of this, main never gets built and so never gets deployed.
+# currently, circleci does not have an "allow-list" feature to build only pr's in addition to specific branches.
+# see https://discuss.circleci.com/t/allow-branch-whitelist-to-override-only-build-pull-requests/6392
+# and https://ideas.circleci.com/cloud-feature-requests/p/allow-branch-whitelist-to-override-only-build-pull-requests
+# this gh action workflow is a workaround to trigger the circleci build for main
+
+name: Trigger main build for circleci
+
+# only run on push to main
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger main build via circleci api
+        env:
+          CIRCLECI_API_TOKEN: ${{ secrets.CIRCLECI_API_TOKEN }}
+        run: |
+          curl --data "{\"branch\":\"main\"}" \
+            --header "Content-Type: application/json" \
+            --header "Circle-Token: $CIRCLECI_API_TOKEN" \
+            --request POST \
+            https://circleci.com/api/v2/project/github/SFDigitalServices/sfgov/pipeline

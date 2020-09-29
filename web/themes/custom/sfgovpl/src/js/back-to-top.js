@@ -8,8 +8,6 @@
 (function ($, Drupal) {
   Drupal.behaviors.backToTop = {
     attach: function (context) {
-      var buttonText = Drupal.t('Back to top');
-      $('body', context).once('backToTop').append('<a id="back-to-top" class="back-to-top">' + buttonText + '<span /></a>');
       $('#back-to-top', context).on('click', function(e) {
         e.preventDefault();
         $('html, body', context).animate({scrollTop: 0}, '300');

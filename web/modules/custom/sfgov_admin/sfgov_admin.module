@@ -8,14 +8,14 @@ use Drupal\Core\Render\Element;
  * Implements hook_theme().
  */
 function sfgov_admin_theme($existing, $type, $theme, $path) {
-  return array(
+  return [
     'field_multiple_value_form__paragraphs' => [
       'base hook' => 'field_multiple_value_form',
     ],
     'field_multiple_value_form__autocomplete' => [
       'base hook' => 'field_multiple_value_form',
     ],
-  );
+  ];
 }
 
 /**
@@ -36,7 +36,7 @@ function sfgov_admin_page_attachments(array &$page) {
  * Implements hook_form_alter().
  */
 function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
+  if ($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
     $selector_condition = [
       ':input[name^="field_location_in_person"]' => ['checked' => TRUE]
     ];
@@ -50,7 +50,7 @@ function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id
 }
 
 function sfgov_admin_custom_validate($form, &$form_state) {
-  if((isset($form_state['values']['field_location_in_person'])) && (empty($form_state['values']['field_address']))) {
+  if ((isset($form_state['values']['field_location_in_person'])) && (empty($form_state['values']['field_address']))) {
     form_set_error('field_address', 'Field cannot be left blank');
   }
 }
@@ -185,9 +185,9 @@ function sfgov_admin_theme_suggestions_field_multiple_value_form_alter(array &$s
 }
 
 function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $viewId = $form['#id'];	
-  if($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display	
-    return;	
+  $viewId = $form['#id']; 
+  if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display  
+    return; 
   }
 
   $form['field_direct_external_url_uri_op']['#options'] = array(
@@ -210,18 +210,18 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
   $childTopics = null;
   $foundAsChild = false;
   $parentTopics = [];
-  foreach($topicNodes as $topicNode) {
+  foreach ($topicNodes as $topicNode) {
     $childTopics = $topicNode->get('field_topics');
-    foreach($childTopics->getValue() as $childTopic) {
+    foreach ($childTopics->getValue() as $childTopic) {
       $childTopicId = $childTopic['target_id'];
-      if($childTopicId == $topicId) {
+      if ($childTopicId == $topicId) {
         $foundAsChild = true;
         $parentTopics[] = $topicNode->getTitle();
         break;
       }
     }
   }
-  if($foundAsChild) {
+  if ($foundAsChild) {
     error_log(print_r($parentTopics, 1));
     $form['field_top_level_topic']['widget']['value']['#description'] = t('This Topic cannot be top level because it is a child topic of the following: ' . implode(', ', $parentTopics));
     $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';

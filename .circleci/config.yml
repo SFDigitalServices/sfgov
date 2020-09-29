@@ -1,7 +1,7 @@
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 defaults: &defaults
   docker:
-    - image: quay.io/pantheon-public/build-tools-ci:1.x
+    - image: quay.io/pantheon-public/build-tools-ci:6.x
   working_directory: ~/example_drops_8_composer
   environment:
     #=========================================================================
@@ -30,124 +30,136 @@ defaults: &defaults
     # See: https://discuss.circleci.com/t/environment-variable-expansion-in-working-directory/11322
     # See: https://discuss.circleci.com/t/circle-2-0-global-environment-variables/8681
     #======================================================================================================================================
-
-    NOTIFY: 'scripts/github/add-commit-comment {project} {sha} "Created multidev environment [{site}#{env}]({dashboard-url})." {site-url}'
     ADMIN_USERNAME: admin
     # BUILD_TOOLS_VERSION: ^2.0.0-alpha4
     TERM: dumb
 
 version: 2
 jobs:
-    # @todo: common initialization: 'composer install' for the site-under-test
-    build:
-        <<: *defaults
-        steps:
-            - checkout
+  # @todo: common initialization: 'composer install' for the site-under-test
+  build:
+    <<: *defaults
+    steps:
+      - checkout
 
-            - restore_cache:
-                keys:
-                    - composer-cache
-                    - terminus-install
+      - restore_cache:
+          keys:
+            - composer-cache
+            - terminus-install
 
-            - run:
-                # Set TERMINUS_ENV and related environment variables.
-                # https://github.com/pantheon-systems/docker-build-tools-ci/blob/1.x/scripts/set-environment
-                name: environment
-                command: /build-tools-ci/scripts/set-environment
+      - run:
+          # Set TERMINUS_ENV and related environment variables.
+          # https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
+          name: environment
+          command: /build-tools-ci/scripts/set-environment
 
-            - run:
-                name: run composer install to get the vendor directory
-                command: composer install
+      - run:
+          name: run composer install to get the vendor directory
+          command: composer install
 
-            - save_cache:
-                key: composer-cache
-                paths:
-                    - $HOME/.composer/cache
+      - save_cache:
+          key: composer-cache
+          paths:
+              - $HOME/.composer/cache
 
-            - save_cache:
-                key: terminus-install
-                paths:
-                    - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
+      - save_cache:
+          key: terminus-install
+          paths:
+              - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
 
-            - run:
-                name: lint php code for syntax errors
-                command: composer -n lint
+      - run:
+          name: lint php code for syntax errors
+          command: composer -n lint
 
-            - run:
-                name: check coding standards
-                command: composer -n code-sniff
+      - run:
+          name: check coding standards
+          command: composer -n code-sniff
 
-            - run:
-                name: run unit tests
-                command: composer -n unit-test
+      - run:
+          name: run unit tests
+          command: composer -n unit-test
 
-    build_deploy_and_test:
-        <<: *defaults
-        steps:
-            - checkout
+  build_deploy_and_test:
+    <<: *defaults
+    steps:
+      - checkout
 
-            - restore_cache:
-                keys:
-                    - composer-cache
-                    - terminus-install
+      - restore_cache:
+          keys:
+            - composer-cache
+            - terminus-install
 
-            - run:
-                # Set TERMINUS_ENV and related environment variables.
-                # https://github.com/pantheon-systems/docker-build-tools-ci/blob/1.x/scripts/set-environment
-                name: dependencies
-                command: /build-tools-ci/scripts/set-environment
+      - run:
+          # Set TERMINUS_ENV and related environment variables.
+          # https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
+          name: dependencies
+          command: /build-tools-ci/scripts/set-environment
 
-            - run:
-                name: install dev dependencies, build assets, etc.
-                command: ./.circleci/scripts/pantheon/01-prepare
+      - run:
+          name: install dev dependencies, build assets, etc.
+          command: ./.circleci/scripts/pantheon/01-prepare
 
-            - run:
-                name: build assets
-                command: composer -n build-assets
+      - run:
+          name: build assets
+          command: composer -n build-assets
 
-            - run:
-                name: create simplesamlphp symlink
-                command: |
-                    mkdir -p ./vendor/simplesamlphp
-                    cd ./vendor/simplesamlphp
-                    rm -r simplesamlphp
-                    ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
-            
-            - run:
-                name: add secrets
-                command: |
-                    echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem
-                    echo $FILE_SAMLCRT | base64 --decode >> ./web/private/saml.crt
-                    echo $FILE_SAMLPEM | base64 --decode >> ./web/private/saml.pem
-                    echo $FILE_SIMPLESAMLCONFIG | base64 --decode >> ./web/private/simplesaml_config.php
-                    mkdir -p ./web/private/metadata
-                    echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/metadata/saml20-idp-remote.php
-                    echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
+      - run:
+          name: create simplesamlphp symlink
+          command: |
+            mkdir -p ./vendor/simplesamlphp
+            cd ./vendor/simplesamlphp
+            rm -r simplesamlphp
+            ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
+      
+      - run:
+          name: add secrets
+          command: |
+            echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem
+            echo $FILE_SAMLCRT | base64 --decode >> ./web/private/saml.crt
+            echo $FILE_SAMLPEM | base64 --decode >> ./web/private/saml.pem
+            echo $FILE_SIMPLESAMLCONFIG | base64 --decode >> ./web/private/simplesaml_config.php
+            mkdir -p ./web/private/metadata
+            echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/metadata/saml20-idp-remote.php
+            echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
 
-            - run:
-                name: prepare database for site-under test
-                command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
-                # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
+      - run:
+          name: prepare database for site-under test
+          command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
+          # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
 
-            - run:
-                name: run composer install again to get dev dependencies
-                command: composer install
+      - run:
+          name: run composer install again to get dev dependencies
+          command: composer install
 
-            - run:
-                name: post-test actions
-                command: ./.circleci/scripts/pantheon/03-post-test
+      - run:
+          name: post-test actions
+          command: ./.circleci/scripts/pantheon/03-post-test
 
-            - run:
-                name: handle merge to main (if needed)
-                command: ./.circleci/scripts/pantheon/04-merge-main
+      - run:
+          name: handle merge to main (if needed)
+          command: ./.circleci/scripts/pantheon/04-merge-main
 
-            - run:
-                name: remove transient test fixtures
-                command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
+      - run:
+          name: remove transient test fixtures
+          command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
 
-            - run:
-                name: run ghost inspector test suite
-                command: ./.circleci/scripts/ghost-inspector/run-gi-suite
+      - run:
+          name: update deployment status
+          command: ./scripts/github/update-deploy-status
+
+      - run:
+          name: run ghost inspector test suite
+          command: ./.circleci/scripts/ghost-inspector/run-gi-suite
+
+  create_gh_release:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - run:
+          name: create gh release
+          command: |
+            echo "create gh release for $CIRCLE_TAG"
+            curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"target_commitish\":\"$CIRCLE_BRANCH\",\"name\":\"$CIRCLE_TAG\",\"body\":\"created via api, add release notes\",\"draft\":false,\"prerelease\":false}" https://api.github.com/repos/sfdigitalservices/sfgov/releases 
 
 workflows:
   version: 2
@@ -157,9 +169,18 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
+  create_gh_release_from_tag:
+    jobs:
+      - create_gh_release:
+          filters:
+            tags:
+              only: /v.*/
+            branches:
+              ignore: /.*/
 
 experimental:
   notify:
     branches:
       only:
         - main
+        - develop
