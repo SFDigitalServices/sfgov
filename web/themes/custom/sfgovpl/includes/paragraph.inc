@@ -83,13 +83,14 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   // Render image attirubutes.
   if (function_exists('_sfgov_image_attributes_renderable')) {
     if (isset($parent) && $parent->bundle() == 'section' && $paragraph_type == 'campaign') {
-      $sections = $parent->get('field_content')->referencedEntities();
-      $section = reset($sections);
-      $media = $section->get('field_media')->referencedEntities();
-      if ($entity = reset($media)) {
-        $element = _sfgov_image_attributes_renderable($entity);
-        $variables['field_media_image_attributes'] = $element;
+      if ($sections = $parent->get('field_content')->referencedEntities()) {
+        $section = reset($sections);
+        $media = $section->get('field_media')->referencedEntities();
+        if ($entity = reset($media)) {
+          $element = _sfgov_image_attributes_renderable($entity);
+        }
       }
+      $variables['field_media_image_attributes'] = isset($element) ? $element : '';
     }
   }
 }
