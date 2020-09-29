@@ -166,14 +166,14 @@ function getCookie(cookieName) {
         }
       }
     }
+    if (elem) {
+      $(elem).on('click', t.sfgovGTranslate);
+
+      // Attach click event.
       // this dropdown list that gets added doesn't always have the english option
       // if a language option doesn't exist in this drop down, the first option is always
       // selected by default, which is problematic
       // so, always add the english option
-    if (elem) {
-      // Attach click event.
-      $(elem).on('click', t.sfgovGTranslate);
-
       setTimeout(function() {
         $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
