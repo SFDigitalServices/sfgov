@@ -12,10 +12,10 @@ index 80d2d5e..f91b011 100644
          '#required' => TRUE
      );
 diff --git a/src/Plugin/Block/GTranslateBlock.php b/src/Plugin/Block/GTranslateBlock.php
-index 7469d6a..477f955 100644
+index 7469d6a..cf51ef1 100644
 --- a/src/Plugin/Block/GTranslateBlock.php
 +++ b/src/Plugin/Block/GTranslateBlock.php
-@@ -168,6 +168,20 @@ EOT;
+@@ -168,6 +168,25 @@ EOT;
  
                  $block_content .= '</select>';
              }; break;
@@ -24,6 +24,11 @@ index 7469d6a..477f955 100644
 +              $i = 0;
 +              foreach($languages as $lang => $lang_name) {
 +                  $flag_y = $flag_map_vertical[$lang];
++
++                  // Override Chinese name. Defaults is 繁體中文 (traditional).
++                  if ($lang == 'zh-TW') {
++                    $lang_name = '中文';
++                  }
 +
 +                  if ($settings->get('gtranslate_' . $lang)) {
 +                    $block_content .= '<a href data-sfgov-translate="' . $gtranslate_main_lang . '|' . $lang . '" class="gtranslate-link">' . $lang_name . '</a>';
