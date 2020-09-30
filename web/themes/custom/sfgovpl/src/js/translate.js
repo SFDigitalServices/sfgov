@@ -36,7 +36,6 @@ function SFGovTranslate() {
         that.sfgovGTranslateFireEvent(c, 'change');
         $('body').show();
         that.addElementTranslationClass(b);
-        that.updateSelectedLang(b);
         deferred.resolve();
     }
     return deferred.promise();
@@ -47,13 +46,8 @@ function SFGovTranslate() {
     $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo').addClass(elementClass);
   }
 
-  this.updateSelectedLang = function(translationVal) {
-    // Set the current language as active.
-    $('.gtranslate-link').removeClass('is-active');
-    $('.gtranslate').find('a[data-sfgov-translate*="|'+ translationVal +'"]').addClass('is-active');
-  }
-
   this.sfgovGTranslate = function(event) {
+    event.preventDefault();
     var args = event.target.getAttribute('data-sfgov-translate');
     var lang = args.split('|')[1];
     var drupalTranslation = that.getDrupalTranslation(lang);
@@ -79,6 +73,7 @@ function SFGovTranslate() {
       }
 
     } else { // no drupal translation exists, use gtranslate
+      // TODO: Is this ever called? AFAICT drupalTranslation.turl always exists.
       that.sfgovDoGTranslate(args);
       that.currentSelectedTranslation = args;
     }
@@ -96,6 +91,24 @@ function SFGovTranslate() {
     }
     return null;
   };
+
+  this.setDrupalTranslationUrls = function() {
+    var currentDrupalLang = drupalSettings.sfgov_translations.page.current_language;
+    var drupalTranslations = drupalSettings.sfgov_translations.page.translations;
+
+    if (drupalTranslations) {
+      for (var i = 0; i < drupalTranslations.length; i++) {
+        var translation = drupalTranslations[i];
+        $('.gtranslate-link[data-sfgov-translate$="|'+ translation.lang +'"]')
+          .attr('href', translation.turl)
+          .attr('data-sfgov-translator', translation.status === true ? 'drupal' : 'gtranslate');
+
+        if (translation.lang === currentDrupalLang) {
+          $('.gtranslate-link[data-sfgov-translate$="|'+ currentDrupalLang +'"]').addClass('is-active');
+        }
+      }
+    }
+  }
 
   this.checkCurrentLanguage = function() {
     var currentDrupalLanguage = drupalSettings.sfgov_translations.page.current_language;
@@ -116,13 +129,11 @@ function SFGovTranslate() {
       }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage);
       that.addElementTranslationClass(currentDrupalLanguage);
-      that.updateSelectedLang(currentDrupalLanguage);
       return;
     }
 
     if(gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang);
-      that.updateSelectedLang(gTranslateLang);
       var drupalTranslation = that.getDrupalTranslation(gTranslateLang);
       if (drupalTranslation && drupalTranslation.turl != window.location.pathname) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(function() { // kill the cookie and redirect to the drupal translation
@@ -153,6 +164,10 @@ function getCookie(cookieName) {
   var t = new SFGovTranslate();
   var observeElement = $('.sfgov-top-container')[0];
   var config = { attributes: true, childList: true, subtree: true };
+
+  // Add href, determine active link.
+  t.setDrupalTranslationUrls();
+
   var callback = function(mutationsList, observer) {
     var elem = null;
     for (var i = 0; i < mutationsList.length; i++) {
@@ -161,7 +176,6 @@ function getCookie(cookieName) {
         if (mutation.target.id == ':0.targetLanguage') {
           // catch the gtranslate dropdown
           elem = $('.gtranslate-link');
-          $(elem).attr('data-gtranslate', 'sfgov');
           break;
         }
       }
@@ -175,7 +189,6 @@ function getCookie(cookieName) {
       // selected by default, which is problematic
       // so, always add the english option
       setTimeout(function() {
-        $('.goog-te-combo').attr('data-gtranslate', 'sfgov');
         $('.goog-te-combo').append('<option value="en">English</option>');
         t.checkCurrentLanguage(); // check the current language of the page AFTER english has been added
       }, 1000);
