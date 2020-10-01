@@ -109,6 +109,9 @@ function sfgov_about_preprocess_node(&$variables) {
           '#url' => $about_node->toUrl(),
           '#title' => "Learn More About The {$node->label()}"
         ];
+
+        // Add cachable dependency.
+        $node->addCacheableDependency($about_node);
       }
 
       break;
