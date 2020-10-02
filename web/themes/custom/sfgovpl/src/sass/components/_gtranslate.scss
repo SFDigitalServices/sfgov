@@ -38,6 +38,11 @@
   // The Chinese link is always Noto Sans.
   &[data-sfgov-translate*="|zh-TW"] {
     @include noto-sans-tc;
+    // Since we are using 18px instead of 22px for the line height, we need to
+    // compensate for the top 1/2 of the 4px (22 - 18) difference to get the
+    // alignment with the other Roboto links right.
+    position: relative;
+    top: -2px;
   }
 
   // When viewing Chinese translation, revert to regular styles for non-Chinese
