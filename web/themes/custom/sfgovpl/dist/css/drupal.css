@@ -2405,90 +2405,105 @@ details[open] .details__content {
 }
 
 .gtranslate_container {
-  display: inline-block;
-  margin-right: 20px;
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
 }
 
-@media screen and (min-width: 950px) {
+@media screen and (min-width: 1280px) {
   .gtranslate_container {
-    margin-right: 30px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
-@media screen and (max-width: 767px) {
-  .gtranslate_container {
-    position: absolute;
-    right: 105px;
-  }
+.gtranslate {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 
-.gtranslate_container .gtranslate {
-  background: url("/themes/custom/sfgovpl/src/img//icons/globe-blue.svg") no-repeat center left transparent;
-  background-size: 20px 20px;
-}
-
-@media screen and (max-width: 768px) {
-  .gtranslate_container .gtranslate {
-    background-size: 26px 26px;
-    padding: 4px 0;
-  }
-}
-
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .gtranslate_container .gtranslate {
-    background-position-x: -40px;
-  }
-}
-
-.gtranslate_container .gtranslate > select {
-  font-size: 17px;
-  font-weight: 500;
+.gtranslate-link {
+  font-size: 14px;
+  font-weight: 400;
   line-height: 18px;
-  border: 0;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  padding: 0 0 0 30px;
-  margin: -2px 0 0 0;
-  height: auto;
-  line-height: normal;
-  background: none;
-  color: #4f66ee;
+  text-decoration: none;
 }
 
-@media screen and (max-width: 768px) {
-  .gtranslate_container .gtranslate > select {
-    margin-top: 0;
-    padding-left: 27px;
-    width: 1px;
+.gtranslate-link.sfgov-translate-lang-zh-TW {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 1px;
+}
+
+.gtranslate-link:link {
+  color: #1c3e57;
+}
+
+.gtranslate-link:visited, .gtranslate-link:link:visited {
+  color: #1c3e57;
+}
+
+.gtranslate-link:focus {
+  color: #1c3e57;
+}
+
+.gtranslate-link.active:hover, .gtranslate-link.is-active:hover, .gtranslate-link.active-trail:hover, .gtranslate-link.visited:hover, .gtranslate-link:hover {
+  color: #1c3e57;
+}
+
+.gtranslate-link.is-active, .gtranslate-link:active, .gtranslate-link.active-trail {
+  color: #1c3e57;
+}
+
+.gtranslate-link:not(:first-of-type) {
+  margin-left: 30px;
+}
+
+.gtranslate-link:hover {
+  text-decoration: underline;
+}
+
+.gtranslate-link.is-active {
+  cursor: default;
+  font-weight: 500;
+}
+
+.gtranslate-link.is-active:hover {
+  text-decoration: none;
+}
+
+.gtranslate-link.is-active[data-sfgov-translate*="|zh-TW"] {
+  font-weight: bold;
+}
+
+.gtranslate-link.sfgov-translate-lang-zh-TW {
+  line-height: 18px;
+}
+
+.gtranslate-link[data-sfgov-translate*="|zh-TW"] {
+  font-family: "Noto Sans TC", sans-serif;
+  position: relative;
+  top: -2px;
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+  .gtranslate-link[data-sfgov-translate*="|zh-TW"] {
+    top: -1px;
   }
 }
 
-@media screen and (min-width: 768px) {
-  .gtranslate_container .gtranslate > select {
-    width: 125px;
-  }
-}
-
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .gtranslate_container .gtranslate > select {
-    width: 107px;
-  }
-}
-
-.gtranslate_container .gtranslate > select:focus {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-  outline: 2px dotted #aeb0b5;
-}
-
-.gtranslate_container label[for="sfgov-gtranslate-select"] {
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  overflow: hidden;
-  position: absolute !important;
-  width: 1px;
-  word-wrap: normal;
+.gtranslate-link:not([data-sfgov-translate*="|zh-TW"]) {
+  font-family: "Rubik", sans-serif;
+  letter-spacing: normal;
 }
 
 .path-search header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
@@ -3767,6 +3782,17 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
     margin-left: 0;
     margin-right: 0px;
     width: 50%;
+  }
+}
+
+.sfgov-top-container {
+  background: #f8f8f8;
+  padding: 10px 0;
+}
+
+@media screen and (min-width: 768px) {
+  .sfgov-top-container {
+    padding: 15px 0;
   }
 }
 
