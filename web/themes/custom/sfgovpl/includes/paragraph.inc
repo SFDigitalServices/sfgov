@@ -83,15 +83,17 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   // Render image attirubutes.
   if (function_exists('_sfgov_image_attributes_renderable')) {
     if ($paragraph_type == 'campaign') {
-      $media = $paragraph->get('field_media')->referencedEntities();
-      if ($entity = reset($media)) {
-        $img_with_attr = _sfgov_image_attributes_renderable($entity);
+      if ($media = $paragraph->get('field_media')->referencedEntities()) {
+        if ($entity = reset($media)) {
+          $img_with_attr = _sfgov_image_attributes_renderable($entity);
+        }
       }
     }
     if ($paragraph_type == 'spotlight') {
-      $media = $paragraph->get('field_spotlight_img')->referencedEntities();
-      if ($entity = reset($media)) {
-        $img_with_attr = _sfgov_image_attributes_renderable($entity);
+      if ($media = $paragraph->get('field_spotlight_img')->referencedEntities()) {
+        if ($entity = reset($media)) {
+          $img_with_attr = _sfgov_image_attributes_renderable($entity);
+        }
       }
     }
     if ($paragraph_type == 'fact') {
