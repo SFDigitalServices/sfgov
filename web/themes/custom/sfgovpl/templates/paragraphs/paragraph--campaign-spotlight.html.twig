@@ -3,8 +3,7 @@
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished',
-    paragraph.field_is_reversed.value == '1' ? 'is-reversed'
+    not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
 
@@ -17,24 +16,21 @@
   paragraph.get('field_spotlight_img').entity ?
   paragraph.get('field_spotlight_img').entity.field_media_image.alt : 'image'
 %}
-{% set spotlight_img_style = spotlight_img_url ? 'background-image: url(' ~ spotlight_img_url ~ ');background-size: cover;' : '' %}
 
-{% set hasTitle = content.field_title['#items'] is not empty %}
-{% set hasImage = content.field_spotlight_img['#items'] is not empty %}
-{% set hasDescription = content.field_description['#items'] is not empty %}
-{% set hasButton = content.field_spotlight_button['#items'] is not empty %}
-
-{% if hasTitle or hasImage or hasDescription or hasButton %}
-  <div{{ attributes.addClass(classes) }}>
-    <div class="container">
-      <div class="group-left">
-        <h2 class="__title">{{ content.field_title }}</h2>
-        {{ content | without('field_spotlight_img', 'field_title') }}
-      </div>
-      <div class="group-right"
-          style="background-image: url('{{ spotlight_img_url }}')"
-          aria-label="{{ spotlight_img_alt }}">
-      </div>
+{% block paragraph %}
+  <div class="paragraph--type--campaign-spotlight-wrapper">
+    <div{{ attributes.addClass(classes) }}>
+      {% block content %}
+        {% if spotlight_img_url %}
+        <div class="field field--type-entity-reference __media field__item">
+          <img src="{{ spotlight_img_url }}" border="0" alt="{{ spotlight_img_alt }}">
+        </div>
+        {% endif %}
+        <div class="paragraph-campaign--text">
+          {{ content|without('field_spotlight_img') }}
+        </div>
+      {% endblock %}
     </div>
+    {{ field_media_image_attributes }}
   </div>
-{% endif %}
+{% endblock paragraph %}
