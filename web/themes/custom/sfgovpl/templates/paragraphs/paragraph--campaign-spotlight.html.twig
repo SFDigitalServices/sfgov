@@ -27,13 +27,13 @@
 {% if hasTitle or hasImage or hasDescription or hasButton %}
   <div{{ attributes.addClass(classes) }}>
     <div class="container">
-      <div class="group-left"
-          style="background-image: url('{{ spotlight_img_url }}')"
-          aria-label="{{ spotlight_img_alt }}">
-      </div>
-      <div class="group-right">
+      <div class="group-left">
         <h2 class="__title">{{ content.field_title }}</h2>
         {{ content | without('field_spotlight_img', 'field_title') }}
+      </div>
+      <div class="group-right"
+          style="background-image: url('{{ spotlight_img_url }}')"
+          aria-label="{{ spotlight_img_alt }}">
       </div>
     </div>
   </div>
