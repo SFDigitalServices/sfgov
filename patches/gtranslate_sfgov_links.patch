@@ -1,0 +1,46 @@
+diff --git a/src/Form/GTranslateSettingsForm.php b/src/Form/GTranslateSettingsForm.php
+index 80d2d5e..f91b011 100644
+--- a/src/Form/GTranslateSettingsForm.php
++++ b/src/Form/GTranslateSettingsForm.php
+@@ -47,7 +47,7 @@ class GTranslateSettingsForm extends ConfigFormBase {
+         '#title' => t('Look'),
+         '#default_value' => $config->get('gtranslate_look'),
+         '#size' => 1,
+-        '#options' => array('flags_dropdown' => 'Flags and dropdown', 'flags' => 'Flags', 'dropdown'=> 'Dropdown', 'dropdown_with_flags' => 'Nice dropdown with flags'),
++        '#options' => array('flags_dropdown' => 'Flags and dropdown', 'flags' => 'Flags', 'dropdown'=> 'Dropdown', 'dropdown_with_flags' => 'Nice dropdown with flags', 'links' => 'SF.gov links'),
+         '#description' => t("Select the look of the module"),
+         '#required' => TRUE
+     );
+diff --git a/src/Plugin/Block/GTranslateBlock.php b/src/Plugin/Block/GTranslateBlock.php
+index 7469d6a..ca35fdf 100644
+--- a/src/Plugin/Block/GTranslateBlock.php
++++ b/src/Plugin/Block/GTranslateBlock.php
+@@ -168,6 +168,28 @@ EOT;
+ 
+                 $block_content .= '</select>';
+             }; break;
++
++            case 'links': {
++              // Change the sort order to: English, Español, 中文, Filipino.
++              $languages = array_merge(array_flip(['en', 'es', 'zh-TW', 'tl']), $languages);
++
++              $i = 0;
++              foreach($languages as $lang => $lang_name) {
++                  $flag_y = $flag_map_vertical[$lang];
++
++                  // Override Chinese name. Defaults is 繁體中文 (traditional).
++                  if ($lang == 'zh-TW') {
++                    $lang_name = '中文';
++                  }
++
++                  if ($settings->get('gtranslate_' . $lang)) {
++                    $block_content .= '<a href data-sfgov-translate="' . $gtranslate_main_lang . '|' . $lang . '" class="gtranslate-link">' . $lang_name . '</a>';
++                  }
++
++                  $i++;
++              }
++          }; break;
++
+             case 'dropdown_with_flags': {
+ 
+ 	            $current_language = isset($_SERVER['HTTP_X_GT_LANG']) ? $_SERVER['HTTP_X_GT_LANG'] : $gtranslate_main_lang;

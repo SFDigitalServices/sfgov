@@ -1,3 +1,9 @@
-{% include "@molecules/02-navs/01-main-navigation.twig" with {
-  "items": items
-} %}
+<nav class="sfgov-main-navigation">
+  <ul class="menu">
+    {% for item in items %}
+      <li{{ item.attributes.addClass(classes) }}>
+        {{ link(item.title, item.url) }}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
