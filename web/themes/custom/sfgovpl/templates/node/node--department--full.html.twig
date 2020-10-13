@@ -151,6 +151,14 @@
           <div class="sfgov-dept-about-description">
             {{ dept_fields.about.description }}
           </div>
+          {% if node.field_parent_department.0 is not empty %}
+          <div class="sfgov-dept-about-public-bodies">
+            <h3>{{ 'Part of'|t }}</h3>
+            <ul>
+            <li>{{ content.field_parent_department }}</li>
+            </ul>
+          </div>
+          {% endif %}
           {% if dept_fields.about.divisions %}
             <div class="sfgov-dept-about-divisions">
               <h3>{{ 'Divisions'|t }}</h3>
@@ -160,14 +168,6 @@
               {% endfor %}
               </ul>
             </div>
-          {% endif %}
-          {% if node.field_parent_department.0 is not empty %}
-          <div class="sfgov-dept-about-public-bodies">
-            <h3>{{ 'Part of'|t }}</h3>
-            <ul>
-            <li>{{ content.field_parent_department }}</li>
-            </ul>
-          </div>
           {% endif %}
           {% if dept_fields.about.public_bodies %}
             <div class="sfgov-dept-about-public-bodies">
