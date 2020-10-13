@@ -22,42 +22,56 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
   switch ($form_id) {
     case 'node_transaction_form':
     case 'node_transaction_edit_form':
-      // Form wrapper.
-      $form['#prefix'] = '<div id="node-transaction-form-wrapper">';
+      // Set form wrapper.
+      $form['#prefix'] = '<div id="node-form-ajax-wrapper">';
       $form['#suffix'] = '</div>';
 
-      // Debug info.
-      $form['debug'] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'id' => ['debug-out'],
-        ],
-        '#weight' => 23,
-      ];
-
-      $items_count = $form_state->getStorage()['field_storage']['#parents']['#fields']['field_departments']['items_count'];
-      for ($i=0; $i <= $items_count; $i++) { 
-        $form['field_departments']['widget'][$i]['target_id']['#ajax'] = [
-          'callback' => '_parent_departments',
-          'wrapper' => 'node-transaction-form-wrapper',
-          'event' => 'autocompleteselect',
-        ];
+      // Get clean values to populate field departments.
+      $default_values = [];
+      if ($field_departments = $form_state->getValue('field_departments')) {
+        foreach ($field_departments as $delta => $value) {
+          if (is_numeric($delta)) {
+            $default_values[$delta] = $value;
+          }
+        }
       }
 
-      $form['field_departments_fetch'] = [
+      if (!empty($default_values)) {
+        // Load nodes from $default_values.
+        $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($default_values);
+
+        // Iterate through field values to populate new values.
+        $i = 0;
+        while (isset($form['field_departments']['widget'][$i])) {
+          if ($default_values) {
+            if (isset($default_values[$i])) {
+              // Populate field.
+              $form['field_departments']['widget'][$i]['target_id']['#default_value'] = $nodes[$default_values[$i]];
+            }
+          }
+
+          $i++;
+        }
+      }
+
+      // Submit button to trigger (via AJAX) the parent departments fetching.
+      $form['field_departments_submit'] = [
         '#type' => 'submit',
-        '#value' => t('Departments Fetch'),
-        '#submit' => ['_parent_departments_fetch'],
+        '#value' => 'Fetch parent departments',
+        '#submit' => ['_fetch_departments_submit'],
         '#ajax' => [
-          'callback' => '_parent_departments_fetch',
-          'wrapper' => 'node-transaction-form-wrapper',
+          'callback' => '_fetch_departments_submit',
+          'wrapper' => 'node-form-ajax-wrapper',
+          'event' => 'click',
+          'disable-refocus' => TRUE,
         ],
-        '#weight' => 1000,
+        '#limit_validation_errors' => [['field_departments']],
+        '#prefix' => '<div class="field-department-submit-wrapper">',
+        '#suffix' => '</div>',
       ];
 
-      if ($form_state->get('field_departments_ids')) {
-        $form['field_departments']['widget']['#description'] = $form_state->get('field_departments_ids');
-      }
+      // Attach library.
+      $form['#attached']['library'][] = 'sfgov_departments/parent_departments';
 
       break;
   }
@@ -68,32 +82,49 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  * @return \Drupal\Core\Ajax\AjaxResponse
  */
-function _parent_departments_fetch(array &$form, FormStateInterface $form_state) {
-  // https://www.drupal.org/forum/support/module-development-and-code-questions/2019-05-21/ajax-form-prepopulate-an-entity
-  
-  $form_state->set('field_departments_ids', time());
-  $form_state->setRebuild();
+function _fetch_departments_submit(array &$form, FormStateInterface $form_state) {
+  $storage = $form_state->getStorage();
+  $values = $form_state->getValues();
+
+  // Get current department values.
+  $field_departments = $values['field_departments'];
+
+  // Store and unset the add_more action.
+  $add_more = $field_departments['add_more'];
+  unset($field_departments['add_more']);
+
+  // Get only the field values.
+  $clean_values = [];
+  foreach ($field_departments as $key => $value) {
+    if (is_numeric($key) && $value['target_id']) {
+      $clean_values[] = $value['target_id'];
+    }
+  }
+
+  // Do nothing if there is no value.
+  if (!empty($clean_values)) {
+    // Get new values
+    $clean_values[] = 778;
+
+    // Reset field count.
+    $storage['field_storage']['#parents']['#fields']['field_departments']['items_count'] = count($clean_values);
+    $form_state->setStorage($storage);
+
+    $clean_values['add_more'] = $add_more;
+
+    // Get user input.
+    $input = $form_state->getUserInput();
+
+    // Clear the input so that it can be populated with the new values.
+    $input['field_departments'] = [];
+
+    // Set new values, and rebuild the form state.
+    $form_state->setValue('field_departments', $clean_values);
+    $form_state->setUserInput($input);
+    $form_state->setRebuild();
+  }
+
   return $form;
-}
-
-/**
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- * @return \Drupal\Core\Ajax\AjaxResponse
- */
-function _parent_departments(array &$form, FormStateInterface $form_state) {
-  $response = new AjaxResponse();
-
-  // Kint
-  $debugOut = @Kint::dump($form_state->getValue('field_departments'));
-  $response->addCommand(new ReplaceCommand('#debug-out', '<div id="debug-out">'.$debugOut.'</div>'));
-  
-  // Loading..
-  $response->addCommand(new InvokeCommand('.field--name-field-departments .description', 'css', ['color', 'red']));
-
-  // Trigger fetch button.
-  $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-field-departments-fetch"]', 'trigger', ['mousedown']));
-  return $response;
 }
 
 /**
