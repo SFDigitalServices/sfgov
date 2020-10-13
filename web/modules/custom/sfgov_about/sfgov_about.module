@@ -19,6 +19,9 @@ function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id
       // Add description to the field Custom Sections and Resources.
       $form['field_custom_sections']['widget']['#description'] = "We've given you some suggestions for headings, but you can change them or add more.";
       $form['field_about_resources']['widget']['#description'] = "We've given you some suggestions for sections, but you can change them or add more. Add tiles under sections that link to webpages anywhere.";
+
+      // Attach library.
+      $form['#attached']['library'][] = 'sfgov_about/about_form';
       break;
 
     case 'node_about_edit_form':
@@ -27,6 +30,9 @@ function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id
 
       // Disable field_parent_department.
       $form['field_parent_department']['#disabled'] = TRUE;
+
+      // Attach library.
+      $form['#attached']['library'][] = 'sfgov_about/about_form';
       break;
   }
 }
