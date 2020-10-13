@@ -23,8 +23,8 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
     case 'node_transaction_form':
     case 'node_transaction_edit_form':
       // Set form wrapper.
-      $form['#prefix'] = '<div id="node-form-ajax-wrapper">';
-      $form['#suffix'] = '</div>';
+      $form['field_departments']['#prefix'] = '<div id="field-departments-wrapper">';
+      $form['field_departments']['#suffix'] = '</div>';
 
       // Get clean values to populate field departments.
       $default_values = [];
@@ -61,7 +61,7 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
         '#submit' => ['_fetch_departments_submit'],
         '#ajax' => [
           'callback' => '_fetch_departments_submit',
-          'wrapper' => 'node-form-ajax-wrapper',
+          'wrapper' => 'field-departments-wrapper',
           'event' => 'click',
           'disable-refocus' => TRUE,
         ],
@@ -103,14 +103,25 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
 
   // Do nothing if there is no value.
   if (!empty($clean_values)) {
-    // Get new values
-    $clean_values[] = 778;
+    foreach ($clean_values as $value) {
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($value);
+
+      // Get parent values.
+      if ($parent_node = $node->field_parent_department->entity) {
+        if (!in_array($parent_node->id(), array_values($clean_values))) {
+          $clean_values[] = $parent_node->id();
+
+          drupal_set_message(t('"@parent_department" is a parent department of “@department” has been defaultly added in addition. You can remove this selection if it does not apply for this content.', [
+            '@parent_department' => $parent_node->label(),
+            '@department' => $node->label(),
+          ]));
+        }
+      }
+    }
 
     // Reset field count.
     $storage['field_storage']['#parents']['#fields']['field_departments']['items_count'] = count($clean_values);
     $form_state->setStorage($storage);
-
-    $clean_values['add_more'] = $add_more;
 
     // Get user input.
     $input = $form_state->getUserInput();
@@ -119,12 +130,13 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
     $input['field_departments'] = [];
 
     // Set new values, and rebuild the form state.
+    $clean_values['add_more'] = $add_more;
     $form_state->setValue('field_departments', $clean_values);
     $form_state->setUserInput($input);
     $form_state->setRebuild();
   }
 
-  return $form;
+  return $form['field_departments'];
 }
 
 /**
