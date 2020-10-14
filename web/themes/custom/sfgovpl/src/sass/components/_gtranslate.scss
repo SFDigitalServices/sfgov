@@ -1,61 +1,63 @@
 .gtranslate_container {
-  display: inline-block;
-  margin-right: 20px;
+  @include contain-1090;
+}
 
-  @include media($narrow-screen) {
-    margin-right: 30px;
+.gtranslate {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+}
+.gtranslate-link {
+  @include fs-small-text;
+  @include link-colors($c-slate, $c-slate);
+  text-decoration: none;
+
+  &:not(:first-of-type) {
+    margin-left: 30px;
   }
 
-  @include media-max($medium-screen - 1px) {
-    position: absolute;
-    right: 105px;
+  &:hover {
+    text-decoration: underline;
   }
 
-  .gtranslate {
-    @include background-image('/icons/globe-blue.svg', center left);
-    background-size: 20px 20px;
+  &.is-active {
+    cursor: default;
+    font-weight: 500;
 
-    @include media-max($medium-screen) {
-      background-size: 26px 26px;
-      padding: 4px 0;
+    &:hover {
+      text-decoration: none;
     }
 
-    @include ie-only {
-      background-position-x: -40px;
-    }
-
-    > select {
-      @include fs-nav-item;
-      border: 0;
-      appearance: none;
-      padding: 0 0 0 30px;
-      margin: -2px 0 0 0;
-      height: auto;
-      line-height: normal;
-      background: none;
-      color: $c-bright-blue;
-
-      @include media-max($medium-screen) {
-        margin-top: 0;
-        padding-left: 27px;
-        width: 1px;
-      }
-
-      @include media($medium-screen) {
-        width: 125px;
-      }
-
-      @include ie-only {
-        width: 107px;
-      }
-
-      &:focus {
-        box-shadow: none;
-        outline: 2px dotted #aeb0b5;
-      }
+    &[data-sfgov-translate*="|zh-TW"] {
+      font-weight: bold;
     }
   }
-  label[for="sfgov-gtranslate-select"] {
-    @include visually-hidden;
+
+  // @fs-small-text (above) changes line-height to 22px for Chinese. In this
+  // case, we don't want the height increase that would cause, because it's
+  // inline with non-Chinese text.
+  &.sfgov-translate-lang-zh-TW {
+    line-height: 18px;
+  }
+
+  // The Chinese link is always Noto Sans.
+  &[data-sfgov-translate*="|zh-TW"] {
+    @include noto-sans-tc;
+    // Adjust the Chinese link to be vertically centered with the non-Chinese
+    // Roboto links.
+    position: relative;
+    top: -2px;
+
+    // iOS.
+    @supports (-webkit-overflow-scrolling: touch) {
+      top: -1px;
+    }
+  }
+
+  // When viewing Chinese translation, revert to regular styles for non-Chinese
+  // links.
+  &:not([data-sfgov-translate*="|zh-TW"]) {
+    @include rubik;
+    letter-spacing: normal;
   }
 }

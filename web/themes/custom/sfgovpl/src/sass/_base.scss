@@ -1,11 +1,18 @@
 html {
-	font-size: 1.0625rem;
+  font-size: $base-font-size * 1px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
 body {
   @include rubik;
   @include fs-body-short;
   color: $c-slate;
+  margin: 0;
 }
 
 p {
@@ -23,6 +30,26 @@ h5 {
   margin-top: 0;
 }
 
+h1 {
+  @include h1;
+}
+
+h2 {
+  @include h2;
+}
+
+h3 {
+  @include h3;
+}
+
+h4 {
+  @include h4;
+}
+
+h5 {
+  @include h5;
+}
+
 a {
   @include link-colors($c-bright-blue, $c-dark-blue);
 }
@@ -33,6 +60,7 @@ li {
 
 img {
   height: auto;
+  max-width: 100%;
 }
 
 .sfgov-list-link {
@@ -83,4 +111,9 @@ img {
 }
 .is-hidden {
   display: none;
+}
+
+*:focus {
+  outline: 2px dotted #aeb0b5;
+  outline-offset: 3px;
 }
