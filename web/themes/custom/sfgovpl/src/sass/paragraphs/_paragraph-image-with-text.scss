@@ -1,6 +1,13 @@
 .image-with-text-container {
+
+  @include media($wide-screen) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .image-with-text {
     border-radius: 8px;
+
     .image img {
       border-radius: 8px 8px 0 0;
       width: 100%;
@@ -34,6 +41,17 @@
           }
         }
       }
+    }
+  }
+  .page-node-type-campaign & {
+    @include contain-1090;
+    margin-bottom: 109px;
+    margin-top: 60px;
+
+    @include media($wide-screen) {
+      margin-top: 60px;
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 }
