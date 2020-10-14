@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Media Caption component.
+ *
+ * Displays a caption for a media image entity.
+ *
+ * Variables:
+ *   - entity: The entity object of the media being displayed.
+ *   - attributes: Attribute object for wrapper classes.
+ *   - tag: The HTML element to use for the wrapper. Defaults to <div>, and is
+ *     customized in media-with-caption.twig, which includes this template, and
+ *     uses <figcaption>.
+ *   - name: Media entity name, a.k.a title, label.
+ *   - type: Media entity bundle: image, video, etc.
+ *   - author: The value of field_artist_or_photographer.
+ *   - url: Source URL (external) from field_link_to_original_source.
+ *   - license: The type of license, e.g. CC-BY.
+ *   - align: Alignment of the caption text. Defaults to 'left'.
+ *
+ * Example usage:
+
+ * {% include '@theme/media-caption.twig' with {
+ *   entity: node.field_image.entity,
+ *  } only %}
+ *
+ * Or, as it is used in sfgov_image_attributes module:
+ *
+ * {% include "@sfgovpl/components/media-caption.twig" with {
+ *   name: name,
+ *   author: author,
+ *   url: url,
+ *   license: license,
+ * %}
+ *
+ * @see media-with-caption.twig
+ * @see sfgov-image-attributes.html.twig
+ */
+ #}
+
+{% set attributes = create_attribute() %}
+{% set tag = tag|default('div') %}
+{% set type = entity.bundle()|default('Image') %}
+{% set name = entity.label|default(name) %}
+{% set author = entity.field_artist_or_photographer.value|default(author) %}
+{% set url = entity.field_link_to_original_source.uri|default(url) %}
+{% set license = entity.field_type_of_license.value|default(license) %}
+{% set classes = [
+  'media-caption',
+  'media-caption--align-' ~ align|default('left'),
+] %}
+
+<{{ tag }}{{ attributes.addClass(classes) }}>
+  <span class="media-caption__name">
+    {% if name %}
+      &ldquo;{{- name|trim -}}&rdquo;
+    {% else %}
+      {{- type|capitalize -}}:
+    {% endif %}
+  </span>
+
+  {% if author %}
+    <span class="media-caption__author">
+      {%- if author and url -%}
+        {{- 'by'|t }} <a href="{{ url }}" rel="noopener" target="_blank">{{- author|trim -}}</a>
+      {%- else -%}
+        {{- 'by'|t }} {{ author|trim -}}
+      {%- endif -%}
+    </span>
+
+    {%- if license -%}
+      <span class="media-caption__license">, {{ license|trim -}}</span>
+    {%- endif -%}
+  {% endif %}
+</{{ tag }}>
