@@ -1,58 +1,81 @@
-.sfgov-full-bleed.sfgov-spotlight-container {
+.sfgov-spotlight {
+  padding: 60px 0;
   position: relative;
-  @include media-max($medium-screen) {
-    .sfgov-section-container {
-      padding: 0;
-    }
-  }
-  @include media($medium-screen) {
-    &.purple-lightpurple {
-      background: linear-gradient(to right, $c-purple-3 50%, $c-purple-2 50%);
-    }
-  }
-  &--nested {
-    margin-bottom: 40px;
-    margin-top: -40px;
+
+  // This is for topic pages, where a spotlight can be nested inside the
+  // field_content field via a "section" paragraph.
+  .sfgov-spotlight-container--nested & {
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0;
 
     @include media($medium-screen) {
-      margin-bottom: 80px;
-      margin-top: -80px;
+      margin-bottom: 0;
+      margin-top: 0;
     }
   }
-}
 
-.sfgov-spotlight {
-  display: flex;
-  flex-direction: column-reverse;
+  // Override top padding if right below a hero banner, e.g. Topic pages.
+  .hero-banner + .sfgov-spotlight-container & {
+    padding-top: 0;
+  }
+
+  .sfgov-spotlight-main {
+    border-radius: 8px;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column-reverse;
+
+    @include media($medium-screen) {
+      flex-direction: row;
+
+      .purple-lightpurple & {
+        background: linear-gradient(to right, $c-purple-3 50%, $c-purple-2 50%);
+      }
+    }
+  }
+
   .sfgov-spotlight-section {
     background: $c-purple-3;
     width: 100%;
     color: $c-white;
-    &.content {
-      padding: 40px 20px;
-    }
-    &.image {
-      background-color: $c-purple-2;
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-      height: 375px;
-      overflow: hidden;
-      img {
-        width: 100%;
-      }
+
+    @include media($medium-screen) {
+      background: $c-purple-3;
+      width: 50%;
     }
   }
-  .sfgov-spotlight-title h2 {
+
+  .sfgov-spotlight-content {
+    border-radius: 0 0 8px 8px;
+    padding: 40px 20px;
+
+    @include media($medium-screen) {
+      border-radius: 8px 0 0 8px;
+      padding: 60px 40px 60px;
+    }
+  }
+
+  .sfgov-spotlight-title {
     @include fs-title-1-mobile;
     color: $c-white;
     margin-bottom: 20px;
     padding-right: 40px;
+
+    @include media($medium-screen) {
+      @include fs-title-1;
+    }
   }
   .sfgov-spotlight-description {
     margin-bottom: 20px;
     padding-right: 40px;
+
+    @include media($medium-screen) {
+      margin-bottom: 40px;
+      padding: 0;
+    }
   }
+
   .sfgov-spotlight-button a {
     @include fs-body-bold;
     padding: 13px 20px 11px;
@@ -63,31 +86,27 @@
       color: $c-dark-blue;
     }
   }
-  @include media($medium-screen) {
-    flex-direction: row;
-    .sfgov-spotlight-section {
-      width: 50%;
-      background: $c-purple-3;
-      &.content {
-        padding: 100px 0;
-      }
-      &.image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-      }
+
+  .sfgov-spotlight-image {
+    background-color: $c-purple-2;
+    border-radius: 8px 8px 0 0;
+
+    @include media($medium-screen) {
+      border-radius: 0 8px 8px 0;
     }
-    .sfgov-spotlight-title h2 {
-      @include fs-title-1;
-    }
-    .sfgov-spotlight-description {
-      margin-bottom: 40px;
+
+    img {
+      border-radius: 8px 8px 0 0;
+
+      @include media($medium-screen) {
+        display: none;
+      }
     }
   }
-  @include media-max($medium-screen) {
-    .sfgov-spotlight-description {
-      padding: 0;
+
+  .sfgov-spotlight-caption {
+    @include media($medium-screen) {
+      margin-top: 15px;
     }
   }
 }
