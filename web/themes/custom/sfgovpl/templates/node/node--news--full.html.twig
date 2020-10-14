@@ -13,7 +13,7 @@
   {% endblock header %}
 
   {% block footer %}
-    <div class="news--meta no-image">
+    <div class="news--meta">
       <div class="news--meta-inner">
         <div class="news--meta-text">
           {{ content.field_abstract }}
@@ -24,13 +24,27 @@
   {% endblock footer %}
 
   {% block content %}
+    {% if content.field_image|render %}
+      <div class="news--image">
+        <div class="news--image-inner">
+          {% include '@theme/media-with-caption.twig' with {
+            entity: node.field_image.entity,
+            media: content.field_image,
+          } only %}
+        </div>
+      </div>
+    {% endif %}
+
     <div{{ content_attributes.addClass(bundle ~ '--body') }}>
-      {{ content|without(
-        'field_abstract',
-        'field_date',
-        'field_dept',
-        'field_news_type'
-      ) }}
+      <div class="news--body-inner">
+        {{ content|without(
+          'field_abstract',
+          'field_date',
+          'field_dept',
+          'field_image',
+          'field_news_type'
+        ) }}
+      </div>
     </div>
 
     {% if content.field_dept.0 %}
