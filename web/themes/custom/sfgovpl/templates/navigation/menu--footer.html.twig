@@ -1,3 +1,9 @@
-{% include "@molecules/02-navs/02-footer-navigation.twig" with {
-  "items": items
-} %}
+<nav class="{% block class %}sfgov-footer-navigation{% endblock %}">
+  <ul class="menu">
+    {% for item in items %}
+      <li{{ item.attributes.addClass(classes) }}>
+        {{ link(item.title, item.url) }}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
