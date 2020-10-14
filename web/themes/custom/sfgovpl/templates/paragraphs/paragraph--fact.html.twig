@@ -11,8 +11,10 @@
   <div class="image">
     <div class="item-wrapper">
       {{ content.field_image }}
-      {{ field_media_image_attributes }}
     </div>
+    {% include '@theme/media-caption.twig' with {
+      entity: paragraph.field_image.entity
+    } only %}
   </div>
   <div class="text">
     <h3 class="fact-title">{{ content.field_title }}</h3>
