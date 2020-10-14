@@ -198,22 +198,10 @@
       </div>
     </div>
   </div>
-  {% if dept_fields.about.people %}
+
+  {% if content.field_people|render %}
     <div class="sfgov-dept-about-people sfgov-dept-section">
-      <div class="sfgov-dept-section-content-container">
-        <ul class="sfgov-dept-about-people-list">
-          {% for i in 0..2 %} {# only do first 3 people #}
-            {% set person = dept_fields.about.people[i] %}
-            <li class="sfgov-dept-about-people-list-item">
-              <div class="person-image" style="background-image: url({{ person.photo }})"><img alt="{{ person.alt }}" /></div>
-              <div class="person-details">
-                <p class="person-name">{{ person.first_name }} {{ person.last_name }}</p>
-                <p>{{ person.title }}</p>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      {{ content.field_people }}
     </div>
   {% endif %}
 {% endif %}
