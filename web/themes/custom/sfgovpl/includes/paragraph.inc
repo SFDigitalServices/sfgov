@@ -79,32 +79,6 @@ function sfgovpl_preprocess_paragraph(&$variables) {
       $variables['content']['field_link']['#title'] = t('Parent Program');
     }
   }
-
-  // Render image attirubutes.
-  if (function_exists('_sfgov_image_attributes_renderable')) {
-    if ($paragraph_type == 'campaign') {
-      if ($media = $paragraph->get('field_media')->referencedEntities()) {
-        if ($entity = reset($media)) {
-          $img_with_attr = _sfgov_image_attributes_renderable($entity);
-        }
-      }
-    }
-    if ($paragraph_type == 'spotlight' || $paragraph_type == 'campaign_spotlight') {
-      if ($media = $paragraph->get('field_spotlight_img')->referencedEntities()) {
-        if ($entity = reset($media)) {
-          $img_with_attr = _sfgov_image_attributes_renderable($entity);
-        }
-      }
-    }
-    if ($paragraph_type == 'fact') {
-      if ($media = $paragraph->get('field_image')->referencedEntities()) {
-        if ($entity = reset($media)) {
-          $img_with_attr = _sfgov_image_attributes_renderable($entity);
-        }
-      }
-    }
-    $variables['field_media_image_attributes'] = isset($img_with_attr) ? $img_with_attr : '';
-  }
 }
 
 /**
