@@ -1,36 +1,65 @@
-{%
-  set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
+{# Campaign theme background color #}
+{% set parent = paragraph.getParentEntity() %}
+{% set campaign_theme = parent.field_campaign_theme.entity %}
+{% set background_color = campaign_theme.field_primary_color.color|default('none') %}
+
+{# Spotlight Image #}
+{% if content.field_spotlight_img|render %}
+  {% set image = paragraph.field_spotlight_img.entity %}
+  {% set image_url = image ? file_url(image.field_media_image.entity.fileuri) : null %}
+  {% set image_alt = image.field_media_image.alt|trim|default('image') %}
+  {% set image_attributes = create_attribute({
+    'role': 'img',
+    'aria-label': image_alt,
+    'style': '
+      background-image: url(' ~ image_url ~ ');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    ',
+  }) %}
+{% endif %}
+
+{% embed 'paragraph.html.twig' with {
+  classes: [
+    'sfgov-campaign-spotlight',
+    paragraph.field_is_reversed.value == '1' ? 'is-reversed'
   ]
-%}
+} %}
+  {% block content %}
+    <div class="sfgov-campaign-spotlight-main" style="background-color: {{ background_color }};">
+      <div class="sfgov-campaign-spotlight-image"{{ image_attributes }}>
+        {{ content.field_spotlight_img }}
+      </div>
 
-{% set spotlight_img_url =
-  paragraph.get('field_spotlight_img').entity ?
-  file_url(paragraph.get('field_spotlight_img').entity.field_media_image.entity.fileuri) : null
-%}
-{%
-  set spotlight_img_alt =
-  paragraph.get('field_spotlight_img').entity ?
-  paragraph.get('field_spotlight_img').entity.field_media_image.alt : 'image'
-%}
-
-{% block paragraph %}
-  <div class="paragraph--type--campaign-spotlight-wrapper">
-    <div{{ attributes.addClass(classes) }}>
-      {% block content %}
-        {% if spotlight_img_url %}
-        <div class="field field--type-entity-reference __media field__item">
-          <img src="{{ spotlight_img_url }}" border="0" alt="{{ spotlight_img_alt }}">
-        </div>
+      <div class="sfgov-campaign-spotlight-content">
+        {% if content.field_title|render %}
+          <h2 class="sfgov-campaign-spotlight-title">
+            {{ content.field_title }}
+          </h2>
         {% endif %}
-        <div class="paragraph-campaign--text">
-          {{ content|without('field_spotlight_img') }}
-        </div>
-      {% endblock %}
+
+        {% if content.field_description|render %}
+          <div class="sfgov-campaign-spotlight-description">
+            {{ content.field_description }}
+          </div>
+        {% endif %}
+
+        {% if content.field_link|render %}
+          <div class="sfgov-campaign-spotlight-button">
+            {{ cotnent.field_link }}
+          </div>
+        {% endif %}
+      </div>
     </div>
-    {{ field_media_image_attributes }}
-  </div>
-{% endblock paragraph %}
+
+    {% if image %}
+      <div class="sfgov-campaign-spotlight-caption">
+        {% include '@theme/media-caption.twig' with {
+          entity: image,
+          align: 'right',
+        } only %}
+      </div>
+    {% endif %}
+  {% endblock %}
+{% endembed %}
