@@ -1,0 +1,37 @@
+.sfgov-container-two-column,
+.sfgov-container-three-column {
+  flex-direction: column;
+  display: flex;
+  flex-wrap: wrap;
+  @media screen and (min-width: $medium-screen) {
+    flex-direction: row;
+  }
+  > .sfgov-container-item {
+    width: 100%;
+    margin-bottom: $rhythm * 2;
+    @media screen and (min-width: $medium-screen) {
+      display: flex;
+      align-items: stretch;
+      > * {
+        margin-right: $rhythm * 2;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $medium-screen) {
+  .sfgov-container-two-column > .sfgov-container-item {
+    width: 50%;
+    &:nth-child(2n+2) > * {
+      margin-right: 0;
+    }
+  }
+
+  .sfgov-container-three-column > .sfgov-container-item {
+    width: 33.33%;
+    &:nth-child(3n+3) > * {
+      margin-right: 0;
+    }
+  }
+}
