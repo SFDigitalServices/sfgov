@@ -1,21 +1,32 @@
-{%
-  set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
-  ]
-%}
+{% embed 'paragraph.html.twig' with { classes: ['sfgov-campaign'] } %}
+  {% block content %}
+    <div class="sfgov-campaign-main">
+      {% if content.field_media|render %}
+        <div class="sfgov-campaign-image">
+          {{ content.field_media }}
+        </div>
+      {% endif %}
 
-{% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {{ content.field_media }}
-      <div class="paragraph-campaign--text">
-        <p>{{ 'Latest'|t }}</p>
-        {{ content|without('field_media') }}
+      <div class="sfgov-campaign-content">
+        <p class="sfgov-campaign-label">{{ 'Latest'|t }}</p>
+
+        {% if content.field_title|render %}
+          <h1 class="sfgov-campaign-title">{{ content.field_title }}</h1>
+        {% endif %}
+
+        {% if content.field_link|render %}
+          <div class="sfgov-campaign-link">{{ content.field_link }}</div>
+        {% endif %}
       </div>
-    {% endblock %}
-  </div>
-  {{ field_media_image_attributes }}
-{% endblock paragraph %}
+    </div>
+
+    {% if content.field_media|render %}
+      <div class="sfgov-campaign-caption">
+        {% include '@theme/media-caption.twig' with {
+          entity: paragraph.field_media.entity,
+          align: 'right',
+        } only %}
+      </div>
+    {% endif %}
+  {% endblock content %}
+{% endembed %}
