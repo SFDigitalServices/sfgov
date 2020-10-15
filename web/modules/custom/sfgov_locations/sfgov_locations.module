@@ -1,0 +1,27 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form().
+ */
+function sfgov_locations_node_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  if ($entity->isNew() && $entity->bundle() == 'location') {
+    $storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+    $langcode = $form_state->get('langcode');
+
+    foreach ([
+      'Parking',
+      'Accessibility',
+      'Public transportation'
+    ] as $title) {
+      $paragraphs_entity = $storage->create([
+        'type' => 'accordion_item_simple',
+        'langcode' => $langcode,
+        'field_title' => $title,
+      ]);
+      $entity->get('field_getting_here_items')->appendItem($paragraphs_entity);
+    }
+  }
+}
