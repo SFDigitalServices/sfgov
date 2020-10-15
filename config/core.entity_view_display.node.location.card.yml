@@ -1,9 +1,9 @@
-uuid: 954408ef-e500-4752-9fbc-4a0f7c02556e
+uuid: cec8055e-4c41-48b6-a3a7-7013e982b027
 langcode: en
-status: false
+status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.card
     - field.field.node.location.body
     - field.field.node.location.field_about_description
     - field.field.node.location.field_abstract
@@ -18,16 +18,21 @@ dependencies:
     - field.field.node.location.field_title
     - node.type.location
   module:
+    - media
     - user
-id: node.location.teaser
+id: node.location.card
 targetEntityType: node
 bundle: location
-mode: teaser
+mode: card
 content:
-  links:
-    weight: 100
-    settings: {  }
+  field_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
     third_party_settings: {  }
+    type: media_thumbnail
     region: content
 hidden:
   body: true
@@ -36,11 +41,11 @@ hidden:
   field_alert_expiration_date: true
   field_alert_text: true
   field_getting_here_items: true
-  field_image: true
   field_locations: true
   field_people: true
   field_phone_numbers: true
   field_services: true
   field_title: true
   langcode: true
+  links: true
   search_api_excerpt: true
