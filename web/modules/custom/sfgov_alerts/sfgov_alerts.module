@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormState;
  * Implements hook_entity_presave().
  */
 function sfgov_alerts_entity_presave($entity) {
-  if ($entity->hasField('field_alert_expiration_date')) {
+  if ($entity->getEntityTypeId() == 'node' && $entity->hasField('field_alert_expiration_date')) {
     _sfgov_alerts_notify($entity);
   }
 }
@@ -41,19 +41,21 @@ function sfgov_alerts_form_alter(&$form, FormState $form_state, $form_id) {
  * Send alert information to logs.
  */
 function _sfgov_alerts_notify($entity) {
-  $expiration_original = $entity->original->field_alert_expiration_date->value ? $entity->original->field_alert_expiration_date->value : 'none';
-  $expiration_updated = $entity->field_alert_expiration_date->value ? $entity->field_alert_expiration_date->value : 'none';
+  if (!$entity->isNew()) {
+    $expiration_original = $entity->original->field_alert_expiration_date->value ? $entity->original->field_alert_expiration_date->value : 'none';
+    $expiration_updated = $entity->field_alert_expiration_date->value ? $entity->field_alert_expiration_date->value : 'none';
 
-  if ($expiration_original != $expiration_updated) {
-    $message = t(
-      '<div class="message-alert-updated" data-alertmessage="message" data-style="@type" data-exp="@expiration" data-user="@current_user"><em>@type</em>Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b></div>', [
-      '@type' => $entity->label(),
-      '@text' => strip_tags($entity->field_alert_text->value),
-      '@expiration' => $expiration_updated,
-      '@expiration_original' => $expiration_original,
-      '@current_user' => \Drupal::currentUser()->getAccountName(),
-    ]);
+    if ($expiration_original != $expiration_updated) {
+      $message = t(
+        '<div class="message-alert-updated" data-alertmessage="message" data-style="@type" data-exp="@expiration" data-user="@current_user"><em>@type</em>Alert Expiration Date has changed from <b>@expiration_original</b> to <b>@expiration.</b><br> Alert Text: <b>@text</b></div>', [
+        '@type' => $entity->label(),
+        '@text' => strip_tags($entity->field_alert_text->value),
+        '@expiration' => $expiration_updated,
+        '@expiration_original' => $expiration_original,
+        '@current_user' => \Drupal::currentUser()->getAccountName(),
+      ]);
 
-    \Drupal::messenger()->addMessage($message);
+      \Drupal::messenger()->addMessage($message);
+    }
   }
 }
