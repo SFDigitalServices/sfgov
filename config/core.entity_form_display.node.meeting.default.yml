@@ -22,9 +22,11 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_title
     - field.field.node.meeting.field_url
     - field.field.node.meeting.field_video_embed
     - field.field.node.meeting.field_video_option
+    - field.field.node.meeting.field_videos
     - node.type.meeting
     - workflows.workflow.editorial
   module:
@@ -37,6 +39,7 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - sfgov_admin
     - text
     - video_embed_field
 third_party_settings:
@@ -59,27 +62,28 @@ third_party_settings:
       label: 'Meeting info'
     group_recording:
       children:
-        - field_intro_text
         - field_video_option
+        - field_title
+        - field_intro_text
         - field_video_embed
         - field_url
       parent_name: ''
-      weight: 6
+      weight: 7
       format_type: details
       region: content
       format_settings:
+        description: ''
+        open: true
+        required_fields: true
         id: ''
         classes: ''
-        description: ''
-        required_fields: true
-        open: false
       label: Recording
     group_regulations:
       children:
         - field_regulations_title
         - field_regulations_accordions
       parent_name: ''
-      weight: 7
+      weight: 8
       format_type: fieldset
       region: content
       format_settings:
@@ -179,7 +183,7 @@ content:
     third_party_settings: {  }
     region: content
   field_dept:
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -203,7 +207,7 @@ content:
     type: datetime_default
     region: content
   field_intro_text:
-    weight: 20
+    weight: 27
     settings:
       rows: 5
       placeholder: ''
@@ -234,7 +238,7 @@ content:
     region: content
   field_meeting_artifacts:
     type: paragraphs
-    weight: 8
+    weight: 9
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -313,8 +317,16 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
+  field_title:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_url:
-    weight: 24
+    weight: 29
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -322,38 +334,57 @@ content:
     type: link_default
     region: content
   field_video_embed:
-    weight: 23
+    weight: 28
     settings: {  }
     third_party_settings: {  }
     type: video_embed_field_textfield
     region: content
   field_video_option:
-    weight: 22
+    weight: 25
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
+    type: options_select
+    region: content
+  field_videos:
+    type: sfgov_paragraphs
+    weight: 6
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: '0'
+      add_mode: dropdown_custom
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: 0
+        collapse_edit_all: 0
+        add_above: 0
+    third_party_settings: {  }
     region: content
   moderation_state:
     type: moderation_state_default
-    weight: 12
+    weight: 13
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -361,7 +392,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 12
     region: content
     third_party_settings: {  }
   title:
@@ -373,19 +404,19 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }

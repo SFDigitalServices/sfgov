@@ -21,9 +21,11 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_title
     - field.field.node.meeting.field_url
     - field.field.node.meeting.field_video_embed
     - field.field.node.meeting.field_video_option
+    - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
     - datetime
@@ -51,7 +53,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_abstract:
-    weight: 114
+    weight: 19
     label: hidden
     settings: {  }
     third_party_settings: {  }
@@ -68,7 +70,7 @@ content:
     region: content
   field_agenda:
     type: entity_reference_revisions_entity_view
-    weight: 10
+    weight: 9
     label: hidden
     settings:
       view_mode: default
@@ -100,7 +102,7 @@ content:
     label: hidden
     settings:
       timezone_override: ''
-      date_format: 'F d, Y l h:iA'
+      date_format: 'g:i a'
     third_party_settings: {  }
     type: datetime_custom
     region: content
@@ -112,7 +114,7 @@ content:
     type: text_default
     region: content
   field_link:
-    weight: 115
+    weight: 20
     label: hidden
     settings:
       trim_length: 80
@@ -124,7 +126,7 @@ content:
     type: link
     region: content
   field_location_in_person:
-    weight: 113
+    weight: 18
     label: hidden
     settings:
       format: default
@@ -134,7 +136,7 @@ content:
     type: boolean
     region: content
   field_location_online:
-    weight: 112
+    weight: 17
     label: hidden
     settings:
       format: default
@@ -145,7 +147,7 @@ content:
     region: content
   field_meeting_artifacts:
     type: entity_reference_revisions_entity_view
-    weight: 9
+    weight: 8
     label: hidden
     settings:
       view_mode: default
@@ -163,7 +165,7 @@ content:
     type: boolean
     region: content
   field_phone_numbers:
-    weight: 116
+    weight: 21
     label: hidden
     settings:
       view_mode: default
@@ -172,7 +174,7 @@ content:
     type: entity_reference_revisions_entity_view
     region: content
   field_public_body:
-    weight: 11
+    weight: 10
     label: hidden
     settings:
       view_mode: default
@@ -182,7 +184,7 @@ content:
     region: content
   field_regulations_accordions:
     type: entity_reference_revisions_entity_view
-    weight: 111
+    weight: 16
     label: hidden
     settings:
       view_mode: default
@@ -190,7 +192,7 @@ content:
     third_party_settings: {  }
     region: content
   field_regulations_title:
-    weight: 110
+    weight: 15
     label: hidden
     settings:
       link_to_entity: false
@@ -202,12 +204,20 @@ content:
     label: hidden
     settings:
       timezone_override: ''
-      date_format: 'F d, Y l h:iA'
+      date_format: 'l, F d, Y  g:i a'
     third_party_settings: {  }
     type: datetime_custom
     region: content
+  field_title:
+    weight: 22
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
   field_url:
-    weight: 13
+    weight: 12
     label: hidden
     settings:
       trim_length: 80
@@ -219,7 +229,7 @@ content:
     type: link
     region: content
   field_video_embed:
-    weight: 12
+    weight: 11
     label: hidden
     settings:
       responsive: true
@@ -231,11 +241,20 @@ content:
     region: content
   field_video_option:
     type: list_default
-    weight: 15
+    weight: 23
     region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+  field_videos:
+    type: entity_reference_revisions_entity_view
+    weight: 13
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
 hidden:
   langcode: true
   links: true
