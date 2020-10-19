@@ -82,7 +82,7 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
     $meeting_time[] = $node->field_end_date->date->format('h:ia', $date_settings);
   }
   $variables['meeting_time'] = [
-    '#markup' => implode(' - ', $meeting_time)
+    '#markup' => implode(' to ', $meeting_time)
   ];
 
   // Address field.
