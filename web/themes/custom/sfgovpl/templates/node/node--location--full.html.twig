@@ -88,6 +88,8 @@
           {{ content.body }}
         </div>
       </div>
+
+      {% if node.field_abstract is not empty or node.field_getting_here_items is not empty %}
       <div class="sfgov-section sfgov-section-getting-here">
         <h2 class="sfgov-section--heading" role="heading">Getting here</h2>
         <div class="sfgov-section--content">
@@ -95,7 +97,10 @@
           {{ content.field_getting_here_items }}
         </div>
       </div>
+      {% endif %}
     </div>
+
+    {% if node.field_phone_numbers is not empty %}
     <div class="group--right">
       <div class="sfgov-section sfgov-section-contact">
         <h2 class="sfgov-section--heading" role="heading">Contact</h2>
@@ -104,8 +109,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
   </div>
 
+  {% if node.field_services is not empty %}
   <div class="sfgov-section sfgov-section-services">
     <div class="sfgov-section-container">
       <h2 class="sfgov-section--heading" role="heading">Services</h2>
@@ -114,7 +121,9 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
+  {% if node.field_locations is not empty %}
   <div class="sfgov-section sfgov-section-locations">
     <div class="sfgov-section-container">
       <h2 class="sfgov-section--heading" role="heading">Related locations</h2>
@@ -123,7 +132,9 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
+  {% if node.field_about_description is not empty %}
   <div class="sfgov-section sfgov-section-about">
     <div class="sfgov-section-container">
       <div class="group--left">
@@ -134,7 +145,9 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
+  {% if node.field_people is not empty %}
   <div class="sfgov-section sfgov-section-people">
     <div class="sfgov-section-container">
       <div class="sfgov-section--content">
@@ -142,4 +155,5 @@
       </div>
     </div>
   </div>
+  {% endif %}
 </article>
