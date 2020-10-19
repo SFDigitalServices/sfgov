@@ -111,7 +111,7 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
         if (!in_array($parent_node->id(), array_values($clean_values))) {
           $clean_values[] = $parent_node->id();
 
-          drupal_set_message(t('"@parent_department" is a parent department of “@department” has been defaultly added in addition. You can remove this selection if it does not apply for this content.', [
+          drupal_set_message(t('"@parent_department" is a parent department of "@department" and has been added by default. You can remove this selection if it does not apply for this content.', [
             '@parent_department' => $parent_node->label(),
             '@department' => $node->label(),
           ]));
