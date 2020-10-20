@@ -25,3 +25,17 @@ function sfgov_locations_node_prepare_form(EntityInterface $entity, $operation, 
     }
   }
 }
+
+/**
+ * Implements template_preprocess_node().
+ */
+function sfgov_locations_preprocess_node(&$variables) {
+  $variables['addresses'] = [];
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('location');
+  $entities = \Drupal::entityTypeManager()->getStorage('location')->loadMultiple([1, 2, 3, 4]);
+
+  foreach ($entities as $key => $entity) {
+    $build = $view_builder->view($entity, 'preview');
+    $variables['addresses'][] = render($build);
+  }
+}
