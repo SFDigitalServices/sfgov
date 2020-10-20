@@ -43,7 +43,13 @@ function sfgovpl_preprocess_paragraph(&$variables) {
       if(count($referencedEntities) > 0) {
           $txId = $referencedEntities[0]->id();
           $variables['txId'] = $txId;
-      }
+      } 
+  }
+  
+  if($paragraph_type == 'mailing_address') {
+      // Get node info for use in twig templates
+      $node = \Drupal::request()->attributes->get('node');
+      $variables['nodetype'] = $node->getType();
   }
 
   // Inject campaign theme into paragraph campaign_spotlight and campaign_resources

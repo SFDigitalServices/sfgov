@@ -20,13 +20,6 @@
   }
 }
 
-@mixin antialiasing($type:antialiased) {
-  /* antialiased, none, subpixel-antialiased*/
-  -webkit-font-smoothing: $type;
-  font-smoothing: $type;
-  font-smooth: always;
-}
-
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
   background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
 }
@@ -163,7 +156,8 @@
   padding: 13px 20px 11px;
   text-align: center;
   text-decoration: none;
-
+  display: inline-block;
+  line-height: 1;
   &:hover {
     background: $c-dark-blue;
   }
@@ -390,4 +384,34 @@
 
 @mixin focus-outline {
   outline: 2px dotted #aeb0b5;
+}
+
+// visually-hidden
+//
+// Hide elements visually, but keep them available for screen readers. Don't use
+// this for elements that need to be focusable (e.g. a, button, input, select,
+// textarea). For those, please use `visually-hidden-focusable` instead.
+//
+// Usage: `@include visually-hidden;`
+
+@mixin visually-hidden {
+  & {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute !important;
+    width: 1px;
+    word-wrap: normal;
+  }
+}
+
+@mixin clearfix {
+  &::after,
+  &::before {
+    content: '';
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
 }
