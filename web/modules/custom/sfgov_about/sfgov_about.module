@@ -123,3 +123,16 @@ function sfgov_about_preprocess_node(&$variables) {
       break;
   }
 }
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgov_about_preprocess_field__node__field_about_resources__about(&$variables) {
+  foreach ($variables['items'] as $key => $item) {
+    $paragraph = $item['content']['#paragraph'];
+
+    if (empty($paragraph->field_resources->getValue())) {
+      unset($variables['items'][$key]);
+    }
+  }
+}
