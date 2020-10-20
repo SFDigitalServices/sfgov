@@ -1,0 +1,65 @@
+.sfgov-event-card {
+  @include rubik;
+  background: $c-green-3;
+  border: 0;
+  border-radius: 8px;
+  color: $c-white;
+  display: block;
+  padding: $rhythm * 2;
+  text-decoration: none;
+  
+  .title {
+    @include h5;
+    color: $c-white;
+    margin: 0 0 $rhythm 0;
+  }
+  .description {
+    @include fs-body-short;
+    color: $c-white;
+    margin: 0;
+  }
+  &.image,
+  &.date {
+    padding: 0;
+    position: relative;
+    .event-image,
+    .event-date {
+      border-radius: $radius $radius 0 0;
+      height: 160px;
+      padding-top: 26px;
+      text-align: center;
+    }
+    .event-image {
+      padding-top: 0;
+      overflow: hidden;
+      img {
+        border-radius: $radius $radius 0 0;
+        width: 100%;
+      }
+    }
+    .event-date {
+      color: $c-slate;
+      background: $c-green-2;
+      opacity: 0.65;
+      display: none;
+      @media screen and (min-width: $medium-screen) {
+        display: block;
+        padding-top: px-to-rem(26);
+      }
+      .month {
+        font-size: px-to-rem(32);
+        line-height: px-to-rem(38);
+      }
+      .date {
+        font-size: px-to-rem(64);
+        line-height: px-to-rem(76);
+      }
+    }
+    .event-info {
+      padding: $rhythm * 2;
+    }
+  }
+  &:hover {
+    background: $c-green-4;
+  }
+}

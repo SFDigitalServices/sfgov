@@ -8,32 +8,6 @@
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
-        "github": {
-            "type": "package",
-            "package": {
-                "name": "sf-digital-services/sfgov-pattern-lab",
-                "version": "dev-retheme",
-                "type": "drupal-library",
-                "source": {
-                    "url": "https://github.com/SFDigitalServices/sfgov-pattern-lab.git",
-                    "type": "git",
-                    "reference": "retheme"
-                }
-            }
-        },
-        "sf-design-system": {
-            "type": "package",
-            "package": {
-                "name": "sf-digital-services/sf-design-system",
-                "version": "v1.2.5",
-                "type": "drupal-library",
-                "source": {
-                    "url": "https://github.com/SFDigitalServices/sf-design-system.git",
-                    "type": "git",
-                    "reference": "v1.2.5-dist"
-                }
-            }
-        },
         "jqueryinstagramfeed": {
             "type": "package",
             "package": {
@@ -85,6 +59,7 @@
         "drupal/core-recommended": "^8.8",
         "drupal/core-vendor-hardening": "^8.8",
         "drupal/ctools": "^3.0",
+        "drupal/date_popup": "^1.1",
         "drupal/eck": "dev-1.x",
         "drupal/entity_browser": "^1.4",
         "drupal/externalauth": "^1.1",
@@ -123,7 +98,7 @@
         "drupal/smart_trim": "^1.1",
         "drupal/subpathauto": "^1.1",
         "drupal/telephone_formatter": "~1.0",
-        "drupal/telephone_validation": "2.1.0",
+        "drupal/telephone_validation": "^2.1",
         "drupal/tmgmt_xtm": "5.x-dev",
         "drupal/twig_tweak": "^2.0",
         "drupal/twig_vardumper": "^1.1",
@@ -134,12 +109,11 @@
         "drupal/views_infinite_scroll": "^1.5",
         "drush-ops/behat-drush-endpoint": "^0.0.5",
         "drush/drush": "^8",
+        "joachim-n/composer-manifest": "^1.0",
         "jsanahuja/jquery.instagramfeed": "^1.2",
         "oomphinc/composer-installers-extender": "^1.1",
         "pantheon-systems/quicksilver-pushback": "^2",
         "rvtraveller/qs-composer-installer": "^1.1",
-        "sf-digital-services/sf-design-system": "^1.2",
-        "sf-digital-services/sfgov-pattern-lab": "dev-retheme",
         "symfony/css-selector": "^3.4.0"
     },
     "require-dev": {
@@ -249,13 +223,13 @@
         },
         "patches": {
             "drupal/group": {
-                "Enable content moderation for groups.": "https://www.drupal.org/files/issues/2018-10-23/2906085-43-content-moderation-integration.patch"
+                "Enable content moderation for groups.": "https://www.drupal.org/files/issues/2020-06-09/group-content_moderation-2906085-74.patch"
             },
             "drupal/telephone_validation": {
-                "Allow emergency and short codes.": "https://www.drupal.org/files/issues/2018-06-02/allow_emergency-2976959-2.patch"
+                "Allow emergency and short codes.": "https://www.drupal.org/files/issues/2020-04-07/allow_emergency-2976959-6.patch"
             },
             "drupal/gtranslate": {
-                "Edits some strings on the select options and removes unnecessary code": "patches/gtranslate_sfgov.patch"
+                "Adds a new option to display links": "patches/gtranslate_sfgov_links.patch"
             },
             "drupal/core": {
                 "Entity links ignore language negotiation API": "https://www.drupal.org/files/issues/2019-07-31/3061761-38.patch",

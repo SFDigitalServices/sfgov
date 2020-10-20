@@ -105,7 +105,8 @@
       function customAddCssClassById(classes) {
         for (var key in classes) {
           var el = document.getElementById(key)
-          el.classList.add(classes[key])
+          if(el != null)
+            el.classList.add(classes[key])
         }
       }
 
@@ -120,7 +121,7 @@
 
       function setCookie(name, value){
         var today = new Date();
-        var expiry = new Date(today.getTime() + 30 * 24 * 3600 * 1000); // plus 30 days
+        var expiry = new Date(today.getTime() + 90 * 24 * 3600 * 1000); // plus 90 days
         document.cookie=name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
       }
 

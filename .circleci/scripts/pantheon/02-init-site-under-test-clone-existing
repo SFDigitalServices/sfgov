@@ -13,6 +13,8 @@ set -eo pipefail
 terminus -n env:wake "$TERMINUS_SITE.dev"
 terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes --clone-content --notify="$NOTIFY"
 
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cache-rebuild
+
 # Run updatedb to ensure that the cloned database is updated for the new code.
 terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y
 
