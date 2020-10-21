@@ -86,11 +86,16 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
   ];
 
   // Address field.
+  $online = $node->field_location_online->value;
   if ($node->field_address->entity) {
-    $variables['meeting_address'] = $node->field_address->entity->field_address->view([
-      'type' => 'address_default',
-      'label' => 'hidden',
-    ]);
+    $address = $node->field_address->entity->field_address->getValue();
+    if ($address[0]['address_line1']) {
+      $variables['meeting_address'] = $address[0]['address_line1'];
+    } else {
+      $variables['meeting_address'] = '';
+    }
+  } elseif ($online == '1') {
+    $variables['online'] = TRUE;
   }
 }
 
