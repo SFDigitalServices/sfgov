@@ -32,6 +32,21 @@
   {% endblock header %}
 
   {% block content %}
+    <div class="{{ bundle }}--additional-information">
+      {{ content|without(
+        'field_abstract',
+        'field_date',
+        'field_dept',
+        'field_image',
+        'field_news_type',
+        'field_topics',
+        'field_description',
+        'field_content',
+        'field_content_bottom'
+      ) }}
+    </div>
+
+    </div>
     <div class="{{ bundle }}--content">
       <h2>{{ 'Documents'|t }}</h2>
       {{ content|without(
@@ -41,7 +56,8 @@
         'field_image',
         'field_news_type',
         'field_topics',
-        'field_description'
+        'field_description',
+        'field_additional_information'
       ) }}
     </div>
 
