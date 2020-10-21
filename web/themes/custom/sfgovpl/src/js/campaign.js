@@ -14,7 +14,7 @@
           var tallestHeight = $(tallestImage).height();
           $(this).find('.fact-item .item-wrapper').height(tallestHeight);
         } else {
-          $(this).find('.fact-item .item-wrapper').hide();
+          $(this).find('.fact-item .image').hide();
         }
       });
     });
