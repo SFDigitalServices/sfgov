@@ -37,6 +37,12 @@
   border-radius: 8px 8px 0 0;
   display: block;
 
+  // NOTE: The inline <img> is used instead of the CSS background image, until
+  // the $medium-screen breakpoint.
+  @include media-max($medium-screen) {
+    background-image: none !important;
+  }
+
   @include media($medium-screen) {
     background-size: cover;
     background-position: center;
