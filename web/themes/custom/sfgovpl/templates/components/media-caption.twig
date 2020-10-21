@@ -50,16 +50,16 @@
   'media-caption--align-' ~ align|default('left'),
 ] %}
 
-<{{ tag }}{{ attributes.addClass(classes) }}>
-  <span class="media-caption__name">
-    {% if name %}
-      &ldquo;{{- name|trim -}}&rdquo;
-    {% else %}
-      {{- type|capitalize -}}:
-    {% endif %}
-  </span>
+{% if author %}
+  <{{ tag }}{{ attributes.addClass(classes) }}>
+    <span class="media-caption__name">
+      {% if name %}
+        &ldquo;{{- name|trim -}}&rdquo;
+      {% else %}
+        {{- type|capitalize -}}:
+      {% endif %}
+    </span>
 
-  {% if author %}
     <span class="media-caption__author">
       {%- if author and url -%}
         {{- 'by'|t }} <a href="{{ url }}" rel="noopener" target="_blank">{{- author|trim -}}</a>
@@ -71,5 +71,6 @@
     {%- if license -%}
       <span class="media-caption__license">, {{ license|trim -}}</span>
     {%- endif -%}
-  {% endif %}
-</{{ tag }}>
+  </{{ tag }}>
+{% endif %}
+
