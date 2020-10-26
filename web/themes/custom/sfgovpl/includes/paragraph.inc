@@ -43,9 +43,9 @@ function sfgovpl_preprocess_paragraph(&$variables) {
       if(count($referencedEntities) > 0) {
           $txId = $referencedEntities[0]->id();
           $variables['txId'] = $txId;
-      } 
+      }
   }
-  
+
   if($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
@@ -59,7 +59,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     && $parent->bundle() == 'campaign') {
     /** @var \Drupal\taxonomy\Entity\Term $theme */
     $theme = $parent->get('field_campaign_theme')->entity;
-    if ($paragraph_type == 'campaign_spotlight' || $paragraph_type == 'image_with_text') {
+    if ($paragraph_type == 'image_with_text') {
       $background_color = $theme->get('field_primary_color')->getValue();
       $background_color_value = $background_color[0]['color'];
     } elseif ($paragraph_type == 'campaign_resources') {
@@ -75,7 +75,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     }
 
     // TODO: detect parent paragraph, instead of parent node.
-    if($paragraph_type == 'link') {
+    if ($paragraph_type == 'link') {
       $variables['content']['field_link']['#title'] = t('Parent Program');
     }
   }
