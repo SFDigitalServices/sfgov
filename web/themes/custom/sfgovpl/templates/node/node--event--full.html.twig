@@ -57,6 +57,15 @@
     <div class="event--content-container">
       <div class="event--content-container-inner">
         <div class="event--content-body">
+          {% if content.field_image|render %}
+            <div class="event--image">
+              {% include '@theme/media-with-caption.twig' with {
+                entity: node.field_image.entity,
+                media: content.field_image,
+              } only %}
+            </div>
+          {% endif %}
+
           {{ content | without(
             'field_start_date',
             'field_end_date',
@@ -67,6 +76,7 @@
             'field_phone_numbers',
             'field_dept',
             'field_description',
+            'field_image',
             'field_location_in_person',
             'field_location_online'
           ) }}

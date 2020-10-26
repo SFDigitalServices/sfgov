@@ -12,7 +12,7 @@
             }
           }
           var tallestHeight = $(tallestImage).height();
-          $(this).find('.fact-item .image').height(tallestHeight);
+          $(this).find('.fact-item .item-wrapper').height(tallestHeight);
         } else {
           $(this).find('.fact-item .image').hide();
         }
