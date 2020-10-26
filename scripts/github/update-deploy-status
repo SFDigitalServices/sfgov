@@ -1,0 +1,57 @@
+#!/bin/bash
+
+repo="$CIRCLE_PROJECT_REPONAME"
+slug="${CIRCLE_PROJECT_USERNAME}/${repo}"
+sha="$CIRCLE_SHA1"
+token="$GITHUB_TOKEN"
+target_url="$MULTIDEV_SITE_URL"
+
+env="$TERMINUS_ENV"
+transient='true'
+auto_inactive='true'
+
+if [ "$CIRCLE_BRANCH" = "main" ]; then
+  env='production'
+  transient='false'
+  auto_inactive='false'
+  target_url="https://sf.gov"
+fi
+
+data=$(printf '{
+  "ref": "%s",
+  "environment": "%s",
+  "auto_merge": false,
+  "transient_environment": %s,
+  "required_contexts": []
+}' "$sha" "$env" "$transient")
+echo "deployment JSON: $data"
+
+deployment=$(
+  curl -s \
+    -d "$data" \
+    -H "Accept: application/vnd.github.ant-man-preview+json" \
+    -X POST "https://api.github.com/repos/$slug/deployments?access_token=$token" \
+)
+
+echo "deployment: $deployment"
+
+statuses_url="$(echo "$deployment" | jq -r .statuses_url)"
+if [ -n "$statuses_url" ]; then
+  echo "Got statuses_url: '$statuses_url'; setting status..."
+
+  data=$(printf '{
+    "state": "success",
+    "target_url": "%s",
+    "environment": "%s",
+    "environment_url": "%s",
+    "auto_inactive": %s
+  }' "$target_url" "$env" "$target_url" "$auto_inactive")
+  printf "status data: %s\nresponse:" "$data"
+
+  curl -s \
+    -H "Accept: application/vnd.github.flash-preview+json" \
+    -d "$data" \
+    -X POST "$statuses_url?access_token=$token"
+else
+  echo "No statuses_url found; skipping deploy status"
+fi

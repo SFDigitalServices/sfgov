@@ -393,27 +393,6 @@ function dept_page_fields() {
         }
       }
     }
-    if($node->hasField('field_people')) {
-      $aboutPeople = $node->get('field_people');
-      if($aboutPeople && !empty($aboutPeople->getValue())) {
-        $peopleId = $aboutPeople->getValue()[0]['target_id'];
-        $peopleParagraph = Paragraph::load($peopleId);
-        if($peopleParagraph && !empty($peopleParagraph->get('field_person_2')->getValue())) {
-          $people = $peopleParagraph->get('field_person_2')->getValue();
-          foreach($people as $person) {
-            if ($personNode = Node::load($person['target_id'])) {
-              $theFields['about']['people'][] = array(
-                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
-                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
-                'title' => $personNode->get('field_title')->getValue()[0]['value'],
-                'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
-                'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
-              );
-            }
-          }
-        }
-      }
-    }
     if($node->hasField('field_req_public_records')) {
       $reqPublicRecords = $node->get('field_req_public_records');
       if($reqPublicRecords && !empty($reqPublicRecords->getValue())) {

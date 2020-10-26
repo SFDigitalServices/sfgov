@@ -74,6 +74,9 @@
             line-height: 1.58824rem;
             color: #fff;
           }
+          p.title {
+            font-weight: bold;
+          }
           p {
             margin-top: 0;
           }
@@ -215,71 +218,6 @@
       padding: 40px;
       border-radius: 8px;
     }
-
-    .__board-members {
-      & > .field__item {
-        margin-bottom: 60px;
-
-        &:last-child {
-          margin: 0;
-        }
-
-        .__people-title {
-          margin-bottom: 0;
-        }
-
-        .person {
-          margin-top: 40px;
-        }
-
-        .sfgov-people--content {
-          display: flex;
-          flex-direction: column;
-
-          .__description {
-            position: inherit;
-            width: 100%;
-            background: none;
-            padding: 0;
-            order: -1;
-
-            p {
-              @include fs-body-short;
-              max-width: 100%;
-            }
-          }
-
-          .person-bio {
-            .person-title {
-              opacity: 0.65;
-            }
-          }
-
-          .__person-2 {
-            .field__item {
-              vertical-align: top;
-              margin: 0;
-              width: auto;
-              display: block;
-            }
-
-            @include media($mobile-screen) {
-              .field__item {
-                display: inline-block;
-                width: 49%;
-              }
-            }
-
-            @include media($medium-screen) {
-              .field__item {
-                display: inline-block;
-                width: 32%;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   .sfgov-public-body-contact {
@@ -316,6 +254,9 @@
           margin: 0;
           line-height: 2em;
         }
+        p.title {
+          font-weight: bold;
+        }
         &::after {
           content: ' ';
           width: 20px;
@@ -326,6 +267,12 @@
         }
         &.address {
           width: 35%;
+          p {
+            font-weight: bold;
+          }
+          p.simple-gmap-link {
+            font-weight: normal;
+          }
           .map {
             margin-top: 15px;
           }
@@ -399,6 +346,10 @@
       .document-file--container {
         margin-bottom: 25px;
         margin-top: 20px;
+        .sfgov-icon-filefilled {
+          display: inline-block;
+          margin-right: 10px;
+        }
         .document a.no-link {
           text-decoration: underline;
           opacity: 0.65;

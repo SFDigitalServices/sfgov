@@ -2,7 +2,7 @@
   @include contain-1090;
 }
 
-.paragraph--type--campaign {
+.sfgov-campaign-main {
   background: $c-yellow-3;
   border-radius: 10px;
   overflow: hidden;
@@ -11,13 +11,13 @@
     display: flex;
     flex-direction: row-reverse;
   }
+}
 
-  .__media {
-    @include media($narrow-screen) {
-      flex: 0 0 50%;
-      overflow: hidden;
-      position: relative;
-    }
+.sfgov-campaign-image {
+  @include media($narrow-screen) {
+    flex: 0 0 50%;
+    overflow: hidden;
+    position: relative;
   }
 
   img {
@@ -37,35 +37,39 @@
       max-width: unset;
     }
   }
+}
 
-  .paragraph-campaign--text {
-    padding: 20px;
-    @include media($narrow-screen) {
-      flex: 0 0 50%;
-      height: 100%;
-      padding: 40px 60px 40px 40px;
-      vertical-align: middle;
-    }
-    p {
-      margin: 0 0 15px;
-    }
+.sfgov-campaign-content {
+  padding: 20px;
+
+  @include media($narrow-screen) {
+    flex: 0 0 50%;
+    height: 100%;
+    padding: 40px 60px 40px 40px;
+    vertical-align: middle;
   }
+}
 
-  .__title {
-    @include fs-title-3;
-    margin-bottom: 28px;
-    letter-spacing: 0;
-    @include media($narrow-screen) {
-      @include fs-title-2;
-      margin-bottom: 40px;
-    }
+.sfgov-campaign-label {
+  margin: 0 0 15px;
+}
+
+.sfgov-campaign-title {
+  @include fs-title-3;
+  margin-bottom: 28px;
+  letter-spacing: 0;
+
+  @include media($narrow-screen) {
+    @include fs-title-2;
+    margin-bottom: 40px;
   }
+}
 
-  .__link {
-    margin-bottom: 20px;
-    a {
-      @include button-clear;
-      border: 0;
-    }
+.sfgov-campaign-link {
+  margin-bottom: 20px;
+
+  a {
+    @include button-clear;
+    border: 0;
   }
 }

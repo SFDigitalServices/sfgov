@@ -25,6 +25,10 @@
 
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
+          // This is used to conditionally hide the following elements on form
+          // form pages: wasThisPageHelpful, helpfulYes, helpfulNo. See field
+          // configuration: Conditions (tab) > Advanced conditions > JavaScript.
+          form.data.isFormPage = (amplitudeData && amplitudeData.content_type === 'Form page') ? 'Yes' : 'No';
 
           var feedbackSuccess, messageComponent = '';
           if (!feedbackSuccess || !messageComponent) {

@@ -11,11 +11,9 @@ dependencies:
     - field.field.node.news.field_image
     - field.field.node.news.field_news_type
     - field.field.node.news.field_topics
-    - image.style.750x500
     - node.type.news
   module:
     - datetime
-    - media
     - options
     - text
     - user
@@ -27,7 +25,7 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 2
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     region: content
@@ -61,13 +59,13 @@ content:
     type: entity_reference_label
     region: content
   field_image:
-    weight: 3
+    weight: 2
     label: hidden
     settings:
-      image_style: 750x500
-      image_link: ''
+      view_mode: news
+      link: false
     third_party_settings: {  }
-    type: media_thumbnail
+    type: entity_reference_entity_view
     region: content
   field_news_type:
     type: list_default

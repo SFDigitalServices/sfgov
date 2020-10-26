@@ -254,7 +254,6 @@
     .sfgov-dept-about-content {
       position: relative;
       @include contain-1090;
-      padding-right: 0;
       a {
         color: $c-white;
       }
@@ -390,61 +389,49 @@
             padding-bottom: 20px;
           }
         }
-        .sfgov-logo,
-        .sfgov-cta,
-        .sfgov-social {
-          border-radius: 8px 0 0 8px;
-        }
       }
     }
   }
 
   .sfgov-dept-about-people {
-    background: #A9D6EA;
-    padding: 40px 0;
-    .sfgov-dept-about-people-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      .sfgov-dept-about-people-list-item {
-        display: inline-block;
-        width: 33%;
-        > div {
-          display: inline-block;
-          vertical-align: top;
-        }
-        .person-image {
-          width: 80px;
-          height: 80px;
-          overflow: hidden;
-          border-radius: 8px;
-          margin-right: 20px;
-          background-repeat: no-repeat;
-          background-size: cover;
-          background-position: top center;
-        }
-        .person-details {
-          .person-name {
-            @include rubik;
-            @include fs-body-bold;
-            text-decoration: underline;
-            color: $c-slate;
-            margin-bottom: 10px;
-          }
-          p {
-            margin: 0;
-            padding: 0;
-            @include fs-body-short;
-            color: $c-slate;
-          }
-        }
+    &.sfgov-dept-section {
+      @include contain-1090;
+      padding: 40px 20px 0 20px;
+
+      @include media($medium-screen) {
+        padding: 60px 20px 0 20px;
       }
     }
-    @include media-max($medium-screen) {
-      .sfgov-dept-about-people-list {
-        .sfgov-dept-about-people-list-item {
-          display: block;
-          width: auto;
+
+    .inner {
+      background: $c-blue-1;
+      border-radius: 8px;
+      padding: 20px;
+      padding-bottom: 40px;
+
+      @include media($medium-screen) {
+        padding: 40px;
+        padding-bottom: 20px;
+      }
+    }
+
+    .sfgov-people--content {
+      padding: 0;
+    }
+
+    .paragraph--type--people {
+      .title {
+        margin-bottom: 40px;
+        @include media($medium-screen) {
+          margin-bottom: 40px;
+        }
+      }
+      .title + .description {
+        margin-top: -30px;
+        margin-bottom: 20px;
+
+        @include media($medium-screen) {
+          margin-top: -30px;
           margin-bottom: 20px;
         }
       }

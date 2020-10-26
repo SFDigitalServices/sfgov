@@ -59,8 +59,8 @@ display:
           id: 0
           total_pages: null
           tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
+            previous: Previous
+            next: Next
             first: '« First'
             last: 'Last »'
           expose:
@@ -475,7 +475,7 @@ display:
           empty: true
           tokenize: false
           content:
-            value: 'No available meeting.'
+            value: 'We didn''t find any meetings that match your filters.'
             format: sf_restricted_html
           plugin_id: text
       relationships: {  }
@@ -619,6 +619,7 @@ display:
         use_more_text: false
         link_display: false
         link_url: false
+        sorts: false
       row:
         type: 'entity:node'
         options:
@@ -781,6 +782,20 @@ display:
       use_more_text: 'See archive'
       link_display: page_past
       link_url: ''
+      sorts:
+        field_start_date_value:
+          id: field_start_date_value
+          table: node__field_start_date
+          field: field_start_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
     cache_metadata:
       max-age: -1
       contexts:
@@ -1131,7 +1146,7 @@ display:
       defaults:
         style: true
         row: true
-        sorts: true
+        sorts: false
         filters: false
         filter_groups: false
         title: false
@@ -1312,9 +1327,23 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<h5>Upcoming meetings</h5>\r\n\r\n<p>See upcoming scheduled meetings for this public body.</p>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See calendar</a>"
+            value: "<h5>Upcoming meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See more meetings</a>"
             format: full_html
           plugin_id: text
+      sorts:
+        field_start_date_value:
+          id: field_start_date_value
+          table: node__field_start_date
+          field: field_start_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
     cache_metadata:
       max-age: -1
       contexts:
@@ -1582,7 +1611,7 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<h5>Meeting Archive</h5>\r\n\r\n<p>View all past meetings from this public body</p>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See archive</a>"
+            value: "<h5>Past meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See all past meetings</a>"
             format: full_html
           plugin_id: text
     cache_metadata:
