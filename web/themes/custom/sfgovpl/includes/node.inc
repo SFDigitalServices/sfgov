@@ -77,12 +77,12 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
 
   // Date time.
   $date_settings = ['timezone' => drupal_get_user_timezone()];
-  $meeting_time = [$node->field_start_date->date->format('h:ia', $date_settings)];
+  $meeting_time = [$node->field_start_date->date->format('g:ia', $date_settings)];
   if ($node->field_end_date->value) {
-    $meeting_time[] = $node->field_end_date->date->format('h:ia', $date_settings);
+    $meeting_time[] = $node->field_end_date->date->format('g:ia', $date_settings);
   }
   $variables['meeting_time'] = [
-    '#markup' => implode(' - ', $meeting_time)
+    '#markup' => implode(' to ', $meeting_time)
   ];
 
   // Address field.
