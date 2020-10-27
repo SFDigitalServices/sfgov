@@ -11,7 +11,6 @@ dependencies:
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
-    - field.field.node.meeting.field_intro_text
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -22,10 +21,7 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
-    - field.field.node.meeting.field_title
-    - field.field.node.meeting.field_url
-    - field.field.node.meeting.field_video_embed
-    - field.field.node.meeting.field_video_option
+    - field.field.node.meeting.field_videos
     - node.type.meeting
     - workflows.workflow.editorial
   module:
@@ -39,7 +35,6 @@ dependencies:
     - scheduler
     - scheduler_content_moderation_integration
     - text
-    - video_embed_field
 third_party_settings:
   field_group:
     group_meeting_info:
@@ -58,30 +53,12 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Meeting info'
-    group_recording:
-      children:
-        - field_video_option
-        - field_title
-        - field_intro_text
-        - field_video_embed
-        - field_url
-      parent_name: ''
-      weight: 6
-      format_type: details
-      region: content
-      format_settings:
-        description: ''
-        open: true
-        required_fields: true
-        id: ''
-        classes: ''
-      label: Recording
     group_regulations:
       children:
         - field_regulations_title
         - field_regulations_accordions
       parent_name: ''
-      weight: 7
+      weight: 8
       format_type: fieldset
       region: content
       format_settings:
@@ -181,7 +158,7 @@ content:
     third_party_settings: {  }
     region: content
   field_dept:
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -203,14 +180,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
-    region: content
-  field_intro_text:
-    weight: 27
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textarea
     region: content
   field_link:
     weight: 6
@@ -236,7 +205,7 @@ content:
     region: content
   field_meeting_artifacts:
     type: paragraphs
-    weight: 8
+    weight: 9
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -315,33 +284,24 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
-  field_title:
-    weight: 26
+  field_videos:
+    type: paragraphs
+    weight: 6
     settings:
-      size: 60
-      placeholder: ''
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
     third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_url:
-    weight: 29
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_video_embed:
-    weight: 28
-    settings: {  }
-    third_party_settings: {  }
-    type: video_embed_field_textfield
-    region: content
-  field_video_option:
-    weight: 25
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
     region: content
   moderation_state:
     type: moderation_state_default
