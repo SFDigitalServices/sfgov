@@ -16,10 +16,10 @@ function sfgovpl_preprocess_page(&$variables) {
  * Implements theme_preprocess_HOOK().
  */
 function sfgovpl_preprocess_page__node__campaign(&$variables) {
-  $node = $variables['node'];
-
   // Conditionally render Logo or Title.
-  if (isset($node)) {
+  if (!empty($node)) {
+    $node = $variables['node'];
+
     if ($node->field_logo->entity) {
       $variables['campaign_branding'] = $node->field_logo->view([
         'type' => 'image',
