@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\node\NodeInterface;
-
 function sfgovpl_preprocess_page(&$variables) {
 
 // The following tests the error messages.
@@ -19,7 +17,7 @@ function sfgovpl_preprocess_page(&$variables) {
  */
 function sfgovpl_preprocess_page__node__campaign(&$variables) {
   // Conditionally render Logo or Title.
-  if (isset($variables['node']) && $variables['node'] instanceof NodeInterface) {
+  if (!empty($node)) {
     $node = $variables['node'];
 
     if ($node->field_logo->entity) {
