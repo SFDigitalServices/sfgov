@@ -23,13 +23,7 @@ function sfgov_image_attributes_entity_extra_field_info() {
  */
 function sfgov_image_attributes_media_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   if ($display->getComponent('image_attributes')) {
-    $build['image_attributes'] = [
-      '#theme' => 'sfgov_image_attributes',
-      '#name' => $entity->getName(),
-      '#author' => $entity->get('field_artist_or_photographer')->value,
-      '#url' => $entity->get('field_link_to_original_source')->uri,
-      '#license' => $entity->get('field_type_of_license')->value,
-    ];
+    $build['image_attributes'] = _sfgov_image_attributes_renderable($entity);
   }
 }
 
@@ -60,6 +54,19 @@ function sfgov_image_attributes_inline_entity_form_entity_form_alter(&$entity_fo
   if ($entity_form['#entity_type'] == 'media' && $entity_form['#bundle'] == 'image') {
     _sfgov_image_attributes_license_type_field($entity_form);
   }
+}
+
+/** 
+ * Get renderable theme array.
+ */
+function _sfgov_image_attributes_renderable($entity) {
+  return [
+    '#theme' => 'sfgov_image_attributes',
+    '#name' => $entity->getName(),
+    '#author' => $entity->get('field_artist_or_photographer')->value,
+    '#url' => $entity->get('field_link_to_original_source')->uri,
+    '#license' => $entity->get('field_type_of_license')->value,
+  ];
 }
 
 /**

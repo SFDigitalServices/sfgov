@@ -84,12 +84,16 @@ function sfgovpl_preprocess_html(&$variables) {
       $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
     }
 
-    // add class page-campaign-[theme] to body tag.
-    if($nodeType == 'campaign') {
+    // Add class page-campaign-[theme] to body tag.
+    if ($nodeType == 'campaign') {
       $node = \Drupal::request()->attributes->get('node');
-      $theme = $node->field_campaign_theme->entity;
-      $theme_class = 'page-campaign-' . \Drupal::service('pathauto.alias_cleaner')->cleanString($theme->label());
-      $variables['attributes']['class'][] = $theme_class;
+      if (!empty($node)) {
+        $theme = $node->field_campaign_theme->entity;
+        if (!empty($theme)) {
+          $theme_class = 'page-campaign-' . \Drupal::service('pathauto.alias_cleaner')->cleanString($theme->label());
+          $variables['attributes']['class'][] = $theme_class;
+        }
+      }
     }
   }
 

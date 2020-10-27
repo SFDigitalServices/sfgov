@@ -8,9 +8,11 @@ dependencies:
     - field.field.node.news.field_abstract
     - field.field.node.news.field_date
     - field.field.node.news.field_dept
+    - field.field.node.news.field_direct_external_url
     - field.field.node.news.field_image
     - field.field.node.news.field_news_type
-    - image.style.750x500
+    - field.field.node.news.field_topics
+    - image.style.700x500
     - node.type.news
   module:
     - datetime
@@ -21,6 +23,11 @@ targetEntityType: node
 bundle: news
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_abstract:
     type: basic_string
     weight: 1
@@ -43,12 +50,15 @@ content:
     region: content
     label: hidden
     settings:
-      image_style: 750x500
+      image_style: 700x500
       image_link: ''
     third_party_settings: {  }
 hidden:
   body: true
   field_dept: true
+  field_direct_external_url: true
   field_news_type: true
+  field_topics: true
   langcode: true
   links: true
+  search_api_excerpt: true
