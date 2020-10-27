@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
-    - field.field.node.meeting.field_intro_text
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -21,20 +20,14 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
-    - field.field.node.meeting.field_title
-    - field.field.node.meeting.field_url
-    - field.field.node.meeting.field_video_embed
-    - field.field.node.meeting.field_video_option
     - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
     - datetime
     - entity_reference_revisions
     - link
-    - options
     - text
     - user
-    - video_embed_field
 id: node.meeting.default
 targetEntityType: node
 bundle: meeting
@@ -105,13 +98,6 @@ content:
       date_format: 'g:i a'
     third_party_settings: {  }
     type: datetime_custom
-    region: content
-  field_intro_text:
-    weight: 14
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
     region: content
   field_link:
     weight: 20
@@ -208,44 +194,6 @@ content:
     third_party_settings: {  }
     type: datetime_custom
     region: content
-  field_title:
-    weight: 22
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_url:
-    weight: 12
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_video_embed:
-    weight: 11
-    label: hidden
-    settings:
-      responsive: true
-      width: 854
-      height: 480
-      autoplay: true
-    third_party_settings: {  }
-    type: video_embed_field_video
-    region: content
-  field_video_option:
-    type: list_default
-    weight: 23
-    region: content
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
   field_videos:
     type: entity_reference_revisions_entity_view
     weight: 13

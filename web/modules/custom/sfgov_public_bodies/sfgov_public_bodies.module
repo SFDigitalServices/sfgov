@@ -108,6 +108,11 @@ function sfgov_public_bodies_form_alter(&$form, \Drupal\Core\Form\FormStateInter
     case 'node_meeting_form':
     case 'node_meeting_edit_form':
       /**
+       * Add JS
+       */
+      $form['#attached']['library'][] = 'sfgov_public_bodies/public_bodies';
+      
+      /**
        * Video widget
        */
       // Rename "none" option for Video options.
@@ -116,22 +121,38 @@ function sfgov_public_bodies_form_alter(&$form, \Drupal\Core\Form\FormStateInter
       // Conditionally display `Video Embed` or `Video URL` fields.
       $form['field_video_embed']['#states'] = [
         'visible' => [
-          'input[name=field_video_option]' => ['value' => 0],
+          'select[name=field_video_option]' => ['value' => 0],
         ],
       ];
+      $form['field_title']['#states'] = array(
+        'visible' => array(
+          'select[name=field_video_option]' => array(
+            array('value' => t('0')),
+            array('value' => t('1'))
+          ),
+        ),
+      );
+      $form['field_intro_text']['#states'] = array(
+        'visible' => array(
+          'select[name=field_video_option]' => array(
+            array('value' => t('0')),
+            array('value' => t('1'))
+          ),
+        ),
+      );
       $form['field_video_embed']['widget'][0]['value']['#states'] = [
         'required' => [
-          'input[name=field_video_option]' => ['value' => 0],
+          'select[name=field_video_option]' => ['value' => 0],
         ],
       ];
       $form['field_url']['#states'] = [
         'visible' => [
-          'input[name=field_video_option]' => ['value' => 1],
+          'select[name=field_video_option]' => ['value' => 1],
         ],
       ];
       $form['field_url']['widget'][0]['uri']['#states'] = [
         'required' => [
-          'input[name=field_video_option]' => ['value' => 1],
+          'select[name=field_video_option]' => ['value' => 1],
         ],
       ];
 
