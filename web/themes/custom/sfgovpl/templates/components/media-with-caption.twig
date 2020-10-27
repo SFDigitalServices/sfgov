@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Media with Caption component.
+ *
+ * Displays an image and caption for an image media entity.
+ *
+ * Variables:
+ *   - attributes: Attribute object for wrapper element.
+ *   - classes: Array of classes to apply to the wrapper.
+ *   - entity: The entity object of the media being displayed.
+ *   - media: Render array for the image to print, e.g. content.field_image.
+ *
+ * Example usage:
+ *
+ * {% include '@theme/media-with-caption.twig' with {
+ *   entity: node.field_image.entity,
+ *   media: content.field_image,
+ * } only %}
+ *
+ * @see media-caption.twig
+ */
+ #}
+{% set attributes = create_attribute() %}
+{% set classes = [
+  'media-with-caption'
+] %}
+
+<figure{{ attributes.addClass(classes) }}>
+  {% if media %}
+    <div class="media-with-caption__media">
+      {{ media }}
+    </div>
+  {% endif %}
+
+  {% include "@theme/media-caption.twig" with {
+    entity: entity,
+    tag: 'figcaption',
+  } only %}
+</figure>
