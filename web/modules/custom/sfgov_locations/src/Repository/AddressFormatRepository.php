@@ -55,8 +55,8 @@ class AddressFormatRepository extends AddressFormatRepositoryBase {
     $definitions = $this->getDefinitions();
     $addressFormats = [];
     foreach ($definitions as $countryCode => $definition) {
-        $definition = $this->processDefinition($countryCode, $definition);
-        $addressFormats[$countryCode] = new AddressFormat($definition);
+      $definition = $this->processDefinition($countryCode, $definition);
+      $addressFormats[$countryCode] = new AddressFormat($definition);
     }
 
     return $addressFormats;
@@ -73,6 +73,10 @@ class AddressFormatRepository extends AddressFormatRepositoryBase {
     $definition['required_fields'][] = AddressField::GIVEN_NAME;
     $definition['required_fields'][] = AddressField::FAMILY_NAME;
 
+    // Allow other modules to alter the address format.
+    $event = new AddressFormatEvent($definition);
+    $this->eventDispatcher->dispatch(AddressEvents::ADDRESS_FORMAT, $event);
+    $definition = $event->getDefinition();
     return $definition;
   }
 
