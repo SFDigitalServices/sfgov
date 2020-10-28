@@ -77,20 +77,25 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
 
   // Date time.
   $date_settings = ['timezone' => drupal_get_user_timezone()];
-  $meeting_time = [$node->field_start_date->date->format('h:ia', $date_settings)];
+  $meeting_time = [$node->field_start_date->date->format('g:ia', $date_settings)];
   if ($node->field_end_date->value) {
-    $meeting_time[] = $node->field_end_date->date->format('h:ia', $date_settings);
+    $meeting_time[] = $node->field_end_date->date->format('g:ia', $date_settings);
   }
   $variables['meeting_time'] = [
-    '#markup' => implode(' - ', $meeting_time)
+    '#markup' => implode(' to ', $meeting_time)
   ];
 
   // Address field.
+  $online = $node->field_location_online->value;
   if ($node->field_address->entity) {
-    $variables['meeting_address'] = $node->field_address->entity->field_address->view([
-      'type' => 'address_default',
-      'label' => 'hidden',
-    ]);
+    $address = $node->field_address->entity->field_address->getValue();
+    if ($address[0]['address_line1']) {
+      $variables['meeting_address'] = $address[0]['address_line1'];
+    } else {
+      $variables['meeting_address'] = '';
+    }
+  } elseif ($online == '1') {
+    $variables['online'] = TRUE;
   }
 }
 
@@ -164,7 +169,7 @@ function dept_page_fields() {
             if ($tx = Node::load($txId)) {
               $txs[] = array(
                 'tx_title' => $tx->get('title')->getValue()[0]['value'],
-                'tx_description' => $tx->get('field_description')->getValue()[0]['value'],
+                'tx_description' => $tx->get('field_description')->getValue() ? $tx->get('field_description')->getValue()[0]['value'] : '',
                 'tx_url' => $tx->toUrl('canonical', ['absolute'=>true])->toString(),
               );
             }
@@ -388,27 +393,6 @@ function dept_page_fields() {
                   'url' => $socialUrl,
                 );
               }
-            }
-          }
-        }
-      }
-    }
-    if($node->hasField('field_people')) {
-      $aboutPeople = $node->get('field_people');
-      if($aboutPeople && !empty($aboutPeople->getValue())) {
-        $peopleId = $aboutPeople->getValue()[0]['target_id'];
-        $peopleParagraph = Paragraph::load($peopleId);
-        if($peopleParagraph && !empty($peopleParagraph->get('field_person_2')->getValue())) {
-          $people = $peopleParagraph->get('field_person_2')->getValue();
-          foreach($people as $person) {
-            if ($personNode = Node::load($person['target_id'])) {
-              $theFields['about']['people'][] = array(
-                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
-                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
-                'title' => $personNode->get('field_title')->getValue()[0]['value'],
-                'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
-                'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
-              );
             }
           }
         }

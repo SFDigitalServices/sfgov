@@ -1,0 +1,21 @@
+<article{{ attributes.addClass(classes) }}>
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': 'About us',
+      'label': 'Part of <a href="@url">@parent</a>'|t({'@parent': node.field_parent_department.entity.label(), '@url': path('entity.node.canonical', {node: node.field_parent_department.entity.id() })})
+    }
+  } %}
+
+  <div class="sfgov-about-section sfgov-about-information">
+    <div class="sfds-layout-container">
+      {{ content.field_custom_sections }}
+    </div>
+  </div>
+
+  <div class="sfgov-about-section sfgov-about-resources">
+    <div class="sfds-layout-container">
+      {{ content.field_about_resources }}
+    </div>
+  </div>
+</article>
+

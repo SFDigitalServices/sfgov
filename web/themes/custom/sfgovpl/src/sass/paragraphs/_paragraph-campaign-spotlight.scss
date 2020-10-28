@@ -1,93 +1,132 @@
-.paragraph--type--campaign-spotlight {
+.sfgov-campaign-spotlight {
+  @include contain-1090;
+  margin-top: 60px;
+  margin-bottom: 60px;
+
+  // Remove/reduce top margin when in header.
+  .__header-spotlight & {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+
+  @include media($wide-screen) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.sfgov-campaign-spotlight-main {
   position: relative;
-  .container {
-    @include contain-1280;
-    display: flex;
-    align-items: center;
-    @include media-max($medium-screen) {
-      flex-direction: column;
-    }
-    .group-left {
-      display: block;
-      background-size: cover;
-      background-position: center;
-      height: 375px;
-      width: 100%;
-      @include media($medium-screen) {
-        position: absolute;
-        left: 0;
-        width: 50%;
-        height: 100%;
-        bottom: 0;
-      }
-    }
-    .group-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 40px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
 
-      @include media($medium-screen) {
-        width: 50%;
-        padding: 3rem;
-        min-height: 400px;
-        margin-left: 50%;
-      }
-    }
+  @include media($medium-screen) {
+    flex-direction: column-reverse;
   }
 
-  .__title {
-    @include fs-title-3;
-    color: white;
-  }
-  .__description {
-    color: white;
-  }
-  .__media-image {
-    img {
-      width: 100%;
-      display: block;
-    }
-  }
-
-  .__link {
-    margin-bottom: 20px;
-    a {
-      @include button-clear;
-      border: 0;
-    }
-  }
-}
-
-.paragraph--type--campaign-spotlight.is-reversed {
-  .container {
+  .is-reversed & {
     @include media($medium-screen) {
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-    }
-  }
-  .group-left {
-    right: 0;
-    left: auto;
-  }
-  .group-right {
-    margin-left: 0;
-  }
-}
-
-.page-campaign-gold,
-.page-campaign-blue {
-  .paragraph--type--campaign-spotlight {
-    .__title,
-    .__description {
-      color: $c-slate;
+      flex-direction: column;
     }
   }
 }
 
-.page-campaign-blue {
-  .__link {
-    a {
+.sfgov-campaign-spotlight-image {
+  border-radius: 8px 8px 0 0;
+  display: block;
+
+  // NOTE: The inline <img> is used instead of the CSS background image, until
+  // the $medium-screen breakpoint.
+  @include media-max($medium-screen) {
+    background-image: none !important;
+  }
+
+  @include media($medium-screen) {
+    background-size: cover;
+    background-position: center;
+    height: 375px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    bottom: 0;
+    border-radius: 8px 0 0 8px;
+
+    .is-reversed & {
+      right: 0;
+      left: auto;
+      border-radius: 0 8px 8px 0;
+    }
+  }
+
+  img {
+    border-radius: 8px 8px 0 0;
+    width: 100%;
+    display: block;
+
+    @include media($medium-screen) {
+      display: none;
+    }
+  }
+}
+
+.sfgov-campaign-spotlight-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 20px;
+  border-radius: 0 8px 8px 0;
+
+  @include media($medium-screen) {
+    width: 50%;
+    padding: 3rem;
+    min-height: 400px;
+    margin-left: 50%;
+    padding: 3rem;
+
+    .is-reversed & {
+      margin-left: 0;
+      border-radius: 8px 0 0 8px;
+    }
+  }
+}
+
+.sfgov-campaign-spotlight-title {
+  @include fs-title-3;
+  color: white;
+  margin: 0;
+
+  @include media($medium-screen) {
+    @include fs-title-2;
+  }
+
+  .page-campaign-gold &,
+  .page-campaign-blue & {
+    color: $c-slate;
+  }
+}
+
+.sfgov-campaign-spotlight-description {
+  color: white;
+
+  .page-campaign-gold &,
+  .page-campaign-blue & {
+    color: $c-slate;
+  }
+}
+
+
+.sfgov-campaign-spotlight-button {
+  margin-bottom: 20px;
+
+  a {
+    @include button-clear;
+    border: 0;
+
+    .page-campaign-blue & {
       @include button;
       color: #fff !important;
     }

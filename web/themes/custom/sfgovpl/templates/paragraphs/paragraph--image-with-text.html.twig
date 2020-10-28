@@ -1,5 +1,11 @@
-<div class="image-with-text-container">
-  <div {{ attributes }} class="image-with-text">
+{# Push any background color to content_attributes and remove from attributes. #}
+{% set background_style = attributes.style|default('') %}
+{% set content_attributes = create_attribute({'style': background_style }) %}
+{% set attributes = attributes.removeAttribute('style') %}
+
+{% embed 'paragraph.html.twig' with { classes: ['image-with-text'] } %}
+{% block content %}
+  <div {{ content_attributes.addClass('image-with-text-content') }}>
     <div class="image">
       {{ content.field_image }}
     </div>
@@ -12,4 +18,14 @@
       </div>
     </div>
   </div>
-</div>
+  {% if content.field_image|render %}
+    <div class="image-with-text-caption">
+      {% include '@theme/media-caption.twig' with {
+        entity: paragraph.field_image.entity,
+        align: 'right',
+      } only %}
+    </div>
+  {% endif %}
+{% endblock %}
+{% endembed %}
+
