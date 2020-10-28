@@ -7,29 +7,33 @@ dependencies:
     - field.storage.location.field_address
   module:
     - address
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
 id: location.physical.field_address
 field_name: field_address
 entity_type: location
 bundle: physical
-label: 'Location Address'
-description: 'The address the user can put in their phone to find your office.'
+label: Address
+description: ''
 required: false
 translatable: true
 default_value:
   -
+    langcode: ''
     country_code: US
-    langcode: null
     administrative_area: ''
     locality: ''
-    dependent_locality: ''
+    dependent_locality: null
     postal_code: ''
-    sorting_code: ''
+    sorting_code: null
     address_line1: ''
     address_line2: ''
     organization: ''
-    given_name: ''
-    additional_name: ''
-    family_name: ''
+    given_name: null
+    additional_name: null
+    family_name: null
 default_value_callback: ''
 settings:
   available_countries:
@@ -45,7 +49,7 @@ settings:
     organization:
       override: optional
     addressLine1:
-      override: optional
+      override: required
     addressLine2:
       override: optional
     postalCode:
