@@ -12,33 +12,60 @@ dependencies:
     - field.field.location.physical.field_text
   module:
     - address
+    - office_hours
+    - text
 id: location.physical.preview
 targetEntityType: location
 bundle: physical
 mode: preview
 content:
   field_address:
-    weight: 1
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: address_plain
     region: content
-  title:
-    label: hidden
-    type: string
-    weight: 0
+  field_operating_hours:
+    type: office_hours
+    weight: 1
     region: content
+    label: above
     settings:
-      link_to_entity: false
+      day_format: long
+      time_format: G
+      compress: false
+      grouped: false
+      show_closed: all
+      closed_format: Closed
+      separator:
+        days: '<br />'
+        grouped_days: ' - '
+        day_hours: ': '
+        hours_hours: '-'
+        more_hours: ', '
+      current_status:
+        position: ''
+        open_text: 'Currently open!'
+        closed_text: 'Currently closed'
+      schema:
+        enabled: false
+      timezone_field: ''
+      office_hours_first_day: ''
+    third_party_settings: {  }
+  field_text:
+    type: text_default
+    weight: 2
+    region: content
+    label: above
+    settings: {  }
     third_party_settings: {  }
 hidden:
   changed: true
   created: true
   field_department: true
-  field_operating_hours: true
   field_show_on_dept: true
-  field_text: true
   langcode: true
   search_api_excerpt: true
+  title: true
   uid: true
