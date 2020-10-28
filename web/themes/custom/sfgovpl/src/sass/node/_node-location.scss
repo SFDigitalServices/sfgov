@@ -117,6 +117,69 @@
         }
       }
     }
+
+    &-at-location {
+      .sfgov-section-container {
+        padding-bottom: 0;
+      }
+
+      .sfgov-container-item {
+        margin: 0;
+
+        &:nth-child(odd) {
+          padding-right: 20px;
+        }
+        &:nth-child(even) {
+          padding-left: 20px;
+        }
+
+        &--inner {
+          margin-bottom: 30px;
+          padding-bottom: 30px;
+          position: relative;
+
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: $c-slate;
+            opacity: 0.1;
+          }
+
+          a {
+            color: $c-slate;
+            text-decoration: none;
+
+            &:hover {
+              .field__label {
+                color: $c-dark-blue;
+              }
+            }
+          }
+        }
+      }
+
+      .eck-entity-address-field {
+        p {
+          margin: 0;
+        }
+
+        .field__label {
+          margin-bottom: 1rem;
+          font-weight: 500;
+          color: $c-bright-blue;
+          text-decoration: underline;
+        }
+      }
+
+      .simple-gmap-static-map,
+      .simple-gmap-link {
+        display: none;
+      }
+    }
   }
 
   .sfgov-section-container {
