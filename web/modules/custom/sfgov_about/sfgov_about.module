@@ -1,0 +1,138 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_about_form':
+      // Set placeholder value for Title.
+      $form['title']['widget'][0]['value']['#value'] = 'About';
+
+      // Hide title field.
+      $form['title']['#access'] = FALSE;
+
+      // Add description to the field Custom Sections and Resources.
+      $form['field_custom_sections']['widget']['#description'] = "We've given you some suggestions for headings, but you can change them or add more.";
+      $form['field_about_resources']['widget']['#description'] = "We've given you some suggestions for sections, but you can change them or add more. Add tiles under sections that link to webpages anywhere.";
+
+      // Attach library.
+      $form['#attached']['library'][] = 'sfgov_about/about_form';
+      break;
+
+    case 'node_about_edit_form':
+      // Hide title field.
+      $form['title']['#access'] = FALSE;
+
+      // Disable field_parent_department.
+      $form['field_parent_department']['#disabled'] = TRUE;
+
+      // Attach library.
+      $form['#attached']['library'][] = 'sfgov_about/about_form';
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function sfgov_about_node_insert(EntityInterface $entity) {
+  if ($entity->bundle() == 'about') {
+    // Update entity title based on `field_parent_department`.
+    $entity->setTitle('About the ' . $entity->field_parent_department->entity->label());
+    $entity->save();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form().
+ */
+function sfgov_about_node_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  if ($entity->isNew() && $entity->bundle() == 'about') {
+    $storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+    $langcode = $form_state->get('langcode');
+
+    // Append items into Custom Sections.
+    foreach ([
+      'Our vision',
+      'Our mission'
+    ] as $title) {
+      $paragraphs_entity = $storage->create([
+        'type' => 'custom_section',
+        'langcode' => $langcode,
+        'field_title' => $title,
+      ]);
+      $entity->get('field_custom_sections')->appendItem($paragraphs_entity);
+    }
+
+    // Append items into Resources.
+    foreach ([
+      'Budget',
+      'Equity',
+      'Procurement',
+      'Reports',
+      'Working at [Department Name]',
+      'Partner resources',
+    ] as $title) {
+      $paragraphs_entity = $storage->create([
+        'type' => 'other_info_card',
+        'langcode' => $langcode,
+        'field_title' => $title,
+      ]);
+      $entity->get('field_about_resources')->appendItem($paragraphs_entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function sfgov_about_preprocess_node(&$variables) {
+  $node = $variables['node'];
+
+  switch ($node->bundle()) {
+    case 'department':
+    case 'public_body':
+      // Query for the About page entity.
+      $database = \Drupal::database();
+      $about_nid = $database->select('node__field_parent_department', 'p')
+        ->fields('p', ['entity_id'])
+        ->condition('p.field_parent_department_target_id', $node->id())
+        ->condition('p.bundle', 'about')
+        ->execute()
+        ->fetchField();
+
+      if ($about_nid) {
+        $about_node = \Drupal::entityTypeManager()->getStorage('node')->load($about_nid);
+
+        // Add link to the About page for Departments and Public Bodies.
+        $variables['about_page_link'] = [
+          '#type' => 'link',
+          '#url' => $about_node->toUrl(),
+          '#title' => "Learn more about us"
+        ];
+
+        // Add cachable dependency.
+        $node->addCacheableDependency($about_node);
+      }
+
+      break;
+  }
+}
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgov_about_preprocess_field__node__field_about_resources__about(&$variables) {
+  foreach ($variables['items'] as $key => $item) {
+    $paragraph = $item['content']['#paragraph'];
+
+    if (empty($paragraph->field_resources->getValue())) {
+      unset($variables['items'][$key]);
+    }
+  }
+}
