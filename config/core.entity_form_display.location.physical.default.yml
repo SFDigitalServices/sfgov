@@ -5,6 +5,7 @@ dependencies:
   config:
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
+    - field.field.location.physical.field_department
     - field.field.location.physical.field_operating_hours
     - field.field.location.physical.field_show_on_dept
     - field.field.location.physical.field_text
@@ -25,10 +26,16 @@ content:
     third_party_settings: {  }
     type: address_default
     region: content
+  field_department:
+    weight: 2
     settings:
+      match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_operating_hours:
     weight: 2
     settings: {  }
