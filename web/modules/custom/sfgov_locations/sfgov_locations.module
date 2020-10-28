@@ -4,6 +4,7 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\sfgov_locations\Element\Address;
 use Drupal\sfgov_locations\Plugin\Field\FieldType\AddressItem;
 use Drupal\sfgov_locations\Plugin\Field\FieldFormatter\AddressPlainFormatter;
+use Drupal\sfgov_locations\Plugin\Validation\Constraint\AddressFormatConstraint;
 use Drupal\sfgov_locations\AddressField;
 
 /**
@@ -21,6 +22,15 @@ function sfgov_locations_field_info_alter(&$info) {
 function sfgov_locations_field_formatter_info_alter(array &$info) {
   if (!empty($info['address_plain'])) {
     $info['address_plain']['class'] = AddressPlainFormatter::class;
+  }
+}
+
+/**
+ * Implements hook_validation_constraint_alter().
+ */
+function sfgov_locations_validation_constraint_alter(array &$definitions) {
+  if (!empty($definitions['AddressFormat'])) {
+    $definitions['AddressFormat']['class'] = AddressFormatConstraint::class;
   }
 }
 
