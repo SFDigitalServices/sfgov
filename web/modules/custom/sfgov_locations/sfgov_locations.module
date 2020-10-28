@@ -33,12 +33,22 @@ function sfgov_locations_preprocess_node(&$variables) {
   $node = $variables['node'];
 
   if ($node->bundle() == 'location') {
-    $variables['addresses'] = [];
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('location');
-    $entities = \Drupal::entityTypeManager()->getStorage('location')->loadMultiple([1, 2, 3, 4]);
+    // Get departments.
+    $departments = $node->field_departments->referencedEntities();
 
-    foreach ($entities as $key => $entity) {
-      $build = $view_builder->view($entity, 'preview');
+    // Get addresses.
+    $addresses = [];
+    foreach ($departments as $department) {
+      if ($department->field_address->entity) {
+        $address = $department->field_address->entity;
+        $addresses[$address->id()] = $address;
+      }
+    }
+
+    // Render address.
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('location');
+    foreach ($addresses as $address) {
+      $build = $view_builder->view($address, 'preview');
       $variables['addresses'][] = render($build);
     }
   }

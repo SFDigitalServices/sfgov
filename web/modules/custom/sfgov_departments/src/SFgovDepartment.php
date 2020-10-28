@@ -292,14 +292,16 @@ class SFgovDepartment {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public static function addNodeToGroupByDepartmentNode(NodeInterface $node, NodeInterface $department) {
+    // Escape for some node types.
+    switch ($node->bundle()) {
+      case 'public_body':
+      case 'location':
+        return;
+    }
+
     $entity_type_manager = \Drupal::entityTypeManager();
     $sf_gov_department = new self($department);
     $group = $sf_gov_department->getDepartmentGroup();
-
-    // Temporarily escape for node type `public_body`.
-    if ($node->bundle() == 'public_body') {
-      return;
-    }
 
     /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
     $plugin = $group->getGroupType()->getContentPlugin('group_node:' . $node->bundle());
