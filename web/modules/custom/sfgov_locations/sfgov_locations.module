@@ -1,0 +1,82 @@
+<?php
+
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\sfgov_locations\Element\Address;
+use Drupal\sfgov_locations\Plugin\Field\FieldType\AddressItem;
+use Drupal\sfgov_locations\Plugin\Field\FieldFormatter\AddressPlainFormatter;
+use Drupal\sfgov_locations\AddressField;
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function sfgov_locations_field_info_alter(&$info) {
+  if (!empty($info['address'])) {
+    $info['address']['class'] = AddressItem::class;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function sfgov_locations_field_formatter_info_alter(array &$info) {
+  if (!empty($info['address_plain'])) {
+    $info['address_plain']['class'] = AddressPlainFormatter::class;
+  }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function sfgov_locations_config_schema_info_alter(&$definitions) {
+  $definitions['address']['mapping'][AddressField::ADDRESSEE] = [
+    'type' => 'string',
+    'label' => 'Addressee',
+  ];
+  $definitions['address']['mapping'][AddressField::LOCATION_NAME] = [
+    'type' => 'string',
+    'label' => 'Location name',
+  ];
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function sfgov_locations_element_info_alter(array &$info) {
+  if (!empty($info['address'])) {
+    $info['address']['#process'][0] = [Address::class, 'processAddress'];
+    $info['address']['#process'][1] = [Address::class, 'processGroup'];
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function sfgov_locations_theme_registry_alter(&$theme_registry) {
+  if (!empty($theme_registry['address_plain'])) {
+    $theme_registry['address_plain']['variables'][AddressField::ADDRESSEE] = NULL;
+    $theme_registry['address_plain']['variables'][AddressField::LOCATION_NAME] = NULL;
+  }
+}
+
+/**
+ * Implements hook_field_views_data_alter().
+ */
+function sfgov_locations_field_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  $field_name = $field_storage->getName();
+  $field_type = $field_storage->getType();
+  if ($field_type == 'address') {
+    $columns = [
+      AddressField::ADDRESSEE => 'standard',
+      AddressField::LOCATION_NAME => 'standard',
+    ];
+    foreach ($data as $table_name => $table_data) {
+      foreach ($columns as $column => $plugin_id) {
+        $data[$table_name][$field_name . '_' . $column]['field'] = [
+          'id' => $plugin_id,
+          'field_name' => $field_name,
+          'property' => $column,
+        ];
+      }
+    }
+  }
+}

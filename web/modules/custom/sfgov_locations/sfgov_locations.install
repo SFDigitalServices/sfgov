@@ -1,0 +1,19 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_install().
+ */
+function sfgov_locations_install() {
+  // Add addressee and location_name fields to location table.
+  $table  = 'field_address';
+  $field  = [
+    'type' => 'varchar',
+    'length' => 255,
+  ];
+  $schema = Database::getConnection()->schema();
+  foreach (['addressee', 'location_name'] as $column) {
+    $schema->addField('location__' . $table, $table . '_' . $column, $field);
+  }
+}
