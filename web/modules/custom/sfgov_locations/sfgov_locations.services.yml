@@ -2,3 +2,7 @@ services:
   sfgov_locations.address_format_repository:
     class: Drupal\sfgov_locations\Repository\AddressFormatRepository
     arguments: ['@event_dispatcher']
+  sfgov_locations.route_subscriber:
+    class: Drupal\sfgov_locations\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
