@@ -6,6 +6,7 @@ dependencies:
     - entity_browser.browser.image
     - field.field.node.location.body
     - field.field.node.location.field_about_description
+    - field.field.node.location.field_address
     - field.field.node.location.field_alert_expiration_date
     - field.field.node.location.field_alert_text
     - field.field.node.location.field_getting_here_items
@@ -47,6 +48,7 @@ third_party_settings:
       label: Alert
     group_location_contact:
       children:
+        - field_address
         - field_phone_numbers
       parent_name: ''
       weight: 3
@@ -78,6 +80,7 @@ third_party_settings:
       children:
         - field_services
         - field_locations
+        - field_departments
       parent_name: ''
       weight: 6
       format_type: details
@@ -148,6 +151,20 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_address:
+    weight: 27
+    settings:
+      entity_browser: location_physical
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
   field_alert_expiration_date:
     weight: 17
     settings:
@@ -245,7 +262,7 @@ content:
     third_party_settings: {  }
   field_phone_numbers:
     type: paragraphs
-    weight: 26
+    weight: 28
     region: content
     settings:
       title: Paragraph
@@ -357,7 +374,7 @@ content:
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
   uid:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 9
     settings:
       match_operator: CONTAINS
       size: 60

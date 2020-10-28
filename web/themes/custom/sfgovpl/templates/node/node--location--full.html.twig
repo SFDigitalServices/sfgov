@@ -100,16 +100,24 @@
       {% endif %}
     </div>
 
-    {% if node.field_phone_numbers is not empty %}
     <div class="group--right">
+      {% if node.field_address is not empty %}
+      <div class="sfgov-section sfgov-section-address">
+        <div class="sfgov-section--content">
+          {{ content.field_address }}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if node.field_phone_numbers is not empty %}
       <div class="sfgov-section sfgov-section-contact">
         <h2 class="sfgov-section--heading" role="heading">Contact</h2>
         <div class="sfgov-section--content">
           {{ content.field_phone_numbers }}
         </div>
       </div>
+      {% endif %}
     </div>
-    {% endif %}
   </div>
 
   {% if node.field_services is not empty %}
