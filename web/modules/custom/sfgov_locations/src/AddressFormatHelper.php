@@ -2,7 +2,7 @@
 
 namespace Drupal\sfgov_locations;
 
-use CommerceGuys\Addressing\AddressFormat\AddressFormat;
+use Drupal\sfgov_locations\AddressFormat;
 
 /**
  * Provides helpers for handling address formats.
