@@ -53,8 +53,10 @@ function sfgov_locations_config_schema_info_alter(&$definitions) {
  */
 function sfgov_locations_element_info_alter(array &$info) {
   if (!empty($info['address'])) {
-    $info['address']['#process'][0] = [Address::class, 'processAddress'];
-    $info['address']['#process'][1] = [Address::class, 'processGroup'];
+    $info['address']['#process'] = [
+      [Address::class, 'processAddress'],
+      [Address::class, 'processGroup']
+    ];
   }
 }
 

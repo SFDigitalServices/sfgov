@@ -3,7 +3,6 @@
 namespace Drupal\sfgov_locations\Element;
 
 use Drupal\address\Element\Address as AddressBase;
-use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 use CommerceGuys\Addressing\AddressFormat\FieldOverride;
 use CommerceGuys\Addressing\Locale;
 use Drupal\Component\Utility\Html;
@@ -11,6 +10,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\sfgov_locations\AddressFormat;
 use Drupal\sfgov_locations\AddressFormatHelper;
 use Drupal\sfgov_locations\AddressField;
 use Drupal\sfgov_locations\FieldOverrides;
@@ -30,13 +30,7 @@ class Address extends AddressBase {
   }
 
   /**
-   * Ensures all keys are set on the provided value.
-   *
-   * @param array $value
-   *   The value.
-   *
-   * @return array
-   *   The modified value.
+   * {@inheritdoc}
    */
   public static function applyDefaults(array $value) {
     $properties = [
@@ -82,20 +76,7 @@ class Address extends AddressBase {
   }
 
   /**
-   * Processes the address form element.
-   *
-   * @param array $element
-   *   The form element to process.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @return array
-   *   The processed element.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown when #used_fields is malformed.
+   * {@inheritdoc}
    */
   public static function processAddress(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Convert #used_fields into #field_overrides.
@@ -150,15 +131,7 @@ class Address extends AddressBase {
   }
 
   /**
-   * Builds the format-specific address elements.
-   *
-   * @param array $element
-   *   The existing form element array.
-   * @param array $value
-   *   The address value, in $property_name => $value format.
-   *
-   * @return array
-   *   The modified form element array containing the format specific elements.
+   * {@inheritdoc}
    */
   protected static function addressElements(array $element, array $value) {
     $size_attributes = [

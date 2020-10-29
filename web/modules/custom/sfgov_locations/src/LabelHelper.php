@@ -3,7 +3,7 @@
 namespace Drupal\sfgov_locations;
 
 use Drupal\address\LabelHelper as LabelHelperBase;
-use CommerceGuys\Addressing\AddressFormat\AddressFormat;
+use Drupal\sfgov_locations\AddressFormat;
 use Drupal\sfgov_locations\AddressField;
 
 /**
