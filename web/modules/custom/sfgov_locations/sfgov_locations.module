@@ -65,8 +65,11 @@ function sfgov_locations_element_info_alter(array &$info) {
  */
 function sfgov_locations_theme_registry_alter(&$theme_registry) {
   if (!empty($theme_registry['address_plain'])) {
+    $module_handler = \Drupal::service('module_handler');
+    $module_path = $module_handler->getModule('sfgov_locations')->getPath();
     $theme_registry['address_plain']['variables'][AddressField::ADDRESSEE] = NULL;
     $theme_registry['address_plain']['variables'][AddressField::LOCATION_NAME] = NULL;
+    $theme_registry['address_plain']['path'] = $module_path . '/templates';
   }
 }
 
