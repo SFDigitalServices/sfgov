@@ -12,22 +12,40 @@ dependencies:
   module:
     - address
     - allowed_formats
+    - field_group
     - maxlength
     - office_hours
     - text
+third_party_settings:
+  field_group:
+    group_address:
+      children:
+        - field_department
+        - field_address
+      parent_name: ''
+      weight: 2
+      format_type: details
+      region: content
+      format_settings:
+        description: ''
+        open: true
+        id: ''
+        classes: ''
+        required_fields: false
+      label: Address
 id: location.physical.default
 targetEntityType: location
 bundle: physical
 mode: default
 content:
   field_address:
-    weight: 3
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: address_default
     region: content
   field_department:
-    weight: 2
+    weight: 3
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -37,20 +55,20 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_operating_hours:
-    weight: 5
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: office_hours_list
     region: content
   field_show_on_dept:
-    weight: 4
+    weight: 5
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_text:
-    weight: 6
+    weight: 7
     settings:
       rows: 3
       placeholder: ''
