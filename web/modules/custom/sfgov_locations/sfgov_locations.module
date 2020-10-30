@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\sfgov_locations\Element\Address;
 use Drupal\sfgov_locations\Plugin\Field\FieldType\AddressItem;
@@ -94,4 +95,46 @@ function sfgov_locations_field_views_data_alter(array &$data, FieldStorageConfig
       }
     }
   }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $forms = [
+    'location_physical_form',
+    'location_physical_form_edit',
+    'location_event_address_form',
+    'location_event_address_form_edit',
+  ];
+
+  if (in_array($form_id, $forms)) {
+    // Remove the 'details' wrapper form, We're using a field group "Address"
+    // that includes both the Address field widget, and the Department field.
+    if (in_array($form_id, ['location_physical_form', 'location_physical_form_edit'])) {
+      $form['field_address']['widget'][0]['#type'] = 'container';
+    }
+
+    // For all Address field types found on these forms, use this after build
+    // function to customize labels, descriptions, etc.
+    $form['field_address']['widget'][0]['address']['#after_build'][] = 'sfgov_locations_customize_address';
+  }
+}
+
+/**
+ * Alter fields in the Address field type widget.
+ */
+function sfgov_locations_customize_address($element, $form_state) {
+  $element['organization']['#title'] = t('Division, program or organization');
+  $element['addressee']['#description'] = t('Use for attention of, to flag a person or group.');
+  $element['location_name']['#description'] = t('Use for named locations like City Hall. Should not duplicate.');
+
+  $element['address_line1']['#title'] = t('Street address line 1');
+  $element['address_line1']['#description'] = t('Google Maps will lookup from this line.');
+
+  $element['address_line2']['#title'] = t('Street address line 2');
+  $element['address_line2']['#title_display'] = 'before';
+  $element['address_line2']['#description'] = t('Room, Suite or Counter.');
+
+  return $element;
 }
