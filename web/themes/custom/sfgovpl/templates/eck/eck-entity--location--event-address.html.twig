@@ -14,6 +14,7 @@
  *   {{ content|without('field_example') }} to temporarily suppress the printing
  *   of a given child element.
  * - attributes: HTML attributes for the containing element.
+ * - view_mode: View mode; for example, "teaser" or "full".
  *
  * @see template_preprocess_eck_entity()
  *
@@ -21,26 +22,20 @@
  */
 #}
 {% set classes = [
-'eck-entity',
-'sfgov-event-address',
-'sfgov-address'
+  'eck-entity',
+  'sfgov-address',
+  'sfgov-event-address',
 ] %}
-<div{{ attributes.addClass(classes) }}>
-    {% set title = content.title.0['#context'].value %}
-    {% set addressLine1 = content.field_address[0]['address_line1']['#value'] %}
-    {% set addressLine2 = content.field_address[0]['address_line2']['#value'] %}
-    {% set city = content.field_address[0]['locality']['#value'] %}
-    {% set state = content.field_address[0]['administrative_area']['#value'] %}
-    {% set zip = content.field_address[0]['postal_code']['#value'] %}
 
+<div{{ attributes.addClass(classes) }}>
+  {% set title = content.title.0['#context'].value %}
+
+  {% if content.title|render %}
     <h4>{{ title }}</h4>
-    <p>
-      {{ addressLine1 }}<br/>
-      {% if addressLine2 %}
-        {{ addressLine2 }}<br/>
-      {% endif %}
-      {{ city }}, {{ state }} {{ zip }}
-    </p>
-    <img src="{{ map_img_url }}" />
-    <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
+  {% endif %}
+
+  {{ content.field_address }}
+
+  <img src="{{ map_img_url }}" />
+  <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
 </div>
