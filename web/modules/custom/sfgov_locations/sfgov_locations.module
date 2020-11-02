@@ -2,6 +2,72 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_location_edit_form':
+    case 'node_location_form':
+      $form['debug'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'id' => ['debug-out'],
+        ],
+        '#weight' => 1000,
+      ];
+
+      // Field wrapper.
+      $form['field_departments']['#prefix'] = '<div id="field-departments-wrapper">';
+      $form['field_departments']['#suffix'] = '</div>';
+
+      $i = 0;
+      while (isset($form['field_departments']['widget'][$i])) {
+        $form['field_departments']['widget'][$i]['target_id']['#ajax'] = [
+          'callback' => '_sfgov_locations_department_address',
+          'wrapper' => 'field-departments-wrapper',
+          'event' => 'autocompleteclose',
+        ];
+
+        $i++;
+      }
+
+      // Add library.
+      $form['#attached']['library'][] = 'sfgov_locations/form_style';
+
+      break;
+  }
+}
+
+/**
+ * Callback function to check if there is a main address related on the selected department.
+ */
+function _sfgov_locations_department_address(&$form, FormStateInterface $form_state) {
+  // Get triggering element.
+  $element = $form_state->getTriggeringElement();
+
+  // Get delta from the triggering element.
+  $delta = $element['#parents'][1];
+
+  // Get all departments.
+  $departments = $form_state->getValue('field_departments');
+
+  // Get the triggering department id (the selected one).
+  $target_id = $departments[$delta]['target_id'];
+
+  // Query for the address from the department.
+  $query = \Drupal::entityQuery('location')
+    ->condition('field_department', $target_id)
+    ->condition('field_show_on_dept', TRUE);
+
+  if (!$query->execute()) {
+    drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
+  }
+
+  return $form['field_departments'];
+}
 
 /**
  * Implements hook_ENTITY_TYPE_prepare_form().
