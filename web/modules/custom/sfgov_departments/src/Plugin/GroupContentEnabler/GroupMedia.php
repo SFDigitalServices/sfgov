@@ -19,7 +19,11 @@ use Drupal\Core\Form\FormStateInterface;
  *   entity_access = TRUE,
  *   reference_label = @Translation("Title"),
  *   reference_description = @Translation("The title of the media to add to the group"),
- *   deriver = "Drupal\sfgov_departments\Plugin\GroupContentEnabler\GroupMediaDeriver"
+ *   deriver = "Drupal\sfgov_departments\Plugin\GroupContentEnabler\GroupMediaDeriver",
+ *   handlers = {
+ *     "access" = "Drupal\group\Plugin\GroupContentAccessControlHandler",
+ *     "permission_provider" = "Drupal\group\Plugin\GroupContentPermissionProvider",
+ *   }
  * )
  */
 class GroupMedia extends GroupContentEnablerBase {
