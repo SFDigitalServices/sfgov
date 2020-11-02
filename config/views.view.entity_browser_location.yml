@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - eck.eck_type.location.event_address
     - eck.eck_type.location.physical
     - field.storage.location.field_address
     - field.storage.location.field_department
@@ -11,6 +12,7 @@ dependencies:
     - eck
     - entity_browser
     - user
+    - verf
 id: entity_browser_location
 label: 'Entity Browser: Location'
 module: views
@@ -81,14 +83,17 @@ display:
           description: ''
           columns:
             entity_browser_select: entity_browser_select
+            title: title
             field_address: field_address
-            field_department: field_department
-            field_address_organization: field_address_organization
-            field_address_addressee: field_address_addressee
-            field_address_location_name: field_address_location_name
-            operations: operations
           info:
             entity_browser_select:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            title:
+              sortable: true
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -96,39 +101,6 @@ display:
             field_address:
               sortable: true
               default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_department:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_address_organization:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_address_addressee:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_address_location_name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            operations:
               align: ''
               separator: ''
               empty_column: false
@@ -508,29 +480,26 @@ display:
           entity_type: location
           entity_field: type
           plugin_id: bundle
-        field_department_target_id:
-          id: field_department_target_id
+        field_department_target_id_verf:
+          id: field_department_target_id_verf
           table: location__field_department
-          field: field_department_target_id
+          field: field_department_target_id_verf
           relationship: none
           group_type: group
           admin_label: ''
-          operator: '='
-          value:
-            min: ''
-            max: ''
-            value: ''
+          operator: in
+          value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: field_department_target_id_op
+            operator_id: field_department_target_id_verf_op
             label: Department
             description: ''
             use_operator: false
-            operator: field_department_target_id_op
+            operator: field_department_target_id_verf_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_department_target_id
+            identifier: field_department_target_id_verf
             required: false
             remember: false
             multiple: false
@@ -540,9 +509,7 @@ display:
               writer: '0'
               publisher: '0'
               administrator: '0'
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
+            reduce: 0
           is_grouped: false
           group_info:
             label: ''
@@ -555,7 +522,27 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: numeric
+          verf_target_bundles:
+            department: department
+            about: '0'
+            article: '0'
+            campaign: '0'
+            department_table: '0'
+            event: '0'
+            form_confirmation_page: '0'
+            form_page: '0'
+            information_page: '0'
+            landing: '0'
+            meeting: '0'
+            news: '0'
+            page: '0'
+            person: '0'
+            public_body: '0'
+            resource_collection: '0'
+            step_by_step: '0'
+            topic: '0'
+            transaction: '0'
+          plugin_id: verf
         field_address_address_line1:
           id: field_address_address_line1
           table: location__field_address
@@ -777,10 +764,13 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_department'
+        - 'config:views.view.entity_browser_location'
+        - node_list
   entity_browser_address:
     display_plugin: entity_browser
     id: entity_browser_address
@@ -812,10 +802,13 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_department'
+        - 'config:views.view.entity_browser_location'
+        - node_list
   entity_browser_event_address:
     display_plugin: entity_browser
     id: entity_browser_event_address
@@ -830,6 +823,8 @@ display:
         empty: true
         fields: false
         header: false
+        style: true
+        row: true
       fields:
         entity_browser_select:
           id: entity_browser_select
@@ -881,6 +876,71 @@ display:
           hide_alter_empty: true
           entity_type: location
           plugin_id: entity_browser_select
+        title:
+          id: title
+          table: location_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Address Title'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: _blank
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: location
+          entity_field: title
+          plugin_id: field
         field_address:
           id: field_address
           table: location__field_address
@@ -943,153 +1003,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_address_organization:
-          id: field_address_organization
-          table: location__field_address
-          field: field_address_organization
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: 'Division or organization'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin_id: standard
-        field_address_addressee:
-          id: field_address_addressee
-          table: location__field_address
-          field: field_address_addressee
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: Addressee
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin_id: standard
-        field_address_location_name:
-          id: field_address_location_name
-          table: location__field_address
-          field: field_address_location_name
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: 'Location name'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin_id: standard
       filters:
         type:
           id: type
@@ -1100,7 +1013,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            physical: physical
+            event_address: event_address
           group: 1
           exposed: false
           expose:
@@ -1109,6 +1022,8 @@ display:
             description: ''
             use_operator: false
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: ''
             required: false
             remember: false
@@ -1116,8 +1031,6 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1133,6 +1046,51 @@ display:
           entity_type: location
           entity_field: type
           plugin_id: bundle
+        title:
+          id: title
+          table: location_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: location
+          entity_field: title
+          plugin_id: string
         field_address_address_line1:
           id: field_address_address_line1
           table: location__field_address
@@ -1153,135 +1111,6 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: field_address_address_line1
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              writer: '0'
-              publisher: '0'
-              administrator: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: string
-        field_address_organization:
-          id: field_address_organization
-          table: location__field_address
-          field: field_address_organization
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: contains
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_address_organization_op
-            label: 'Division or Organization'
-            description: ''
-            use_operator: false
-            operator: field_address_organization_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: field_address_organization
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              writer: '0'
-              publisher: '0'
-              administrator: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: string
-        field_address_addressee:
-          id: field_address_addressee
-          table: location__field_address
-          field: field_address_addressee
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: contains
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_address_addressee_op
-            label: Addressee
-            description: ''
-            use_operator: false
-            operator: field_address_addressee_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: field_address_addressee
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              writer: '0'
-              publisher: '0'
-              administrator: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: string
-        field_address_location_name:
-          id: field_address_location_name
-          table: location__field_address
-          field: field_address_location_name
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: contains
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_address_location_name_op
-            label: 'Location name'
-            description: ''
-            use_operator: false
-            operator: field_address_location_name_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: field_address_location_name
             required: false
             remember: false
             multiple: false
