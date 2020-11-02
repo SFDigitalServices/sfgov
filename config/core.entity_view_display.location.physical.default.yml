@@ -5,8 +5,10 @@ dependencies:
   config:
     - eck.eck_type.location.physical
     - field.field.location.physical.field_address
+    - field.field.location.physical.field_department
     - field.field.location.physical.field_google_map
     - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_show_on_dept
     - field.field.location.physical.field_text
   module:
     - address
@@ -24,6 +26,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: address_plain
+    region: content
+  field_department:
+    weight: 5
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_google_map:
     type: simple_gmap
@@ -52,8 +62,8 @@ content:
       office_hours_first_day: '0'
       day_format: short
       time_format: g
-      compress: '1'
-      grouped: '1'
+      compress: true
+      grouped: true
       closed_format: Closed
       separator:
         days: '<br />'
@@ -66,10 +76,20 @@ content:
         open_text: 'Currently open'
         closed_text: 'Currently closed'
       schema:
-        enabled: '1'
+        enabled: true
       timezone_field: ''
     third_party_settings: {  }
     type: office_hours
+    region: content
+  field_show_on_dept:
+    weight: 4
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   field_text:
     weight: 3
@@ -82,5 +102,6 @@ hidden:
   changed: true
   created: true
   langcode: true
+  search_api_excerpt: true
   title: true
   uid: true
