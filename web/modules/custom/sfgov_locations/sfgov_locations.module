@@ -11,18 +11,11 @@ function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $for
   switch ($form_id) {
     case 'node_location_edit_form':
     case 'node_location_form':
-      $form['debug'] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'id' => ['debug-out'],
-        ],
-        '#weight' => 1000,
-      ];
-
       // Field wrapper.
       $form['field_departments']['#prefix'] = '<div id="field-departments-wrapper">';
       $form['field_departments']['#suffix'] = '</div>';
 
+      // Attach AJAX callback to the field_departments values.
       $i = 0;
       while (isset($form['field_departments']['widget'][$i])) {
         $form['field_departments']['widget'][$i]['target_id']['#ajax'] = [
@@ -34,7 +27,7 @@ function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $for
         $i++;
       }
 
-      // Add library.
+      // Attach library to style the node form.
       $form['#attached']['library'][] = 'sfgov_locations/form_style';
 
       break;
