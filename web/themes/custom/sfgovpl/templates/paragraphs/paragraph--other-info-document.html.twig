@@ -54,23 +54,10 @@
 %}
 
 {% block paragraph %}
-  {# Make sure there is a file field available to render. This will ensure
-  referenced entities that have been deleted don't end up printing with
-  incorrect info. #}
-  {% if content.field_file|render %}
-    <div {{ attributes.addClass(classes).setAttribute('data-contact', 'document') }}>
-      {% block content %}
-        <div class="document">
-          {% if fileurl|length > 3 and field_file.entity.field_published_date.value %}
-            <div class="link-date"><span class="link"><a href="{{ fileurl }}">{{ field_file.entity.label }}</a></span>
-          {% elseif field_file.entity.field_document_url and field_file.entity.field_published_date.value %}
-            <div class="link-date"><span class="link"><a href="{{ field_file.entity.field_document_url.value.0.uri }}">{{ field_file.entity.label }}</a></span>
-          {% else %}
-            <div class="link-date"><span class="no-link">{{ field_file.entity.label }}</span>
-          {% endif %}
-        </div>
-      </div>
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      <h4 class="title">{{ content | without('field_file') }}</h4>
+      {{ content.field_file }}
     {% endblock %}
   </div>
-  {% endif %}
 {% endblock paragraph %}
