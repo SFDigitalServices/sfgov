@@ -73,19 +73,20 @@ $latestRelease = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/rel
 
 // use the tag name to compare
 $tagName = $latestRelease->tag_name;
+$tagDate = $latestRelease->published_at;
+$sinceDate = date_create($tagDate)->modify('-1 day')->format('Y-m-d\TH:i:s\Z');
 
 $pretext = ':drupal: deployed to `' . $_ENV['PANTHEON_ENVIRONMENT'] . '`'. "\n\n";
 $pretext .= '<https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEON_ENVIRONMENT .'/deploys|pantheon dashboard>' . ' | ';
 $pretext .= 'http://' . $_ENV['PANTHEON_ENVIRONMENT'] . '-' . $_ENV['PANTHEON_SITE_NAME'] . '.pantheonsite.io' . "\n\n";
 $pretext .= 'a brief and truncated summary of commits since tag/release `'. $tagName . '` :' . "\n\n";
 
-// get commits since last release
-$compare = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/compare/' . $tagName . '...HEAD', [
+// get commits since last tag/release date
+$commits = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/commits?since=' . $sinceDate, [
   'User-Agent: SFDigitalServices/sfgov',
   'Authorization: token ' . $secrets['github'],
 ]);
 
-$commits = $compare->commits;
 $commitsStr = '';
 
 foreach($commits as $commit) {
@@ -99,7 +100,7 @@ foreach($commits as $commit) {
 
 $prefix = '```';
 $suffix = '```' . "\n\n";
-$suffix .= '<https://github.com/sfdigitalservices/sfgov/compare/' . $tagName . '...HEAD|Click here for the full comparison>' . "\n\n";
+$suffix .= '<https://github.com/SFDigitalServices/sfgov/commits/main?since=' . $sinceDate . '|Click here for the full list of commits since tag/release `'. $tagName .'`>' . "\n\n";
 $suffix .= ':yolo: :all_the_things: :ahhhhhhhhh:';
 
 $charCount = strlen($pretext) + strlen($prefix) + strlen($suffix); // keep count of essential parts of message
