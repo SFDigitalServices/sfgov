@@ -153,3 +153,13 @@ function _sfgov_locations_customize_address($element, $form_state) {
 
   return $element;
 }
+
+/**
+ * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ */
+function sfgov_locations_field_widget_multivalue_office_hours_list_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  if (!empty($elements['add_more'])) {
+    // Change the label from 'Add item' to 'Add day'.
+    $elements['add_more']['#value'] = t('Add day');
+  }
+}
