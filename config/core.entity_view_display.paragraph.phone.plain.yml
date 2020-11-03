@@ -1,0 +1,42 @@
+uuid: 3cd2d7cb-66cf-4700-ac22-00c77c6e91d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.plain
+    - field.field.paragraph.phone.field_owner
+    - field.field.paragraph.phone.field_tel
+    - field.field.paragraph.phone.field_text
+    - paragraphs.paragraphs_type.phone
+  module:
+    - text
+id: paragraph.phone.plain
+targetEntityType: paragraph
+bundle: phone
+mode: plain
+content:
+  field_owner:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_tel:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_text:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  search_api_excerpt: true
