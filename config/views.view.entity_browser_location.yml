@@ -55,7 +55,7 @@ display:
       pager:
         type: full
         options:
-          items_per_page: 10
+          items_per_page: 20
           offset: 0
           id: 0
           total_pages: null
@@ -65,10 +65,10 @@ display:
             first: '« First'
             last: 'Last »'
           expose:
-            items_per_page: false
+            items_per_page: true
             items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
+            items_per_page_options: '20, 50'
+            items_per_page_options_all: true
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
@@ -956,7 +956,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Address Title'
+          label: Title
           exclude: false
           alter:
             alter_text: false
@@ -1024,8 +1024,8 @@ display:
           label: Address
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "<p class=\"address\" translate=\"no\">\r\n  {% if field_address__address_line1 %}\r\n    {{ field_address__address_line1 }} <br>\r\n  {% endif %}\r\n\r\n  {% if field_address__address_line2 %}\r\n    {{ field_address__address_line2 }} <br>\r\n  {% endif %}\r\n\r\n  {% if field_address__locality or field_address__postal_code or field_address__administrative_area %}\r\n    {{ field_address__locality }}, {{ field_address__administrative_area }} {{ field_address__postal_code }}<br>\r\n  {% endif %}\r\n</p>"
             make_link: false
             path: ''
             absolute: false
