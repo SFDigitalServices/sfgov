@@ -84,7 +84,6 @@ display:
           description: ''
           columns:
             id: id
-            view_location: view_location
             field_address: field_address
             field_department: field_department
             field_address_organization: field_address_organization
@@ -96,13 +95,6 @@ display:
           info:
             id:
               sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            view_location:
-              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
@@ -244,7 +236,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a href="/location/{{ id }}" target="_blank" rel="noopener">{{ field_address }}</a>'
+            text: "<a href=\"/location/{{ id }}\" target=\"_blank\" rel=\"noopener\">\r\n{% if field_address__address_line1 %}{{ field_address__address_line1 }}<br>{% endif %}\r\n{{ field_address__address_line2 }}\r\n</a>"
             make_link: false
             path: ''
             absolute: false
