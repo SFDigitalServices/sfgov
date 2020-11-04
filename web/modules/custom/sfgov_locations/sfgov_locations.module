@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\sfgov_locations\Element\Address;
@@ -62,6 +64,53 @@ function sfgov_locations_element_info_alter(array &$info) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_location_edit_form':
+    case 'node_location_form':
+      // Field wrapper.
+      $form['field_departments']['#prefix'] = '<div id="field-departments-wrapper">';
+      $form['field_departments']['#suffix'] = '</div>';
+
+      // Attach AJAX callback to the field_departments values.
+      $i = 0;
+      while (isset($form['field_departments']['widget'][$i])) {
+        $form['field_departments']['widget'][$i]['target_id']['#ajax'] = [
+          'callback' => '_sfgov_locations_department_address',
+          'wrapper' => 'field-departments-wrapper',
+          'event' => 'autocompleteclose',
+        ];
+
+        $i++;
+      }
+
+      // Attach library to style the node form.
+      $form['#attached']['library'][] = 'sfgov_locations/form_style';
+
+      break;
+
+      // This handles direct add/edits at /admin/content/location/add/physical
+      // and /location/144/edit. If making changes here, note that you'll likely
+      // also want to make the same changes in
+      // sfgov_locations_inline_entity_form_entity_form_alter(),
+      // which will apply your changes in the context of using Entity Browser.
+      case 'location_physical_form':
+      case 'location_physical_edit':
+
+        // Remove the 'details' wrapper form. We're using a field group "Address"
+        // that includes both the Address field widget, and the Department field.
+        $form['field_address']['widget'][0]['#type'] = 'container';
+
+        // Customize Address field labels, descriptions, etc.
+        $form['field_address']['widget'][0]['address']['#after_build'][] = '_sfgov_locations_customize_address';
+
+        break;
+  }
+}
+
+/**
  * Implements hook_theme_registry_alter().
  */
 function sfgov_locations_theme_registry_alter(&$theme_registry) {
@@ -98,23 +147,53 @@ function sfgov_locations_field_views_data_alter(array &$data, FieldStorageConfig
 }
 
 /**
- * Implements hook_form_alter().
- *
- * This hook handles direct add/edits at '/admin/content/location/add/physical'
- * and '/location/144/edit'.
- *
- * If making changes here, note that you'll likely also want to make the same
- * changes in sfgov_locations_inline_entity_form_entity_form_alter(), which will
- * apply your changes in the context of using Entity Browser.
+ * Callback function to check if there is a main address related on the selected department.
  */
-function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (in_array($form_id, ['location_physical_form', 'location_physical_form_edit'])) {
-    // Remove the 'details' wrapper form. We're using a field group "Address"
-    // that includes both the Address field widget, and the Department field.
-    $form['field_address']['widget'][0]['#type'] = 'container';
+function _sfgov_locations_department_address(&$form, FormStateInterface $form_state) {
+  // Get triggering element.
+  $element = $form_state->getTriggeringElement();
 
-    // Customize Address field labels, descriptions, etc.
-    $form['field_address']['widget'][0]['address']['#after_build'][] = '_sfgov_locations_customize_address';
+  // Get delta from the triggering element.
+  $delta = $element['#parents'][1];
+
+  // Get all departments.
+  $departments = $form_state->getValue('field_departments');
+
+  // Get the triggering department id (the selected one).
+  $target_id = $departments[$delta]['target_id'];
+
+  // Query for the address from the department.
+  $query = \Drupal::entityQuery('location')
+    ->condition('field_department', $target_id)
+    ->condition('field_show_on_dept', TRUE);
+
+  if (!$query->execute()) {
+    drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
+  }
+
+  return $form['field_departments'];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form().
+ */
+function sfgov_locations_node_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  if ($entity->isNew() && $entity->bundle() == 'location') {
+    $storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+    $langcode = $form_state->get('langcode');
+
+    foreach ([
+      'Parking',
+      'Accessibility',
+      'Public transportation'
+    ] as $title) {
+      $paragraphs_entity = $storage->create([
+        'type' => 'accordion_item_simple',
+        'langcode' => $langcode,
+        'field_title' => $title,
+      ]);
+      $entity->get('field_getting_here_items')->appendItem($paragraphs_entity);
+    }
   }
 }
 
@@ -161,5 +240,49 @@ function sfgov_locations_field_widget_multivalue_office_hours_list_form_alter(ar
   if (!empty($elements['add_more'])) {
     // Change the label from 'Add item' to 'Add day'.
     $elements['add_more']['#value'] = t('Add day');
+  }
+}
+
+/**
+ * Implements template_preprocess_node().
+ */
+function sfgov_locations_preprocess_node(&$variables) {
+  $node = $variables['node'];
+
+  // Build the addresses list for the Location content type.
+  if ($node->bundle() == 'location') {
+    // Get departments.
+    $departments = $node->field_departments->referencedEntities();
+
+    // View builder for Location entity.
+    $location_view_builder = \Drupal::entityTypeManager()->getViewBuilder('location');
+
+    // Get addresses.
+    $department_addresses = [];
+    foreach ($departments as $department) {
+      $item = [
+        'label' => $department->label(),
+        'url' => $department->field_url->getValue() ? $department->field_url->uri : $department->toUrl()->toString()
+      ];
+
+      // Query departments from the Location entity to match with the referenced
+      // departments on the Location content type.
+      $query = \Drupal::entityQuery('location')
+        ->condition('field_department', $department->id())
+        ->condition('field_show_on_dept', TRUE);
+
+      // If there is any result, add into the $item array.
+      if ($result = $query->execute()) {
+        if ($address = \Drupal::entityTypeManager()->getStorage('location')->load(reset($result))) {
+          $address_view = $location_view_builder->view($address, 'default');
+          $item['address'] = render($address_view);
+        }
+      }
+
+      $department_addresses[] = $item;
+    }
+
+    // Pass the addresses to the template.
+    $variables['departments'] = $department_addresses;
   }
 }
