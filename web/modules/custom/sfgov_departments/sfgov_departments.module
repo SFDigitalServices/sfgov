@@ -1,12 +1,6 @@
 <?php
 
 use Drupal\node\Entity\Node;
-
-/**
- * @file
- * Contains sfgov_departments.module.
- */
-
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\sfgov_departments\SFgovDepartment;
 use Drupal\Core\Access\AccessResult;
@@ -203,11 +197,7 @@ function sfgov_departments_media_update(\Drupal\media\MediaInterface $entity) {
  * When trying to view, update or delete an entity it suffices to have the right to
  * do so in only one group the node belongs to.
  */
-function sfgov_departments_media_access(
-  \Drupal\media\MediaInterface $entity,
-  $op,
-  \Drupal\Core\Session\AccountInterface $account
-) {
+function sfgov_departments_media_access(\Drupal\media\MediaInterface $entity, $op, \Drupal\Core\Session\AccountInterface $account) {
   // We do not care about create access as we have our own wizard for that. Any
   // operation aside from 'view', 'update' and 'delete' is also unsupported.
   if (!in_array($op, ['view', 'update', 'delete'])) {

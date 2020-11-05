@@ -17,20 +17,20 @@ function sfgovpl_preprocess_page(&$variables) {
  */
 function sfgovpl_preprocess_page__node__campaign(&$variables) {
   // Conditionally render Logo or Title.
-  if (!empty($node)) {
     $node = $variables['node'];
-
-    if ($node->field_logo->entity) {
-      $variables['campaign_branding'] = $node->field_logo->view([
-        'type' => 'image',
-        'label' => 'hidden',
-        'settings' => array(
-          'image_style' => 'campaign_logo',
-        ),
-      ]);
-    }
-    else {
-      $variables['campaign_branding'] = [
+    
+    if (!empty($node)) {
+      if ($node->field_logo->entity) {
+        $variables['campaign_branding'] = $node->field_logo->view([
+          'type' => 'image',
+          'label' => 'hidden',
+          'settings' => array(
+            'image_style' => 'campaign_logo',
+          ),
+        ]);
+      }
+      else {
+        $variables['campaign_branding'] = [
         '#markup' => '<h1>' . $node->label() . '</h1>',
       ];
     }
