@@ -5,6 +5,7 @@ dependencies:
   config:
     - entity_browser.browser.image
     - field.field.node.department.field_about_description
+    - field.field.node.department.field_about_or_description
     - field.field.node.department.field_address
     - field.field.node.department.field_alert_expiration_date
     - field.field.node.department.field_alert_text
@@ -46,6 +47,7 @@ third_party_settings:
   field_group:
     group_about:
       children:
+        - field_about_or_description
         - field_about_description
         - field_image
         - field_parent_department
@@ -148,12 +150,20 @@ content:
     third_party_settings: {  }
   field_about_description:
     type: string_textarea
-    weight: 47
+    weight: 55
     region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_about_or_description:
+    weight: 54
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
   field_address:
     type: entity_browser_entity_reference
     weight: 35
@@ -184,7 +194,7 @@ content:
     third_party_settings: {  }
   field_call_to_action:
     type: paragraphs
-    weight: 52
+    weight: 60
     region: content
     settings:
       title: Paragraph
@@ -238,7 +248,7 @@ content:
     third_party_settings: {  }
   field_divisions:
     type: entity_reference_autocomplete
-    weight: 50
+    weight: 58
     region: content
     settings:
       match_operator: CONTAINS
@@ -293,7 +303,7 @@ content:
     third_party_settings: {  }
   field_image:
     type: entity_browser_entity_reference
-    weight: 48
+    weight: 56
     region: content
     settings:
       entity_browser: image
@@ -307,7 +317,7 @@ content:
     third_party_settings: {  }
   field_parent_department:
     type: entity_reference_autocomplete
-    weight: 49
+    weight: 57
     region: content
     settings:
       match_operator: CONTAINS
@@ -317,7 +327,7 @@ content:
     third_party_settings: {  }
   field_people:
     type: paragraphs
-    weight: 54
+    weight: 62
     region: content
     settings:
       title: Paragraph
@@ -355,7 +365,7 @@ content:
     third_party_settings: {  }
   field_public_bodies:
     type: paragraphs
-    weight: 51
+    weight: 59
     region: content
     settings:
       title: Paragraph
@@ -380,7 +390,7 @@ content:
     third_party_settings: {  }
   field_req_public_records_email:
     type: email_default
-    weight: 13
+    weight: 14
     region: content
     settings:
       size: 60
@@ -388,7 +398,7 @@ content:
     third_party_settings: {  }
   field_req_public_records_link:
     type: link_default
-    weight: 12
+    weight: 13
     region: content
     settings:
       placeholder_url: ''
@@ -422,7 +432,7 @@ content:
     third_party_settings: {  }
   field_social_media:
     type: paragraphs
-    weight: 53
+    weight: 61
     region: content
     settings:
       title: Paragraph
