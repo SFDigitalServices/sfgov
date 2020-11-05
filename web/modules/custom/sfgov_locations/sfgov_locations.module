@@ -69,42 +69,39 @@ function sfgov_locations_element_info_alter(array &$info) {
  * Alters the artist options on artwork pages.
  */
 function sfgov_locations_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form['#id']) {
+    case 'views-exposed-form-addresses-page-addresses':
+    case 'views-exposed-form-entity-browser-location-entity-browser-address':
 
-  if ($form['#id'] != 'views-exposed-form-addresses-page-addresses') {
-    return FALSE;
+      // Query list of Departments, sorted by Title.
+      $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
+      $nids = $storage->getQuery();
+      $nids = $nids->condition('type', 'department')
+        ->condition('status', 1)
+        ->sort('title')
+        ->execute();
+
+      if (!$nids) {
+        return FALSE;
+      }
+
+      // Create options list using Department node titles.
+      $options = [];
+      $nodes = $storage->loadMultiple($nids);
+      foreach ($nodes as $node) {
+        $options[$node->id()] = $node->getTitle();
+      }
+
+      // Change Departments field to a <select> that lists departments by name.
+      $field_name = 'field_department_target_id';
+      $form[$field_name]['#type'] = 'select';
+      $form[$field_name]['#multiple'] = FALSE;
+      $form[$field_name]['#empty_option'] = t('- Any -');
+      $form[$field_name]['#options'] = $options;
+      unset($form[$field_name]['#size']);
+
+      break;
   }
-
-  // Query nodes
-  $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
-  $nids = $storage->getQuery();
-
-  // List of Departments, sorted by Title.
-  $nids = $nids->condition('type', 'department')
-    ->condition('status', 1)
-    ->sort('title')
-    ->execute();
-
-  // If there are no nodes, move on
-  if (!$nids) {
-    return FALSE;
-  }
-
-  // Start building out the options for our select list
-  $options = [];
-  $nodes = $storage->loadMultiple($nids);
-
-  // Push titles into select list
-  foreach ($nodes as $node) {
-    $options[$node->id()] = $node->getTitle();
-  }
-
-  // Change Departments field to a <select> that lists departments by name.
-  $dept_field = 'field_department_target_id';
-  $form[$dept_field]['#type'] = 'select';
-  $form[$dept_field]['#multiple'] = FALSE;
-  $form[$dept_field]['#empty_option'] = t('- Any -');
-  $form[$dept_field]['#options'] = $options;
-  unset($form[$dept_field]['#size']);
 }
 
 /**
