@@ -10,7 +10,6 @@ dependencies:
     - address
     - eck
     - user
-    - verf
 id: addresses
 label: Addresses
 module: views
@@ -728,26 +727,29 @@ display:
           entity_type: location
           entity_field: type
           plugin_id: bundle
-        field_department_target_id_verf:
-          id: field_department_target_id_verf
+        field_department_target_id:
+          id: field_department_target_id
           table: location__field_department
-          field: field_department_target_id_verf
+          field: field_department_target_id
           relationship: none
           group_type: group
           admin_label: ''
-          operator: in
-          value: {  }
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
           group: 1
           exposed: true
           expose:
-            operator_id: field_department_target_id_verf_op
+            operator_id: field_department_target_id_op
             label: Department
             description: ''
             use_operator: false
-            operator: field_department_target_id_verf_op
+            operator: field_department_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_department_target_id_verf
+            identifier: field_department_target_id
             required: false
             remember: false
             multiple: false
@@ -757,7 +759,9 @@ display:
               writer: '0'
               publisher: '0'
               administrator: '0'
-            reduce: 0
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -770,27 +774,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          verf_target_bundles:
-            department: department
-            about: '0'
-            article: '0'
-            campaign: '0'
-            department_table: '0'
-            event: '0'
-            form_confirmation_page: '0'
-            form_page: '0'
-            information_page: '0'
-            landing: '0'
-            meeting: '0'
-            news: '0'
-            page: '0'
-            person: '0'
-            public_body: '0'
-            resource_collection: '0'
-            step_by_step: '0'
-            topic: '0'
-            transaction: '0'
-          plugin_id: verf
+          plugin_id: numeric
         field_address_address_line1:
           id: field_address_address_line1
           table: location__field_address
@@ -1079,7 +1063,20 @@ display:
             format: full_html
           plugin_id: text
       footer: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: 'There are no results to display.'
+            format: sf_restricted_html
+          plugin_id: text
       relationships:
         uid:
           id: uid
@@ -1105,13 +1102,10 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_department'
-        - 'config:views.view.addresses'
-        - node_list
   page_addresses:
     display_plugin: page
     id: page_addresses
@@ -1137,10 +1131,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_department'
-        - 'config:views.view.addresses'
-        - node_list
