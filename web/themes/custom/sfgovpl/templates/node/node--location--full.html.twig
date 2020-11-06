@@ -131,23 +131,12 @@
   </div>
   {% endif %}
 
-  {% if departments is not empty %}
+  {% if content.field_departments|render %}
   <div class="sfgov-section sfgov-section-at-location">
     <div class="sfgov-section-container">
       <h2 class="sfgov-section--heading" role="heading">At {{ label }}</h2>
       <div class="sfgov-section--content">
-        <div class="sfgov-container-two-column">
-          {% for item in departments %}
-          <div class="sfgov-container-item">
-            <div class="sfgov-container-item--inner">
-              <a href="{{ item.url }}">
-                <h5 class="at-location-label">{{ item.label }}</h5>
-              </a>
-              {% if item.address %}<div class="at-location-addrress">{{ item.address }}</div>{% endif %}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
+        {{ content.field_departments }}
       </div>
     </div>
   </div>

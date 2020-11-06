@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Template for the plain address formatter, for "Address" (phyiscal) location
+ * entity, when rendered with the "location_page" view mode.
+ *
+ * The following fields are not printed:
+ *
+ *   Not used:
+ *   - given_name (first name)
+ *   - additional_name (middle name)
+ *   - family_name (last name)
+ *   - dependent_locality.code  (neighborhood)
+ *
+ *   Contain data, but intentionally omitted for this view mode:
+ *   - address_line1
+ *   - locality (city)
+ *   - administrative_area.code (state)
+ *   - postal_code (zip)
+ *   - country (everything is in the US)
+ */
+#}
+<div class="address" translate="no">
+  {% if organization %}
+    {{ organization }}<br>
+  {% endif %}
+
+  {% if addressee %}
+    {{ addressee }}<br>
+  {% endif %}
+
+  {% if location_name %}
+    {{ location_name }}<br>
+  {% endif %}
+
+  {% if address_line2 %}
+    {{ address_line2 }}<br>
+  {% endif %}
+</div>
