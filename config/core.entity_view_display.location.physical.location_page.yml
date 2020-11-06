@@ -1,0 +1,69 @@
+uuid: 5b24ef4d-2655-450d-8730-27dfec189d3c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.location.location_page
+    - eck.eck_type.location.physical
+    - field.field.location.physical.field_address
+    - field.field.location.physical.field_department
+    - field.field.location.physical.field_operating_hours
+    - field.field.location.physical.field_text
+  module:
+    - address
+    - office_hours
+    - text
+id: location.physical.location_page
+targetEntityType: location
+bundle: physical
+mode: location_page
+content:
+  field_address:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_plain
+    region: content
+  field_operating_hours:
+    weight: 1
+    label: hidden
+    settings:
+      show_closed: open
+      office_hours_first_day: '0'
+      day_format: short
+      time_format: g
+      compress: true
+      grouped: true
+      closed_format: Closed
+      separator:
+        days: '<br />'
+        grouped_days: ' - '
+        day_hours: ': '
+        hours_hours: ' - '
+        more_hours: ', '
+      current_status:
+        position: ''
+        open_text: 'Currently open'
+        closed_text: 'Currently closed'
+      schema:
+        enabled: true
+      timezone_field: ''
+    third_party_settings: {  }
+    type: office_hours
+    region: content
+  field_text:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  changed: true
+  created: true
+  field_department: true
+  langcode: true
+  search_api_excerpt: true
+  title: true
+  uid: true
