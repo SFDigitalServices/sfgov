@@ -205,8 +205,7 @@ function _sfgov_locations_department_address(&$form, FormStateInterface $form_st
 
   // Query for the address from the department.
   $query = \Drupal::entityQuery('location')
-    ->condition('field_department', $target_id)
-    ->condition('field_show_on_dept', TRUE);
+    ->condition('field_department', $target_id);
 
   if (!$query->execute()) {
     drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
