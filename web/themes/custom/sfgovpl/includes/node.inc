@@ -315,7 +315,12 @@ function dept_page_fields() {
     }
 
     // about fields
-    if($node->hasField('field_about_description')) {
+    if($node->hasField('field_about_or_description') && isset($node->get('field_about_or_description')->getValue()[0]['value'])) {
+      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
+      if($aboutDescription) {
+        $theFields['about']['description'] = $aboutDescription;
+      }
+    } elseif($node->hasField('field_about_description')) {
       $aboutDescription = $node->get('field_about_description')->getValue() ? $node->get('field_about_description')->getValue()[0]['value'] : null;
       if($aboutDescription) {
         $theFields['about']['description'] = $aboutDescription;
