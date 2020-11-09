@@ -197,17 +197,16 @@ function _sfgov_locations_department_address(&$form, FormStateInterface $form_st
   // Get delta from the triggering element.
   $delta = $element['#parents'][1];
 
-  // Get all departments.
-  $departments = $form_state->getValue('field_departments');
+  // Get all departments from Location node.
+  $related_departments = $form_state->getValue('field_departments');
 
   // Get the triggering department id (the selected one).
-  $target_id = $departments[$delta]['target_id'];
+  $department_id = $related_departments[$delta]['target_id'];
 
-  // Query for the address from the department.
-  $query = \Drupal::entityQuery('location')
-    ->condition('field_department', $target_id);
+  // Load selected department.
+  $department = \Drupal::entityTypeManager()->getStorage('node')->load($department_id);
 
-  if (!$query->execute()) {
+  if (!$department->field_address->entity) {
     drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
   }
 
