@@ -44,7 +44,6 @@
         var selector = 'a[name="' + window.location.hash.replace('#','') + '"]';
         scrollTo(selector);
       }
-      checkWindowSize();
     });
   });
 })(jQuery);
