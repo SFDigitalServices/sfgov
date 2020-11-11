@@ -1,9 +1,9 @@
-uuid: 954408ef-e500-4752-9fbc-4a0f7c02556e
+uuid: fced4853-6b25-409e-b98e-c900a447a24c
 langcode: en
-status: false
+status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.location_page
     - field.field.node.location.body
     - field.field.node.location.field_about_description
     - field.field.node.location.field_address
@@ -22,20 +22,23 @@ dependencies:
     - node.type.location
   module:
     - user
-id: node.location.teaser
+id: node.location.location_page
 targetEntityType: node
 bundle: location
-mode: teaser
+mode: location_page
 content:
-  links:
-    weight: 100
-    settings: {  }
+  field_address:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: location_page
+      link: false
     third_party_settings: {  }
+    type: entity_reference_entity_view
     region: content
 hidden:
   body: true
   field_about_description: true
-  field_address: true
   field_alert_expiration_date: true
   field_alert_text: true
   field_at_this_location: true
@@ -49,4 +52,5 @@ hidden:
   field_services: true
   field_title: true
   langcode: true
+  links: true
   search_api_excerpt: true

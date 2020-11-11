@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.location.field_address
     - field.field.node.location.field_alert_expiration_date
     - field.field.node.location.field_alert_text
+    - field.field.node.location.field_at_this_location
     - field.field.node.location.field_departments
     - field.field.node.location.field_getting_here_items
     - field.field.node.location.field_image
@@ -69,14 +70,22 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
-  field_departments:
-    weight: 14
+  field_at_this_location:
+    weight: 15
     label: hidden
     settings:
       view_mode: location_page
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
+  field_departments:
+    weight: 14
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_getting_here_items:
     type: entity_reference_revisions_entity_view

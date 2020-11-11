@@ -111,14 +111,24 @@ function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $for
   switch ($form_id) {
     case 'node_location_edit_form':
     case 'node_location_form':
-      // Field wrapper.
-      $form['field_departments']['#prefix'] = '<div id="field-departments-wrapper">';
-      $form['field_departments']['#suffix'] = '</div>';
+      // Set Views argument for filtering the Related Locations node reference.
+      if ($node = \Drupal::routeMatch()->getParameter('node')) {
+        $i = 0;
+        while (isset($form['field_locations']['widget'][$i])) {
+          $form['field_locations']['widget'][$i]['target_id']['#selection_settings']['view']['arguments'] = [$node->id()];
+          $i++;
+        }
+      }
 
-      // Attach AJAX callback to the field_departments values.
+
+      // Field wrapper.
+      $form['field_at_this_location']['#prefix'] = '<div id="field-departments-wrapper">';
+      $form['field_at_this_location']['#suffix'] = '</div>';
+
+      // Attach AJAX callback to the field_at_this_location values.
       $i = 0;
-      while (isset($form['field_departments']['widget'][$i])) {
-        $form['field_departments']['widget'][$i]['target_id']['#ajax'] = [
+      while (isset($form['field_at_this_location']['widget'][$i])) {
+        $form['field_at_this_location']['widget'][$i]['target_id']['#ajax'] = [
           'callback' => '_sfgov_locations_department_address',
           'wrapper' => 'field-departments-wrapper',
           'event' => 'autocompleteclose',
@@ -198,7 +208,7 @@ function _sfgov_locations_department_address(&$form, FormStateInterface $form_st
   $delta = $element['#parents'][1];
 
   // Get all departments from Location node.
-  $related_departments = $form_state->getValue('field_departments');
+  $related_departments = $form_state->getValue('field_at_this_location');
 
   // Get the triggering department id (the selected one).
   $department_id = $related_departments[$delta]['target_id'];
@@ -210,7 +220,7 @@ function _sfgov_locations_department_address(&$form, FormStateInterface $form_st
     drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
   }
 
-  return $form['field_departments'];
+  return $form['field_at_this_location'];
 }
 
 /**
@@ -280,4 +290,11 @@ function sfgov_locations_field_widget_multivalue_office_hours_list_form_alter(ar
     // Change the label from 'Add item' to 'Add day'.
     $elements['add_more']['#value'] = t('Add day');
   }
+}
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgov_locations_preprocess_field__node__field_departments__location(&$variables) {
+  $variables['label'] = t('Departments');
 }

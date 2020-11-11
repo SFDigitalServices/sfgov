@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.location.field_address
     - field.field.node.location.field_alert_expiration_date
     - field.field.node.location.field_alert_text
+    - field.field.node.location.field_at_this_location
     - field.field.node.location.field_departments
     - field.field.node.location.field_getting_here_items
     - field.field.node.location.field_image
@@ -80,6 +81,7 @@ third_party_settings:
     group_related_information:
       children:
         - field_services
+        - field_at_this_location
         - field_locations
         - field_departments
       parent_name: ''
@@ -169,12 +171,9 @@ content:
     region: content
   field_alert_expiration_date:
     weight: 17
-    settings:
-      increment: 15
-      date_order: YMD
-      time_type: '24'
+    settings: {  }
     third_party_settings: {  }
-    type: datetime_datelist
+    type: datetime_default
     region: content
   field_alert_text:
     weight: 16
@@ -192,8 +191,18 @@ content:
         hide_guidelines: '0'
     type: text_textarea
     region: content
+  field_at_this_location:
+    weight: 10
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_departments:
-    weight: 32
+    weight: 12
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -245,7 +254,7 @@ content:
     region: content
   field_locations:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 11
     region: content
     settings:
       match_operator: CONTAINS
@@ -386,7 +395,7 @@ content:
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
   uid:
     type: entity_reference_autocomplete
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60

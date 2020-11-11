@@ -7,27 +7,17 @@
     }
   }
 
-  .group--left {
-    @include columns-720(left);
-  }
-  .group--right {
-    @include columns-350(right);
-
-    .sfgov-section {
-      background: $c-blue-1;
-      border-radius: 8px;
-      margin-bottom: 60px;
-      padding: 40px;
-    }    
-  }
 
   .sfgov-section {
     margin: 0;
 
     &--heading {
-      @include fs-title-1;
-      margin-top: 0;
       margin-bottom: 40px;
+      @include fs-title-1-mobile;
+      @include media($mobile-screen) {
+        @include fs-title-1;
+        margin-bottom: 60px;
+      }
     }
 
     &-info {
@@ -38,6 +28,9 @@
           width: 100%;
           height: auto;
         }
+      }
+      .__body {
+        margin-bottom: 60px;
       }
     }
 
@@ -56,7 +49,7 @@
       .eck-entity-address-field {
         margin-bottom: 1rem;
 
-        .field__label {
+        .__address .title {
           @include fs-title-5;
           margin-bottom: 1rem;
         }
@@ -65,11 +58,18 @@
           margin: 0;
         }
       }
+
+      .simple-gmap-link {
+        margin-bottom: 0;
+      }
     }
 
     &-contact {
       h2 {
-        @include fs-title-3;
+        @include fs-title-3-mobile;
+        @include media($mobile-screen) {
+          @include fs-title-3;
+        }
       }
 
       .paragraph {
@@ -99,11 +99,40 @@
 
       h2 {
         color: white;
+        margin: 0 0 20px 0;
       }
 
       .__about-description {
-        @include fs-big-description;
+        @include fs-big-description-mobile;
+        @include media($mobile-screen) {
+          @include fs-big-description;
+        }
         @include antialiasing;
+        margin-bottom: 20px;
+      }
+
+      .__departments {
+        .field__label {
+          @include fs-title-3-mobile;
+          @include media($mobile-screen) {
+            @include fs-title-3;
+          }
+        }
+
+        .field__items {
+          @include media($mobile-screen) {
+            padding-left: 30px;
+          }
+
+          .field__item {
+            margin-bottom: 20px;
+
+            a {
+              @include antialiasing;
+              color: white;
+            }
+          }
+        }
       }
     }
 
@@ -113,7 +142,21 @@
         border-radius: 8px;
 
         .inner {
-          padding: 40px 40px 0 40px;
+          @include media-max($mobile-screen) {
+            padding: 20px;
+
+            .title {
+              margin-top: 0;
+            }
+
+            .person-card:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          @include media($medium-screen) {
+            padding: 40px 40px 0 40px;
+          }
         }
       }
     }
@@ -126,14 +169,7 @@
       .sfgov-container-item {
         margin: 0;
 
-        &:nth-child(odd) {
-          padding-right: 20px;
-        }
-        &:nth-child(even) {
-          padding-left: 20px;
-        }
-
-        &--inner {
+        article {
           margin-bottom: 30px;
           padding-bottom: 30px;
           position: relative;
@@ -158,6 +194,7 @@
               margin-bottom: 1rem;
               font-weight: 500;
               text-decoration: underline;
+              margin: 0;
             }
 
             &:hover {
@@ -166,25 +203,69 @@
               }
             }
           }
+
+          .at-location-addrress {
+            margin-top: 1rem;
+
+            p {
+              margin: 0;
+            }
+
+            .__operating-hours {
+              margin-top: 1rem; 
+            }
+          }
+        }
+
+        @include media($narrow-screen) {
+          &:nth-child(odd) article {
+            margin-right: 20px;
+          }
+          &:nth-child(even) article {
+            margin-left: 20px;
+          }
         }
       }
+    }
+  }
 
-      .eck-entity-address-field {
-        p {
-          margin: 0;
-        }
+  .group--left {
+    @include columns-720(left);
+  }
+  .group--right {
+    @include columns-350(right);
+    margin-top: 40px;
+
+    .sfgov-section {
+      background: $c-blue-1;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 20px;
+
+      &--heading {
+        margin: 0 0 20px 0;
       }
+    }
 
-      .simple-gmap-static-map,
-      .simple-gmap-link {
-        display: none;
+    @include media($mobile-screen) {
+      margin-top: 0;
+
+      .sfgov-section {
+        margin-bottom: 60px;
+        padding: 40px;
       }
     }
   }
 
   .sfgov-section-container {
     @include contain-1090;
-    padding: 60px 0;
     overflow: hidden;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    @include media($narrow-screen) {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
   }
 }
