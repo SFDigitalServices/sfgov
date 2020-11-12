@@ -321,6 +321,13 @@ function dept_page_fields() {
         $theFields['about']['description'] = $aboutDescription;
       }
     }
+    // Override about_description field if new about_or_description field is set
+    if($node->hasField('field_about_or_description')) {
+      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
+      if($aboutDescription) {
+        $theFields['about']['description'] = $aboutDescription;
+      }
+    }
     if($node->hasField('field_divisions')) {
       $aboutDivisions = $node->get('field_divisions')->getValue();
       if($aboutDivisions) {
