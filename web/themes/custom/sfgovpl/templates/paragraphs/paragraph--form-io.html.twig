@@ -59,6 +59,7 @@
 (function() {
 
   var time = Date.now()
+  var confirmationURL = {{ paragraph.field_formio_confirmation_url.value | escape('js') }}
 
   window.addEventListener('load', function() {
     var amp = amplitude.getInstance()
@@ -168,12 +169,12 @@
               }
             }
           }
-        {% if paragraph.field_formio_confirmation_url.value %}
-          // if confirmation url is set, this is for backward compatibility
-          window.location = '{{ paragraph.field_formio_confirmation_url.value }}'
-        {% endif %}
+
+          if (confirmationURL) {
+            window.location = confirmationURL
+          }
+        })
       })
-    })
 
     function customAddCssClassById(classes) {
       for (var key in classes) {
