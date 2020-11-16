@@ -57,16 +57,16 @@
 {% block content %}
 <script>
 (function() {
-   var time = Date.now()
-   var amp = amplitude.getInstance()
-   
-   window.addEventListener('load', function() {
+    var time = Date.now()
+
+    window.addEventListener('load', function() {
+      var amp = amplitude.getInstance()
       amp.logEvent('window.load', { time: Date.now() - time })
-      
+
       // keeping this as a DOM for patch.js
       var el = document.getElementById('formio-{{ form_id }}')
       var options = safeJSONParse(el.getAttribute('data-options'))
-      
+
       var formEventHandlers = {
         submit: function (submission) {
         },
@@ -116,7 +116,7 @@
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
           amp.logEvent('form.load', { time: Date.now() - time })
-          
+
           for (var eventName in formEventHandlers) {
             form.on(eventName, function () {
               const data = Object.assign({
@@ -125,7 +125,7 @@
               amp.logEvent('form.' + eventName, data)
             })
           }
-          
+
           //perform sfoptions, hide certain elements
           if (options.sfoptions && options.sfoptions.hide instanceof Object) {
             customHideElements(options.sfoptions.hide)
@@ -168,7 +168,7 @@
           {% endif %}
         })
       })
-      
+
       function customAddCssClassById(classes) {
         for (var key in classes) {
           var el = document.getElementById(key)
@@ -256,7 +256,7 @@
         return parsed
       }
   })
-  
+
 })()
 </script>
 {% endblock content %}
