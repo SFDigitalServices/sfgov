@@ -1,0 +1,7 @@
+services:
+  logger.channel.sfgov_moderation:
+    parent: logger.channel_base
+    arguments: ['sfgov_moderation']
+  sfgov_moderation.util:
+    class: Drupal\sfgov_moderation\ModerationUtilService
+    arguments: ['@entity_type.manager']
