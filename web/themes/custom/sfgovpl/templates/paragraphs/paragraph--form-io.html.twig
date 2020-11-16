@@ -79,7 +79,7 @@
       amplitude.logEvent(eventName, Object.assign(data, amplitudeData))
     }
 
-    amp('window.load', { time: loadTime })
+    amp('window.load', { load_time: loadTime })
 
     // keeping this as a DOM for patch.js
     var el = document.getElementById('formio-{{ form_id }}')
@@ -96,32 +96,32 @@
       submit: function (submission) { },
       submitDone: function (submission) { },
       error: function (message) {
-        return { message: message }
+        return { error: message }
       },
       submitError: function (message) {
-        return { message: message }
+        return { error: message }
       },
       componentError: function (error) {
         return {
           component: error.component.key,
-          message: error.message
+          error: error.message
         }
       },
       prevPage: function (data) {
-        return { page: data.page }
+        return { page_index: data.page }
       },
       nextPage: function (data) {
-        return { page: data.page }
+        return { page_index: data.page }
       },
       wizardNavigationClicked: function (page) {
         return {
-          title: page.title
+          page_title: page.title
         }
       },
       wizardPageSelected: function (page, index) {
         return {
-          title: page.title,
-          page: index
+          page_title: page.title,
+          page_index: index
         }
       },
       saveDraft: function (submission) { },
@@ -136,14 +136,14 @@
     time = Date.now()
     Formio.createForm(el, el.getAttribute('data-source'), options)
       .then(function(form) {
-        amp('form.load', { time: Date.now() - time })
+        amp('form.load', { load_time: Date.now() - time })
 
         Object.keys(formEventHandlers).forEach(function(eventName) {
           form.on(eventName, function() {
-            var data = formEventHandlers[eventName].apply(form, arguments)
-            if (data !== false) {
-              data = Object.assign({ form: form.url }, amplitudeData, data)
-              amp('form.' + eventName, data)
+            var formData = formEventHandlers[eventName].apply(form, arguments)
+            if (formData !== false) {
+              formData.url = form.url
+              amp('form.' + eventName, { form: formData })
             }
           })
         })
