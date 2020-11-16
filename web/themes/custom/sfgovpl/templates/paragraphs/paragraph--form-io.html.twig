@@ -57,204 +57,205 @@
 {% block content %}
 <script>
 (function() {
-    var time = Date.now()
 
-    window.addEventListener('load', function() {
-      var amp = amplitude.getInstance()
-      amp.logEvent('window.load', { time: Date.now() - time })
+  var time = Date.now()
 
-      // keeping this as a DOM for patch.js
-      var el = document.getElementById('formio-{{ form_id }}')
-      var options = safeJSONParse(el.getAttribute('data-options'))
+  window.addEventListener('load', function() {
+    var amp = amplitude.getInstance()
+    amp.logEvent('window.load', { time: Date.now() - time })
 
-      var formEventHandlers = {
-        submit: function (submission) {
-        },
-        submitDone: function (submission) {
-        },
-        error: function (message) {
-          return { message: message }
-        },
-        submitError: function (message) {
-          return { message: message }
-        },
-        componentError: function (error) {
-          return {
-            component: error.component.key,
-            message: error.message
-          }
-        },
-        prevPage: function (data) {
-          return { page: data.page }
-        },
-        nextPage: function (data) {
-          return { page: data.page }
-        },
-        wizardNavigationClicked: function (page) {
-          return {
-            title: page.title
-          }
-        },
-        wizardPageSelected: function (page, index) {
-          return {
-            title: page.title,
-            page: index
-          }
-        },
-        saveDraft: function (submission) {
-        },
-        restoreDraft: function (submission) {
-        },
-        editGridAddRow: function (data) {
-          return {
-            component: data.component.key
-          }
+    // keeping this as a DOM for patch.js
+    var el = document.getElementById('formio-{{ form_id }}')
+    var options = safeJSONParse(el.getAttribute('data-options'))
+
+    /*
+     * Every key in this object is a form event name, and the value is a
+     * function that returns amplitude event data for the given event data.
+     *
+     * Note that formiojs uses eventemitter2 and usually emits event data as
+     * multiple arguments to the listener rather than as a single event
+     * object.
+     */
+    var formEventHandlers = {
+      submit: function (submission) { },
+      submitDone: function (submission) { },
+      error: function (message) {
+        return { message: message }
+      },
+      submitError: function (message) {
+        return { message: message }
+      },
+      componentError: function (error) {
+        return {
+          component: error.component.key,
+          message: error.message
         }
-      }
+      },
+      prevPage: function (data) {
+        return { page: data.page }
+      },
+      nextPage: function (data) {
+        return { page: data.page }
+      },
+      wizardNavigationClicked: function (page) {
+        return {
+          title: page.title
+        }
+      },
+      wizardPageSelected: function (page, index) {
+        return {
+          title: page.title,
+          page: index
+        }
+      },
+      saveDraft: function (submission) { },
+      restoreDraft: function (submission) { }
+    }
 
-      time = Date.now()
-      Formio.createForm(el, el.getAttribute('data-source'), options)
-        .then(function(form) {
-          amp.logEvent('form.load', { time: Date.now() - time })
+    time = Date.now()
+    Formio.createForm(el, el.getAttribute('data-source'), options)
+      .then(function(form) {
+        amp.logEvent('form.load', { time: Date.now() - time })
 
-          for (var eventName in formEventHandlers) {
-            form.on(eventName, function () {
-              const data = Object.assign({
-                form: this.url
-              }, formEventHandlers[eventName].apply(form, arguments))
+        for (var eventName in formEventHandlers) {
+          form.on(eventName, function () {
+            var data = formEventHandlers[eventName].apply(form, arguments)
+            if (data !== false) {
+              data = Object.assign({ form: form.url }, data)
               amp.logEvent('form.' + eventName, data)
-            })
-          }
-
-          //perform sfoptions, hide certain elements
-          if (options.sfoptions && options.sfoptions.hide instanceof Object) {
-            customHideElements(options.sfoptions.hide)
-          }
-          // add css class to element(by id)
-          if (options.sfoptions && options.sfoptions.addClass) {
-            customAddCssClassById(options.sfoptions.addClass)
-          }
-          // if cookies are defined, populate the form field with cookie value.
-          if(options.sfoptions instanceof Object && options.sfoptions.cookies){
-            manageFormCookies(options.sfoptions["cookies"], form, true)
-          }
-          // perform custom action on nextPage event
-          form.on('nextPage', function(){
-            // set form cookies, if there are any
-            if(options.sfoptions instanceof Object && options.sfoptions.cookies){
-              manageFormCookies(options.sfoptions.cookies, form, false)
             }
           })
+        }
 
-          // What to do when the submit begins.
-          form.on('submitDone', function(submission) {
-            // custom options defined in Form.io render options field
-            if(options.redirects instanceof Object){
-              if (options.sfoptions && options.sfoptions.hide instanceof Object) {
-                customHideElements(options.sfoptions.hide)
-              }
-              for (var key in options.redirects) {
-                var value = options.redirects[key]
-                // only one "redirect" should be "yes", this is set in the form.io form
-                if (submission.data[key] === "yes") {
-                  window.location = value
-                  break
-                }
+        //perform sfoptions, hide certain elements
+        if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+          customHideElements(options.sfoptions.hide)
+        }
+        // add css class to element(by id)
+        if (options.sfoptions && options.sfoptions.addClass) {
+          customAddCssClassById(options.sfoptions.addClass)
+        }
+        // if cookies are defined, populate the form field with cookie value.
+        if(options.sfoptions instanceof Object && options.sfoptions.cookies){
+          manageFormCookies(options.sfoptions["cookies"], form, true)
+        }
+        // perform custom action on nextPage event
+        form.on('nextPage', function(){
+          // set form cookies, if there are any
+          if(options.sfoptions instanceof Object && options.sfoptions.cookies){
+            manageFormCookies(options.sfoptions.cookies, form, false)
+          }
+        })
+
+        // What to do when the submit begins.
+        form.on('submitDone', function(submission) {
+          // custom options defined in Form.io render options field
+          if(options.redirects instanceof Object){
+            if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+              customHideElements(options.sfoptions.hide)
+            }
+            for (var key in options.redirects) {
+              var value = options.redirects[key]
+              // only one "redirect" should be "yes", this is set in the form.io form
+              if (submission.data[key] === "yes") {
+                window.location = value
+                break
               }
             }
-          {% if paragraph.field_formio_confirmation_url.value %}
-            // if confirmation url is set, this is for backward compatibility
-            window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
-          {% endif %}
-        })
+          }
+        {% if paragraph.field_formio_confirmation_url.value %}
+          // if confirmation url is set, this is for backward compatibility
+          window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
+        {% endif %}
       })
+    })
 
-      function customAddCssClassById(classes) {
-        for (var key in classes) {
-          var el = document.getElementById(key)
-          if (el != null) {
-            el.classList.add(classes[key])
-          }
+    function customAddCssClassById(classes) {
+      for (var key in classes) {
+        var el = document.getElementById(key)
+        if (el != null) {
+          el.classList.add(classes[key])
         }
       }
+    }
 
-      function customHideElements(elements) {
-        elements.forEach(function(klass, index) {
-          var hide = document.getElementsByClassName(klass)
-          for (var i = 0; i < hide.length; i++){
-            hide[i].style.display = "none"
-          }
-        })
-      }
-
-      function setCookie(name, value){
-        var today = new Date();
-        var expiry = new Date(today.getTime() + 90 * 24 * 3600 * 1000); // plus 90 days
-        document.cookie=name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
-      }
-
-      function getCookie(name){
-        var re = new RegExp(name + "=([^;]+)");
-        var value = re.exec(document.cookie);
-        return (value != null) ? unescape(value[1]) : null;
-      }
-
-      function setCheckboxRadioButton(field, cookieval, fieldtype) {
-        if (!cookieval) return;
-
-        if (cookieval.includes(field.value) ){
-          field.prop('checked', true)
+    function customHideElements(elements) {
+      elements.forEach(function(klass, index) {
+        var hide = document.getElementsByClassName(klass)
+        for (var i = 0; i < hide.length; i++){
+          hide[i].style.display = "none"
         }
+      })
+    }
+
+    function setCookie(name, value){
+      var today = new Date();
+      var expiry = new Date(today.getTime() + 90 * 24 * 3600 * 1000); // plus 90 days
+      document.cookie=name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
+    }
+
+    function getCookie(name){
+      var re = new RegExp(name + "=([^;]+)");
+      var value = re.exec(document.cookie);
+      return (value != null) ? unescape(value[1]) : null;
+    }
+
+    function setCheckboxRadioButton(field, cookieval, fieldtype) {
+      if (!cookieval) return;
+
+      if (cookieval.includes(field.value) ){
+        field.prop('checked', true)
       }
+    }
 
-      function manageFormCookies(cookies, form, populateAll) {
-        cookies.forEach(function(item, index) {
-          var field = $('input[name*="'+item+'"]') // use jquery to get dynamic field by name
-          var fieldtype = field.prop('type')
+    function manageFormCookies(cookies, form, populateAll) {
+      cookies.forEach(function(item, index) {
+        var field = $('input[name*="'+item+'"]') // use jquery to get dynamic field by name
+        var fieldtype = field.prop('type')
 
-          // special type: select, because formio renders select as divs
-          var selectField = $('select[name*="'+item+'"]')[0]
-          if (selectField){
-            field = $(selectField) // convert to jQuery object
+        // special type: select, because formio renders select as divs
+        var selectField = $('select[name*="'+item+'"]')[0]
+        if (selectField){
+          field = $(selectField) // convert to jQuery object
+        }
+        if (field || populateAll) {
+          var cookieval = getCookie(item)
+          if (cookieval) {
+            // set submission data, form validation needs this
+            form._submission.data[item] = cookieval
           }
-          if (field || populateAll) {
-            var cookieval = getCookie(item)
-            if (cookieval) {
-              // set submission data, form validation needs this
-              form._submission.data[item] = cookieval
+
+          if (field) { // populate fields with cookie values
+            if (fieldtype !== undefined && (fieldtype === 'radio' || fieldtype === 'checkbox')) {
+              setCheckboxRadioButton(field, cookieval, fieldtype)
+            } else {
+              field.val(cookieval)
             }
-
-            if (field) { // populate fields with cookie values
-              if (fieldtype !== undefined && (fieldtype === 'radio' || fieldtype === 'checkbox')) {
-                setCheckboxRadioButton(field, cookieval, fieldtype)
-              } else {
-                field.val(cookieval)
-              }
-            } else if (field) {
-              // set cookie for first time
-              if (fieldtype !== undefined && (fieldtype === 'radio' || fieldtype === 'checkbox')) {
-                setCookie(item, field.prop('checked'))
-              } else {
-                setCookie(item, field.val())
-              }
-            } // updates cookie if value changed
-            $(field).change(function() {
-              console.log("setting cookie for " + item + " with value " + this.value)
-              setCookie(item, this.value)
-            })
-          }
-        })
-      }
-
-      function safeJSONParse(str) {
-        var parsed = {}
-        try {
-          parsed = JSON.parse(str)
-        } catch (error) {
-          console.warn('Unable to parse form options:', str)
+          } else if (field) {
+            // set cookie for first time
+            if (fieldtype !== undefined && (fieldtype === 'radio' || fieldtype === 'checkbox')) {
+              setCookie(item, field.prop('checked'))
+            } else {
+              setCookie(item, field.val())
+            }
+          } // updates cookie if value changed
+          $(field).change(function() {
+            console.log("setting cookie for " + item + " with value " + this.value)
+            setCookie(item, this.value)
+          })
         }
-        return parsed
+      })
+    }
+
+    function safeJSONParse(str) {
+      var parsed = {}
+      try {
+        parsed = JSON.parse(str)
+      } catch (error) {
+        console.warn('Unable to parse form options:', str)
       }
+      return parsed
+    }
   })
 
 })()
