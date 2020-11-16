@@ -109,7 +109,12 @@
         }
       },
       saveDraft: function (submission) { },
-      restoreDraft: function (submission) { }
+      restoreDraft: function (submission) { },
+      editGridAddRow: function (data) {
+        return {
+          component: data.component.key
+        }
+      }
     }
 
     time = Date.now()
@@ -117,7 +122,7 @@
       .then(function(form) {
         amp.logEvent('form.load', { time: Date.now() - time })
 
-        for (var eventName in formEventHandlers) {
+        Object.keys(formEventHandlers).forEach(function (eventName) {
           form.on(eventName, function () {
             var data = formEventHandlers[eventName].apply(form, arguments)
             if (data !== false) {
@@ -125,7 +130,7 @@
               amp.logEvent('form.' + eventName, data)
             }
           })
-        }
+        })
 
         //perform sfoptions, hide certain elements
         if (options.sfoptions && options.sfoptions.hide instanceof Object) {
