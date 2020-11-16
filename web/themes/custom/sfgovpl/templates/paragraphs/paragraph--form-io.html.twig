@@ -122,8 +122,8 @@
       .then(function(form) {
         amp.logEvent('form.load', { time: Date.now() - time })
 
-        Object.keys(formEventHandlers).forEach(function (eventName) {
-          form.on(eventName, function () {
+        Object.keys(formEventHandlers).forEach(function(eventName) {
+          form.on(eventName, function() {
             var data = formEventHandlers[eventName].apply(form, arguments)
             if (data !== false) {
               data = Object.assign({ form: form.url }, data)
@@ -141,13 +141,13 @@
           customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
-        if(options.sfoptions instanceof Object && options.sfoptions.cookies){
-          manageFormCookies(options.sfoptions["cookies"], form, true)
+        if (options.sfoptions instanceof Object && options.sfoptions.cookies) {
+          manageFormCookies(options.sfoptions.cookies, form, true)
         }
         // perform custom action on nextPage event
-        form.on('nextPage', function(){
+        form.on('nextPage', function() {
           // set form cookies, if there are any
-          if(options.sfoptions instanceof Object && options.sfoptions.cookies){
+          if (options.sfoptions instanceof Object && options.sfoptions.cookies) {
             manageFormCookies(options.sfoptions.cookies, form, false)
           }
         })
@@ -155,7 +155,7 @@
         // What to do when the submit begins.
         form.on('submitDone', function(submission) {
           // custom options defined in Form.io render options field
-          if(options.redirects instanceof Object){
+          if (options.redirects instanceof Object) {
             if (options.sfoptions && options.sfoptions.hide instanceof Object) {
               customHideElements(options.sfoptions.hide)
             }
@@ -170,7 +170,7 @@
           }
         {% if paragraph.field_formio_confirmation_url.value %}
           // if confirmation url is set, this is for backward compatibility
-          window.location = '{{ paragraph.field_formio_confirmation_url.value }}';
+          window.location = '{{ paragraph.field_formio_confirmation_url.value }}'
         {% endif %}
       })
     })
@@ -187,28 +187,28 @@
     function customHideElements(elements) {
       elements.forEach(function(klass, index) {
         var hide = document.getElementsByClassName(klass)
-        for (var i = 0; i < hide.length; i++){
+        for (var i = 0; i < hide.length; i++) {
           hide[i].style.display = "none"
         }
       })
     }
 
-    function setCookie(name, value){
-      var today = new Date();
+    function setCookie(name, value) {
+      var today = new Date()
       var expiry = new Date(today.getTime() + 90 * 24 * 3600 * 1000); // plus 90 days
-      document.cookie=name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
+      document.cookie=name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString()
     }
 
-    function getCookie(name){
-      var re = new RegExp(name + "=([^;]+)");
-      var value = re.exec(document.cookie);
-      return (value != null) ? unescape(value[1]) : null;
+    function getCookie(name) {
+      var re = new RegExp(name + "=([^;]+)")
+      var value = re.exec(document.cookie)
+      return (value != null) ? unescape(value[1]) : null
     }
 
     function setCheckboxRadioButton(field, cookieval, fieldtype) {
-      if (!cookieval) return;
+      if (!cookieval) return
 
-      if (cookieval.includes(field.value) ){
+      if (cookieval.includes(field.value)) {
         field.prop('checked', true)
       }
     }
@@ -220,7 +220,7 @@
 
         // special type: select, because formio renders select as divs
         var selectField = $('select[name*="'+item+'"]')[0]
-        if (selectField){
+        if (selectField) {
           field = $(selectField) // convert to jQuery object
         }
         if (field || populateAll) {
