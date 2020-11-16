@@ -62,8 +62,19 @@
   var confirmationURL = {{ paragraph.field_formio_confirmation_url.value | escape('js') }}
 
   window.addEventListener('load', function() {
+    var loadTime = Date.now() - time
     var amp = amplitude.getInstance()
-    amp.logEvent('window.load', { time: Date.now() - time })
+    amp.logEvent('window.load', { time: loadTime })
+
+    // Get the properties defined in the Amplitude event for "Feedback form".
+    var amplitudeData = {}
+    if (drupalSettings.amplitude.events.length) {
+      drupalSettings.amplitude.events.find(function(obj) {
+        if (obj.name === 'Page view') {
+          amplitudeData = JSON.parse(obj.properties)
+        }
+      })
+    }
 
     // keeping this as a DOM for patch.js
     var el = document.getElementById('formio-{{ form_id }}')
@@ -74,8 +85,7 @@
      * function that returns amplitude event data for the given event data.
      *
      * Note that formiojs uses eventemitter2 and usually emits event data as
-     * multiple arguments to the listener rather than as a single event
-     * object.
+     * multiple arguments to the listener rather than a single event object.
      */
     var formEventHandlers = {
       submit: function (submission) { },
@@ -127,7 +137,7 @@
           form.on(eventName, function() {
             var data = formEventHandlers[eventName].apply(form, arguments)
             if (data !== false) {
-              data = Object.assign({ form: form.url }, data)
+              data = Object.assign({ form: form.url }, amplitudeData, data)
               amp.logEvent('form.' + eventName, data)
             }
           })
