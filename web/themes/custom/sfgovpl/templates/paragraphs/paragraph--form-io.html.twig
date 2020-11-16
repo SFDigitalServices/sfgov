@@ -63,8 +63,6 @@
 
   window.addEventListener('load', function() {
     var loadTime = Date.now() - time
-    var amp = amplitude.getInstance()
-    amp.logEvent('window.load', { time: loadTime })
 
     // Get the properties defined in the Amplitude event for "Feedback form".
     var amplitudeData = {}
@@ -75,6 +73,13 @@
         }
       })
     }
+
+    var amplitude = window.amplitude.getInstance()
+    var amp = function(eventName, data) {
+      amplitude.logEvent(eventName, Object.assign(data, amplitudeData))
+    }
+
+    amp('window.load', { time: loadTime })
 
     // keeping this as a DOM for patch.js
     var el = document.getElementById('formio-{{ form_id }}')
@@ -131,14 +136,14 @@
     time = Date.now()
     Formio.createForm(el, el.getAttribute('data-source'), options)
       .then(function(form) {
-        amp.logEvent('form.load', { time: Date.now() - time })
+        amp('form.load', { time: Date.now() - time })
 
         Object.keys(formEventHandlers).forEach(function(eventName) {
           form.on(eventName, function() {
             var data = formEventHandlers[eventName].apply(form, arguments)
             if (data !== false) {
               data = Object.assign({ form: form.url }, amplitudeData, data)
-              amp.logEvent('form.' + eventName, data)
+              amp('form.' + eventName, data)
             }
           })
         })
