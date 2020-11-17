@@ -1,3 +1,5 @@
+{{ content.content_moderation_control }}
+
  {% block header %}
     {% include '@theme/hero-banner-with-image.twig' with {
       'banner': {
@@ -11,6 +13,7 @@
   {% block content %}
       <div class="confirmation--left">
         {{ content|without(
+          'content_moderation_control',
           'field_confirmation_sidebar',
           'field_banner_color',
           'field_banner_image',

@@ -14,7 +14,11 @@
 
   {% block content %}
     <div class="step-by-step-content">
-      {{ content | without('field_description', 'field_topics') }}
+      {{ content|without(
+        'content_moderation_control',
+        'field_description',
+        'field_topics'
+      ) }}
     </div>
     {% include '@theme/last-updated.twig' with {
       'date': node.changedtime|date('F d, Y')
