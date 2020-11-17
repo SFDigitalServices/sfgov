@@ -28,8 +28,17 @@ function sfgov_admin_page_attachments(array &$page) {
   /** @var \Drupal\Core\Routing\AdminContext $is_admin */
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
 
-  if ($is_admin) {
+  $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+  if ($is_admin && $active_theme == 'seven') {
     $page['#attached']['library'][] = 'sfgov_admin/admin';
+  }
+
+  // This library is for backend-related functionality, like inline Diffs,
+  // Preview, and Workflow functionality, where default theme is active, and
+  // administrative tools are on page.
+  $logged_in = \Drupal::currentUser()->isAuthenticated();
+  if ($logged_in && $active_theme == 'sfgovpl') {
+    $page['#attached']['library'][] = 'sfgovpl/sfgov-editorial';
   }
 }
 
