@@ -1,12 +1,12 @@
 {% if content.field_spotlight_img|render %}
   {% set image = paragraph.field_spotlight_img.entity %}
-  {% set image_url = image ? file_url(image.field_media_image.entity.fileuri) : null %}
-  {% set image_alt = image.field_media_image.alt|trim %}
-  {% set image_attributes = create_attribute({
-    'aria-label': image_alt,
+  {% set img_url = image ? file_url(image.field_media_image.entity.fileuri) : null %}
+  {% set img_alt = image.field_media_image.alt|trim %}
+  {% set img_attributes = create_attribute({
+    'aria-label': img_alt,
     'role': 'img',
     'style': '
-      background-image: url(' ~ image_url ~ ');
+      background-image: url(' ~ img_url ~ ');
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
@@ -35,7 +35,7 @@
     </div>
 
     {% if image %}
-      <div class="sfgov-spotlight-section sfgov-spotlight-image"{{ image_attributes }}>
+      <div class="sfgov-spotlight-section sfgov-spotlight-image"{{ img_attributes }}>
         {{ content.field_spotlight_img }}
       </div>
     {% endif %}
