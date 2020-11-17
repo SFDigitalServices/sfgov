@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Template override for the "Content moderation" widget.
+ */
+#}
+
+<details class="content-moderation-control">
+  <summary><span>{{'Moderate'|t }}</span></summary>
+
+  <div class="content-moderation-control__content">
+    <div class="content-moderation-control__transition">
+      {{ form.current }}
+      {{ form.new_state }}
+    </div>
+
+    <div class="content-moderation-control__log">
+      {{ form.revision_log }}
+      {{ form.submit }}
+    </div>
+
+    {{ form|without('current', 'new_state', 'revision_log', 'submit') }}
+  </div>
+</details>
+

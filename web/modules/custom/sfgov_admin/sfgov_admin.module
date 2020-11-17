@@ -3,6 +3,7 @@
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Component\Utility\Html;
 
 /**
  * Implements hook_theme().
@@ -194,9 +195,9 @@ function sfgov_admin_preprocess_field_multiple_value_form__autocomplete(&$variab
 }
 
 function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $viewId = $form['#id']; 
-  if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display  
-    return; 
+  $viewId = $form['#id'];
+  if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display
+    return;
   }
 
   $form['field_direct_external_url_uri_op']['#options'] = array(
@@ -245,4 +246,20 @@ function sfgov_admin_preprocess_file_upload_help(&$variables) {
   // Remove all help text except for the user-entered description.
   $variables['descriptions'] = $variables['description'];
 
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $current_state = $form['current']['#markup'];
+  $classes = [
+    'form-item-current-state',
+    'form-item-current-state--' .  Html::cleanCssIdentifier(strtolower($current_state)),
+  ];
+
+  $form['current']['#title'] = t('Current state');
+  $form['current']['#markup'] = '<div class="' . implode($classes, ' ') . '">' . $current_state . '</div>';
+  $form['revision_log']['#placeholder'] = t('Log message');
+  $form['revision_log']['#size'] = NULL;
 }
