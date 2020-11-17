@@ -16,7 +16,7 @@ use Drupal\Core\Link;
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
     $content_type = $variables['node']->getType();
-    if($content_type == 'department') {
+    if ($content_type == 'department' && $variables['view_mode'] == 'full') {
       $variables['dept_fields'] = dept_page_fields();
       sfgovpl_add_regions_to_node(['department_news'], $variables);
       sfgovpl_add_regions_to_node(['department_events'], $variables);
@@ -323,7 +323,12 @@ function dept_page_fields() {
     }
 
     // about fields
-    if($node->hasField('field_about_description')) {
+    if($node->hasField('field_about_or_description') && isset($node->get('field_about_or_description')->getValue()[0]['value'])) {
+      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
+      if($aboutDescription) {
+        $theFields['about']['description'] = $aboutDescription;
+      }
+    } elseif($node->hasField('field_about_description')) {
       $aboutDescription = $node->get('field_about_description')->getValue() ? $node->get('field_about_description')->getValue()[0]['value'] : null;
       if($aboutDescription) {
         $theFields['about']['description'] = $aboutDescription;
