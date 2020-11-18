@@ -1,10 +1,32 @@
 .page-node-type-form-page {
   // some overrides for formbuilder/sf-design-system-integration
-  // TODO: clean this up as part of deprecating old pattern lab library
+  // TODO: clean this up as part of building out new design system
   $form-type: normal;
   input, textarea, select {
     height: auto;
   }
+  
+  header[role="banner"] {
+    .sfgov-nav-container__content {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 auto;
+      justify: space-between;
+  
+      .sfgov-logo__container {
+        width: 33.33%;
+      }
+  
+      .head-right--container {
+        @include fs-title-4;
+        float: none;
+        margin: 12px 0 0 0;
+        text-align: left;
+        width: 66.66%;
+      }
+    }
+  }
+
   .form-page {
     @include contain-1090;
     button:hover {
