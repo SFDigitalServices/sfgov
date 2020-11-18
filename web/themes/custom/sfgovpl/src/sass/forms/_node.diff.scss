@@ -30,18 +30,31 @@
   display: none;
 }
 
-// Todo, add some styles to deal with button links... these tags are not visible.
 del, ins {
-  // display: inline-block;
-  // padding: 1em !important;
+  display: inline-block;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  &, > * {
+    color: $c-slate !important;
+  }
 }
 
 del {
-  background-color: #fcc;
+  outline-color: $c-red-3;
+
+  &, > * {
+    background-color: $c-red-2 !important;
+    text-decoration: line-through !important;
+  }
 }
 
 ins {
-  background-color: #cfc;
+  outline-color: $c-green-3 !important;
+
+  &, > * {
+    background-color: $c-green-2;
+    text-decoration: underline !important;
+  }
 }
 
 // System CSS Overrides
