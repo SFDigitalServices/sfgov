@@ -1,0 +1,135 @@
+// Content Moderation Widget
+//------------------------------------------------------------------------------
+
+.content-moderation-entity-moderation-form {
+  max-width: none;
+}
+
+.content-moderation-control {
+  background: $c-black-opacity-3;
+  border-radius: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+
+  summary {
+    @include antialiasing;
+    background: #2d2d2d;
+    border-radius: 0;
+    border: 0;
+    color: $c-white;
+  }
+
+  &:not([open]) summary::after {
+    background-color: $c-white;
+    background-image: none;
+    mask: url('/themes/custom/sfgovpl/src/img/plus-blue.svg') no-repeat 50% 50%;
+    mask-size: 19px 19px;
+  }
+
+  &[open] summary {
+    background: #2d2d2d;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.content-moderation-control__content {
+  margin: 0 auto;
+  max-width: 1090px;
+  padding: 40px 20px 60px 20px;
+}
+
+.content-moderation-control__transition {
+  @include media($narrow-screen) {
+    align-items: center;
+    display: flex;
+  }
+
+  .form-item {
+    align-items: center;
+    display: flex;
+    margin: 0 0 20px 0;
+    padding: 0;
+    max-width: 400px;
+
+    @include media($narrow-screen) {
+      margin: 0;
+    }
+
+    &:not(:first-child) {
+      @include media($narrow-screen) {
+        margin-left: 2rem;
+      }
+    }
+  }
+
+  label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin: 0 1rem 0 0;
+
+    @include media-max($narrow-screen) {
+      flex: 1 0 115px;
+      font-size: 1.1rem;
+    }
+
+    @include media($narrow-screen) {
+      min-width: max-content;
+    }
+  }
+
+  .form-item-current-state {
+    border-radius: 8px;
+    border: solid 2px $c-grey-5;
+    color: $c-slate;
+    cursor: not-allowed;
+    padding: 0.64rem 1rem;
+    width: 100%;
+
+    &--draft {
+      background-color: $c-red-1;
+      border-color: $c-red-2;
+
+    }
+    &--ready-for-review {
+      background-color: $c-yellow-1;
+      border-color: $c-yellow-2;
+    }
+  }
+}
+
+.content-moderation-control__log {
+  align-items: stretch;
+  display: flex;
+  margin-top: 20px;
+
+  .form-item-revision-log {
+    align-items: stretch;
+    display: flex;
+    flex: 1 0 auto;
+    position: relative;
+
+    label {
+      @include visually-hidden;
+    }
+
+    input {
+      border-bottom-right-radius: 0;
+      border-right: 0;
+      border-top-right-radius: 0;
+      flex: 1 1 auto;
+      margin: 0;
+      width: 100%;
+    }
+  }
+
+  .form-submit {
+    border-bottom-left-radius: 0;
+    border-left: 0;
+    border-top-left-radius: 0;
+    flex: 0 1 80px;
+    margin: 0;
+  }
+}
