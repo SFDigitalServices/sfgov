@@ -5,24 +5,43 @@
   input, textarea, select {
     height: auto;
   }
-  
+
   header[role="banner"] {
+    @include media-max($medium-screen) {
+      padding-bottom: 0;
+    }
     .sfgov-nav-container__content {
-      display: flex;
-      flex-direction: row;
-      flex: 1 1 auto;
-      justify: space-between;
+      display: block;
+      @include media($medium-screen) {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 auto;
+        justify: space-between;
+      }
   
       .sfgov-logo__container {
-        width: 33.33%;
+        width: 100%;
+        @include media($medium-screen) {
+          width: 33.33%;
+        }
+        @include media-max($medium-screen) {
+          margin-bottom: 20px;
+        }
       }
   
       .head-right--container {
-        @include fs-title-4;
+        @include fs-body-bold;
         float: none;
-        margin: 12px 0 0 0;
         text-align: left;
-        width: 66.66%;
+        width: auto;
+        border-top: 3px solid $c-grey-3;
+        padding: 15px 0;
+        @include media($medium-screen) {
+          @include fs-title-4;
+          border-top: none;
+          margin: 12px 0 0 0;
+          width: 66.66%;
+        }
       }
     }
   }
@@ -33,8 +52,16 @@
       border-bottom: 3px solid;
     }
   }
-  .formio-sfds .flex-auto{
-    flex: 0 1 auto;
+  .formio-sfds {
+    nav {
+      margin: 0;
+      @include media($medium-screen) {
+        margin: 1.75rem 0 0 60px;
+      }
+    }
+    .flex-auto{
+      flex: 0 1 auto;
+    }
   }
   .hero-banner--border{
     margin-bottom: 20px;
