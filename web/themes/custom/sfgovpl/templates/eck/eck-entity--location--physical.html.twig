@@ -22,6 +22,7 @@
  */
 #}
 {% set classes = [
+  'sfgov-location',
   'location--' ~ eck_entity.bundle|clean_class,
   'location--' ~ eck_entity.bundle|clean_class ~ '--' ~ view_mode|clean_class,
   view_mode ? 'location--view-mode--' ~ view_mode|clean_class,
@@ -45,16 +46,14 @@
 
       {% if map_img_url %}
         <div class="sfgov-location__map">
-          <a href="{{ map_site_url }}">
-            <img src="{{ map_img_url }}" />
-          </a>
+          <a href="{{ map_site_url }}"><img src="{{ map_img_url }}" /></a>
         </div>
       {% endif %}
 
       {% if map_directions_url %}
-        <p class="sfgov-location__directions">
+        <div class="sfgov-location__directions">
           <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
-        </p>
+        </div>
       {% endif %}
 
       {% if content.field_text|render %}
