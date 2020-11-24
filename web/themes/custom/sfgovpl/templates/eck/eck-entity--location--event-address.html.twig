@@ -1,41 +1,33 @@
 {#
 /**
  * @file
- * Default theme implementation to display an ECK entity.
- *
- * Available variables:
- * - eck_entity: The full ECK entity with limited access to object properties
- *   and methods. Only "getter" methods (method names starting with "get",
- *   "has", or "is") and a few common methods such as "id" and "label" are
- *   available. Calling other methods (such as node.delete) will result in an
- *   exception.
- * - content: All ECK entity items. Use {{ content }} to print them all,
- *   or print a subset such as {{ content.field_example }}. Use
- *   {{ content|without('field_example') }} to temporarily suppress the printing
- *   of a given child element.
- * - attributes: HTML attributes for the containing element.
- * - view_mode: View mode; for example, "teaser" or "full".
- *
- * @see template_preprocess_eck_entity()
- *
- * @ingroup themeable
+ * Template for ECK location entity, Event address (event_address) bundle.
  */
 #}
-{% set classes = [
-  'eck-entity',
-  'sfgov-address',
-  'sfgov-event-address',
-] %}
 
-<div{{ attributes.addClass(classes) }}>
-  {% set title = content.title.0['#context'].value %}
-
-  {% if content.title|render %}
-    <h4>{{ title }}</h4>
+{% extends 'eck-entity--location--physical.html.twig' %}
+{% block content %}
+  {% if content.field_address|render %}
+    <div class="sfgov-location__address">
+      {% if eck_entity.title.value %}
+        <h4 class="address__title">{{ eck_entity.title.value }}</h4>
+      {% endif %}
+      {{ content.field_address }}
+    </div>
   {% endif %}
 
-  {{ content.field_address }}
+  {% if map_img_url %}
+    <div class="sfgov-location__map">
+      <a href="{{ map_site_url }}">
+        <img src="{{ map_img_url }}" />
+      </a>
+    </div>
+  {% endif %}
 
-  <img src="{{ map_img_url }}" />
-  <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
-</div>
+  {% if map_directions_url %}
+    <p class="sfgov-location__directions">
+      <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
+    </p>
+  {% endif %}
+{% endblock %}
+

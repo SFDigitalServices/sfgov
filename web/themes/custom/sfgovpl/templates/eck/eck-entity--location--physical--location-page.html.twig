@@ -3,18 +3,11 @@
  * @file
  * Template for ECK location entity, Address (physical) bundle, rendered with
  * location_page view mode. This is used on 'location' nodes, specifically the
- * "At %department* locations, referenced from field_departments.
+ * "At department locations", referenced from field_departments.
  */
 #}
 
-{% set parent = eck_entity.getParentEntity() %}
-{% set classes = [
-  'eck-entity',
-  'sfgov-address',
-  'sfgov-address--physical',
-  'sfgov-address--physical--location-page',
-] %}
-
-<div{{ attributes.addClass(classes) }}>
+{% extends 'eck-entity--location--physical.html.twig' %}
+{% block content %}
   {{ content }}
-</div>
+{% endblock %}

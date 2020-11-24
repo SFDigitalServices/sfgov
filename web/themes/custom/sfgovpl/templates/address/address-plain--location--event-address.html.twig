@@ -18,16 +18,10 @@
  *   - country (everything is in the US)
  */
 #}
-<p class="address" translate="no">
-  {% if address_line1 %}
-    {{ address_line1 }} <br>
-  {% endif %}
-
-  {% if address_line2 %}
-    {{ address_line2 }} <br>
-  {% endif %}
-
-  {% if locality or postal_code or administrative_area.code %}
-    {{ locality }}, {{ administrative_area.code }} {{ postal_code }}<br>
-  {% endif %}
-</p>
+{% include '@theme/address.twig' with {
+  line1: address_line1,
+  line2: address_line2,
+  city: locality,
+  state: administrative_area.code,
+  zip: postal_code
+} only %}

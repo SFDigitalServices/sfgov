@@ -1,20 +1,34 @@
-<p class="address" translate="no"> </p>
-{% if given_name or family_name %}
-  <p>{{ given_name }} {{ family_name }} </p>
-{% endif %}
-{% if organization %}
-  <h4 class="field__label">{{ organization }} </h4>
-{% endif %}
-{% if address_line1 %}
-  <p>{{ address_line1 }}</p>
-{% endif %}
-{% if address_line2 %}
-  <p>{{ address_line2 }}</p>
-{% endif %}
+{#
+/**
+ * @file
+ * Address component template.
+ */
+#}
+{% set title_tag = title_tag|default('span') %}
 
-{% if dependent_locality.code %}
-  <p>{{ dependent_locality.code }}</p>
-{% endif %}
-{% if locality or postal_code or administrative_area.code %}
-  <p>{{ locality }}, {{ administrative_area.code }} {{ postal_code }}</p>
-{% endif %}
+<p class="address" translate="no">
+  {% if title %}
+    <{{ title_tag }} class="address__title">{{ title }}</{{ title_tag }}>
+    {% if title_tag == 'span' %}<br>{% endif %}
+  {% endif %}
+
+  {% if addressee %}
+    <span class="address__addressee">{{ addressee }}</span><br>
+  {% endif %}
+
+  {% if location_name %}
+    <span class="address__location-name">{{ location_name }}</span><br>
+  {% endif %}
+
+  {% if line1 %}
+    <span class="address__line1">{{ line1 }}</span><br>
+  {% endif %}
+
+  {% if line2 %}
+    <span class="address__line2">{{ line2 }}</span><br>
+  {% endif %}
+
+  {% if city or state or zip %}
+    <span class="address__city-state-zip">{{ city }}, {{ state }} {{ zip }}</span>
+  {% endif %}
+</p>

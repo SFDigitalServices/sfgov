@@ -21,34 +21,48 @@
  * @ingroup themeable
  */
 #}
-
 {% set classes = [
-  'eck-entity',
-  'sfgov-address',
-  'sfgov-address--physical',
-] %}
+  'location--' ~ eck_entity.bundle|clean_class,
+  'location--' ~ eck_entity.bundle|clean_class ~ '--' ~ view_mode|clean_class,
+  view_mode ? 'location--view-mode--' ~ view_mode|clean_class,
+  parent ? 'location--parent--' ~ parent.bundle|clean_class,
+]|merge(classes|default([])) %}
 
-<div{{ attributes.addClass(classes) }}>
+{% block address %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {% if content.field_address|render %}
+        <div class="sfgov-location__address">
+          {{ content.field_address }}
+        </div>
+      {% endif %}
 
-  {% if content.field_address|render %}
-    <div class="eck-entity-address-field">
-      {{ content.field_address }}
-    </div>
-  {% endif %}
+      {% if content.field_operating_hours|render %}
+        <div class="sfgov-location__hours">
+          {{ content.field_operating_hours }}
+        </div>
+      {% endif %}
 
-  {{ content.field_operating_hours }}
+      {% if map_img_url %}
+        <div class="sfgov-location__map">
+          <a href="{{ map_site_url }}">
+            <img src="{{ map_img_url }}" />
+          </a>
+        </div>
+      {% endif %}
 
-  {% if map_img_url %}
-    <div class="simple-gmap-static-map">
-      <a href="{{ map_site_url }}"><img src="{{ map_img_url }}" /></a>
-    </div>
-  {% endif %}
+      {% if map_directions_url %}
+        <p class="sfgov-location__directions">
+          <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
+        </p>
+      {% endif %}
 
-  {% if map_directions_url %}
-    <p class="simple-gmap-link">
-      <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
-    </p>
-  {% endif %}
+      {% if content.field_text|render %}
+        <div class="sfgov-location__notes">
+          {{ content.field_text }}
+        </div>
+      {% endif %}
+    {% endblock %}
 
-  {{ content.field_text }}
-</div>
+  </div>
+{% endblock %}

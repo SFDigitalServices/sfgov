@@ -2,8 +2,9 @@
 /**
  * @file
  * Template for the plain address formatter, for "Address" (phyiscal) location
- * entity, when rendered with the "location_page" view mode.
- *
+ * entity when rendered with the "Default with Organization as h4 (default_h4)"
+ * view mode.
+
  * The following fields are not printed:
  *
  *   Not used:
@@ -13,15 +14,17 @@
  *   - dependent_locality.code  (neighborhood)
  *
  *   Contain data, but intentionally omitted for this view mode:
- *   - address_line1
- *   - locality (city)
- *   - administrative_area.code (state)
- *   - postal_code (zip)
  *   - country (everything is in the US)
  */
 #}
 {% include '@theme/address.twig' with {
+  title_tag: 'h4',
+  title: organization,
   addressee: addressee,
-  location_name: location_name,
+  name: location_name,
+  line1: address_line1,
   line2: address_line2,
+  city: locality,
+  state: administrative_area.code,
+  zip: postal_code
 } only %}
