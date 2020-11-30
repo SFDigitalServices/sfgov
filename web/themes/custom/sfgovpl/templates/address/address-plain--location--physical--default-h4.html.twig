@@ -4,7 +4,11 @@
  * Template for the plain address formatter, for "Address" (phyiscal) location
  * entity when rendered with the "Default with Organization as h4 (default_h4)"
  * view mode.
-
+ *
+ * Additional variables:
+ *  - parent_entity: The parent entity the address is attached to, such as an
+ *    ECK location entity, or a Node.
+ *
  * The following fields are not printed:
  *
  *   Not used:
@@ -15,13 +19,24 @@
  *
  *   Contain data, but intentionally omitted for this view mode:
  *   - country (everything is in the US)
+ *
+ * @see sfgov_locations_preprocess_address_plain().
  */
 #}
+{% set parent = parent_entity %}
+
+{# Use Department for title if available, otherwise, Organization. #}
+{% set department = parent.field_department.entity.label %}
+{% set title = department ? department : organization %}
+{# Use Organization as subtitle, if it's not the same as Department name. #}
+{% set subtitle = (department and department != organization) ? organization : '' %}
+
 {% include '@theme/address.twig' with {
   title_tag: 'h4',
-  title: organization,
+  title: title,
+  subtitle: subtitle,
   addressee: addressee,
-  name: location_name,
+  location_name: location_name,
   line1: address_line1,
   line2: address_line2,
   city: locality,
