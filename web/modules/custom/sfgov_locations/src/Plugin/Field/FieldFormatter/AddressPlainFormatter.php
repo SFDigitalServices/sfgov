@@ -17,8 +17,7 @@ use Drupal\sfgov_locations\AddressFormat;
 use Drupal\sfgov_locations\Repository\AddressFormatRepository;
 
 /**
- * Plugin implementation of the 'address_plain' formatter.,
- * )
+ * Plugin implementation of the 'address_plain' formatter.
  */
 class AddressPlainFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
