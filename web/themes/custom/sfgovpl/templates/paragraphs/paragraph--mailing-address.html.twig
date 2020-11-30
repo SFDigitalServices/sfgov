@@ -55,7 +55,7 @@ set classes = [
       {%  set org = paragraph.field_location.entity.field_text[0] %}
       {% if not field_address.isEmpty() %}
         {% set parent_bundle = parent.bundle() %}
-        {% if parent_bundle == "step" %}
+        {% if parent_bundle == "step" and nodetype != 'transaction' %}
           {% if field_address.locality or field_address.postal_code or field_address.administrative_area %}
               {% if field_address.locality %}
                   {% set city = "#{field_address.locality}," %}
@@ -76,9 +76,35 @@ set classes = [
           {% endif %}
 
           {{ card }}
+          
+        {% elseif parent_bundle == "step" and nodetype == 'transaction' %}
+          {% if field_address.locality or field_address.postal_code or field_address.administrative_area %}
+              {% if field_address.locality %}
+                  {% set city = "#{field_address.locality}," %}
+              {% endif %}
+              {% set line2 = "#{city} #{field_address.administrative_area} #{field_address.postal_code}" %}
+          {% endif %}
+
+          {% if field_address.organization %}
+            <h4 class="address_card__line1">{{ field_address.organization }}</h4>
+          {% endif %}
+
+          {% if  field_address.address_line1 %}
+            <div class="address_card__line1">{{  field_address.address_line1 }}</div>
+          {% endif %}
+          
+          {% if field_address.address_line2 %}
+            <div class="address_card__line2">{{ field_address.address_line2 }}</div>
+          {% endif %}
+          
+          {% if line2 %}
+            <div class="address_card__line3">{{ line2 }}</div>
+          {% endif %}
+
+          {{ card }}
 
         {% else %}
-          {% include "@atoms/06-address/06-address.twig" with {
+          {% include "@theme/address.twig" with {
             "given_name": field_address.given_name,
             "family_name": field_address.family_name,
             "organization": field_address.organization,

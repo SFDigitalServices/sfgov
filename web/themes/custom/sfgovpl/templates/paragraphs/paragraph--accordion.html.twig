@@ -1,34 +1,28 @@
-{%
-  set classes = [
-  'paragraph',
-  'paragraph--type--' ~ paragraph.bundle|clean_class,
-  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-  not paragraph.isPublished() ? 'paragraph--unpublished',
-]
-%}
+{# Campaign theme accent color. #}
+{% set background_color = group_right_background|default('none') %}
 
-{% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% if content.field_description[0] %}
-      <div class="group-left">
-        {% if content.field_title %}
-        <h3>{{ content.field_title }}</h3>
-        {% endif %}
-        {{ content.field_content }}
+{% embed 'paragraph.html.twig' with { classes: ['sfgov-accordion'] } %}
+  {% block content %}
+    {% if content.field_title|render %}
+      <div class="sfgov-accordion-group-left">
+        <h3 class="sfgov-accordion-title">{{- content.field_title -}}</h3>
       </div>
-      <div class="group-right">
-        {{ content.field_description }}
-      </div>
-    {% else %}
-      {% if content.field_title %}
-      <h3>{{ content.field_title }}</h3>
-      {% endif %}
-      {{ content.field_content }}
-    </div>
-    <div class="group-right">
-      {{ content.field_description }}
-      <div{{ create_attribute().addClass('group-right-bg').setAttribute('style', 'background-color:' ~ group_right_background) }}></div>
-    </div>
     {% endif %}
-  </div>
-{% endblock paragraph %}
+
+    {% if content.field_content|render %}
+      <div class="sfgov-accordion-group-left">
+        <div class="sfgov-accordion-content">
+          {{ content.field_content }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.field_description|render %}
+      <div class="sfgov-accordion-group-right">
+        <div class="sfgov-accordion-description" style="background-color: {{ background_color }};">
+          {{ content.field_description }}
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+{% endembed %}

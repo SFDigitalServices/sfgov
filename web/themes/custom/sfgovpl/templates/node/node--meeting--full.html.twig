@@ -9,7 +9,7 @@
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {
       'title': node.label,
-      'text': node.field_start_date.date|date('M d, Y'),
+      'text': node.field_start_date.date|date('F d, Y'),
       'label': hero_banner_label
     }
   } %}
@@ -82,10 +82,12 @@
             <h4>Online</h4>
             {{ content.field_abstract }}
             {{ content.field_link }}
-            <div class="location--online--phone">
-              <h4>Phone</h4>
-              {{ content.field_phone_numbers }}
-            </div>
+            {% if content.field_phone_numbers|render %}
+              <div class="location--online--phone">
+                <h4>Phone</h4>
+                {{ content.field_phone_numbers }}
+              </div>
+            {% endif %}
           </div>
           {% endif %}
         </div>

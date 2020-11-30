@@ -74,6 +74,9 @@
             line-height: 1.58824rem;
             color: #fff;
           }
+          p.title {
+            font-weight: bold;
+          }
           p {
             margin-top: 0;
           }
@@ -88,6 +91,12 @@
           &[data-contact] {
             padding: 0;
             background: none;
+          }
+
+          &.paragraph--type--thing-to-know {
+            .title {
+              @include fs-title-5;
+            }
           }
         }
       }
@@ -184,6 +193,13 @@
         }
       }
     }
+
+    .about-page-link {
+      a {
+        @include button;
+        display: inline-block;
+      }
+    }
   }
 
   .sfgov-public-body-callout {
@@ -247,9 +263,12 @@
           margin: 0;
         }
         p {
+          @include fs-body-short;
           padding: 0;
           margin: 0;
-          line-height: 2em;
+        }
+        p.title {
+          @include fs-title-5;
         }
         &::after {
           content: ' ';
@@ -261,6 +280,9 @@
         }
         &.address {
           width: 35%;
+          p.simple-gmap-link {
+            font-weight: normal;
+          }
           .map {
             margin-top: 15px;
           }
@@ -334,13 +356,20 @@
       .document-file--container {
         margin-bottom: 25px;
         margin-top: 20px;
-        .document a.no-link {
-          text-decoration: underline;
-          opacity: 0.65;
-          color: $c-slate;
+        .sfgov-icon-filefilled {
+          display: inline-block;
+          margin-right: 10px;
+        }
+        .document {
+          vertical-align: top;
+          a.no-link {
+            text-decoration: underline;
+            opacity: 0.65;
+            color: $c-slate;
 
-          &:hover {
-            color: inherit;
+            &:hover {
+              color: inherit;
+            }
           }
         }
 
