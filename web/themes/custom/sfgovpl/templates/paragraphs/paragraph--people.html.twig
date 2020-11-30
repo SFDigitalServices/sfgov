@@ -56,15 +56,26 @@
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
       <div class="inner">
-        {{ content.field_people_title }}
+        {% if content.field_people_title.0 is not empty %}
+          <h2 class="title">{{ content.field_people_title.0 }}</h2>
+        {% endif %}
+        {% if content.field_description.0 is not empty %}
+          <div class="description">
+            {{ content.field_description }}
+          </div>
+        {% endif %}
         <div class="sfgov-people--content">
           {% if single %}
             {{ drupal_entity('node', content.field_person_2.0['#node'].id(), 'card') }}
           {% else %}
             {{ content.field_person_2 }}
           {% endif %}
-          {{ content.field_description }}
         </div>
+        {% if content.field_description.0 is not empty %} {# exception for front page people sections #}
+          <div class="description bottom">
+            {{ content.field_description }}
+          </div>
+        {% endif %}
       </div>
     {% endblock %}
   </div>

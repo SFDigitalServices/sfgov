@@ -74,6 +74,9 @@
             line-height: 1.58824rem;
             color: #fff;
           }
+          p.title {
+            font-weight: bold;
+          }
           p {
             margin-top: 0;
           }
@@ -88,6 +91,12 @@
           &[data-contact] {
             padding: 0;
             background: none;
+          }
+
+          &.paragraph--type--thing-to-know {
+            .title {
+              @include fs-title-5;
+            }
           }
         }
       }
@@ -184,6 +193,13 @@
         }
       }
     }
+
+    .about-page-link {
+      a {
+        @include button;
+        display: inline-block;
+      }
+    }
   }
 
   .sfgov-public-body-callout {
@@ -214,71 +230,6 @@
       background: $c-blue-1;
       padding: 40px;
       border-radius: 8px;
-    }
-
-    .__board-members {
-      & > .field__item {
-        margin-bottom: 60px;
-
-        &:last-child {
-          margin: 0;
-        }
-
-        .__people-title {
-          margin-bottom: 0;
-        }
-
-        .person {
-          margin-top: 40px;
-        }
-
-        .sfgov-people--content {
-          display: flex;
-          flex-direction: column;
-
-          .__description {
-            position: inherit;
-            width: 100%;
-            background: none;
-            padding: 0;
-            order: -1;
-
-            p {
-              @include fs-body-short;
-              max-width: 100%;
-            }
-          }
-
-          .person-bio {
-            .person-title {
-              opacity: 0.65;
-            }
-          }
-
-          .__person-2 {
-            .field__item {
-              vertical-align: top;
-              margin: 0;
-              width: auto;
-              display: block;
-            }
-
-            @include media($mobile-screen) {
-              .field__item {
-                display: inline-block;
-                width: 49%;
-              }
-            }
-
-            @include media($medium-screen) {
-              .field__item {
-                display: inline-block;
-                width: 32%;
-              }
-            }
-          }
-        }
-      }
     }
   }
 
@@ -312,9 +263,12 @@
           margin: 0;
         }
         p {
+          @include fs-body-short;
           padding: 0;
           margin: 0;
-          line-height: 2em;
+        }
+        p.title {
+          @include fs-title-5;
         }
         &::after {
           content: ' ';
@@ -326,6 +280,9 @@
         }
         &.address {
           width: 35%;
+          p.simple-gmap-link {
+            font-weight: normal;
+          }
           .map {
             margin-top: 15px;
           }
@@ -398,6 +355,23 @@
 
       .document-file--container {
         margin-bottom: 25px;
+        margin-top: 20px;
+        .sfgov-icon-filefilled {
+          display: inline-block;
+          margin-right: 10px;
+        }
+        .document {
+          vertical-align: top;
+          a.no-link {
+            text-decoration: underline;
+            opacity: 0.65;
+            color: $c-slate;
+
+            &:hover {
+              color: inherit;
+            }
+          }
+        }
 
         &:last-child {
           margin-bottom: 0;
@@ -421,4 +395,17 @@
   .sfgov-service-card div p {
     color: $c-slate;
   }
+}
+
+.meeting--unpublished::before {
+  content: 'Unpublished';
+  font-size: 12px;
+  text-transform: uppercase;
+  background: red;
+  padding: 4px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  display: inline-block;
+  line-height: 12px;
+  color: $c-white;
 }

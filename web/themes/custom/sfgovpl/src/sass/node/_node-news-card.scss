@@ -1,31 +1,71 @@
+// News Card
+//
+// News card is rendered by the "News" view (/admin/structure/views/view/news).
+// It has 2 variants that map to Drupal view modes:
+//
+// - card:
+//   - fields: Title, Date, Image
+//   - selector: .news--card {}
+//   - used on: Home page
+//
+// - card_compact:
+//   - fields: Title, Date
+//   - selector: .news--card.news--card-compact {}
+//   - used on: Departments (e.g. /oceia), Topics (e.g. /topics/immigrants)
+//
+// -----------------------------------------------------------------------------
+
 .news--card {
   @include link-colors($c-slate);
+  align-content: space-between;
   background-color: $c-yellow-3;
-  background-position: right top;
-  background-repeat: no-repeat;
   border-radius: 8px;
-  display: block; // <= Default needed for homepage, overridden on dept page.
+  display: flex;
+  flex-flow: row wrap;
   padding: 20px;
+  position: relative;
   text-decoration: none;
 
-  &.has-image {
+  @include media($medium-screen) {
     min-height: 160px;
-    padding: 20px 180px 20px 20px;
-
-    @include media-max($medium-screen) {
-      background-image: none !important;
-      height: auto;
-      padding-right: 0;
-    }
   }
 
   &:hover {
     background-color: $c-yellow-4;
   }
 
+  &.news--card-compact {
+    align-content: start;
 
-  .article--card__title {
+    @include media($medium-screen) {
+      min-height: 0;
+    }
+  }
+
+  // 'card' will render an image, but it's an optional field.
+  &.has-image {
+    @include media-max($narrow-screen) {
+      background-image: none !important;
+    }
+
+    @include media($narrow-screen) {
+      background-position: right top;
+      background-repeat: no-repeat;
+      background-size: 160px 100%; // Stretch height for longer titles.
+      padding-right: 180px; // 160px + 20px padding.
+    }
+  }
+
+  > * {
+    flex: 1 0 100%;
+  }
+
+  .article__title {
     @include fs-body-bold;
-    margin: 0 0 11px;
+    margin: 0 0 10px 0;
+  }
+
+  .__date {
+    line-height: 1;
   }
 }

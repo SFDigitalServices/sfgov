@@ -54,20 +54,27 @@
         margin-right: 0;
 
         @include media-max($medium-screen) {
-          position: relative;
-          right: unset;
+          position: static;
+          select {
+            margin-right: 0;
+            overflow: hidden;
+          }
         }
       }
     }
   }
 
   .document-file--container {
+    margin-top: 20px;
     .sfgov-icon-filefilled {
       &:before {
         background: url(/themes/custom/sfgovpl/src/img/document.svg) no-repeat
           50% 50% transparent;
         min-height: 26px;
       }
+    }
+    .document {
+      vertical-align: top;
     }
   }
 
@@ -88,7 +95,10 @@
         color: white;
       }
       > .field__item {
-        @include fs-big-description;
+        @include fs-body-long;
+        @include media($medium-screen) {
+          @include fs-big-description;
+        }
         a {
           color: #fff;
         }
@@ -192,12 +202,6 @@
     }
   }
 
-  .paragraph--type--campaign-spotlight {
-    .__title {
-      @include fs-title-1;
-    }
-  }
-
   .__campaign-locations-access-wrapper {
     @include contain-1090;
     padding-top: 60px;
@@ -217,8 +221,7 @@
       @include columns-720(left);
     }
   }
-  .campaign-featured-image,
-  .image-with-text-container {
+  .campaign-featured-image {
     @include contain-1090;
     margin-bottom: 109px;
   }

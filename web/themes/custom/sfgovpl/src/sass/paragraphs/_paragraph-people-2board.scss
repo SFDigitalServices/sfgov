@@ -1,67 +1,104 @@
-// Board of Supervisors.
-.sfgov-title--board-of-supervisors {
-  position: relative;
-  @include contain-1090;
-  margin-top: 40px;
-  margin-bottom: 40px;
-
-  .inner {
+// Board of Supervisors (front page only)
+.path-frontpage {
+  .sfgov-title--board-of-supervisors {
     position: relative;
-    background: $c-blue-1;
-    border-radius: 8px;
-    padding: 20px;
-
-    @include media($medium-screen) {
-      padding: 40px;
-    }
-  }
-
-  .sfgov-people--content {
-    @include media($narrow-screen) {
-      padding-bottom: 120px;
-    }
-
-    @include media($wide-screen) {
-      padding-bottom: 100px;
-    }
-
-    .__person-2 {
-      .field__item {
-        vertical-align: top;
-        margin: 0 auto 20px;
-        width: auto;
-        display: block;
-
-        @include media($medium-screen) {
-          margin-bottom: 40px;
-        }
-      }
-
-      @include media($mobile-screen) {
-        .field__item {
-          display: inline-block;
-          width: 49%;
-        }
-      }
-
-      @include media($medium-screen) {
-        .field__item {
-          display: inline-block;
-          width: 32%;
-        }
-      }
-    }
-  }
-
-  .__people-title {
+    @include contain-1090;
+    margin-top: 40px;
     margin-bottom: 40px;
-  }
+  
+    .inner {
+      position: relative;
+      background: $c-blue-1;
+      border-radius: 8px;
+      padding: 20px;
+  
+      @include media($medium-screen) {
+        padding: 40px;
+      }
+    }
+  
+    .sfgov-people--content {
+      padding-top: 0;
+      @include media($narrow-screen) {
+        padding-bottom: 120px;
+      }
+  
+      @include media($wide-screen) {
+        padding-bottom: 100px;
+      }
+  
+      .__person-2 {
+        .field__item {
+          vertical-align: top;
+          margin: 0 auto 20px;
+          width: auto;
+          display: block;
+  
+          @include media($medium-screen) {
+            margin-bottom: 40px;
+          }
+        }
+  
+        @include media($mobile-screen) {
+          .field__item {
+            display: inline-block;
+            width: 49%;
+          }
+        }
+  
+        @include media($medium-screen) {
+          .field__item {
+            display: inline-block;
+            width: 32%;
+          }
+        }
+      }
+    }
+  
+    .title {
+      @include fs-title-3-mobile;
+      margin-bottom: 40px;
+      @include media($medium-screen) {
+        @include fs-title-3;
+      }
+    }
+  
+    .person-title {
+      opacity: .7;
+    }
 
-  .person-title {
-    opacity: .7;
-  }
+    .description {
+      display: none;
+      &.bottom {
+        display: block;
+      }
+      @include sidebar('p');
+      background: $c-white;
+      bottom: 40px;
 
-  .__description {
-    bottom: 40px;
+      @include media($wide-screen) {
+        width: calc(50% - 160px);
+      }
+  
+      @include media($narrow-screen) {
+        width: 31.5%;
+      }
+
+      p {
+        @include fs-body-bold;
+        color: $c-slate;
+        margin: 0;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+  
+      a {
+        @include button;
+        display: inline-block;
+        font-style: normal;
+        margin-top: 20px;
+      }
+    }
   }
 }

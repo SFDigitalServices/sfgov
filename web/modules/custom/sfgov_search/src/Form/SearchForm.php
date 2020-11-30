@@ -4,8 +4,34 @@ namespace Drupal\sfgov_search\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SearchForm extends FormBase {
+
+  /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(LanguageManagerInterface $languageManager) {
+    $this->languageManager = $languageManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('language_manager')
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -22,7 +48,7 @@ class SearchForm extends FormBase {
         'sfgov-search-form-311',
       ),
       'role' => 'search',
-      'novalidate' => 'true',
+      'novalidate' => 'novalidate',
     );
 
     $suffix_markup = '<div id="sfgov-search-describedby" aria-hidden="true" class="visually-hidden">' . t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value') . '</div>';
@@ -40,6 +66,7 @@ class SearchForm extends FormBase {
         'role' => t('combobox'),
         'aria-autocomplete' => t('both'),
         'aria-describedby' => 'sfgov-search-describedby',
+        'aria-expanded' => 'false',
         'aria-owns' => 'sfgov-search-autocomplete',
         'aria-activedescendant' => '',
       ),
@@ -62,6 +89,8 @@ class SearchForm extends FormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $keyword = $form_state->getValues()['sfgov_search_input'];
-    $form_state->setRedirect('sfgov_search.content', ['keyword' => $keyword]);
+    $form_state->setRedirect('sfgov_search.content', ['keyword' => $keyword], [
+      'language' => $this->languageManager->getCurrentLanguage(),
+    ]);
   }
 }

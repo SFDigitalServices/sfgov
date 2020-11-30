@@ -2,14 +2,14 @@
 {% set hero_banner_label = 
     meeting_is_past
     ? 'Part of <a href="@url">@public_body Archive</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_past', {arg_0: content.field_public_body[0]['#node'].id() })})
-    : 'Part of <a href="@url">@public_body Calendar</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
+    : 'Part of <a href="@url">@public_body meetings</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
 %}
 
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {
       'title': node.label,
-      'text': node.field_start_date.date|date('M d, Y'),
+      'text': node.field_start_date.date|date('F d, Y'),
       'label': hero_banner_label
     }
   } %}
@@ -71,9 +71,23 @@
           </div>
           {% endif %}
 
-          {% if content.field_address|render %}
-          <div class="address">
+          {% if node.field_location_in_person.value and content.field_address|render %}
+          <div class="location--in-person">
             {{ content.field_address }}
+          </div>
+          {% endif %}
+
+          {% if node.field_location_online.value %}
+          <div class="location--online">
+            <h4>Online</h4>
+            {{ content.field_abstract }}
+            {{ content.field_link }}
+            {% if content.field_phone_numbers|render %}
+              <div class="location--online--phone">
+                <h4>Phone</h4>
+                {{ content.field_phone_numbers }}
+              </div>
+            {% endif %}
           </div>
           {% endif %}
         </div>

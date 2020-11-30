@@ -104,15 +104,11 @@
   </div>
 </div>
 
-{% if public_body_fields.callout %}
-<div class="sfgov-public-body-section sfgov-public-body-callout sfds-layout-container">
-  <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <div class="sfgov-public-body-section--content">
-      {{ public_body_fields.callout|raw }}
-    </div>
-  </div>
-</div>
-{% endif %}
+{# Alert #}
+{% include '@theme/alert.twig' with {
+  date_exp: node.field_alert_expiration_date.0.value,
+  style: 'department',
+} %}
 
 {% if content.field_public_body_meetings|render %}
 <div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">
@@ -153,6 +149,12 @@
     <h2 id="about" class="sfgov-public-body-section--heading" role="heading">About</h2>
     <div class="sfgov-public-body-section--content">
       {{ public_body_fields.about }}
+
+      {% if about_page_link %}
+      <p class="about-page-link">
+        {{ about_page_link }}
+      </p>
+      {% endif %}
 
       {{ content.field_subcommittees }}
     </div>
@@ -195,10 +197,26 @@
         </div>
         {% elseif info.bundle == 'other_info_document' %}
           {% for info_content in info.content %}
-          {% include "@atoms/09-document/09-document.twig" with {
-            "field_file": info_content.file,
-            "fileurl": info_content.fileurl,
+          {% if info_content.url %}
+          {% include "@theme/document.twig" with {
+            "url": info_content.url,
+            "label": info_content.label,
           } %}
+          {% elseif info_content.link %}
+          {% include "@theme/document.twig" with {
+            "url": info_content.link,
+            "label": info_content.label,
+          } %}
+          {% else %}
+          <div class="document-file--container empty-doc">
+            <i class="sfgov-icon-filefilled"></i>
+            <span class="document">
+            {{ info_content.label }}
+            <br>
+            {{ '(upcoming)'|t }}
+            </span>
+           </div>
+          {% endif %}
           {% endfor %}
         {% endif %}
       </div>

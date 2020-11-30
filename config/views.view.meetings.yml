@@ -59,8 +59,8 @@ display:
           id: 0
           total_pages: null
           tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
+            previous: Previous
+            next: Next
             first: '« First'
             last: 'Last »'
           expose:
@@ -209,7 +209,7 @@ display:
           type: datetime_custom
           settings:
             timezone_override: ''
-            date_format: 'M Y'
+            date_format: 'F Y'
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -273,7 +273,7 @@ display:
           type: datetime_custom
           settings:
             timezone_override: ''
-            date_format: 'l, M d'
+            date_format: 'l, F j'
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -475,7 +475,7 @@ display:
           empty: true
           tokenize: false
           content:
-            value: 'No available meeting.'
+            value: 'We didn''t find any meetings that match your filters.'
             format: sf_restricted_html
           plugin_id: text
       relationships: {  }
@@ -545,6 +545,7 @@ display:
         - 'config:core.entity_view_display.node.event.default'
         - 'config:core.entity_view_display.node.event.teaser'
         - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
         - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
         - 'config:core.entity_view_display.node.form_page.default'
         - 'config:core.entity_view_display.node.form_page.teaser'
@@ -618,25 +619,52 @@ display:
         use_more_text: false
         link_display: false
         link_url: false
+        sorts: false
       row:
         type: 'entity:node'
         options:
           relationship: none
           view_mode: card
       filters:
-        status:
-          value: '1'
+        status_extra:
+          id: status_extra
           table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: false
+          group: 1
+          exposed: false
           expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          plugin_id: node_status
         type:
           id: type
           table: node_field_data
@@ -694,46 +722,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
-        status_1:
-          id: status_1
-          table: node_field_data
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: status
-          plugin_id: boolean
         field_start_date_value:
           id: field_start_date_value
           table: node__field_start_date
@@ -784,8 +772,9 @@ display:
         groups:
           1: AND
       pager:
-        type: none
+        type: some
         options:
+          items_per_page: 3
           offset: 0
       title: 'Past meetings'
       use_more: true
@@ -793,12 +782,27 @@ display:
       use_more_text: 'See archive'
       link_display: page_past
       link_url: ''
+      sorts:
+        field_start_date_value:
+          id: field_start_date_value
+          table: node__field_start_date
+          field: field_start_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -818,6 +822,7 @@ display:
         - 'config:core.entity_view_display.node.event.default'
         - 'config:core.entity_view_display.node.event.teaser'
         - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
         - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
         - 'config:core.entity_view_display.node.form_page.default'
         - 'config:core.entity_view_display.node.form_page.teaser'
@@ -898,19 +903,45 @@ display:
           relationship: none
           view_mode: card
       filters:
-        status:
-          value: '1'
+        status_extra:
+          id: status_extra
           table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: false
+          group: 1
+          exposed: false
           expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          plugin_id: node_status
         type:
           id: type
           table: node_field_data
@@ -968,46 +999,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
-        status_1:
-          id: status_1
-          table: node_field_data
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: status
-          plugin_id: boolean
         field_start_date_value:
           id: field_start_date_value
           table: node__field_start_date
@@ -1058,8 +1049,9 @@ display:
         groups:
           1: AND
       pager:
-        type: none
+        type: some
         options:
+          items_per_page: 3
           offset: 0
       title: 'Upcoming meetings'
       fields:
@@ -1139,6 +1131,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
@@ -1153,7 +1146,7 @@ display:
       defaults:
         style: true
         row: true
-        sorts: true
+        sorts: false
         filters: false
         filter_groups: false
         title: false
@@ -1178,19 +1171,45 @@ display:
             format: sf_restricted_html
           plugin_id: text
       filters:
-        status:
-          value: '1'
+        status_extra:
+          id: status_extra
           table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: false
+          group: 1
+          exposed: false
           expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          plugin_id: node_status
         type:
           id: type
           table: node_field_data
@@ -1248,46 +1267,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
-        status_1:
-          id: status_1
-          table: node_field_data
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: status
-          plugin_id: boolean
         field_start_date_value:
           id: field_start_date_value
           table: node__field_start_date
@@ -1348,9 +1327,23 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<h5>Upcoming meetings</h5>\r\n\r\n<p>See upcoming scheduled meetings for this public body.</p>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See calendar</a>"
+            value: "<h5>Upcoming meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See more meetings</a>"
             format: full_html
           plugin_id: text
+      sorts:
+        field_start_date_value:
+          id: field_start_date_value
+          table: node__field_start_date
+          field: field_start_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
     cache_metadata:
       max-age: -1
       contexts:
@@ -1358,6 +1351,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -1377,6 +1371,7 @@ display:
         - 'config:core.entity_view_display.node.event.default'
         - 'config:core.entity_view_display.node.event.teaser'
         - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
         - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
         - 'config:core.entity_view_display.node.form_page.default'
         - 'config:core.entity_view_display.node.form_page.teaser'
@@ -1460,19 +1455,45 @@ display:
             format: sf_restricted_html
           plugin_id: text
       filters:
-        status:
-          value: '1'
+        status_extra:
+          id: status_extra
           table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: false
+          group: 1
+          exposed: false
           expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          plugin_id: node_status
         type:
           id: type
           table: node_field_data
@@ -1530,46 +1551,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
-        status_1:
-          id: status_1
-          table: node_field_data
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: status
-          plugin_id: boolean
         field_start_date_value:
           id: field_start_date_value
           table: node__field_start_date
@@ -1630,7 +1611,7 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<h5>Meeting Archive</h5>\r\n\r\n<p>View all past meetings from this public body</p>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See archive</a>"
+            value: "<h5>Past meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See all past meetings</a>"
             format: full_html
           plugin_id: text
     cache_metadata:
@@ -1640,6 +1621,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -1659,6 +1641,7 @@ display:
         - 'config:core.entity_view_display.node.event.default'
         - 'config:core.entity_view_display.node.event.teaser'
         - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
         - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
         - 'config:core.entity_view_display.node.form_page.default'
         - 'config:core.entity_view_display.node.form_page.teaser'

@@ -73,7 +73,9 @@ function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $vie
 
           foreach ($public_body->field_subcommittees->getValue() as $value) {
             $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-            $subcommittees[$subcommittee->id()] = $subcommittee->label();
+            if (!empty($subcommittee)) {
+                $subcommittees[$subcommittee->id()] = $subcommittee->label();
+            }
           }
 
           foreach ($subcommittees as $key => $value) {
@@ -105,7 +107,10 @@ function sfgov_public_bodies_form_alter(&$form, \Drupal\Core\Form\FormStateInter
   switch ($form_id) {
     case 'node_meeting_form':
     case 'node_meeting_edit_form':
-      // Rename "none" option.
+      /**
+       * Video widget
+       */
+      // Rename "none" option for Video options.
       $form['field_video_option']['widget']['#options']['_none'] = t('No video');
 
       // Conditionally display `Video Embed` or `Video URL` fields.
@@ -129,6 +134,40 @@ function sfgov_public_bodies_form_alter(&$form, \Drupal\Core\Form\FormStateInter
           'input[name=field_video_option]' => ['value' => 1],
         ],
       ];
+
+      /**
+       * Meeting location
+       */
+      $form['field_address']['#states'] = [
+        'visible' => [':input[name^="field_location_in_person"]' => ['checked' => TRUE]],
+      ];
+
       break;
+  }
+}
+
+/**
+ * Implements hook_field_group_build_pre_render_alter().
+ */
+function sfgov_public_bodies_field_group_form_process_build_alter(&$element) {
+  if (isset($element['group_meeting_online'])) {
+    $element['group_meeting_online']['#states'] = [
+      'visible' => [':input[name^="field_location_online"]' => ['checked' => TRUE]]
+    ];
+  }
+}
+
+/**
+ * Implements template_preprocess_fieldset().
+ */
+function sfgov_public_bodies_preprocess_fieldset(&$variables) {
+  $element = $variables['element'];
+
+  if (!empty($element['#form_id']) && $element['#form_id'] == 'meeting_list_filters_form') {
+    // Manually set 'aria-describedby' to subcommittees #suffix. See comments in
+    // web/modules/custom/sfgov_public_bodies/src/Form/MeetingListFiltersForm.php
+    if (!empty($element['#name']) && $element['#name'] == 'subcommittees') {
+      $variables['attributes']['aria-describedby'] = 'subcommittees-description';
+    }
   }
 }
