@@ -3,7 +3,7 @@
 require '../shared.php';
 
 $workflow_type = $_POST['wf_type'];
-echo "deployment status update for workflow '$workflow_type'...";
+print("Deployment status update for workflow '$workflow_type'...");
 
 $secrets = _get_secrets(['github']);
 $token = $secrets['github'];
@@ -22,6 +22,8 @@ $target_url = sprintf(
   $_ENV['PANTHEON_SITE_NAME']
 );
 
+print("Target URL: '$target_url'");
+
 switch ($workflow_type) {
 case 'deploy':
   # "Deploy code to Test or Live"
@@ -34,7 +36,7 @@ case 'create_cloud_development_environment':
   $transient = true;
 
 default:
-  echo "The workflow '$workflow_type' does not apply to GitHub deployment status.";
+  print("The workflow '$workflow_type' does not apply to GitHub deployment status.");
   exit(0);
 }
 
@@ -46,6 +48,10 @@ $deployment = createDeployment([
   'required_contexts' => []
 ]);
 
+print("\n==== Deployment: ====\n");
+print(json_encode($deployment, JSON_PRETTY_PRINT));
+print("\n==== /deployment ====\n");
+
 $status = createDeploymentStatus($deployment['id'], [
   'state' => 'success',
   'target_url' => $target_url,
@@ -53,6 +59,10 @@ $status = createDeploymentStatus($deployment['id'], [
   'environment_url' => $target_url,
   'auto_inactive' => true
 ]);
+
+print("\n==== Deployment status: ====\n");
+print(json_encode($status, JSON_PRETTY_PRINT));
+print("\n==== /status ====\n");
 
 function createDeployment($data, $headers=[])
 {
