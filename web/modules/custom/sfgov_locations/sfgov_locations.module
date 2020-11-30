@@ -298,3 +298,14 @@ function sfgov_locations_field_widget_multivalue_office_hours_list_form_alter(ar
 function sfgov_locations_preprocess_field__node__field_departments__location(&$variables) {
   $variables['label'] = t('Departments');
 }
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_locations_preprocess_address_plain(&$variables) {
+  if (!empty($variables['address'])) {
+    // Provide the parent entity to the 'address-plain--' templates.
+    $variables['parent_entity'] = $variables['address']->getEntity();
+  }
+}
