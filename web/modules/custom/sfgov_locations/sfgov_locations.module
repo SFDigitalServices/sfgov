@@ -65,8 +65,6 @@ function sfgov_locations_element_info_alter(array &$info) {
 
 /**
  * Implements hook_form_FORM_ID_alter().
- *
- * Alters the artist options on artwork pages.
  */
 function sfgov_locations_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   switch ($form['#id']) {
@@ -80,10 +78,6 @@ function sfgov_locations_form_views_exposed_form_alter(&$form, FormStateInterfac
         ->condition('status', 1)
         ->sort('title')
         ->execute();
-
-      if (!$nids) {
-        return FALSE;
-      }
 
       // Create options list using Department node titles.
       $options = [];
