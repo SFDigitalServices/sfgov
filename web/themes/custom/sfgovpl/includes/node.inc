@@ -16,7 +16,7 @@ use Drupal\Core\Link;
 function sfgovpl_preprocess_node(&$variables) {
   if(!empty($variables['node'])) {
     $content_type = $variables['node']->getType();
-    if($content_type == 'department') {
+    if ($content_type == 'department' && $variables['view_mode'] == 'full') {
       $variables['dept_fields'] = dept_page_fields();
       sfgovpl_add_regions_to_node(['department_news'], $variables);
       sfgovpl_add_regions_to_node(['department_events'], $variables);
@@ -51,21 +51,29 @@ function sfgovpl_preprocess_node__meeting__full(&$variables) {
   }
 
   // Get video
-  if ($video_url = $node->get('field_video_embed')->value) {
-    /** @var \Drupal\sfgov_video\VideoService $video_service */
-    $video_service = \Drupal::service('sfgov_video.utilities');
-    $video_id = $video_service->getVideoId($video_url);
-
-    // Pass variable with video captions.
-    $variables['video_captions'] = $video_service->getYoutubeTranscript($video_id);
-
-    // Video captions link
-    $url = Url::fromUserInput('/video/' . $video_id);
-    $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
-    $link = $link->toRenderable();
-    $link['#attributes']['target'] = '_blank';
-    // Pass variable with video captions link.
-    $variables['video_captions_link'] = $link;
+  if ($video_par = $node->get('field_videos')->referencedEntities()) {
+    try {
+      $video_par = $video_par[0];
+      $video_type = $video_par->getType();
+      if ($video_type == 'video') {
+        $video_url = $video_par->field_video->value;
+        /** @var \Drupal\sfgov_video\VideoService $video_service */
+        $video_service = \Drupal::service('sfgov_video.utilities');
+        $video_id = $video_service->getVideoId($video_url);
+        // Pass variable with video captions.
+        $variables['video_captions'] = $video_service->getYoutubeTranscript($video_id);
+        // Video captions link
+        $url = Url::fromUserInput('/video/' . $video_id);
+        $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
+        $link = $link->toRenderable();
+        $link['#attributes']['target'] = '_blank';
+        $link['#attributes']['rel'] = 'noopener';
+        // Pass variable with video captions link.
+        $variables['video_captions_link'] = $link;
+      }
+    } catch (Exception $ex) {
+      // do nothing
+    }
   }
 }
 
@@ -77,20 +85,25 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
 
   // Date time.
   $date_settings = ['timezone' => drupal_get_user_timezone()];
-  $meeting_time = [$node->field_start_date->date->format('h:ia', $date_settings)];
+  $meeting_time = [$node->field_start_date->date->format('g:ia', $date_settings)];
   if ($node->field_end_date->value) {
-    $meeting_time[] = $node->field_end_date->date->format('h:ia', $date_settings);
+    $meeting_time[] = $node->field_end_date->date->format('g:ia', $date_settings);
   }
   $variables['meeting_time'] = [
-    '#markup' => implode(' - ', $meeting_time)
+    '#markup' => implode(' to ', $meeting_time)
   ];
 
   // Address field.
+  $online = $node->field_location_online->value;
   if ($node->field_address->entity) {
-    $variables['meeting_address'] = $node->field_address->entity->field_address->view([
-      'type' => 'address_default',
-      'label' => 'hidden',
-    ]);
+    $address = $node->field_address->entity->field_address->getValue();
+    if ($address[0]['address_line1']) {
+      $variables['meeting_address'] = $address[0]['address_line1'];
+    } else {
+      $variables['meeting_address'] = '';
+    }
+  } elseif ($online == '1') {
+    $variables['online'] = TRUE;
   }
 }
 
@@ -164,7 +177,7 @@ function dept_page_fields() {
             if ($tx = Node::load($txId)) {
               $txs[] = array(
                 'tx_title' => $tx->get('title')->getValue()[0]['value'],
-                'tx_description' => $tx->get('field_description')->getValue()[0]['value'],
+                'tx_description' => $tx->get('field_description')->getValue() ? $tx->get('field_description')->getValue()[0]['value'] : '',
                 'tx_url' => $tx->toUrl('canonical', ['absolute'=>true])->toString(),
               );
             }
@@ -310,7 +323,12 @@ function dept_page_fields() {
     }
 
     // about fields
-    if($node->hasField('field_about_description')) {
+    if($node->hasField('field_about_or_description') && isset($node->get('field_about_or_description')->getValue()[0]['value'])) {
+      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
+      if($aboutDescription) {
+        $theFields['about']['description'] = $aboutDescription;
+      }
+    } elseif($node->hasField('field_about_description')) {
       $aboutDescription = $node->get('field_about_description')->getValue() ? $node->get('field_about_description')->getValue()[0]['value'] : null;
       if($aboutDescription) {
         $theFields['about']['description'] = $aboutDescription;
@@ -388,27 +406,6 @@ function dept_page_fields() {
                   'url' => $socialUrl,
                 );
               }
-            }
-          }
-        }
-      }
-    }
-    if($node->hasField('field_people')) {
-      $aboutPeople = $node->get('field_people');
-      if($aboutPeople && !empty($aboutPeople->getValue())) {
-        $peopleId = $aboutPeople->getValue()[0]['target_id'];
-        $peopleParagraph = Paragraph::load($peopleId);
-        if($peopleParagraph && !empty($peopleParagraph->get('field_person_2')->getValue())) {
-          $people = $peopleParagraph->get('field_person_2')->getValue();
-          foreach($people as $person) {
-            if ($personNode = Node::load($person['target_id'])) {
-              $theFields['about']['people'][] = array(
-                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
-                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
-                'title' => $personNode->get('field_title')->getValue()[0]['value'],
-                'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
-                'photo' => file_create_url($personNode->get('field_photo')->entity->uri->value),
-              );
             }
           }
         }

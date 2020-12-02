@@ -1,0 +1,24 @@
+{%
+  set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished',
+  'container',
+  'video-embed-component'
+]
+%}
+{% block paragraph %}
+  {{ attach_library('sfgovpl/sfgov-video') }}
+
+  <div{{ attributes.addClass(classes) }}>
+    <div class="container">
+      <h2>{{ content.field_title }}</h2>
+      {{ content.field_description }}
+
+      <div class="video-wrapper">
+        {{ content.field_link }}
+      </div>
+    </div>
+  </div>
+{% endblock paragraph %}

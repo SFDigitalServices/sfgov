@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Address component template.
+ */
+#}
+{% set title_tag = title_tag|default('div') %}
+
+<div class="sfgov-address" translate="no">
+  {% if title %}
+    <{{ title_tag }} class="sfgov-address__title">{{ title }}</{{ title_tag }}>
+  {% endif %}
+
+  {% if subtitle %}
+    <span class="sfgov-address__subtitle">{{ subtitle }}</span><br>
+  {% endif %}
+
+  {% if addressee %}
+    <span class="sfgov-address__addressee">{{ addressee }}</span><br>
+  {% endif %}
+
+  {% if location_name %}
+    <span class="sfgov-address__location-name">{{ location_name }}</span><br>
+  {% endif %}
+
+  {% if line1 %}
+    <span class="sfgov-address__line1">{{ line1 }}</span><br>
+  {% endif %}
+
+  {% if line2 %}
+    <span class="sfgov-address__line2">{{ line2 }}</span><br>
+  {% endif %}
+
+  {% if city or state or zip %}
+    <span class="sfgov-address__city-state-zip">{{ city }}, {{ state }} {{ zip }}</span>
+  {% endif %}
+</div>

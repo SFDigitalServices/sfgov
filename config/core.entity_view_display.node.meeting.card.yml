@@ -11,7 +11,6 @@ dependencies:
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
     - field.field.node.meeting.field_end_date
-    - field.field.node.meeting.field_intro_text
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -22,34 +21,22 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
-    - field.field.node.meeting.field_url
-    - field.field.node.meeting.field_video_embed
-    - field.field.node.meeting.field_video_option
+    - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
     - datetime
-    - entity_reference_revisions
     - user
 id: node.meeting.card
 targetEntityType: node
 bundle: meeting
 mode: card
 content:
-  field_phone_numbers:
-    weight: 109
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
-    region: content
   field_start_date:
     weight: 0
     label: hidden
     settings:
       timezone_override: ''
-      date_format: 'l, M j, Y - h:ia'
+      date_format: 'l, M j, Y, g:i a'
     third_party_settings: {  }
     type: datetime_custom
     region: content
@@ -62,18 +49,17 @@ hidden:
   field_dept: true
   field_direct_external_url: true
   field_end_date: true
-  field_intro_text: true
   field_link: true
   field_location_in_person: true
   field_location_online: true
   field_meeting_artifacts: true
   field_meeting_cancel: true
+  field_phone_numbers: true
   field_public_body: true
   field_regulations_accordions: true
   field_regulations_title: true
-  field_url: true
-  field_video_embed: true
-  field_video_option: true
+  field_title: true
+  field_videos: true
   langcode: true
   links: true
   search_api_excerpt: true

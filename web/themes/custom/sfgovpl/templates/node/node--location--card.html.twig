@@ -1,0 +1,8 @@
+{% extends 'node.html.twig' %}
+{% block node %}
+  {% include "@theme/location-card.twig" with {
+    "title": label,
+    "url": url,
+    "image_url": file_url(node.field_image.entity.field_media_image.entity.uri.value|image_style('350x200'))
+  } %}
+{% endblock node %}

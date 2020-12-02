@@ -39,29 +39,11 @@
       scrollTo(scrollToSelector);
     });
 
-    $(window).on('resize', function() {
-      checkWindowSize();
-    });
-
-    var checkWindowSize = function() {
-      var bp = 768;
-      var windowWidth = $(window).width();
-      $('.sfgov-spotlight-image').each(function() {
-        var parent = $(this).parent();
-        if(windowWidth <= bp) {
-          $(parent).prepend($(this));
-        } else {
-          $(parent).append($(this));
-        }
-      })
-    };
-
     $(document).ready(function() {
       if(window.location.hash) {
         var selector = 'a[name="' + window.location.hash.replace('#','') + '"]';
         scrollTo(selector);
       }
-      checkWindowSize();
     });
   });
 })(jQuery);

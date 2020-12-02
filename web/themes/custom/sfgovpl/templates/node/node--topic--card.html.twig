@@ -4,12 +4,14 @@
   {% endblock title %}
 
   {% block body %}
-    <div class="sfgov-container-item">
-      {% include "@theme/topic-card.twig" with {
-        "title": node.label,
-        "description": content.field_description.0['#text'],
-        "url": url
-      } %}
-    </div>
+    {% if is_front %}
+      {% set el = 'p' %}
+    {% endif %}
+    {% include "@theme/topic-card.twig" with {
+      "title": node.label,
+      "description": content.field_description.0['#text'],
+      "url": url,
+      "elem": el ? el : ''
+    } %}
   {% endblock body %}
 {% endblock node %}

@@ -4,6 +4,75 @@
 
 // https://app.zeplin.io/project/5cd9e1b9936b89681acbd2d6/styleguide
 
+
+@mixin antialiasing($type:antialiased) {
+  /* antialiased, none, subpixel-antialiased*/
+  @if $type == antialiased {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  } @else if $type == none {
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: auto;
+  } @else {
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+@mixin h1 {
+  color: $c-slate;
+  font-weight: $fw-medium;
+  margin: 1.75rem 0 0;
+  font-size: px-to-rem(33);
+  line-height: px-to-rem(44);
+  &.title {
+    line-height: normal;
+    font-weight: $fw-light;
+  }
+  @media screen and (min-width: 40rem) {
+    font-size: px-to-rem(62);
+    line-height: normal;
+    letter-spacing: -0.3px;
+    &.title {
+      font-size: px-to-rem(50);
+      letter-spacing: 0;
+    }
+  }
+}
+
+@mixin h2 {
+  color: $c-slate;
+  font-weight: $fw-medium;
+  margin: 1.25rem 0 0.875rem;
+  font-size: px-to-rem(40);
+  line-height: normal;
+}
+
+@mixin h3 {
+  color: $c-slate;
+  font-weight: $fw-medium;
+  font-size: px-to-rem(24);
+  line-height: px-to-rem(30);
+  margin: 1.25rem 0 0.875rem;
+  @media screen and (min-width: $medium-screen) {
+    font-size: px-to-rem(30);
+    line-height: px-to-rem(42);
+  }
+}
+
+@mixin h4 {
+  font-weight: $fw-regular;
+  margin: 1.25rem 0 0.875rem;
+  font-size: px-to-rem(24);
+  line-height: px-to-rem(34);
+}
+
+@mixin h5 {
+  margin: 1rem 0 0.875rem;
+  font-weight: $fw-medium;
+  font-size: px-to-rem(20);
+  line-height: px-to-rem(27);
+}
+
 @mixin fs-display-1 {
   font-size: 72px;
   font-weight: $fw-light;
@@ -297,6 +366,12 @@
   font-size: 17px;
   font-weight: $fw-medium;
   line-height: 18px;
+}
+
+@mixin fs-body-link-bold {
+  font-size: 17px;
+  font-weight: $fw-medium;
+  line-height: 24px;
 }
 
 // Complex mixins.

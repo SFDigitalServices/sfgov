@@ -3,13 +3,23 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.in_person_location.field_address_display
     - field.field.paragraph.in_person_location.field_location
     - paragraphs.paragraphs_type.in_person_location
+  module:
+    - rest_views
 id: paragraph.in_person_location.default
 targetEntityType: paragraph
 bundle: in_person_location
 mode: default
 content:
+  field_address_display:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: boolean_export
+    region: content
   field_location:
     weight: 0
     label: hidden
@@ -19,4 +29,5 @@ content:
     third_party_settings: {  }
     type: entity_reference_entity_view
     region: content
-hidden: {  }
+hidden:
+  search_api_excerpt: true
