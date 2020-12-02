@@ -1,5 +1,10 @@
+{% if elem %}
+  {% set el = elem %}
+{% else %}
+  {% set el = 'h3' %}
+{% endif %}
 <a class="sfgov-topic-card" href="{{ url }}">
-  <h3 class="title">{{ title }}</h3>
+  <{{ el }} class="title">{{ title }}</{{ el }}>
   <p class="description">
     {{ description }}
   </p>

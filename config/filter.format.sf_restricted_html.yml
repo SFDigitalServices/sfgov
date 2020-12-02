@@ -4,6 +4,8 @@ status: true
 dependencies:
   module:
     - editor
+    - linkit
+    - media
 name: 'SF Restricted HTML'
 format: sf_restricted_html
 weight: -9
@@ -21,7 +23,7 @@ filters:
     status: true
     weight: -49
     settings:
-      allowed_html: '<a href hreflang> <br> <em> <li> <ol start type> <p> <span> <strong> <u> <ul type>'
+      allowed_html: '<br> <em> <li> <ol type start> <p> <span> <strong> <u> <ul type> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>'
       filter_html_help: true
       filter_html_nofollow: false
   filter_autop:
@@ -66,3 +68,19 @@ filters:
     status: false
     weight: -47
     settings: {  }
+  media_embed:
+    id: media_embed
+    provider: media
+    status: false
+    weight: 100
+    settings:
+      default_view_mode: default
+      allowed_media_types: {  }
+      allowed_view_modes: {  }
+  linkit:
+    id: linkit
+    provider: linkit
+    status: true
+    weight: 0
+    settings:
+      title: true
