@@ -1,0 +1,34 @@
+uuid: 88c60017-2037-4327-931a-6c50564aba6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_at_this_location
+    - node.type.department
+    - node.type.location
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.location.field_at_this_location
+field_name: field_at_this_location
+entity_type: node
+bundle: location
+label: 'At this location'
+description: 'Use if there are multiple departments or other locations operating at this location. Leave blank if there is only one thing at this location.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      location: location
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference
