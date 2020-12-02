@@ -59,7 +59,7 @@
 (function() {
 
   var time = Date.now()
-  var confirmationURL = {{ paragraph.field_formio_confirmation_url.value | escape('js') }}
+  var confirmationURL = {{ paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw  }}
 
   window.addEventListener('load', function() {
     var loadTime = Date.now() - time
