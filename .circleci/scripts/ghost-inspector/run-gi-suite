@@ -46,7 +46,7 @@ fi
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
 SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
-curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":ghost: sfgov suite executed\n<'$GI_START_URL'|'$GI_START_URL'> / <'$CIRCLE_PULL_REQUEST'|pr> / <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/'$RESULT_ID'|screenshots>","text":"'"$SUITE_TEST_RESULTS_SLACK"'"}]}' $RONBOT_WEBHOOK_URL
+curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":ghost: sfgov suite executed\n<'$GI_START_URL'|'$GI_START_URL'> | <'$CIRCLE_PULL_REQUEST'|pr> | <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/'$RESULT_ID'|screenshots>","text":"'"$SUITE_TEST_RESULTS_SLACK"'"}]}' $RONBOT_WEBHOOK_URL
 
 # output suite tests with results
 echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
