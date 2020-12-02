@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Template for Department node, when rendered with the 'location_page_address'
+ * view mode.
+ */
+#}
+{% extends 'node.html.twig' %}
+{% block content %}
+  <div class="sfgov-container-item--inner">
+    <a href="{{ url }}">
+      <h5 class="at-location-label">{{ label }}</h5>
+    </a>
+
+    {% if content.field_address|render %}
+      <div class="at-location-addrress">
+        {{ content.field_address }}
+      </div>
+    {% endif %}
+
+    {{ content|without('field_address') }}
+  </div>
+{% endblock %}

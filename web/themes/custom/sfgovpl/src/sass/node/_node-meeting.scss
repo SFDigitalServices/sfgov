@@ -64,12 +64,12 @@
       }
 
       .location--in-person {
-        .eck-entity-address-field {
+        .sfgov-location__address {
           margin-bottom:  1rem;
           p {
             margin: 0;
           }
-          .field__label {
+          .sfgov-address__title {
             @include fs-title-5;
             margin-bottom: 20px;
           }
@@ -134,7 +134,10 @@
   }
 
   .sfgov-section-overview {
-    padding: 0 70px 60px 0;
+    @media (min-width: $mobile-screen) {
+      padding: 0 70px 60px 0;
+    }
+    padding-bottom: 60px;
     .sfgov-section--heading {
       @include fs-title-2;
     }
@@ -167,7 +170,7 @@
           position: relative;
           padding-left: 100px;
           counter-increment: counter;
-          padding-bottom: 30px;
+          padding-bottom: 60px;
           list-style: none;
 
           .__title {
@@ -261,11 +264,15 @@
     margin-bottom: 0;
     background: $c-blue-1;
 
-    h4 {
+    .field__label  {
       font-size: 17px;
       font-weight: 500;
       line-height: 24px;
       margin-bottom: 10px;
+    }
+    
+    .field__item {
+      margin-bottom: 20px;
     }
   }
 
