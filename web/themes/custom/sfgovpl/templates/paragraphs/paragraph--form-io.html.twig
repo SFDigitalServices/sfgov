@@ -102,10 +102,10 @@
         return { error: message }
       },
       componentError: function (error) {
-        return {
+        return error ? {
           component: error.component.key,
           error: error.message
-        }
+        } : false
       },
       prevPage: function (data) {
         return { page_index: data.page }
@@ -140,10 +140,14 @@
 
         Object.keys(formEventHandlers).forEach(function(eventName) {
           form.on(eventName, function() {
-            var formData = formEventHandlers[eventName].apply(form, arguments)
-            if (formData !== false) {
-              formData.url = form.url
-              amp('form.' + eventName, { form: formData })
+            try {
+              var formData = formEventHandlers[eventName].apply(form, arguments)
+              if (formData !== false) {
+                formData.url = form.url
+                amp('form.' + eventName, { form: formData })
+              }
+            } catch (error) {
+              console.error('There was an error handling form event "%s":', eventName, error)
             }
           })
         })
