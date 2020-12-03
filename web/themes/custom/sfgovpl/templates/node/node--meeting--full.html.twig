@@ -57,17 +57,18 @@
         <div class="sfgov-section--content">
           {% if content.field_start_date|render or content.field_end_date|render %}
           <div class="date-time">
-            <h4>Date</h4>
+            <h4>Date & Time</h4>
             {% if content.field_start_date|render %}
             <div class="start-date">
-              {{ content.field_start_date }}
+              {{ node.field_start_date.date|date('l, F d, Y') }}
+              <br>
+              {{ node.field_start_date.date|date('g:i a') }}
+              {% if content.field_end_date|render %}
+                to {{ node.field_end_date.date|date('g:i a') }}
+              {% endif %}
             </div>
             {% endif %}
-            {% if content.field_end_date|render %}
-            <div class="end-date">
-              {{ content.field_end_date }}
-            </div>
-            {% endif %}
+            
           </div>
           {% endif %}
 
