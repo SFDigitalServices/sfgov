@@ -184,6 +184,15 @@ function sfgov_admin_theme_suggestions_field_multiple_value_form_alter(array &$s
   }
 }
 
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function sfgov_admin_preprocess_field_multiple_value_form__autocomplete(&$variables) {
+  if ($variables['element']['#field_name'] == 'field_person_2') {
+    $variables['button']['#value'] = $variables['element']['#max_delta'] >= 0 ? t('Add another person') : t('Add person');
+  }
+}
+
 function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $viewId = $form['#id']; 
   if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display  

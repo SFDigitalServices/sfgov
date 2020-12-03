@@ -51,21 +51,29 @@ function sfgovpl_preprocess_node__meeting__full(&$variables) {
   }
 
   // Get video
-  if ($video_url = $node->get('field_video_embed')->value) {
-    /** @var \Drupal\sfgov_video\VideoService $video_service */
-    $video_service = \Drupal::service('sfgov_video.utilities');
-    $video_id = $video_service->getVideoId($video_url);
-
-    // Pass variable with video captions.
-    $variables['video_captions'] = $video_service->getYoutubeTranscript($video_id);
-
-    // Video captions link
-    $url = Url::fromUserInput('/video/' . $video_id);
-    $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
-    $link = $link->toRenderable();
-    $link['#attributes']['target'] = '_blank';
-    // Pass variable with video captions link.
-    $variables['video_captions_link'] = $link;
+  if ($video_par = $node->get('field_videos')->referencedEntities()) {
+    try {
+      $video_par = $video_par[0];
+      $video_type = $video_par->getType();
+      if ($video_type == 'video') {
+        $video_url = $video_par->field_video->value;
+        /** @var \Drupal\sfgov_video\VideoService $video_service */
+        $video_service = \Drupal::service('sfgov_video.utilities');
+        $video_id = $video_service->getVideoId($video_url);
+        // Pass variable with video captions.
+        $variables['video_captions'] = $video_service->getYoutubeTranscript($video_id);
+        // Video captions link
+        $url = Url::fromUserInput('/video/' . $video_id);
+        $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
+        $link = $link->toRenderable();
+        $link['#attributes']['target'] = '_blank';
+        $link['#attributes']['rel'] = 'noopener';
+        // Pass variable with video captions link.
+        $variables['video_captions_link'] = $link;
+      }
+    } catch (Exception $ex) {
+      // do nothing
+    }
   }
 }
 

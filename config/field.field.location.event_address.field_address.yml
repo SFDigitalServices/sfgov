@@ -7,6 +7,10 @@ dependencies:
     - field.storage.location.field_address
   module:
     - address
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
 id: location.event_address.field_address
 field_name: field_address
 entity_type: location
@@ -17,19 +21,21 @@ required: false
 translatable: true
 default_value:
   -
+    langcode: ''
     country_code: US
-    langcode: en
     administrative_area: ''
     locality: ''
-    dependent_locality: ''
+    dependent_locality: null
     postal_code: ''
-    sorting_code: ''
+    sorting_code: null
     address_line1: ''
     address_line2: ''
     organization: ''
-    given_name: ''
-    additional_name: ''
-    family_name: ''
+    given_name: null
+    additional_name: null
+    family_name: null
+    addressee: ''
+    location_name: ''
 default_value_callback: ''
 settings:
   available_countries:
@@ -44,9 +50,23 @@ settings:
       override: hidden
     organization:
       override: hidden
+    addressLine1:
+      override: optional
+    addressLine2:
+      override: optional
+    postalCode:
+      override: optional
     sortingCode:
       override: hidden
     dependentLocality:
+      override: hidden
+    locality:
+      override: optional
+    administrativeArea:
+      override: optional
+    addressee:
+      override: hidden
+    location_name:
       override: hidden
   fields: {  }
 field_type: address
