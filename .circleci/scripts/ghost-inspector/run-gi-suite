@@ -46,7 +46,7 @@ fi
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
 SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
-if [ -n "$CIRCLE_PULL_REQUEST" ] then
+if [ -n "$CIRCLE_PULL_REQUEST" ]; then
   PR='<'$CIRCLE_PULL_REQUEST'|pr>'
 else
   PR='`'$CIRCLE_BRANCH'`'
