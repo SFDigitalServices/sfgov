@@ -106,12 +106,9 @@
         return { error: message }
       },
       componentError: function (error) {
-        return error ? {
+        return {
           component: error.component.key,
           error: error.message
-        } : {
-          // if we don't get an error argument here, we should still probably log it
-          error: 'No error argument passed to "componentError" handler!'
         }
       },
       prevPage: function (data) {
