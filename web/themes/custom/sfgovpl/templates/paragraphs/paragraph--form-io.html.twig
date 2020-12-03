@@ -93,8 +93,12 @@
      * multiple arguments to the listener rather than a single event object.
      */
     var formEventHandlers = {
-      submit: function (submission) { },
-      submitDone: function (submission) { },
+      submit: function (submission) {
+        return { } // just log the event
+      },
+      submitDone: function (submission) {
+        return { } // just log the event
+      },
       error: function (message) {
         return { error: message }
       },
@@ -105,7 +109,10 @@
         return error ? {
           component: error.component.key,
           error: error.message
-        } : false
+        } : {
+          // if we don't get an error argument here, we should still probably log it
+          error: 'No error argument passed to "componentError" handler!'
+        }
       },
       prevPage: function (data) {
         return { page_index: data.page }
@@ -124,8 +131,12 @@
           page_index: index
         }
       },
-      saveDraft: function (submission) { },
-      restoreDraft: function (submission) { },
+      saveDraft: function (submission) {
+        return { } // just log the event
+      },
+      restoreDraft: function (submission) {
+        return { } // just log the event
+      },
       editGridAddRow: function (data) {
         return {
           component: data.component.key
@@ -142,7 +153,7 @@
           form.on(eventName, function() {
             try {
               var formData = formEventHandlers[eventName].apply(form, arguments)
-              if (formData !== false) {
+              if (formData && typeof formData === 'object') {
                 formData.url = form.url
                 amp('form.' + eventName, { form: formData })
               }
