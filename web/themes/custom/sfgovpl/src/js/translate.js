@@ -183,11 +183,11 @@ function getCookie(cookieName) {
           break;
         }
       }
-      if(mutation.type == 'attributes') {
+      if (mutation.type === 'attributes') {
         var mutationTarget = mutation.target;
         if (mutationTarget.tagName === 'HTML') {
           var lang = mutationTarget.getAttribute('lang');
-          if(gtranslateLanguageMap[lang]) {
+          if (gtranslateLanguageMap[lang]) {
             mutationTarget.setAttribute('lang', gtranslateLanguageMap[lang]);
           }
         }
@@ -210,6 +210,6 @@ function getCookie(cookieName) {
 
   var observer = new MutationObserver(callback);
   observer.observe(observeElement, config);
-  observer.observe($('html')[0], config);
+  observer.observe(document.querySelector('html'), config);
 
 })(jQuery);
