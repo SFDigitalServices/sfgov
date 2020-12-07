@@ -3,7 +3,7 @@
   max-width: none;
 }
 
-.content-moderation-control {
+.content-moderation {
   background: #f9f9f9;
   border-radius: 0;
   border: 0;
@@ -11,39 +11,102 @@
   padding: 0;
 }
 
-.content-moderation-control summary {
+.content-moderation summary,
+.content-moderation[open] summary {
   /* antialiased, none, subpixel-antialiased*/
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #2d2d2d;
   border-radius: 0;
-  border: 0;
-  color: #fff;
+  border: solid 1px;
+  color: #1c3e57;
+  padding: 0 !important;
 }
 
-.content-moderation-control:not([open]) summary::after {
-  background-color: #fff;
-  background-image: none;
+.content-moderation.is-draft summary,
+.content-moderation.is-draft[open] summary {
+  background-color: #f5e9e5;
+  border-color: #efcabb;
+}
+
+.content-moderation.is-ready-for-review summary,
+.content-moderation.is-ready-for-review[open] summary {
+  background-color: #f8f1df;
+  border-color: #f9e3a3;
+}
+
+.content-moderation.is-archived summary,
+.content-moderation.archived[open] summary {
+  background-color: #edebf6;
+  border-color: #cccced;
+}
+
+.content-moderation:not([open]) summary::after,
+.content-moderation[open] summary::after {
+  display: none;
+}
+
+.content-moderation_summary-container {
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  position: relative;
+}
+
+@media screen and (min-width: 1280px) {
+  .content-moderation_summary-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.content-moderation_summary-container::after {
+  background-color: #1c3e57;
+  content: '';
+  height: 30px;
   -webkit-mask: url("/themes/custom/sfgovpl/src/img/plus-blue.svg") no-repeat 50% 50%;
           mask: url("/themes/custom/sfgovpl/src/img/plus-blue.svg") no-repeat 50% 50%;
   -webkit-mask-size: 19px 19px;
           mask-size: 19px 19px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 30px;
 }
 
-.content-moderation-control[open] summary {
-  background: #2d2d2d;
-  border: 0;
-  border-radius: 0;
+.content-moderation[open] .content-moderation_summary-container::after {
+  -webkit-mask: url("/themes/custom/sfgovpl/src/img/minus-white.svg") no-repeat 50% 50%;
+          mask: url("/themes/custom/sfgovpl/src/img/minus-white.svg") no-repeat 50% 50%;
+  -webkit-mask-size: 19px 3px;
+          mask-size: 19px 3px;
 }
 
-.content-moderation-control__content {
+.content-moderation__content {
   margin: 0 auto;
   max-width: 1090px;
-  padding: 40px 20px 60px 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 60px;
 }
 
-@media screen and (min-width: 950px) {
-  .content-moderation-control__transition {
+@media screen and (min-width: 1280px) {
+  .content-moderation__content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.content-moderation__message {
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 700px) {
+  .content-moderation__transition {
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
@@ -53,74 +116,53 @@
   }
 }
 
-.content-moderation-control__transition .form-item {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+.content-moderation__transition .form-item {
   margin: 0 0 20px 0;
   padding: 0;
-  max-width: 400px;
+  max-width: 50%;
 }
 
-@media screen and (min-width: 950px) {
-  .content-moderation-control__transition .form-item {
+@media screen and (min-width: 700px) {
+  .content-moderation__transition .form-item {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
     margin: 0;
+    max-width: 520px;
   }
 }
 
-@media screen and (min-width: 950px) {
-  .content-moderation-control__transition .form-item:not(:first-child) {
+@media screen and (min-width: 700px) {
+  .content-moderation__transition .form-item:not(:first-child) {
     margin-left: 2rem;
   }
 }
 
-.content-moderation-control__transition label {
+.content-moderation__transition label {
   display: block;
   font-size: 1.2rem;
   font-weight: normal;
   margin: 0 1rem 0 0;
 }
 
-@media screen and (max-width: 950px) {
-  .content-moderation-control__transition label {
-    -webkit-box-flex: 1;
-        -ms-flex: 1 0 115px;
-            flex: 1 0 115px;
+@media screen and (max-width: 700px) {
+  .content-moderation__transition label {
     font-size: 1.1rem;
   }
 }
 
-@media screen and (min-width: 950px) {
-  .content-moderation-control__transition label {
+@media screen and (min-width: 700px) {
+  .content-moderation__transition label {
     min-width: -webkit-max-content;
     min-width: -moz-max-content;
     min-width: max-content;
   }
 }
 
-.content-moderation-control__transition .form-item-current-state {
-  border-radius: 8px;
-  border: solid 2px #323a45;
-  color: #1c3e57;
-  cursor: not-allowed;
-  padding: 0.64rem 1rem;
-  width: 100%;
-}
-
-.content-moderation-control__transition .form-item-current-state--draft {
-  background-color: #f5e9e5;
-  border-color: #efcabb;
-}
-
-.content-moderation-control__transition .form-item-current-state--ready-for-review {
-  background-color: #f8f1df;
-  border-color: #f9e3a3;
-}
-
-.content-moderation-control__log {
+.content-moderation__log {
   -webkit-box-align: stretch;
       -ms-flex-align: stretch;
           align-items: stretch;
@@ -130,7 +172,7 @@
   margin-top: 20px;
 }
 
-.content-moderation-control__log .form-item-revision-log {
+.content-moderation__log .form-item-revision-log {
   -webkit-box-align: stretch;
       -ms-flex-align: stretch;
           align-items: stretch;
@@ -143,7 +185,7 @@
   position: relative;
 }
 
-.content-moderation-control__log .form-item-revision-log label {
+.content-moderation__log .form-item-revision-log label {
   clip: rect(1px, 1px, 1px, 1px);
   height: 1px;
   overflow: hidden;
@@ -152,7 +194,7 @@
   word-wrap: normal;
 }
 
-.content-moderation-control__log .form-item-revision-log input {
+.content-moderation__log .form-item-revision-log input {
   border-bottom-right-radius: 0;
   border-right: 0;
   border-top-right-radius: 0;
@@ -163,7 +205,7 @@
   width: 100%;
 }
 
-.content-moderation-control__log .form-submit {
+.content-moderation__log .form-submit {
   border-bottom-left-radius: 0;
   border-left: 0;
   border-top-left-radius: 0;
@@ -171,6 +213,23 @@
       -ms-flex: 0 1 80px;
           flex: 0 1 80px;
   margin: 0;
+}
+
+.content-moderation__status {
+  display: inline-block;
+  border-radius: 8px;
+  font-size: 0.923rem;
+  padding: 0 0.5rem;
+}
+
+.content-moderation__status.is-published {
+  background: #00896d;
+  color: #fff;
+}
+
+.content-moderation__status.is-unpublished {
+  background: #c9563a;
+  color: #fff;
 }
 
 .diff-header,
