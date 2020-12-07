@@ -5,60 +5,102 @@
   max-width: none;
 }
 
-.content-moderation-control {
+.content-moderation {
   background: $c-black-opacity-3;
   border-radius: 0;
   border: 0;
   margin: 0;
   padding: 0;
 
-  summary {
+  summary,
+  &[open] summary {
     @include antialiasing;
-    background: #2d2d2d;
     border-radius: 0;
-    border: 0;
-    color: $c-white;
+    border: solid 1px;
+    color: $c-slate;
+    padding: 0 !important;
   }
 
-  &:not([open]) summary::after {
-    background-color: $c-white;
-    background-image: none;
+  // Color by workflow moderation state.
+  &.is-draft summary,
+  &.is-draft[open] summary {
+    background-color: $c-red-1;
+    border-color: $c-red-2;
+  }
+
+  &.is-ready-for-review summary,
+  &.is-ready-for-review[open] summary {
+    background-color: $c-yellow-1;
+    border-color: $c-yellow-2;
+  }
+
+  &.is-archived summary,
+  &.archived[open] summary {
+    background-color: $c-purple-1;
+    border-color: $c-purple-2;
+  }
+
+  // Override base <details> styles. We want the +/- icons inside the container.
+  &:not([open]) summary::after,
+  &[open] summary::after {
+    display: none;
+  }
+}
+
+.content-moderation_summary-container {
+  @include contain-1090;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  position: relative;
+
+  &::after {
+    background-color: $c-slate;
+    content: '';
+    height: 30px;
     mask: url('/themes/custom/sfgovpl/src/img/plus-blue.svg') no-repeat 50% 50%;
     mask-size: 19px 19px;
-  }
-
-  &[open] summary {
-    background: #2d2d2d;
-    border: 0;
-    border-radius: 0;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 30px;
   }
 }
 
-.content-moderation-control__content {
-  margin: 0 auto;
-  max-width: 1090px;
-  padding: 40px 20px 60px 20px;
+.content-moderation[open] .content-moderation_summary-container::after {
+  mask: url('/themes/custom/sfgovpl/src/img/minus-white.svg') no-repeat 50% 50%;
+  mask-size: 19px 3px;
 }
 
-.content-moderation-control__transition {
-  @include media($narrow-screen) {
+.content-moderation__content {
+  @include contain-1090;
+  padding-top: 30px;
+  padding-bottom: 60px;
+}
+
+.content-moderation__message {
+  margin-bottom: 2rem;
+}
+
+.content-moderation__transition {
+  @include media($mobile-screen) {
     align-items: center;
     display: flex;
   }
 
   .form-item {
-    align-items: center;
-    display: flex;
     margin: 0 0 20px 0;
     padding: 0;
-    max-width: 400px;
+    max-width: 50%;
 
-    @include media($narrow-screen) {
+    @include media($mobile-screen) {
+      align-items: center;
+      display: flex;
       margin: 0;
+      max-width: 520px;
     }
 
     &:not(:first-child) {
-      @include media($narrow-screen) {
+      @include media($mobile-screen) {
         margin-left: 2rem;
       }
     }
@@ -70,37 +112,18 @@
     font-weight: normal;
     margin: 0 1rem 0 0;
 
-    @include media-max($narrow-screen) {
-      flex: 1 0 115px;
+    @include media-max($mobile-screen) {
+
       font-size: 1.1rem;
     }
 
-    @include media($narrow-screen) {
+    @include media($mobile-screen) {
       min-width: max-content;
-    }
-  }
-
-  .form-item-current-state {
-    border-radius: 8px;
-    border: solid 2px $c-grey-5;
-    color: $c-slate;
-    cursor: not-allowed;
-    padding: 0.64rem 1rem;
-    width: 100%;
-
-    &--draft {
-      background-color: $c-red-1;
-      border-color: $c-red-2;
-
-    }
-    &--ready-for-review {
-      background-color: $c-yellow-1;
-      border-color: $c-yellow-2;
     }
   }
 }
 
-.content-moderation-control__log {
+.content-moderation__log {
   align-items: stretch;
   display: flex;
   margin-top: 20px;
@@ -131,5 +154,22 @@
     border-top-left-radius: 0;
     flex: 0 1 80px;
     margin: 0;
+  }
+}
+
+.content-moderation__status {
+  display: inline-block;
+  border-radius: 8px;
+  font-size: 0.923rem;
+  padding: 0 0.5rem;
+
+  &.is-published {
+    background: $c-green-3;
+    color: $c-white;
+  }
+
+  &.is-unpublished {
+    background: $c-red-3;
+    color: $c-white;
   }
 }

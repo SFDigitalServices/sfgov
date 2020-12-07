@@ -2,24 +2,87 @@
 /**
  * @file
  * Template override for the "Content moderation" widget.
+ *
+ * The moderation form is only displayed only when viewing the latest
+ * (translation-affecting) revision, unless it was created as published default
+ * revision.
+ *
+ * Additional variables:
+ * - form['#node']: Node object for the base node.
+ * - form['#node_revision']: Node object for the revision being viewed.
+ * - form['#current_state'] = Current moderation state.
+ * - form['#node_url']: Url of base node, or the revision (string).
+ *
+ * @see sfgov_admin_form_content_moderation_entity_moderation_form_alter()
  */
 #}
+{% set node = form['#node'] %}
+{% set revision = form['#node_revision'] %}
+{% set current_state = form['#current_state'] %}
 
-<details class="content-moderation-control">
-  <summary><span>{{'Moderate'|t }}</span></summary>
+{# Note: Using methods and filters, like clean_class does not work inside
+{% trans %} tags, so we need to set these variables outside the block. #}
+{% set revision_status = revision.isPublished() ? 'published' : 'unpublished' %}
+{% set node_status = node.isPublished() ? 'published' : 'unpublished' %}
+{% set current_state_class = current_state|clean_class %}
+{% set node_status_class = node_status|clean_class %}
+{% set node_title = node.label() %}
+{% set node_url = form['#node_url'] %}
 
-  <div class="content-moderation-control__content">
-    <div class="content-moderation-control__transition">
-      {{ form.current }}
+{% set classes = [
+  'content-moderation',
+  'is-' ~ current_state_class,
+] %}
+
+<details{{ attributes.addClass(classes) }} open>
+  <summary class="content-moderation__summary">
+    <div class="content-moderation_summary-container">
+      {% trans %}
+        <span class="content-moderation__state is-{{ current_state_class }}">
+          Current state: {{ current_state }}
+        </span>
+        <span class="content-moderation__status is-{{ revision_status }}">
+          {{ revision_status }}
+        </span>
+      {% endtrans %}
+    </div>
+  </summary>
+
+  <div class="content-moderation__content">
+    <div class="content-moderation__message">
+      <p>
+        {% if node.isPublished() %}
+          {% trans %}
+            This is the latest, <em>unpublished</em> revision, in
+            <em class="{{ current_state_class }}">{{ current_state }}</em> state, of
+            <a href="{{ node_url }}" target="_blank" rel="noopener">{{ node_title }} [{{node_status}}]</a>.
+          {% endtrans %}
+
+        {% else %}
+          {% trans %}
+            This is the latest, <em>unpublished</em> revision, in
+            <em class="{{ current_state_class }}">{{ current_state }}</em>
+            state, of this page. There are no published revisions available.
+          {% endtrans %}
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="content-moderation__transition">
       {{ form.new_state }}
     </div>
 
-    <div class="content-moderation-control__log">
+    <div class="content-moderation__log">
       {{ form.revision_log }}
       {{ form.submit }}
     </div>
 
+    {% if node.revision_log.value %}
+      <div class="content-moderation__message">
+        <p><em>{{ 'Previous log message:'|t }}</em> {{ node.revision_log.value }}</p>
+      </div>
+    {% endif %}
+
     {{ form|without('current', 'new_state', 'revision_log', 'submit') }}
   </div>
 </details>
-
