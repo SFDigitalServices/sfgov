@@ -80,14 +80,22 @@
   </div>
 </div>
 
-{{ content.field_featured_items }}
-
 <div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
   <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
     <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
     <ul></ul>
   </div>
 </div>
+
+{% if content.field_spotlight2['#items'].getValue() %}
+  <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+    <div class="sfgov-section-container">
+      {{ content.field_spotlight2 }}
+    </div>
+  </div>
+{% endif %}
+
+{{ content.field_featured_items }}
 
 {# Alert #}
 {% include '@theme/alert.twig' with {
