@@ -1,27 +1,26 @@
 .maintenance-page {
-  padding: 30px 20px;
-  h1 {
-    font-size: 33px;
+  @include contain-1090;
+  padding-top: 30px;
+
+  .sfgov-logo--seal {
+    height: 42px;
+    width: 42px;
   }
-  .sfgov-maintenance-logo {
-    @include rubik;
-    padding: 20px 0 !important;
-    position: relative;
-    img {
-      display: inline-block;
-      width: 50px;
+
+  .sfgov-logo--lockup {
+    height: 23px;
+    width: 112px;
+  }
+
+  h1 {
+    @include fs-title-1-mobile;
+
+    @include media($narrow-screen) {
+      @include fs-title-1;
     }
-    .logo-text {
-      display: inline-block;
-      font-size: 42px;
-      font-weight: 300;
-      position: absolute;
-      top: 20px;
-      left: 60px;
-      color: #000;
-      strong {
-        font-weight: 500;
-      }
-    }
+  }
+
+  main {
+    padding: 0 0 60px 0;
   }
 }
