@@ -165,6 +165,10 @@ function getCookie(cookieName) {
   var observeElement = $('.sfgov-top-container')[0];
   var config = { attributes: true, childList: true, subtree: true };
 
+  var gtranslateLanguageMap = {
+    tl: "fil"
+  };
+
   // Add href, determine active link.
   t.setDrupalTranslationUrls();
 
@@ -177,6 +181,15 @@ function getCookie(cookieName) {
           // catch the gtranslate dropdown
           elem = $('.gtranslate-link');
           break;
+        }
+      }
+      if (mutation.type === 'attributes') {
+        var mutationTarget = mutation.target;
+        if (mutationTarget.tagName === 'HTML') {
+          var lang = mutationTarget.getAttribute('lang');
+          if (gtranslateLanguageMap[lang]) {
+            mutationTarget.setAttribute('lang', gtranslateLanguageMap[lang]);
+          }
         }
       }
     }
@@ -197,5 +210,6 @@ function getCookie(cookieName) {
 
   var observer = new MutationObserver(callback);
   observer.observe(observeElement, config);
+  observer.observe(document.querySelector('html'), config);
 
 })(jQuery);

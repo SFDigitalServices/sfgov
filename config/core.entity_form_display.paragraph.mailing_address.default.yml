@@ -3,11 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - entity_browser.browser.location_mailing
     - field.field.paragraph.mailing_address.field_location
     - paragraphs.paragraphs_type.mailing_address
-  module:
-    - entity_browser
 id: paragraph.mailing_address.default
 targetEntityType: paragraph
 bundle: mailing_address
@@ -16,16 +13,12 @@ content:
   field_location:
     weight: 11
     settings:
-      entity_browser: location_mailing
-      field_widget_display: rendered_entity
-      field_widget_edit: true
-      field_widget_remove: true
-      open: true
-      selection_mode: selection_append
-      field_widget_display_settings:
-        view_mode: default
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: entity_browser_entity_reference
+    type: entity_reference_autocomplete
     region: content
   translation:
     weight: 10

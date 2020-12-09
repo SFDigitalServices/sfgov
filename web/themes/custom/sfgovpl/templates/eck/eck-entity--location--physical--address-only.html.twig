@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Template override for 'Address' (in_person_location) paragraph when rendered
+ * with 'Address only' view mode.
+ */
+#}
+{% extends 'eck-entity--location--physical.html.twig' %}
+{% block content %}
+  {% if content.field_address|render %}
+    <div class="sfgov-location__address">
+      {{ content.field_address }}
+    </div>
+  {% endif %}
+{% endblock %}

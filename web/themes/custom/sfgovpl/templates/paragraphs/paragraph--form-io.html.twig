@@ -59,7 +59,11 @@
 (function() {
 
   var time = Date.now()
-  var confirmationURL = "{{ paragraph.field_formio_confirmation_url.value | escape('js') }}"
+    
+  var confirmationURL = {{ paragraph.field_formio_confirmation_url.value is empty ? 
+    "null" : 
+    paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw  
+  }}
 
   window.addEventListener('load', function() {
     var loadTime = Date.now() - time
@@ -93,8 +97,12 @@
      * multiple arguments to the listener rather than a single event object.
      */
     var formEventHandlers = {
-      submit: function (submission) { },
-      submitDone: function (submission) { },
+      submit: function (submission) {
+        return { } // just log the event
+      },
+      submitDone: function (submission) {
+        return { } // just log the event
+      },
       error: function (message) {
         return { error: message }
       },
@@ -124,8 +132,12 @@
           page_index: index
         }
       },
-      saveDraft: function (submission) { },
-      restoreDraft: function (submission) { },
+      saveDraft: function (submission) {
+        return { } // just log the event
+      },
+      restoreDraft: function (submission) {
+        return { } // just log the event
+      },
       editGridAddRow: function (data) {
         return {
           component: data.component.key
@@ -140,10 +152,14 @@
 
         Object.keys(formEventHandlers).forEach(function(eventName) {
           form.on(eventName, function() {
-            var formData = formEventHandlers[eventName].apply(form, arguments)
-            if (formData !== false) {
-              formData.url = form.url
-              amp('form.' + eventName, { form: formData })
+            try {
+              var formData = formEventHandlers[eventName].apply(form, arguments)
+              if (formData && typeof formData === 'object') {
+                formData.url = form.url
+                amp('form.' + eventName, { form: formData })
+              }
+            } catch (error) {
+              console.error('There was an error handling form event "%s":', eventName, error)
             }
           })
         })
