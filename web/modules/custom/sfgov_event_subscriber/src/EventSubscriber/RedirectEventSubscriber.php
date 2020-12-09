@@ -36,6 +36,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     }
 
     $redirect_url = NULL;
+    $cacheableDependency = NULL;
     $node = $event->getRequest()->attributes->get('node');
     $media = $event->getRequest()->attributes->get('media');
 
@@ -53,13 +54,13 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
           // This is where you set the destination.
           $redirect_url = $field_external_url[0]['uri'];
-          $response = new TrustedRedirectResponse($redirect_url);
-          $response->addCacheableDependency($node);
-          $event->setResponse($response);
+          $cacheableDependency = $node;
         }
       }
 
       if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
+        $redirect_url = NULL;
+        $cacheableDependency = NULL;
         $field_go_to_current_url = $node->get('field_go_to_current_url')->getValue();
 
         if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
@@ -67,9 +68,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
 
           if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
             $redirect_url = $field_dept_url[0]['uri'];
-            $response = new TrustedRedirectResponse($redirect_url);
-            $response->addCacheableDependency($node);
-            $event->setResponse($response);
+            $cacheableDependency = $node;
           }
         }
       }
@@ -81,7 +80,6 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         if(!empty($field_file)) {
           $file_id = $field_file[0]['target_id'];
           $file_url = \Drupal\file\Entity\File::load($file_id)->url();
-          error_log($file_url);
           $redirect_url = $file_url;
         }
         else if(!empty($field_doc_url)) {
@@ -91,7 +89,14 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     }
 
     if(!empty($redirect_url)) {
-      $response = new TrustedRedirectResponse($redirect_url);
+      $response_headers = [
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+      ];
+      $response = new TrustedRedirectResponse($redirect_url, '302', $response_headers);
+      if(!empty($cacheableDependency)) {
+        $response->addCacheableDependency($cacheableDependency);
+      }
+      \Drupal::service('page_cache_kill_switch')->trigger(); // disable page cache for anonymous requests
       $event->setResponse($response);
     }
 

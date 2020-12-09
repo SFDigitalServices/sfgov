@@ -307,8 +307,3 @@ function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $for
   // Attach #form_id to all form elements.
   sfgov_utilities_attach_form_id($form, $form_id);
 }
-
-function sfgov_utilities_node_presave(Drupal\node\NodeInterface $node) {
-  $cacheBins = Cache::getBins();
-  $cacheBins['dynamic_page_cache']->deleteAll();
-}
