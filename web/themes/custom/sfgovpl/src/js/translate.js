@@ -208,8 +208,11 @@ function getCookie(cookieName) {
     }
   }
 
-  var observer = new MutationObserver(callback);
-  observer.observe(observeElement, config);
-  observer.observe(document.querySelector('html'), config);
+  if (observeElement) {
+    var observer = new MutationObserver(callback);
+    observer.observe(observeElement, config);
+    observer.observe(document.querySelector('html'), config);
+  }
+
 
 })(jQuery);
