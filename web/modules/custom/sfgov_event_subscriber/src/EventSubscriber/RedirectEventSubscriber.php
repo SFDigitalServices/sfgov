@@ -11,8 +11,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\Core\Cache\CacheableRedirectResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
