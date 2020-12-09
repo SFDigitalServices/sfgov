@@ -11,7 +11,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Cache\CacheableRedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
@@ -40,35 +41,40 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $node = $event->getRequest()->attributes->get('node');
     $media = $event->getRequest()->attributes->get('media');
 
-    if($node && $node->isPublished()) {
-      // Add cache context to make sure the request won't be cached for authenticated users.
-      $node->addCacheContexts(['user.roles:anonymous']);
-
-      // Get node type.
-      $node_type = strtolower($node->type->entity->label());
-
-      // Redirect rule based on the field `field_direct_external_url`.
-      if ($node->hasField('field_direct_external_url') ){
-        $field_external_url = $node->get('field_direct_external_url')->getValue();
-
-        if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
-          // This is where you set the destination.
-          $redirect_url = $field_external_url[0]['uri'];
-          $cacheableDependency = $node;
-        }
+    if($node) {
+      if(!$node->isPublished()) {
+        return;
       }
+      else {
+        // Add cache context to make sure the request won't be cached for authenticated users.
+        $node->addCacheContexts(['user.roles:anonymous']);
 
-      if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
-        $redirect_url = NULL;
-        $cacheableDependency = NULL;
-        $field_go_to_current_url = $node->get('field_go_to_current_url')->getValue();
+        // Get node type.
+        $node_type = strtolower($node->type->entity->label());
 
-        if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
-          $field_dept_url = $node->get('field_url')->getValue();
+        // Redirect rule based on the field `field_direct_external_url`.
+        if ($node->hasField('field_direct_external_url') ){
+          $field_external_url = $node->get('field_direct_external_url')->getValue();
 
-          if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
-            $redirect_url = $field_dept_url[0]['uri'];
+          if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
+            // This is where you set the destination.
+            $redirect_url = $field_external_url[0]['uri'];
             $cacheableDependency = $node;
+          }
+        }
+
+        if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
+          $redirect_url = NULL;
+          $cacheableDependency = NULL;
+          $field_go_to_current_url = $node->get('field_go_to_current_url')->getValue();
+
+          if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
+            $field_dept_url = $node->get('field_url')->getValue();
+
+            if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
+              $redirect_url = $field_dept_url[0]['uri'];
+              $cacheableDependency = $node;
+            }
           }
         }
       }
