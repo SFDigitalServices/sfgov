@@ -1,13 +1,25 @@
 <?php
 
 use Drupal\node\Entity\Node;
+use Drupal\media\MediaInterface;
+use Drupal\node\NodeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\sfgov_departments\SFgovDepartment;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+
+/**
+ * Implements template_preprocess_node().
+ */
+function sfgov_departments_preprocess_node__department__full(&$variables) {
+  $topic_ids = ['199', '595', '794', '893'];
+  $topics = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($topic_ids);
+  $variables['services_by_topic'] = $topics;
+}
 
 /**
  * Implements hook_form_alter().
@@ -142,7 +154,7 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
  * Create the related department group entity when the department node
  * is created.
  */
-function sfgov_departments_node_insert(\Drupal\node\NodeInterface $entity) {
+function sfgov_departments_node_insert(NodeInterface $entity) {
   sfgov_departments_node_update($entity);
 }
 
@@ -152,7 +164,7 @@ function sfgov_departments_node_insert(\Drupal\node\NodeInterface $entity) {
  * Update the related department group entity when the department node
  * is updated.
  */
-function sfgov_departments_node_update(\Drupal\node\NodeInterface $entity) {
+function sfgov_departments_node_update(NodeInterface $entity) {
   if ($entity->bundle() == 'department') {
     SFgovDepartment::createOrUpdate($entity);
   }
@@ -167,7 +179,7 @@ function sfgov_departments_node_update(\Drupal\node\NodeInterface $entity) {
  * Delete the related department group entity when the department node is
  * deleted.
  */
-function sfgov_departments_node_delete(\Drupal\node\NodeInterface $entity) {
+function sfgov_departments_node_delete(NodeInterface $entity) {
   if ($entity->bundle() == 'department') {
     SFgovDepartment::delete($entity);
   }
@@ -178,7 +190,7 @@ function sfgov_departments_node_delete(\Drupal\node\NodeInterface $entity) {
  *
  * Relate the media entity to a group when created.
  */
-function sfgov_departments_media_insert(\Drupal\media\MediaInterface $entity) {
+function sfgov_departments_media_insert(MediaInterface $entity) {
   sfgov_departments_media_update($entity);
 }
 
@@ -187,7 +199,7 @@ function sfgov_departments_media_insert(\Drupal\media\MediaInterface $entity) {
  *
  * Relate the media entity to a group when updated.
  */
-function sfgov_departments_media_update(\Drupal\media\MediaInterface $entity) {
+function sfgov_departments_media_update(MediaInterface $entity) {
   if ($entity->hasField('field_department')) {
     SFgovDepartment::updateGroupMediaContent($entity);
   }
@@ -200,7 +212,7 @@ function sfgov_departments_media_update(\Drupal\media\MediaInterface $entity) {
  * When trying to view, update or delete an entity it suffices to have the right to
  * do so in only one group the node belongs to.
  */
-function sfgov_departments_media_access(\Drupal\media\MediaInterface $entity, $op, \Drupal\Core\Session\AccountInterface $account) {
+function sfgov_departments_media_access(MediaInterface $entity, $op, AccountInterface $account) {
   // We do not care about create access as we have our own wizard for that. Any
   // operation aside from 'view', 'update' and 'delete' is also unsupported.
   if (!in_array($op, ['view', 'update', 'delete'])) {

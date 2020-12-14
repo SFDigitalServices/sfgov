@@ -104,6 +104,21 @@
   </div>
 {% endif %}
 
+{% if services_by_topic %}
+  <div id="sfgov-dept-services-by-topic" class="sfgov-full-bleed sfgov-services-by-topic-container">
+    <div class="sfgov-section-container">
+      <h3 class="dept-heading--section">{{ 'Services by topic'|t }}</h3>
+      <div class="sfgov-container-two-column">
+        {% for item in services_by_topic %}
+        <div class="sfgov-container-item">
+          <a href="#">{{ item.label }}</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
 {% if content.field_spotlight['#items'].getValue() %}
   <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
     <div class="sfgov-section-container">
