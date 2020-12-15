@@ -41,14 +41,14 @@ class Settings extends ConfigFormBase {
     ];
     $form['formio']['formio_version'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('<a href="https://github.com/formio/formio.js">Formio.js</a> source override'),
-      '#description' => $this->t('Specify a source, e.g. <code>https://unpkg.com/formiojs@<strong>4.10.0-rc.6</strong>/dist/formio.full.min.js</code>, or leave blank to use default.'),
+      '#title' => $this->t('<a href="https://github.com/formio/formio.js">Formio.js</a> version'),
+      '#description' => $this->t('Specify a source, e.g. <code>4.10.0-rc.6</code>, or leave blank to use default (latest version).'),
       '#default_value' => $config->get('formio_version'),
     ];
     $form['formio']['formio_sfds_version'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('<a href="https://github.com/SFDigitalServices/formio-sfds">Form.io SFDS</a> source override'),
-      '#description' => $this->t('Specify a source, e.g. <code>https://unpkg.com/formio-sfds@<strong>v4.2.0</strong>/dist/formio-sfds.standalone.js</code>, or leave blank to use default.'),
+      '#title' => $this->t('<a href="https://github.com/SFDigitalServices/formio-sfds">Form.io SFDS</a> version'),
+      '#description' => $this->t('Specify a source, e.g. <code>7.0.0</code>, or leave blank to use default (latest version).'),
       '#default_value' => $config->get('formio_sfds_version'),
     ];
 
