@@ -17,6 +17,7 @@ EXECUTE_URL="https://api.ghostinspector.com/v1/suites/$GI_SUITE/execute?apiKey=$
 echo "Execute url: $EXECUTE_URL"
 
 RESULT_ID=$(curl -s $EXECUTE_URL | jq -r '.data._id')
+echo 'export GI_RESULT_ID="'$RESULT_ID'"' >> $BASH_ENV
 
 echo "Result id: $RESULT_ID" 
 
