@@ -150,6 +150,10 @@ jobs:
       - run:
           name: run ghost inspector test suite
           command: ./.circleci/scripts/ghost-inspector/run-gi-suite
+      
+      - run:
+          name: run accessibility scans
+          command: ./.circleci/scripts/accessibility/accessibility-scan
 
   create_gh_release:
     docker:
