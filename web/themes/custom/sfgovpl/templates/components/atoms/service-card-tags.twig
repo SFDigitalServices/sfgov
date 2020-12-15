@@ -1,0 +1,17 @@
+<a class="sfgov-service-card {{ invisible ? 'invisible' }}" href="{{ invisible ? '' : url }}">
+  {% if invisible == 'invisible' %}
+  {% else  %}
+    <{{ heading ? heading : 'h3' }} class="service-card--title title">{{ title }}</{{ heading ? heading : 'h3' }}>
+    <p class="description">
+      {{ description }}
+    </p>
+
+    {% if tags %}
+    <ul class="tags">
+    {% for tag in tags %}
+      <li>{{ tag.entity.label }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+  {% endif %}
+</a>
