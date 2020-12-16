@@ -39,14 +39,12 @@
 %}
 
 <div{{ attributes.addClass(classes) }}>
-  {% block header %}
   {% include "@theme/hero-banner-color.twig" with {
     "banner": {
       'title': 'All SFGov Services'|t
     }
   }
   %}
-  {% endblock header %}
 
   <div class="content">
     <div class="sfgov-section-container">
@@ -56,8 +54,15 @@
           {{ filters }}
           {{ attachment_before }}
         </div>
+        <div class="inner sfgov-related-topics">
+          <h3>{{ 'Related topics'|t }}</h3>
+        </div>
       </div>
       <div class="group--left">
+        {% block header %}
+          {{ header }}
+        {% endblock header %}
+
         {% block rows %}
           {{ rows }}
         {% endblock rows %}
@@ -69,11 +74,6 @@
         {% block more %}
           {{ more }}
         {% endblock more %}
-      </div>
-      <div class="group--right">
-        <div class="inner sfgov-related-topics">
-          <h3>{{ 'Related topics'|t }}</h3>
-        </div>
       </div>
     </div>
   </div>

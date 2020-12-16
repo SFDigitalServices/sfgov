@@ -13,3 +13,27 @@ function sfgov_services_preprocess_views_view__services__services_search(&$varia
 
   $variables['filters'] = \Drupal::formBuilder()->getForm('Drupal\sfgov_services\Form\ServicesSearchFiltersForm');
 }
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function sfgov_services_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
+  if ($view->id() == 'services' && $view->getDisplay()->display['id'] == 'services_search') {
+    $query_topics = \Drupal::request()->query->get('topics');
+    $query_departments = \Drupal::request()->query->get('departments');
+
+    foreach ($query->where as $group => $where) {
+      // Add filters for Topics.
+      if ($query_topics) {
+        $query->addTable("node__field_topics");
+        $query->addWhere($group, 'node__field_topics.field_topics_target_id', array_values($query_topics), 'in');
+      }
+
+      // Add filters for Departments.
+      if ($query_departments) {
+        $query->addTable("node__field_departments");
+        $query->addWhere($group, 'node__field_departments.field_departments_target_id', array_values($query_departments), 'in');
+      }
+    }
+  }
+}
