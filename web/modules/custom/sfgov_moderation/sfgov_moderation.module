@@ -1,5 +1,9 @@
 <?php
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_module_implements_alter().
  */
@@ -7,5 +11,92 @@ function sfgov_moderation_module_implements_alter(&$implementations, $hook) {
   // Disable access control from the "group" module.
   if ($hook == 'entity_access') {
     unset($implementations['group']);
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'node') {
+
+    $fields['reviewer'] = BaseFieldDefinition::create('entity_reference')
+      ->setName('reviewer')
+      ->setLabel(t('Reviewer'))
+      ->setDescription(t('Assign a user as a reviewer.'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setDefaultValue(NULL)
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 100,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'region' => 'hidden',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * BASE_FORM_ID: node_form.
+ */
+function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (empty($form['reviewer']) || empty($form['field_departments'])) {
+    return;
+  }
+
+  // Custom validation callback.
+  $form['#validate'][] = '_sfgov_moderation_form_node_form_validate';
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+  $moderation_info = \Drupal::service('content_moderation.moderation_information');
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
+
+  // If bundle is moderated.
+  if ($moderation_info->shouldModerateEntitiesOfBundle($entity_type, $node->bundle())) {
+    // Move "reviewer" field to the footer region, if available.
+    if (isset($form['footer'])) {
+      $form['reviewer']['#group'] = 'footer';
+    }
+
+    // Only show "reviewer" field if a department has been selected.
+    $form['reviewer']['widget'][0]['target_id']['#states'] = [
+      'visible' => [
+        ':input[name="field_departments[0][target_id]"]' => ['empty' => FALSE],
+      ],
+    ];
+  }
+
+  // If bundle is not moderated, disable "reviewer" field.
+  else {
+    $form['reviewer']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Validation callback for the node form.
+ */
+function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+
+  $reviewer = $form_state->getValue('reviewer');
+
+  if (!empty($reviewer[0]['target_id']) && $reviewer[0]['target_id'] == $node->getOwnerId()) {
+    $form_state->setErrorByName('reviewer', t('Reviewer should be a different user than the author.'));
   }
 }
