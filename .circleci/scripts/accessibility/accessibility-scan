@@ -2,4 +2,34 @@
 
 set -eo pipefail
 
+npm install @axe-core/cli -g
+
+GI_START_URL="$MULTIDEV_SITE_URL"
+
+if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+  PR='<'$CIRCLE_PULL_REQUEST'|pr>'
+else
+  PR='`'$CIRCLE_BRANCH'`'
+fi
+
 echo "RESULT_ID from ghost inspector step: $GI_RESULT_ID"
+
+# get the test results from result_id
+SUITE_RESULTS=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results/?apiKey=$GI_API_KEY")
+
+TESTS=$(echo $SUITE_RESULTS | jq -r '[ .data[]|{"test_id":"\(.test._id)", "result_id":"\(.suiteResult)", "test_name":"\(.test.name)", "url":"\(.urls | .[-1])", "scan_result":[]}]')
+
+echo $TESTS | jq -c '.[]' | while read i; do
+  echo $i | jq -r '"\(.test_id) \(.url)"'
+done
+
+
+URLS=$(echo $TESTS | jq -r '.[] | .url')
+
+echo $URLS
+
+SCAN_OUTPUT=$(axe --stdout $URLS | jq -jr '.[] | (.url|capture("^(?<a>(?<b>[^:/?#]+):)?(?<c>//(?<d>[^/?#]*))?(?<e>[^?#]*)(?<f>\\?(?<g>[^#]*))?(?<h>#(.*))?")|.e), " (", (.violations|length), " violations)", "\n"')
+
+# SCAN_OUTPUT=$(axe --stdout $URLS | jq -jr '.[] | .url, " (", (.violations|length), " violations)", "\n"')
+
+curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":accessibility: accessibility scan complete\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR'","text":"```'"$SCAN_OUTPUT"'```"}]}' $RONBOT_WEBHOOK_URL
