@@ -41,7 +41,8 @@ class SFgovDepartment {
       $entity_type_manager = \Drupal::entityTypeManager();
       $query = \Drupal::entityQuery('group')
         ->condition('field_department', $this->department_node->id())
-        ->range(0, 1);
+        ->range(0, 1)
+        ->accessCheck(FALSE);
       $ids = $query->execute();
 
       $this->department_group = empty($ids) ?
@@ -96,7 +97,8 @@ class SFgovDepartment {
     // Search for group of this department node.
     $query = \Drupal::entityQuery('group')
       ->condition('field_department', $department_node->id())
-      ->range(0, 1);
+      ->range(0, 1)
+      ->accessCheck(FALSE);
     $ids = $query->execute();
 
     /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $group_storage */
@@ -130,7 +132,8 @@ class SFgovDepartment {
    */
   public static function delete(NodeInterface $node) {
     $query = \Drupal::entityQuery('group')
-      ->condition('field_department', $node->id());
+      ->condition('field_department', $node->id())
+      ->accessCheck(FALSE);
     $ids = $query->execute();
 
     if (!empty($ids)) {
@@ -198,14 +201,14 @@ class SFgovDepartment {
       }
     }
 
-    // Get previous groups.
+    // Get groups this node already belongs to.
     $previous_departments_ids = [];
     $query = \Drupal::entityQuery('group_content')
       ->condition('type', $plugin_types, 'IN')
-      ->condition('entity_id', $node->id())
-      ->range(0, 1);
-    $content_in_groups = $group_content_storage->loadMultiple($query->execute());
-    foreach ($content_in_groups as $group_content) {
+      ->condition('entity_id', $node->id());
+    $content_in_groups_content = $group_content_storage->loadMultiple($query->execute());
+
+    foreach ($content_in_groups_content as $group_content) {
       $referenced = $group_content->gid->referencedEntities();
       $group = reset($referenced);
       if ($department_node = self::getDepartmentNode($group)) {
@@ -213,12 +216,15 @@ class SFgovDepartment {
       }
     }
 
-    // Add to new departments.
+    // Update values.
     $departments = $node->get('field_departments')->referencedEntities();
     foreach ($departments as $department_node) {
+      // Keep existing associations.
       if (in_array($department_node->id(), array_keys($previous_departments_ids))) {
         unset($previous_departments_ids[$department_node->id()]);
       }
+
+      // Add to new departments.
       else {
         SFgovDepartment::addNodeToGroupByDepartmentNode($node, $department_node);
       }
@@ -302,6 +308,12 @@ class SFgovDepartment {
     $entity_type_manager = \Drupal::entityTypeManager();
     $sf_gov_department = new self($department);
     $group = $sf_gov_department->getDepartmentGroup();
+
+    // Create group and retry if needed.
+    if (empty($group)) {
+      static::createOrUpdate($department);
+      $group = $sf_gov_department->getDepartmentGroup();
+    }
 
     /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
     $plugin = $group->getGroupType()->getContentPlugin('group_node:' . $node->bundle());
