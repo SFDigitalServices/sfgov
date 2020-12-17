@@ -1,10 +1,11 @@
 <?php
 
 namespace Drupal\sfgov_moderation;
+
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\Group;
 use Drupal\node\NodeInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Class ModerationUtilService.
@@ -28,10 +29,10 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * @inheritDoc
    */
-  public function accountBelongsToDepartment(UserInterface $account, NodeInterface $department): bool {
+  public function accountBelongsToDepartment(AccountInterface $account, NodeInterface $department): bool {
     $department_group = $this->getDepartmentGroupFromNode($department);
     if (!$department_group) {
-      return FALSE;
+      return TRUE;
     }
 
     return $department_group->getMember($account) ? TRUE : FALSE;
@@ -59,7 +60,8 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
     // Search for group of this department node.
     $query = $group_storage->getQuery()
       ->condition('field_department', $department_node->id())
-      ->range(0, 1);
+      ->range(0, 1)
+      ->accessCheck(FALSE);
     $ids = $query->execute();
 
     return empty($ids) ? NULL : $group_storage->load(reset($ids));

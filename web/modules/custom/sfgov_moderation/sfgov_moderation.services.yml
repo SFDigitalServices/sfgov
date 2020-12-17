@@ -2,6 +2,16 @@ services:
   logger.channel.sfgov_moderation:
     parent: logger.channel_base
     arguments: ['sfgov_moderation']
+
   sfgov_moderation.util:
     class: Drupal\sfgov_moderation\ModerationUtilService
     arguments: ['@entity_type.manager']
+
+  # Decorate "content_moderation.state_transition_validation" core service.
+  sfgov_moderation.state_transition_validation:
+    class: Drupal\sfgov_moderation\StateTransitionValidation
+    decorates: content_moderation.state_transition_validation
+    decoration_priority: 5
+    public: false
+    arguments: [ '@sfgov_moderation.state_transition_validation.inner', '@content_moderation.moderation_information', '@sfgov_moderation.util']
+

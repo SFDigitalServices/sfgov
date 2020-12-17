@@ -1,2 +1,11 @@
 <?php
 
+/**
+ * Implements hook_module_implements_alter().
+ */
+function sfgov_moderation_module_implements_alter(&$implementations, $hook) {
+  // Disable access control from the "group" module.
+  if ($hook == 'entity_access') {
+    unset($implementations['group']);
+  }
+}
