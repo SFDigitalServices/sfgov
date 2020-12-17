@@ -1,13 +1,8 @@
 <?php
 
-use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\sfgov_departments\SFgovDepartment;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Ajax\InvokeCommand;
-use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * Implements hook_form_alter().
@@ -101,10 +96,11 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
   // Do nothing if there is no value.
   if (!empty($clean_values)) {
     foreach ($clean_values as $value) {
+      /** @var \Drupal\node\NodeInterface $node */
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($value);
 
       // Get parent values.
-      if ($parent_node = $node->field_parent_department->entity) {
+      if ($node && $node->hasField('field_parent_department') && ($parent_node = $node->field_parent_department->entity)) {
         if (!in_array($parent_node->id(), array_values($clean_values))) {
           $clean_values[] = $parent_node->id();
 
@@ -153,6 +149,19 @@ function sfgov_departments_node_insert(\Drupal\node\NodeInterface $entity) {
  * is updated.
  */
 function sfgov_departments_node_update(\Drupal\node\NodeInterface $entity) {
+  /** Avoid recursive calls.
+   *
+   * Node update hook is triggered upon group content create, which leads
+   * to multiple calls to this hook for the same node save.
+   * This is needed in conjunction with
+   * https://www.drupal.org/files/issues/2019-09-13/group-2872697-33.patch.
+   *
+   * @see https://www.drupal.org/project/group/issues/2872697
+   */
+  if ($entity->isSyncing()) {
+    return;
+  }
+
   if ($entity->bundle() == 'department') {
     SFgovDepartment::createOrUpdate($entity);
   }
