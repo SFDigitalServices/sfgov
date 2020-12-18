@@ -165,7 +165,7 @@ function sfgov_departments_node_update(\Drupal\node\NodeInterface $entity) {
   if ($entity->bundle() == 'department') {
     SFgovDepartment::createOrUpdate($entity);
   }
-  elseif ($entity->hasField('field_departments')) {
+  elseif (($field_name = SFgovDepartment::getDepartmentFieldName($entity->bundle())) && $entity->hasField($field_name)) {
     SFgovDepartment::updateGroupContent($entity);
   }
 }
@@ -246,7 +246,9 @@ function sfgov_departments_media_access(\Drupal\media\MediaInterface $entity, $o
   foreach ($group_contents as $group_content) {
     /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
     $group = $group_content->getGroup();
-    $groups[$group->id()] = $group;
+    if ($group) {
+      $groups[$group->id()] = $group;
+    }
   }
 
   // From this point on you need group to allow you to perform the operation.
