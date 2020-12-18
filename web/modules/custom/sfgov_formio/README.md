@@ -1,8 +1,37 @@
 # SF Gov Form.io
 
-This module stores the library definitions, and related code for Form.io forms.
+- [Introduction](#introduction)
+- [Configuration](#configuration)
+- [Testing](#testing)
+- [Content](#content)
 
-## Form.io Content
+## Introduction
+
+This module loads the dependencies needed for Form.io functionality on SF.gov. It also provides a settings form, and includes other general customizations. The two dependencies are:
+
+- [Formio.js](https://github.com/formio/formio.js): The Form.io JavaScript library.
+- [formio-sfds](https://github.com/SFDigitalServices/formio-sfds): The SFDS Form.io theme, which provides custom templates, styles, and facilitates other functionality, such as form translations.
+
+## Configuration
+
+The version of each dependency can be configured in the administrative backend, using the following instructions:
+
+1. Log in as a privileged user, and visit `/admin/config/services/sfgov_formio`.
+2. Enter the desired version for each dependency, e.g. `7.0.0-rc.1`. If left blank, the latest release will be loaded.
+3. Save.
+
+_Note: The configuration must be exported to code in order to persist through deployments. The values defined in the configuration settings file ([config/sfgov_formio.settings.yml](/config/sfgov_formio.settings.yml)), will overwrite database settings with each deployment._
+
+## Testing
+
+It's possible to test different versions, without having to edit the above settings, by using the following query parameters:
+
+| Parameter name | Example Query String | Resulting Source |
+| :--- | :--- | :---
+| `formiojsVersion` | `/home?formiojsVersion=4.11.2` | `https://unpkg.com/formiojs@4.11.2/dist/formio.full.min.js` |
+| `formio-sfdsVersion` | `/home?formio-sfdsVersion=7.0.2` | `https://unpkg.com/formio-sfds@7.0.2/dist/formio-sfds.standalone.js` |
+
+## Content
 
 Form.io forms are implemented via Paragraphs. There is a `form_io` Paragraph entity, which is exposed in two different entities:
 
@@ -16,21 +45,5 @@ Form.io forms are implemented via Paragraphs. There is a `form_io` Paragraph ent
 1. Decide which type you need and go to `/node/add/form_page` or `/block/add/form`.
 2. Click the "Add Form.io" button to add the Form.io Paragraph.
 3. Add the endpoint in the Data Source field, e.g. `https://sfds.form.io/name`
-4. Add any options, such as localization, in the Form.io Render Options field.
+4. Add any options, such as localization, in the Form.io Render Options field, in JSON format.
 5. Add a URL in the Confirmation Page URL, if desired.
-
-## Library Definitions
-
-The source files and dependencies are defined in [`sfgov_formio.libraries.yml`](./sfgov_formio.libraries.yml), which defines two libraries:
-
-1. `sfgov_formio/formio`: The [Formio.js](https://github.com/formio/formio.js) library.
-2. `sfgov_formio/formio_sfds`: The [formio-sfds](https://github.com/SFDigitalServices/formio-sfds) library, which provides SFDS-specific templates, customizations, and theme.
-
-### Override Library Definitions in the Admin UI
-
-This module has a settings page that can be used to override the source location for each library in the administrative UI. This allows for easy testing, without needing codebase changes. To use this feature:
-
-1. Log in, and visit `/admin/config/services/sfgov_formio`.
-2. Enter a source for the Formio.js library, e.g. `https://unpkg.com/formiojs@4.10.0-rc.6/dist/formio.full.min.js`, or leave blank to use default.
-3. Enter a source for formio-sfds, e.g. `https://unpkg.com/formio-sfds@v4.2.0/dist/formio-sfds.standalone.js`, or leave blank to use default.
-4. Save.
