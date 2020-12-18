@@ -33,22 +33,22 @@ class Settings extends ConfigFormBase {
 
     $form['formio'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Override Library Definitions'),
+      '#title' => $this->t('Configure Form.io Versions'),
     ];
     $form['formio']['info'] = [
       '#type' => 'item',
-      '#markup' => 'Use the fields below to override the sources defined in <a href="https://github.com/SFDigitalServices/sfgov/blob/develop/web/modules/custom/sfgov_formio/sfgov_formio.libraries.yml">sfgov_formio.libraries.yml</a>.',
+      '#markup' => 'Use the fields below to specify the versions used for each dependency.',
     ];
     $form['formio']['formio_version'] = [
       '#type' => 'textfield',
       '#title' => $this->t('<a href="https://github.com/formio/formio.js">Formio.js</a> version'),
-      '#description' => $this->t('Specify a source, e.g. <code>4.10.0-rc.6</code>, or leave blank to use default (latest version).'),
+      '#description' => $this->t('Specify a version number, e.g. <code>4.10.0-rc.6</code>, or leave blank to use default (latest release).'),
       '#default_value' => $config->get('formio_version'),
     ];
     $form['formio']['formio_sfds_version'] = [
       '#type' => 'textfield',
       '#title' => $this->t('<a href="https://github.com/SFDigitalServices/formio-sfds">Form.io SFDS</a> version'),
-      '#description' => $this->t('Specify a source, e.g. <code>7.0.0</code>, or leave blank to use default (latest version).'),
+      '#description' => $this->t('Specify a version number, e.g. <code>7.0.0</code>, or leave blank to use default (latest release).'),
       '#default_value' => $config->get('formio_sfds_version'),
     ];
 
