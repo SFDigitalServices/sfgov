@@ -62,7 +62,8 @@ function sfgov_utilities_tokens($type, $tokens, array $data, array $options, \Dr
 
 function _sfgov_utilities_referenced_node_titles($node, $fieldName) {
   if(empty($node)) return;
-
+  if(!$node->hasField($fieldName)) return;
+  
   $fieldNodes = $node->get($fieldName)->getValue();
   $titles = [];
 
