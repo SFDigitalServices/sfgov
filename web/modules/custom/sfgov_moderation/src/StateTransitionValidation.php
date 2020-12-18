@@ -7,6 +7,7 @@ use Drupal\content_moderation\StateTransitionValidation as CoreStateTransitionVa
 use Drupal\content_moderation\StateTransitionValidationInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\sfgov_departments\SFgovDepartment;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\TransitionInterface;
 use Drupal\workflows\WorkflowInterface;
@@ -65,14 +66,16 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
     /** @var \Drupal\node\NodeInterface $entity */
 
     $validTransitions = parent::getValidTransitions($entity, $user);
+    $fieldName = SFgovDepartment::getDepartmentFieldName($entity->bundle());
 
     // For admins, new content or other entity types, inherit behavior.
     if ($entity->getEntityTypeId() != 'node' ||
       $entity->isNew() ||
       $user->hasPermission('administer nodes') ||
       $user->hasPermission('bypass node access') ||
-      $entity->hasField(!'field_departments') ||
-      (!$departments = $entity->field_departments->referencedEntities())
+     empty($fieldName) ||
+      !$entity->hasField($fieldName) ||
+      (!$departments = $entity->{$fieldName}->referencedEntities())
     ) {
       return $validTransitions;
     }

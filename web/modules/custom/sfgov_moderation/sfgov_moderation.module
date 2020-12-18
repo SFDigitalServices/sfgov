@@ -3,6 +3,7 @@
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\sfgov_departments\SFgovDepartment;
 
 /**
  * Implements hook_module_implements_alter().
@@ -54,15 +55,17 @@ function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_typ
  * BASE_FORM_ID: node_form.
  */
 function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (empty($form['reviewer']) || empty($form['field_departments'])) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+
+  $fieldName = SFgovDepartment::getDepartmentFieldName($node->bundle());
+  if (empty($form['reviewer']) || empty($fieldName) || empty($form[$fieldName])) {
     return;
   }
 
   // Custom validation callback.
   $form['#validate'][] = '_sfgov_moderation_form_node_form_validate';
 
-  /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state->getFormObject()->getEntity();
   $moderation_info = \Drupal::service('content_moderation.moderation_information');
   $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
 
@@ -76,7 +79,7 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
     // Only show "reviewer" field if a department has been selected.
     $form['reviewer']['widget'][0]['target_id']['#states'] = [
       'visible' => [
-        ':input[name="field_departments[0][target_id]"]' => ['empty' => FALSE],
+        ':input[name="' . $fieldName .'[0][target_id]"]' => ['filled' => TRUE],
       ],
     ];
   }
