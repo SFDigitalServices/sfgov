@@ -30,6 +30,43 @@ class SFgovDepartment {
   }
 
   /**
+   * Get the department field name given the node bundle.
+   *
+   * @param string $bundle
+   *   The node bundle.
+   *
+   * @return string|null
+   *   The field name.
+   */
+  public static function getDepartmentFieldName(string $bundle): ?string {
+    switch ($bundle) {
+      case 'transaction':
+      case 'topic':
+      case 'public_body':
+      case 'location':
+        return 'field_departments';
+        break;
+
+      case 'news':
+      case 'event':
+      case 'information_page':
+      case 'meeting':
+      case 'campaign':
+      case 'department_table':
+      case 'form_confirmation_page':
+      case 'page':
+      case 'person':
+      case 'resource_collection':
+      case 'step_by_step':
+        return 'field_dept';
+
+        break;
+    }
+
+    return NULL;
+  }
+
+  /**
    * Get the department group of this object.
    *
    * @return \Drupal\group\Entity\GroupInterface|null
@@ -217,7 +254,8 @@ class SFgovDepartment {
     }
 
     // Update values.
-    $departments = $node->get('field_departments')->referencedEntities();
+    $field_name = static::getDepartmentFieldName($node->bundle());
+    $departments = $node->get($field_name)->referencedEntities();
     foreach ($departments as $department_node) {
       // Keep existing associations.
       if (in_array($department_node->id(), array_keys($previous_departments_ids))) {
