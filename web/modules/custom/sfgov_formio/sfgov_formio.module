@@ -90,10 +90,7 @@ function _sfgov_formiojs_source() {
   // Check for query parameters first.
   if (\Drupal::request()->query) {
     $query = \Drupal::request()->query->get('formiojsVersion');
-    // Check for a valid semver string.
-    if (version_compare($query, '0.0.1', '>=' ) <= 0) {
-      $query = NULL;
-    }
+    $query = strip_tags($query);
   }
 
   // Prefer source from query params.
@@ -122,10 +119,7 @@ function _sfgov_formio_sfds_source() {
   // Check for query parameters.
   if (\Drupal::request()->query) {
     $query = \Drupal::request()->query->get('formio-sfdsVersion');
-    // Ensure a valid semver string.
-    if (version_compare($query, '0.0.1', '>=' ) <= 0) {
-      $query = NULL;
-    }
+    $query = strip_tags($query);
   }
 
   // Prefer version from query params, if available.
