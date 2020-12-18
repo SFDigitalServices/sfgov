@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.page.field_content
     - field.field.node.page.field_content_bottom
+    - field.field.node.page.field_dept
     - field.field.node.page.field_description
     - field.field.node.page.field_sidebar
     - node.type.page
@@ -129,6 +130,16 @@ content:
         add_above: 0
     third_party_settings: {  }
     region: content
+  field_dept:
+    weight: 101
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_description:
     weight: 1
     settings:
@@ -201,6 +212,16 @@ content:
     weight: 17
     region: content
     settings: {  }
+    third_party_settings: {  }
+  reviewer:
+    type: entity_reference_autocomplete
+    weight: 100
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox

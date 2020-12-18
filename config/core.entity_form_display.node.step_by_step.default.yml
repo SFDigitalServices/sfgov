@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.step_by_step.field_dept
     - field.field.node.step_by_step.field_description
     - field.field.node.step_by_step.field_intro_text
     - field.field.node.step_by_step.field_process_steps
@@ -14,6 +15,8 @@ dependencies:
     - maxlength
     - paragraphs
     - path
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 id: node.step_by_step.default
 targetEntityType: node
@@ -26,6 +29,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_dept:
+    weight: 101
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_description:
     weight: 1
     settings:
@@ -102,6 +115,16 @@ content:
     weight: 30
     region: content
     settings: {  }
+    third_party_settings: {  }
+  reviewer:
+    type: entity_reference_autocomplete
+    weight: 100
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox

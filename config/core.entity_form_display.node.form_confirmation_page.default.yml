@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.form_confirmation_page.field_banner_color
     - field.field.node.form_confirmation_page.field_banner_image
     - field.field.node.form_confirmation_page.field_confirmation_sidebar
+    - field.field.node.form_confirmation_page.field_dept
     - field.field.node.form_confirmation_page.field_form_confirm_page_slug
     - field.field.node.form_confirmation_page.field_step
     - image.style.thumbnail
@@ -188,6 +189,16 @@ content:
         collapse_edit_all: collapse_edit_all
     third_party_settings: {  }
     region: content
+  field_dept:
+    weight: 101
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_form_confirm_page_slug:
     weight: 23
     settings:
@@ -252,6 +263,16 @@ content:
     weight: 30
     region: content
     settings: {  }
+    third_party_settings: {  }
+  reviewer:
+    type: entity_reference_autocomplete
+    weight: 100
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox

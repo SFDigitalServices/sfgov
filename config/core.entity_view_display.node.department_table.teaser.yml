@@ -4,7 +4,14 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.department_table.field_column_one
+    - field.field.node.department_table.field_column_one_type
+    - field.field.node.department_table.field_column_two
+    - field.field.node.department_table.field_column_two_type
     - field.field.node.department_table.field_department_item
+    - field.field.node.department_table.field_dept
+    - field.field.node.department_table.field_description
+    - field.field.node.department_table.field_topics
     - node.type.department_table
   module:
     - user
@@ -13,6 +20,11 @@ targetEntityType: node
 bundle: department_table
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     settings: {  }
@@ -24,6 +36,9 @@ hidden:
   field_column_two: true
   field_column_two_type: true
   field_department_item: true
+  field_dept: true
   field_description: true
   field_topics: true
   langcode: true
+  reviewer: true
+  search_api_excerpt: true
