@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.person.field_dept
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
@@ -30,6 +31,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_dept:
+    weight: 101
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_direct_external_url:
     weight: 5
     settings:
@@ -108,6 +119,16 @@ content:
     weight: 15
     region: content
     settings: {  }
+    third_party_settings: {  }
+  reviewer:
+    type: entity_reference_autocomplete
+    weight: 100
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
