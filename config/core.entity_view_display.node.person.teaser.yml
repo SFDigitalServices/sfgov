@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.person.field_dept
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
@@ -18,12 +19,18 @@ targetEntityType: node
 bundle: person
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_dept: true
   field_direct_external_url: true
   field_first_name: true
   field_last_name: true
@@ -31,3 +38,5 @@ hidden:
   field_sub_title: true
   field_title: true
   langcode: true
+  reviewer: true
+  search_api_excerpt: true
