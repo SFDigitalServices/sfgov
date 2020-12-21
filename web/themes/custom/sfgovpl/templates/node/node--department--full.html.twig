@@ -101,13 +101,17 @@
     <div class="sfgov-section-container">
       {{ content.field_department_services }}
 
-      {% if services_by_topic %}
+      {% if node.field_option_services_seemore.value %}
+      <a href="{{ path('view.services.services_search', {}, {'query': {'departments': {'1': node.id()}}}) }}" class="see-more">{{ 'See all services'|t }}</a>
+      {% endif %}
+
+      {% if services_by_topic and node.field_option_services_by_topic.value %}
         <div class="sfgov-services-by-topic-container">
           <h3>{{ 'Services by topic'|t }}</h3>
           <div class="sfgov-container-two-column">
             {% for item in services_by_topic %}
             <div class="sfgov-container-item">
-              <a href="#">{{ item.label }}</a>
+              <a href="{{ path('entity.node.canonical', {'node': item.id()}) }}">{{ item.label }}</a>
             </div>
             {% endfor %}
           </div>
