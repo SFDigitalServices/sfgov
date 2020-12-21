@@ -17,7 +17,22 @@ use Drupal\Core\Ajax\ReplaceCommand;
  * Implements template_preprocess_node().
  */
 function sfgov_departments_preprocess_node__department__full(&$variables) {
-  $topic_ids = ['199', '595', '794', '893'];
+  $node = $variables['node'];
+  $connection = \Drupal::database();
+
+  // Get all Topics tagged in the Transactions for the current Department.
+  $query = $connection->select('node__field_departments', 'd');
+  $query->join('node__field_topics', 't', 'd.entity_id = t.entity_id');
+  $query->fields('t', array('field_topics_target_id'));
+  $query->condition('d.bundle', 'transaction');
+  $query->condition('d.field_departments_target_id', $node->id());
+  $results = $query->distinct()->execute()->fetchAll();
+
+  $topic_ids = [];
+  foreach ($results as $result) {
+    $topic_ids[] = $result->field_topics_target_id;
+  }
+
   $topics = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($topic_ids);
   $variables['services_by_topic'] = $topics;
 }
