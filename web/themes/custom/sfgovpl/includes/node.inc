@@ -7,6 +7,7 @@
 
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
