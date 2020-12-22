@@ -185,7 +185,7 @@ function sfgov_utilities_page_attachments(array &$page) {
         $view->setDisplay('topics_more_services');
         $view->execute();
         $view_result = $view->result;
-        $excluded_services = topic_page_services();
+        $excluded_services = topic_page_services($node);
 
         // Check More Services for unpublished items
         foreach ($view_result as $key => $value) {
