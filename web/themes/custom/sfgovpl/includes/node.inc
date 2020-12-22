@@ -1,10 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Preprocess functions for 'node' theme hooks.
+ */
+
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
-use Drupal\eck\Entity\EckEntityBundle;
-use Drupal\Core\Entity;
-use Drupal\file\Entity\File;
 use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
@@ -14,18 +16,31 @@ use Drupal\Core\Link;
  * Implements hook_preprocess_node().
  */
 function sfgovpl_preprocess_node(&$variables) {
-  if(!empty($variables['node'])) {
-    $content_type = $variables['node']->getType();
-    if ($content_type == 'department' && $variables['view_mode'] == 'full') {
-      $variables['dept_fields'] = dept_page_fields();
-      sfgovpl_add_regions_to_node(['department_news'], $variables);
-      sfgovpl_add_regions_to_node(['department_events'], $variables);
-    }
-    if($content_type == 'topic') {
-      $variables['service_section_ids'] = topic_page_services();
-    }
-    if($content_type == 'public_body') {
-      $variables['public_body_fields'] = public_body_page_fields();
+  // Make sure we have a node object that works on revisions, diffs, etc.
+  _sfgovpl_node_object($variables);
+
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $node = $variables['node'];
+    $content_type = $node->bundle();
+
+    if ($variables['view_mode'] == 'full') {
+      switch ($content_type) {
+        case 'department':
+          $variables['dept_fields'] = dept_page_fields($node);
+          sfgovpl_add_regions_to_node([
+            'department_news',
+            'department_events',
+          ], $variables);
+          break;
+
+        case 'topic':
+          $variables['service_section_ids'] = topic_page_services($node);
+          break;
+
+        case 'public_body':
+          $variables['public_body_fields'] = public_body_page_fields($node);
+          break;
+      }
     }
 
     // If the node being displayed is a translation, add a "notranslate" wrapper
@@ -107,13 +122,14 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
   }
 }
 
-/*
-* retrieve the transaction ids in field_department_services that will be excluded from "more services" section on topic page
-* send the list of ids to a twig var which will then get passed to view contextual filters via twig_tweak
-*/
-function topic_page_services() {
-  $node = \Drupal::request()->attributes->get('node');
-  if($node) {
+/**
+ * Retrieve the transaction ids in field_department_services that will be
+ * excluded from "more services" section on topic page send the list of ids to a
+ * Twig var which will then get passed to view contextual filters via
+ * twig_tweak.
+ */
+function topic_page_services($node) {
+  if (!empty($node)) {
     if($node->hasField('field_department_services')) {
       $services = $node->get('field_department_services');
       if(!empty($services->getValue())) {
@@ -122,7 +138,7 @@ function topic_page_services() {
           $serviceSectionId = $service->getValue()['target_id'];
           $serviceSectionLoaded = Paragraph::load($serviceSectionId);
 
-          // load the paragraph and get the transactions
+          // Load the paragraph and get the transactions.
           $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
           for($i=0; $i<count($topicTransactions); $i++) {
             $txId = $topicTransactions[$i]['target_id'];
@@ -136,8 +152,7 @@ function topic_page_services() {
   return null;
 }
 
-function dept_page_fields() {
-  $node = \Drupal::request()->attributes->get('node');
+function dept_page_fields($node) {
   $theFields = array(
     'featured_items' => array(),
     'services' => array(),
@@ -452,9 +467,8 @@ function dept_page_fields() {
   return $theFields;
 }
 
-function public_body_page_fields() {
+function public_body_page_fields($node) {
   $styleThumbnail = ImageStyle::load('thumbnail');
-  $node = \Drupal::request()->attributes->get('node');
   $theFields = array(
     'featured_items' => array(),
     'services' => array(),
