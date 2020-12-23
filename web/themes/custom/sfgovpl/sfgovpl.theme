@@ -1,4 +1,7 @@
 <?php
+
+use Drupal\node\NodeInterface;
+
 /**
  * @file
  * Theme hooks for SFGOV.
@@ -8,4 +11,54 @@
 $includes_path = dirname(__FILE__) . '/includes/*.inc';
 foreach (glob($includes_path) as $filename) {
   require_once dirname(__FILE__) . '/includes/' . basename($filename);
+}
+
+/**
+ * Centralize code to get node object in various hooks based on route.
+ *
+ * Some routes, like revisions and inline diffs, do not provide a node object.
+ * In these cases $node is simply a nid string. We need to make sure we have a
+ * real node object to work with.
+ */
+function _sfgovpl_node_object(&$variables) {
+  // If we already have a node object, we do NOT want to make any changes here.
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    return;
+  }
+
+  // This code resolves issues where $variables['node'] does not exist, or is
+  // simply a node id string, such as preprocess and suggestion hooks like:
+  // hook_preprocess_html(), hook_preprocess_page(), and
+  // hook_theme_suggestions_HOOK_alter().
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  switch ($route_name) {
+    case 'entity.node.canonical':
+    case 'entity.node.latest_version':
+    case 'public_preview.preview_link':
+      $nid = \Drupal::routeMatch()->getRawParameter('node');
+      $variables['node'] = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      break;
+
+    case 'entity.node.preview':
+      $variables['node'] = \Drupal::routeMatch()->getParameter('node_preview');
+      break;
+
+    case 'entity.node.revision':
+      $nid = \Drupal::routeMatch()->getRawParameter('node');
+      $variables['node'] = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      // When viewing a revision, node_revision is the node being viewed, and
+      // node is a $nid string. In order to offer a page--node--TYPE suggestion,
+      // we substitute node_revision for node, so we can use $node->bundle. 🙄
+      // @see: web/themes/custom/sfgovpl/includes/suggestions.inc
+      $rid = \Drupal::routeMatch()->getRawParameter('node_revision');
+      $variables['node_revision'] = \Drupal::entityTypeManager()->getStorage('node')->loadRevision($rid);
+    break;
+
+    case 'diff.revisions_diff':
+      $nid = \Drupal::routeMatch()->getRawParameter('node');
+      $variables['node'] = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      break;
+
+    return $variables;
+  }
 }

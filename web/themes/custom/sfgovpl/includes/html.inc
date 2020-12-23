@@ -1,99 +1,111 @@
 <?php
 
+/**
+ * @file
+ * Preprocess functions for the 'html' theme hooks.
+ */
+
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
-use org\bovigo\vfs\content\FileContent;
 
+/**
+ * Implements hook_preprocess_HOOK().
+ */
 function sfgovpl_preprocess_html(&$variables) {
+  // Make sure we have a node object that works on revisions, diffs, etc.
+  _sfgovpl_node_object($variables);
 
-  // for metadata
-  if(!empty($variables['node_type'])) {
-    $nodeType = $variables['node_type'];
-    if($nodeType == 'department') {
-      $node = \Drupal::request()->attributes->get('node');
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $node = $variables['node'];
+    $node_type = $node->bundle();
 
-      $metaDeptPhone = [
-        '#tag' => 'meta',
-        '#attributes' => [
-          'name' => 'departmentPhone',
-          'content' => '',
-        ]
-      ];
-      $metaDeptAddress = [
-        '#tag' => 'meta',
-        '#attributes' => [
-          'name' => 'departmentAddress',
-          'content' => '',
-        ]
-      ];
+    // Send these variables to html.html.twig as well.
+    $variables['node'] = $node;
+    $variables['node_type'] = $node_type;
 
-      if(count($node->get('field_phone_numbers')->getValue()) > 0) {
-        $paragraphPhoneId = $node->get('field_phone_numbers')->getValue()[0]['target_id'];
-        $phone = Paragraph::load($paragraphPhoneId);
-        $metaDeptPhone['#attributes']['content'] = $phone->field_tel->value;
-      }
-
-      if(count($node->get('field_address')->getValue()) > 0) {
-        $paragraphAddressId = $node->get('field_address')->getValue()[0]['target_id'];
-        $paragraphAddress = Paragraph::load($paragraphAddressId);
-        $address = $node->get('field_address')->referencedEntities()[0];
-        $metaDeptAddress['#attributes']['content'] = $address->field_address->address_line1;
-      }
-
-      $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'departmentPhone'];
-      $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'departmentAddress'];
-    }
-
-    if($nodeType == 'transaction') {
-      $txNode = \Drupal::request()->attributes->get('node');
-      $relatedDepts = $txNode->get('field_departments')->getValue();
-      $transaction = [
-        'related_depts' => [],
-      ];
-      foreach($relatedDepts as $relatedDept) {
-        $relatedDeptId = $relatedDept['target_id'];
-        $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
-        $relatedDeptInfo = [
-          'id' => $relatedDeptId,
-          'title' => $relatedDeptNode ? $relatedDeptNode->getTitle() : '',
+    // For metadata.
+    switch ($node_type) {
+      case 'department':
+        $metaDeptPhone = [
+          '#tag' => 'meta',
+          '#attributes' => [
+            'name' => 'departmentPhone',
+            'content' => '',
+          ]
         ];
-        $transaction['related_depts'][] = $relatedDeptInfo;
-      }
-      $metaTx = [
-        '#tag' => 'meta',
-        '#attributes' => [
-          'name' => 'transaction',
-          'content' => json_encode($transaction, JSON_HEX_QUOT),
-        ],
-      ];
+        $metaDeptAddress = [
+          '#tag' => 'meta',
+          '#attributes' => [
+            'name' => 'departmentAddress',
+            'content' => '',
+          ]
+        ];
 
-      $metaTxRelatedDept = [
-        '#tag' => 'meta',
-        '#attributes' => [
-          'name' => 'transactionRelatedDept',
-          'content' => '',
-        ]
-      ];
+        if (count($node->get('field_phone_numbers')->getValue()) > 0) {
+          $paragraphPhoneId = $node->get('field_phone_numbers')->getValue()[0]['target_id'];
+          $phone = Paragraph::load($paragraphPhoneId);
+          $metaDeptPhone['#attributes']['content'] = $phone->field_tel->value;
+        }
 
-      if(count($relatedDepts) > 0) {
-        $oneRelatedDept = \Drupal\Node\Entity\Node::load($relatedDepts[0]['target_id']);
-        $metaTxRelatedDept['#attributes']['content'] = $oneRelatedDept ? $oneRelatedDept->getTitle() : '';
-      }
-      $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
-      $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
-    }
+        if (count($node->get('field_address')->getValue()) > 0) {
+          $paragraphAddressId = $node->get('field_address')->getValue()[0]['target_id'];
+          $paragraphAddress = Paragraph::load($paragraphAddressId);
+          $address = $node->get('field_address')->referencedEntities()[0];
+          $metaDeptAddress['#attributes']['content'] = $address->field_address->address_line1;
+        }
 
-    // Add class page-campaign-[theme] to body tag.
-    if ($nodeType == 'campaign') {
-      $node = \Drupal::request()->attributes->get('node');
-      if (!empty($node)) {
+        $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'departmentPhone'];
+        $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'departmentAddress'];
+        break;
+
+      case 'transaction':
+        $relatedDepts = $node->get('field_departments')->getValue();
+        $transaction = [
+          'related_depts' => [],
+        ];
+        foreach ($relatedDepts as $relatedDept) {
+          $relatedDeptId = $relatedDept['target_id'];
+          $relatedDeptNode = Node::load($relatedDeptId);
+          $relatedDeptInfo = [
+            'id' => $relatedDeptId,
+            'title' => $relatedDeptNode ? $relatedDeptNode->getTitle() : '',
+          ];
+          $transaction['related_depts'][] = $relatedDeptInfo;
+        }
+        $metaTx = [
+          '#tag' => 'meta',
+          '#attributes' => [
+            'name' => 'transaction',
+            'content' => json_encode($transaction, JSON_HEX_QUOT),
+          ],
+        ];
+
+        $metaTxRelatedDept = [
+          '#tag' => 'meta',
+          '#attributes' => [
+            'name' => 'transactionRelatedDept',
+            'content' => '',
+          ]
+        ];
+
+        if (count($relatedDepts) > 0) {
+          $oneRelatedDept = Node::load($relatedDepts[0]['target_id']);
+          $metaTxRelatedDept['#attributes']['content'] = $oneRelatedDept ? $oneRelatedDept->getTitle() : '';
+        }
+        $variables['page']['#attached']['html_head'][] = [$metaTx, 'transaction'];
+        $variables['page']['#attached']['html_head'][] = [$metaTxRelatedDept, 'transactionRelatedDept'];
+        break;
+
+      case 'campaign':
+        // Add class page-campaign-[theme] to body tag.
         $theme = $node->field_campaign_theme->entity;
         if (!empty($theme)) {
           $theme_class = 'page-campaign-' . \Drupal::service('pathauto.alias_cleaner')->cleanString($theme->label());
           $variables['attributes']['class'][] = $theme_class;
         }
-      }
+        break;
     }
   }
 
@@ -118,7 +130,6 @@ function sfgovpl_preprocess_html(&$variables) {
   $currentLanguage = $languageManager->getCurrentLanguage()->getId();
   $currentRoute = \Drupal::service('current_route_match');
   $routeParameters = $currentRoute->getParameters()->all();
-  $node = \Drupal::routeMatch()->getParameter('node');
   $gTranslatePrefixMap = [
     'fil' => 'tl',
     'zh-hant' => 'zh-TW',
@@ -126,8 +137,9 @@ function sfgovpl_preprocess_html(&$variables) {
   $pageInfo = [];
   $pageInfo['current_language'] = isset($gTranslatePrefixMap[$currentLanguage]) ? $gTranslatePrefixMap[$currentLanguage] : $currentLanguage;
   $isFront = \Drupal::service('path.matcher')->isFrontPage();
-  if ($node instanceof NodeInterface) {
-    $theNode = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
+
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface && $currentRoute->getRouteName() == 'entity.node.canonical') {
+    $theNode = $variables['node'];
     $pageInfo['nid'] = $theNode->id();
     $pageInfo['nurl'] = $theNode->toUrl()->toString();
     $langs = $theNode->getTranslationLanguages();
