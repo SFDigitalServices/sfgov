@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\node\NodeInterface;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
@@ -39,8 +40,8 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $node = $event->getRequest()->attributes->get('node');
     $media = $event->getRequest()->attributes->get('media');
 
-    if($node) {
-      if(!$node->isPublished()) {
+    if ($node && $node instanceof NodeInterface) {
+      if (!$node->isPublished()) {
         return;
       }
       else {
