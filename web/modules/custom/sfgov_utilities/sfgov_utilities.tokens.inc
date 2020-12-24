@@ -52,7 +52,8 @@ function sfgov_utilities_tokens($type, $tokens, array $data, array $options, \Dr
           if(!empty($data['node'])) {
             $replacements[$original] = _sfgov_utilities_referenced_node_titles($data['node'], 'field_departments');
           }
-          
+        default:
+          break;
       }
     }
   }
@@ -63,7 +64,7 @@ function sfgov_utilities_tokens($type, $tokens, array $data, array $options, \Dr
 function _sfgov_utilities_referenced_node_titles($node, $fieldName) {
   if(empty($node)) return;
   if(!$node->hasField($fieldName)) return;
-  
+
   $fieldNodes = $node->get($fieldName)->getValue();
   $titles = [];
 
@@ -72,5 +73,5 @@ function _sfgov_utilities_referenced_node_titles($node, $fieldName) {
     $titles[] = $referencedNode->getTitle();
   }
 
-  return implode(',', $titles);
+  return json_encode($titles);
 }
