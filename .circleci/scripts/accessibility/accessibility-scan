@@ -3,7 +3,14 @@
 set -eo pipefail
 
 npm install @axe-core/cli -g
-sudo apt-get --only-upgrade install google-chrome-stable
+
+# get the chromedriver version compatible with this image's google chrome version
+rm -rf /tmp/chromedriver
+mkdir /tmp/chromedriver/
+CHROMEDRIVER_VERSION="85.0.4183.87" # current google chrome version in circleci image is 85, cannot sudo to update
+CHROMEDRIVER_PATH="/usr/local/bin"
+wget -O /tmp/chromedriver/chromedriver.zip 'http://chromedriver.storage.googleapis.com/'$CHROMEDRIVER_VERSION'/chromedriver_linux64.zip'
+unzip -o /tmp/chromedriver/chromedriver.zip chromedriver -d $CHROMEDRIVER_PATH
 
 GI_START_URL="$MULTIDEV_SITE_URL"
 
@@ -29,7 +36,7 @@ URLS=$(echo $TESTS | jq -r '.[] | .url')
 
 echo $URLS
 
-SCAN_OUTPUT=$(axe --stdout $URLS | jq -jr '.[] | (.url|capture("^(?<a>(?<b>[^:/?#]+):)?(?<c>//(?<d>[^/?#]*))?(?<e>[^?#]*)(?<f>\\?(?<g>[^#]*))?(?<h>#(.*))?")|.e), " (", (.violations|length), " violations)", "\n"')
+SCAN_OUTPUT=$(axe --stdout $URLS --chromedriver-path "$CHROMEDRIVER_PATH/chromedriver" | jq -jr '.[] | (.url|capture("^(?<a>(?<b>[^:/?#]+):)?(?<c>//(?<d>[^/?#]*))?(?<e>[^?#]*)(?<f>\\?(?<g>[^#]*))?(?<h>#(.*))?")|.e), " (", (.violations|length), " violations)", "\n"')
 
 # SCAN_OUTPUT=$(axe --stdout $URLS | jq -jr '.[] | .url, " (", (.violations|length), " violations)", "\n"')
 
