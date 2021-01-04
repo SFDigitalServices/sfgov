@@ -45,7 +45,7 @@ while read i; do
     "url": "%s",
     "scan_results": %s
   }' "$GI_RESULT_ID" "$TEST_ID" "$URL" "$SCAN_JSON_DATA")
-  curl -s -H 'Content-Type: application/json' --data "$DATA" https://fcbfcc061b66.ngrok.io/webhooks/accessibility
+  curl -s -H 'Content-Type: application/json' --data "$DATA" http://ronswanbot.herokuapp.com/webhooks/accessibility
 done < <(echo $TESTS | jq -c '.[]')
 
-curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":accessibility: accessibility scan complete\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR'","text":"```'"$SLACK_NOTIFY_RESULTS"'```"}]}' $RONBOT_WEBHOOK_URL
+curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":accessibility: accessibility scan complete\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR' | <http://ronswanbot.herokuapp.com/builds/results/'$GI_RESULT_ID'|scan results>","text":"```'"$SLACK_NOTIFY_RESULTS"'```"}]}' $RONBOT_WEBHOOK_URL
