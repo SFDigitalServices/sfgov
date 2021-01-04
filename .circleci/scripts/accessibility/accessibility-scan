@@ -23,21 +23,29 @@ fi
 echo "RESULT_ID from ghost inspector step: $GI_RESULT_ID"
 
 # get the test results from result_id
-SUITE_RESULTS=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results/?apiKey=$GI_API_KEY")
+SUITE_RESULTS=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results/?apiKey=$GI_API_KEY&count=50") # max results from ghost inspector api is 50
 
+SLACK_NOTIFY_RESULTS=""
+
+# construct an object with the test id, result id, test name, and url
 TESTS=$(echo $SUITE_RESULTS | jq -r '[ .data[]|{"test_id":"\(.test._id)", "result_id":"\(.suiteResult)", "test_name":"\(.test.name)", "url":"\(.urls | .[-1])", "scan_result":[]}]')
 
-echo $TESTS | jq -c '.[]' | while read i; do
+# iterate through that object, axe scan each url, and send the results to ronbot for processing
+while read i; do
   echo $i | jq -r '"\(.test_id) \(.url)"'
-done
+  TEST_ID=$(echo $i | jq -r '"\(.test_id)"')
+  URL=$(echo $i | jq -r '"\(.url)"')
+  SCAN_JSON_DATA=$(axe --stdout $URL | jq ".[0].violations")
+  URL_PATH=$(echo "/${URL#*://*/}")
+  V=$(echo $SCAN_JSON_DATA | jq length)
+  SLACK_NOTIFY_RESULTS+="$URL_PATH ($V violations)\n"
+  DATA=$(printf '{
+    "result_id": "%s",
+    "test_id": "%s",
+    "url": "%s",
+    "scan_results": %s
+  }' "$GI_RESULT_ID" "$TEST_ID" "$URL" "$SCAN_JSON_DATA")
+  curl -s -H 'Content-Type: application/json' --data "$DATA" https://fcbfcc061b66.ngrok.io/webhooks/accessibility
+done < <(echo $TESTS | jq -c '.[]')
 
-
-URLS=$(echo $TESTS | jq -r '.[] | .url')
-
-echo $URLS
-
-SCAN_OUTPUT=$(axe --stdout $URLS --chromedriver-path "$CHROMEDRIVER_PATH/chromedriver" | jq -jr '.[] | (.url|capture("^(?<a>(?<b>[^:/?#]+):)?(?<c>//(?<d>[^/?#]*))?(?<e>[^?#]*)(?<f>\\?(?<g>[^#]*))?(?<h>#(.*))?")|.e), " (", (.violations|length), " violations)", "\n"')
-
-# SCAN_OUTPUT=$(axe --stdout $URLS | jq -jr '.[] | .url, " (", (.violations|length), " violations)", "\n"')
-
-curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":accessibility: accessibility scan complete\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR'","text":"```'"$SCAN_OUTPUT"'```"}]}' $RONBOT_WEBHOOK_URL
+curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":accessibility: accessibility scan complete\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR'","text":"```'"$SLACK_NOTIFY_RESULTS"'```"}]}' $RONBOT_WEBHOOK_URL
