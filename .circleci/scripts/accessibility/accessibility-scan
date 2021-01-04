@@ -35,7 +35,7 @@ while read i; do
   echo $i | jq -r '"\(.test_id) \(.url)"'
   TEST_ID=$(echo $i | jq -r '"\(.test_id)"')
   URL=$(echo $i | jq -r '"\(.url)"')
-  SCAN_JSON_DATA=$(axe --stdout $URL | jq ".[0].violations")
+  SCAN_JSON_DATA=$(axe --stdout $URL  --chromedriver-path "$CHROMEDRIVER_PATH/chromedriver" | jq ".[0].violations")
   URL_PATH=$(echo "/${URL#*://*/}")
   V=$(echo $SCAN_JSON_DATA | jq length)
   SLACK_NOTIFY_RESULTS+="$URL_PATH ($V violations)\n"
