@@ -4,32 +4,23 @@
  * @file Update hooks for SF Gov Alerts module.
  */
 
-use Drupal\node\Entity\Node;
-
 /**
  *  Update the input format on field_alert_text to use sf_restricted_html.
  */
-function sfgov_alerts_update_8001(&$sandbox) {
-
-  ini_set('memory_limit', '1024M');
-  ini_set('max_execution_time', 240);
-
-  // Find nodes with field_alert_text (departments, public bodies, etc).
-  $nids = \Drupal::entityQuery('node')
-    ->exists('field_alert_text')
-    ->execute();
-
-  // Load them as Node objects.
-  $nodes = Node::loadMultiple($nids);
-
-  /** @var \Drupal\node\Entity\Node $node */
-  foreach ($nodes as $node) {
-    $default_value = $node->field_alert_text->value;
-    // Update format, retaining existing content as value.
-    $node->set('field_alert_text', [
-      'value' => $default_value,
-      'format' => 'sf_restricted_html',
-    ]);
-    $node->save();
+function sfgov_alerts_update_8801(&$sandbox) {
+  $db = \Drupal::database();
+  $query = $db->select('node__field_alert_text', 'f');
+  $query->fields('f', ['entity_id', 'revision_id']);
+  $results = $query->execute()->fetchAll();
+  foreach ($results as $row) {
+    $db->update('node__field_alert_text')
+      ->fields(['field_alert_text_format' => 'sf_restricted_html'])
+      ->condition('entity_id', $row->entity_id)
+      ->execute();
+    $db->update('node_revision__field_alert_text')
+      ->fields(['field_alert_text_format' => 'sf_restricted_html'])
+      ->condition('entity_id', $row->entity_id)
+      ->condition('revision_id', $row->revision_id)
+      ->execute();
   }
 }
