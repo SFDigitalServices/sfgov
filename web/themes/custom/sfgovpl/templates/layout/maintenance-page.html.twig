@@ -17,19 +17,31 @@
   <main role="main">
     <a id="main-content" tabindex="-1"></a>
     <div class="main-content-container">
-      {% if title %}
-        <h1 class="maintenance-title">{{ title }}</h1>
+
+      {% if maintenance_messages.en %}
+        <div class="message message--en">
+          {{- maintenance_messages.en|raw -}}
+        </div>
       {% endif %}
-      {% if maintenance_messages %}
-        {% for code, message in maintenance_messages %}
-          <div class="message message-{{ code }}">
-            {% if not loop.first %}
-             <hr>
-            {% endif %}
-            {{- message|raw -}}
-          </div>
-        {% endfor %}
+
+      {% if maintenance_messages.es %}
+        <div class="message message--es">
+          {{- maintenance_messages.es|raw -}}
+        </div>
       {% endif %}
+
+      {% if maintenance_messages['zh-hant'] %}
+        <div class="message message--zh-hant sfgov-translate-lang-zh-TW">
+          {{- maintenance_messages['zh-hant']|raw -}}
+        </div>
+      {% endif %}
+
+      {% if maintenance_messages.fil %}
+        <div class="message message--fil">
+          {{- maintenance_messages.fil|raw -}}
+        </div>
+      {% endif %}
+
     </div>
   </main>
 </div>
