@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file Update hooks for SF Gov Alerts module.
+ */
+
+use Drupal\node\Entity\Node;
+
+/**
+ *  Update the input format on field_alert_text to use sf_restricted_html.
+ */
+function sfgov_alerts_update_8001(&$sandbox) {
+  // Find nodes with field_alert_text (departments, public bodies, etc).
+  $nids = \Drupal::entityQuery('node')
+    ->exists('field_alert_text')
+    ->execute();
+
+  // Load them as Node objects.
+  $nodes = Node::loadMultiple($nids);
+
+  /** @var \Drupal\node\Entity\Node $node */
+  foreach ($nodes as $node) {
+    // Update format, retaining existing content as value.
+    $node->field_alert_text->setValue([
+      'value' => $node->field_alert_text->value,
+      'format' => 'sf_restricted_html',
+    ]);
+
+    // This isn't supposed to be required. It also doesn't work. When it runs,
+    // it stalls the whole process. which never finishes, even though we are
+    // talking about 7 nodes in total.
+    // $node->save();
+  }
+}
