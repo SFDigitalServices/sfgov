@@ -166,18 +166,20 @@
           })
         })
 
-        //perform sfoptions, hide certain elements
-        if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+        var sfoptions = options.sfoptions || {}
+        // perform sfoptions, hide certain elements
+        if (sfoptions.hide instanceof Object) {
           customHideElements(options.sfoptions.hide)
         }
         // add css class to element(by id)
-        if (options.sfoptions && options.sfoptions.addClass) {
+        if (sfoptions.addClass) {
           customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
-        if (options.sfoptions instanceof Object && options.sfoptions.cookies) {
+        if (sfoptions.cookies) {
           manageFormCookies(options.sfoptions.cookies, form, true)
         }
+
         // perform custom action on nextPage event
         form.on('nextPage', function() {
           // set form cookies, if there are any
