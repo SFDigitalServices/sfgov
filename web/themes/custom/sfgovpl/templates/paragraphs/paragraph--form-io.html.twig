@@ -146,7 +146,8 @@
     }
 
     time = Date.now()
-    Formio.createForm(el, el.getAttribute('data-source'), options)
+    var dataSource = el.getAttribute('data-source')
+    Formio.createForm(el, dataSource, options)
       .then(function(form) {
         amp('form.load', { load_time: Date.now() - time })
 
@@ -204,6 +205,12 @@
           if (confirmationURL) {
             window.location = confirmationURL
           }
+        })
+      })
+      .catch(error => {
+        amp('form.loadError', {
+          url: dataSource,
+          error: error
         })
       })
 
