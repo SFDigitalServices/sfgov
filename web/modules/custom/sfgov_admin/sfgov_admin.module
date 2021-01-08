@@ -236,3 +236,13 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
     $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';
   }
 }
+
+/**
+ * Implements hook_preprocess_file_upload_help().
+ */
+function sfgov_admin_preprocess_file_upload_help(&$variables) {
+
+  // Remove all help text except for the user-entered description.
+  $variables['descriptions'] = $variables['description'];
+
+}
