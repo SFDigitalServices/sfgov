@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for sfgov_departments.
+ */
+
+/**
+ * Remove group content.
+ */
+function sfgov_departments_update_8101(&$sandbox) {
+  // Doing hard truncate on tables instead of using the entity API, because of
+  // too many issues when deleting entities:
+  // - Calling id() on null during urlRouteParameters:
+  // https://www.drupal.org/project/group/issues/3049434
+  // - Node update hook is triggered upon group content create:
+  // "https://www.drupal.org/files/issues/2019-09-13/group-2872697-33.patch"
+  $db = \Drupal::database();
+  $db->truncate('group__field_department')->execute();
+  $db->truncate('group_content_field_data')->execute();
+  $db->truncate('group_content')->execute();
+}
+
+/**
+ * Remove group entities.
+ */
+function sfgov_departments_update_8102(&$sandbox) {
+  _sfgov_departments_delete_all_entities($sandbox, 'group');
+}
+
+/**
+ * Remove group types.
+ */
+function sfgov_departments_update_8103(&$sandbox) {
+  _sfgov_departments_delete_all_entities($sandbox, 'group_type');
+}
+
+/**
+ * Disable group modules.
+ */
+function sfgov_departments_update_8104(&$sandbox) {
+  \Drupal::service('module_installer')->uninstall(['gnode', 'group']);
+}
+
+/**
+ * Delete all entities of the given type.
+ */
+function _sfgov_departments_delete_all_entities(&$sandbox, string $entityType) {
+  $itemsPerBatch = 25;
+  $storage = \Drupal::entityTypeManager()->getStorage($entityType);
+
+  if (!isset($sandbox['sandbox']['progress'])) {
+    $sandbox['sandbox']['total'] = $storage->getQuery()->accessCheck(FALSE)->count()->execute();
+    $sandbox['sandbox']['progress'] = 0;
+  }
+
+  $ids = \Drupal::entityQuery($entityType)
+    ->accessCheck(FALSE)
+    ->range(0, $itemsPerBatch)
+    ->execute();
+
+  if ($entities = $storage->loadMultiple($ids)) {
+    $storage->delete($entities);
+    $sandbox['sandbox']['progress'] += count($entities);
+
+    \Drupal::messenger()->addMessage(t('@number %type have been deleted.', [
+      '@number' => $sandbox['sandbox']['progress'],
+      '%type' => $entityType,
+    ]));
+  }
+
+  if ($sandbox['sandbox']['total'] == 0) {
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['sandbox']['progress'] / $sandbox['sandbox']['total']);
+  }
+}
