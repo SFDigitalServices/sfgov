@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_departments
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -23,6 +24,16 @@ content:
     third_party_settings: {  }
   contact:
     weight: 5
+    region: content
+  field_departments:
+    weight: 31
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   language:
     weight: 0

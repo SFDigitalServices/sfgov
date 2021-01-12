@@ -3,7 +3,6 @@
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\sfgov_departments\SFgovDepartment;
 
 /**
  * Implements hook_module_implements_alter().
@@ -58,7 +57,10 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
-  $fieldName = SFgovDepartment::getDepartmentFieldName($node->bundle());
+  /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
+  $moderationUtil = \Drupal::service('sfgov_moderation.util');
+
+  $fieldName = $moderationUtil->getDepartmentFieldName($node->bundle());
   if (empty($form['reviewer']) || empty($fieldName) || empty($form[$fieldName])) {
     return;
   }
