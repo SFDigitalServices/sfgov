@@ -17,9 +17,6 @@ EXECUTE_URL="https://api.ghostinspector.com/v1/suites/$GI_SUITE/execute?apiKey=$
 echo "Execute url: $EXECUTE_URL"
 
 RESULT_ID=$(curl -s $EXECUTE_URL | jq -r '.data._id')
-echo 'export GI_RESULT_ID="'$RESULT_ID'"' >> $BASH_ENV
-
-echo "Result id: $RESULT_ID" 
 
 # Poll for the suite result, sleep for a few seconds if it hasn't changed
 echo "Polling for suite results (ID: $RESULT_ID)"
@@ -53,10 +50,21 @@ else
   PR='`'$CIRCLE_BRANCH'`'
 fi
 
-curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":ghost: sfgov suite executed\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR' | <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/'$RESULT_ID'|screenshots>","text":"'"$SUITE_TEST_RESULTS_SLACK"'"}]}' $RONBOT_WEBHOOK_URL
-
 # output suite tests with results
 echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
 
-# return our passing status
-exit $PASSING
+
+# pass some things along as env variables
+if [ -n "$CIRCLE_BRANCH" ]; then # circleci
+  echo 'export GI_START_URL="'$GI_START_URL'"' >> $BASH_ENV
+  echo 'export GI_RESULT_ID="'$RESULT_ID'"' >> $BASH_ENV
+  echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
+  echo 'export GI_PASSING="'$PASSING'"' >> $BASH_ENV
+  echo 'export PR="'$PR'"' >> $BASH_ENV
+else # local
+  export GI_START_URL=$GI_START_URL
+  export GI_RESULT_ID=$RESULT_ID
+  export GI_SUITE_TEST_RESULTS_SLACK=$SUITE_TEST_RESULTS_SLACK
+  export GI_PASSING=$PASSING
+  export PR=$PR
+fi

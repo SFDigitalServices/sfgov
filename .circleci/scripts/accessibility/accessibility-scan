@@ -48,4 +48,9 @@ while read i; do
   curl -s -H 'Content-Type: application/json' --data "$DATA" http://ronswanbot.herokuapp.com/webhooks/accessibility
 done < <(echo $TESTS | jq -c '.[]')
 
-curl -g -X POST -H 'Content-type: application/json' --data '{"attachments":[{"pretext":":accessibility: accessibility scan complete\n<'$GI_START_URL'|'$GI_START_URL'> | '$PR' | <http://ronswanbot.herokuapp.com/builds/results/'$GI_RESULT_ID'|scan results>","text":"```'"$SLACK_NOTIFY_RESULTS"'```"}]}' $RONBOT_WEBHOOK_URL
+# pass some things along as env variables
+if [ -n "$CIRCLE_BRANCH" ]; then # circleci
+  echo 'export A11Y_RESULTS_SLACK="'$SLACK_NOTIFY_RESULTS'"' >> $BASH_ENV
+else # local
+  export A11Y_RESULTS_SLACK=$SLACK_NOTIFY_RESULTS
+fi
