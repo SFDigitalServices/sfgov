@@ -53,16 +53,8 @@ fi
 # output suite tests with results
 echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
 
-echo "export vars"
 # pass some things along as env variables
 if [ -n "$CIRCLE_BRANCH" ]; then # circleci
-  echo "circleci"
-  echo "GI_RESULT_ID: $GI_RESULT_ID"
-  echo "GI_SUITE_TEST_RESULTS_SLACK: $GI_SUITE_TEST_RESULTS_SLACK"
-  echo "PASSING: $PASSING"
-  echo "GI_START_URL: $GI_START_URL"
-  echo "PR: $PR"
-
   echo 'export GI_START_URL="'$GI_START_URL'"' >> $BASH_ENV
   echo 'export GI_RESULT_ID="'$GI_RESULT_ID'"' >> $BASH_ENV
   echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$GI_SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
