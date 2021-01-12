@@ -20,7 +20,7 @@ else
   PR='`'$CIRCLE_BRANCH'`'
 fi
 
-echo "RESULT_ID from ghost inspector step: $GI_RESULT_ID"
+echo "GI_RESULT_ID from ghost inspector step: $GI_RESULT_ID"
 
 # get the test results from result_id
 SUITE_RESULTS=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results/?apiKey=$GI_API_KEY&count=50") # max results from ghost inspector api is 50
