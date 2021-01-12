@@ -35,11 +35,34 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
    *
    * @var string[]
    */
-  protected static $reviewerAllowedTransitions = [
+  protected const REVIEWER_ALLOWED_TRANSITIONS = [
     'archived_draft', // Restore to Draft.
     'create_new_draft', // Create New Draft.
     'publish', // Publish.
     'submit_for_review', // Submit for review.
+  ];
+
+  /**
+   * State flows allowed for a reviewer role.
+   *
+   * Reviewer allowed transitions. Array is keyed by the IDs of the
+   * original states, and each value is an array of valid new states.
+   *
+   * @var array
+   */
+  protected const REVIEWER_ALLOWED_STATE_FLOWS = [
+    'draft' => [],
+    'ready_for_review' => [
+      'ready_for_review',
+      'published',
+    ],
+    'publish' => [
+      'draft',
+      'published',
+    ],
+    'archived' => [
+      'draft',
+    ],
   ];
 
   /**
@@ -79,12 +102,12 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       return $validTransitions;
     }
 
-    // Act on moderated content that belongs to a group.
+    // Act on moderated content that belongs to a department.
 
     // Restrict transitions based if $user is the reviewer.
-    if (($reviewer = $entity->reviewer->target_id) && $reviewer == $user->id()) {
+    if ($this->userIsReviewer($entity, $user)) {
       return array_filter($this->getAllTransitionsFromState($entity), function (TransitionInterface $transition) {
-        return in_array($transition->id(), static::$reviewerAllowedTransitions);
+        return in_array($transition->id(), static::REVIEWER_ALLOWED_TRANSITIONS);
       });
     }
 
@@ -102,8 +125,26 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
    * {@inheritdoc}
    */
   public function isTransitionValid(WorkflowInterface $workflow, StateInterface $original_state, StateInterface $new_state, AccountInterface $user, ContentEntityInterface $entity = NULL) {
+    if ($entity === NULL) {
+      @trigger_error(sprintf('Omitting the $entity parameter from %s is deprecated and will be required in Drupal 9.0.0.', __METHOD__), E_USER_DEPRECATED);
+    }
     $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($original_state->id(), $new_state->id());
-    return $user->hasPermission('use ' . $workflow->id() . ' transition ' . $transition->id());
+
+    // Allow if user has transition permission granted by role.
+    if ($user->hasPermission('use ' . $workflow->id() . ' transition ' . $transition->id())) {
+      return TRUE;
+    }
+
+    // Allow if user is the reviewer and state flow is allowed.
+    if ($this->userIsReviewer($entity, $user)
+      && isset(static::REVIEWER_ALLOWED_STATE_FLOWS[$original_state->id()])
+      && in_array($new_state->id(), static::REVIEWER_ALLOWED_STATE_FLOWS[$original_state->id()])
+    ) {
+      return TRUE;
+    }
+
+    // Invalid in all other cases.
+    return FALSE;
   }
 
   /**
@@ -121,6 +162,26 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       $workflow->getTypePlugin()->getInitialState($entity);
 
     return $current_state->getTransitions();
+  }
+
+  /**
+   * Determine if the given user is a "reviewer" of the entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return bool
+   *   Boolean value.
+   */
+  protected function userIsReviewer(ContentEntityInterface $entity, AccountInterface $user): bool {
+    if (!$entity->hasField('reviewer')) {
+      return FALSE;
+    }
+
+    $reviewerId = $entity->reviewer->target_id;
+    return (!empty($reviewerId) && $reviewerId == $user->id());
   }
 
 }
