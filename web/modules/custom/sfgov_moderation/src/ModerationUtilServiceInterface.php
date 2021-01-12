@@ -11,6 +11,22 @@ use Drupal\node\NodeInterface;
 interface ModerationUtilServiceInterface {
 
   /**
+   * The field name that contains the departments a user belongs to.
+   */
+  public const DEPARTMENTS_ACCOUNT_FIELD = 'field_departments';
+
+  /**
+   * Get the department field name given the node bundle.
+   *
+   * @param string $bundle
+   *   The node bundle.
+   *
+   * @return string|null
+   *   The field name.
+   */
+  public function getDepartmentFieldName(string $bundle): ?string;
+
+  /**
    * Check if an account belongs to a department.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
