@@ -4,15 +4,18 @@ set -eo pipefail
 
 source ./.circleci/scripts/ghost-inspector/run-gi-suite
 
-echo "PR: $PR"
-echo "GI_PASSING: $GI_PASSING"
-
 # exported vars from ghost inspector script execution
 # GI_RESULT_ID
 # GI_SUITE_TEST_RESULTS_SLACK
 # GI_PASSING
 # GI_START_URL
 # PR
+
+echo "GI_RESULT_ID: $GI_RESULT_ID"
+echo "GI_SUITE_TEST_RESULTS_SLACK: $GI_SUITE_TEST_RESULTS_SLACK"
+echo "GI_PASSING: $GI_PASSING"
+echo "GI_START_URL: $GI_START_URL"
+echo "PR: $PR"
 
 source ./.circleci/scripts/accessibility/accessibility-scan
 
