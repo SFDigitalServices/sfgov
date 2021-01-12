@@ -4,7 +4,6 @@ namespace Drupal\sfgov_moderation;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\group\Entity\Group;
 use Drupal\node\NodeInterface;
 
 /**
@@ -29,41 +28,46 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * @inheritDoc
    */
-  public function accountBelongsToDepartment(AccountInterface $account, NodeInterface $department): bool {
-    $department_group = $this->getDepartmentGroupFromNode($department);
-    if (!$department_group) {
-      return TRUE;
+  public function getDepartmentFieldName(string $bundle): ?string {
+    switch ($bundle) {
+      case 'transaction':
+      case 'topic':
+      case 'public_body':
+      case 'location':
+        return 'field_departments';
+        break;
+
+      case 'news':
+      case 'event':
+      case 'information_page':
+      case 'meeting':
+      case 'campaign':
+      case 'department_table':
+      case 'form_confirmation_page':
+      case 'page':
+      case 'person':
+      case 'resource_collection':
+      case 'step_by_step':
+        return 'field_dept';
+        break;
     }
 
-    return $department_group->getMember($account) ? TRUE : FALSE;
+    return NULL;
   }
 
   /**
-   * Given a department node, get the corresponding department group.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node.
-   *
-   * @return \Drupal\group\Entity\Group|null
-   *   The group or null.
+   * @inheritDoc
    */
-  protected function getDepartmentGroupFromNode(NodeInterface $node): ?Group {
-    // Make sure group entities are always referencing the english translation.
-    $department_node = $node;
-    if ($node->language()->getId() != 'en' && $node->hasTranslation('en')) {
-      $department_node = $node->getTranslation('en');
+  public function accountBelongsToDepartment(AccountInterface $account, NodeInterface $department): bool {
+    // Get full user object, not just the session.
+    $accountEntity = $this->entityTypeManager->getStorage('user')->load($account->id());
+
+    $accountDepartments = [];
+    foreach ($accountEntity->get(static::DEPARTMENTS_ACCOUNT_FIELD)->getValue() as $item) {
+      $accountDepartments[] = $item['target_id'];
     }
 
-    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $group_storage */
-    $group_storage = $this->entityTypeManager->getStorage('group');
-
-    // Search for group of this department node.
-    $query = $group_storage->getQuery()
-      ->condition('field_department', $department_node->id())
-      ->range(0, 1)
-      ->accessCheck(FALSE);
-    $ids = $query->execute();
-
-    return empty($ids) ? NULL : $group_storage->load(reset($ids));
+    return in_array($department->id(), $accountDepartments);
   }
+
 }
