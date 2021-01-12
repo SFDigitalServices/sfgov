@@ -42,7 +42,7 @@ else
 fi
 
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
-SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
+GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
 if [ -n "$CIRCLE_PULL_REQUEST" ]; then
   PR='<'$CIRCLE_PULL_REQUEST'|pr>'
@@ -58,20 +58,20 @@ echo "export vars"
 if [ -n "$CIRCLE_BRANCH" ]; then # circleci
   echo "circleci"
   echo "GI_RESULT_ID: $GI_RESULT_ID"
-  echo "SUITE_TEST_RESULTS_SLACK: $SUITE_TEST_RESULTS_SLACK"
+  echo "GI_SUITE_TEST_RESULTS_SLACK: $GI_SUITE_TEST_RESULTS_SLACK"
   echo "PASSING: $PASSING"
   echo "GI_START_URL: $GI_START_URL"
   echo "PR: $PR"
 
   echo 'export GI_START_URL="'$GI_START_URL'"' >> $BASH_ENV
   echo 'export GI_RESULT_ID="'$GI_RESULT_ID'"' >> $BASH_ENV
-  echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
+  echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$GI_SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
   echo 'export PR="'$PR'"' >> $BASH_ENV
   echo 'export GI_PASSING="'$GI_PASSING'"' >> $BASH_ENV
 else # local
   export GI_START_URL=$GI_START_URL
   export GI_RESULT_ID=$GI_RESULT_ID
-  export GI_SUITE_TEST_RESULTS_SLACK=$SUITE_TEST_RESULTS_SLACK
+  export GI_SUITE_TEST_RESULTS_SLACK=$GI_SUITE_TEST_RESULTS_SLACK
   export GI_PASSING=$PASSING
   export PR=$PR
 fi

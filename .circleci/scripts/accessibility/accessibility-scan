@@ -25,7 +25,7 @@ echo "GI_RESULT_ID from ghost inspector step: $GI_RESULT_ID"
 # get the test results from result_id
 SUITE_RESULTS=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results/?apiKey=$GI_API_KEY&count=50") # max results from ghost inspector api is 50
 
-SLACK_NOTIFY_RESULTS=""
+A11Y_RESULTS_SLACK=""
 
 # construct an object with the test id, result id, test name, and url
 TESTS=$(echo $SUITE_RESULTS | jq -r '[ .data[]|{"test_id":"\(.test._id)", "result_id":"\(.suiteResult)", "test_name":"\(.test.name)", "url":"\(.urls | .[-1])", "scan_result":[]}]')
@@ -38,7 +38,7 @@ while read i; do
   SCAN_JSON_DATA=$(axe --stdout $URL  --chromedriver-path "$CHROMEDRIVER_PATH/chromedriver" | jq ".[0].violations")
   URL_PATH=$(echo "/${URL#*://*/}")
   V=$(echo $SCAN_JSON_DATA | jq length)
-  SLACK_NOTIFY_RESULTS+="$URL_PATH ($V violations)\n"
+  A11Y_RESULTS_SLACK+="$URL_PATH ($V violations)\n"
   DATA=$(printf '{
     "result_id": "%s",
     "test_id": "%s",
@@ -50,7 +50,7 @@ done < <(echo $TESTS | jq -c '.[]')
 
 # pass some things along as env variables
 if [ -n "$CIRCLE_BRANCH" ]; then # circleci
-  echo 'export A11Y_RESULTS_SLACK="'$SLACK_NOTIFY_RESULTS'"' >> $BASH_ENV
+  echo 'export A11Y_RESULTS_SLACK="'$A11Y_RESULTS_SLACK'"' >> $BASH_ENV
 else # local
-  export A11Y_RESULTS_SLACK=$SLACK_NOTIFY_RESULTS
+  export A11Y_RESULTS_SLACK=$A11Y_RESULTS_SLACK
 fi
