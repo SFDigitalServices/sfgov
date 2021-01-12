@@ -57,6 +57,12 @@ echo "export vars"
 # pass some things along as env variables
 if [ -n "$CIRCLE_BRANCH" ]; then # circleci
   echo "circleci"
+  echo "RESULT_ID: $RESULT_ID"
+  echo "SUITE_TEST_RESULTS_SLACK: $SUITE_TEST_RESULTS_SLACK"
+  echo "PASSING: $PASSING"
+  echo "GI_START_URL: $GI_START_URL"
+  echo "PR: $PR"
+
   echo 'export GI_START_URL="'$GI_START_URL'"' >> $BASH_ENV
   echo 'export GI_RESULT_ID="'$RESULT_ID'"' >> $BASH_ENV
   echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
