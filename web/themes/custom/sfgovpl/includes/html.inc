@@ -162,7 +162,7 @@ function sfgovpl_preprocess_html(&$variables) {
   $variables['page']['#attached']['drupalSettings']['sfgov_translations']['page'] = $pageInfo;
 
   // For translations, if it is a views page.
-  if ($currentRoute->getRouteName() != 'entity.node.canonical') {
+  if (!empty($currentRoute->getRouteName()) && $currentRoute->getRouteName() != 'entity.node.canonical') {
     $routeParameters = $currentRoute->getRawParameters()->all();
     foreach ($languages as $langCode => $language) {
       $pageInfo['translations'][] = [

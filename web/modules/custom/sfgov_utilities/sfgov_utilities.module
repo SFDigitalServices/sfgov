@@ -223,8 +223,10 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
   // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
   // This will make sure to apply transliteration cleanup and appropirate URL patterns.
   // @see SG-1154
-  if ($entity->path->pathauto == PathautoState::SKIP) {
-    \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
+  if(!empty($entity->path)) {
+    if ($entity->path->pathauto == PathautoState::SKIP) {
+      \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
+    }
   }
 }
 
@@ -235,7 +237,7 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
   // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
   // This will make sure to apply transliteration cleanup and appropirate URL patterns.
   // @see SG-1154
-  if (is_object($entity->path)) {
+  if (!empty($entity->path)) {
     if ($entity->path->pathauto == PathautoState::SKIP) {
       \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
     }
