@@ -16,73 +16,87 @@
  * @see sfgov_admin_form_content_moderation_entity_moderation_form_alter()
  */
 #}
-{% set node = form['#node'] %}
-{% set revision = form['#node_revision'] %}
+
 {% set current_state = form['#current_state'] %}
+{% set current_state_class = current_state|clean_class %}
 
 {# Note: Using methods and filters, like clean_class does not work inside
 {% trans %} tags, so we need to set these variables outside the block. #}
-{% set revision_status = revision.isPublished() ? 'published' : 'unpublished' %}
-{% set node_status = node.isPublished() ? 'published' : 'unpublished' %}
-{% set current_state_class = current_state|clean_class %}
-{% set node_status_class = node_status|clean_class %}
-{% set node_title = node.label() %}
+{% set node = form['#node'] %}
 {% set node_url = form['#node_url'] %}
+{% set node_title = node.label() %}
+
+{% set revision = form['#node_revision'] %}
+{% set revision_user = revision.getRevisionUser() %}
+{% set revision_author = revision_user.getDisplayName() %}
+{% set revision_date = revision.getRevisionCreationTime()|format_date('custom', 'F j, Y, g:i a') %}
+{% set revision_log_message = revision.getRevisionLogMessage() %}
 
 {% set classes = [
   'content-moderation',
   'is-' ~ current_state_class,
 ] %}
 
-<details{{ attributes.addClass(classes) }} open>
+<details{{ attributes.addClass(classes) }}>
   <summary class="content-moderation__summary">
-    <div class="content-moderation_summary-container">
+    <div class="content-moderation__summary-container">
       {% trans %}
-        <span class="content-moderation__state is-{{ current_state_class }}">
-          Current state: {{ current_state }}
-        </span>
-        <span class="content-moderation__status is-{{ revision_status }}">
-          {{ revision_status }}
+        <div class="content-moderation__state">
+          <span>Current state</span>
+          <mark class="is-{{ current_state_class }}">
+            {{ current_state }}
+          </mark>
         </span>
       {% endtrans %}
     </div>
   </summary>
 
   <div class="content-moderation__content">
+    {% if node.revision_log.value or revision_author %}
+      <div class="content-moderation__log">
+        {% if revision_author %}
+          <strong class="content-moderation__label" title="Revision created: {{ revision_date }}">
+            {{ 'Last revision from @username'|t({ '@username': revision_author }) }}
+          </strong>
+        {% endif %}
+
+        {% if revision_log_message %}
+          <div class="content-moderation__log">
+            <p class="content-moderation__log-message">
+              {{ revision_log_message }}
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="content-moderation__fields">
+      {{ form.new_state }}
+      {{ form.revision_log }}
+    </div>
+
     <div class="content-moderation__message">
       <p>
+       {{ 'This is the latest, unpublished, version of this page.'|t }}
+
         {% if node.isPublished() %}
           {% trans %}
-            This is the latest, <em>unpublished</em> revision, in
-            <em class="{{ current_state_class }}">{{ current_state }}</em> state, of
-            <a href="{{ node_url }}" target="_blank" rel="noopener">{{ node_title }} [{{node_status}}]</a>.
+            <a href="{{ node_url }}" target="_blank" rel="noopener" title="{{ node_title }}">
+              View the version that is currently published.
+            </a>
           {% endtrans %}
 
         {% else %}
-          {% trans %}
-            This is the latest, <em>unpublished</em> revision, in
-            <em class="{{ current_state_class }}">{{ current_state }}</em>
-            state, of this page. There are no published revisions available.
-          {% endtrans %}
+          {{ 'There are currently no published versions.'|t }}
         {% endif %}
       </p>
     </div>
 
-    <div class="content-moderation__transition">
-      {{ form.new_state }}
-    </div>
-
-    <div class="content-moderation__log">
-      {{ form.revision_log }}
+    <div class="content-moderation__button">
       {{ form.submit }}
     </div>
 
-    {% if node.revision_log.value %}
-      <div class="content-moderation__message">
-        <p><em>{{ 'Previous log message:'|t }}</em> {{ node.revision_log.value }}</p>
-      </div>
-    {% endif %}
-
     {{ form|without('current', 'new_state', 'revision_log', 'submit') }}
+
   </div>
 </details>

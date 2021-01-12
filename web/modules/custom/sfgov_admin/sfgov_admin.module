@@ -271,7 +271,7 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
     /** @var \Drupal\node\NodeInterface $node */
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($revision->id());
 
-    // We treat also the latest translation-affecting revision as the current
+    // We also treat the latest translation-affecting revision as the current
     // revision, if it was the default revision, as its values for the
     // current language will be the same of the current default revision in
     // this case.
@@ -295,12 +295,13 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
     $form['#node'] = $node;
     $form['#node_revision'] = $revision;
     $form['#current_state'] = $current_state;
+    // Note: Can't use toString() in the template.
     $form['#node_url'] = $node_url->toString();
 
     // Alter form elements.
     $form['current']['#title'] = t('Current state');
     $form['current']['#markup'] = '<div class="' . implode($classes, ' ') . '">' . $current_state . '</div>';
-    $form['new_state']['#title'] = t('Change from "@current_state" to', ['@current_state' => $current_state]);
+    $form['revision_log']['#title'] = t('Add a revision note');
     $form['revision_log']['#placeholder'] = t('Log message');
     $form['revision_log']['#size'] = NULL;
   }
