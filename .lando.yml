@@ -4,12 +4,12 @@ config:
   framework: drupal8
   site: sfgov
   id: 91d50373-c4cf-40e4-a646-cb73e16a140c
-  composer_version: 1-latest
-  # Note: xDebug negatively impacts performance. Leaving it off globally, and
-  # enabling it as needed, is recommended. The custom tooling commands (below)
-  # can be used toggle it on (lando xdebug-on) /off (lando xdebug-off).
-  # xdebug: true
   webroot: web
+  composer_version: 1-latest
+  # Note: Xdebug negatively impacts performance. It should be toggled on/off
+  # using the custom tooling commands, 'lando xdebug-on' and 'lando xdebug-off',
+  # as needed.
+  # xdebug: develop,debug
 services:
   appserver:
     run:
@@ -21,6 +21,8 @@ services:
           "http://sfgov.lndo.site", "goutte": { "guzzle_parameters": { "verify":
           false } } }, "Drupal\\DrupalExtension": { "drush": { "root":
           "/app/web" } } } }
+        XDEBUG_MODE: develop,debug
+        XDEBUG_SESSION_START: LANDO
 tooling:
   behat:
     service: appserver
