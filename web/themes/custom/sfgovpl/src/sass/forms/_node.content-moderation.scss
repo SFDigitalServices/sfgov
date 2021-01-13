@@ -1,0 +1,146 @@
+// Content Moderation Widget
+//------------------------------------------------------------------------------
+
+.content-moderation-entity-moderation-form {
+  max-width: none;
+}
+
+.content-moderation {
+  background: #2d2d2d;
+  color: $c-white;
+  border-radius: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+
+  a {
+    @include link-colors($c-white, $c-white);
+  }
+
+  // Override base <details> icons. We want them inside the container.
+  &:not([open]) summary::after,
+  &[open] summary::after {
+    display: none;
+  }
+
+  label,
+  .content-moderation__label {
+    @include fs-body-bold;
+    color: $c-white;
+    display: block;
+  }
+
+  mark {
+    border-radius: 8px;
+    color: $c-white;
+    display: inline-block;
+    padding: 5px 15px 5px 15px;
+    margin-left: 1ch;
+
+    &.is-draft {
+      background-color: $c-red-3;
+    }
+
+    &.is-ready-for-review {
+      background-color: $c-yellow-3;
+      color: $c-slate;
+    }
+
+    &.is-archived {
+      background-color: $c-light-slate;
+    }
+  }
+
+  .content-moderation__summary {
+    @include fs-body-bold;
+    @include antialiasing;
+    background: #333;
+    border-radius: 0;
+    border: 0;
+    color: $c-white;
+    padding: 0 !important;
+  }
+
+  .content-moderation__summary-container {
+    @include contain-1090;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    position: relative;
+
+    &::after {
+      color: $c-white;
+      background: url("data:image/svg+xml,%3Csvg width='20' height='20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.96 14.755a1.245 1.245 0 01-.885-.365l-7.5-7.5a1.252 1.252 0 011.77-1.77l6.615 6.62 6.615-6.62a1.251 1.251 0 111.77 1.77l-7.5 7.5a1.247 1.247 0 01-.885.365z' fill='%23fff'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      content: '';
+      height: 20px;
+      position: absolute;
+      right: 20px;
+      top: 26px;
+      width: 20px;
+    }
+  }
+
+  &[open] .content-moderation__summary-container::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17.46 14.755a1.245 1.245 0 01-.885-.365L9.96 7.775 3.345 14.39a1.252 1.252 0 01-1.77-1.77l7.5-7.5a1.26 1.26 0 011.77 0l7.5 7.5a1.26 1.26 0 010 1.77 1.246 1.246 0 01-.885.365z' fill='%23fff'/%3E%3C/svg%3E");
+  }
+}
+
+.content-moderation__content {
+  @include contain-1090;
+  padding-top: 30px;
+  padding-bottom: 40px;
+}
+
+.content-moderation__log-message {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.32);
+  margin-top: 1px;
+  padding-bottom: 25px;
+}
+
+.content-moderation__message p {
+  margin: 2px 0 22px 0;
+}
+
+.content-moderation__fields {
+  margin-top: 20px;
+
+  @include media($medium-screen) {
+    align-items: stretch;
+    display: flex;
+  }
+
+  label {
+    margin: 0 0 8px 0;
+  }
+
+  .form-item {
+    margin: 0 0 15px 0;
+    padding: 0;
+
+    &:not(:first-child) {
+      @include media($medium-screen) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .form-item-revision-log {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+}
+
+.content-moderation__button {
+  .form-submit {
+    @include button;
+    width: auto;
+    margin: 0;
+
+    &:hover, &:focus {
+      background-color: darken($c-bright-blue, 10%);
+      border-color: darken($c-bright-blue, 10%);
+    }
+  }
+}

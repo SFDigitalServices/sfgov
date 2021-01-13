@@ -5,6 +5,8 @@
     : 'Part of <a href="@url">@public_body meetings</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
 %}
 
+{{ content.content_moderation_control }}
+
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {

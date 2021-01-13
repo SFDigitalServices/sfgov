@@ -104,7 +104,10 @@
 
       <div{{ content_attributes.addClass(bundle ~ '__content') }}>
         {% block body %}
-        {{ content|without('links') }}
+        {{ content|without(
+          'content_moderation_control',
+          'links'
+        ) }}
         {% endblock body %}
       </div>
 
