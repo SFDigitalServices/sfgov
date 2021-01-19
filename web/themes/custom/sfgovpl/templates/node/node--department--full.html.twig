@@ -166,26 +166,6 @@
             </ul>
           </div>
           {% endif %}
-          {% if dept_fields.about.divisions %}
-            <div class="sfgov-dept-about-divisions">
-              <h3>{{ 'Divisions'|t }}</h3>
-              <ul>
-              {% for division in dept_fields.about.divisions %}
-                <li><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
-              {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
-          {% if dept_fields.about.public_bodies %}
-            <div class="sfgov-dept-about-public-bodies">
-              <h3>{{ 'Public Bodies'|t }}</h3>
-              <ul>
-              {% for publicBody in dept_fields.about.public_bodies %}
-                <li><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
-              {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
         </div>
         <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section sfds-responsive-container-right-zero">
           {% if dept_fields.about.logo_url %}
@@ -212,6 +192,33 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="sfgov-dept-about-divisions-wrapper {% if dept_fields.about.divisions|length < 4 and dept_fields.about.public_bodies|length < 4 %}sfgov-container-two-column{% endif %}">
+    {% if dept_fields.about.divisions %}
+      <div class="sfgov-dept-about-divisions sfgov-container-item">
+        <div>
+          <h3>{{ 'Divisions'|t }}</h3>
+          <ul class="{% if dept_fields.about.divisions|length >= 4 %}sfgov-container-two-column{% endif %}">
+          {% for division in dept_fields.about.divisions %}
+            <li class="sfgov-container-item"><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+    {% if dept_fields.about.public_bodies %}
+      <div class="sfgov-dept-about-public-bodies sfgov-container-item">
+        <div>
+          <h3>{{ 'Public Bodies'|t }}</h3>
+          <ul class="{% if dept_fields.about.public_bodies|length >= 4 %}sfgov-container-two-column{% endif %}">
+          {% for publicBody in dept_fields.about.public_bodies %}
+            <li class="sfgov-container-item"><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   {% if content.field_people|render %}
