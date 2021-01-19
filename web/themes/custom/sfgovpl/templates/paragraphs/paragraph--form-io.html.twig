@@ -202,7 +202,9 @@
           }
 
           if (confirmationURL) {
-            window.location = confirmationURL
+            window.location = form.language
+              ? confirmationURL.replace('{lang}', form.language)
+              : confirmationURL.replace('{lang}/', '')
           }
         })
       })
