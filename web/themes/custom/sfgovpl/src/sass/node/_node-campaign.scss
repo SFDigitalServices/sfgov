@@ -130,6 +130,52 @@
       }
     }
   }
+  .__campaign-about-dept-wrapper {
+    @include contain-1090;
+    margin-top: 60px;
+    margin-bottom: 60px;
+
+    .field__item {
+      margin-bottom: 20px;
+      a {
+        @include antialiasing;
+      }
+    }
+
+    .full-width {
+      .field__items {
+        flex-direction: column;
+        display: flex;
+        flex-wrap: wrap;
+        @media screen and (min-width: $medium-screen) {
+          flex-direction: row;
+        }
+
+        .field__item {
+          width: 100%;
+          margin-bottom: $rhythm * 2;
+          @media screen and (min-width: $medium-screen) {
+            display: flex;
+            align-items: stretch;
+            > * {
+              margin-right: $rhythm * 2;
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      @media screen and (min-width: $medium-screen) {
+        .field__items > .field__item {
+          width: 50%;
+          &:nth-child(2n+2) > * {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
   .__instagram-feed,
   .paragraph--type--instagram-embed--large {
     @include contain-1090;
