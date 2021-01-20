@@ -265,7 +265,7 @@ function sfgov_admin_preprocess_file_upload_help(&$variables) {
 function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form, $form_state, $form_id) {
   /** @var \Drupal\node\NodeInterface $revision */
   $revision = $form_state->get('entity');
-
+  if (empty($revision)) return;
   if ($revision->getEntityTypeId() == 'node') {
     // Base node for the revision.
     /** @var \Drupal\node\NodeInterface $node */
