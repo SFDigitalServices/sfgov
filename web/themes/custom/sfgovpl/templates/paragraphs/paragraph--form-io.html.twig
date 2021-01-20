@@ -79,10 +79,19 @@
       })
     }
 
-    var amplitude = window.amplitude.getInstance()
-    var amp = function(eventName, data) {
-      amplitude.logEvent(eventName, Object.assign(data, amplitudeData))
-    }
+    var amp = (function() {
+      var amplitude
+      var log = function (event, data) {
+        console.log('Form event (no amplitude):', event, data)
+      }
+      return function(eventName, data) {
+        if (!amplitude && window.amplitude) {
+          amplitude = window.amplitude.getInstance()
+          log = amplitude.logEvent.bind(amplitude)
+        }
+        log(eventName, Object.assign(data, amplitudeData))
+      }
+    })()
 
     amp('window.load', { load_time: loadTime })
 
