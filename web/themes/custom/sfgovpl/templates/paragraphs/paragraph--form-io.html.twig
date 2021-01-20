@@ -59,10 +59,11 @@
 (function() {
 
   var time = Date.now()
-    
-  var confirmationURL = {{ paragraph.field_formio_confirmation_url.value is empty ? 
-    "null" : 
-    paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw  
+
+  var confirmationURL = {{
+    paragraph.field_formio_confirmation_url.value is empty
+      ? "null"
+      : paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw
   }}
 
   window.addEventListener('load', function() {
@@ -78,10 +79,19 @@
       })
     }
 
-    var amplitude = window.amplitude.getInstance()
-    var amp = function(eventName, data) {
-      amplitude.logEvent(eventName, Object.assign(data, amplitudeData))
-    }
+    var amp = (function() {
+      var amplitude
+      var log = function (event, data) {
+        console.log('Form event (no amplitude):', event, data)
+      }
+      return function(eventName, data) {
+        if (!amplitude && window.amplitude) {
+          amplitude = window.amplitude.getInstance()
+          log = amplitude.logEvent.bind(amplitude)
+        }
+        log(eventName, Object.assign(data, amplitudeData))
+      }
+    })()
 
     amp('window.load', { load_time: loadTime })
 
@@ -146,7 +156,8 @@
     }
 
     time = Date.now()
-    Formio.createForm(el, el.getAttribute('data-source'), options)
+    var dataSource = el.getAttribute('data-source')
+    Formio.createForm(el, dataSource, options)
       .then(function(form) {
         amp('form.load', { load_time: Date.now() - time })
 
@@ -164,18 +175,20 @@
           })
         })
 
-        //perform sfoptions, hide certain elements
-        if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+        var sfoptions = options.sfoptions || {}
+        // perform sfoptions, hide certain elements
+        if (sfoptions.hide instanceof Object) {
           customHideElements(options.sfoptions.hide)
         }
         // add css class to element(by id)
-        if (options.sfoptions && options.sfoptions.addClass) {
+        if (sfoptions.addClass) {
           customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
-        if (options.sfoptions instanceof Object && options.sfoptions.cookies) {
+        if (sfoptions.cookies) {
           manageFormCookies(options.sfoptions.cookies, form, true)
         }
+
         // perform custom action on nextPage event
         form.on('nextPage', function() {
           // set form cookies, if there are any
@@ -204,6 +217,12 @@
           if (confirmationURL) {
             window.location = confirmationURL
           }
+        })
+      })
+      .catch(error => {
+        amp('form.loadError', {
+          url: dataSource,
+          error: error
         })
       })
 
