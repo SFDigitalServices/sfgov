@@ -215,8 +215,10 @@
           }
 
           if (confirmationURL) {
-            window.location = form.language
-              ? confirmationURL.replace('{lang}', form.language)
+            // see: <https://github.com/formio/formio.js/pull/3592> for more details
+            var lang = form.language || form.options.language
+            window.location = lang
+              ? confirmationURL.replace('{lang}', lang)
               : confirmationURL.replace('{lang}/', '')
           }
         })
