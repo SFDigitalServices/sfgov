@@ -23,8 +23,10 @@ function sfgovpl_preprocess_node(&$variables) {
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
     $node = $variables['node'];
     $content_type = $node->bundle();
+    $view_mode = $variables['view_mode'];
 
-    if ($variables['view_mode'] == 'full') {
+    // Full node.
+    if ($view_mode == 'full') {
       switch ($content_type) {
         case 'department':
           $variables['dept_fields'] = dept_page_fields($node);
@@ -44,11 +46,29 @@ function sfgovpl_preprocess_node(&$variables) {
       }
     }
 
-    // If the node being displayed is a translation, add a "notranslate" wrapper
-    // class, to exclude it from gtranslate (the rest of the page, navigation,
-    // footer, etc., will be translated this way).
-    if ('en' != $variables['node']->language()->getId()) {
-      $variables['attributes']['class'][] = 'notranslate';
+  }
+
+  // If the Google translate language matches an existing translation,
+  // show the translated node and do not let Google translate it.
+  if (isset($_COOKIE['googtrans'])) {
+    $langs = $node->getTranslationLanguages();
+    $gtranslang = str_replace('/en/', '', $_COOKIE['googtrans']);
+    foreach ($langs as $lang => $value) {
+      if ($gtranslang == $lang && $lang != 'en') {
+
+        // Do not let Google translate full pages that are not in English.
+        if ($view_mode == 'full') {
+          $variables['attributes']['class'][] = 'notranslate';
+        }
+
+        // Use translated cards for transactions.
+        elseif ($view_mode == 'card' && $content_type == 'transaction') {
+          $variables['attributes']['class'][] = 'notranslate';
+          $translated = $node->getTranslation($lang);
+          $variables['node'] = $translated;
+          $variables['url'] = $translated->toUrl();
+        }
+      }
     }
   }
 }
