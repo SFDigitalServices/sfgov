@@ -66,6 +66,11 @@
       : paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw
   }}
 
+  var formLanguageMap = {
+    zh:       'zh-hant',
+    'zh-TW':  'zh-hant'
+  }
+
   window.addEventListener('load', function() {
     var loadTime = Date.now() - time
 
@@ -216,7 +221,8 @@
 
           if (confirmationURL) {
             // see: <https://github.com/formio/formio.js/pull/3592> for more details
-            var lang = form.language || form.options.language
+            var formLang = form.language || form.options.language
+            var lang = formLanguageMap[formLang] || formLang
             window.location = lang
               ? confirmationURL.replace('{lang}', lang)
               : confirmationURL.replace('{lang}/', '')
