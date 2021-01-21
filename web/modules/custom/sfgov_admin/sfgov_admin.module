@@ -31,8 +31,15 @@ function sfgov_admin_page_attachments(array &$page) {
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
 
   $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
-  if ($is_admin && $active_theme == 'seven') {
-    $page['#attached']['library'][] = 'sfgov_admin/admin';
+  if ($is_admin) {
+    switch ($active_theme) {
+      case 'seven':
+        $page['#attached']['library'][] = 'sfgov_admin/admin';
+        break;
+      case 'gin':
+        $page['#attached']['library'][] = 'sfgov_admin/gin';
+        break;
+    }
   }
 
   // This library is for backend-related functionality, like inline Diffs,
