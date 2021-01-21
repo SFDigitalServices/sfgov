@@ -223,7 +223,7 @@
             // see: <https://github.com/formio/formio.js/pull/3592> for more details
             var formLang = form.language || form.options.language
             var lang = formLanguageMap[formLang] || formLang
-            window.location = lang
+            window.location = lang && lang !== 'en'
               ? confirmationURL.replace('{lang}', lang)
               : confirmationURL.replace('{lang}/', '')
           }
