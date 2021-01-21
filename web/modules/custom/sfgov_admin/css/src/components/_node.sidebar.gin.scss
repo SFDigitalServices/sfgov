@@ -1,0 +1,115 @@
+.sidebar-toggle {
+  align-items: center;
+  background-color: transparent;
+  border: solid 1px transparent;
+  display: none;
+  float: right;
+  height: 50px;
+  justify-content: center;
+  margin: 1px 1px 0;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  text-indent: -999em;
+  white-space: nowrap;
+  width: 50px;
+
+  &:focus {
+    background: #f7f7f7;
+    outline: 0;
+  }
+  &:hover {
+    background: transparent;
+  }
+
+  @media only screen and (min-width: 780px), (min-device-height: 780px) and (orientation: landscape) {
+    display: flex;
+  }
+
+  .sidebar-toggle-active & {
+    border: 1px solid #bfbfbf;
+    margin: 1px;
+  }
+
+  &, *, *::after, *::before {
+    box-sizing: border-box;
+  }
+
+  .sidebar-toggle__icon {
+    background: transparent;
+    left: 0;
+    margin: -2px auto auto auto;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transition: background 0.2s;
+
+    &, &::before, &::after {
+      display: inline-block;
+      height: 3px;
+      position: absolute;
+      width: 24px;
+    }
+
+    &::before, &::after {
+      backface-visibility: hidden;
+      background: #585858;
+      content: '';
+      right: 0;
+      transform: translateZ(0);
+      transform-origin: 0% 50%;
+      transition: transform 0.2s;
+    }
+
+    .sidebar-toggle-active & {
+      &, &::before, &::after {
+        background: #000;
+      }
+    }
+
+    &::before {
+      top: -6px;
+      transform: translateX(4px) translateY(-3px) rotate(45deg);
+
+      .sidebar-toggle-active & {
+        transform: none;
+      }
+    }
+
+    &::after {
+      top: 6px;
+      transform: translateX(4px) translateY(2px) rotate(-45deg);
+
+      .sidebar-toggle-active & {
+        transform: none;
+      }
+    }
+  }
+
+  &:focus, &:hover {
+    .sidebar-toggle__icon {
+      &::before, &::after {
+        background: #000;
+      }
+      .sidebar-toggle-active & {
+        &, &::before, &::after {
+          background: #000;
+        }
+      }
+    }
+  }
+}
+
+.sidebar-toggle-active {
+  @media screen and (min-width: 780px), (orientation: landscape) and (min-device-height: 780px) {
+    .layout-region-node-main,
+    .layout-region-node-footer {
+      padding-right: 0;
+      width: calc(100% - 50px);
+    }
+    .layout-region-node-secondary {
+      float: left;
+      width: 50px;
+    }
+  }
+}
