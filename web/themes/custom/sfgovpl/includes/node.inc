@@ -47,28 +47,6 @@ function sfgovpl_preprocess_node(&$variables) {
     }
 
   }
-
-  // If the current language matches an existing Drupal translation,
-  // show the Drupal-translated node and do not let Google translate it.
-  $node_languages = $node->getTranslationLanguages();
-  $current_language = \Drupal::languageManager()->getCurrentLanguage()->getId();;
-  foreach ($node_languages as $language => $value) {
-    if ($current_language == $language && $language != 'en') {
-
-      // Do not let Google translate full pages that are not in English.
-      if ($view_mode == 'full') {
-        $variables['attributes']['class'][] = 'notranslate';
-      }
-
-      // If they exist, use Drupal-translated cards for transactions.
-      elseif ($view_mode == 'card' && $content_type == 'transaction') {
-        $variables['attributes']['class'][] = 'notranslate';
-        $translated = $node->getTranslation($language);
-        $variables['node'] = $translated;
-        $variables['url'] = $translated->toUrl();
-      }
-    }
-  }
 }
 
 /**
