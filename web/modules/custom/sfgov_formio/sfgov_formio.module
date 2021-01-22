@@ -11,6 +11,8 @@ function sfgov_formio_theme_suggestions_paragraph_alter(array &$suggestions, arr
   $paragraph = $variables['elements']['#paragraph'];
 
   if ($paragraph->bundle() === 'form_io') {
+    // Use the data source property created in sfgov_formio_entity_view_alter()
+    // to add custom template suggestions.
     if (!empty($variables['elements']['field_formio_data_source']['#formio_id'])) {
       $formio_id = str_replace('-', '_', $variables['elements']['field_formio_data_source']['#formio_id']);
       $suggestions[] = 'paragraph__form_io__' . $formio_id;
@@ -23,9 +25,6 @@ function sfgov_formio_theme_suggestions_paragraph_alter(array &$suggestions, arr
  */
 function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
   if ($entity->getEntityTypeId() === 'paragraph' && $entity->getType() === 'form_io') {
-
-    $build['#attached']['library'][] = 'sfgov_formio/formio_sfds';
-
     // Get the form ID from the endpoint URL.
     if ($entity->field_formio_data_source->value) {
       // Given https://sfds.form.io/feedback, look for 'feedback'.
@@ -39,30 +38,99 @@ function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
 }
 
 /**
- * Implements hook_library_info_build().
+ * Implements hook_page_attachments().
  */
-function sfgov_formio_library_info_alter(&$libraries, $extension) {
+function sfgov_formio_page_attachments(array &$attachments) {
+  $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
 
-  // Apply any library overrides defined at /admin/config/services/sfgov_formio.
-  if ($extension === 'sfgov_formio') {
-    $settings = \Drupal::config('sfgov_formio.settings');
+  // The version we load takes query parameters into account. We are NOT using
+  // libraries here because they are too heavily cached, and unable to respond
+  // request-level changes. This is one of the only asset-related hooks which
+  // can evaluate a page request. hook_library_info_build/alter(), etc. cannot.
+  if ($active_theme == 'sfgovpl') {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'script',
+        '#attributes' => [
+          'src' => _sfgov_formiojs_source(),
+          'defer' => TRUE,
+        ],
+      ],
+      'formiojs',
+    ];
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'script',
+        '#attributes' => [
+          'src' => _sfgov_formio_sfds_source(),
+          'defer' => TRUE,
+        ],
+      ],
+      'formio-sfds',
+    ];
 
-    if (isset($libraries['formio'])) {
-      $formio_version = $settings->get('formio_version');
-      if (!empty($formio_version)) {
-        $libraries['formio']['js'] = [
-          $formio_version => ['type' => 'external']
-        ];
-      }
-    }
-
-    if (isset($libraries['formio_sfds'])) {
-      $formio_sfds_version = $settings->get('formio_sfds_version');
-      if (!empty($formio_sfds_version)) {
-        $libraries['formio_sfds']['js'] = [
-          $formio_sfds_version => ['type' => 'external'
-        ]];
-      }
-    }
+    // Allow Drupal's caching system to take the query string into account when
+    // setting the page_cache id. This ensures we get the version we want when
+    // new combinations are requested, and cache a HIT for subsequent requests.
+    $attachments['#cache']['contexts'][] = 'url.query_args:formiojsVersion';
+    $attachments['#cache']['contexts'][] = 'url.query_args:formio-sfdsVersion';
   }
+}
+
+/**
+ * Return the Formio.js source URL.
+ *
+ * @return string $source
+ *   Source URL to use with <script src="">.
+ */
+function _sfgov_formiojs_source() {
+  // Fallback (latest version).
+  $source = 'https://unpkg.com/formiojs/dist/formio.full.min.js';
+
+  // Check for query parameters first.
+  if (\Drupal::request()->query) {
+    $query = \Drupal::request()->query->get('formiojsVersion');
+    $query = strip_tags($query);
+  }
+
+  // Prefer source from query params.
+  if (!empty($query)) {
+    $source = 'https://unpkg.com/formiojs@' . $query . '/dist/formio.full.min.js';
+  }
+
+  // Use settings configured at 'admin/config/services/sfgov_formio'.
+  else if ($config = \Drupal::config('sfgov_formio.settings')->get('formio_version')) {
+    $source = 'https://unpkg.com/formiojs@' . $config . '/dist/formio.full.min.js';
+  }
+
+  return $source;
+}
+
+/**
+ * Return the Form.io SFDS theme source URL.
+ *
+ * @return string $source
+ *   Source URL to use with <script src="">.
+ */
+function _sfgov_formio_sfds_source() {
+  // Fallback (latest version).
+  $source = 'https://unpkg.com/formio-sfds/dist/formio-sfds.standalone.js';
+
+  // Check for query parameters.
+  if (\Drupal::request()->query) {
+    $query = \Drupal::request()->query->get('formio-sfdsVersion');
+    $query = strip_tags($query);
+  }
+
+  // Prefer version from query params, if available.
+  if (!empty($query)) {
+    $source = 'https://unpkg.com/formio-sfds@' . $query . '/dist/formio-sfds.standalone.js';
+  }
+
+  // Use settings configured at 'admin/config/services/sfgov_formio'.
+  else if ($config = \Drupal::config('sfgov_formio.settings')->get('formio_sfds_version')) {
+    $source = 'https://unpkg.com/formio-sfds@' . $config . '/dist/formio-sfds.standalone.js';
+  }
+
+  return $source;
 }

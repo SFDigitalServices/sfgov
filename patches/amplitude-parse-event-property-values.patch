@@ -1,0 +1,31 @@
+diff --git a/js/amplitude-events.js b/js/amplitude-events.js
+index a23add7..8304d41 100644
+--- a/js/amplitude-events.js
++++ b/js/amplitude-events.js
+@@ -28,7 +28,7 @@
+   function triggerEvent(event, elem) {
+     var amplitude_instance = amplitude.getInstance();
+     var event_name = event['name'];
+-    var event_properties = event['properties'];
++    var event_properties = event['properties'].replace(/\&quot;/g, '\\"');
+ 
+     if (!event_properties) {
+       amplitude_instance.logEvent(event_name);
+@@ -38,6 +38,17 @@
+ 
+     var event_properties_parsed = JSON.parse(event_properties);
+ 
++    for(var key in event_properties_parsed) {
++      var value = event_properties_parsed[key];
++      if (typeof value === 'string') {
++        try {
++          if(typeof JSON.parse(value) === 'object') {
++            event_properties_parsed[key] = JSON.parse(value);
++          }
++        } catch (e) {}
++      }
++    }
++
+     if (elem) {
+       var event_trigger_data_capture = event['event_trigger_data_capture'];
+       var event_trigger_data_capture_properties = event['event_trigger_data_capture_properties'];
