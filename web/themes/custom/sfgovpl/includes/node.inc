@@ -48,26 +48,24 @@ function sfgovpl_preprocess_node(&$variables) {
 
   }
 
-  // If the Google translate language matches an existing translation,
-  // show the translated node and do not let Google translate it.
-  if (isset($_COOKIE['googtrans'])) {
-    $langs = $node->getTranslationLanguages();
-    $gtranslang = str_replace('/en/', '', $_COOKIE['googtrans']);
-    foreach ($langs as $lang => $value) {
-      if ($gtranslang == $lang && $lang != 'en') {
+  // If the current language matches an existing Drupal translation,
+  // show the Drupal-translated node and do not let Google translate it.
+  $node_languages = $node->getTranslationLanguages();
+  $current_language = \Drupal::languageManager()->getCurrentLanguage()->getId();;
+  foreach ($node_languages as $language => $value) {
+    if ($current_language == $language && $language != 'en') {
 
-        // Do not let Google translate full pages that are not in English.
-        if ($view_mode == 'full') {
-          $variables['attributes']['class'][] = 'notranslate';
-        }
+      // Do not let Google translate full pages that are not in English.
+      if ($view_mode == 'full') {
+        $variables['attributes']['class'][] = 'notranslate';
+      }
 
-        // Use translated cards for transactions.
-        elseif ($view_mode == 'card' && $content_type == 'transaction') {
-          $variables['attributes']['class'][] = 'notranslate';
-          $translated = $node->getTranslation($lang);
-          $variables['node'] = $translated;
-          $variables['url'] = $translated->toUrl();
-        }
+      // If they exist, use Drupal-translated cards for transactions.
+      elseif ($view_mode == 'card' && $content_type == 'transaction') {
+        $variables['attributes']['class'][] = 'notranslate';
+        $translated = $node->getTranslation($language);
+        $variables['node'] = $translated;
+        $variables['url'] = $translated->toUrl();
       }
     }
   }
