@@ -27,3 +27,12 @@ The start the build script, navigate to the `./build` of this module in your ter
 ```bash
 gulp
 ```
+
+## Gin notes
+
+To set gin as the admin theme via command line:
+```
+lando drush cset system.theme admin gin
+lando drush cset gin.settings classic_toolbar 1
+lando drush cset gin.settings classic_toolbar toolbar
+```

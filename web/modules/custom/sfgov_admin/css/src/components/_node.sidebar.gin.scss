@@ -1,42 +1,33 @@
 .sidebar-toggle {
   align-items: center;
   background-color: transparent;
-  border: solid 1px transparent;
+  border: solid 2px var(--colorGinPrimary);
+  border-radius: 6px;
   display: none;
   float: right;
-  height: 50px;
+  height: 40px;
   justify-content: center;
-  margin: 1px 1px 0;
+  margin: 6px;
   overflow: hidden;
   padding: 0;
   position: relative;
   text-indent: -999em;
   white-space: nowrap;
-  width: 50px;
-
-  &:focus {
-    background: #f7f7f7;
-    outline: 0;
-  }
-  &:hover {
-    background: transparent;
-  }
+  width: 40px;
 
   @media only screen and (min-width: 780px), (min-device-height: 780px) and (orientation: landscape) {
     display: flex;
   }
 
-  .sidebar-toggle-active & {
-    border: 1px solid #bfbfbf;
-    margin: 1px;
-  }
-
-  &, *, *::after, *::before {
+  &,
+  *,
+  *::after,
+  *::before {
     box-sizing: border-box;
   }
 
+  // span, ::before, and ::after form the icon bars for hamburger and the x.
   .sidebar-toggle__icon {
-    background: transparent;
     left: 0;
     margin: -2px auto auto auto;
     position: absolute;
@@ -44,16 +35,18 @@
     top: 50%;
     transition: background 0.2s;
 
-    &, &::before, &::after {
+    &,
+    &::before,
+    &::after {
       display: inline-block;
-      height: 3px;
+      height: 2px;
       position: absolute;
       width: 24px;
     }
 
-    &::before, &::after {
+    &::before,
+    &::after {
       backface-visibility: hidden;
-      background: #585858;
       content: '';
       right: 0;
       transform: translateZ(0);
@@ -61,55 +54,74 @@
       transition: transform 0.2s;
     }
 
-    .sidebar-toggle-active & {
-      &, &::before, &::after {
-        background: #000;
-      }
-    }
-
     &::before {
       top: -6px;
-      transform: translateX(4px) translateY(-3px) rotate(45deg);
-
-      .sidebar-toggle-active & {
-        transform: none;
-      }
     }
 
     &::after {
       top: 6px;
-      transform: translateX(4px) translateY(2px) rotate(-45deg);
-
-      .sidebar-toggle-active & {
-        transform: none;
-      }
     }
   }
 
-  &:focus, &:hover {
-    .sidebar-toggle__icon {
-      &::before, &::after {
+  .sidebar-toggle-x {
+    background: transparent;
+
+    &::before {
+      background: var(--colorGinPrimary);
+      transform: translateX(4px) translateY(-3px) rotate(45deg);
+    }
+
+    &::after {
+      background: var(--colorGinPrimary);
+      transform: translateX(4px) translateY(2px) rotate(-45deg);
+    }
+  }
+
+  .sidebar-toggle-hamburger {
+    background: var(--colorGinPrimary);
+
+    &::before,
+    &::after {
+      background: var(--colorGinPrimary);
+      transform: none;
+    }
+  }
+
+  // Hover and Focus states.
+  &:focus,
+  &:hover {
+    background: var(--colorGinPrimary);
+    outline: 0;
+
+    .sidebar-toggle-x {
+
+      &::before,
+      &::after {
         background: #000;
       }
-      .sidebar-toggle-active & {
-        &, &::before, &::after {
-          background: #000;
-        }
+    }
+    .sidebar-toggle-hamburger {
+      &,
+      &::before,
+      &::after {
+        background: #000;
       }
     }
   }
 }
 
-.sidebar-toggle-active {
+.gin--edit-form.sidebar-toggle-active {
   @media screen and (min-width: 780px), (orientation: landscape) and (min-device-height: 780px) {
-    .layout-region-node-main,
-    .layout-region-node-footer {
-      padding-right: 0;
-      width: calc(100% - 50px);
-    }
-    .layout-region-node-secondary {
-      float: left;
-      width: 50px;
+    padding-right: 0;
+    width: calc(100% - 54px);
+
+    //.layout-region-node-main,
+    //.layout-region-node-footer {
+    //  padding-right: 0;
+    //}
+
+    .page-wrapper__node-edit-form .layout-region-node-secondary {
+      width: 54px !important;
     }
   }
 }
