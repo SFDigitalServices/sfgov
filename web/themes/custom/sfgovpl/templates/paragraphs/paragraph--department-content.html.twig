@@ -1,104 +1,62 @@
-{#
-/**
- * @file
- * Default theme implementation to display a paragraph.
- *
- * Available variables:
- * - paragraph: Full paragraph entity.
- *   Only method names starting with "get", "has", or "is" and a few common
- *   methods such as "id", "label", and "bundle" are available. For example:
- *   - paragraph.getCreatedTime() will return the paragraph creation timestamp.
- *   - paragraph.id(): The paragraph ID.
- *   - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
- *   - paragraph.getOwnerId(): The user ID of the paragraph author.
- *   See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
- *   and methods for the paragraph object.
- * - content: All paragraph items. Use {{ content }} to print them all,
- *   or print a subset such as {{ content.field_example }}. Use
- *   {{ content|without('field_example') }} to temporarily suppress the printing
- *   of a given child element.
- * - attributes: HTML attributes for the containing element.
- *   The attributes.class element may contain one or more of the following
- *   classes:
- *   - paragraphs: The current template type (also known as a "theming hook").
- *   - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
- *     "Image" it would result in "paragraphs--type--image". Note that the machine
- *     name will often be in a short form of the human readable label.
- *   - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
- *     preview would result in: "paragraphs--view-mode--preview", and
- *     default: "paragraphs--view-mode--default".
- * - view_mode: View mode; for example, "preview" or "full".
- * - logged_in: Flag for authenticated user status. Will be true when the
- *   current user is a logged-in member.
- * - is_admin: Flag for admin user status. Will be true when the current user
- *   is an administrator.
- *
- * @see template_preprocess_paragraph()
- *
- * @ingroup themeable
- */
-#}
-{%
-  set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
-  ]
-%}
-
-{% if paragraph.field_meeting.0.entity %}
-  {% set node = paragraph.field_meeting.0.entity %}
-  {% set node_path = path('entity.node.canonical', {'node': node.id}) %}
-{% endif %}
-
-
-{% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      <div class="department-name">
-        {{ paragraph.field_department.entity.title.value }}
-      </div>
-      <div class="column-1">
-        <div class="document-file" data-contact="document">
-        {% if paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value %}
-          <a href="{{ file_url(paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value) }}">
-            {{ paragraph.field_document.entity.field_file.entity.label }}
-          </a>
-        {% elseif paragraph.field_document.entity.field_file.entity.field_document_url.value.0.uri %}
-          <a href="{{ paragraph.field_document.entity.field_file.entity.field_document_url.value.0.uri }}">
-            {{ paragraph.field_document.entity.field_file.entity.label }}
-          </a>
-        {% else %}
-          <span>{{ 'No document available'|t }}</span>
-        {% endif %}
-        </div>
-      </div>
-      <div class="column-2">
-        {% if node.field_direct_external_url.0.url %}
-          <div class="meeting-item"  data-contact="calendar">
-            <a href=" {{ node.field_direct_external_url.0.url }} ">
-              {{ paragraph.field_meeting.0.entity.title.value }}
-            </a>
-            {% if node.field_start_date.value %}
-              <div class="date"> {{ node.field_start_date.value|date("F j, Y") }} </div>
-            {% else %}
-              <div class="date">{{ 'Upcoming'|t }}</div>
-            {% endif %}
-          </div>
-        {% else %}
-          <div class="meeting-item"  data-contact="calendar">
-            <a href=" {{ node_path }} ">
-              {{ paragraph.field_meeting.0.entity.title.value }}
-            </a>
-            {% if node.field_start_date.value %}
-              <div class="date"> {{ node.field_start_date.value|date("F j, Y") }} </div>
-            {% else %}
-              <div class="date">{{ 'Upcoming'|t }}</div>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
-    {% endblock %}
+{% extends 'paragraph.html.twig' %}
+{% block content %}
+  <div class="department-name">
+    {{ paragraph.field_department.entity.title.value }}
   </div>
-{% endblock paragraph %}
+  <div class="column-1">
+    <div class="document-file" data-contact="document">
+      {% if
+        paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value %}
+        <a href="{{
+          file_url(
+            paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value
+          )
+          }}">
+          {{ paragraph.field_document.entity.field_file.entity.label }}
+        </a>
+      {% elseif
+        paragraph.field_document.entity.field_file.entity.field_document_url.value[0].uri %}
+        <a href="{{
+          paragraph.field_document.entity.field_file.entity.field_document_url.value[0].uri
+          }}">
+          {{ paragraph.field_document.entity.field_file.entity.label }}
+        </a>
+      {% else %}
+        <span>{{ 'No document available'|t }}</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="column-2">
+    {% if node.field_direct_external_url[0].url %}
+      <div class="meeting-item" data-contact="calendar">
+        <a href=" {{ node.field_direct_external_url[0].url }} ">
+          {{ paragraph.field_meeting[0].entity.title.value }}
+        </a>
+        {% if node.field_start_date.value %}
+          <div class="date">
+            {{ node.field_start_date.value|date('F j, Y') }}
+          </div>
+        {% else %}
+          <div class="date">
+            {{ 'Upcoming'|t }}
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="meeting-item" data-contact="calendar">
+        <a href=" {{ node_path }} ">
+          {{ paragraph.field_meeting[0].entity.title.value }}
+        </a>
+        {% if node.field_start_date.value %}
+          <div class="date">
+            {{ node.field_start_date.value|date('F j, Y') }}
+          </div>
+        {% else %}
+          <div class="date">
+            {{ 'Upcoming'|t }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
