@@ -3,28 +3,25 @@
   <div class="department-name">
     {{ paragraph.field_department.entity.title.value }}
   </div>
+
+  {% set documents = paragraph.field_document.entity.field_file %}
+
   <div class="column-1">
-    <div class="document-file" data-contact="document">
-      {% if
-        paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value %}
-        <a href="{{
-          file_url(
-            paragraph.field_document.entity.field_file.entity.field_media_file.entity.uri.value
-          )
-          }}">
-          {{ paragraph.field_document.entity.field_file.entity.label }}
-        </a>
-      {% elseif
-        paragraph.field_document.entity.field_file.entity.field_document_url.value[0].uri %}
-        <a href="{{
-          paragraph.field_document.entity.field_file.entity.field_document_url.value[0].uri
-          }}">
-          {{ paragraph.field_document.entity.field_file.entity.label }}
-        </a>
-      {% else %}
-        <span>{{ 'No document available'|t }}</span>
-      {% endif %}
-    </div>
+    {% for key, document in documents %}
+      {% set file_uri = document.entity.field_media_file.entity.uri.value %}
+      {% set label = document.entity.label %}
+      {% set url = document.entity.field_document_url.value[0].uri %}
+
+      <div class="document-file" data-contact="document">
+        {% if file_uri %}
+          <a href="{{ file_url(file_uri) }}">{{ label }}</a>
+        {% elseif url %}
+          <a href="{{ url }}">{{ label }}</a>
+        {% else %}
+          <span>{{ 'No document available'|t }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
   </div>
   <div class="column-2">
     {% if node.field_direct_external_url[0].url %}
