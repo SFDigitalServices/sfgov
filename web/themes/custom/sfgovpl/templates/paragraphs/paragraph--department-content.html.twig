@@ -1,22 +1,23 @@
 {% extends 'paragraph.html.twig' %}
 {% block content %}
+  {% set documents = paragraph.field_document.entity.field_file %}
   <div class="department-name">
     {{ paragraph.field_department.entity.title.value }}
   </div>
 
-  {% set documents = paragraph.field_document.entity.field_file %}
-
+  {# Column 1 - Documents #}
   <div class="column-1">
-    {% for key, document in documents %}
-      {% set file_uri = document.entity.field_media_file.entity.uri.value %}
-      {% set label = document.entity.label %}
-      {% set url = document.entity.field_document_url.value[0].uri %}
+    {% for key, item in documents %}
+      {% set document = item.enitty %}
+      {% set document_file_uri = document.field_media_file.entity.uri.value %}
+      {% set document_label = document.label %}
+      {% set document_url = document.field_document_url.value[0].uri %}
 
       <div class="document-file" data-contact="document">
-        {% if file_uri %}
-          <a href="{{ file_url(file_uri) }}">{{ label }}</a>
-        {% elseif url %}
-          <a href="{{ url }}">{{ label }}</a>
+        {% if document_file_uri %}
+          <a href="{{ file_url(document_file_uri) }}">{{ document_label }}</a>
+        {% elseif document_url %}
+          <a href="{{ document_url }}">{{ document_label }}</a>
         {% else %}
           <span>{{ 'No document available'|t }}</span>
         {% endif %}
