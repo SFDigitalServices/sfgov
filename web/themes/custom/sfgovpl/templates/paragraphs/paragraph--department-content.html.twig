@@ -1,61 +1,77 @@
 {% extends 'paragraph.html.twig' %}
-{% block content %}
-  {# @todo - In order for translations to work properly, view modes should be used whenever possible for entity references. #}
-  {% set documents = paragraph.field_document.entity.field_file %}
-  {% set meetings = paragraph.field_meeting %}
+{% block paragraph %}
+  <div {{ attributes.addClass(classes).addClass('clearfix') }}>
+    {% block content %}
+      {% set documents = paragraph.field_document.entity.field_file %}
+      {% set meetings = paragraph.field_meeting %}
 
-  <div class="department-name">
-    {{ paragraph.field_department.entity.title.value }}
-  </div>
-
-  {# Column 1 - Documents #}
-  <div class="column-1">
-    {% for key, item in documents %}
-      {% set document = item.entity %}
-      {% set document_file_uri = document.field_media_file.entity.uri.value %}
-      {% set document_label = document.label %}
-      {% set document_url = document.field_document_url.value[0].uri %}
-
-      <div class="document-file" data-contact="document">
-        {% if document_file_uri %}
-          <a href="{{ file_url(document_file_uri) }}">{{ document_label }}</a>
-        {% elseif document_url %}
-          <a href="{{ document_url }}">{{ document_label }}</a>
-        {% else %}
-          <span>{{ 'No document available'|t }}</span>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-
-  {# Column 2 - Meetings #}
-  <div class="column-2">
-    {% for key, item in meetings %}
-      {% set meeting = item.entity %}
-      {% set meeting_external_url = meeting.field_direct_external_url[0].url %}
-      {% set meeting_label = meeting.label %}
-      {% set meeting_start = meeting.field_start_date.value %}
-      {% set meeting_path =
-        path(
-          'entity.node.canonical',
-          {
-            node: meeting.id
-          }
-        )
+      {# Count the number of rows we need to print based on the largest number of items in the column. #}
+      {% set count = (documents|length) > (meetings|length)
+        ? documents|length
+        : meetings|length
       %}
+      {% set row_count = count - 1 %}
 
-      <div class="meeting-item" data-contact="calendar">
-        <a href="{{
-          meeting_external_url
-            ? meeting_external_url
-            : meeting_path
-          }}">
-          {{ meeting_label }}
-        </a>
-        <div class="date">
-          {{ meeting_start ? meeting_start|date('F j, Y') : 'Upcoming'|t }}
-        </div>
+      <div class="department-content__department-name">
+        {{ paragraph.field_department.entity.title.value }}
       </div>
-    {% endfor %}
+      <table class="department-content__table">
+        {% for i in 0..row_count %}
+          <tr>
+            {# Set Document Values. #}
+            {% set document = documents[i].entity %}
+            {% set document_file_uri =
+              document.field_media_file.entity.uri.value
+            %}
+            {% set document_label = document.label %}
+            {% set document_url = document.field_document_url.value[0].uri %}
+
+            {# Set Meeting Values. #}
+            {% set meeting = meetings[i].entity %}
+            {% set meeting_external_url =
+              meeting.field_direct_external_url[0].url
+            %}
+            {% set meeting_label = meeting.label %}
+            {% set meeting_start = meeting.field_start_date.value %}
+
+            {# Render Table Cells. #}
+            <td>
+              {% if document %}
+                <div class="department-content__item" data-contact="document">
+                  {% if document_file_uri %}
+                    <a href="{{ file_url(document_file_uri) }}">
+                      {{ document_label }}
+                    </a>
+                  {% elseif document_url %}
+                    <a href="{{ document_url }}">{{ document_label }}</a>
+                  {% else %}
+                    <span>{{ 'No document available'|t }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if meeting %}
+                <div class="department-content__item" data-contact="calendar">
+                  <a href="{{
+                    meeting_external_url
+                      ? meeting_external_url
+                      : meeting_path
+                    }}">
+                    {{ meeting_label }}
+                  </a>
+                  <div class="date">
+                    {{ meeting_start
+                      ? meeting_start|date('F j, Y')
+                      : 'Upcoming'|t }}
+                  </div>
+                </div>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endblock %}
   </div>
 {% endblock %}

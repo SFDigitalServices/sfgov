@@ -1,17 +1,39 @@
 .paragraph--type--department-content {
-  > div {
-    display: inline-block;
-    padding-right: 30px;
-    width: 33%;
-    vertical-align: top;
-  }
-  .department-name {
+
+  .department-content__department-name {
     @include fs-title-5;
+
+    @include media($medium-screen) {
+      max-width: 33%;
+      float: left;
+    }
   }
-  .document-file,
-  .meeting-item {
+
+  .department-content__table {;
+    @include media($medium-screen) {
+      max-width: 66%;
+      float: right;
+    }
+
+    td {
+      vertical-align: top;
+      width: 50%;
+
+      &:first-child {
+        padding-right: 15px;
+      }
+
+      &:last-child {
+        padding-left: 15px;
+      }
+    }
+  }
+
+  .department-content__item {
     background-position: 0 2px;
     padding-left: 40px;
+    word-break: break-word;
+
     .date {
       opacity: .65;
     }
