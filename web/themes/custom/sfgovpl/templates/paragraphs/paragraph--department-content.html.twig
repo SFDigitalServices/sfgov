@@ -15,7 +15,7 @@
       {% set row_count = count > 1 ? count - 1 : 0 %}
 
       {% set no_doc_text %}
-        <span>{{ 'No document available'|t }}</span>
+        <span class="c-light-slate">{{ 'No document available'|t }}</span>
       {% endset %}
 
       <div class="department-content__department-name">
@@ -42,7 +42,8 @@
 
             {# Render Table Column 1. (Documents) #}
             <td>
-              <div class="department-content__item" data-contact="document">
+              <div class="department-content__item"
+                {{ document_count > 0 ? "data-contact='document'" }}>
                 {% if document_count == 0 %}
                   {{ no_doc_text }}
                 {% elseif document %}
@@ -62,7 +63,8 @@
             {# Render Table Column 2. (Meetings) #}
             <td>
               {% if meeting_count == 0 or meeting %}
-                <div class="department-content__item" data-contact="calendar">
+                <div class="department-content__item"
+                  {{ meeting_count > 0 ? "data-contact='calendar'" }}>
                   <a href="{{
                     meeting_external_url
                       ? meeting_external_url
@@ -70,7 +72,7 @@
                     }}">
                     {{ meeting_label }}
                   </a>
-                  <div class="date">
+                  <div class="c-light-slate">
                     {{ meeting_start
                       ? meeting_start|date('F j, Y')
                       : 'Upcoming'|t }}
