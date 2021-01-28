@@ -6,11 +6,17 @@
       {% set meetings = paragraph.field_meeting %}
 
       {# Count the number of rows we need to print based on the largest number of items in the column. #}
-      {% set count = (documents|length) > (meetings|length)
-        ? documents|length
-        : meetings|length
+      {% set document_count = documents|length %}
+      {% set meeting_count = meetings|length %}
+      {% set count = document_count > mmeeting_count
+        ? document_count
+        : meeting_count
       %}
-      {% set row_count = count - 1 %}
+      {% set row_count = count > 1 ? count - 1 : 0 %}
+
+      {% set no_doc_text %}
+        <span>{{ 'No document available'|t }}</span>
+      {% endset %}
 
       <div class="department-content__department-name">
         {{ paragraph.field_department.entity.title.value }}
@@ -34,10 +40,12 @@
             {% set meeting_label = meeting.label %}
             {% set meeting_start = meeting.field_start_date.value %}
 
-            {# Render Table Cells. #}
+            {# Render Table Column 1. (Documents) #}
             <td>
-              {% if document %}
-                <div class="department-content__item" data-contact="document">
+              <div class="department-content__item" data-contact="document">
+                {% if document_count == 0 %}
+                  {{ no_doc_text }}
+                {% elseif document %}
                   {% if document_file_uri %}
                     <a href="{{ file_url(document_file_uri) }}">
                       {{ document_label }}
@@ -45,14 +53,15 @@
                   {% elseif document_url %}
                     <a href="{{ document_url }}">{{ document_label }}</a>
                   {% else %}
-                    <span>{{ 'No document available'|t }}</span>
+                    {{ no_doc_text }}
                   {% endif %}
-                </div>
-              {% endif %}
+                {% endif %}
+              </div>
             </td>
 
+            {# Render Table Column 2. (Meetings) #}
             <td>
-              {% if meeting %}
+              {% if meeting_count == 0 or meeting %}
                 <div class="department-content__item" data-contact="calendar">
                   <a href="{{
                     meeting_external_url
