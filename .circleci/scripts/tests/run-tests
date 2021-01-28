@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -eo pipefail
+
+source ./.circleci/scripts/ghost-inspector/run-gi-suite
+
+# exported vars from ghost inspector script execution
+# GI_RESULT_ID
+# GI_SUITE_TEST_RESULTS_SLACK
+# GI_PASSING
+# GI_START_URL
+# PR
+
+echo "GI_RESULT_ID: $GI_RESULT_ID"
+echo "GI_SUITE_TEST_RESULTS_SLACK: $GI_SUITE_TEST_RESULTS_SLACK"
+echo "GI_PASSING: $GI_PASSING"
+echo "GI_START_URL: $GI_START_URL"
+echo "PR: $PR"
+
+source ./.circleci/scripts/accessibility/accessibility-scan
+
+# exported vars from accessibility scan script execution
+# A11Y_RESULTS_SLACK
+
+title="<$GI_START_URL|$GI_START_URL> | $PR | <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/$GI_RESULT_ID|results>"
+
+data=$(printf '{
+  "attachments": [{
+    "fallback": "sfgov tests complete",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "%s"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":ghost: *e2e test results*\n%s"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":accessibility: *scan results*\n```%s```"
+        }
+      }
+    ]
+  }]
+}' "$title" "$GI_SUITE_TEST_RESULTS_SLACK" "$A11Y_RESULTS_SLACK")
+
+curl -g -X POST -H 'Content-type: application/json' --data "$data" $RONBOT_WEBHOOK_URL
+
+exit $GI_PASSING
