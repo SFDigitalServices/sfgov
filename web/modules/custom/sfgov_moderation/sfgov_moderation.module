@@ -1,18 +1,12 @@
 <?php
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
-
-/**
- * Implements hook_module_implements_alter().
- */
-function sfgov_moderation_module_implements_alter(&$implementations, $hook) {
-  // Disable access control from the "group" module.
-  if ($hook == 'entity_access') {
-    unset($implementations['group']);
-  }
-}
+use Drupal\Core\Render\Element;
+use Drupal\sfgov_moderation\ModerationUtilServiceInterface;
 
 /**
  * Implements hook_entity_base_field_info().
@@ -29,20 +23,15 @@ function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_typ
       ->setDefaultValue(NULL)
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
+        'type' => 'options_select',
         'weight' => 100,
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => '60',
-          'placeholder' => '',
-        ],
       ])
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'region' => 'hidden',
       ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
 
     return $fields;
   }
@@ -79,11 +68,32 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
     }
 
     // Only show "reviewer" field if a department has been selected.
-    $form['reviewer']['widget'][0]['target_id']['#states'] = [
+    $form['reviewer']['widget']['#states'] = [
       'visible' => [
         ':input[name="' . $fieldName .'[0][target_id]"]' => ['filled' => TRUE],
       ],
     ];
+
+    // Change field type to textfield to allow custom autocomplete widget.
+    $departmentIds = $form_state->isRebuilding() ?
+      array_column($form_state->getValue($fieldName, []), 'target_id') :
+      array_column($node->get($fieldName)->getValue(), 'target_id');
+
+    $form['reviewer']['widget']['#options'] = _sfgov_moderation_reviewer_options($departmentIds, $form['reviewer']['widget']['#default_value']);
+    $form['reviewer']['widget']['#prefix'] = '<div id="node-reviewer-wrapper">';
+    $form['reviewer']['widget']['#suffix'] = '</div>';
+
+    // Add ajax callback to departments field autocomplete widgets.
+    foreach (Element::children($form[$fieldName]['widget']) as $key) {
+      if (!is_numeric($key)) {
+        continue;
+      }
+
+      $form[$fieldName]['widget'][$key]['target_id']['#ajax'] = [
+        'callback' => '_sfgov_moderation_departments_callback',
+        'event' => 'autocompleteclose change',
+      ];
+    }
   }
 
   // If bundle is not moderated, disable "reviewer" field.
@@ -104,4 +114,62 @@ function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $f
   if (!empty($reviewer[0]['target_id']) && $reviewer[0]['target_id'] == $node->getOwnerId()) {
     $form_state->setErrorByName('reviewer', t('Reviewer should be a different user than the author.'));
   }
+}
+
+/**
+ * Ajax callback whenever the department field changes.
+ */
+function _sfgov_moderation_departments_callback(&$form, $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#node-reviewer-wrapper', $form['reviewer']['widget']));
+
+  return $response;
+}
+
+/**
+ * Get users that can serve as reviewers.
+ *
+ * The users need to belong to the given departments.
+ *
+ * @param array $department_ids
+ *   The department node IDs.
+ * @param null $default_value
+ *   The select list default value. It could need to be changed/nulled to avoid
+ *   an "invalid value" warning.
+ *
+ * @return array
+ *   The list of reviewers keyed by UID, grouped by department.
+ */
+function _sfgov_moderation_reviewer_options($department_ids = [], &$default_value = NULL) {
+  $empty = [
+    '_none' => t('- None -'),
+  ];
+
+  if (empty($department_ids)) {
+    return $empty;
+  }
+
+  $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+
+  $query = $userStorage
+    ->getQuery()
+    ->condition('uid', 0, '>')
+    ->condition('status', 1)
+    ->condition(ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD, $department_ids, 'IN')
+    ->sort('name', 'DESC');
+
+  $ids = $query->execute();
+  $users = $ids ? $userStorage->loadMultiple($ids) : [];
+  $default_value = in_array($default_value, $ids) ? $default_value : NULL;
+  $options = $empty;
+
+  foreach ($users as $user) {
+    foreach ($user->{ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD}->referencedEntities() as $department) {
+      $options[$department->label() . ' ' . t('department')][$user->id()] = t('%username', [
+        '%username' => $user->label(),
+      ]);
+    }
+  }
+
+  return $options;
 }
