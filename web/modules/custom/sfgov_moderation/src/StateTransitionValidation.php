@@ -76,6 +76,26 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
   ];
 
   /**
+   * State flows allowed for an author.
+   *
+   * Author allowed transitions. Array is keyed by the IDs of the
+   * original states, and each value is an array of valid new states.
+   *
+   * @var array
+   */
+  protected const AUTHOR_ALLOWED_STATE_FLOWS = [
+    'draft' => [
+      'draft',
+      'ready_for_review',
+    ],
+    'ready_for_review' => [
+      'draft',
+    ],
+    'publish' => [],
+    'archived' => [],
+  ];
+
+  /**
    * Constructs a new StateTransitionValidation.
    *
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $inner_service
@@ -159,8 +179,8 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
 
     // Allow if user is the author and state flow is allowed.
     if ($this->userIsAuthor($entity, $user)
-      && isset(static::REVIEWER_ALLOWED_STATE_FLOWS[$original_state->id()])
-      && in_array($new_state->id(), static::REVIEWER_ALLOWED_STATE_FLOWS[$original_state->id()])
+      && isset(static::AUTHOR_ALLOWED_STATE_FLOWS[$original_state->id()])
+      && in_array($new_state->id(), static::AUTHOR_ALLOWED_STATE_FLOWS[$original_state->id()])
     ) {
       return TRUE;
     }
