@@ -43,6 +43,16 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
   ];
 
   /**
+   * Transitions allowed for an author.
+   *
+   * @var string[]
+   */
+  protected const AUTHOR_ALLOWED_TRANSITIONS = [
+    'create_new_draft', // Create New Draft.
+    'submit_for_review', // Submit for review.
+  ];
+
+  /**
    * State flows allowed for a reviewer role.
    *
    * Reviewer allowed transitions. Array is keyed by the IDs of the
@@ -111,9 +121,21 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       });
     }
 
-    // Finally, only allow transitions if current user (non-admin) belongs to the department.
+    // Restrict transitions based if $user is the author.
+    if ($this->userIsAuthor($entity, $user)) {
+      return array_filter($this->getAllTransitionsFromState($entity), function (TransitionInterface $transition) {
+        return in_array($transition->id(), static::AUTHOR_ALLOWED_TRANSITIONS);
+      });
+    }
+
+    // If node has no departments, allow access.
+    if (empty($departments)) {
+      return $validTransitions;
+    }
+
+    // Finally, if it does have departments, only allow transitions if current user (non-admin) belongs to the department.
     foreach ($departments as $department) {
-      if ($accountBelongsToDepartment = $this->moderationUtil->accountBelongsToDepartment($user->getAccount(), $department)) {
+      if ($accountBelongsToDepartment = $this->moderationUtil->accountBelongsToDepartment($user->getAccount(), $department->id())) {
         break;
       }
     }
@@ -132,6 +154,14 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
 
     // Allow if user has transition permission granted by role.
     if ($user->hasPermission('use ' . $workflow->id() . ' transition ' . $transition->id())) {
+      return TRUE;
+    }
+
+    // Allow if user is the author and state flow is allowed.
+    if ($this->userIsAuthor($entity, $user)
+      && isset(static::REVIEWER_ALLOWED_STATE_FLOWS[$original_state->id()])
+      && in_array($new_state->id(), static::REVIEWER_ALLOWED_STATE_FLOWS[$original_state->id()])
+    ) {
       return TRUE;
     }
 
@@ -182,6 +212,21 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
 
     $reviewerId = $entity->reviewer->target_id;
     return (!empty($reviewerId) && $reviewerId == $user->id());
+  }
+
+  /**
+   * Determine if the given user is an "author" of the entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return bool
+   *   Boolean value.
+   */
+  protected function userIsAuthor(ContentEntityInterface $entity, AccountInterface $user): bool {
+    return $entity->getOwnerId() == $user->id();
   }
 
 }
