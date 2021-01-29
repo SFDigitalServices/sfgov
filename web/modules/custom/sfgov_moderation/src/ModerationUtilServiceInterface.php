@@ -40,4 +40,15 @@ interface ModerationUtilServiceInterface {
    */
   public function accountBelongsToDepartment(AccountInterface $account, NodeInterface $department): bool;
 
+  /**
+   * Get a list of valid reviewer user IDs given a list of department NIDs.
+   *
+   * @param int[] $departmentIds
+   *   A list of department node IDs.
+   *
+   * @return int[]
+   *   The list of reviewers UIDs.
+   */
+  public function getValidReviewers(array $departmentIds = []): array;
+
 }
