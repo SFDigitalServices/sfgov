@@ -165,12 +165,12 @@ function _sfgov_moderation_departments_callback(&$form, $form_state) {
  *
  * @param array $department_ids
  *   The department node IDs.
- * @param null $default_value
+ * @param mixed $default_value
  *   The select list default value. It could need to be changed/nulled to avoid
  *   an "invalid value" warning.
  *
  * @return array
- *   The list of reviewers keyed by UID, grouped by department.
+ *   The list of reviewers keyed by UID.
  */
 function _sfgov_moderation_reviewer_options($department_ids = [], &$default_value = NULL) {
   $empty = [
@@ -185,15 +185,18 @@ function _sfgov_moderation_reviewer_options($department_ids = [], &$default_valu
 
   $userStorage = \Drupal::entityTypeManager()->getStorage('user');
   $users = $ids ? $userStorage->loadMultiple($ids) : [];
-  $default_value = in_array($default_value, $ids) ? $default_value : NULL;
+  $default_value = (!empty($default_value) && is_array($default_value) || in_array($default_value[0], $ids)) ? $default_value : NULL;
   $options = $empty;
 
   foreach ($users as $user) {
+    $departments = [];
     foreach ($user->{ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD}->referencedEntities() as $department) {
-      $options[$department->label() . ' ' . t('department')][$user->id()] = t('%username', [
-        '%username' => $user->label(),
-      ]);
+      $departments[] = $department->label();
     }
+    $options[$user->id()] = t('%username (%departments)', [
+      '%username' => $user->label(),
+      '%departments' => implode(', ', $departments),
+    ]);
   }
 
   return $options;
