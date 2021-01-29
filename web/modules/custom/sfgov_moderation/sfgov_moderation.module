@@ -54,14 +54,15 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
     return;
   }
 
-  // Custom validation callback.
-  $form['#validate'][] = '_sfgov_moderation_form_node_form_validate';
-
   $moderation_info = \Drupal::service('content_moderation.moderation_information');
   $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
 
   // If bundle is moderated.
   if ($moderation_info->shouldModerateEntitiesOfBundle($entity_type, $node->bundle())) {
+
+    // Custom validation callback.
+    $form['#validate'][] = '_sfgov_moderation_form_node_form_validate';
+
     // Move "reviewer" field to the footer region, if available.
     if (isset($form['footer'])) {
       $form['reviewer']['#group'] = 'footer';
@@ -119,12 +120,30 @@ function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $f
   }
 
   // Reviewer should belong to the tagged departments.
-  if (($deptartmentField = $moderationUtil->getDepartmentFieldName($node->bundle())) &&
+  $departmentField = $moderationUtil->getDepartmentFieldName($node->bundle());
+  $departmentIds = array_column($form_state->getValue($departmentField, []), 'target_id');
+  if ($departmentField &&
     !empty($reviewer[0]['target_id']) &&
-    ($departmentIds = array_column($form_state->getValue($deptartmentField, []), 'target_id'))) {
+    $departmentIds) {
     $validReviewers = \Drupal::service('sfgov_moderation.util')->getValidReviewers($departmentIds);
     if (!in_array($reviewer[0]['target_id'], $validReviewers)) {
       $form_state->setErrorByName('reviewer', t('Reviewer should belong to the departments.'));
+    }
+  }
+
+
+  // Require selecting a reviewer if departments are tagged in form.
+  if (empty($reviewer[0]['target_id']) && !empty($departmentIds)) {
+    $currentUser = \Drupal::currentUser();
+    $toState = $form_state->getValue('moderation_state')[0]['value'];
+
+    if (
+      // State "ready_for_review" always requires selecting a reviewer.
+      $toState == 'ready_for_review' ||
+      // Only publishers belonging to a node's departments can publish without selecting a reviewer.
+      ($toState == 'publish' && !$moderationUtil->canPublishFromDraftWithoutReviewer($currentUser, $departmentIds))
+    ) {
+      $form_state->setErrorByName('reviewer', t('A reviewer is required to change the moderation status.'));
     }
   }
 }

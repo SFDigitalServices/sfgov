@@ -16,6 +16,11 @@ interface ModerationUtilServiceInterface {
   public const DEPARTMENTS_ACCOUNT_FIELD = 'field_departments';
 
   /**
+   * The publisher role machine name.
+   */
+  public const PUBLISHER_ROLE = 'publisher';
+
+  /**
    * Get the department field name given the node bundle.
    *
    * @param string $bundle
@@ -31,14 +36,14 @@ interface ModerationUtilServiceInterface {
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The given account.
-   * @param \Drupal\node\NodeInterface $department
-   *   The department node.
+   * @param \Drupal\node\NodeInterface|int $department
+   *   The department node or a department node ID.
    *
    * @return bool
    * If the node belongs to a department, returns true or false. True if the
    * node has no department assigned.
    */
-  public function accountBelongsToDepartment(AccountInterface $account, NodeInterface $department): bool;
+  public function accountBelongsToDepartment(AccountInterface $account, $department): bool;
 
   /**
    * Get a list of valid reviewer user IDs given a list of department NIDs.
@@ -50,5 +55,21 @@ interface ModerationUtilServiceInterface {
    *   The list of reviewers UIDs.
    */
   public function getValidReviewers(array $departmentIds = []): array;
+
+  /**
+   * Check if an account can publish from draft without selecting a reviewer.
+   *
+   * @todo Maybe change this to a permission.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The given account.
+   * @param array $departmentIds
+   *   A list of department node IDs.
+   *
+   * @return bool
+   *   True if the user has the publisher role, and they belong to one of the
+   *   departments.
+   */
+  public function canPublishFromDraftWithoutReviewer(AccountInterface $account, array $departmentIds): bool;
 
 }

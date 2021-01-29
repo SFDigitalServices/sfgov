@@ -4,7 +4,6 @@ namespace Drupal\sfgov_moderation;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Class ModerationUtilService.
@@ -58,7 +57,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * @inheritDoc
    */
-  public function accountBelongsToDepartment(AccountInterface $account, NodeInterface $department): bool {
+  public function accountBelongsToDepartment(AccountInterface $account, $department): bool {
     // Get full user object, not just the session.
     $accountEntity = $this->entityTypeManager->getStorage('user')->load($account->id());
 
@@ -67,7 +66,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       $accountDepartments[] = $item['target_id'];
     }
 
-    return in_array($department->id(), $accountDepartments);
+    return in_array(is_object($department) ? $department->id() : $department, $accountDepartments);
   }
 
   /**
@@ -87,6 +86,28 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
 
     $ids = $query->execute();
     return $ids ? array_values($ids) : [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function canPublishFromDraftWithoutReviewer(AccountInterface $account, array $departmentIds): bool {
+    if (!in_array(static::PUBLISHER_ROLE, $account->getRoles())) {
+      return FALSE;
+    }
+
+    $belongsTo = FALSE;
+    foreach ($departmentIds as $departmentId) {
+      if ($this->accountBelongsToDepartment($account, $departmentId)) {
+        $belongsTo = TRUE;
+        break;
+      }
+    }
+    if (!$belongsTo) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }
