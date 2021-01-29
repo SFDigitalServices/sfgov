@@ -109,10 +109,23 @@ function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $f
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
-  $reviewer = $form_state->getValue('reviewer');
+  /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
+  $moderationUtil = \Drupal::service('sfgov_moderation.util');
 
+  // Reviewer should not be the same as the node author.
+  $reviewer = $form_state->getValue('reviewer');
   if (!empty($reviewer[0]['target_id']) && $reviewer[0]['target_id'] == $node->getOwnerId()) {
     $form_state->setErrorByName('reviewer', t('Reviewer should be a different user than the author.'));
+  }
+
+  // Reviewer should belong to the tagged departments.
+  if (($deptartmentField = $moderationUtil->getDepartmentFieldName($node->bundle())) &&
+    !empty($reviewer[0]['target_id']) &&
+    ($departmentIds = array_column($form_state->getValue($deptartmentField, []), 'target_id'))) {
+    $validReviewers = \Drupal::service('sfgov_moderation.util')->getValidReviewers($departmentIds);
+    if (!in_array($reviewer[0]['target_id'], $validReviewers)) {
+      $form_state->setErrorByName('reviewer', t('Reviewer should belong to the departments.'));
+    }
   }
 }
 
@@ -145,20 +158,13 @@ function _sfgov_moderation_reviewer_options($department_ids = [], &$default_valu
     '_none' => t('- None -'),
   ];
 
-  if (empty($department_ids)) {
+  $ids = \Drupal::service('sfgov_moderation.util')->getValidReviewers($department_ids);
+
+  if (empty($ids)) {
     return $empty;
   }
 
   $userStorage = \Drupal::entityTypeManager()->getStorage('user');
-
-  $query = $userStorage
-    ->getQuery()
-    ->condition('uid', 0, '>')
-    ->condition('status', 1)
-    ->condition(ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD, $department_ids, 'IN')
-    ->sort('name', 'DESC');
-
-  $ids = $query->execute();
   $users = $ids ? $userStorage->loadMultiple($ids) : [];
   $default_value = in_array($default_value, $ids) ? $default_value : NULL;
   $options = $empty;

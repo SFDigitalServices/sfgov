@@ -70,4 +70,23 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
     return in_array($department->id(), $accountDepartments);
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getValidReviewers(array $departmentIds = []): array {
+    if (empty($departmentIds)) {
+      return [];
+    }
+
+    $query = $this->entityTypeManager->getStorage('user')
+      ->getQuery()
+      ->condition('uid', 0, '>')
+      ->condition('status', 1)
+      ->condition(ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD, $departmentIds, 'IN')
+      ->sort('name', 'DESC');
+
+    $ids = $query->execute();
+    return $ids ? array_values($ids) : [];
+  }
+
 }
