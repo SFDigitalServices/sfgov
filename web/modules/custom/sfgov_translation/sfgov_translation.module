@@ -9,14 +9,17 @@ function sfgov_translation_preprocess_node(&$variables) {
   _sfgovpl_node_object($variables);
 
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+
+    // Node vars.
     $node = $variables['node'];
-    $content_type = $node->bundle();
     $view_mode = $variables['view_mode'];
+    $nid = $node->id();
 
     // If the current language matches an existing Drupal translation,
     // show the Drupal-translated node and do not let Google translate it.
     $node_languages = $node->getTranslationLanguages();
     $current_language = \Drupal::languageManager()->getCurrentLanguage()->getId();;
+
     foreach ($node_languages as $language => $value) {
       if ($current_language == $language && $language != 'en') {
 
@@ -25,14 +28,65 @@ function sfgov_translation_preprocess_node(&$variables) {
           $variables['attributes']['class'][] = 'notranslate';
         }
 
-        // If they exist, use Drupal-translated cards for transactions.
-        elseif ($view_mode == 'card' && $content_type == 'transaction') {
+        // Translate everything else.
+        else {
           $variables['attributes']['class'][] = 'notranslate';
           $translated = $node->getTranslation($language);
           $variables['node'] = $translated;
           $variables['url'] = $translated->toUrl();
         }
       }
+    }
+
+    // Get redirect info.
+    $entity = \Drupal::entityTypeManager()->getStorage('redirect');
+    $query = $entity->getQuery();
+    $ids = $query->condition('type', 'redirect')
+      ->condition('type', 'redirect')#type = bundle id (machine name)
+      ->execute();
+    $redirects = $entity->loadMultiple($ids);
+
+    $variables['is_redirected_from'] = Null;
+    foreach ($redirects as $rid => $redirect) {
+      $redirect_to = $redirect->redirect_redirect->getValue();
+      $redirect_from = $redirect->redirect_source->getValue();
+
+      if ($redirect_from[0]['path'] == 'node/' . $node->id()) {
+        $variables['is_redirected_from'] = [
+          'rid' => $rid,
+          'to' => $redirect_to[0]['uri'],
+          'from' => $redirect_from[0]['path']
+        ];
+      }
+
+      // Debugger.
+      $twig_debug = \Drupal::service('twig')->isDebug();
+      if ($twig_debug) {
+        $language_str = '';
+        foreach ($node_languages as $language => $value) {
+          $language_str .= $language . ', ';
+        }
+
+        $variables['debug'] = [
+          '#attributes' => [
+            'class' => [
+              'notranslate',
+            ],
+          ],
+          '#type' => 'container',
+          'table' => [
+            '#type' => 'table',
+            '#rows' => [
+              ['nid', $nid],
+              ['rid',  $variables['is_redirected_from']['rid']],
+              ['redirect_to', $variables['is_redirected_from']['to']],
+              ['redirect_from',$variables['is_redirected_from']['from']],
+              ['languages', $language_str],
+            ],
+          ],
+        ];
+      }
+      // End Debugger.
     }
   }
 }
