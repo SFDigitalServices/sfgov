@@ -14,6 +14,7 @@ Replace the translated node object in the render array.
 - `node.label`
 - `url`
 - `node.field_FIELD_NAME.value`
+- `node.type.entity.label` (Content type name)
 
 2. Variables that start with `content` will need to be tested for translation awareness.
 
