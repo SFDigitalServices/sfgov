@@ -5,7 +5,7 @@
 
 ## Solution:
 Replace the translated node object in the render array.
-@see sfgov_translation_preprocess_node()
+@see _sfgovpl_negotiate_translation()
 
 ## Rules for respecting translations:
 
