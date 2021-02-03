@@ -122,8 +122,35 @@
           project: submission.project
         }
       },
-      error: function (message) {
-        return { error: message }
+      error: function (messageOrErrors) {
+        if (Array.isArray(messageOrErrors)) {
+          /**
+           * If we get an array of errors, create a mapping of component keys
+           * to error messages, with exactly one entry per component. Only the
+           * first validation message will be sent to Amplitude.
+           *
+           * {
+           *   [component.key]: component.message
+           * }
+           *
+           * <https://github.com/formio/formio.js/blob/v4.11.2/src/Webform.js#L1208>
+           */
+          var errors = {}
+          messageOrErrors.forEach(function(error) {
+            if (error && error.component && error.message) {
+              errors[error.component.key] = error.message
+            }
+          })
+          return {
+            errors: components
+          }
+        } else if (typeof messageOrErrors === 'string') {
+          // in some instances, formiojs sends a single error message:
+          // <https://github.com/formio/formio.js/blob/v4.11.2/src/Webform.js#L1048>
+          return {
+            message: messageOrErrors
+          }
+        }
       },
       submitError: function (message) {
         return { error: message }
