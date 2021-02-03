@@ -116,7 +116,11 @@
         return { } // just log the event
       },
       submitDone: function (submission) {
-        return { } // just log the event
+        return {
+          id: submission._id,
+          form: submission.form,
+          project: submission.project
+        }
       },
       error: function (message) {
         return { error: message }
