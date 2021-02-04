@@ -103,6 +103,7 @@
     // keeping this as a DOM for patch.js
     var el = document.getElementById('formio-{{ form_id }}')
     var options = safeJSONParse(el.getAttribute('data-options'))
+    var lastFormErrors
 
     /*
      * Every key in this object is a form event name, and the value is a
@@ -141,8 +142,12 @@
               components[error.component.key] = error.message
             }
           })
-          return {
-            errors: components
+          var serialized = JSON.stringify(components)
+          if (serialized !== lastFormErrors) {
+            lastFormErrors = serialized
+            return {
+              errors: components
+            }
           }
         } else if (typeof messageOrErrors === 'string') {
           // in some instances, formiojs sends a single error message:
