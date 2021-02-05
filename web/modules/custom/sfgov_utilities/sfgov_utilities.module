@@ -248,10 +248,12 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
  * Custom function to build the attributes needed for rendering a Map.
  */
 function _sfgov_utilities_build_map($address) {
+  $gmap_config = \Drupal::config('sfgov_utilities.settings');
+
   $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
   $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
 
-  $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
+  $apiKey = $gmap_config->get('gmaps_api_key');
   // options for the map image
   $options = [
     'zoom' => 15,
