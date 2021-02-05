@@ -3,27 +3,25 @@
 set -eo pipefail
 
 # use the terminus env vars created by previous steps
-GI_START_URL="$MULTIDEV_SITE_URL/"
+GI_START_URL="$MULTIDEV_SITE_URL"
 
 echo "Using start url: $GI_START_URL"
 
 # set up a couple variables to monitor result state
 STATUS='null'
 SUITE_RESULT=
-PASSING=
+GI_PASSING=
 
 EXECUTE_URL="https://api.ghostinspector.com/v1/suites/$GI_SUITE/execute?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1"
 
 echo "Execute url: $EXECUTE_URL"
 
-RESULT_ID=$(curl -s $EXECUTE_URL | jq -r '.data._id')
-
-echo "Result id: $RESULT_ID" 
+GI_RESULT_ID=$(curl -s $EXECUTE_URL | jq -r '.data._id')
 
 # Poll for the suite result, sleep for a few seconds if it hasn't changed
-echo "Polling for suite results (ID: $RESULT_ID)"
+echo "Polling for suite results (ID: $GI_RESULT_ID)"
 while [ "$STATUS" = 'null' ]; do
-  SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$RESULT_ID/?apiKey=$GI_API_KEY")
+  SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/?apiKey=$GI_API_KEY")
   RESPONSE_STATUS=$(echo $SUITE_RESULT | jq -r '.code')
   if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
     echo "API ERROR"
@@ -37,19 +35,35 @@ done
 # status has been updated, check results for "passing"
 if [ "$(echo $SUITE_RESULT | jq -r '.data.passing')" != 'true' ]; then
   echo "Suite failed! ¯\_(ツ)_/¯"
-  PASSING=1
+  GI_PASSING=1
 else 
   echo "Suite passed! \o/"
-  PASSING=0
+  GI_PASSING=0
 fi
 
 SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
-SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then "> :redx: " elif (.screenshotComparePassing!=true) then "> :orangedash: " elif(.passing) then "> :greencheck: " else "> :redx: " end + " \(.name)"')
+GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
-curl -X POST -H 'Content-type: application/json' --data '{"text":":ghost: suite executed for '$GI_START_URL'\n\n:git: `'$CIRCLE_BRANCH'`\n\n'"$SUITE_TEST_RESULTS_SLACK"' \n\n :camera: <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/'$RESULT_ID'|screenshots here>"}' $RONBOT_WEBHOOK_URL
+if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+  PR='<'$CIRCLE_PULL_REQUEST'|pr>'
+else
+  PR='`'$CIRCLE_BRANCH'`'
+fi
 
 # output suite tests with results
 echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
 
-# return our passing status
-exit $PASSING
+# pass some things along as env variables
+if [ -n "$CIRCLE_BRANCH" ]; then # circleci
+  echo 'export GI_START_URL="'$GI_START_URL'"' >> $BASH_ENV
+  echo 'export GI_RESULT_ID="'$GI_RESULT_ID'"' >> $BASH_ENV
+  echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$GI_SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
+  echo 'export PR="'$PR'"' >> $BASH_ENV
+  echo 'export GI_PASSING="'$GI_PASSING'"' >> $BASH_ENV
+else # local
+  export GI_START_URL=$GI_START_URL
+  export GI_RESULT_ID=$GI_RESULT_ID
+  export GI_SUITE_TEST_RESULTS_SLACK=$GI_SUITE_TEST_RESULTS_SLACK
+  export GI_PASSING=$PASSING
+  export PR=$PR
+fi

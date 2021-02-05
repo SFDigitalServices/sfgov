@@ -1,10 +1,15 @@
 .page-node-type-public-body {
   .hero-banner.default {
-    padding-top: 60px;
-    font-weight: 500;
-
+    padding-top: 20px;
+    font-weight: normal;
+    color: rgba(33,33,35,.65);
+    
     .lead-paragraph {
       margin-bottom: 60px;
+    }
+    
+    h1 {
+      margin-top: 40px;
     }
   }
 
@@ -172,24 +177,22 @@
 
   .sfgov-public-body-about {
     padding: 60px 0;
+    
+    .sfgov-public-body-section--content {
+      @include fs-big-description;
+      @include media-max($mobile-screen) {
+        @include fs-big-description-mobile;
+      }
+    }
 
     .__subcommittees {
       margin-top: 115px;
 
       .field__label {
-        @include fs-title-2;
         margin-bottom: 75px;
-      }
-
-      .sfgov-container-item {
-        a {
-          .title {
-            color: $c-bright-blue;
-          }
-          .description {
-            color: $c-slate;
-            opacity: 0.65;
-          }
+        @include fs-title-2;
+        @media screen and (max-width: $mobile-screen) {
+          @include fs-title-2-mobile;
         }
       }
     }
@@ -230,6 +233,12 @@
       background: $c-blue-1;
       padding: 40px;
       border-radius: 8px;
+      @include media-max($medium-screen) {
+        padding: 20px;
+      }
+      .paragraph--type--people .inner {
+        padding: 0;
+      }
     }
   }
 

@@ -59,7 +59,17 @@
 (function() {
 
   var time = Date.now()
-  var confirmationURL = {{ paragraph.field_formio_confirmation_url.value | escape('js') }}
+
+  var confirmationURL = {{
+    paragraph.field_formio_confirmation_url.value is empty
+      ? "null"
+      : paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw
+  }}
+
+  var formLanguageMap = {
+    zh:       'zh-hant',
+    'zh-TW':  'zh-hant'
+  }
 
   window.addEventListener('load', function() {
     var loadTime = Date.now() - time
@@ -74,10 +84,19 @@
       })
     }
 
-    var amplitude = window.amplitude.getInstance()
-    var amp = function(eventName, data) {
-      amplitude.logEvent(eventName, Object.assign(data, amplitudeData))
-    }
+    var amp = (function() {
+      var amplitude
+      var log = function (event, data) {
+        console.log('Form event (no amplitude):', event, data)
+      }
+      return function (eventName, data) {
+        if (!amplitude && window.amplitude) {
+          amplitude = window.amplitude.getInstance()
+          log = amplitude.logEvent.bind(amplitude)
+        }
+        log(eventName, Object.assign(data, amplitudeData))
+      }
+    })()
 
     amp('window.load', { load_time: loadTime })
 
@@ -93,19 +112,51 @@
      * multiple arguments to the listener rather than a single event object.
      */
     var formEventHandlers = {
-      submit: function (submission) { },
-      submitDone: function (submission) { },
-      error: function (message) {
-        return { error: message }
+      submit: function (submission) {
+        return { } // just log the event
+      },
+      submitDone: function (submission) {
+        return {
+          submission_id: submission._id
+        }
+      },
+      error: function (messageOrErrors) {
+        if (Array.isArray(messageOrErrors)) {
+          /**
+           * If we get an array of errors, create a mapping of component keys
+           * to error messages, with exactly one entry per component. Only the
+           * first validation message will be sent to Amplitude.
+           *
+           * {
+           *   errors: {
+           *     [component.key]: component.message
+           *   }
+           * }
+           *
+           * <https://github.com/formio/formio.js/blob/v4.11.2/src/Webform.js#L1208>
+           */
+          var components = {}
+          messageOrErrors.forEach(function(error) {
+            if (error && error.component && error.message) {
+              components[error.component.key] = error.message
+            }
+          })
+          return {
+            errors: components
+          }
+        } else if (typeof messageOrErrors === 'string') {
+          // in some instances, formiojs sends a single error message:
+          // <https://github.com/formio/formio.js/blob/v4.11.2/src/Webform.js#L1048>
+          return {
+            message: messageOrErrors
+          }
+        }
       },
       submitError: function (message) {
         return { error: message }
       },
       componentError: function (error) {
-        return {
-          component: error.component.key,
-          error: error.message
-        }
+        return false
       },
       prevPage: function (data) {
         return { page_index: data.page }
@@ -124,8 +175,12 @@
           page_index: index
         }
       },
-      saveDraft: function (submission) { },
-      restoreDraft: function (submission) { },
+      saveDraft: function (submission) {
+        return { } // just log the event
+      },
+      restoreDraft: function (submission) {
+        return { } // just log the event
+      },
       editGridAddRow: function (data) {
         return {
           component: data.component.key
@@ -134,32 +189,39 @@
     }
 
     time = Date.now()
-    Formio.createForm(el, el.getAttribute('data-source'), options)
+    var dataSource = el.getAttribute('data-source')
+    Formio.createForm(el, dataSource, options)
       .then(function(form) {
         amp('form.load', { load_time: Date.now() - time })
 
         Object.keys(formEventHandlers).forEach(function(eventName) {
           form.on(eventName, function() {
-            var formData = formEventHandlers[eventName].apply(form, arguments)
-            if (formData !== false) {
-              formData.url = form.url
-              amp('form.' + eventName, { form: formData })
+            try {
+              var formData = formEventHandlers[eventName].apply(form, arguments)
+              if (formData && typeof formData === 'object') {
+                formData.url = form.url
+                amp('form.' + eventName, { form: formData })
+              }
+            } catch (error) {
+              console.error('There was an error handling form event "%s":', eventName, error)
             }
           })
         })
 
-        //perform sfoptions, hide certain elements
-        if (options.sfoptions && options.sfoptions.hide instanceof Object) {
+        var sfoptions = options.sfoptions || {}
+        // perform sfoptions, hide certain elements
+        if (sfoptions.hide instanceof Object) {
           customHideElements(options.sfoptions.hide)
         }
         // add css class to element(by id)
-        if (options.sfoptions && options.sfoptions.addClass) {
+        if (sfoptions.addClass) {
           customAddCssClassById(options.sfoptions.addClass)
         }
         // if cookies are defined, populate the form field with cookie value.
-        if (options.sfoptions instanceof Object && options.sfoptions.cookies) {
+        if (sfoptions.cookies) {
           manageFormCookies(options.sfoptions.cookies, form, true)
         }
+
         // perform custom action on nextPage event
         form.on('nextPage', function() {
           // set form cookies, if there are any
@@ -186,8 +248,19 @@
           }
 
           if (confirmationURL) {
-            window.location = confirmationURL
+            // see: <https://github.com/formio/formio.js/pull/3592> for more details
+            var formLang = form.language || form.options.language
+            var lang = formLanguageMap[formLang] || formLang
+            window.location = lang && lang !== 'en'
+              ? confirmationURL.replace('{lang}', lang)
+              : confirmationURL.replace('{lang}/', '')
           }
+        })
+      })
+      .catch(error => {
+        amp('form.loadError', {
+          url: dataSource,
+          error: error
         })
       })
 

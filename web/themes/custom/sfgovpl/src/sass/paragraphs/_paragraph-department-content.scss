@@ -1,0 +1,64 @@
+.paragraph--type--department-content {
+
+  .department-content__department-name {
+    @include fs-title-5;
+    margin-bottom: 20px;
+    padding-right: 30px;
+    min-height: 1px; // Needed so empty divs maintain width.
+
+    @include media($medium-screen) {
+      margin-bottom: 0;
+      width: 33%;
+      float: left;
+    }
+  }
+
+  .department-content__table {
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    @include media($medium-screen) {
+      width: 66%;
+      float: left;
+    }
+
+    tr:last-child td {
+      padding-bottom: 0;
+    }
+
+    td {
+      display: block;
+      vertical-align: top;
+      width: 100%;
+
+      @include media($medium-screen) {
+        display: table-cell;
+        width: 50%;
+      }
+
+      &:first-child {
+        @include media($medium-screen) {
+          padding: 0 15px 40px 0;
+        }
+
+      }
+
+      &:last-child {
+        @include media($medium-screen) {
+          padding: 0 0 40px 15px;
+        }
+      }
+    }
+  }
+
+  .department-content__item {
+    background-position: 0 2px;
+    padding-left: 40px;
+    padding-bottom: 20px;
+    word-break: break-word;
+
+    @include media($medium-screen) {
+      padding-bottom: 0;
+    }
+  }
+}

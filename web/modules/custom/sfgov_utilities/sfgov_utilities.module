@@ -1,8 +1,11 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\sfgov_utilities\Utility;
+use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\pathauto\PathautoState;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Cache\Cache;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_template_preprocess_default_variables_alter().
@@ -150,7 +153,7 @@ function sfgov_utilities_page_attachments(array &$page) {
   // Don't run on admin pages
   if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
     $node = \Drupal::routeMatch()->getParameter('node');
-    if (isset($node)) {
+    if (!empty($node) && $node instanceOf NodeInterface) {
       $bundle = $node->bundle();
       // Only check department and topic nodes
       if ($bundle == 'department' || $bundle == 'topic') {
@@ -182,7 +185,7 @@ function sfgov_utilities_page_attachments(array &$page) {
         $view->setDisplay('topics_more_services');
         $view->execute();
         $view_result = $view->result;
-        $excluded_services = topic_page_services();
+        $excluded_services = topic_page_services($node);
 
         // Check More Services for unpublished items
         foreach ($view_result as $key => $value) {
@@ -214,13 +217,43 @@ function sfgov_utilities_page_attachments(array &$page) {
 }
 
 /**
+ * Implements hook_entity_insert().
+ */
+function sfgov_utilities_entity_insert(EntityInterface $entity) {
+  // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
+  // This will make sure to apply transliteration cleanup and appropirate URL patterns.
+  // @see SG-1154
+  if(!empty($entity->path)) {
+    if ($entity->path->pathauto == PathautoState::SKIP) {
+      \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function sfgov_utilities_entity_update(EntityInterface $entity) {
+  // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
+  // This will make sure to apply transliteration cleanup and appropirate URL patterns.
+  // @see SG-1154
+  if (!empty($entity->path)) {
+    if ($entity->path->pathauto == PathautoState::SKIP) {
+      \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
+    }
+  }
+}
+
+/**
  * Custom function to build the attributes needed for rendering a Map.
  */
 function _sfgov_utilities_build_map($address) {
+  $gmap_config = \Drupal::config('sfgov_utilities.settings');
+
   $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
   $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
 
-  $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
+  $apiKey = $gmap_config->get('gmaps_api_key');
   // options for the map image
   $options = [
     'zoom' => 15,

@@ -3,6 +3,9 @@
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_theme().
@@ -27,8 +30,17 @@ function sfgov_admin_page_attachments(array &$page) {
   /** @var \Drupal\Core\Routing\AdminContext $is_admin */
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
 
-  if ($is_admin) {
+  $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+  if ($is_admin && $active_theme == 'seven') {
     $page['#attached']['library'][] = 'sfgov_admin/admin';
+  }
+
+  // This library is for backend-related functionality, like inline Diffs,
+  // Preview, and Workflow functionality, where default theme is active, and
+  // administrative tools are on page.
+  $logged_in = \Drupal::currentUser()->isAuthenticated();
+  if ($logged_in && $active_theme == 'sfgovpl') {
+    $page['#attached']['library'][] = 'sfgovpl/sfgov-editorial';
   }
 }
 
@@ -184,10 +196,19 @@ function sfgov_admin_theme_suggestions_field_multiple_value_form_alter(array &$s
   }
 }
 
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function sfgov_admin_preprocess_field_multiple_value_form__autocomplete(&$variables) {
+  if ($variables['element']['#field_name'] == 'field_person_2') {
+    $variables['button']['#value'] = $variables['element']['#max_delta'] >= 0 ? t('Add another person') : t('Add person');
+  }
+}
+
 function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $viewId = $form['#id']; 
-  if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display  
-    return; 
+  $viewId = $form['#id'];
+  if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display
+    return;
   }
 
   $form['field_direct_external_url_uri_op']['#options'] = array(
@@ -225,5 +246,63 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
     error_log(print_r($parentTopics, 1));
     $form['field_top_level_topic']['widget']['value']['#description'] = t('This Topic cannot be top level because it is a child topic of the following: ' . implode(', ', $parentTopics));
     $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';
+  }
+}
+
+/**
+ * Implements hook_preprocess_file_upload_help().
+ */
+function sfgov_admin_preprocess_file_upload_help(&$variables) {
+
+  // Remove all help text except for the user-entered description.
+  $variables['descriptions'] = $variables['description'];
+
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form, $form_state, $form_id) {
+  /** @var \Drupal\node\NodeInterface $revision */
+  $revision = $form_state->get('entity');
+  if (empty($revision)) return;
+  if ($revision->getEntityTypeId() == 'node') {
+    // Base node for the revision.
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($revision->id());
+
+    // We also treat the latest translation-affecting revision as the current
+    // revision, if it was the default revision, as its values for the
+    // current language will be the same of the current default revision in
+    // this case.
+    $current_revision_displayed = FALSE;
+    $is_current_revision = $revision->getRevisionId() == $node->getRevisionId() || (!$current_revision_displayed && $revision->wasDefaultRevision());
+    if (!$is_current_revision) {
+      $node_url = new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $revision->getRevisionId()]);
+    }
+    else {
+      $node_url = $node->toUrl();
+      $current_revision_displayed = TRUE;
+    }
+
+    $current_state = $form['current']['#markup'];
+    $classes = [
+      'form-item-current-state',
+      'form-item-current-state--' .  Html::cleanCssIdentifier(strtolower($current_state)),
+    ];
+
+    // Send properties to the entity-moderation-form.html.twig template.
+    $form['#node'] = $node;
+    $form['#node_revision'] = $revision;
+    $form['#current_state'] = $current_state;
+    // Note: Can't use toString() in the template.
+    $form['#node_url'] = $node_url->toString();
+
+    // Alter form elements.
+    $form['current']['#title'] = t('Current state');
+    $form['current']['#markup'] = '<div class="' . implode($classes, ' ') . '">' . $current_state . '</div>';
+    $form['revision_log']['#title'] = t('Add a revision note');
+    $form['revision_log']['#placeholder'] = t('Log message');
+    $form['revision_log']['#size'] = NULL;
   }
 }

@@ -78,10 +78,11 @@ $tagName = $latestRelease->tag_name;
 $tagDate = $latestRelease->published_at;
 $sinceDate = date_create($tagDate)->modify('-1 day')->format('Y-m-d\TH:i:s\Z');
 
-$pretext = ':drupal: deployed to `' . $_ENV['PANTHEON_ENVIRONMENT'] . '`'. "\n\n";
-$pretext .= '<https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEON_ENVIRONMENT .'/deploys|pantheon dashboard>' . ' | ';
-$pretext .= 'http://' . $_ENV['PANTHEON_ENVIRONMENT'] . '-' . $_ENV['PANTHEON_SITE_NAME'] . '.pantheonsite.io' . "\n\n";
-$pretext .= 'a brief and truncated summary of commits since tag/release `'. $tagName . '` :' . "\n\n";
+$fallbackText = 'sf.gov deployed to ' . $_ENV['PANTHEON_ENVIRONMENT'];
+
+$pretext = ':drupal: deployed to `<http://' . $_ENV['PANTHEON_ENVIRONMENT'] . '-' . $_ENV['PANTHEON_SITE_NAME'] . '.pantheonsite.io|' . $_ENV['PANTHEON_ENVIRONMENT'] . '>` | ';
+$pretext .= '<https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEON_ENVIRONMENT .'/deploys|pantheon dashboard>' . "\n";
+$pretext .= 'commits since tag/release `'. $tagName . '` (<https://github.com/SFDigitalServices/sfgov/commits/main?since=' . $sinceDate . '|full list>):' . "\n";
 
 // get commits since last tag/release date
 $commits = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/commits?since=' . $sinceDate, [
@@ -100,9 +101,7 @@ foreach($commits as $commit) {
   $commitsStr .= $sha . ' ' . $trimmedMessage . ' (' . $author . ')' . "\n";
 }
 
-$prefix = '```';
-$suffix = '```' . "\n\n";
-$suffix .= '<https://github.com/SFDigitalServices/sfgov/commits/main?since=' . $sinceDate . '|Click here for the full list of commits since tag/release `'. $tagName .'`>' . "\n\n";
+$suffix = ':point_up: possibly/probably truncated' . "\n\n";
 $suffix .= ':yolo: :all_the_things: :ahhhhhhhhh:';
 
 $charCount = strlen($pretext) + strlen($prefix) + strlen($suffix); // keep count of essential parts of message
@@ -112,17 +111,15 @@ if(($commitsStrLen + $charCount) > $slack_cutoff) { // cutoff exceeded
   $commitsStr = substr($commitsStr, 0, ($slack_cutoff-$charCount)); // truncate commits message
 }
 
-$pretext .= $prefix . $commitsStr . $suffix; // put it all together
-
 $attachment = array(
   'pretext' => $pretext,
   // 'fallback' => $text,
   // 'color' => $pantheon_yellow, // Can either be one of 'good', 'warning', 'danger', or any hex color code
   // 'fields' => $fields,
-  'text' => '```'. $commitsStr . '```'
+  'text' => '```'. $commitsStr . '```' . $suffix
 );
 
-_slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['slack_username'], $pretext, $attachment, $secrets['always_show_text']);
+_slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['slack_username'], $fallbackText, $attachment, $secrets['always_show_text']);
 
 /**
  * Make a curl request
@@ -158,8 +155,7 @@ function _slack_notification($slack_url, $channel, $username, $text, $attachment
     'username' => $username,
     'channel' => $channel,
     'icon_emoji' => ':pantheon2:',
-    // 'attachments' => array($attachment) // uncomment to send attachment
-    'text' => $text,
+    'attachments' => array($attachment),
   );
   if ($alwaysShowText) {
     $post['text'] = $text;

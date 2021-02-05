@@ -14,6 +14,9 @@ use Drupal\Core\Ajax\ReplaceCommand;
  */
 function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   switch ($form_id) {
+    case 'node_department_edit_form':
+      $form['field_about_description']['#disabled'] = 'disabled';
+      break;
     case 'node_transaction_form':
     case 'node_transaction_edit_form':
       // Set form wrapper.

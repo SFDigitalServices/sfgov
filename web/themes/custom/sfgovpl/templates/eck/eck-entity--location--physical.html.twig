@@ -1,49 +1,67 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display an ECK entity.
+ *
+ * Available variables:
+ * - eck_entity: The full ECK entity with limited access to object properties
+ *   and methods. Only "getter" methods (method names starting with "get",
+ *   "has", or "is") and a few common methods such as "id" and "label" are
+ *   available. Calling other methods (such as node.delete) will result in an
+ *   exception.
+ * - content: All ECK entity items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ *
+ * @see template_preprocess_eck_entity()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = [
+  'sfgov-location',
+  'location--' ~ eck_entity.bundle|clean_class,
+  'location--' ~ eck_entity.bundle|clean_class ~ '--' ~ view_mode|clean_class,
+  view_mode ? 'location--view-mode--' ~ view_mode|clean_class,
+  parent ? 'location--parent--' ~ parent.bundle|clean_class,
+]|merge(classes|default([])) %}
 
-{% if not content.field_address.isEmpty() %}
-    {% set address_content = content.field_address[0] %}
-    {% set address_text = ''  %}
-    <div class="eck-entity-address-field">
-        <p class="address" translate="no"> </p>
-        {% if address_content['#given_name'] or address_content['#family_name'] %}
-            <p>{{ address_content['#given_name'] }} {{ address_content['#family_name'] }} </p>
-        {% endif %}
-        {% if address_content['#organization'] %}
-            <p class="field__label">{{ address_content['#organization'] }} </p>
-        {% endif %}
-        {% if address_content['#address_line1'] %}
-            {%  set address_text = address_content['#address_line1'] %}
-            <p>{{ address_content['#address_line1'] }}</p>
-        {% endif %}
-        {% if address_content['#address_line2'] %}
-            {%  set address_text = address_text ~ ' ' ~ address_content['#address_line1'] %}
-            <p>{{ address_content['#address_line2'] }}</p>
-        {% endif %}
+{% block address %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {% if content.field_address|render %}
+        <div class="sfgov-location__address">
+          {{ content.field_address }}
+        </div>
+      {% endif %}
 
-        {% if address_content['#dependent_locality'].code %}
-            <p>{{ address_content['#dependent_locality.code'] }}</p>
-        {% endif %}
-        {% if address_content['#locality'] or address_content['#postal_code'] or address_content['#administrative_area.code'] %}
-           {%   set address_text = address_text ~ ' ' ~ address_content['#locality'] ~ ' ' ~ address_content['#administrative_area'].code %}
-            <p>{{ address_content['#locality'] }}, {{ address_content['#administrative_area'].code }} {{ address_content['#postal_code'] }}</p>
-        {% endif %}
-    </div>
+      {% if content.field_operating_hours|render %}
+        <div class="sfgov-location__hours">
+          {{ content.field_operating_hours }}
+        </div>
+      {% endif %}
 
-{% endif %}
+      {% if map_img_url %}
+        <div class="sfgov-location__map">
+          <a href="{{ map_site_url }}"><img src="{{ map_img_url }}" /></a>
+        </div>
+      {% endif %}
 
-{% if not content.field_operating_hours.isEmpty() %}
-    {{ content.field_operating_hours }}
-{% endif %}
+      {% if map_directions_url %}
+        <div class="sfgov-location__directions">
+          <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
+        </div>
+      {% endif %}
 
-{% if map_img_url %}
-    <div class="simple-gmap-static-map">
-        <a href="{{ map_site_url }}"><img src="{{ map_img_url }}" /></a>
-    </div>
-{% endif %}
+      {% if content.field_text|render %}
+        <div class="sfgov-location__notes">
+          {{ content.field_text }}
+        </div>
+      {% endif %}
+    {% endblock %}
 
-{% if map_directions_url %}
-    <p class="simple-gmap-link">
-        <a href="{{ map_directions_url }}">{{ 'Get directions'|t }}</a>
-    </p>
-{% endif %}
-
-{{ content.field_text }}
+  </div>
+{% endblock %}

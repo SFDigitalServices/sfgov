@@ -80,6 +80,8 @@
   bundle ~ '__title--' ~ view_mode|clean_class,
 ] %}
 
+{{ content.content_moderation_control }}
+
 <article{{ attributes.addClass(classes) }}>
   {% block header %}
     {{ title_prefix }}
@@ -107,6 +109,7 @@
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
       {{ content|without(
+        'content_moderation_control',
         'field_description',
         'links'
       ) }}

@@ -1,0 +1,305 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\sfgov_locations\Element\Address;
+use Drupal\sfgov_locations\Plugin\Field\FieldType\AddressItem;
+use Drupal\sfgov_locations\Plugin\Field\FieldFormatter\AddressPlainFormatter;
+use Drupal\sfgov_locations\Plugin\Validation\Constraint\AddressFormatConstraint;
+use Drupal\sfgov_locations\AddressField;
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function sfgov_locations_field_info_alter(&$info) {
+  if (!empty($info['address'])) {
+    $info['address']['class'] = AddressItem::class;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function sfgov_locations_field_formatter_info_alter(array &$info) {
+  if (!empty($info['address_plain'])) {
+    $info['address_plain']['class'] = AddressPlainFormatter::class;
+  }
+}
+
+/**
+ * Implements hook_validation_constraint_alter().
+ */
+function sfgov_locations_validation_constraint_alter(array &$definitions) {
+  if (!empty($definitions['AddressFormat'])) {
+    $definitions['AddressFormat']['class'] = AddressFormatConstraint::class;
+  }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function sfgov_locations_config_schema_info_alter(&$definitions) {
+  $definitions['address']['mapping'][AddressField::ADDRESSEE] = [
+    'type' => 'string',
+    'label' => 'Addressee',
+  ];
+  $definitions['address']['mapping'][AddressField::LOCATION_NAME] = [
+    'type' => 'string',
+    'label' => 'Location name',
+  ];
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function sfgov_locations_element_info_alter(array &$info) {
+  if (!empty($info['address'])) {
+    $info['address']['#process'] = [
+      [Address::class, 'processAddress'],
+      [Address::class, 'processGroup']
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_locations_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form['#id']) {
+    case 'views-exposed-form-addresses-page-addresses':
+    case 'views-exposed-form-entity-browser-location-entity-browser-address':
+
+      // Query list of Departments, sorted by Title.
+      $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
+      $nids = $storage->getQuery();
+      $nids = $nids->condition('type', 'department')
+        ->condition('status', 1)
+        ->sort('title')
+        ->execute();
+
+      // Create options list using Department node titles.
+      $options = [];
+      $nodes = $storage->loadMultiple($nids);
+      foreach ($nodes as $node) {
+        $options[$node->id()] = $node->getTitle();
+      }
+
+      // Change Departments field to a <select> that lists departments by name.
+      $field_name = 'field_department_target_id';
+      $form[$field_name]['#type'] = 'select';
+      $form[$field_name]['#multiple'] = FALSE;
+      $form[$field_name]['#empty_option'] = t('- Any -');
+      $form[$field_name]['#options'] = $options;
+      unset($form[$field_name]['#size']);
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_locations_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_location_edit_form':
+    case 'node_location_form':
+      // Set Views argument for filtering the Related Locations node reference.
+      if ($node = \Drupal::routeMatch()->getParameter('node')) {
+        $i = 0;
+        while (isset($form['field_locations']['widget'][$i])) {
+          $form['field_locations']['widget'][$i]['target_id']['#selection_settings']['view']['arguments'] = [$node->id()];
+          $i++;
+        }
+      }
+
+
+      // Field wrapper.
+      $form['field_at_this_location']['#prefix'] = '<div id="field-departments-wrapper">';
+      $form['field_at_this_location']['#suffix'] = '</div>';
+
+      // Attach AJAX callback to the field_at_this_location values.
+      $i = 0;
+      while (isset($form['field_at_this_location']['widget'][$i])) {
+        $form['field_at_this_location']['widget'][$i]['target_id']['#ajax'] = [
+          'callback' => '_sfgov_locations_department_address',
+          'wrapper' => 'field-departments-wrapper',
+          'event' => 'autocompleteclose',
+        ];
+
+        $i++;
+      }
+
+      // Attach library to style the node form.
+      $form['#attached']['library'][] = 'sfgov_locations/form_style';
+
+      break;
+
+      // This handles direct add/edits at /admin/content/location/add/physical
+      // and /location/144/edit. If making changes here, note that you'll likely
+      // also want to make the same changes in
+      // sfgov_locations_inline_entity_form_entity_form_alter(),
+      // which will apply your changes in the context of using Entity Browser.
+      case 'location_physical_form':
+      case 'location_physical_edit':
+
+        // Remove the 'details' wrapper form. We're using a field group "Address"
+        // that includes both the Address field widget, and the Department field.
+        $form['field_address']['widget'][0]['#type'] = 'container';
+
+        // Customize Address field labels, descriptions, etc.
+        $form['field_address']['widget'][0]['address']['#after_build'][] = '_sfgov_locations_customize_address';
+
+        break;
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function sfgov_locations_theme_registry_alter(&$theme_registry) {
+  if (!empty($theme_registry['address_plain'])) {
+    $module_handler = \Drupal::service('module_handler');
+    $module_path = $module_handler->getModule('sfgov_locations')->getPath();
+    $theme_registry['address_plain']['variables'][AddressField::ADDRESSEE] = NULL;
+    $theme_registry['address_plain']['variables'][AddressField::LOCATION_NAME] = NULL;
+    $theme_registry['address_plain']['path'] = $module_path . '/templates';
+  }
+}
+
+/**
+ * Implements hook_field_views_data_alter().
+ */
+function sfgov_locations_field_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  $field_name = $field_storage->getName();
+  $field_type = $field_storage->getType();
+  if ($field_type == 'address') {
+    $columns = [
+      AddressField::ADDRESSEE => 'standard',
+      AddressField::LOCATION_NAME => 'standard',
+    ];
+    foreach ($data as $table_name => $table_data) {
+      foreach ($columns as $column => $plugin_id) {
+        $data[$table_name][$field_name . '_' . $column]['field'] = [
+          'id' => $plugin_id,
+          'field_name' => $field_name,
+          'property' => $column,
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Callback function to check if there is a main address related on the selected department.
+ */
+function _sfgov_locations_department_address(&$form, FormStateInterface $form_state) {
+  // Get triggering element.
+  $element = $form_state->getTriggeringElement();
+
+  // Get delta from the triggering element.
+  $delta = $element['#parents'][1];
+
+  // Get all departments from Location node.
+  $related_departments = $form_state->getValue('field_at_this_location');
+
+  // Get the triggering department id (the selected one).
+  $department_id = $related_departments[$delta]['target_id'];
+
+  // Load selected department.
+  $department = \Drupal::entityTypeManager()->getStorage('node')->load($department_id);
+
+  if (!$department->field_address->entity) {
+    drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
+  }
+
+  return $form['field_at_this_location'];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form().
+ */
+function sfgov_locations_node_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  if ($entity->isNew() && $entity->bundle() == 'location') {
+    $storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+    $langcode = $form_state->get('langcode');
+
+    foreach ([
+      'Parking',
+      'Accessibility',
+      'Public transportation'
+    ] as $title) {
+      $paragraphs_entity = $storage->create([
+        'type' => 'accordion_item_simple',
+        'langcode' => $langcode,
+        'field_title' => $title,
+      ]);
+      $entity->get('field_getting_here_items')->appendItem($paragraphs_entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ *
+ * This hook handles location forms embedded in Entity Browser.
+ *
+ * If making changes here, note that you'll likely also want to make the same
+ * changes in sfgov_locations_form_alter() which handles the direct entity add
+ * and edit use case.
+ */
+function sfgov_locations_inline_entity_form_entity_form_alter(array &$entity_form, FormStateInterface &$form_state) {
+  if ($entity_form['#entity_type'] == 'location' && $entity_form['#bundle'] == 'physical') {
+    // Remove the 'details' wrapper form. We're using a field group "Address"
+    // that includes both the Address field widget, and the Department field.
+    $entity_form['field_address']['widget'][0]['#type'] = 'container';
+
+    // Customize Address field labels, descriptions, etc.
+    $entity_form['field_address']['widget'][0]['address']['#after_build'][] = '_sfgov_locations_customize_address';
+  }
+}
+
+/**
+ * Alter fields in the Address field type widget.
+ */
+function _sfgov_locations_customize_address($element, $form_state) {
+  $element['organization']['#title'] = t('Division, program or organization');
+  $element['addressee']['#description'] = t('Use for attention of, to flag a person or group.');
+  $element['location_name']['#description'] = t('Use for named locations like City Hall. Should not duplicate department or division.');
+  $element['address_line1']['#title'] = t('Street address line 1');
+  $element['address_line1']['#description'] = t('Google Maps will lookup from this line.');
+  $element['address_line2']['#title'] = t('Street address line 2');
+  $element['address_line2']['#title_display'] = 'before';
+  $element['address_line2']['#description'] = t('Room, Suite or Counter.');
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ */
+function sfgov_locations_field_widget_multivalue_office_hours_list_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  if (!empty($elements['add_more'])) {
+    // Change the label from 'Add item' to 'Add day'.
+    $elements['add_more']['#value'] = t('Add day');
+  }
+}
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgov_locations_preprocess_field__node__field_departments__location(&$variables) {
+  $variables['label'] = t('Departments');
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_locations_preprocess_address_plain(&$variables) {
+  if (!empty($variables['address'])) {
+    // Provide the parent entity to the 'address-plain--' templates.
+    $variables['parent_entity'] = $variables['address']->getEntity();
+  }
+}

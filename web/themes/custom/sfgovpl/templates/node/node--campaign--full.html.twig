@@ -80,10 +80,12 @@
   bundle ~ '__title--' ~ view_mode|clean_class,
 ] %}
 
+{{ content.content_moderation_control }}
+
 <article{{ attributes.addClass(classes) }}>
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
-      {{ content | without('links', 'field_logo', 'field_social_media_embed', 'field_campaign_about', 'field_campaign_about', 'field_links', 'field_dept') }}
+      {{ content | without('links', 'field_logo', 'field_social_media_embed', 'field_campaign_about', 'field_campaign_about', 'field_links', 'field_dept', 'content_moderation_control') }}
       {% if content.field_social_media_embed|render is not empty %}
         <div class="__campaign-social-media-wrapper sfgov-full-bleed">
           <div class="sfgov-section-container">
