@@ -159,10 +159,16 @@
         return false
       },
       prevPage: function (data) {
-        return { page_index: data.page }
+        return {
+          page_index: data.page,
+          page_title: getPageTitle(data, this)
+        }
       },
       nextPage: function (data) {
-        return { page_index: data.page }
+        return {
+          page_index: data.page,
+          page_title: getPageTitle(data, this)
+        }
       },
       wizardNavigationClicked: function (page) {
         return {
@@ -263,6 +269,16 @@
           error: error
         })
       })
+
+    function getPageTitle(data, form) {
+      if (!form || !form.pages || form.pages.length === 0) {
+        return undefined
+      }
+      var page = form.pages[data.page]
+      return page && page.component
+        ? page.component.title
+        : undefined
+    }
 
     function customAddCssClassById(classes) {
       for (var key in classes) {
