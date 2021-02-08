@@ -9,13 +9,14 @@
 ### Prerequisites
 
 - Latest version of [Lando](https://docs.devwithlando.io) installed.
-- A global installation of [Composer](https://getcomposer.org)
+- A global installation of [Composer](https://getcomposer.org)*
 
 ### Instructions
 
 1. **Get the codebase**: `git clone git@github.com:SFDigitalServices/sfgov.git`. _Note: Always use the Github repository for development. CircleCI is used to deploy an artifact build to Pantheon via Github._
+2. Go to the root directory. `cd sfgov`
 2. **Run the custom script** which will also install Composer dependencies: `./scripts/custom/local_dev_setup.sh`
-3. **Download the following assets** from the private files directory via SFTP:
+3. **Download the following assets** from files(_dev)/private/saml on Pantheon via SFTP or the Backups tab on the dashboard. Place them in web/sistes/default/files/private/saml:
 
     ```sh
     IDCSCertificate.pem
@@ -73,6 +74,18 @@
 
       # Add a dummy hash salt.
       $settings['hash_salt'] = 'whatever';
+
+      # Database settings.
+      $databases['default']['default'] = array (
+        'database' => 'pantheon',
+        'username' => 'pantheon',
+        'password' => 'pantheon',
+        'prefix' => '',
+        'host' => 'database',
+        'port' => '3306',
+        'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+        'driver' => 'mysql',
+      );
       ```
 
     </details>
@@ -83,7 +96,7 @@
 
     ```sh
     # 1. After updating the codebase, install any pending composer dependencies.
-    composer install
+    lando composer install
     # 2. If any dependencies were updated, run database updates.
     lando drush updb -y
     # 3. Update active config to include and changes pending in `develop`.
@@ -102,9 +115,9 @@ https://www.atlassian.com/git/tutorials/making-a-pull-request
 
 TLDR version:
 
-1. Create a branch and make changes. Push branch.
-2. Open a pull request to merge from branch to master.
-3. The team reviews, discusses, and makes change requests to the change. This includes the PM reviewing the CircleCI review app BEFORE it is merged into master.
+1. Create a branch from `develop` and make changes. Push branch.
+2. Open a pull request to merge from branch to `develop`.
+3. The team reviews, discusses, and makes change requests to the change. This includes the PM reviewing the CircleCI review app BEFORE it is merged into `develop`.
 4. Change is approved and merged.
 5. Delete branch.
 
@@ -118,7 +131,7 @@ TLDR version:
 6. Check in modified composer and config files `git add composer.* config/*`
 7. Commit and push changes `git commit -m 'installed paragraphs' && git push`
 8. Wait for CircleCI to build and deploy to a multidev. CircleCI will add comment to the checkin on GitHub with link to the created MultiDev.
-9. Create Pull Request and merge to master
+9. Create Pull Request and merge to develop
 10. Switch away from branch and delete branch `git checkout master && git push origin --delete new_branch && git branch -d new_branch`
 
 ## Local Behat Tests
@@ -157,3 +170,4 @@ Temp workaround is to use Lando's helper script to import db. Refer to `.lando.y
 
 In short, do `lando getdb` from the `/web` directory to import the db from Pantheon `dev` environment.
 
+_* I'm not 100% sure, but I don't think global composer is necessary. One can use `lando composer install` instead. -ZK_
