@@ -7,11 +7,14 @@
 
 namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
+use Drupal\views\Plugin\views\argument\NullArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Path\AliasStorage;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
@@ -24,11 +27,11 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     // Drupal logger not working,  need to as CH3
 
-    $events[KernelEvents::REQUEST][] = ['redirectBasedOnField'];
+    $events[KernelEvents::REQUEST][] = ['sfgovRedirect', 0];
     return $events;
   }
 
-  public function redirectBasedOnField(GetResponseEvent $event) {
+  public function sfgovRedirect(GetResponseEvent $event) {
     // Don't redirect authenticated users.
     $account = \Drupal::currentUser();
     if (!in_array('anonymous', $account->getRoles())) {
@@ -37,6 +40,32 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
 
     $redirect_url = NULL;
     $cacheableDependency = NULL;
+
+    $redirectBasedOnField = $this->redirectBasedOnField($event);
+    $redirectBasedOnAlias = $this->redirectBasedOnAlias($event);
+
+    if ($redirectBasedOnField) {
+      $redirect_url = $redirectBasedOnField;
+    } elseif($redirectBasedOnAlias) {
+      $redirect_url = $redirectBasedOnAlias;
+    }
+
+    if(!empty($redirect_url)) {
+      $response_headers = [
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+      ];
+      $response = new RedirectResponse($redirect_url, '302', $response_headers);
+      if(!empty($cacheableDependency)) {
+        $response->addCacheableDependency($cacheableDependency);
+      }
+      \Drupal::service('page_cache_kill_switch')->trigger(); // disable page cache for anonymous requests
+      $event->setResponse($response);
+    }
+  }
+
+  public function redirectBasedOnField(GetResponseEvent $event) {
+    $redirect_url = NULL;
+
     $node = $event->getRequest()->attributes->get('node');
     $media = $event->getRequest()->attributes->get('media');
 
@@ -80,7 +109,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         }
       }
     }
-    else if($media) {      
+    else if($media) {
       if($media->hasField('field_document_url') || $media->hasField('field_media_file')) {
         $field_file = $media->get('field_media_file')->getValue();
         $field_doc_url = $media->get('field_document_url')->getValue();
@@ -95,18 +124,28 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       }
     }
 
-    if(!empty($redirect_url)) {
-      $response_headers = [
-        'Cache-Control' => 'no-cache, no-store, must-revalidate',
-      ];
-      $response = new TrustedRedirectResponse($redirect_url, '302', $response_headers);
-      if(!empty($cacheableDependency)) {
-        $response->addCacheableDependency($cacheableDependency);
-      }
-      \Drupal::service('page_cache_kill_switch')->trigger(); // disable page cache for anonymous requests
-      $event->setResponse($response);
+    return $redirect_url;
+  }
+
+  public function redirectBasedOnAlias(GetResponseEvent $event) {
+
+    $redirect_url = NULL;
+
+    // Get the requested path alias.
+    $request = $event->getRequest();
+    $current_path_alias = $request->getPathInfo();
+
+    // Check to see if a redirect matches the alias.
+    $redirect = \Drupal::service('redirect.repository')->findMatchingRedirect($current_path_alias);
+
+    // If the redirect exists, set the url to the redirect's destination.
+    if ($redirect) {
+      $redirect_value = $redirect->redirect_redirect->getValue();
+      $redirect_uri = $redirect_value[0]['uri'];
+      $redirect_url = \Drupal\Core\Url::fromUri($redirect_uri)->toString();
     }
 
+    return $redirect_url;
   }
 }
 
