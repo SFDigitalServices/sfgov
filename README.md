@@ -157,17 +157,4 @@ lando drush updatedb
 lando drush cr
 ```
 
-## Issues with Lando/Drush (7/26/2019)
-
-Pantheon required a `drush` update to `8.2.3`. Updating site-local Drush to this version resulted in a failed attempt to `lando pull` the db from Pantheon, with the following error:
-
-```txt
-Class 'Drush\Commands\DrushCommands' not found
-/etc/drush/drupal-8-drush-commandfiles/Commands/site-audit-tool/SiteAuditCommands.php:18
-```
-
-Temp workaround is to use Lando's helper script to import db. Refer to `.lando.yml` file, under the `tooling` section.
-
-In short, do `lando getdb` from the `/web` directory to import the db from Pantheon `dev` environment.
-
 _* I'm not 100% sure, but I don't think global composer is necessary. One can use `lando composer install` instead. -ZK_
