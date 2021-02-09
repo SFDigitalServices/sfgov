@@ -102,14 +102,6 @@ jobs:
       - run:
           name: build assets
           command: composer -n build-assets
-
-      - run:
-          name: create simplesamlphp symlink
-          command: |
-            mkdir -p ./vendor/simplesamlphp
-            cd ./vendor/simplesamlphp
-            rm -r simplesamlphp
-            ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
       
       - run:
           name: add secrets
