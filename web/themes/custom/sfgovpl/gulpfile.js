@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const babel = require('gulp-babel');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
@@ -10,12 +11,24 @@ const path = require('path');
 const drupalLibraries = path.resolve(__dirname, '../../../libraries');
 
 exports.css = css;
-exports.watch = gulp.series(css, watch);
+exports.js = js;
+exports.assets = assets;
+exports.watch = gulp.series(assets, watch);
 
 exports.default = gulp.series(
-  gulp.parallel(css),
+  assets,
   gulp.parallel(watch, serve)
 );
+
+function js() {
+  return gulp
+    .src('./src/js/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./dist/js'))
+    .pipe(browsersync.stream());
+}
 
 function css() {
   const plugins = [
@@ -34,6 +47,10 @@ function css() {
     .pipe(browsersync.stream());
 }
 
+function assets() {
+  return gulp.parallel(css, js);
+}
+
 function serve() {
   return browsersync.init({
     proxy: 'https://sfgov.lndo.site/'
@@ -41,5 +58,5 @@ function serve() {
 }
 
 function watch() {
-  return gulp.watch(config.css.source, css);
+  return gulp.watch('./src', assets);
 }
