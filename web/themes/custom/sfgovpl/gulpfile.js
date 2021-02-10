@@ -30,16 +30,15 @@ function js() {
 }
 
 function css() {
-  const plugins = [
-    autoprefixer()
-  ];
   return gulp
     .src('./src/sass/**/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({ 
       outputStyle: 'expanded'
     }))
-    .pipe(postcss(plugins))
+    .pipe(postcss([
+      autoprefixer()
+    ]))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist/css'))
     .pipe(browsersync.stream());
