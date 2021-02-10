@@ -7,6 +7,8 @@ const autoprefixer = require('autoprefixer');
 const browsersync = require('browser-sync').create();
 const path = require('path');
 
+const assets = gulp.parallel(css, js);
+
 exports.css = css;
 exports.js = js;
 exports.assets = assets;
@@ -41,10 +43,6 @@ function css() {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist/css'))
     .pipe(browsersync.stream());
-}
-
-function assets() {
-  return gulp.parallel(css, js);
 }
 
 function serve() {
