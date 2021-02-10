@@ -1,5 +1,3 @@
-"use strict";
-
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
@@ -8,14 +6,23 @@ const autoprefixer = require('autoprefixer');
 const browsersync = require('browser-sync').create();
 const path = require('path');
 
-const config = require('./config');
-const drupalLibraries = path.resolve(__dirname, '../../../libraries'); // drupal libraries which include sass source files
+// drupal libraries which include sass source files
+const drupalLibraries = path.resolve(__dirname, '../../../libraries');
+
+exports.css = css;
+exports.watch = gulp.series(css, watch);
+
+exports.default = gulp.series(
+  gulp.parallel(css),
+  gulp.parallel(watch, serve)
+);
+
 function css() {
   const plugins = [
-    autoprefixer(config.autoprefixer)
+    autoprefixer()
   ];
   return gulp
-    .src(config.css.source)
+    .src('./src/sass/**/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({ 
       outputStyle: 'expanded',
@@ -23,24 +30,16 @@ function css() {
     }))
     .pipe(postcss(plugins))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(config.css.dest))
+    .pipe(gulp.dest('./dist/css'))
     .pipe(browsersync.stream());
 }
 
 function serve() {
-  browsersync.init({
+  return browsersync.init({
     proxy: 'https://sfgov.lndo.site/'
   });
 }
 
 function watch() {
-  gulp.watch(config.css.source, css);
+  return gulp.watch(config.css.source, css);
 }
-
-exports.css = gulp.series(css);
-exports.watch = gulp.series(css, watch);
-
-exports.default = gulp.series(
-  gulp.parallel(css),
-  gulp.parallel(watch, serve)
-);
