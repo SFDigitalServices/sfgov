@@ -2,7 +2,6 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
-const autoprefixer = require('autoprefixer');
 const browsersync = require('browser-sync').create();
 const path = require('path');
 
@@ -18,17 +17,16 @@ exports.default = gulp.series(
 );
 
 function css() {
-  const plugins = [
-    autoprefixer()
-  ];
   return gulp
     .src('./src/sass/**/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({ 
-      outputStyle: 'expanded',
-      includePaths: [drupalLibraries]
+      includePaths: [drupalLibraries],
+      outputStyle: process.env.NODE_ENV === 'development'
+        ? 'expanded'
+        : 'compact'
     }))
-    .pipe(postcss(plugins))
+    .pipe(postcss())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist/css'))
     .pipe(browsersync.stream());
