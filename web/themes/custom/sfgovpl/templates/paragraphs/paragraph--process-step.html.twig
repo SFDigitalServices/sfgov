@@ -48,6 +48,10 @@
   ]
 %}
 {% set optional = paragraph.field_process_optional.getValue()[0].value %}
+{%
+  set showMoreText = 'Show more'|t
+  set showLessText = 'Show less'|t
+%}
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }} data-toggle-container>
     {% block content %}
@@ -83,6 +87,10 @@
         </div>
       </div>
     {% endblock %}
-    <a class="show-more-link" data-toggle-trigger href="javascript:void(0)">{{ 'Show more'|t }}</a>
+    <a class="show-more-link" role="button"
+      data-toggle-trigger
+      data-show-text="{{ showMoreText }}"
+      data-hide-text="{{ showLessText }}"
+      href="javascript:void(0)">{{ showMoreText }}</a>
   </div>
 {% endblock paragraph %}
