@@ -9,6 +9,7 @@ namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\node\NodeInterface;
@@ -28,15 +29,12 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     return $events;
   }
 
-  public function sfgovRedirect(GetResponseEvent $event) {
+  public function sfgovRedirect(GetResponseEvent $event, $redirect_url = NULL) {
     // Don't redirect authenticated users.
     $account = \Drupal::currentUser();
     if (!in_array('anonymous', $account->getRoles())) {
       return;
     }
-
-    $redirect_url = NULL;
-    $cacheableDependency = NULL;
 
     $redirectBasedOnField = $this->redirectBasedOnField($event);
     $redirectBasedOnAlias = $this->redirectBasedOnAlias($event);
@@ -45,68 +43,87 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       $redirect_url = $redirectBasedOnField;
     } elseif($redirectBasedOnAlias) {
       $redirect_url = $redirectBasedOnAlias;
+    } else {
+      return;
     }
 
+    // Reconstruct response.
     if(!empty($redirect_url)) {
       $response_headers = [
         'Cache-Control' => 'no-cache, no-store, must-revalidate',
       ];
-      $response = new RedirectResponse($redirect_url, '302', $response_headers);
-      if(!empty($cacheableDependency)) {
-        $response->addCacheableDependency($cacheableDependency);
-      }
-      \Drupal::service('page_cache_kill_switch')->trigger(); // disable page cache for anonymous requests
-      $event->setResponse($response);
+      $response = new TrustedRedirectResponse($redirect_url, '302', $response_headers);
+      $cached_response = $this->setRedirectCachableDependency($response);
+
+      // Disable page cache for anonymous requests.
+      \Drupal::service('page_cache_kill_switch')->trigger();
+      $event->setResponse($cached_response);
     }
   }
 
-  public function redirectBasedOnField(GetResponseEvent $event) {
-    $redirect_url = NULL;
-
+  public function addCacheContextsToNode(GetResponseEvent $event) {
     $node = $event->getRequest()->attributes->get('node');
-    $media = $event->getRequest()->attributes->get('media');
-
     if ($node && $node instanceof NodeInterface) {
       $route_name = \Drupal::routeMatch()->getRouteName();
 
       if (!$node->isPublished() || $route_name === 'public_preview.preview_link') {
-        return;
+        return NULL;
       }
       else {
         // Add cache context to make sure the request won't be cached for authenticated users.
         $node->addCacheContexts(['user.roles:anonymous']);
+      }
+    }
+    return $node ? $node : null;
+  }
 
-        // Get node type.
-        $node_type = strtolower($node->type->entity->label());
+  /**
+   * @param \Symfony\Component\HttpFoundation\RedirectResponse $response
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function setRedirectCachableDependency(RedirectResponse $response) {
+    if(!empty($cacheableDependency)) {
+      $response->addCacheableDependency($cacheableDependency);
+    }
+    return $response;
+  }
 
-        // Redirect rule based on the field `field_direct_external_url`.
-        if ($node->hasField('field_direct_external_url') ){
-          $field_external_url = $node->get('field_direct_external_url')->getValue();
+  public function redirectBasedOnField(GetResponseEvent $event, $redirect_url = NULL) {
 
-          if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != ''){
-            // This is where you set the destination.
-            $redirect_url = $field_external_url[0]['uri'];
-            $cacheableDependency = $node;
-          }
+    $media = $event->getRequest()->attributes->get('media');
+
+    if ($this->addCacheContextsToNode($event) != null) {
+
+      $node = $this->addCacheContextsToNode($event);
+      $node_type = strtolower($node->type->entity->label());
+
+      // Node redirect rule based on the field `field_direct_external_url`.
+      if ($node->hasField('field_direct_external_url')) {
+        $field_external_url = $node->get('field_direct_external_url')
+          ->getValue();
+
+        if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != '') {
+          $redirect_url = $field_external_url[0]['uri'];
         }
+      }
 
-        if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
-          $redirect_url = NULL;
-          $cacheableDependency = NULL;
-          $field_go_to_current_url = $node->get('field_go_to_current_url')->getValue();
+      // Node redirect rule based on the field `field_go_to_current_url`.
+      if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
+        $field_go_to_current_url = $node->get('field_go_to_current_url')
+          ->getValue();
 
-          if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
-            $field_dept_url = $node->get('field_url')->getValue();
+        if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
+          $field_dept_url = $node->get('field_url')->getValue();
 
-            if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
-              $redirect_url = $field_dept_url[0]['uri'];
-              $cacheableDependency = $node;
-            }
+          if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
+            $redirect_url = $field_dept_url[0]['uri'];
           }
         }
       }
     }
     else if($media) {
+      // Media field redirect rule.
       if($media->hasField('field_document_url') || $media->hasField('field_media_file')) {
         $field_file = $media->get('field_media_file')->getValue();
         $field_doc_url = $media->get('field_document_url')->getValue();
@@ -120,13 +137,10 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         }
       }
     }
-
-    return $redirect_url;
+    return $redirect_url ? $redirect_url : null;
   }
 
-  public function redirectBasedOnAlias(GetResponseEvent $event) {
-
-    $redirect_url = NULL;
+  public function redirectBasedOnAlias(GetResponseEvent $event, $redirect_url = NULL) {
 
     // Get the requested path alias.
     $request = $event->getRequest();
@@ -142,7 +156,6 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       $redirect_url = Url::fromUri($redirect_uri)->toString();
     }
 
-    return $redirect_url;
+    return $redirect_url ? $redirect_url : null;
   }
 }
-
