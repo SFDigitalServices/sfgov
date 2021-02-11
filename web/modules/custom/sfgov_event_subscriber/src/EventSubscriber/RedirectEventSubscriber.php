@@ -7,14 +7,13 @@
 
 namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
-use Drupal\views\Plugin\views\argument\NullArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Path\AliasStorage;
+use Drupal\file\Entity\File;
+use Drupal\Core\Url;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
@@ -25,8 +24,6 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    // Drupal logger not working,  need to as CH3
-
     $events[KernelEvents::REQUEST][] = ['sfgovRedirect', 0];
     return $events;
   }
@@ -115,7 +112,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         $field_doc_url = $media->get('field_document_url')->getValue();
         if(!empty($field_file)) {
           $file_id = $field_file[0]['target_id'];
-          $file_url = \Drupal\file\Entity\File::load($file_id)->url();
+          $file_url = File::load($file_id)->url();
           $redirect_url = $file_url;
         }
         else if(!empty($field_doc_url)) {
@@ -138,11 +135,11 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     // Check to see if a redirect matches the alias.
     $redirect = \Drupal::service('redirect.repository')->findMatchingRedirect($current_path_alias);
 
-    // If the redirect exists, set the url to the redirect's destination.
+    // If the redirect exists, set the url to the destination.
     if ($redirect) {
       $redirect_value = $redirect->redirect_redirect->getValue();
       $redirect_uri = $redirect_value[0]['uri'];
-      $redirect_url = \Drupal\Core\Url::fromUri($redirect_uri)->toString();
+      $redirect_url = Url::fromUri($redirect_uri)->toString();
     }
 
     return $redirect_url;
