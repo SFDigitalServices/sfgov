@@ -1,15 +1,14 @@
-var SFGOV = {};
-SFGOV.util = {
-  getParam: function(name) {
-    var result = null,
-        tmp = [];
-    location.search
-        .substr(1)
-        .split("&")
-        .forEach(function (item) {
-          tmp = item.split("=");
-          if (tmp[0] === name) result = decodeURIComponent(tmp[1]);
-        });
-    return result;
+window.SFGOV = {
+  util: {
+    getParam(name) {
+      const parts = location.search.substr(1).split('&')
+      for (const part of parts) {
+        const [key, val] = part.split('=')
+        if (key === name) {
+          return decodeURIComponent(val)
+        }
+      }
+      return undefined
+    }
   }
 }
