@@ -5,28 +5,33 @@
  * - Appear only after 700px
  * - Disappear if the user starts to scroll down
  */
-(function ($, Drupal) {
+;(function ($, Drupal) {
   Drupal.behaviors.backToTop = {
     attach: function (context) {
-      $('#back-to-top', context).on('click', function(e) {
-        e.preventDefault();
-        $('html, body', context).animate({scrollTop: 0}, '300');
-      });
+      const top = document.getElementById('back-to-top')
+      const $win = $(window, context)
+      const $root = $('html, body', context)
 
-      $(window, context).on('load', function() {
-        var then = 0;
-        var now = 0;
-        $(window, context).once('scroll').on('scroll', function() {
-          now = $(window, context).scrollTop();
-          if (then > now && now > 700) {
-            $('#back-to-top').addClass('show');
-          }
-          else {
-            $('#back-to-top').removeClass('show');
-          }
-          then = now;
-        });
-      });
+      top.addEventListener('click', function (e) {
+        e.preventDefault()
+        $root.animate({ scrollTop: 0 }, '300')
+      })
+
+      $win.on('load', function () {
+        let then = 0
+        let now = 0
+        $win
+          .once('scroll')
+          .on('scroll', function () {
+            now = $win.scrollTop()
+            if (then > now && now > 700) {
+              top.classList.add('show')
+            } else {
+              top.classList.remove('show')
+            }
+            then = now
+          })
+      })
     }
-  };
-})(jQuery, Drupal);
+  }
+})(jQuery, Drupal)
