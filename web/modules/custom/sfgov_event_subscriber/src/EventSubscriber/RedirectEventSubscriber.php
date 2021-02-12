@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\sfgov_event_subscriber\EventSubscriber\RedirectEventSubscriber.
- */
-
 namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,7 +24,13 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     return $events;
   }
 
-  public function sfgovRedirect(GetResponseEvent $event, $redirect_url = NULL) {
+  /**
+   * Method to manage custom redirects.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The event object.
+   */
+  public function sfgovRedirect(GetResponseEvent $event) {
     // Don't redirect authenticated users.
     $account = \Drupal::currentUser();
     if (!in_array('anonymous', $account->getRoles())) {
@@ -41,19 +42,21 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
 
     if ($redirectBasedOnField) {
       $redirect_url = $redirectBasedOnField;
-    } elseif($redirectBasedOnAlias) {
+    }
+    elseif ($redirectBasedOnAlias) {
       $redirect_url = $redirectBasedOnAlias;
-    } else {
+    }
+    else {
       return;
     }
 
     // Reconstruct response.
-    if(!empty($redirect_url)) {
+    if (!empty($redirect_url)) {
       $response_headers = [
         'Cache-Control' => 'no-cache, no-store, must-revalidate',
       ];
       $response = new TrustedRedirectResponse($redirect_url, '302', $response_headers);
-      $cached_response = $this->setRedirectCachableDependency($response);
+      $cached_response = $this->setRedirectCacheableDependency($response);
 
       // Disable page cache for anonymous requests.
       \Drupal::service('page_cache_kill_switch')->trigger();
@@ -61,6 +64,15 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     }
   }
 
+  /**
+   * Add cache context to make sure the request isn't cached for auth users.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The event object.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   *   The node object or null.
+   */
   public function addCacheContextsToNode(GetResponseEvent $event) {
     $node = $event->getRequest()->attributes->get('node');
     if ($node && $node instanceof NodeInterface) {
@@ -70,30 +82,42 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         return NULL;
       }
       else {
-        // Add cache context to make sure the request won't be cached for authenticated users.
         $node->addCacheContexts(['user.roles:anonymous']);
       }
     }
-    return $node ? $node : null;
+    return $node ? $node : NULL;
   }
 
   /**
+   * Inject cache context into response.
+   *
    * @param \Symfony\Component\HttpFoundation\RedirectResponse $response
+   *   The original response object.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   The response object with cacheable dependency.
    */
-  public function setRedirectCachableDependency(RedirectResponse $response) {
-    if(!empty($cacheableDependency)) {
+  public function setRedirectCacheableDependency(RedirectResponse $response) {
+    if (!empty($cacheableDependency)) {
       $response->addCacheableDependency($cacheableDependency);
     }
     return $response;
   }
 
-  public function redirectBasedOnField(GetResponseEvent $event, $redirect_url = NULL) {
+  /**
+   * Follow redirects from aliases.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The event object.
+   *
+   * @return string|null
+   *   String to redirect to.
+   */
+  public function redirectBasedOnField(GetResponseEvent $event) {
 
     $media = $event->getRequest()->attributes->get('media');
 
-    if ($this->addCacheContextsToNode($event) != null) {
+    if ($this->addCacheContextsToNode($event) != NULL) {
 
       $node = $this->addCacheContextsToNode($event);
       $node_type = strtolower($node->type->entity->label());
@@ -122,25 +146,34 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         }
       }
     }
-    else if($media) {
+    elseif ($media) {
       // Media field redirect rule.
-      if($media->hasField('field_document_url') || $media->hasField('field_media_file')) {
+      if ($media->hasField('field_document_url') || $media->hasField('field_media_file')) {
         $field_file = $media->get('field_media_file')->getValue();
         $field_doc_url = $media->get('field_document_url')->getValue();
-        if(!empty($field_file)) {
+        if (!empty($field_file)) {
           $file_id = $field_file[0]['target_id'];
           $file_url = File::load($file_id)->url();
           $redirect_url = $file_url;
         }
-        else if(!empty($field_doc_url)) {
+        elseif (!empty($field_doc_url)) {
           $redirect_url = $field_doc_url[0]['uri'];
         }
       }
     }
-    return $redirect_url ? $redirect_url : null;
+    return $redirect_url ? $redirect_url : NULL;
   }
 
-  public function redirectBasedOnAlias(GetResponseEvent $event, $redirect_url = NULL) {
+  /**
+   * Follow redirects from aliases.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The event object.
+   *
+   * @return string|null
+   *   String to redirect to.
+   */
+  public function redirectBasedOnAlias(GetResponseEvent $event) {
 
     // Get the requested path alias.
     $request = $event->getRequest();
@@ -156,6 +189,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       $redirect_url = Url::fromUri($redirect_uri)->toString();
     }
 
-    return $redirect_url ? $redirect_url : null;
+    return $redirect_url ? $redirect_url : NULL;
   }
+
 }
