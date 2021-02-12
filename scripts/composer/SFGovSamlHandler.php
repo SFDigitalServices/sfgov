@@ -14,23 +14,22 @@ class SFGovSamlHandler
     return $project_root . '/web';
   }
 
-  public static function linkDependencies(Event $event) 
+  public static function copyDependencies(Event $event) 
   {
     $root = static::getDrupalRoot(getcwd());
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
 
-    $config_dir_target = $root . '/private/saml/config';
-    $config_dir_link = $vendor_dir . '/simplesamlphp/simplesamlphp/config';
+    $config_dir_source = $root . '/private/saml/config/';
+    $config_dir_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/config';
 
-    $metadata_dir_target = $root . '/private/saml/metadata';
-    $metadata_dir_link = $vendor_dir . '/simplesamlphp/simplesamlphp/metadata';
+    $config_file_source = $root . '/private/saml/simplesaml_config.php';
+    $config_file_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/config/config.php';
 
-    // remove vendor simplesamlphp config dir before linking
-    rmdir($config_dir_link);
-    symlink($config_dir_target, $config_dir_link);
+    $metadata_dir_source = $root . '/private/saml/metadata/';
+    $metadata_dir_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/metadata';
 
-    // remove vendor simplesamlphp metadata dir before linking
-    rmdir($metadata_dir_link);
-    symlink($metadata_dir_target, $metadata_dir_link);
+    exec('cp -r ' . $config_dir_source . ' ' . $config_dir_dest);
+    copy($config_file_source, $config_file_dest);
+    exec('cp -r ' . $metadata_dir_source . ' ' . $metadata_dir_dest);
   }
 }
