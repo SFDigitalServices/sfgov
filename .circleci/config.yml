@@ -100,10 +100,6 @@ jobs:
           command: ./.circleci/scripts/pantheon/01-prepare
 
       - run:
-          name: build assets
-          command: composer -n build-assets
-      
-      - run:
           name: add secrets
           command: |
             echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem
@@ -113,6 +109,10 @@ jobs:
             mkdir -p ./web/private/metadata
             echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/metadata/saml20-idp-remote.php
             echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
+
+      - run:
+          name: build assets
+          command: composer -n build-assets
 
       - run:
           name: prepare database for site-under test
