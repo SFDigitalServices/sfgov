@@ -102,13 +102,13 @@ jobs:
       - run:
           name: add secrets
           command: |
-            echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem
-            echo $FILE_SAMLCRT | base64 --decode >> ./web/private/saml.crt
-            echo $FILE_SAMLPEM | base64 --decode >> ./web/private/saml.pem
-            echo $FILE_SIMPLESAMLCONFIG | base64 --decode >> ./web/private/simplesaml_config.php
+            echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/saml/IDCSCertificate.pem
+            echo $FILE_SAMLCRT | base64 --decode >> ./web/private/saml/saml.crt
+            echo $FILE_SAMLPEM | base64 --decode >> ./web/private/saml/saml.pem
+            echo $FILE_SIMPLESAMLCONFIG | base64 --decode >> ./web/private/saml/simplesaml_config.php
             mkdir -p ./web/private/metadata
-            echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/metadata/saml20-idp-remote.php
-            echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
+            echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/saml/metadata/saml20-idp-remote.php
+            echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/saml/metadata/saml20-sp-remote.php
 
       - run:
           name: build assets
