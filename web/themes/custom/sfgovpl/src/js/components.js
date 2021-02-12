@@ -1,18 +1,24 @@
-(function($) {
-  var toggles = document.querySelectorAll('[data-toggle-container]');
-  for(var i=0; i<toggles.length; i++) {
-    (function(n) {
-      var trigger = toggles[i].querySelector('[data-toggle-trigger]');
-      $(trigger).click(function(e) { // TODO: remove jquery dependency, roll our own method of adding event listeners
-        var triggerLink = e.target;
-        if(toggles[n].hasAttribute('data-toggle-show')) {
-          toggles[n].removeAttribute('data-toggle-show');
-          triggerLink.innerHTML = 'Show more';
-        } else {
-          toggles[n].setAttribute('data-toggle-show', '');
-          triggerLink.innerHTML = 'Show less';
-        }
-      });
-    })(i);
+const toggles = document.querySelectorAll('[data-toggle-container]')
+
+for (const toggle of toggles) {
+  const trigger = toggle.querySelector('[data-toggle-trigger]')
+
+  if (!trigger) {
+    console.error('Toggle element contains no trigger (with the "data-toggle-trigger" attribute)', toggle)
+    continue
   }
-})(jQuery);
+
+  const showMoreText = toggle.getAttribute('data-show-text') || toggle.textContent || 'Show more'
+  const showLessText = toggle.getAttribute('data-hide-text') || 'Show less'
+
+  trigger.addEventListener('click', e => {
+    const triggerLink = e.target
+    if (toggle.hasAttribute('data-toggle-show')) {
+      toggle.removeAttribute('data-toggle-show')
+      triggerLink.innerHTML = showMoreText
+    } else {
+      toggle.setAttribute('data-toggle-show', 'true')
+      triggerLink.innerHTML = showLessText
+    }
+  })
+}

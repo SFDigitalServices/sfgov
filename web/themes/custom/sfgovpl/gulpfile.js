@@ -1,45 +1,55 @@
-const gulp = require('gulp');
-const sass = require('gulp-sass');
-const sourcemaps = require('gulp-sourcemaps');
-const postcss = require('gulp-postcss');
-const autoprefixer = require('autoprefixer');
-const browsersync = require('browser-sync').create();
-const path = require('path');
+const gulp = require('gulp')
+const babel = require('gulp-babel')
+const sass = require('gulp-sass')
+const sourcemaps = require('gulp-sourcemaps')
+const postcss = require('gulp-postcss')
+const autoprefixer = require('autoprefixer')
+const browsersync = require('browser-sync').create()
+const path = require('path')
 
-// drupal libraries which include sass source files
-const drupalLibraries = path.resolve(__dirname, '../../../libraries');
+const assets = gulp.parallel(css, js)
 
-exports.css = css;
-exports.watch = gulp.series(css, watch);
+exports.css = css
+exports.js = js
+exports.assets = assets
+exports.watch = gulp.series(assets, watch)
 
-exports.default = gulp.series(
-  gulp.parallel(css),
-  gulp.parallel(watch, serve)
-);
+exports.default = gulp.series(assets, gulp.parallel(watch, serve))
+
+function js() {
+  return gulp
+    .src('./src/js/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./dist/js'))
+    .pipe(browsersync.stream())
+}
 
 function css() {
-  const plugins = [
-    autoprefixer()
-  ];
   return gulp
-    .src('./src/sass/**/*.scss')
+    .src('./src/sass/*.scss')
     .pipe(sourcemaps.init())
-    .pipe(sass({ 
-      outputStyle: 'expanded',
-      includePaths: [drupalLibraries]
-    }))
-    .pipe(postcss(plugins))
+    .pipe(
+      sass({
+        outputStyle: 'expanded'
+      })
+    )
+    .pipe(postcss([autoprefixer()]))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist/css'))
-    .pipe(browsersync.stream());
+    .pipe(browsersync.stream())
 }
 
 function serve() {
   return browsersync.init({
     proxy: 'https://sfgov.lndo.site/'
-  });
+  })
 }
 
 function watch() {
-  return gulp.watch(config.css.source, css);
+  return gulp.parallel(
+    gulp.watch('./src/sass', css),
+    gulp.watch(['./src/js', 'babel.config.js'], js)
+  )
 }

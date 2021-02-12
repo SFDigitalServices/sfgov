@@ -104,6 +104,10 @@ jobs:
           command: composer -n build-assets
 
       - run:
+          name: build theme assets
+          command: ./scripts/custom/build-theme-assets.sh
+
+      - run:
           name: create simplesamlphp symlink
           command: |
             mkdir -p ./vendor/simplesamlphp
