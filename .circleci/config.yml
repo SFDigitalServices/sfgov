@@ -108,14 +108,6 @@ jobs:
           command: ./scripts/custom/build-theme-assets.sh
 
       - run:
-          name: create simplesamlphp symlink
-          command: |
-            mkdir -p ./vendor/simplesamlphp
-            cd ./vendor/simplesamlphp
-            rm -r simplesamlphp
-            ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
-      
-      - run:
           name: add secrets
           command: |
             echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem

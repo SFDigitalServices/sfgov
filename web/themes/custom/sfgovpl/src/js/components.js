@@ -8,10 +8,11 @@ for (const toggle of toggles) {
     continue
   }
 
+  const showMoreText = toggle.getAttribute('data-show-text') || toggle.textContent || 'Show more'
+  const showLessText = toggle.getAttribute('data-hide-text') || 'Show less'
+
   trigger.addEventListener('click', e => {
     const triggerLink = e.target
-    const showMoreText = toggle.getAttribute('data-show-text') || 'Show more'
-    const showLessText = toggle.getAttribute('data-hide-text') || 'Show less'
     if (toggle.hasAttribute('data-toggle-show')) {
       toggle.removeAttribute('data-toggle-show')
       triggerLink.innerHTML = showMoreText

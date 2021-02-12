@@ -1,12 +1,16 @@
 {% extends 'node.html.twig' %}
 
 {% block title %}
+
 {% endblock title %}
 
 {% block body %}
   {{ content.field_image }}
   <div class="news--teaser--body">
-    <h2{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h2>
-    {{ content|without('links', 'field_image') }}
+    <h2 {{ title_attributes.addClass(title_classes) }}>
+      <a href="{{ url }}" rel="bookmark">{{ node.label }}</a>
+    </h2>
+    {{ node.field_abstract.value }}
+    {{ content|without('links', 'field_image', 'field_abstract') }}
   </div>
 {% endblock body %}

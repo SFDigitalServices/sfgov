@@ -1,9 +1,8 @@
-{% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
-{% set description = node.get('field_description').getValue()[0]['value'] %}
 {% set type = node.type.entity.label %} {# content type #}
-{% include "@theme/search-result-topic.twig" with {
-  "content_type": type,
-  "url": url,
-  "title": elements['#node'].get('title').getString(),
-  "body": description
+
+{% include '@theme/search-result-topic.twig' with {
+  content_type: type,
+  url: url,
+  title: node.label,
+  body: node.field_description.value
 } %}
