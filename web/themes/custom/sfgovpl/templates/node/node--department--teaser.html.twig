@@ -1,12 +1,15 @@
-<div class="transaction-card">
+{% set classes = ['transaction-card'] %}
+<div {{ attributes.addClass(classes) }}>
   <div class="transaction-card-container">
     <h2 class="transaction-card__title">
       {% if url %}
-        <a href="{{ url }}" class="transaction-card--link">{{ label }}</a>
+        <a href="{{ url }}" class="transaction-card--link">{{ node.label }}</a>
       {% else %}
-        {{ label }}
+        {{ node.label }}
       {% endif %}
     </h2>
-    <div class="transaction-card__body">{{ node.field_description.value }}</div>
+    <div class="transaction-card__body">
+      {{ node.field_description.value }}
+    </div>
   </div>
 </div>
