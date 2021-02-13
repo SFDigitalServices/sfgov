@@ -312,3 +312,18 @@ function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $for
   // Attach #form_id to all form elements.
   sfgov_utilities_attach_form_id($form, $form_id);
 }
+
+/**
+ * Implements hook_cron().
+ */
+function sfgov_utilities_cron() {
+  $apiKeys = \Drupal\Core\Site\Settings::get('gmaps_api_keys');
+  $gmap_config = \Drupal::config('sfgov_utilities.settings');
+  
+  foreach($apiKeys as $apiKey) {
+    if($gmap_config->get('gmaps_api_key') !== $apiKey) {
+      \Drupal::service('config.factory')->getEditable('sfgov_utilities.settings')->set('gmaps_api_key', $apiKey)->save();
+      break;
+    }
+  }
+}
