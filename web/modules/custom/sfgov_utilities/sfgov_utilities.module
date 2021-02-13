@@ -315,16 +315,29 @@ function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $for
 
 /**
  * Implements hook_cron().
+ * 
+ * TODO: find a way to write the updated array to an accessible var
+ * accessing settings via \Drupal\Core\Site\Settings is readonly
+ * so at the moment, we're really only swapping between two keys vs the entire array of keys
  */
 function sfgov_utilities_cron() {
-  $apiKeys = \Drupal\Core\Site\Settings::get('gmaps_api_keys');
-  $gmap_config = \Drupal::config('sfgov_utilities.settings');
+  $api_keys = \Drupal\Core\Site\Settings::get('gmaps_api_keys');
+
+  if(!empty($api_keys)) {
+    $current_key = \Drupal::config('sfgov_utilities.settings')->get('gmaps_api_key');
+    $new_key = $api_keys[0];
   
-  foreach($apiKeys as $apiKey) {
-    if($gmap_config->get('gmaps_api_key') !== $apiKey) {
-      \Drupal::service('config.factory')->getEditable('sfgov_utilities.settings')->set('gmaps_api_key', $apiKey)->save();
-      break;
+    if($new_key === $current_key) {
+      $found_key = array_search($current_key, $api_keys);
+  
+      if($found_key >= 0) {
+        array_splice($api_keys, $found_key, 1);
+        $api_keys[] = $current_key;
+        $new_key = $api_keys[0];
+      }
     }
+
+    \Drupal::service('config.factory')->getEditable('sfgov_utilities.settings')->set('gmaps_api_key', $new_key)->save();
   }
 
   \Drupal::service('cache.render')->invalidateAll();
