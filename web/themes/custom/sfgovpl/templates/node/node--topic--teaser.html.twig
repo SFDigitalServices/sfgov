@@ -1,21 +1,8 @@
-{% set url = path('entity.node.canonical', {'node': elements['#node'].id()  }) %}
-
-{% if node.get('field_description').getValue()[0] %}
-  {% set content = node.get('field_description').getValue()[0]['value'] %}
-{% endif %}
-
-{# {% include "@theme/transaction-card.twig" with {
-  "transaction_card": {
-    "url": url,
-    "title": elements['#node'].get('title').getString(),
-    "body": content
-  }
-} %} #}
-
-<div class="sfgov-container-item">
-  {% include "@theme/topic-card.twig" with {
-    "title": elements['#node'].get('title').getString(),
-    "description": content,
-    "url": url
+{% set classes = ['sfgov-container-item'] %}
+<div {{ attributes.addClass(classes) }}>
+  {% include '@theme/topic-card.twig' with {
+    title: node.label,
+    description: node.field_description.value,
+    url: url
   } %}
 </div>
