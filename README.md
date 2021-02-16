@@ -15,8 +15,7 @@
 
 1. **Get the codebase**: `git clone git@github.com:SFDigitalServices/sfgov.git`. _Note: Always use the Github repository for development. CircleCI is used to deploy an artifact build to Pantheon via Github._
 2. Go to the root directory. `cd sfgov`
-2. **Run the custom script** which will also install Composer dependencies: `./scripts/custom/local_dev_setup.sh`
-3. **Download the following assets** from files(_dev)/private/saml on Pantheon via SFTP or the Backups tab on the dashboard. Place them in web/sistes/default/files/private/saml:
+3. **Download the following assets** from files(_dev)/private/saml on Pantheon via SFTP or the Backups tab on the dashboard. Place them in web/sites/default/files/private/saml:
 
     ```sh
     IDCSCertificate.pem
@@ -25,11 +24,11 @@
     saml.pem
     simplesaml_config.php
     ```
-
-4. **Start the Lando VM**: `lando start`
-5. **Obtain a [machine token](https://pantheon.io/docs/machine-tokens/)** from your Pantheon dashboard, and run the provided command, making sure to prefix it with `lando`, e.g. `lando terminus auth:login --machine-token=TOKEN`.
-6. **Get latest DB and files from Pantheon** dev environment: `lando pull`. Most of the time, code will not need to be pulled from Pantheon: `lando pull --code=none --database=dev --files=dev`.
-7. Create a **local services** file:
+4. Install Composer dependencies and execute post-install scripts (including copying saml related things above to the right vendor directory): `composer install`
+5. **Start the Lando VM**: `lando start`
+6. **Obtain a [machine token](https://pantheon.io/docs/machine-tokens/)** from your Pantheon dashboard, and run the provided command, making sure to prefix it with `lando`, e.g. `lando terminus auth:login --machine-token=TOKEN`.
+7. **Get latest DB and files from Pantheon** dev environment: `lando pull`. Most of the time, code will not need to be pulled from Pantheon: `lando pull --code=none --database=dev --files=dev`.
+8. Create a **local services** file:
 
     <details>
       <summary>Copy development.services.yml</summary>
@@ -54,7 +53,7 @@
 
     </details>
 
-8. Create a **local settings** file, and add the settings below:
+9. Create a **local settings** file, and add the settings below:
 
     <details>
       <summary>Copy example.settings.local.php</summary>
@@ -92,7 +91,7 @@
 
     _See [Disable Drupal 8 caching during development](https://www.drupal.org/node/2598914) for more details_.
 
-9. **Update dependencies and active config** in the following order:
+10. **Update dependencies and active config** in the following order:
 
     ```sh
     # 1. After updating the codebase, install any pending composer dependencies.
@@ -105,7 +104,7 @@
     lando drush cr
     ```
 
-10. Visit [https://sfgov.lndo.site](https://sfgov.lndo.site). 🎉
+11. Visit [https://sfgov.lndo.site](https://sfgov.lndo.site). 🎉
 
 ## Pull Request Workflow
 
