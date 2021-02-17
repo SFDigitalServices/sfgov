@@ -33,11 +33,7 @@ class VaccineController extends ControllerBase {
   }
 
   public function makeFilters() {
-    $filters = [
-      '#type' => 'checkbox',
-      '#title' => t('Only show sites open to the general public.')
-    ];
-    return $filters;
+    return \Drupal::formBuilder()->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
   public function makeResults() {
