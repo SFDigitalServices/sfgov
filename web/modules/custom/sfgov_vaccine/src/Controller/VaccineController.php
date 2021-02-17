@@ -37,10 +37,18 @@ class VaccineController extends ControllerBase {
   }
 
   public function makeResults() {
-    $results = [
-      '#type' => 'checkbox',
-      '#title' => t('Only show sites open to the general public.')
+
+    $titles = ['Moscone', 'Laguna', 'Walgreens'];
+    $results = [];
+
+    foreach ($titles as $title) {
+      $result = [
+        'site_title' => $title,
     ];
+
+      $results[] = $result;
+    }
+
     return $results;
   }
 
