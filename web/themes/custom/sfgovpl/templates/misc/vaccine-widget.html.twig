@@ -9,13 +9,15 @@
   </div>
 </div>
 
-<div class="">
+<div class="sfgov-full-bleed">
   <div class="sfgov-section-container">
-    {{ drupal_dump(results) }}
     {% for result in results %}
-      <h3>
-        {{ result.site_title }}
-      </h3>
+      {% include '@theme/atoms/service-card.twig' with {
+        title: result.site_title,
+        description: '',
+        url: '',
+        heading: 'h3'
+      } %}
     {% endfor %}
   </div>
 </div>

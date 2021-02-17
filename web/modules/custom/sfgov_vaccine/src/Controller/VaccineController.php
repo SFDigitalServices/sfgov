@@ -38,14 +38,14 @@ class VaccineController extends ControllerBase {
 
   public function makeResults() {
 
-    $titles = ['Moscone', 'Laguna', 'Walgreens'];
+    $path_to_file = drupal_get_path('module', 'sfgov_vaccine') . '/data/sites.json';
+    $sites = json_decode(file_get_contents($path_to_file));
+
     $results = [];
-
-    foreach ($titles as $title) {
+    foreach ($sites as $site_id => $site_data ) {
       $result = [
-        'site_title' => $title,
-    ];
-
+        'site_title' => $site_data->site_title,
+      ];
       $results[] = $result;
     }
 
