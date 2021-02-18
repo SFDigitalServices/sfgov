@@ -4,7 +4,7 @@ namespace Drupal\sfgov_vaccine\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Class VaccineController.
@@ -38,13 +38,18 @@ class VaccineController extends ControllerBase {
 
   public function makeResults() {
 
-    $path_to_file = drupal_get_path('module', 'sfgov_vaccine') . '/data/sites.json';
-    $sites = json_decode(file_get_contents($path_to_file));
+    // @todo Figure out what to do if this fails.
+    /** @var \GuzzleHttp\Client $client */
+    $client = \Drupal::service('http_client_factory')->fromOptions([
+      'base_uri' => 'http://zakiyadesigns.com/',
+    ]);
+    $response = $client->get('sites.json');
+    $sites = Json::decode($response->getBody());
 
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
       $result = [
-        'site_title' => $site_data->site_title,
+        'site_title' => $site_data['site_title'],
       ];
       $results[] = $result;
     }
