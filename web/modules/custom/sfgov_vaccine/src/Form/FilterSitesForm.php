@@ -21,7 +21,7 @@ class FilterSitesForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['open'] = [
+    $form['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show sites open to the general public'),
       '#default_value' => 'false',
@@ -74,9 +74,6 @@ class FilterSitesForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state->getValues() as $key => $value) {
-      // @TODO: Validate fields.
-    }
     parent::validateForm($form, $form_state);
   }
 
@@ -84,10 +81,7 @@ class FilterSitesForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Display result.
-    foreach ($form_state->getValues() as $key => $value) {
-      \Drupal::messenger()->addMessage($key . ': ' . ($key === 'text_format'?$value['value']:$value));
-    }
+    return NULL;
   }
 
 }

@@ -37,9 +37,9 @@ class VaccineController extends ControllerBase {
     // @todo Figure out what to do if this fails.
     /** @var \GuzzleHttp\Client $client */
     $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => 'https://vaccination-site-microservice-git-api-spec.sfds.vercel.app/',
+      'base_uri' => 'http://zakiyadesigns.com/',
     ]);
-    $response = $client->get('api/v1/sites');
+    $response = $client->get('sites.json');
     return Json::decode($response->getBody());
   }
 
@@ -58,15 +58,18 @@ class VaccineController extends ControllerBase {
       // Prep some vars.
       $available = $site_data['active']; // Boolean.
       $site_name = $site_data['name'];
+      $restrictions = $site_data['restrictions'];
 
       // Map results.
       $result = [
         'site_name' => $site_name,
-        'available' => $available ? t('Appointments Available') : '',
         'attributes' => new Attribute([
-          'class' => ['sfgov-service-card'],
+          'class' => ['sfgov-service-card', 'vaccine-site'],
           'data-available' => $available ? 'true': 'false',
+          'data-restrictions' => $restrictions ? 'false' : 'true',
           ]),
+        'restrictions' => $restrictions ? t('Has restrictions') : t('Open to anyone'),
+        'available' => $available ? t('Appointments Available') : t('No Available Appointments'),
       ];
       $results[] = $result;
     }
