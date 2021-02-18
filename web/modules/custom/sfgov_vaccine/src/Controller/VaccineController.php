@@ -5,6 +5,7 @@ namespace Drupal\sfgov_vaccine\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Class VaccineController.
@@ -48,8 +49,17 @@ class VaccineController extends ControllerBase {
 
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
+      // Prep some vars.
+      $available = $site_data['appointments']['available'];
+
+      // Map results.
       $result = [
-        'site_title' => $site_data['site_title'],
+        'site_name' => $site_data['site_name'],
+        'available' => $available ? t('Appointments Available') : '',
+        'attributes' => new Attribute([
+          'class' => ['sfgov-service-card'],
+          'data-available' => $available ? 'true': 'false',
+          ]),
       ];
       $results[] = $result;
     }
