@@ -13,10 +13,19 @@
 <div class="sfgov-full-bleed" data-vaccine="results">
   <div class="sfgov-section-container">
     {% for result in results %}
+      {% set description %}
+        <p>
+          {{ result.restrictions }}
+        </p>
+        <p>
+          {{ result.available }}
+        </p>
+      {% endset %}
+
       {% include '@theme/atoms/vaccine-site-card.twig' with {
         attributes: result.attributes,
         title: result.site_name,
-        description: result.available,
+        description: description,
         url: ''
       } %}
     {% endfor %}
