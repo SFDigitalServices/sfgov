@@ -1,3 +1,4 @@
+{{ attach_library('sfgov_vaccine/filter_sites') }}
 {% include '@theme/hero-banner-color.twig' with {
   banner: {
     title: page_title
@@ -9,14 +10,14 @@
   </div>
 </div>
 
-<div class="sfgov-full-bleed">
+<div class="sfgov-full-bleed" data-vaccine="results">
   <div class="sfgov-section-container">
     {% for result in results %}
-      {% include '@theme/atoms/service-card.twig' with {
-        title: result.site_title,
-        description: '',
-        url: '',
-        heading: 'h3'
+      {% include '@theme/atoms/vaccine-site-card.twig' with {
+        attributes: result.attributes,
+        title: result.site_name,
+        description: result.available,
+        url: ''
       } %}
     {% endfor %}
   </div>
