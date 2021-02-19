@@ -1,19 +1,21 @@
 {# result.available can be true false or null #}
 {% if result.available is not null and result.booking_url %}
-  <div class="vaccine-site__booking_info">
-    <div class="field">
-      {{ result.available
-        ? 'Appointments Available as of'|t
-        : 'No appointments as of'|t }}
-      {{ result.generated }}
-    </div>
-
+  <div class="vaccine-site__booking_info {{ result.available ? 'yes' : 'no' }}">
     {% if result.available %}
+      <div class="field">
+        {{ 'Appointments Available as of'|t }} {{ result.generated }}
+      </div>
       <div class="sfgov-cta-button__container">
         <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
       </div>
     {% else %}
-      <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
+      <div class="field">
+        {{ 'No appointments as of'|t }}
+        {{ result.generated }}
+      </div>
+      <div class="field">
+        <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
+      </div>
     {% endif %}
 
     {# Show booking info if drop in is true. #}

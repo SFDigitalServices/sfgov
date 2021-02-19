@@ -88,8 +88,22 @@
 }
 
 .vaccine-site__booking_info {
-  background: $c-blue-1;
+  background-color: $c-blue-1;
   padding: 20px;
+
+  &.yes {
+    @include background-image('check-green.svg', 20px 25px, $c-blue-1);
+    .field {
+      padding-left: 40px;
+    }
+  }
+
+  &.no {
+    @include background-image('close-red.svg', 20px 25px, $c-blue-1);
+    .field {
+      padding-left: 40px;
+    }
+  }
 
   a {
     text-align: center;
