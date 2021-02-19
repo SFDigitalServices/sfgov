@@ -14,27 +14,39 @@
   <div class="sfgov-section-container">
     {% for result in results %}
       {% set description %}
-        <div>
-          <a href="{{ result.address_url }}">{{ result.address_text }}</a>
-        </div>
-        <div>
-          {{ result.restrictions }}
-        </div>
-        <div>
-          {% for eligibility in result.eligibilities %}
-            <span>{{ eligibility }}</span>
-          {% endfor %}
+        {# address_url #}
+        {% if result.address_url %}
+          <div class="vaccine-site__address field">
+            <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+          </div>
+        {% endif %}
+
+        {# Open to .. #}
+        <div class="field">
+          <label>{{ result.restrictions }}</label>
+
+          {# 65 and over, etc #}
+          <div class="vaccine-site__eligibilities">
+            {% for eligibility in result.eligibilities %}
+              <span class="vaccine-site__eligibility">{{ eligibility }}</span>
+            {% endfor %}
+          </div>
         </div>
 
-        <label>{{ 'Languages'|t }}</label>
-        <div>
-          {{ result.languages|join(', ') }}
+        {# Languages #}
+        <div class="field">
+          <label>{{ 'Languages'|t }}</label>
+          <div>
+            {{ result.languages|join(', ') }}
+          </div>
         </div>
 
-        <label>{{ 'Access'|t }}</label>
-        {{ result.access_modes|join(', ') }}
-
-        <div>
+        {# Drive thru, walk thru, wheelchair #}
+        <div class="field">
+          <label>{{ 'Access'|t }}</label>
+          {{ result.access_modes|join(', ') }}
+        </div>
+        <div class="field">
           <a href="{{ result.info_url }}">
             {{ 'Learn more about this location'|t }}
           </a>
