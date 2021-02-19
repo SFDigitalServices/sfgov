@@ -173,6 +173,7 @@ class VaccineController extends ControllerBase {
       $info_url = $site_data['info']['url'];
       $booking_url = $site_data['booking']['url'];
       $booking_dropins = $site_data['booking']['dropins'];
+      $booking_info = $site_data['booking']['info'];
 
       // Map results.
       $result = [
@@ -196,6 +197,7 @@ class VaccineController extends ControllerBase {
         'available' => $available,
         'booking_url' => $booking_url,
         'booking_dropins' => $booking_dropins,
+        'booking_info' => $booking_info,
       ];
       $results[] = $result;
     }
