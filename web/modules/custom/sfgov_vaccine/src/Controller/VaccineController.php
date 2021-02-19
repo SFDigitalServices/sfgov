@@ -62,12 +62,39 @@ class VaccineController extends ControllerBase {
   private function makeResults() {
 
     $all_data = $this->datafecth();
-
     $sites = $all_data['data']['sites'];
-
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
-      // Prep some vars.
+
+      // Pre-prep languages.
+      $site_data_languages = $site_data['access']['languages'];
+      $languages_with_text = [
+        'en' => [
+          'boolean' => $site_data_languages["en"],
+          'text' => t('English')
+         ],
+        'es' => [
+          'boolean' => $site_data_languages["es"],
+          'text' => t('Spanish')
+        ],
+        'zh' => [
+          'boolean' => $site_data_languages["zh"],
+          'text' => t('Chinese')
+        ],
+        'fil' => [
+          'boolean' => $site_data_languages["fil"],
+          'text' => t('Filipinio')
+        ]
+      ];
+
+      $languages = [];
+      foreach ($languages_with_text as $key => $value){
+        if ($value['boolean'] == TRUE) {
+          array_push($languages, $value['text']);
+        }
+      }
+
+      // Usable variables.
       $available = $site_data['active']; // Boolean.
       $site_name = $site_data['name'];
       $restrictions = $site_data['open_to']['everyone'];
@@ -82,6 +109,7 @@ class VaccineController extends ControllerBase {
           'data-restrictions' => $restrictions ? 'true' : 'false',
           ]),
         'restrictions' => $restrictions_text,
+        'languages' => $languages,
         'available' => $available ? t('Appointments Available') : t('No Available Appointments'),
       ];
       $results[] = $result;
