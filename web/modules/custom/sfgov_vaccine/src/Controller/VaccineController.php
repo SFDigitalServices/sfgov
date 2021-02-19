@@ -164,7 +164,7 @@ class VaccineController extends ControllerBase {
       }
 
       // Usable variables.
-      $available = $site_data['appointments']['available']; // Boolean.
+      $available = $site_data['appointments']['available']; // True, false, or null.
       $site_name = $site_data['name'];
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'];
@@ -193,7 +193,7 @@ class VaccineController extends ControllerBase {
         'eligibilities' => $eligibilities,
         'access_modes' => $access_modes,
         'info_url' => $info_url,
-        'available' => $available ? t('Appointments Available as of') : t('No appointments as of'),
+        'available' => $available,
         'booking_url' => $booking_url,
         'booking_dropins' => $booking_dropins,
       ];

@@ -1,3 +1,19 @@
-<div>
-  <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
-</div>
+{# result.available can be true false or null #}
+{% if result.available is not null %}
+  <div class="vaccine-site__booking_info">
+    <div>
+      {{ result.available
+        ? 'Appointments Available as of'|t
+        : 'No appointments as of'|t }}
+      {{ result.generated }}
+    </div>
+
+    {% if result.available %}
+      <button value="{{ result.booking_url }}">
+        {{ 'Book an appointment'|t }}
+      </button>
+    {% else %}
+      <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
+    {% endif %}
+  </div>
+{% endif %}
