@@ -95,11 +95,50 @@ class VaccineController extends ControllerBase {
         }
       }
 
+      // Pre-prep Eligibility.
+      $site_data_eligibility = $site_data['eligibility'];
+      $eligibility_with_text = [
+        '65_and_over' => [
+          'boolean' => $site_data_eligibility["65_and_over"],
+          'text' => t('65 and over')
+        ],
+        'healthcare_workers' => [
+          'boolean' => $site_data_eligibility["healthcare_workers"],
+          'text' => t('Healthcare workers')
+        ],
+        'education_and_childcare' => [
+          'boolean' => $site_data_eligibility["education_and_childcare"],
+          'text' => t('Education and childcare')
+        ],
+        'agriculture_and_food' => [
+          'boolean' => $site_data_eligibility["agriculture_and_food"],
+          'text' => t('Agriculture and food')
+        ],
+        'second_dose_only' => [
+          'boolean' => $site_data_eligibility["second_dose_only"],
+          'text' => t('Second dose')
+        ],
+        'emergency_services' => [
+          'boolean' => $site_data_eligibility["emergency_services"],
+          'text' => t('Emergency services')
+        ]
+      ];
+
+      // @todo make this a reusable method for languages and eligibility.
+      $eligibilities = [];
+      foreach ($eligibility_with_text as $key => $value){
+        if ($value['boolean'] == TRUE) {
+          array_push($eligibilities, $value['text']);
+        }
+      }
+
       // Usable variables.
       $available = $site_data['appointments']['available']; // Boolean.
       $site_name = $site_data['name'];
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'];
+      $address_text = $site_data['location']['address'];
+      $address_url = $site_data['location']['url'];
 
       // Map results.
       $result = [
@@ -111,7 +150,10 @@ class VaccineController extends ControllerBase {
           ]),
         'generated' => date( "F j, Y, g:i a", strtotime($generated)),
         'restrictions' => $restrictions_text,
+        'address_text' => $address_text,
+        'address_url' => $address_url,
         'languages' => $languages,
+        'eligibilities' => $eligibilities,
         'available' => $available ? t('Appointments Available as of') : t('No appointments as of'),
       ];
       $results[] = $result;

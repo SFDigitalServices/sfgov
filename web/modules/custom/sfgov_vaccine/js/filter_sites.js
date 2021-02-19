@@ -6,10 +6,15 @@
       // @todo Banish the jquery!
       const $button = $(".vaccine-filter-form #edit-submit");
       const $sites = $(".vaccine-site");
-      const $filters = ["available", "restrictions"];
+      const $checkboxFilters = ["available", "restrictions"];
+      const $selectFilters = ["language", "mode"];
 
-      function checkActiveFilters(filter_label, y) {
+      function checkActiveSelectFilters(filter_label, y) {
         return $(`[name=${filter_label}]`).prop("checked");
+      }
+
+      function checkActiveCheckboxFilters(filter_label) {
+        return $(`[name=${filter_label}]`).prop("selected");
       }
 
       // Click Apply.
@@ -19,7 +24,13 @@
         // @todo Change to if class exists in display().
         $sites.removeClass("invisible");
 
-        const $active_filters = $filters.filter(checkActiveFilters);
+        const $active_filters = $checkboxFilters.filter(
+          checkActiveCheckboxFilters
+        );
+
+        const $selectFilters = $checkboxFilters.filter(
+          checkActiveSelectFilters
+        );
 
         function isRemoved(value, site) {
           for (let filter_label of $active_filters) {
