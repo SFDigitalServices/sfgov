@@ -49,9 +49,9 @@ class FilterSitesForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Access Mode'),
       '#options' => [
-        'all' => $this->t('Drive-thru and walk-thru'),
-        'drive' => $this->t('Drive-thru'),
-        'walk' => $this->t('Walk-thru'),
+        'wadr' => $this->t('Drive-thru and walk-thru'),
+        'dr' => $this->t('Drive-thru'),
+        'wa' => $this->t('Walk-thru'),
       ],
       '#default_value' => 'all',
       '#multiple' => FALSE,
@@ -60,9 +60,12 @@ class FilterSitesForm extends FormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('Eligibility requirements '),
       '#options' => [
-        '75+' => $this->t('Age 75 and over'),
-        '65+' => $this->t('Drive-thru'),
-        'frontline' => $this->t('Frontline healthcare workers'),
+        '65' => $this->t('65 and over'),
+        'hw' => $this->t('Healthcare workers'),
+        'ec' => $this->t('Education and childcare'),
+        'af' => $this->t('Agriculture and food'),
+        'sd' => $this->t('Second dose'),
+        'es' => $this->t('Emergency services'),
         ],
     ];
     $form['submit'] = [
