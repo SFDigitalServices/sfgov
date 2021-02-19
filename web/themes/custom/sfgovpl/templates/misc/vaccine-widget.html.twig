@@ -14,12 +14,12 @@
   <div class="sfgov-section-container">
     {% for result in results %}
       {% set description %}
-        <p>
+        <div>
           <a href="{{ result.address_url }}">{{ result.address_text }}</a>
-        </p>
-        <p>
+        </div>
+        <div>
           {{ result.restrictions }}
-        </p>
+        </div>
         <div>
           {% for eligibility in result.eligibilities %}
             <span>{{ eligibility }}</span>
@@ -27,22 +27,27 @@
         </div>
 
         <label>{{ 'Languages'|t }}</label>
-        <p>
+        <div>
           {{ result.languages|join(', ') }}
-        </p>
-        <p>
+        </div>
+        <div>
           {{ result.available }} {{ result.generated }}
-        </p>
+        </div>
 
         <label>{{ 'Access'|t }}</label>
         {{ result.access_modes|join(', ') }}
+
+        <div>
+          <a href="{{ result.info_url }}">
+            {{ 'Learn more about this location' }}
+          </a>
+        </div>
       {% endset %}
 
       {% include '@theme/atoms/vaccine-site-card.twig' with {
         attributes: result.attributes,
         title: result.site_name,
-        description: description,
-        url: ''
+        description: description
       } %}
     {% endfor %}
   </div>

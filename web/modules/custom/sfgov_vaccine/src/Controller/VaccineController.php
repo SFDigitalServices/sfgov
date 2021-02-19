@@ -164,6 +164,7 @@ class VaccineController extends ControllerBase {
       $restrictions_text = $site_data['open_to']['text'];
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
+      $info_url = $site_data['info']['url'];
 
       // Map results.
       $result = [
@@ -172,7 +173,7 @@ class VaccineController extends ControllerBase {
           'class' => ['sfgov-service-card', 'vaccine-site'],
           'data-available' => $available ? 'true': 'false',
           'data-restrictions' => $restrictions ? 'true' : 'false',
-          ]),
+        ]),
         'generated' => date( "F j, Y, g:i a", strtotime($generated)),
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
@@ -180,6 +181,7 @@ class VaccineController extends ControllerBase {
         'languages' => $languages,
         'eligibilities' => $eligibilities,
         'access_modes' => $access_modes,
+        'info_url' => $info_url,
         'available' => $available ? t('Appointments Available as of') : t('No appointments as of'),
       ];
       $results[] = $result;
