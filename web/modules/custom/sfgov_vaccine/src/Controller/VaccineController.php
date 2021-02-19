@@ -159,7 +159,8 @@ class VaccineController extends ControllerBase {
       foreach ($access_mode_with_text as $key => $value){
         if ($value['boolean'] == TRUE) {
           array_push($access_modes, $value['text']);
-          array_push($access_mode_keys, $key);
+          if ($key != 'wh') {
+            array_push($access_mode_keys, $key);}
         }
       }
 
@@ -174,16 +175,20 @@ class VaccineController extends ControllerBase {
       $booking_url = $site_data['booking']['url'];
       $booking_dropins = $site_data['booking']['dropins'];
       $booking_info = $site_data['booking']['info'];
+      $wheelchair = $site_data['access']['wheelchair'];
 
       // Map results.
       $result = [
         'site_name' => $site_name,
         'attributes' => new Attribute([
           'class' => ['sfgov-service-card', 'vaccine-site'],
-          'data-available' => $available ? 'true': 'false',
-          'data-restrictions' => $restrictions ? 'true' : 'false',
+          // Single Selects.
+          'data-restrictions' => $restrictions ? 0 : 1,
+          'data-available' => $available,
+          'data-wheelchair' => $wheelchair,
+          // Multi-selects.
           'data-language' => implode('-',$language_keys),
-          'data-access' => implode('',$access_mode_keys),
+          'data-access' => implode('-',$access_mode_keys),
           'data-eligibility' => implode('-',$eligibility_keys),
         ]),
         'generated' => date( "F j, Y, g:i a", strtotime($generated)),
