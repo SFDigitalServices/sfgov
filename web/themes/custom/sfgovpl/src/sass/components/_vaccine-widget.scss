@@ -3,12 +3,6 @@
 }
 
 .vaccine-filter-form {
-  // Negative margins are bad but this is more reliable than a body class for now.
-  margin: 0 auto;
-  @include media($narrow-screen) {
-    margin: 0 0 0 80px;
-  }
-
   h2 {
     @include fs-title-3;
     margin-bottom: 40px;
@@ -62,4 +56,33 @@
   input[type=submit] {
     width: auto;
   }
+}
+
+.vaccine-site {
+  margin-bottom: 40px;
+
+  label {
+    @include fs-body-bold;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+}
+
+.vaccine-site__title {
+  @include fs-title-3-mobile;
+}
+
+.vaccine-site__address {
+  a {
+    @include link-colors($c-light-slate, $c-bright-blue);
+  }
+}
+
+.vaccine-site__eligibility {
+  @include fs-small-text;
+  background: $c-grey-2;
+  padding: 3px 8px;
+  word-break: keep-all;
 }

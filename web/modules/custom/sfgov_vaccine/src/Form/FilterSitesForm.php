@@ -21,6 +21,11 @@ class FilterSitesForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['label'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Filters'),
+      ];
     $form['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show sites open to the general public'),
@@ -31,9 +36,15 @@ class FilterSitesForm extends FormBase {
       '#title' => $this->t('Only show sites with available appointments'),
       '#default_value' => FALSE,
     ];
+    $form['wheelchair'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Wheelchair accessible'),
+      '#default_value' => FALSE,
+    ];
     $form['language'] = [
       '#type' => 'select',
       '#title' => $this->t('Language'),
+      '#title_display' => 'hidden',
       '#options' => [
         // @todo refactor with VaccineController->makeResults() for DRYness.
         'any' => $this->t('Any language'),
@@ -47,7 +58,7 @@ class FilterSitesForm extends FormBase {
     ];
     $form['access_mode'] = [
       '#type' => 'select',
-      '#title' => $this->t('Access Mode'),
+      '#title_display' => 'hidden',
       '#options' => [
         'wadr' => $this->t('Drive-thru and walk-thru'),
         'dr' => $this->t('Drive-thru'),
