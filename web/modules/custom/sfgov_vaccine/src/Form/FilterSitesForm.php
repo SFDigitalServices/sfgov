@@ -45,9 +45,9 @@ class FilterSitesForm extends FormBase {
       '#default_value' => 'any',
       '#multiple' => FALSE,
     ];
-    $form['mode'] = [
+    $form['access_mode'] = [
       '#type' => 'select',
-      '#title' => $this->t('Mode'),
+      '#title' => $this->t('Access Mode'),
       '#options' => [
         'all' => $this->t('Drive-thru and walk-thru'),
         'drive' => $this->t('Drive-thru'),
