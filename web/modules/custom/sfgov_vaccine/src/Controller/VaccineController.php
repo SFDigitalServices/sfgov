@@ -89,36 +89,38 @@ class VaccineController extends ControllerBase {
       ];
 
       $languages = [];
+      $language_keys = [];
       foreach ($languages_with_text as $key => $value){
         if ($value['boolean'] == TRUE) {
           array_push($languages, $value['text']);
+          array_push($language_keys, $key);
         }
       }
 
       // Pre-prep Eligibility.
       $site_data_eligibility = $site_data['eligibility'];
       $eligibility_with_text = [
-        '65_and_over' => [
+        '65' => [
           'boolean' => $site_data_eligibility["65_and_over"],
           'text' => t('65 and over')
         ],
-        'healthcare_workers' => [
+        'hw' => [
           'boolean' => $site_data_eligibility["healthcare_workers"],
           'text' => t('Healthcare workers')
         ],
-        'education_and_childcare' => [
+        'ec' => [
           'boolean' => $site_data_eligibility["education_and_childcare"],
           'text' => t('Education and childcare')
         ],
-        'agriculture_and_food' => [
+        'af' => [
           'boolean' => $site_data_eligibility["agriculture_and_food"],
           'text' => t('Agriculture and food')
         ],
-        'second_dose_only' => [
+        'sd' => [
           'boolean' => $site_data_eligibility["second_dose_only"],
           'text' => t('Second dose')
         ],
-        'emergency_services' => [
+        'es' => [
           'boolean' => $site_data_eligibility["emergency_services"],
           'text' => t('Emergency services')
         ]
@@ -127,33 +129,37 @@ class VaccineController extends ControllerBase {
       // @todo make this a reusable method for languages and eligibility,
       // access_mode.
       $eligibilities = [];
+      $eligibility_keys = [];
       foreach ($eligibility_with_text as $key => $value){
         if ($value['boolean'] == TRUE) {
           array_push($eligibilities, $value['text']);
+          array_push($eligibility_keys, $key);
         }
       }
 
       // Pre-prep access mode.
       $site_data_access_mode = $site_data['access_mode'];
       $access_mode_with_text = [
-        'walk' => [
+        'wa' => [
           'boolean' => $site_data_access_mode["walk"],
           'text' => t('Walk-thru')
         ],
-        'drive' => [
+        'dr' => [
           'boolean' => $site_data_access_mode["drive"],
           'text' => t('Drive-thru')
         ],
-        'wheelchair' => [
+        'wh' => [
           'boolean' => $site_data['access']['wheelchair'],
           'text' => t('Wheelchair accessible'),
         ],
       ];
 
       $access_modes = [];
+      $access_mode_keys = [];
       foreach ($access_mode_with_text as $key => $value){
         if ($value['boolean'] == TRUE) {
           array_push($access_modes, $value['text']);
+          array_push($access_mode_keys, $key);
         }
       }
 
@@ -168,7 +174,6 @@ class VaccineController extends ControllerBase {
       $booking_url = $site_data['booking']['url'];
       $booking_dropins = $site_data['booking']['dropins'];
 
-
       // Map results.
       $result = [
         'site_name' => $site_name,
@@ -176,6 +181,9 @@ class VaccineController extends ControllerBase {
           'class' => ['sfgov-service-card', 'vaccine-site'],
           'data-available' => $available ? 'true': 'false',
           'data-restrictions' => $restrictions ? 'true' : 'false',
+          'data-language' => implode('-',$language_keys),
+          'data-access' => implode('',$access_mode_keys),
+          'data-eligibility' => implode('-',$eligibility_keys),
         ]),
         'generated' => date( "F j, Y, g:i a", strtotime($generated)),
         'restrictions' => $restrictions_text,
