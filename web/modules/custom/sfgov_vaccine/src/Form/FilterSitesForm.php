@@ -35,10 +35,13 @@ class FilterSitesForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Language'),
       '#options' => [
+        // @todo refactor with VaccineController->makeResults() for DRYness.
         'any' => $this->t('Any language'),
         'en' => $this->t('English'),
         'es' => $this->t('Spanish'),
-        ],
+        'zh' => $this->t('Chinese'),
+        'fil' => $this->t('Filipino'),
+      ],
       '#default_value' => 'any',
       '#multiple' => FALSE,
     ];

@@ -84,7 +84,7 @@ class VaccineController extends ControllerBase {
         ],
         'fil' => [
           'boolean' => $site_data_languages["fil"],
-          'text' => t('Filipinio')
+          'text' => t('Filipino')
         ]
       ];
 
