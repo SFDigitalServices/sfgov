@@ -124,11 +124,36 @@ class VaccineController extends ControllerBase {
         ]
       ];
 
-      // @todo make this a reusable method for languages and eligibility.
+      // @todo make this a reusable method for languages and eligibility,
+      // access_mode.
       $eligibilities = [];
       foreach ($eligibility_with_text as $key => $value){
         if ($value['boolean'] == TRUE) {
           array_push($eligibilities, $value['text']);
+        }
+      }
+
+      // Pre-prep access mode.
+      $site_data_access_mode = $site_data['access_mode'];
+      $access_mode_with_text = [
+        'walk' => [
+          'boolean' => $site_data_access_mode["walk"],
+          'text' => t('Walk-thru')
+        ],
+        'drive' => [
+          'boolean' => $site_data_access_mode["drive"],
+          'text' => t('Drive-thru')
+        ],
+        'wheelchair' => [
+          'boolean' => $site_data['access']['wheelchair'],
+          'text' => t('Wheelchair accessible'),
+        ],
+      ];
+
+      $access_modes = [];
+      foreach ($access_mode_with_text as $key => $value){
+        if ($value['boolean'] == TRUE) {
+          array_push($access_modes, $value['text']);
         }
       }
 
@@ -154,6 +179,7 @@ class VaccineController extends ControllerBase {
         'address_url' => $address_url,
         'languages' => $languages,
         'eligibilities' => $eligibilities,
+        'access_modes' => $access_modes,
         'available' => $available ? t('Appointments Available as of') : t('No appointments as of'),
       ];
       $results[] = $result;
