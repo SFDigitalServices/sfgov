@@ -62,6 +62,7 @@ class VaccineController extends ControllerBase {
   private function makeResults() {
 
     $all_data = $this->datafecth();
+    $generated = $all_data['data']['generated'];
     $sites = $all_data['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
@@ -95,7 +96,7 @@ class VaccineController extends ControllerBase {
       }
 
       // Usable variables.
-      $available = $site_data['active']; // Boolean.
+      $available = $site_data['appointments']['available']; // Boolean.
       $site_name = $site_data['name'];
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'];
@@ -108,9 +109,10 @@ class VaccineController extends ControllerBase {
           'data-available' => $available ? 'true': 'false',
           'data-restrictions' => $restrictions ? 'true' : 'false',
           ]),
+        'generated' => date( "F j, Y, g:i a", strtotime($generated)),
         'restrictions' => $restrictions_text,
         'languages' => $languages,
-        'available' => $available ? t('Appointments Available') : t('No Available Appointments'),
+        'available' => $available ? t('Appointments Available as of') : t('No appointments as of'),
       ];
       $results[] = $result;
     }
