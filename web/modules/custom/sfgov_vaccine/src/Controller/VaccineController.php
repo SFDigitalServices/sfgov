@@ -40,8 +40,18 @@ class VaccineController extends ControllerBase {
       'base_uri' => 'https://vaccination-site-microservice-git-add-sample-json-fixture.sfds.vercel.app/',
     ]);
 
+    // Optional language query.
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $query = NULL;
+    if ($language != 'en') {
+      $query = [
+        'query' => [
+          'lang' => $language,
+        ]];
+    }
+
     // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get('api/v1/test_sites');
+    $response = $client->get('api/v1/test_sites', $query);
     return Json::decode($response->getBody());
   }
 
