@@ -24,12 +24,12 @@ class FilterSitesForm extends FormBase {
     $form['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show sites open to the general public'),
-      '#default_value' => 'false',
+      '#default_value' => TRUE,
     ];
     $form['available'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show sites with available appointments'),
-      '#default_value' => 'false',
+      '#default_value' => FALSE,
     ];
     $form['language'] = [
       '#type' => 'select',
