@@ -4,50 +4,51 @@
   Drupal.behaviors.filterSites = {
     attach: function (context) {
       // @todo Banish the jquery!
-      const $button = $(".vaccine-filter-form #edit-submit", context);
-      const $sites = $(".vaccine-site");
-      const $checkboxFilters = ["available", "restrictions"];
-      const $selectFilters = ["language", "access_mode"];
 
-      function checkActiveSelectFilters(filter_label, y) {
-        return $(`[name=${filter_label}]`).prop("checked");
-      }
+      $(".vaccine-filter-form #edit-submit", context).on(
+        "click",
+        function (event) {
+          event.preventDefault();
 
-      function checkActiveCheckboxFilters(filter_label) {
-        return $(`[name=${filter_label}]`).prop("selected");
-      }
+          let chkBox = { datatest: null };
 
-      // Click Apply.
-      $button.on("click", function (event) {
-        event.preventDefault();
-
-        // @todo Change to if class exists in display().
-        $sites.removeClass("invisible");
-
-        const $active_filters = $checkboxFilters.filter(
-          checkActiveCheckboxFilters
-        );
-
-        const $selectFilters = $checkboxFilters.filter(
-          checkActiveSelectFilters
-        );
-
-        function isRemoved(value, site) {
-          for (let filter_label of $active_filters) {
-            return site.getAttribute(`data-${filter_label}`) === "false";
+          if ($("[name=restrictions]").is(":checked")) {
+            chkBox.datatest = "1";
+          } else {
+            chkBox.datatest = "0";
           }
-        }
 
-        function display(x, y) {
-          if (typeof x[1] === "object" && x[1].classList !== undefined) {
-            // @todo Use a different class or the hide attribute.
-            x[1].classList.add("invisible");
-          }
-        }
+          $(".vaccine-site")
+            .show()
+            .filter(function () {
+              let rtnData = "";
 
-        const filtered_sites = $sites.filter(isRemoved);
-        Object.entries(filtered_sites).forEach(display);
-      });
+              // const regExName = new RegExp(
+              //   $("[name=restrictions]").prop("checked"),
+              //   "ig"
+              // );
+
+              // const regExA = new RegExp(
+              //   $("[name=available]").val().trim(),
+              //   "ig"
+              // );
+              // const regExB = new RegExp(
+              //   $("[name=wheelchair]").val().trim(),
+              //   "ig"
+              // );
+              const regExTest = new RegExp(chkBox.datatest, "ig");
+
+              rtnData = $(this).attr("data-restrictions").match(regExTest); //&&
+              // $(this).attr("data-available").match(regExA) &&
+              // $(this).attr("data-wheelchair").match(regExB) &&
+              // $(this).attr("data-language").match(regExTest)
+
+              //console.log(rtnData);
+              return rtnData;
+            })
+            .hide();
+        }
+      );
     },
   };
 })(jQuery, Drupal);
