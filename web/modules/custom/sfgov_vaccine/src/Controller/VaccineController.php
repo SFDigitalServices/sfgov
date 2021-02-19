@@ -37,9 +37,11 @@ class VaccineController extends ControllerBase {
     // @todo Figure out what to do if this fails.
     /** @var \GuzzleHttp\Client $client */
     $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => 'http://zakiyadesigns.com/',
+      'base_uri' => 'https://vaccination-site-microservice-git-add-sample-json-fixture.sfds.vercel.app/',
     ]);
-    $response = $client->get('sites.json');
+
+    // @todo - Creat ability to set value in $settings_array.
+    $response = $client->get('api/v1/test_sites');
     return Json::decode($response->getBody());
   }
 
@@ -49,16 +51,17 @@ class VaccineController extends ControllerBase {
 
   private function makeResults() {
 
-    $alldata = $this->datafecth();
+    $all_data = $this->datafecth();
 
-    $sites = $alldata['data']['sites'];
+    $sites = $all_data['data']['sites'];
 
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
       // Prep some vars.
       $available = $site_data['active']; // Boolean.
       $site_name = $site_data['name'];
-      $restrictions = $site_data['restrictions'];
+      $restrictions = $site_data['open_to']['everyone'];
+      $restrictions_text = $site_data['open_to']['text'];
 
       // Map results.
       $result = [
@@ -66,9 +69,9 @@ class VaccineController extends ControllerBase {
         'attributes' => new Attribute([
           'class' => ['sfgov-service-card', 'vaccine-site'],
           'data-available' => $available ? 'true': 'false',
-          'data-restrictions' => $restrictions ? 'false' : 'true',
+          'data-restrictions' => $restrictions ? 'true' : 'false',
           ]),
-        'restrictions' => $restrictions ? t('Has restrictions') : t('Open to anyone'),
+        'restrictions' => $restrictions_text,
         'available' => $available ? t('Appointments Available') : t('No Available Appointments'),
       ];
       $results[] = $result;
@@ -78,7 +81,7 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Showresults.
+   * Display Page.
    *
    * @return array
    *   Return Render Array.
