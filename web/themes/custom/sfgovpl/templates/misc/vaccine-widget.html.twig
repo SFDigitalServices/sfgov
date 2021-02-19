@@ -54,16 +54,16 @@
         <div>
           {{ result.available }} {{ result.generated }}
         </div>
-
-        <div>
-          <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
-        </div>
       {% endset %}
 
-      {% include '@theme/atoms/vaccine-site-card.twig' with {
+      {% set booking_info %}
+        {% include '@theme/atoms/vaccine-site-booking.twig' %}
+      {% endset %}
+      {% include '@theme/molecules/vaccine-site-card.twig' with {
         attributes: result.attributes,
         title: result.site_name,
-        description: description
+        description: description,
+        booking_info: booking_info
       } %}
     {% endfor %}
   </div>
