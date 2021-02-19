@@ -15,8 +15,16 @@
     {% for result in results %}
       {% set description %}
         <p>
+          <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+        </p>
+        <p>
           {{ result.restrictions }}
         </p>
+        <div>
+          {% for eligibility in result.eligibilities %}
+            <span>{{ eligibility }}</span>
+          {% endfor %}
+        </div>
 
         <label>{{ 'Languages'|t }}</label>
         <p>
