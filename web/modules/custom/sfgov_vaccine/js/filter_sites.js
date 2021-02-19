@@ -4,10 +4,10 @@
   Drupal.behaviors.filterSites = {
     attach: function (context) {
       // @todo Banish the jquery!
-      const $button = $(".vaccine-filter-form #edit-submit");
+      const $button = $(".vaccine-filter-form #edit-submit", context);
       const $sites = $(".vaccine-site");
       const $checkboxFilters = ["available", "restrictions"];
-      const $selectFilters = ["language", "mode"];
+      const $selectFilters = ["language", "access_mode"];
 
       function checkActiveSelectFilters(filter_label, y) {
         return $(`[name=${filter_label}]`).prop("checked");

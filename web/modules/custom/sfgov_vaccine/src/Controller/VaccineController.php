@@ -165,6 +165,9 @@ class VaccineController extends ControllerBase {
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
       $info_url = $site_data['info']['url'];
+      $booking_url = $site_data['booking']['url'];
+      $booking_dropins = $site_data['booking']['dropins'];
+
 
       // Map results.
       $result = [
@@ -183,6 +186,8 @@ class VaccineController extends ControllerBase {
         'access_modes' => $access_modes,
         'info_url' => $info_url,
         'available' => $available ? t('Appointments Available as of') : t('No appointments as of'),
+        'booking_url' => $booking_url,
+        'booking_dropins' => $booking_dropins,
       ];
       $results[] = $result;
     }

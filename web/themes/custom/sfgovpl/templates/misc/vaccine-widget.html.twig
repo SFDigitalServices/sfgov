@@ -30,17 +30,21 @@
         <div>
           {{ result.languages|join(', ') }}
         </div>
-        <div>
-          {{ result.available }} {{ result.generated }}
-        </div>
 
         <label>{{ 'Access'|t }}</label>
         {{ result.access_modes|join(', ') }}
 
         <div>
           <a href="{{ result.info_url }}">
-            {{ 'Learn more about this location' }}
+            {{ 'Learn more about this location'|t }}
           </a>
+        </div>
+        <div>
+          {{ result.available }} {{ result.generated }}
+        </div>
+
+        <div>
+          <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
         </div>
       {% endset %}
 
