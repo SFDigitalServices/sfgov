@@ -62,7 +62,7 @@ class FilterSitesForm extends FormBase {
       '#type' => 'select',
       '#title_display' => 'hidden',
       '#options' => [
-        'any' => $this->t('Drive-thru and walk-thru'),
+        'all' => $this->t('Drive-thru and walk-thru'),
         'dr' => $this->t('Drive-thru'),
         'wa' => $this->t('Walk-thru'),
       ],

@@ -13,6 +13,7 @@
           let restrictions_chkBox = { datatest: null };
           let available_chkBox = { datatest: null };
           let wheelchair_chkBox = { datatest: null };
+          let eligibility_select = { datatest: null };
 
           if ($("[name=restrictions]").is(":checked") === true) {
             // show
@@ -58,13 +59,19 @@
                 "ig"
               );
 
+              const access_mode_regExTest = new RegExp(
+                $("[name=access_mode]").val().trim(),
+                "ig"
+              );
+
               rtnData =
                 $(this)
                   .attr("data-restrictions")
                   .match(restrictions_regExTest) &&
                 $(this).attr("data-available").match(available_regExTest) &&
                 $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
-                $(this).attr("data-language").match(language_regExTest);
+                $(this).attr("data-language").match(language_regExTest) &&
+                $(this).attr("data-access-mode").match(access_mode_regExTest);
 
               return rtnData;
             })
