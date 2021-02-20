@@ -184,8 +184,8 @@ class VaccineController extends ControllerBase {
           'class' => ['sfgov-service-card', 'vaccine-site'],
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
-          'data-available' => $available,
-          'data-wheelchair' => $wheelchair,
+          'data-available' => $available ? 1 : 0,
+          'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
           'data-language' => implode('-',$language_keys),
           'data-access' => implode('-',$access_mode_keys),
