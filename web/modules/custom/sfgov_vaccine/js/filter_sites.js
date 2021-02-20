@@ -34,25 +34,39 @@
             wheelchair_chkBox.datatest = "";
           }
 
-          const eligibility_options = ["65", " hw", "ec", "af", "sd", "es"];
+          let eligibily_datatests = ["sf", "hw", "ec", "af", "sd", "es"];
+          let eligibility_select = [];
 
-          for (const eligibility_option of eligibility_options) {
-            let eligibility_select = { eligibility_option: { datatest: null } };
+          for (let i in eligibily_datatests) {
+            let eligibility_option = eligibily_datatests[i];
 
-            if (
+            // No eligibility selected.
+            if ($(`[name^="eligibility"]:checked`).length === 0) {
+              eligibility_select.push("all");
+            }
+
+            // this option in the array selected
+            else if (
               $(`[name="eligibility[${eligibility_option}]"]`).is(
                 ":checked"
               ) === true
             ) {
-              eligibility_select.eligibility_option.datatest = "1";
+              eligibility_select.push(eligibility_option);
+
+              // this option in the array not selected
             } else {
-              eligibility_select.eligibility_option.datatest = "";
+              eligibility_select.push("none");
             }
           }
+
+          // `elibibility_select` should be an an array of strings
+          // ["none", "hw", "none", "none", "none", "none"]
+          // ["all", "all", "all", "all", "all", "all"]
           $(".vaccine-site")
             .hide()
             .filter(function () {
               let rtnData = "";
+              let rtnData2 = "";
 
               const restrictions_regExTest = new RegExp(
                 restrictions_chkBox.datatest,
@@ -78,6 +92,22 @@
                 "ig"
               );
 
+              let eligibility_tests = [];
+
+              for (const eligibility_option in eligibily_datatests) {
+                let eligibility_regExTest = new RegExp(
+                  eligibility_select[eligibility_option],
+                  "ig"
+                );
+                // `eligibility_regExTest` should be a string /hw/gi, /none/gi, /all/gi
+
+                const eligibility_test = $(this)
+                  .attr("data-eligibility")
+                  .match(eligibility_regExTest);
+
+                eligibility_tests.push(eligibility_test);
+              }
+
               rtnData =
                 $(this)
                   .attr("data-restrictions")
@@ -85,7 +115,8 @@
                 $(this).attr("data-available").match(available_regExTest) &&
                 $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
                 $(this).attr("data-language").match(language_regExTest) &&
-                $(this).attr("data-access-mode").match(access_mode_regExTest);
+                $(this).attr("data-access-mode").match(access_mode_regExTest) &&
+                eligibility_tests[1];
 
               return rtnData;
             })
