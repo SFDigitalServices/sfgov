@@ -47,11 +47,13 @@ class FilterSitesForm extends FormBase {
       '#title_display' => 'hidden',
       '#options' => [
         // @todo refactor with VaccineController->makeResults() for DRYness.
-        'any' => $this->t('Any language'),
+        'all' => $this->t('Any language'),
         'en' => $this->t('English'),
         'es' => $this->t('Spanish'),
         'zh' => $this->t('Chinese'),
         'fil' => $this->t('Filipino'),
+        'viet' => $this->t('Vietnamese'),
+        'ru' => $this->t('Russian'),
       ],
       '#default_value' => 'any',
       '#multiple' => FALSE,
@@ -60,7 +62,7 @@ class FilterSitesForm extends FormBase {
       '#type' => 'select',
       '#title_display' => 'hidden',
       '#options' => [
-        'wadr' => $this->t('Drive-thru and walk-thru'),
+        'any' => $this->t('Drive-thru and walk-thru'),
         'dr' => $this->t('Drive-thru'),
         'wa' => $this->t('Walk-thru'),
       ],

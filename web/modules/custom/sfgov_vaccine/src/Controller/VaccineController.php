@@ -37,7 +37,7 @@ class VaccineController extends ControllerBase {
     // @todo Figure out what to do if this fails.
     /** @var \GuzzleHttp\Client $client */
     $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => 'https://vaccination-site-microservice-git-add-sample-json-fixture.sfds.vercel.app/',
+      'base_uri' => 'https://vaccination-site-microservice.vercel.app/',
     ]);
 
     // Optional language query.
@@ -51,7 +51,7 @@ class VaccineController extends ControllerBase {
     }
 
     // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get('api/v1/test_sites', $query);
+    $response = $client->get('api/v1/sites', $query);
     return Json::decode($response->getBody());
   }
 
@@ -96,6 +96,7 @@ class VaccineController extends ControllerBase {
           array_push($language_keys, $key);
         }
       }
+      array_push($language_keys, 'all');
 
       // Pre-prep Eligibility.
       $site_data_eligibility = $site_data['eligibility'];
@@ -201,7 +202,7 @@ class VaccineController extends ControllerBase {
           'data-available' => $available ? 1 : 0,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
-          'data-language' => implode('-',$language_keys),
+          'data-language' => $language_keys ? implode('-',$language_keys) : 'en-es-zk-fil-viet-ru-all',
           'data-access' => implode('-',$access_mode_keys),
           'data-eligibility' => implode('-',$eligibility_keys),
         ]),
