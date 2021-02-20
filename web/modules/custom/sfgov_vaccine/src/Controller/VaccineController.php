@@ -165,16 +165,30 @@ class VaccineController extends ControllerBase {
       }
 
       // Usable variables.
-      $available = $site_data['appointments']['available']; // True, false, or null.
+
+      $available = NULL;
+      $info_url = NULL;
+      $booking_info = NULL;
+
+      if (isset($site_data['appointments']) && isset($site_data['appointments']['available'])) {
+        $available = $site_data['appointments']['available'];
+      }
+
+      if (isset($site_data['info']) && isset($site_data['info']['info'])) {
+        $info_url = $site_data['info']['url'];
+      }
+
+      if (isset($site_data['booking']['info'])) {
+        $booking_info = $site_data['booking']['info'];
+      }
+
       $site_name = $site_data['name'];
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'];
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
-      $info_url = $site_data['info']['url'];
       $booking_url = $site_data['booking']['url'];
       $booking_dropins = $site_data['booking']['dropins'];
-      $booking_info = $site_data['booking']['info'];
       $wheelchair = $site_data['access']['wheelchair'];
 
       // Map results.
