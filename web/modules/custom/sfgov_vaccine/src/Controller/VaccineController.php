@@ -137,6 +137,7 @@ class VaccineController extends ControllerBase {
           array_push($eligibility_keys, $key);
         }
       }
+      array_push($eligibility_keys, 'all');
 
       // Pre-prep access mode.
       $site_data_access_mode = $site_data['access_mode'];
@@ -164,9 +165,9 @@ class VaccineController extends ControllerBase {
             array_push($access_mode_keys, $key);}
         }
       }
+      array_push($access_mode_keys, 'all');
 
       // Usable variables.
-
       $available = NULL;
       $info_url = NULL;
       $booking_info = NULL;
@@ -203,7 +204,7 @@ class VaccineController extends ControllerBase {
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
           'data-language' => $language_keys ? implode('-',$language_keys) : 'en-es-zk-fil-viet-ru-all',
-          'data-access' => implode('-',$access_mode_keys),
+          'data-access-mode' => implode('-',$access_mode_keys),
           'data-eligibility' => implode('-',$eligibility_keys),
         ]),
         'generated' => date( "F j, Y, g:i a", strtotime($generated)),
