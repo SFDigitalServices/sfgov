@@ -73,7 +73,7 @@ class FilterSitesForm extends FormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('Eligibility requirements '),
       '#options' => [
-        '65' => $this->t('65 and over'),
+        'sf' => $this->t('65 and over'),
         'hw' => $this->t('Healthcare workers'),
         'ec' => $this->t('Education and childcare'),
         'af' => $this->t('Agriculture and food'),

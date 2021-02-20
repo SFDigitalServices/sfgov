@@ -101,7 +101,7 @@ class VaccineController extends ControllerBase {
       // Pre-prep Eligibility.
       $site_data_eligibility = $site_data['eligibility'];
       $eligibility_with_text = [
-        '65' => [
+        'sf' => [
           'boolean' => $site_data_eligibility["65_and_over"],
           'text' => t('65 and over')
         ],
