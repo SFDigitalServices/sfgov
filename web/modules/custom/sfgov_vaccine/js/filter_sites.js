@@ -53,12 +53,18 @@
                 "ig"
               );
 
+              const language_regExTest = new RegExp(
+                $("[name=language]").val().trim(),
+                "ig"
+              );
+
               rtnData =
                 $(this)
                   .attr("data-restrictions")
                   .match(restrictions_regExTest) &&
                 $(this).attr("data-available").match(available_regExTest) &&
-                $(this).attr("data-wheelchair").match(wheelchair_regExTest); //&&
+                $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
+                $(this).attr("data-language").match(language_regExTest);
 
               return rtnData;
             })
