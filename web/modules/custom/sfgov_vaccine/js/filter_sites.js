@@ -10,43 +10,59 @@
         function (event) {
           event.preventDefault();
 
-          let chkBox = { datatest: null };
+          let restrictions_chkBox = { datatest: null };
+          let available_chkBox = { datatest: null };
+          let wheelchair_chkBox = { datatest: null };
 
-          if ($("[name=restrictions]").is(":checked")) {
-            chkBox.datatest = "1";
+          if ($("[name=restrictions]").is(":checked") === true) {
+            // show
+            restrictions_chkBox.datatest = "0";
           } else {
-            chkBox.datatest = "0";
+            //hide
+            restrictions_chkBox.datatest = "";
+          }
+
+          if ($("[name=available]").is(":checked") === true) {
+            available_chkBox.datatest = "1";
+          } else {
+            available_chkBox.datatest = "";
+          }
+
+          if ($("[name=wheelchair]").is(":checked") === true) {
+            wheelchair_chkBox.datatest = "1";
+          } else {
+            wheelchair_chkBox.datatest = "";
           }
 
           $(".vaccine-site")
-            .show()
+            .hide()
             .filter(function () {
               let rtnData = "";
 
-              // const regExName = new RegExp(
-              //   $("[name=restrictions]").prop("checked"),
-              //   "ig"
-              // );
+              const restrictions_regExTest = new RegExp(
+                restrictions_chkBox.datatest,
+                "ig"
+              );
+              const available_regExTest = new RegExp(
+                available_chkBox.datatest,
+                "ig"
+              );
 
-              // const regExA = new RegExp(
-              //   $("[name=available]").val().trim(),
-              //   "ig"
-              // );
-              // const regExB = new RegExp(
-              //   $("[name=wheelchair]").val().trim(),
-              //   "ig"
-              // );
-              const regExTest = new RegExp(chkBox.datatest, "ig");
+              const wheelchair_regExTest = new RegExp(
+                wheelchair_chkBox.datatest,
+                "ig"
+              );
 
-              rtnData = $(this).attr("data-restrictions").match(regExTest); //&&
-              // $(this).attr("data-available").match(regExA) &&
-              // $(this).attr("data-wheelchair").match(regExB) &&
-              // $(this).attr("data-language").match(regExTest)
+              rtnData =
+                $(this)
+                  .attr("data-restrictions")
+                  .match(restrictions_regExTest) &&
+                $(this).attr("data-available").match(available_regExTest) &&
+                $(this).attr("data-wheelchair").match(wheelchair_regExTest); //&&
 
-              //console.log(rtnData);
               return rtnData;
             })
-            .hide();
+            .show();
         }
       );
     },
