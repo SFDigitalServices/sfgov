@@ -13,7 +13,6 @@
           let restrictions_chkBox = { datatest: null };
           let available_chkBox = { datatest: null };
           let wheelchair_chkBox = { datatest: null };
-          let eligibility_select = { datatest: null };
 
           if ($("[name=restrictions]").is(":checked") === true) {
             // show
@@ -35,6 +34,21 @@
             wheelchair_chkBox.datatest = "";
           }
 
+          const eligibility_options = ["65", " hw", "ec", "af", "sd", "es"];
+
+          for (const eligibility_option of eligibility_options) {
+            let eligibility_select = { eligibility_option: { datatest: null } };
+
+            if (
+              $(`[name="eligibility[${eligibility_option}]"]`).is(
+                ":checked"
+              ) === true
+            ) {
+              eligibility_select.eligibility_option.datatest = "1";
+            } else {
+              eligibility_select.eligibility_option.datatest = "";
+            }
+          }
           $(".vaccine-site")
             .hide()
             .filter(function () {
