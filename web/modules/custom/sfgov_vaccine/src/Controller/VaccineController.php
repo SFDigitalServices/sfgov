@@ -51,7 +51,7 @@ class VaccineController extends ControllerBase {
     }
 
     // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get('api/v1/test_sites', $query);
+    $response = $client->get('api/v1/sites', $query);
     return Json::decode($response->getBody());
   }
 
