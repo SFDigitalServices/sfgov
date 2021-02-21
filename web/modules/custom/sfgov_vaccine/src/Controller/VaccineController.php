@@ -51,7 +51,7 @@ class VaccineController extends ControllerBase {
     }
 
     // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get('api/v1/sites', $query);
+    $response = $client->get('api/v1/test_sites', $query);
     return Json::decode($response->getBody());
   }
 
@@ -62,7 +62,6 @@ class VaccineController extends ControllerBase {
   private function makeResults() {
 
     $all_data = $this->datafecth();
-    $generated = $all_data['data']['generated'];
     $sites = $all_data['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
@@ -183,7 +182,7 @@ class VaccineController extends ControllerBase {
       if (isset($site_data['booking']['info'])) {
         $booking_info = $site_data['booking']['info'];
       }
-
+      $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'];
@@ -207,7 +206,7 @@ class VaccineController extends ControllerBase {
           'data-access-mode' => implode('-',$access_mode_keys),
           'data-eligibility' => implode('-',$eligibility_keys),
         ]),
-        'generated' => date( "F j, Y, g:i a", strtotime($generated)),
+        'last_updated' => date( "F j, Y, g:i a", strtotime($last_updated)),
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,

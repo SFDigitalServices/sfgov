@@ -128,7 +128,7 @@
       }
 
       function showNoResultsMessage() {
-        if ($(".vaccine-site:visible").length == 0) {
+        if ($(".vaccine-site:visible").length === 0) {
           $(".vaccine-fllter__empty").removeAttr("hidden");
         } else {
           $(".vaccine-fllter__empty").attr("hidden", true);
