@@ -4,13 +4,14 @@
   Drupal.behaviors.filterSites = {
     attach: function (context) {
       // @todo Banish the jquery!
-      $(window).load(filterVaccineSites());
+      filterVaccineSites();
 
       $(".vaccine-filter-form #edit-submit", context).on(
         "click",
         function (event) {
           event.preventDefault();
           filterVaccineSites();
+          showNoResultsMessage();
         }
       );
 
@@ -124,6 +125,14 @@
             return rtnData;
           })
           .show();
+      }
+
+      function showNoResultsMessage() {
+        if ($(".vaccine-site:visible").length == 0) {
+          $(".vaccine-fllter__empty").removeAttr("hidden");
+        } else {
+          $(".vaccine-fllter__empty").attr("hidden", true);
+        }
       }
     },
   };
