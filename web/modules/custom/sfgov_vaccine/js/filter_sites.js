@@ -66,7 +66,6 @@
             .hide()
             .filter(function () {
               let rtnData = "";
-              let rtnData2 = "";
 
               const restrictions_regExTest = new RegExp(
                 restrictions_chkBox.datatest,
@@ -92,20 +91,21 @@
                 "ig"
               );
 
-              let eligibility_tests = [];
-
+              $(this).removeClass("eligible");
               for (const eligibility_option in eligibily_datatests) {
+                // `eligibility_regExTest` should be a string /hw/gi, /none/gi, /all/gi
                 let eligibility_regExTest = new RegExp(
                   eligibility_select[eligibility_option],
                   "ig"
                 );
-                // `eligibility_regExTest` should be a string /hw/gi, /none/gi, /all/gi
 
                 const eligibility_test = $(this)
                   .attr("data-eligibility")
                   .match(eligibility_regExTest);
 
-                eligibility_tests.push(eligibility_test);
+                if (eligibility_test) {
+                  $(this).addClass("eligible");
+                }
               }
 
               rtnData =
@@ -115,8 +115,9 @@
                 $(this).attr("data-available").match(available_regExTest) &&
                 $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
                 $(this).attr("data-language").match(language_regExTest) &&
+                $(this).attr("data-available").match(available_regExTest) &&
                 $(this).attr("data-access-mode").match(access_mode_regExTest) &&
-                eligibility_tests[1];
+                $(this).hasClass("eligible");
 
               return rtnData;
             })
