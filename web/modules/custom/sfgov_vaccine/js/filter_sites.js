@@ -19,6 +19,7 @@
         let restrictions_chkBox = { datatest: null };
         let available_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
+        let groupByAvailability = false;
 
         if ($("[name=restrictions]").is(":checked") === true) {
           // show
@@ -29,9 +30,7 @@
         }
 
         if ($("[name=available]").is(":checked") === true) {
-          available_chkBox.datatest = "1";
-        } else {
-          available_chkBox.datatest = "";
+          groupByAvailability = true;
         }
 
         if ($("[name=wheelchair]").is(":checked") === true) {
@@ -81,6 +80,18 @@
               "ig"
             );
 
+            if (groupByAvailability === true) {
+              $(".vaccine-filter__other").removeAttr("hidden");
+              if ($(this).attr("data-available") === "1") {
+                $(this).appendTo(".vaccine-filter__sites");
+              } else {
+                $(this).appendTo(".vaccine-filter__other-sites");
+              }
+            } else {
+              $(this).appendTo(".vaccine-filter__sites");
+              $(".vaccine-filter__other").attr("hidden", true);
+            }
+
             const wheelchair_regExTest = new RegExp(
               wheelchair_chkBox.datatest,
               "ig"
@@ -115,23 +126,26 @@
 
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
-              $(this).attr("data-available").match(available_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
               $(this).attr("data-language").match(language_regExTest) &&
-              $(this).attr("data-available").match(available_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
               $(this).hasClass("eligible");
 
             return rtnData;
+          })
+          .sort(function (a, b) {
+            const dataA = $(a).data("available");
+            const dataB = $(b).data("available");
+            return dataA < dataB;
           })
           .show();
       }
 
       function showNoResultsMessage() {
         if ($(".vaccine-site:visible").length === 0) {
-          $(".vaccine-fllter__empty").removeAttr("hidden");
+          $(".vaccine-filter__empty").removeAttr("hidden");
         } else {
-          $(".vaccine-fllter__empty").attr("hidden", true);
+          $(".vaccine-filter__empty").attr("hidden", true);
         }
       }
     },
