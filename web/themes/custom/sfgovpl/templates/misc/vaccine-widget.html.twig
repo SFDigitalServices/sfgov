@@ -4,90 +4,104 @@
     title: page_title
   }
 } %}
-<div class="sfgov-full-bleed light-blue vaccine-filter-form__form_wrapper">
+<div class="sfgov-full-bleed light-blue vaccine-filter__filter-top">
   <div class="sfgov-section-container">
     {{ filters }}
   </div>
 </div>
 
-<div class="sfgov-full-bleed">
+<div class="sfgov-full-bleed vaccine-filter__body">
   <div class="sfgov-section-container">
-    <div class="vaccine-filter__sites">
-      {% for result in results %}
-        {% set description %}
-          {# address_url #}
-          {% if result.address_url %}
-            <div class="vaccine-site__address field">
-              <a href="{{ result.address_url }}">{{ result.address_text }}</a>
-            </div>
-          {% endif %}
+    <div class="group--left">
+      <div class="vaccine-filter__sites">
+        {% for result in results %}
+          {% set description %}
+            {# address_url #}
+            {% if result.address_url %}
+              <div class="vaccine-site__address field">
+                <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+              </div>
+            {% endif %}
 
-          {# Open to .. #}
-          <div class="field">
-            <label class="notranslate">{{ result.restrictions }}</label>
-
-            {# 65 and over, etc #}
-            <div class="vaccine-site__eligibilities">
-              {% for eligibility in result.eligibilities %}
-                <span class="vaccine-site__eligibility">{{ eligibility }}</span>
-              {% endfor %}
-            </div>
-          </div>
-
-          {# Languages #}
-          {% if result.languages %}
+            {# Open to .. #}
             <div class="field">
-              <label>{{ 'Languages'|t }}</label>
-              <div>
-                {{ result.languages|join(', ') }}
+              <label class="notranslate">{{ result.restrictions }}</label>
+
+              {# 65 and over, etc #}
+              <div class="vaccine-site__eligibilities">
+                {% for eligibility in result.eligibilities %}
+                  <span class="vaccine-site__eligibility">
+                    {{ eligibility }}
+                  </span>
+                {% endfor %}
               </div>
             </div>
-          {% endif %}
 
-          {# Drive thru, walk thru, wheelchair #}
-          {% if result.access_modes %}
-            <div class="field">
-              <label>{{ 'Access'|t }}</label>
-              {{ result.access_modes|join(', ') }}
-            </div>
-          {% endif %}
+            {# Languages #}
+            {% if result.languages %}
+              <div class="field">
+                <label>{{ 'Languages'|t }}</label>
+                <div>
+                  {{ result.languages|join(', ') }}
+                </div>
+              </div>
+            {% endif %}
 
-          {% if result.info_url %}
-            <div class="field">
-              <a href="{{ result.info_url }}">
-                {{ 'Learn more about this location'|t }}
-              </a>
-            </div>
-          {% endif %}
-        {% endset %}
+            {# Drive thru, walk thru, wheelchair #}
+            {% if result.access_modes %}
+              <div class="field">
+                <label>{{ 'Access'|t }}</label>
+                {{ result.access_modes|join(', ') }}
+              </div>
+            {% endif %}
 
-        {% set booking_info %}
-          {% include '@theme/atoms/vaccine-site-booking.twig' %}
-        {% endset %}
-        {% include '@theme/molecules/vaccine-site-card.twig' with {
-          attributes: result.attributes,
-          title: result.site_name,
-          description: description,
-          booking_info: booking_info
-        } %}
-      {% endfor %}
+            {% if result.info_url %}
+              <div class="field">
+                <a href="{{ result.info_url }}">
+                  {{ 'Learn more about this location'|t }}
+                </a>
+              </div>
+            {% endif %}
+          {% endset %}
+
+          {% set booking_info %}
+            {% include '@theme/atoms/vaccine-site-booking.twig' %}
+          {% endset %}
+          {% include '@theme/molecules/vaccine-site-card.twig' with {
+            attributes: result.attributes,
+            title: result.site_name,
+            description: description,
+            booking_info: booking_info
+          } %}
+        {% endfor %}
+      </div>
+
+      <div class="vaccine-filter__other" hidden>
+        <h3>
+          {{ 'More Vaccine Sites' }}
+        </h3>
+        <p>
+          {{
+            'We don’t have information about these sites. Contact them directly to find out what services they are offering.'|t
+          }}
+        </p>
+
+        <div class="vaccine-filter__other-sites"></div>
+      </div>
+
+      <div class="vaccine-filter__empty" hidden>
+        <h4>
+          {{ 'No sites match your search.'|t }}
+        </h4>
+        <p>
+          {{ 'Remove some of the filters to find more sites. '|t }}
+          <a href="/getvaccinated">
+            {{ 'You can also see more options to get vaccinated.'|t }}
+          </a>
+        </p>
+      </div>
     </div>
 
-    <div class="vaccine-filter__other" hidden>
-      <h3>
-        {{ 'More Vaccine Sites' }}
-      </h3>
-      <p>
-        {{
-          'We don’t have information about these sites. Contact them directly to find out what services they are offering.'|t
-        }}
-      </p>
-
-      <div class="vaccine-filter__other-sites"></div>
-    </div>
-
-    <div class="vaccine-filter__empty" hidden>
-      {{ 'There are no results to display. Please widen your search.'|t }}
-    </div>
+    <div class="group--right"></div>
   </div>
 </div>
