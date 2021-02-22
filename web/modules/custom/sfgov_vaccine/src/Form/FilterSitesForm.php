@@ -77,7 +77,7 @@ class FilterSitesForm extends FormBase {
         'hw' => $this->t('Healthcare workers'),
         'ec' => $this->t('Education and childcare'),
         'af' => $this->t('Agriculture and food'),
-        'sd' => $this->t('Second dose'),
+//        'sd' => $this->t('Second dose'),
         'es' => $this->t('Emergency services'),
         ],
     ];
