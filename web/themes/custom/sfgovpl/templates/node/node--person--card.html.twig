@@ -7,11 +7,11 @@
   {% block body %}
     {% include '@theme/person-card.twig' with {
       "url": url,
-      "first_name": content.field_first_name.0,
-      "last_name": content.field_last_name.0,
+      "first_name": node.field_first_name.value,
+      "last_name": node.field_last_name.value,
       "position_title": node.field_title.value,
-      "position_subtitle": content.field_sub_title.0,
-      "photo": content.field_photo.0
+      "position_subtitle": node.field_sub_title.value,
+      "photo": file_url(node.field_photo.entity.fileuri)
     } %}
   {% endblock body %}
 {% endblock node %}
