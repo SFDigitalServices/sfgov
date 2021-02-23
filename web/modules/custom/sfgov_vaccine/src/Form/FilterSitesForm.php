@@ -45,6 +45,7 @@ class FilterSitesForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Language'),
       '#title_display' => 'hidden',
+      '#attributes' => ['class' => ['notranslate']],
       '#options' => [
         // @todo refactor with VaccineController->makeResults() for DRYness.
         'all' => $this->t('Any language'),
