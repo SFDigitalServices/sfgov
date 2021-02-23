@@ -23,27 +23,42 @@ class FilterSitesForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#attributes']['class'][] = 'notranslate';
 
-    $form['label'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'h2',
-      '#value' => $this->t('Filters'),
-      ];
-    $form['restrictions'] = [
+    $form['container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Filters'),
+      '#attributes' => [
+        'data-filter-toggle-container' => TRUE,
+      ],
+    ];
+    $form['container']['toggle'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'data-filter-toggle-content' => TRUE,
+      ],
+    ];
+    $form['container']['toggle']['items'] = [
+      '#type' => 'container',
+    ];
+    $form['container']['toggle']['items']['single_checkboxes'] = [
+      '#type' => 'container',
+    ];
+    $form['container']['toggle']['items']['single_checkboxes']['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show sites open to the general public'),
       '#default_value' => TRUE,
     ];
-    $form['available'] = [
+
+    $form['container']['toggle']['items']['single_checkboxes']['available'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show sites with available appointments'),
       '#default_value' => FALSE,
     ];
-    $form['wheelchair'] = [
+    $form['container']['toggle']['items']['single_checkboxes']['wheelchair'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Wheelchair accessible'),
       '#default_value' => FALSE,
     ];
-    $form['language'] = [
+    $form['container']['toggle']['items']['language'] = [
       '#type' => 'select',
       '#title' => $this->t('Language'),
       '#title_display' => 'hidden',
@@ -60,7 +75,7 @@ class FilterSitesForm extends FormBase {
       '#default_value' => 'any',
       '#multiple' => FALSE,
     ];
-    $form['access_mode'] = [
+    $form['container']['toggle']['items']['access_mode'] = [
       '#type' => 'select',
       '#title_display' => 'hidden',
       '#options' => [
@@ -71,7 +86,7 @@ class FilterSitesForm extends FormBase {
       '#default_value' => 'all',
       '#multiple' => FALSE,
     ];
-    $form['eligibility'] = [
+    $form['container']['toggle']['items']['eligibility'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Eligibility requirements '),
       '#options' => [
@@ -83,7 +98,7 @@ class FilterSitesForm extends FormBase {
         'es' => $this->t('Emergency services'),
         ],
     ];
-    $form['submit'] = [
+    $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
     ];
