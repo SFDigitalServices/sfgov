@@ -91,7 +91,10 @@
 
             if (groupByAvailability === true) {
               $(".vaccine-filter__other").removeAttr("hidden");
-              if ($(this).attr("data-available") === "1") {
+              if (
+                $(this).attr("data-available") === "1" ||
+                $(this).find(".dropin").length !== 0
+              ) {
                 $(this).appendTo(".vaccine-filter__sites");
               } else {
                 $(this).appendTo(".vaccine-filter__other-sites");
