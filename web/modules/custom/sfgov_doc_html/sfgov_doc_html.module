@@ -1,0 +1,44 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_doc_html_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $fid = \Drupal::request()->query->get('converted_file');
+  $data = \Drupal::database()->select('sfgov_doc_html_files', 't')
+    ->fields('t')
+    ->condition('t.fid', $fid)
+    ->execute()
+    ->fetchObject();
+  if (!empty($data->html)) {
+    if (!empty($data->title)) {
+      $form['title']['widget'][0]['value']['#default_value'] = $data->title;
+    }
+    $form['body']['widget'][0]['#default_value'] = $data->html;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function sfgov_doc_html_file_delete(EntityInterface $entity) {
+  // Deleting converted file record when source file is deleted.
+  \Drupal::database()->delete('sfgov_doc_html_files')
+    ->condition('fid', $entity->id())
+    ->execute();
+}
+
+/**
+ * Supported content types with body field mapping.
+ */
+function sfgov_doc_html_supported_content_types() {
+  return [
+    'report' => [
+      'label' => t('Report'),
+      'field' => 'body',
+    ]
+  ];
+}
