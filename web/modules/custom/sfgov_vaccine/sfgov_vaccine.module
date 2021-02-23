@@ -5,6 +5,17 @@
  * Contains sfgov_vaccine.module.
  */
 
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_vaccine_preprocess_html(&$variables) {
+  $route = \Drupal::routeMatch()->getRouteName();
+  if ($route == 'sfgov_vaccine.vaccine_controller_display_page') {
+    $variables['attributes']['class'][] = 'page-sfgov-vaccine-sites';
+  }
+}
+
 /**
  * Implements hook_theme().
  */
@@ -19,3 +30,4 @@ function sfgov_vaccine_theme() {
     ],
   ];
 }
+
