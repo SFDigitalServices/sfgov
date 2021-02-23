@@ -68,6 +68,7 @@ class VaccineController extends ControllerBase {
 
       // Pre-prep languages.
       $site_data_languages = $site_data['access']['languages'];
+      $site_date_remote_translation = $site_data['access']["remote_translation"];
       $languages_with_text = [
         'en' => [
           'boolean' => $site_data_languages["en"],
@@ -84,7 +85,19 @@ class VaccineController extends ControllerBase {
         'fil' => [
           'boolean' => $site_data_languages["fil"],
           'text' => t('Filipino')
-        ]
+        ],
+        'vi' => [
+          'boolean' => $site_data_languages["vi"],
+          'text' => t('Vietnamese')
+        ],
+        'vi' => [
+          'boolean' => $site_data_languages["fil"],
+          'text' => t('Vietnamese')
+        ],
+        'remote_translation' => [
+          'boolean' => $site_date_remote_translation,
+          'text' => $site_date_remote_translation['available'] ? t($site_date_remote_translation['info']) : NULL
+        ],
       ];
 
       $languages = [];
@@ -202,7 +215,7 @@ class VaccineController extends ControllerBase {
           'data-available' => $available ? 1 : 0,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
-          'data-language' => $language_keys ? implode('-',$language_keys) : 'en-es-zk-fil-viet-ru-all',
+          'data-language' => $language_keys ? implode('-',$language_keys) : 'en-es-zk-fil-vi-ru-all',
           'data-access-mode' => implode('-',$access_mode_keys),
           'data-eligibility' => implode('-',$eligibility_keys),
         ]),

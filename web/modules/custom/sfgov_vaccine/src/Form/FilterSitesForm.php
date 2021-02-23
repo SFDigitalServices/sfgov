@@ -52,7 +52,7 @@ class FilterSitesForm extends FormBase {
         'es' => $this->t('Spanish'),
         'zh' => $this->t('Chinese'),
         'fil' => $this->t('Filipino'),
-        'viet' => $this->t('Vietnamese'),
+        'vi' => $this->t('Vietnamese'),
         'ru' => $this->t('Russian'),
       ],
       '#default_value' => 'any',
