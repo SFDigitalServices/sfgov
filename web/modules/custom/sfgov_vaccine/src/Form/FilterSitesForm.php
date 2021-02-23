@@ -21,6 +21,8 @@ class FilterSitesForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['#attributes']['class'][] = 'notranslate';
+
     $form['label'] = [
       '#type' => 'html_tag',
       '#tag' => 'h2',
@@ -45,7 +47,6 @@ class FilterSitesForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Language'),
       '#title_display' => 'hidden',
-      '#attributes' => ['class' => ['notranslate']],
       '#options' => [
         // @todo refactor with VaccineController->makeResults() for DRYness.
         'all' => $this->t('Any language'),
