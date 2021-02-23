@@ -4,7 +4,16 @@
   Drupal.behaviors.filterSites = {
     attach: function (context) {
       // @todo Banish the jquery!
+
+      // Set media query.
+      const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+      // On load.
       filterVaccineSites();
+      layoutChange(mediaQuery);
+
+      // Register event listener.
+      mediaQuery.addListener(layoutChange);
 
       $(".vaccine-filter-form #edit-submit", context).on(
         "click",
@@ -146,6 +155,16 @@
           $(".vaccine-filter__empty").removeAttr("hidden");
         } else {
           $(".vaccine-filter__empty").attr("hidden", true);
+        }
+      }
+
+      function layoutChange(e) {
+        if (e.matches) {
+          $(".vaccine-filter__filters").appendTo(".group--right");
+        } else {
+          $(".vaccine-filter__filters").appendTo(
+            ".vaccine-filter__filter-top > div"
+          );
         }
       }
     },
