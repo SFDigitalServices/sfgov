@@ -131,7 +131,7 @@ class VaccineController extends ControllerBase {
         ],
         'sd' => [
           'boolean' => $site_data_eligibility["second_dose_only"],
-          'text' => t('Second dose')
+          'text' => t('Second dose only')
         ],
         'es' => [
           'boolean' => $site_data_eligibility["emergency_services"],
