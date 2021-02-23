@@ -188,7 +188,7 @@ class VaccineController extends ControllerBase {
         $available = $site_data['appointments']['available'];
       }
 
-      if (isset($site_data['info']) && isset($site_data['info']['info'])) {
+      if (isset($site_data['info']) && isset($site_data['info']['url'])) {
         $info_url = $site_data['info']['url'];
       }
 
