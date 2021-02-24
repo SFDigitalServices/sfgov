@@ -209,7 +209,7 @@ class VaccineController extends ControllerBase {
       $result = [
         'site_name' => $site_name,
         'attributes' => new Attribute([
-          'class' => ['sfgov-service-card', 'vaccine-site'],
+          'class' => ['sfgov-service-card', 'vaccine-site', 'no-hover'],
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
           'data-available' => $available ? 1 : 0,
