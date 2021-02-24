@@ -1,5 +1,5 @@
-{{ attach_library('sfgov_vaccine/filter_sites') }}
 {{ attach_library('sfgovpl/filters') }}
+{{ attach_library('sfgov_vaccine/filter_sites') }}
 {% include '@theme/hero-banner-color.twig' with {
   banner: {
     title: page_title
@@ -30,11 +30,11 @@
             {% endif %}
 
             {# Open to .. #}
-            <div class="field">
+            <div class="vaccine-site__eligibility-availability">
               <label class="notranslate">{{ result.restrictions }}</label>
 
               {# 65 and over, etc #}
-              <div class="vaccine-site__eligibilities">
+              <div class="vaccine-site__eligibilities notranslate">
                 {% for eligibility in result.eligibilities %}
                   <span class="vaccine-site__eligibility">
                     {{ eligibility }}
