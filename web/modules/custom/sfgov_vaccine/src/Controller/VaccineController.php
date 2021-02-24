@@ -103,7 +103,8 @@ class VaccineController extends ControllerBase {
       $languages = [];
       $language_keys = [];
       foreach ($languages_with_text as $key => $value){
-        if ($value['boolean'] == TRUE) {
+        if ($value['boolean'] === TRUE) {
+
           array_push($languages, $value['text']);
           array_push($language_keys, $key);
         }
