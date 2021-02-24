@@ -33,7 +33,7 @@ class VaccineController extends ControllerBase {
     return t("COVID-19 vaccine sites");
   }
 
-  private function datafecth() {
+  private function dataFetch() {
     // @todo Figure out what to do if this fails.
     /** @var \GuzzleHttp\Client $client */
     $client = \Drupal::service('http_client_factory')->fromOptions([
@@ -55,13 +55,18 @@ class VaccineController extends ControllerBase {
     return Json::decode($response->getBody());
   }
 
+  private function makeTimeStamp() {
+    $all_data = $this->dataFetch();
+    return $all_data['data']['generated'];
+  }
+
   private function makeFilters() {
     return \Drupal::formBuilder()->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
   private function makeResults() {
 
-    $all_data = $this->datafecth();
+    $all_data = $this->dataFetch();
     $sites = $all_data['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
@@ -250,6 +255,7 @@ class VaccineController extends ControllerBase {
       '#cache' => ['max-age' => 0,],
       '#theme' => 'vaccine-widget',
       '#page_title' => $this->makeTitle(),
+      '#timestamp' => $this->makeTimeStamp(),
       '#filters' => $this->makeFilters(),
       '#results' => $this->makeResults(),
       ];
