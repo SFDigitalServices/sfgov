@@ -1,3 +1,4 @@
+{{ attach_library('sfgovpl/filters') }}
 {{ attach_library('sfgov_vaccine/filter_sites') }}
 {% include '@theme/hero-banner-color.twig' with {
   banner: {
@@ -11,6 +12,9 @@
     </div>
   </div>
 </div>
+
+<!-- data.generated string from microservice api. -->
+<!-- {{ timestamp }} -->
 
 <div class="sfgov-full-bleed vaccine-filter__body">
   <div class="sfgov-section-container">
@@ -26,11 +30,11 @@
             {% endif %}
 
             {# Open to .. #}
-            <div class="field">
+            <div class="vaccine-site__eligibility-availability">
               <label class="notranslate">{{ result.restrictions }}</label>
 
               {# 65 and over, etc #}
-              <div class="vaccine-site__eligibilities">
+              <div class="vaccine-site__eligibilities notranslate">
                 {% for eligibility in result.eligibilities %}
                   <span class="vaccine-site__eligibility">
                     {{ eligibility }}

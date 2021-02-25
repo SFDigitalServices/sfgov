@@ -1,11 +1,3 @@
-// @todo Use a more reliable varialbe.
-.path-vaccine-sites {
-  .hero-banner.color {
-    @include media($medium-screen) {
-      background: $c-blue-2;
-    }
-  }
-}
 .vaccine-filter__filter-top {
   padding: 30px 0;
 
@@ -34,82 +26,21 @@
 }
 
 .vaccine-filter-form {
-  h2 {
-    @include fs-title-3;
-    margin-bottom: 40px;
-  }
+   [data-drupal-selector="edit-single-checkboxes"] {
+     margin-bottom: 50px;
 
-  label {
-    display: inline-block;
-    padding: 0 0 0 40px;
-    margin: 0 0 20px 0;
-    font-size: 15px;
-    line-height: 18px;
-
-    &::before {
-      background-color: #fff;
-      border-radius: 4px;
-      border: solid 2px $c-slate;
-      content: '';
-      flex: 0 0 18px;
-      height: 18px;
-      left: 0;
-      margin-left: 0;
-      margin-top: 0;
-      position: absolute;
-      top: 0;
-      width: 18px;
-    }
-  }
-
-  .js-form-type-checkbox {
-    padding-bottom: 20px;
-    position: relative;
-
-    label {
+     .js-form-type-checkbox label {
       @include fs-body-short;
-      display: inline;
-      margin: 0;
-      padding: 0 0 0 30px;
-    }
-    input[type=checkbox] {
-      display: inline;
-      margin: 0;
-      width: 10px;
-      text-align: left;
+       margin-bottom: 0;
+
+       &::before {
+         top: 2px;
+       }
     }
   }
 
-  .fieldset-legend {
-    @include fs-body-bold;
-  }
-
-  .js-form-type-select {
-    margin-bottom: 20px;
-  }
-
-  // @todo replace with wrappers.
-  .form-item-wheelchair,
-  .form-item-access-mode {
-    margin-bottom: 40px;
-  }
-
-  .form-checkboxes {
-    background: $c-white;
-    border-radius: $radius;
-    border: 2px solid $c-grey-3;
-    max-height: 250px;
-    margin: 0 0 40px;
-    overflow: scroll;
-    padding: 20px;
-
-    label {
-      @include fs-small-text;
-    }
-  }
-
-  input[type=submit] {
-    width: auto;
+  .fieldset-wrapper .form-wrapper .form-item-access-mode {
+    margin-bottom: 60px;
   }
 }
 
@@ -118,6 +49,7 @@
 
   label {
     @include fs-body-bold;
+    margin-bottom: 0;
   }
 
   .field {
@@ -127,6 +59,7 @@
 
 .vaccine-site__title {
   @include fs-title-3-mobile;
+  margin: 0;
 }
 
 .vaccine-site__address {
@@ -135,10 +68,16 @@
   }
 }
 
+.vaccine-site__eligibility-availability {
+  margin-bottom: 9px;
+}
+
 .vaccine-site__eligibility {
   @include fs-small-text;
   background: $c-grey-2;
-  margin-right: 6px;
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-right: 10px;
   padding: 3px 8px;
   word-break: keep-all;
 }
@@ -175,5 +114,11 @@
   }
   a {
     text-align: center;
+  }
+}
+
+.vaccine-filter__empty {
+  h4 {
+    @include fs-title-5;
   }
 }
