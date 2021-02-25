@@ -8,10 +8,16 @@ set -eo pipefail
 #
 # Use EITHER this script OR the re-install-new script; do not run both.
 #
+clone_content=""
+
+# check if the $TERMINUS_ENV already exists.  if it does, don't clone the content
+if ! terminus -n env:info sfgov.$TERMINUS_ENV ; then # env does not exist
+  clone_content="--clone-content"
+fi
 
 # Create a new multidev site to test on
 terminus -n env:wake "$TERMINUS_SITE.dev"
-terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes --clone-content --notify="$NOTIFY"
+terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes $clone_content --notify="$NOTIFY"
 
 terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cache-rebuild
 
