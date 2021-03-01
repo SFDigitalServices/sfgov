@@ -108,6 +108,7 @@
               "ig"
             );
 
+            // "Drive-thru or walk-thru" select (Access mode).
             const access_mode_regExTest = new RegExp(
               $("[name=access_mode]").val().trim(),
               "ig"
