@@ -26,7 +26,6 @@
 
       function filterVaccineSites() {
         let restrictions_chkBox = { datatest: null };
-        let available_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
 
         if ($("[name=restrictions]").is(":checked") === true) {
@@ -81,10 +80,6 @@
             // "Only show sites open to the general public" checkbox.
             const restrictions_regExTest = new RegExp(
               restrictions_chkBox.datatest,
-              "ig"
-            );
-            const available_regExTest = new RegExp(
-              available_chkBox.datatest,
               "ig"
             );
 
