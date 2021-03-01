@@ -71,6 +71,7 @@ class FilterSitesForm extends FormBase {
         'fil' => $this->t('Filipino'),
         'vi' => $this->t('Vietnamese'),
         'ru' => $this->t('Russian'),
+        'rt' => $this->t('Other Languages'),
       ],
       '#default_value' => 'any',
       '#multiple' => FALSE,
