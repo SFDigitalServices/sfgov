@@ -100,7 +100,7 @@ class VaccineController extends ControllerBase {
           'text' => t('Vietnamese')
         ],
         'remote_translation' => [
-          'boolean' => $site_date_remote_translation,
+          'boolean' => $site_date_remote_translation['available'],
           'text' => $site_date_remote_translation['available'] ? t($site_date_remote_translation['info']) : NULL
         ],
       ];
