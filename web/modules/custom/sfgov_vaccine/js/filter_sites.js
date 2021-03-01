@@ -103,10 +103,27 @@
               "ig"
             );
 
-            const language_regExTest = new RegExp(
-              $("[name=language]").val().trim(),
-              "ig"
-            );
+            // Languages.
+            $(this).removeClass("language-match");
+            const language_selected = $("[name=language]").val().trim();
+            let language_other_test = null;
+
+            if (language_selected !== "en") {
+              let language_other_regExtest = new RegExp("rt", "ig");
+              language_other_test = $(this)
+                .attr("data-language")
+                .match(language_other_regExtest);
+            }
+
+            const language_regExTest = new RegExp(language_selected, "ig");
+
+            const language_test = $(this)
+              .attr("data-language")
+              .match(language_regExTest);
+
+            if (language_test || language_other_test) {
+              $(this).addClass("language-match");
+            }
 
             // "Drive-thru or walk-thru" select (Access mode).
             const access_mode_regExTest = new RegExp(
@@ -135,9 +152,9 @@
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
-              $(this).attr("data-language").match(language_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
-              $(this).hasClass("eligible");
+              $(this).hasClass("eligible") &&
+              $(this).hasClass("language-match");
 
             return rtnData;
           })
