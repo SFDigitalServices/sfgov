@@ -69,7 +69,7 @@
           }
         }
 
-        // `elibibility_select` should be an an array of strings
+        // `eligibility_select` should be an an array of strings.
         // ["none", "hw", "none", "none", "none", "none"]
         // ["all", "all", "all", "all", "all", "all"]
         $(".vaccine-site")
@@ -78,6 +78,7 @@
           .filter(function () {
             let rtnData = "";
 
+            // "Only show sites open to the general public" checkbox.
             const restrictions_regExTest = new RegExp(
               restrictions_chkBox.datatest,
               "ig"
@@ -87,6 +88,7 @@
               "ig"
             );
 
+            // "Only show sites with available appointments" checkbox.
             if (groupByAvailability === true) {
               if (
                 $(this).attr("data-available") === "1" ||
@@ -100,6 +102,7 @@
               $(this).appendTo(".vaccine-filter__sites");
             }
 
+            // "Wheelchair accessible" checkbox.
             const wheelchair_regExTest = new RegExp(
               wheelchair_chkBox.datatest,
               "ig"
@@ -115,6 +118,7 @@
               "ig"
             );
 
+            // "Eligibility requirements" checkboxes.
             $(this).removeClass("eligible");
             for (const eligibility_option in eligibily_datatests) {
               // `eligibility_regExTest` should be a string /hw/gi, /none/gi, /all/gi
