@@ -69,3 +69,39 @@ function _sfgovpl_node_object(&$variables) {
     }
   }
 }
+
+/** 
+ * If the current language matches an existing Drupal translation,
+ * show the Drupal-translated node and do not let Google translate it.
+ */
+function _sfgovpl_node_notranslate($node, $view_mode) {
+  if ($node instanceof NodeInterface) {
+    $variables = [];
+
+    $node_languages = $node->getTranslationLanguages();
+    $current_language = \Drupal::languageManager()
+      ->getCurrentLanguage()
+      ->getId();
+
+    foreach ($node_languages as $language => $value) {
+      if ($current_language == $language && $language != 'en') {
+
+        // Do not let Google translate full pages that are not in English.
+        if ($view_mode == 'full') {
+          $variables['attributes']['class'][] = 'notranslate';
+          $variables['notranslate'] = 'notranslate';
+        }
+
+        // Translate everything else.
+        else {
+          $variables['notranslate'] = 'notranslate';
+          $variables['attributes']['class'][] = 'notranslate';
+          $translated = $node->getTranslation($language);
+          $variables['node'] = $translated;
+          $variables['url'] = $translated->toUrl();
+        }
+      }
+    }
+  }
+  return $variables;
+}

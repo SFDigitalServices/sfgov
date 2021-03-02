@@ -16,6 +16,13 @@ function sfgovpl_preprocess_page__node__campaign(&$variables) {
 
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
     $node = $variables['node'];
+    $view_mode = $variables['view_mode'];
+    $node_variables =  _sfgovpl_node_notranslate($node, $view_mode);
+
+    $class = '';
+    if (!empty($node_variables['notranslate'])) {
+      $class = ' class="notranslate"';
+    }
 
     // Conditionally render Logo or Title.
     if ($node->field_logo->entity) {
@@ -29,7 +36,7 @@ function sfgovpl_preprocess_page__node__campaign(&$variables) {
     }
     else {
       $variables['campaign_branding'] = [
-        '#markup' => '<h1>' . $node->label() . '</h1>',
+        '#markup' => '<h1' . $class . '>' . $node->label() . '</h1>',
       ];
     }
   }
