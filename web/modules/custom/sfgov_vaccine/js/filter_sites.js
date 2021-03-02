@@ -5,17 +5,21 @@
     attach: function (context) {
       // @todo Banish the jquery!
 
-      // Set media query.
+      // Set media query and register event listener.
       const mediaQuery = window.matchMedia("(min-width: 768px)");
+      mediaQuery.addListener(layoutChange);
+
+      // Elements.
+      const sectionCount = $(".vaccine-filter__count");
+
+      // Other variables.
       let groupByAvailability = false;
 
       // On load.
       displaySites();
       layoutChange(mediaQuery);
 
-      // Register event listener.
-      mediaQuery.addListener(layoutChange);
-
+      // On Click.
       $(".vaccine-filter-form #edit-submit", context).on(
         "click",
         function (event) {
@@ -175,6 +179,16 @@
         $(".vaccine-filter__empty").attr("hidden", true);
       }
 
+      function showCount() {
+        let count = $(".vaccine-site:visible").length;
+        sectionCount.find("span").text(count);
+        sectionCount.show();
+      }
+
+      function hideCount() {
+        sectionCount.hide();
+      }
+
       function showSites() {
         $(".vaccine-filter__sites").show();
       }
@@ -193,30 +207,42 @@
         $(".vaccine-filter__other-sites").hide();
       }
 
+      // This is the main function.
       function displaySites() {
         filterVaccineSites();
 
         if (
+          // If there are no results.
           $(".vaccine-filter__other-sites .included").length === 0 &&
           $(".vaccine-filter__sites .included").length === 0
         ) {
-          showNoResultsMessage();
+          hideCount();
           hideSites();
           hideOtherSites();
+          showNoResultsMessage();
         } else if (
+          // If "Only show sites with available appointments" is checked and
+          // there are sites that don't meet the selected criteria.
           groupByAvailability === true &&
           $(".vaccine-filter__other-sites .included").length > 0
         ) {
-          hideNoResultsMessage();
           showSites();
           showOtherSites();
+          hideNoResultsMessage();
+          // showCount() should be last because it depends on the other functions.
+          showCount();
         } else {
+          // If "Only show sites with available appointments" is not checked and
+          // there are sites that meet the selected criteria.
           hideNoResultsMessage();
           showSites();
           hideOtherSites();
+          // showCount() should be last because it depends on the other functions.
+          showCount();
         }
       }
 
+      // Responsive layout.
       function layoutChange(e) {
         if (e.matches) {
           $(".vaccine-filter__filters").appendTo(".group--right");

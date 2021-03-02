@@ -21,6 +21,14 @@
 <div class="sfgov-full-bleed vaccine-filter__body">
   <div class="sfgov-section-container">
     <div class="group--left">
+      <div class="vaccine-filter__count">
+        {{
+          'Showing <span>@count</span> results'|t({
+            '@count': results|length
+          })
+        }}
+      </div>
+
       <div class="vaccine-filter__sites">
         {% for result in results %}
           {% set description %}
