@@ -20,12 +20,13 @@ class VaccineController extends ControllerBase {
    */
   protected $languageManager;
 
-/**
- * @var Drupal\Core\Form\FormBuilder
- */
-protected $formBuilder;
+  /**
+   * @var Drupal\Core\Form\FormBuilder
+   */
+  protected $formBuilder;
 
-protected $configFactory;
+  protected $configFactory;
+
 
 public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory) {
     $this->languageManager = $languageManager;
@@ -44,6 +45,14 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
     );
   }
 
+  private function getAPIQuery() {
+    return $this->configFactory->get('sfgov_vaccine.settings')->get('query');
+  }
+
+  private function getAPIBaseUri() {
+    return $this->configFactory->get('sfgov_vaccine.settings')->get('base_uri');
+  }
+
   private function makeTitle() {
     // @todo Create admin form.
     return t("COVID-19 vaccine sites");
@@ -53,27 +62,31 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
     // @todo Figure out what to do if this fails.
     /** @var \GuzzleHttp\Client $client */
     $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => $this->configFactory->get('sfgov_vaccine.settings')->get('base_uri'),
+      'base_uri' => $this->getAPIBaseUri(),
     ]);
 
     // Optional language query.
     $language = $this->languageManager()->getCurrentLanguage()->getId();
-    $query = NULL;
+    $language_query = NULL;
     if ($language != 'en') {
-      $query = [
+      $language_query = [
         'query' => [
           'lang' => $language,
         ]];
     }
 
-    // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get($this->configFactory->get('sfgov_vaccine.settings')->get('query'), $query);
+    $response = $client->get($this->getAPIQuery(), $language_query);
     return Json::decode($response->getBody());
   }
 
-  private function makeTimeStamp() {
+  private function makeAPIData() {
     $all_data = $this->dataFetch();
-    return $all_data['data']['generated'];
+
+    return [
+      'timestamp' => $all_data['data']['generated'],
+      'base_uri' => $this->getAPIBaseUri(),
+      'query' => $this->getAPIQuery(),
+    ];
   }
 
   private function makeFilters() {
@@ -271,7 +284,7 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
       '#cache' => ['max-age' => 0,],
       '#theme' => 'vaccine_widget',
       '#page_title' => $this->makeTitle(),
-      '#timestamp' => $this->makeTimeStamp(),
+      '#api_data' => $this->makeAPIData(),
       '#filters' => $this->makeFilters(),
       '#results' => $this->makeResults(),
       ];
