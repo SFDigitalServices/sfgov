@@ -3,6 +3,7 @@
 namespace Drupal\sfgov_vaccine\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
@@ -13,19 +14,23 @@ use Drupal\Core\Template\Attribute;
 class VaccineController extends ControllerBase {
 
   /**
-   * Drupal\Core\Cache\Context\CacheContextInterface definition.
-   *
-   * @var \Drupal\Core\Cache\Context\CacheContextInterface
+   * @var \Drupal\http_client_manager\HttpClientInterface
    */
-  protected $cacheContextIp;
+  protected $languageManager;
+
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->cacheContextIp = $container->get('cache_context.ip');
-    return $instance;
+    return new static(
+      $container->get('language_manager')
+    );
+  }
+
+  public function __construct(LanguageManager $languageManager) {
+    $this->languageManager = $languageManager;
+
   }
 
   private function makeTitle() {
@@ -41,7 +46,7 @@ class VaccineController extends ControllerBase {
     ]);
 
     // Optional language query.
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $language = $this->languageManager()->getCurrentLanguage()->getId();
     $query = NULL;
     if ($language != 'en') {
       $query = [
@@ -253,7 +258,7 @@ class VaccineController extends ControllerBase {
   public function displayPage() {
     return [
       '#cache' => ['max-age' => 0,],
-      '#theme' => 'vaccine-widget',
+      '#theme' => 'vaccine_widget',
       '#page_title' => $this->makeTitle(),
       '#timestamp' => $this->makeTimeStamp(),
       '#filters' => $this->makeFilters(),
