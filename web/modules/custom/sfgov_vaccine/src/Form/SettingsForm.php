@@ -32,17 +32,11 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('sfgov_vaccine.settings');
 
-    $form['base_uri'] = [
+    $form['api_url'] = [
       '#type' => 'url',
-      '#title' => $this->t('Base uri'),
-      '#description' => $this->t('Enter the base uri (e.g. https://vaccination-site-microservice.vercel.app, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app).'),
-      '#default_value' => $config->get('base_uri')
-    ];
-    $form['query'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Query'),
-      '#description' => $this->t('Enter the url query (e.g. api/v1/appointments).'),
-      '#default_value' => $config->get('query'),
+      '#title' => $this->t('Microservice URL'),
+      '#description' => $this->t('e.g. https://vaccination-site-microservice.vercel.app/api/v1/appointments, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app/api/v1/appointments'),
+      '#default_value' => $config->get('api_url')
     ];
     $form['submit'] = [
       '#type' => 'submit',
@@ -58,7 +52,7 @@ class SettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
     $values = $form_state->getValues();
-    UrlHelper::isValid($values['base_uri']);
+    UrlHelper::isValid($values['api_url']);
 
     parent::validateForm($form, $form_state);
   }
@@ -68,8 +62,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('sfgov_vaccine.settings')
-      ->set('base_uri', $form_state->getValue('base_uri'))
-      ->set('query', $form_state->getValue('query'))
+      ->set('api_url', $form_state->getValue('api_url'))
       ->save();
   }
 

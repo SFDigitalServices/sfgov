@@ -11,8 +11,7 @@
 function sfgov_vaccine_update_8001() {
   $config_factory = \Drupal::configFactory();
   $config = $config_factory->getEditable('sfgov_vaccine.settings');
-  $config->set('base_uri','https://vaccination-site-microservice.vercel.app');
-  $config->set('query', 'api/v1/appointments');
+  $config->set('api_url','https://vaccination-site-microservice.vercel.app/api/v1/appointments');
   $config->save(TRUE);
 }
 
