@@ -12,6 +12,7 @@
       // Elements.
       const sectionCount = $(".vaccine-filter__count");
       const leftColumn = $(".group--left");
+      const submitButton = $(".vaccine-filter-form #edit-submit", context);
 
       // Other variables.
       let groupByAvailability = false;
@@ -22,15 +23,13 @@
       layoutChange(mediaQuery);
 
       // On Click.
-      $(".vaccine-filter-form #edit-submit", context).on(
-        "click",
-        function (event) {
-          event.preventDefault();
-          leftColumn.fadeOut(speed);
-          displaySites();
-          leftColumn.fadeIn(speed);
-        }
-      );
+      submitButton.on("click", function (event) {
+        event.preventDefault();
+        leftColumn.fadeOut(speed);
+        displaySites();
+        leftColumn.fadeIn(speed);
+        scrollUp(speed);
+      });
 
       function filterVaccineSites() {
         let restrictions_chkBox = { datatest: null };
@@ -253,6 +252,12 @@
             ".vaccine-filter__filter-top > div"
           );
         }
+      }
+
+      // Scroll to Top.
+      function scrollUp(speed) {
+        let newPosition = sectionCount.offset().top - 150;
+        $("html, body").animate({ scrollTop: newPosition }, speed);
       }
     },
   };
