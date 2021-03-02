@@ -55,7 +55,7 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
 
   private function makeTitle() {
     // @todo Create admin form.
-    return t("COVID-19 vaccine sites");
+    return $this->t("COVID-19 vaccine sites");
   }
 
   private function dataFetch() {
@@ -106,27 +106,27 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
       $languages_with_text = [
         'en' => [
           'boolean' => $site_data_languages["en"],
-          'text' => t('English')
+          'text' => $this->t('English')
          ],
         'es' => [
           'boolean' => $site_data_languages["es"],
-          'text' => t('Spanish')
+          'text' => $this->t('Spanish')
         ],
         'zh' => [
           'boolean' => $site_data_languages["zh"],
-          'text' => t('Chinese')
+          'text' => $this->t('Chinese')
         ],
         'fil' => [
           'boolean' => $site_data_languages["fil"],
-          'text' => t('Filipino')
+          'text' => $this->t('Filipino')
         ],
         'vi' => [
           'boolean' => $site_data_languages["vi"],
-          'text' => t('Vietnamese')
+          'text' => $this->t('Vietnamese')
         ],
         'ru' => [
           'boolean' => $site_data_languages["ru"],
-          'text' => t('Russian')
+          'text' => $this->t('Russian')
         ],
         'rt' => [
           'boolean' => $site_date_remote_translation['available'],
@@ -150,27 +150,27 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
       $eligibility_with_text = [
         'sf' => [
           'boolean' => $site_data_eligibility["65_and_over"],
-          'text' => t('65 and over')
+          'text' => $this->t('65 and over')
         ],
         'hw' => [
           'boolean' => $site_data_eligibility["healthcare_workers"],
-          'text' => t('Healthcare workers')
+          'text' => $this->t('Healthcare workers')
         ],
         'ec' => [
           'boolean' => $site_data_eligibility["education_and_childcare"],
-          'text' => t('Education and childcare')
+          'text' => $this->t('Education and childcare')
         ],
         'af' => [
           'boolean' => $site_data_eligibility["agriculture_and_food"],
-          'text' => t('Agriculture and food')
+          'text' => $this->t('Agriculture and food')
         ],
         'sd' => [
           'boolean' => $site_data_eligibility["second_dose_only"],
-          'text' => t('Second dose only')
+          'text' => $this->t('Second dose only')
         ],
         'es' => [
           'boolean' => $site_data_eligibility["emergency_services"],
-          'text' => t('Emergency services')
+          'text' => $this->t('Emergency services')
         ]
       ];
 
@@ -191,15 +191,15 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
       $access_mode_with_text = [
         'wa' => [
           'boolean' => $site_data_access_mode["walk"],
-          'text' => t('Walk-thru')
+          'text' => $this->t('Walk-thru')
         ],
         'dr' => [
           'boolean' => $site_data_access_mode["drive"],
-          'text' => t('Drive-thru')
+          'text' => $this->t('Drive-thru')
         ],
         'wh' => [
           'boolean' => $site_data['access']['wheelchair'],
-          'text' => t('Wheelchair accessible'),
+          'text' => $this->t('Wheelchair accessible'),
         ],
       ];
 
