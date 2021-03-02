@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Class VaccineController.
@@ -16,8 +17,12 @@ use Drupal\Core\Template\Attribute;
 class VaccineController extends ControllerBase {
 
   /**
-   * @var \Drupal\http_client_manager\HttpClientInterface
+   * Guzzle\Client instance.
+   *
+   * @var \GuzzleHttp\ClientInterface
    */
+  protected $httpClient;
+
   protected $languageManager;
 
   /**
@@ -28,10 +33,11 @@ class VaccineController extends ControllerBase {
   protected $configFactory;
 
 
-public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory) {
+  public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client) {
     $this->languageManager = $languageManager;
     $this->formBuilder = $formBuilder;
     $this->configFactory = $configFactory;
+    $this->httpClient = $http_client;
   }
 
   /**
@@ -41,16 +47,13 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
     return new static(
       $container->get('language_manager'),
       $container->get('form_builder'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('http_client')
     );
   }
 
-  private function getAPIQuery() {
-    return $this->configFactory->get('sfgov_vaccine.settings')->get('query');
-  }
-
-  private function getAPIBaseUri() {
-    return $this->configFactory->get('sfgov_vaccine.settings')->get('base_uri');
+  private function getAPIUrl() {
+    return $this->configFactory->get('sfgov_vaccine.settings')->get('api_url');
   }
 
   private function makeTitle() {
@@ -59,24 +62,13 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
   }
 
   private function dataFetch() {
-    // @todo Figure out what to do if this fails.
-    /** @var \GuzzleHttp\Client $client */
-    $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => $this->getAPIBaseUri(),
-    ]);
-
-    // Optional language query.
     $language = $this->languageManager()->getCurrentLanguage()->getId();
-    $language_query = NULL;
-    if ($language != 'en') {
-      $language_query = [
-        'query' => [
-          'lang' => $language,
-        ]];
-    }
+    $url = $this->getAPIUrl() . '?lang=' . $language;
+    $client = \Drupal::httpClient();
+    $request = $client->get($url);
+    $response = $request->getBody();
 
-    $response = $client->get($this->getAPIQuery(), $language_query);
-    return Json::decode($response->getBody());
+    return Json::decode($response);
   }
 
   private function makeAPIData() {
@@ -84,9 +76,8 @@ public function __construct(LanguageManager $languageManager, FormBuilderInterfa
 
     return [
       'timestamp' => $all_data['data']['generated'],
-      'base_uri' => $this->getAPIBaseUri(),
-      'query' => $this->getAPIQuery(),
-    ];
+      'api_url' => $this->getAPIUrl()
+      ];
   }
 
   private function makeFilters() {
