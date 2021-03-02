@@ -32,11 +32,11 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('sfgov_vaccine.settings');
 
-    $form['base_url'] = [
+    $form['base_uri'] = [
       '#type' => 'url',
-      '#title' => $this->t('Base url'),
-      '#description' => $this->t('Enter the base url (e.g. https://vaccination-site-microservice.vercel.app, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app).'),
-      '#default_value' => $config->get('base_url')
+      '#title' => $this->t('Base uri'),
+      '#description' => $this->t('Enter the base uri (e.g. https://vaccination-site-microservice.vercel.app, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app).'),
+      '#default_value' => $config->get('base_uri')
     ];
     $form['query'] = [
       '#type' => 'textfield',
@@ -58,7 +58,7 @@ class SettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
     $values = $form_state->getValues();
-    UrlHelper::isValid($values['base_url']);
+    UrlHelper::isValid($values['base_uri']);
 
     parent::validateForm($form, $form_state);
   }
@@ -68,7 +68,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('sfgov_vaccine.settings')
-      ->set('base_url', $form_state->getValue('base_url'))
+      ->set('base_uri', $form_state->getValue('base_uri'))
       ->set('query', $form_state->getValue('query'))
       ->save();
   }
