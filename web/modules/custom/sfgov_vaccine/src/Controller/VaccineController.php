@@ -2,8 +2,10 @@
 
 namespace Drupal\sfgov_vaccine\Controller;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
@@ -18,19 +20,28 @@ class VaccineController extends ControllerBase {
    */
   protected $languageManager;
 
+/**
+ * @var Drupal\Core\Form\FormBuilder
+ */
+protected $formBuilder;
+
+protected $configFactory;
+
+public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory) {
+    $this->languageManager = $languageManager;
+    $this->formBuilder = $formBuilder;
+    $this->configFactory = $configFactory;
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('form_builder'),
+      $container->get('config.factory')
     );
-  }
-
-  public function __construct(LanguageManager $languageManager) {
-    $this->languageManager = $languageManager;
-
   }
 
   private function makeTitle() {
@@ -42,7 +53,7 @@ class VaccineController extends ControllerBase {
     // @todo Figure out what to do if this fails.
     /** @var \GuzzleHttp\Client $client */
     $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => 'https://vaccination-site-microservice.vercel.app/',
+      'base_uri' => $this->configFactory->get('sfgov_vaccine.settings')->get('base_uri'),
     ]);
 
     // Optional language query.
@@ -56,7 +67,7 @@ class VaccineController extends ControllerBase {
     }
 
     // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get('api/v1/appointments', $query);
+    $response = $client->get($this->configFactory->get('sfgov_vaccine.settings')->get('query'), $query);
     return Json::decode($response->getBody());
   }
 
@@ -66,7 +77,7 @@ class VaccineController extends ControllerBase {
   }
 
   private function makeFilters() {
-    return \Drupal::formBuilder()->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
+    return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
   private function makeResults() {
