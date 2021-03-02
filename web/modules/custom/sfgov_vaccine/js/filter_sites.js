@@ -25,7 +25,7 @@
       // On Click.
       submitButton.on("click", function (event) {
         event.preventDefault();
-        leftColumn.fadeOut(speed);
+        leftColumn.fadeOut(0);
         displaySites();
         leftColumn.fadeIn(speed);
         scrollUp(speed);
