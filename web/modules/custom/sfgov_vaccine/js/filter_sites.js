@@ -11,9 +11,11 @@
 
       // Elements.
       const sectionCount = $(".vaccine-filter__count");
+      const leftColumn = $(".group--left");
 
       // Other variables.
       let groupByAvailability = false;
+      const speed = "slow";
 
       // On load.
       displaySites();
@@ -24,7 +26,9 @@
         "click",
         function (event) {
           event.preventDefault();
+          leftColumn.fadeOut(speed);
           displaySites();
+          leftColumn.fadeIn(speed);
         }
       );
 
@@ -179,8 +183,8 @@
         $(".vaccine-filter__empty").attr("hidden", true);
       }
 
-      function showCount() {
-        let count = $(".vaccine-site:visible").length;
+      function showCount(speed) {
+        let count = $(".vaccine-filter__sites .included").length;
         sectionCount.find("span").text(count);
         sectionCount.show();
       }
@@ -198,13 +202,11 @@
       }
 
       function showOtherSites() {
-        $(".vaccine-filter__other").removeAttr("hidden");
-        $(".vaccine-filter__other-sites").show();
+        $(".vaccine-filter__other").show();
       }
 
-      function hideOtherSites() {
-        $(".vaccine-filter__other").attr("hidden", true);
-        $(".vaccine-filter__other-sites").hide();
+      function hideOtherSites(speed) {
+        $(".vaccine-filter__other").hide();
       }
 
       // This is the main function.
