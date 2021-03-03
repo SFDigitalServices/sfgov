@@ -1,39 +1,47 @@
-{# result.available can be true false or null #}
+{% set info %}
+  {% if result.booking_info %}
+    <div class="vaccine-site__booking_info">
+      {{ result.booking_info }}
+    </div>
+  {% endif %}
+{% endset %}
+
 {% if result.available is not null and result.booking_url %}
-  <div class="vaccine-site__booking_info notranslate {{
+  <div class="vaccine-site__booking_box notranslate {{
     result.available
       ? 'yes'
       : 'no'
     }}">
     {% if result.available %}
       <div class="field">
-        {{ 'Appointments available as of'|t }} {{ result.last_updated }}
+        <strong>
+          {{ 'Appointments available as of'|t }} {{ result.last_updated }}
+        </strong>
+        {{ info }}
       </div>
       <div class="sfgov-cta-button__container">
         <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
       </div>
     {% else %}
       <div class="field">
-        {{ 'No appointments as of'|t }}
-        {{ result.last_updated }}
+        <strong>
+          {{ 'No appointments as of'|t }}
+          {{ result.last_updated }}
+        </strong>
+        {{ info }}
       </div>
       <div class="field">
         <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
       </div>
     {% endif %}
-
-    {# Show booking info if drop in is true. #}
   </div>
-{% elseif result.booking_url %}
-  <div class="vaccine-site__booking_info notranslate">
-    <div class="sfgov-cta-button__container no-pad">
-      <a href="{{ result.booking_url }}">{{ 'Check for availability'|t }}</a>
-    </div>
-  </div>
-{% endif %}
-
-{% if result.booking_info %}
-  <div class="vaccine-site__booking_info notranslate dropin">
-    {{ result.booking_info }}
+{% elseif result.booking_url or result.booking_info %}
+  <div class="vaccine-site__booking_box notranslate">
+    {{ info }}
+    {% if result.booking_url %}
+      <div class="sfgov-cta-button__container no-pad">
+        <a href="{{ result.booking_url }}">{{ 'Check for availability'|t }}</a>
+      </div>
+    {% endif %}
   </div>
 {% endif %}
