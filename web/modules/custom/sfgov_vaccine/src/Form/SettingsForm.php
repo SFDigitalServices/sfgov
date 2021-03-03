@@ -5,11 +5,37 @@ namespace Drupal\sfgov_vaccine\Form;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Class SettingsForm.
  */
 class SettingsForm extends ConfigFormBase {
+
+  /**
+   * Guzzle\Client instance.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(ClientInterface $httpClient) {
+    $this->httpClient = $httpClient;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('http_client')
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -52,7 +78,21 @@ class SettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
     $values = $form_state->getValues();
-    UrlHelper::isValid($values['api_url']);
+    $url = $values['api_url'];
+    $format = UrlHelper::isValid($values['api_url']);
+
+    if ($format === TRUE) {
+      $request = $this->httpClient->get($url, ['http_errors' => false]);
+      $code = $request->getStatusCode();
+
+      if($code != 200) {
+        $message = $this->t(
+          "Failed response with code @code. Try entering the microservice url again.", [
+          '@code' => $request->getStatusCode()
+        ]);
+        $form_state->setErrorByName('api_uri',$message);
+      }
+    }
 
     parent::validateForm($form, $form_state);
   }
@@ -62,8 +102,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('sfgov_vaccine.settings')
-      ->set('api_url', $form_state->getValue('api_url'))
+      ->set('api_url', trim($form_state->getValue('api_url')))
       ->save();
   }
-
 }
