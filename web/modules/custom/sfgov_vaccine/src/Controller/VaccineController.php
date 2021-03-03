@@ -12,7 +12,7 @@ use Drupal\Core\Template\Attribute;
 use GuzzleHttp\ClientInterface;
 
 /**
- * Class VaccineController.
+ * Creates the vaccine sites page.
  */
 class VaccineController extends ControllerBase {
 
@@ -32,12 +32,14 @@ class VaccineController extends ControllerBase {
 
   protected $configFactory;
 
+  protected $all_data = NULL;
 
   public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client) {
     $this->languageManager = $languageManager;
     $this->formBuilder = $formBuilder;
     $this->configFactory = $configFactory;
     $this->httpClient = $http_client;
+    $this->all_data = $this->dataFetch();
   }
 
   /**
@@ -64,31 +66,32 @@ class VaccineController extends ControllerBase {
   public function dataFetch() {
     $language = $this->languageManager()->getCurrentLanguage()->getId();
     $url = $this->getAPIUrl() . '?lang=' . $language;
-    $request = $this->httpClient->get($url, ['http_errors' => false]);
+    $request = $this->httpClient->get($url, ['http_errors' => FALSE]);
     $response = $request->getBody();
 
     return Json::decode($response);
   }
 
-  private function makeAPIData() {
+  private function makeAPIData($all_data) {
 
-    $all_data = $this->dataFetch();
     $error_message = $this->t('We are having trouble reaching the service right now. Please try again later.');
 
     return [
       'timestamp' => $all_data['data']['generated'],
       'api_url' => $this->getAPIUrl(),
-      'error' => $all_data == NULL  ? $error_message : NULL,
+      'error' => $all_data == NULL ? $error_message : NULL,
     ];
   }
 
-  private function makeFilters() {
+  private function makeFilters($all_data) {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
-  private function makeResults() {
-
-    $all_data = $this->dataFetch();
+  /**
+   * Render result.
+   * @return array
+   */
+  private function makeResults($all_data) {
 
     if ($all_data == NULL) {
       return [];
@@ -96,7 +99,7 @@ class VaccineController extends ControllerBase {
 
     $sites = $all_data['data']['sites'];
     $results = [];
-    foreach ($sites as $site_id => $site_data ) {
+    foreach ($sites as $site_id => $site_data) {
 
       // Pre-prep languages.
       $site_data_languages = $site_data['access']['languages'];
@@ -104,37 +107,37 @@ class VaccineController extends ControllerBase {
       $languages_with_text = [
         'en' => [
           'boolean' => $site_data_languages["en"],
-          'text' => $this->t('English')
-         ],
+          'text' => $this->t('English'),
+        ],
         'es' => [
           'boolean' => $site_data_languages["es"],
-          'text' => $this->t('Spanish')
+          'text' => $this->t('Spanish'),
         ],
         'zh' => [
           'boolean' => $site_data_languages["zh"],
-          'text' => $this->t('Chinese')
+          'text' => $this->t('Chinese'),
         ],
         'fil' => [
           'boolean' => $site_data_languages["fil"],
-          'text' => $this->t('Filipino')
+          'text' => $this->t('Filipino'),
         ],
         'vi' => [
           'boolean' => $site_data_languages["vi"],
-          'text' => $this->t('Vietnamese')
+          'text' => $this->t('Vietnamese'),
         ],
         'ru' => [
           'boolean' => $site_data_languages["ru"],
-          'text' => $this->t('Russian')
+          'text' => $this->t('Russian'),
         ],
         'rt' => [
           'boolean' => $site_date_remote_translation['available'],
-          'text' => $site_date_remote_translation['available'] ? t($site_date_remote_translation['info']) : NULL
+          'text' => $site_date_remote_translation['available'] ? $this->t('@info', ['@info' => $site_date_remote_translation['info']]) : NULL,
         ],
       ];
 
       $languages = [];
       $language_keys = [];
-      foreach ($languages_with_text as $key => $value){
+      foreach ($languages_with_text as $key => $value) {
         if ($value['boolean'] === TRUE) {
 
           array_push($languages, $value['text']);
@@ -148,35 +151,35 @@ class VaccineController extends ControllerBase {
       $eligibility_with_text = [
         'sf' => [
           'boolean' => $site_data_eligibility["65_and_over"],
-          'text' => $this->t('65 and over')
+          'text' => $this->t('65 and over'),
         ],
         'hw' => [
           'boolean' => $site_data_eligibility["healthcare_workers"],
-          'text' => $this->t('Healthcare workers')
+          'text' => $this->t('Healthcare workers'),
         ],
         'ec' => [
           'boolean' => $site_data_eligibility["education_and_childcare"],
-          'text' => $this->t('Education and childcare')
+          'text' => $this->t('Education and childcare'),
         ],
         'af' => [
           'boolean' => $site_data_eligibility["agriculture_and_food"],
-          'text' => $this->t('Agriculture and food')
+          'text' => $this->t('Agriculture and food'),
         ],
         'sd' => [
           'boolean' => $site_data_eligibility["second_dose_only"],
-          'text' => $this->t('Second dose only')
+          'text' => $this->t('Second dose only'),
         ],
         'es' => [
           'boolean' => $site_data_eligibility["emergency_services"],
-          'text' => $this->t('Emergency services')
-        ]
+          'text' => $this->t('Emergency services'),
+        ],
       ];
 
       // @todo make this a reusable method for languages and eligibility,
       // access_mode.
       $eligibilities = [];
       $eligibility_keys = [];
-      foreach ($eligibility_with_text as $key => $value){
+      foreach ($eligibility_with_text as $key => $value) {
         if ($value['boolean'] == TRUE) {
           array_push($eligibilities, $value['text']);
           array_push($eligibility_keys, $key);
@@ -189,11 +192,11 @@ class VaccineController extends ControllerBase {
       $access_mode_with_text = [
         'wa' => [
           'boolean' => $site_data_access_mode["walk"],
-          'text' => $this->t('Walk-thru')
+          'text' => $this->t('Walk-thru'),
         ],
         'dr' => [
           'boolean' => $site_data_access_mode["drive"],
-          'text' => $this->t('Drive-thru')
+          'text' => $this->t('Drive-thru'),
         ],
         'wh' => [
           'boolean' => $site_data['access']['wheelchair'],
@@ -203,11 +206,12 @@ class VaccineController extends ControllerBase {
 
       $access_modes = [];
       $access_mode_keys = [];
-      foreach ($access_mode_with_text as $key => $value){
+      foreach ($access_mode_with_text as $key => $value) {
         if ($value['boolean'] == TRUE) {
           array_push($access_modes, $value['text']);
           if ($key != 'wh') {
-            array_push($access_mode_keys, $key);}
+            array_push($access_mode_keys, $key);
+          }
         }
       }
       array_push($access_mode_keys, 'all');
@@ -248,11 +252,11 @@ class VaccineController extends ControllerBase {
           'data-available' => $available ? 1 : 0,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
-          'data-language' => $language_keys ? implode('-',$language_keys) : 'en-es-zh-fil-vi-ru-rt-all',
-          'data-access-mode' => implode('-',$access_mode_keys),
-          'data-eligibility' => implode('-',$eligibility_keys),
+          'data-language' => $language_keys ? implode('-', $language_keys) : 'en-es-zh-fil-vi-ru-rt-all',
+          'data-access-mode' => implode('-', $access_mode_keys),
+          'data-eligibility' => implode('-', $eligibility_keys),
         ]),
-        'last_updated' => date( "F j, Y, g:i a", strtotime($last_updated)),
+        'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
@@ -279,12 +283,13 @@ class VaccineController extends ControllerBase {
    */
   public function displayPage() {
     return [
-      '#cache' => ['max-age' => 0,],
+      '#cache' => ['max-age' => 0],
       '#theme' => 'vaccine_widget',
       '#page_title' => $this->makeTitle(),
-      '#api_data' => $this->makeAPIData(),
-      '#filters' => $this->makeFilters(),
-      '#results' => $this->makeResults(),
-      ];
+      '#api_data' => $this->makeAPIData($this->all_data),
+      '#filters' => $this->makeFilters($this->all_data),
+      '#results' => $this->makeResults($this->all_data),
+    ];
   }
+
 }
