@@ -95,25 +95,51 @@
   word-break: keep-all;
 }
 
-.vaccine-site__booking_info {
+.vaccine-site__booking_box {
   background-color: $c-blue-1;
+  margin-top: 40px;
   padding: 20px;
 
-  + .vaccine-site__booking_info {
-    padding-top: 0;
+  strong {
+    @include fs-body-bold;
+  }
+
+  @include media($medium-screen) {
+    padding: 40px;
   }
 
   &.yes {
     @include background-image('check-green.svg', 20px 25px, $c-blue-1);
+
+    @include media($medium-screen) {
+      background-position: 40px 40px;
+    }
+
     .field {
       padding-left: 40px;
+    }
+    .vaccine-site__booking_info {
+      padding-top: 10px;
     }
   }
 
   &.no {
     @include background-image('close-red.svg', 20px 25px, $c-blue-1);
+
+    @include media($medium-screen) {
+      background-position: 40px 40px;
+    }
+
     .field {
       padding-left: 40px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .vaccine-site__booking_info {
+      padding-top: 10px;
     }
   }
   .sfgov-cta-button__container {
@@ -125,12 +151,23 @@
     }
     &.no-pad {
       @include media($medium-screen) {
-        padding-left: 20px;
+        padding-left: 0;
       }
     }
   }
   a {
-    text-align: center;
+    display: block;
+
+    @include media($medium-screen) {
+      display: inline-block;
+    }
+  }
+}
+
+.vaccine-site__booking_info {
+
+  + .sfgov-cta-button__container {
+    margin-top: 20px;
   }
 }
 
