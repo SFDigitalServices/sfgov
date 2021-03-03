@@ -61,23 +61,25 @@ class VaccineController extends ControllerBase {
     return $this->t("COVID-19 vaccine sites");
   }
 
-  private function dataFetch() {
+  public function dataFetch() {
     $language = $this->languageManager()->getCurrentLanguage()->getId();
     $url = $this->getAPIUrl() . '?lang=' . $language;
-    $client = \Drupal::httpClient();
-    $request = $client->get($url);
+    $request = $this->httpClient->get($url, ['http_errors' => false]);
     $response = $request->getBody();
 
     return Json::decode($response);
   }
 
   private function makeAPIData() {
+
     $all_data = $this->dataFetch();
+    $error_message = $this->t('We are having trouble reaching the service right now. Please try again later.');
 
     return [
       'timestamp' => $all_data['data']['generated'],
-      'api_url' => $this->getAPIUrl()
-      ];
+      'api_url' => $this->getAPIUrl(),
+      'error' => $all_data == NULL  ? $error_message : NULL,
+    ];
   }
 
   private function makeFilters() {
@@ -87,6 +89,11 @@ class VaccineController extends ControllerBase {
   private function makeResults() {
 
     $all_data = $this->dataFetch();
+
+    if ($all_data == NULL) {
+      return [];
+    }
+
     $sites = $all_data['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data ) {
