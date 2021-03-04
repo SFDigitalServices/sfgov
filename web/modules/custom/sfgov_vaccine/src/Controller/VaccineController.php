@@ -17,29 +17,49 @@ use GuzzleHttp\ClientInterface;
 class VaccineController extends ControllerBase {
 
   /**
-   * Guzzle\Client instance.
+   * The HTTP client.
    *
    * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
+  /**
+   * The language manager service.
+   *
+   * @var Drupal\Core\Language\LanguageManager
+   */
   protected $languageManager;
 
   /**
-   * @var Drupal\Core\Form\FormBuilder
+   * The form builder.
+   *
+   * @var Drupal\Core\Form\FormBuilderInterface
    */
   protected $formBuilder;
 
+  /**
+   * The configuration factory.
+   *
+   * @var Drupal\Core\Config\ConfigFactory
+   */
   protected $configFactory;
 
-  protected $all_data = NULL;
+  /**
+   * Data from the microservice.
+   *
+   * @var arrayorNULL
+   */
+  protected $allData = NULL;
 
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client) {
     $this->languageManager = $languageManager;
     $this->formBuilder = $formBuilder;
     $this->configFactory = $configFactory;
     $this->httpClient = $http_client;
-    $this->all_data = $this->dataFetch();
+    $this->allData = $this->dataFetch();
   }
 
   /**
@@ -54,15 +74,24 @@ class VaccineController extends ControllerBase {
     );
   }
 
+  /**
+   * Get the microservice url from config.
+   */
   private function getAPIUrl() {
     return $this->configFactory->get('sfgov_vaccine.settings')->get('api_url');
   }
 
+  /**
+   * Prepare page title for rendering.
+   */
   private function makeTitle() {
     // @todo Create admin form.
     return $this->t("COVID-19 vaccine sites");
   }
 
+  /**
+   * Get data from the mircoservice.
+   */
   public function dataFetch() {
     $language = $this->languageManager()->getCurrentLanguage()->getId();
     $url = $this->getAPIUrl() . '?lang=' . $language;
@@ -72,32 +101,37 @@ class VaccineController extends ControllerBase {
     return Json::decode($response);
   }
 
-  private function makeAPIData($all_data) {
+  /**
+   * Prepare API data for rendering.
+   */
+  private function makeAPIData($allData) {
 
     $error_message = $this->t('We are having trouble reaching the service right now. Please try again later.');
 
     return [
-      'timestamp' => $all_data['data']['generated'],
+      'timestamp' => $allData['data']['generated'],
       'api_url' => $this->getAPIUrl(),
-      'error' => $all_data == NULL ? $error_message : NULL,
+      'error' => $allData == NULL ? $error_message : NULL,
     ];
   }
 
-  private function makeFilters($all_data) {
+  /**
+   * Get the filter form.
+   */
+  private function makeFilters($allData) {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
   /**
-   * Render result.
-   * @return array
+   * Prepare sites for rendering.
    */
-  private function makeResults($all_data) {
+  private function makeResults($allData) {
 
-    if ($all_data == NULL) {
+    if ($allData == NULL) {
       return [];
     }
 
-    $sites = $all_data['data']['sites'];
+    $sites = $allData['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data) {
 
@@ -276,19 +310,16 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Display Page.
-   *
-   * @return array
-   *   Return Render Array.
+   * Display page content.
    */
   public function displayPage() {
     return [
       '#cache' => ['max-age' => 0],
       '#theme' => 'vaccine_widget',
       '#page_title' => $this->makeTitle(),
-      '#api_data' => $this->makeAPIData($this->all_data),
-      '#filters' => $this->makeFilters($this->all_data),
-      '#results' => $this->makeResults($this->all_data),
+      '#api_data' => $this->makeAPIData($this->allData),
+      '#filters' => $this->makeFilters($this->allData),
+      '#results' => $this->makeResults($this->allData),
     ];
   }
 
