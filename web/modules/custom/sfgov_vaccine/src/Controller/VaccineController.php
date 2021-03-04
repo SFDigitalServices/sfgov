@@ -137,7 +137,7 @@ class VaccineController extends ControllerBase {
 
       // Pre-prep languages.
       $site_data_languages = $site_data['access']['languages'];
-      $site_date_remote_translation = $site_data['access']["remote_translation"];
+      $site_data_remote_translation = $site_data['access']["remote_translation"];
       $languages_with_text = [
         'en' => [
           'boolean' => $site_data_languages["en"],
