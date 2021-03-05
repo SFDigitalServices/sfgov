@@ -76,18 +76,17 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Get the microservice url from config.
+   * Get config.
    */
-  private function getAPIUrl() {
-    return $this->configFactory->get('sfgov_vaccine.settings')->get('api_url');
+  private function settings($value) {
+    return  $this->configFactory->get('sfgov_vaccine.settings')->get($value);
   }
 
   /**
-   * Prepare page title for rendering.
+   * Get the microservice url from config.
    */
-  private function makeTitle() {
-    // @todo Create admin form.
-    return $this->t("COVID-19 vaccine sites");
+  private function getAPIUrl() {
+    return $this->settings('api_url');
   }
 
   /**
@@ -114,7 +113,7 @@ class VaccineController extends ControllerBase {
    */
   private function makeAPIData($allData) {
 
-    $error_message = $this->t('We are having trouble reaching the service right now. Please try again later.');
+    $error_message = $this->settings('error_message');
 
     return [
       'timestamp' => $allData['data']['generated'],
@@ -146,46 +145,22 @@ class VaccineController extends ControllerBase {
       // Pre-prep languages.
       $site_data_languages = $site_data['access']['languages'];
       $site_data_remote_translation = $site_data['access']["remote_translation"];
-      $languages_with_text = [
-        'en' => [
-          'boolean' => $site_data_languages["en"],
-          'text' => $this->t('English'),
-        ],
-        'es' => [
-          'boolean' => $site_data_languages["es"],
-          'text' => $this->t('Spanish'),
-        ],
-        'zh' => [
-          'boolean' => $site_data_languages["zh"],
-          'text' => $this->t('Chinese'),
-        ],
-        'fil' => [
-          'boolean' => $site_data_languages["fil"],
-          'text' => $this->t('Filipino'),
-        ],
-        'vi' => [
-          'boolean' => $site_data_languages["vi"],
-          'text' => $this->t('Vietnamese'),
-        ],
-        'ru' => [
-          'boolean' => $site_data_languages["ru"],
-          'text' => $this->t('Russian'),
-        ],
-        'rt' => [
-          'boolean' => $site_data_remote_translation['available'],
-          'text' => $site_data_remote_translation['available'] ? $site_data_remote_translation['info'] : NULL,
-        ],
-      ];
 
-      $languages = [];
+      $printed_languages = [];
       $language_keys = [];
-      foreach ($languages_with_text as $key => $value) {
-        if ($value['boolean'] === TRUE) {
-
-          array_push($languages, $value['text']);
-          array_push($language_keys, $key);
+      foreach ($site_data_languages as $short_key => $boolean) {
+        if ($boolean === TRUE) {
+          $languages = $this->settings('languages.'. $short_key);
+          array_push ($printed_languages, $languages);
+          array_push($language_keys, $short_key);
         }
       }
+
+      if ($site_data_remote_translation['available']) {
+        array_push($printed_languages, $site_data_remote_translation['info']);
+        array_push($language_keys, 'rt');
+      }
+
       array_push($language_keys, 'all');
 
       // Pre-prep Eligibility.
@@ -294,7 +269,7 @@ class VaccineController extends ControllerBase {
           'data-available' => $available,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
-          'data-language' => $language_keys ? implode('-', $language_keys) : 'en-es-zh-fil-vi-ru-rt-all',
+          'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
           'data-access-mode' => implode('-', $access_mode_keys),
           'data-eligibility' => implode('-', $eligibility_keys),
         ]),
@@ -302,7 +277,7 @@ class VaccineController extends ControllerBase {
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
-        'languages' => $languages,
+        'languages' => $printed_languages,
         'eligibilities' => $eligibilities,
         'access_modes' => $access_modes,
         'info_url' => $info_url,
@@ -324,7 +299,7 @@ class VaccineController extends ControllerBase {
     return [
       '#cache' => ['max-age' => 0],
       '#theme' => 'vaccine_widget',
-      '#page_title' => $this->makeTitle(),
+      '#template_strings' => $this->settings('template_strings'),
       '#api_data' => $this->makeAPIData($this->allData),
       '#filters' => $this->makeFilters($this->allData),
       '#results' => $this->makeResults($this->allData),
