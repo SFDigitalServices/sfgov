@@ -10,7 +10,8 @@ use Drupal\Core\Form\FormStateInterface;
 */
 class SFGovAmplitudeConfigurationForm extends ConfigFormBase {
 
-  const SETTINGS = 'sfgov_amplitude.settings';
+  const API_SETTINGS = 'sfgov_amplitude.api.settings';
+  const TOKEN_SETTINGS = 'sfgov_amplitude.tokens.settings';
 
   /**
    * {@inheritdoc}
@@ -24,12 +25,14 @@ class SFGovAmplitudeConfigurationForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      self::SETTINGS,
+      self::API_SETTINGS,
+      self::TOKEN_SETTINGS,
     ];
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config(self::SETTINGS);
+    $api_config = $this->config(self::API_SETTINGS);
+    $token_config = $this->config(self::TOKEN_SETTINGS);
     
     $form['#prefix'] = $this->t('This form allows you to set the amplitude api key');
     
@@ -38,7 +41,7 @@ class SFGovAmplitudeConfigurationForm extends ConfigFormBase {
       '#size' => '50',
       '#maxlength' => '255',
       '#title' => $this->t('Amplitude api key'),
-      '#default_value' => $config->get('amplitude_api_key'),
+      '#default_value' => $api_config->get('amplitude_api_key'),
     ];
 
     $form['amplitude_drupal_tokens'] = [
@@ -48,7 +51,7 @@ class SFGovAmplitudeConfigurationForm extends ConfigFormBase {
       '#description' => $this->t(
         'The JSON-formatted set of drupal tokens to expose to amplitude'
       ),
-      '#default_value' => $config->get('amplitude_drupal_tokens'),
+      '#default_value' => $token_config->get('amplitude_drupal_tokens'),
     ];
 
     $form['token_container']['token_tree'] = [
@@ -76,8 +79,11 @@ class SFGovAmplitudeConfigurationForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $this->config(self::SETTINGS)
+    $this->config(self::API_SETTINGS)
       ->set('amplitude_api_key', $form_state->getValue('amplitude_api_key'))
+      ->save();
+
+    $this->config(self::TOKEN_SETTINGS)
       ->set('amplitude_drupal_tokens', $form_state->getValue('amplitude_drupal_tokens'))
       ->save();
   }
