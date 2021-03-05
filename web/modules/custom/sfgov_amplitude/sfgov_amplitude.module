@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * Implements hook_page_attachments().
+ */
+function sfgov_amplitude_page_attachments(array &$page) {
+  $config = \Drupal::config('sfgov_amplitude.settings');
+  $apiKey = $config->get('amplitude_api_key');
+  $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+  $userUUID = $user->isAnonymous() ? NULL: $user->uuid();
+  $drupalTokens = json_decode((\Drupal::token()->replace($config->get('amplitude_drupal_tokens'))), TRUE);
+  $drupalTokens['user']['uuid'] = $userUUID;
+
+  $page['#attached']['library'][] = 'sfgov_amplitude/amplitude-events';
+  $page['#attached']['drupalSettings']['sfgov_amplitude'] = [
+    'api_key' => $apiKey,
+    'user' => $drupalTokens['user'],
+    'page' => $drupalTokens['page']
+  ];
+}
