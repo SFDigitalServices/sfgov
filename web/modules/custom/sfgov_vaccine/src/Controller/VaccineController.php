@@ -160,42 +160,17 @@ class VaccineController extends ControllerBase {
         array_push($printed_languages, $site_data_remote_translation['info']);
         array_push($language_keys, 'rt');
       }
-
       array_push($language_keys, 'all');
 
-      // Pre-prep Eligibility.
-      $site_data_eligibility = $site_data['eligibility'];
-      $eligibility_with_text = [
-        'sf' => [
-          'boolean' => $site_data_eligibility["65_and_over"],
-          'text' => $this->t('65 and over'),
-        ],
-        'hw' => [
-          'boolean' => $site_data_eligibility["healthcare_workers"],
-          'text' => $this->t('Healthcare workers'),
-        ],
-        'ec' => [
-          'boolean' => $site_data_eligibility["education_and_childcare"],
-          'text' => $this->t('Education and childcare'),
-        ],
-        'af' => [
-          'boolean' => $site_data_eligibility["agriculture_and_food"],
-          'text' => $this->t('Agriculture and food'),
-        ],
-        'es' => [
-          'boolean' => $site_data_eligibility["emergency_services"],
-          'text' => $this->t('Emergency services'),
-        ],
-      ];
-
-      // @todo make this a reusable method for languages and eligibility,
-      // access_mode.
-      $eligibilities = [];
+      // Eligibility.
+      $printed_eligibility = [];
       $eligibility_keys = [];
-      foreach ($eligibility_with_text as $key => $value) {
-        if ($value['boolean'] == TRUE) {
-          array_push($eligibilities, $value['text']);
-          array_push($eligibility_keys, $key);
+      $site_data_eligibility = $site_data['eligibility'];
+      foreach($site_data_eligibility as $short_key => $boolean) {
+        if ($boolean === TRUE) {
+          $eligibility = $this->settings('eligibility.'. $short_key .'.text');
+          array_push ($printed_eligibility, $eligibility);
+          array_push($eligibility_keys, $short_key);
         }
       }
       array_push($eligibility_keys, 'all');
@@ -278,7 +253,7 @@ class VaccineController extends ControllerBase {
         'address_text' => $address_text,
         'address_url' => $address_url,
         'languages' => $printed_languages,
-        'eligibilities' => $eligibilities,
+        'eligibilities' => $printed_eligibility,
         'access_modes' => $access_modes,
         'info_url' => $info_url,
         'available' => $available,
