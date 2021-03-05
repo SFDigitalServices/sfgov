@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class FilterSitesForm.
+ * Vaccine sites page filter.
  */
 class FilterSitesForm extends FormBase {
 
@@ -89,7 +89,7 @@ class FilterSitesForm extends FormBase {
     ];
     $form['container']['toggle']['items']['eligibility'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Eligibility requirements '),
+      '#title' => $this->t('Eligibility requirements'),
       '#options' => [
         'sf' => $this->t('65 and over'),
         'hw' => $this->t('Healthcare workers'),
@@ -108,13 +108,6 @@ class FilterSitesForm extends FormBase {
   }
 
   
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
-  }
-
   /**
    * {@inheritdoc}
    */

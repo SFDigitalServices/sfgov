@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
- * Class SettingsForm.
+ * Settings for the vaccine sites page.
  */
 class SettingsForm extends ConfigFormBase {
 
