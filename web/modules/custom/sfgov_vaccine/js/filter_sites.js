@@ -183,7 +183,7 @@
       }
 
       function showCount(speed) {
-        let count = $(".vaccine-filter__sites .included").length;
+        let count = $(".vaccine-site.included").length;
         sectionCount.find("span").text(count);
         sectionCount.show();
       }
