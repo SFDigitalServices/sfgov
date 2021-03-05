@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         filters.push(filterSelect.value + '|' + filterSelect.options[filterSelect.selectedIndex].text)
       }
 
-      console.log(filters);
-
       amplitude.getInstance().logEvent('vaccine-sites-filter-click', { filters })
     }
   })
