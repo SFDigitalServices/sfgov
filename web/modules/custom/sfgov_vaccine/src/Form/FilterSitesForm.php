@@ -107,6 +107,7 @@ class FilterSitesForm extends FormBase {
     return $form;
   }
 
+  
   /**
    * {@inheritdoc}
    */
