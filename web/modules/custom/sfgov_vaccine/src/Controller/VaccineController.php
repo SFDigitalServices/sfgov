@@ -251,12 +251,16 @@ class VaccineController extends ControllerBase {
       array_push($access_mode_keys, 'all');
 
       // Usable variables.
-      $available = NULL;
       $info_url = NULL;
       $booking_info = NULL;
 
-      if (isset($site_data['appointments']) && isset($site_data['appointments']['available'])) {
-        $available = $site_data['appointments']['available'];
+      $available = $site_data['appointments']['available'];
+      if ($available === TRUE) {
+        $available = 'yes';
+      } else if($available === FALSE) {
+        $available = 'no';
+      } else if ($available === NULL) {
+        $available = 'null';
       }
 
       if (isset($site_data['info']) && isset($site_data['info']['url'])) {
@@ -283,7 +287,7 @@ class VaccineController extends ControllerBase {
           'class' => ['sfgov-service-card', 'vaccine-site', 'no-hover'],
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
-          'data-available' => $available ? 1 : 0,
+          'data-available' => $available,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
           'data-language' => $language_keys ? implode('-', $language_keys) : 'en-es-zh-fil-vi-ru-rt-all',

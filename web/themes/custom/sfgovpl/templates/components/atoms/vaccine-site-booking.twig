@@ -6,13 +6,9 @@
   {% endif %}
 {% endset %}
 
-{% if result.available is not null and result.booking_url %}
-  <div class="vaccine-site__booking_box notranslate {{
-    result.available
-      ? 'yes'
-      : 'no'
-    }}">
-    {% if result.available %}
+{% if result.available != 'null' and result.booking_url %}
+  <div class="vaccine-site__booking_box notranslate {{ result.available }}">
+    {% if result.available == 'yes' %}
       <div class="field">
         <strong>
           {{ 'Appointments available as of'|t }} {{ result.last_updated }}
@@ -22,7 +18,7 @@
       <div class="sfgov-cta-button__container">
         <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
       </div>
-    {% else %}
+    {% elseif result.available == 'no' %}
       <div class="field">
         <strong>
           {{ 'No appointments as of'|t }}
@@ -36,7 +32,10 @@
     {% endif %}
   </div>
 {% elseif result.booking_url or result.booking_info %}
-  <div class="vaccine-site__booking_box notranslate">
+  <div class="vaccine-site__booking_box notranslate {{
+    result.booking_dropins
+      ? 'js-dropin'
+    }}">
     {{ info }}
     {% if result.booking_url %}
       <div class="sfgov-cta-button__container no-pad">

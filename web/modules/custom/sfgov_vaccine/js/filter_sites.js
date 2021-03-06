@@ -17,6 +17,7 @@
       // Other variables.
       let groupByAvailability = false;
       const speed = "slow";
+      const class_match_available = "match-available";
 
       // On load.
       displaySites();
@@ -92,16 +93,22 @@
 
             // "Only show sites with available appointments" checkbox.
             if (groupByAvailability === true) {
+              $(this).removeClass(class_match_available);
               if (
-                $(this).attr("data-available") === "1" ||
-                $(this).find(".dropin").length !== 0
+                $(this).attr("data-available") === "yes" ||
+                $(this).find(".js-dropin").length !== 0
               ) {
                 $(this).appendTo(".vaccine-filter__sites");
-              } else {
+                $(this).addClass(class_match_available);
+              } else if ($(this).attr("data-available") === "null") {
                 $(this).appendTo(".vaccine-filter__other-sites");
+                $(this).addClass(class_match_available);
+              } else {
+                $(this).removeClass(class_match_available);
               }
             } else {
               $(this).appendTo(".vaccine-filter__sites");
+              $(this).addClass(class_match_available);
             }
 
             // "Wheelchair accessible" checkbox.
@@ -161,7 +168,8 @@
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
               $(this).hasClass("eligible") &&
-              $(this).hasClass("language-match");
+              $(this).hasClass("language-match") &&
+              $(this).hasClass(class_match_available);
 
             return rtnData;
           })
