@@ -15,15 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const filters = []
         
         for (let i = 0; i < filterChecks.length; i++) {
-          filters.push(filterChecks[i].getAttribute('name'))
+          let labelId = filterChecks[i].getAttribute('id')
+          let labelText = vaccineFilterForm.querySelector('label[for="' + labelId + '"]').innerText
+
+          filters.push(labelText)
         }
   
         for(let i = 0; i < filterSelects.length; i++) {
-          const filterSelect = filterSelects[i]
-          filters.push(filterSelect.value + '|' + filterSelect.options[filterSelect.selectedIndex].text)
+          let filterSelect = filterSelects[i]
+          let filterSelectText = filterSelect.options[filterSelect.selectedIndex].text
+
+          filters.push(filterSelectText)
         }
   
-        amplitude.getInstance().logEvent('vaccine-sites-filter-click', { filters })
+        amplitude.getInstance().logEvent('Vaccine sites filter click', { filters })
       } 
     }
   })
