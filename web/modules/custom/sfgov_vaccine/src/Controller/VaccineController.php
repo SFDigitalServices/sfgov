@@ -129,6 +129,32 @@ class VaccineController extends ControllerBase {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
+  private function gatherKeys($site_data, $group, $extra) {
+    $keys = [];
+    $site_data_group = $site_data[$group];
+    foreach($site_data_group as $data_key => $boolean) {
+      if ($boolean === TRUE && $data_key !='info') {
+        $short_key = $this->settings($group. '.'. $data_key . '.short_key');
+        array_push($keys, $short_key);
+      }
+    }
+    array_push($keys, $extra);
+
+    return $keys;
+  }
+
+  private function gatherStrings($site_data, $group) {
+    $printed = [];
+    $site_data_group = $site_data[$group];
+    foreach($site_data_group as $data_key => $boolean) {
+      if ($boolean === TRUE && $data_key !='info') {
+        $printed_value = $this->settings($group. '.'. $data_key .'.text');
+        array_push ($printed, $printed_value);
+      }
+    }
+    return $printed;
+  }
+
   /**
    * Prepare sites for rendering.
    */
@@ -141,6 +167,9 @@ class VaccineController extends ControllerBase {
     $sites = $allData['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data) {
+
+      $eligibility_keys = $this->gatherKeys($site_data, 'eligibility', 'all');
+      $eligibility_text = $this->gatherStrings($site_data, 'eligibility');
 
       // Pre-prep languages.
       $site_data_languages = $site_data['access']['languages'];
@@ -162,18 +191,6 @@ class VaccineController extends ControllerBase {
       }
       array_push($language_keys, 'all');
 
-      // Eligibility.
-      $printed_eligibility = [];
-      $eligibility_keys = [];
-      $site_data_eligibility = $site_data['eligibility'];
-      foreach($site_data_eligibility as $short_key => $boolean) {
-        if ($boolean === TRUE) {
-          $eligibility = $this->settings('eligibility.'. $short_key .'.text');
-          array_push ($printed_eligibility, $eligibility);
-          array_push($eligibility_keys, $short_key);
-        }
-      }
-      array_push($eligibility_keys, 'all');
 
       // Pre-prep access mode.
       $site_data_access_mode = $site_data['access_mode'];
@@ -253,7 +270,7 @@ class VaccineController extends ControllerBase {
         'address_text' => $address_text,
         'address_url' => $address_url,
         'languages' => $printed_languages,
-        'eligibilities' => $printed_eligibility,
+        'eligibilities' => $eligibility_text,
         'access_modes' => $access_modes,
         'info_url' => $info_url,
         'available' => $available,
