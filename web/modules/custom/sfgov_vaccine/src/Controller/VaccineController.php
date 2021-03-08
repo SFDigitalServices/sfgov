@@ -130,6 +130,28 @@ class VaccineController extends ControllerBase {
   }
 
   /**
+   * Prepare each site's data-access-mode value.
+   */
+  private function getSiteAccessModeKeys($site_data) {
+
+    $access_mode_options = [
+      'walk' => $site_data['access_mode']["walk"],
+      'drive' => $site_data['access_mode']["drive"],
+    ];
+
+    $keys = [];
+    foreach ($access_mode_options as $key => $value) {
+      if ($value === TRUE) {
+        $key = $this->settings('access_mode.' . $key . '.short_key');
+        array_push($keys, $key);
+      }
+    }
+    array_push($keys, 'all');
+
+    return $keys;
+  }
+
+  /**
    * Prepare each site's data-eligibility value.
    */
   private function getSiteEligibilityKeys($site_data, $group, $extra) {
@@ -163,6 +185,27 @@ class VaccineController extends ControllerBase {
     }
     array_push($keys, 'all');
     return $keys;
+  }
+
+  /**
+   * Prepare each site's access mode text.
+   */
+  private function getSiteAccessModeText($site_data) {
+    $access_mode_options = [
+      'walk' => $site_data['access_mode']["walk"],
+      'drive' => $site_data['access_mode']["drive"],
+      'wheelchair' => $site_data['access']['wheelchair'],
+    ];
+
+    $printed = [];
+    foreach ($access_mode_options as $key => $value) {
+      if ($value === TRUE) {
+        $text = $this->settings('access_mode.' . $key . '.text');
+        array_push($printed, $text);
+      }
+    }
+
+    return $printed;
   }
 
   /**
@@ -218,35 +261,8 @@ class VaccineController extends ControllerBase {
       $eligibility_text = $this->getSiteEligibilityText($site_data, 'eligibility');
       $language_keys = $this->getSiteLanguageKeys($site_data['access']);
       $language_text = $this->getSiteLanguageText($site_data['access']);
-
-      // Pre-prep access mode.
-      $site_data_access_mode = $site_data['access_mode'];
-      $access_mode_with_text = [
-        'wa' => [
-          'boolean' => $site_data_access_mode["walk"],
-          'text' => $this->t('Walk-thru'),
-        ],
-        'dr' => [
-          'boolean' => $site_data_access_mode["drive"],
-          'text' => $this->t('Drive-thru'),
-        ],
-        'wh' => [
-          'boolean' => $site_data['access']['wheelchair'],
-          'text' => $this->t('Wheelchair accessible'),
-        ],
-      ];
-
-      $access_modes = [];
-      $access_mode_keys = [];
-      foreach ($access_mode_with_text as $key => $value) {
-        if ($value['boolean'] == TRUE) {
-          array_push($access_modes, $value['text']);
-          if ($key != 'wh') {
-            array_push($access_mode_keys, $key);
-          }
-        }
-      }
-      array_push($access_mode_keys, 'all');
+      $access_mode_keys = $this->getSiteAccessModeKeys($site_data);
+      $access_mode_text = $this->getSiteAccessModeText($site_data);
 
       // Usable variables.
       $info_url = NULL;
@@ -300,7 +316,7 @@ class VaccineController extends ControllerBase {
         'address_url' => $address_url,
         'languages' => $language_text,
         'eligibilities' => $eligibility_text,
-        'access_modes' => $access_modes,
+        'access_modes' => $access_mode_text,
         'info_url' => $info_url,
         'available' => $available,
         'booking_url' => $booking_url,
