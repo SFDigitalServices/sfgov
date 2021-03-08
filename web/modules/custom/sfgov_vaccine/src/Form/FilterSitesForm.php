@@ -61,7 +61,7 @@ class FilterSitesForm extends FormBase {
     $form['container']['toggle']['items']['language'] = [
       '#type' => 'select',
       '#title' => $this->t('Language'),
-      '#title_display' => 'hidden',
+      '#title_display' => 'invisible',
       '#options' => [
         // @todo refactor with VaccineController->makeResults() for DRYness.
         'all' => $this->t('Any language'),
@@ -78,7 +78,8 @@ class FilterSitesForm extends FormBase {
     ];
     $form['container']['toggle']['items']['access_mode'] = [
       '#type' => 'select',
-      '#title_display' => 'hidden',
+      '#title' => $this->t('Access Mode'),
+      '#title_display' => 'invisible',
       '#options' => [
         'all' => $this->t('Drive-thru or walk-thru'),
         'dr' => $this->t('Drive-thru'),
