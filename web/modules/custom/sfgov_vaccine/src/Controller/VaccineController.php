@@ -79,7 +79,7 @@ class VaccineController extends ControllerBase {
    * Get config.
    */
   private function settings($value) {
-    return  $this->configFactory->get('sfgov_vaccine.settings')->get($value);
+    return $this->configFactory->get('sfgov_vaccine.settings')->get($value);
   }
 
   /**
@@ -129,12 +129,15 @@ class VaccineController extends ControllerBase {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
-  private function gatherKeys($site_data, $group, $extra) {
+  /**
+   * Prepare each site's data-eligibility value.
+   */
+  private function getSiteEligibilityKeys($site_data, $group, $extra) {
     $keys = [];
     $site_data_group = $site_data[$group];
-    foreach($site_data_group as $data_key => $boolean) {
-      if ($boolean === TRUE && $data_key !='info') {
-        $short_key = $this->settings($group. '.'. $data_key . '.short_key');
+    foreach ($site_data_group as $data_key => $boolean) {
+      if ($boolean === TRUE && $data_key != 'info') {
+        $short_key = $this->settings($group . '.' . $data_key . '.short_key');
         array_push($keys, $short_key);
       }
     }
@@ -143,16 +146,59 @@ class VaccineController extends ControllerBase {
     return $keys;
   }
 
-  private function gatherStrings($site_data, $group) {
+  /**
+   * Prepare each site's data-language value.
+   */
+  private function getSiteLanguageKeys($access_data) {
+    $keys = [];
+    $site_data_languages = $access_data['languages'];
+    $site_data_remote_translation = $access_data["remote_translation"];
+    foreach ($site_data_languages as $short_key => $boolean) {
+      if ($boolean === TRUE) {
+        array_push($keys, $short_key);
+      }
+    }
+    if ($site_data_remote_translation['available']) {
+      array_push($keys, 'rt');
+    }
+    array_push($keys, 'all');
+    return $keys;
+  }
+
+  /**
+   * Prepare each site's eligibility text.
+   */
+  private function getSiteEligibilityText($site_data, $group) {
     $printed = [];
     $site_data_group = $site_data[$group];
-    foreach($site_data_group as $data_key => $boolean) {
-      if ($boolean === TRUE && $data_key !='info') {
-        $printed_value = $this->settings($group. '.'. $data_key .'.text');
-        array_push ($printed, $printed_value);
+    foreach ($site_data_group as $data_key => $boolean) {
+      if ($boolean === TRUE && $data_key != 'info') {
+        $printed_value = $this->settings($group . '.' . $data_key . '.text');
+        array_push($printed, $printed_value);
       }
     }
     return $printed;
+  }
+
+  /**
+   * Prepare each site's language text.
+   */
+  private function getSiteLanguageText($access_data) {
+    $site_data_remote_translation = $access_data["remote_translation"];
+
+    $printed_languages = [];
+    $site_data_languages = $access_data['languages'];
+    foreach ($site_data_languages as $short_key => $boolean) {
+      if ($boolean === TRUE) {
+        $languages = $this->settings('languages.' . $short_key);
+        array_push($printed_languages, $languages);
+      }
+    }
+
+    if ($site_data_remote_translation['available']) {
+      array_push($printed_languages, $site_data_remote_translation['info']);
+    }
+    return $printed_languages;
   }
 
   /**
@@ -168,29 +214,10 @@ class VaccineController extends ControllerBase {
     $results = [];
     foreach ($sites as $site_id => $site_data) {
 
-      $eligibility_keys = $this->gatherKeys($site_data, 'eligibility', 'all');
-      $eligibility_text = $this->gatherStrings($site_data, 'eligibility');
-
-      // Pre-prep languages.
-      $site_data_languages = $site_data['access']['languages'];
-      $site_data_remote_translation = $site_data['access']["remote_translation"];
-
-      $printed_languages = [];
-      $language_keys = [];
-      foreach ($site_data_languages as $short_key => $boolean) {
-        if ($boolean === TRUE) {
-          $languages = $this->settings('languages.'. $short_key);
-          array_push ($printed_languages, $languages);
-          array_push($language_keys, $short_key);
-        }
-      }
-
-      if ($site_data_remote_translation['available']) {
-        array_push($printed_languages, $site_data_remote_translation['info']);
-        array_push($language_keys, 'rt');
-      }
-      array_push($language_keys, 'all');
-
+      $eligibility_keys = $this->getSiteEligibilityKeys($site_data, 'eligibility', 'all');
+      $eligibility_text = $this->getSiteEligibilityText($site_data, 'eligibility');
+      $language_keys = $this->getSiteLanguageKeys($site_data['access']);
+      $language_text = $this->getSiteLanguageText($site_data['access']);
 
       // Pre-prep access mode.
       $site_data_access_mode = $site_data['access_mode'];
@@ -228,9 +255,11 @@ class VaccineController extends ControllerBase {
       $available = $site_data['appointments']['available'];
       if ($available === TRUE) {
         $available = 'yes';
-      } else if($available === FALSE) {
+      }
+      elseif ($available === FALSE) {
         $available = 'no';
-      } else if ($available === NULL) {
+      }
+      elseif ($available === NULL) {
         $available = 'null';
       }
 
@@ -269,7 +298,7 @@ class VaccineController extends ControllerBase {
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
-        'languages' => $printed_languages,
+        'languages' => $language_text,
         'eligibilities' => $eligibility_text,
         'access_modes' => $access_modes,
         'info_url' => $info_url,
