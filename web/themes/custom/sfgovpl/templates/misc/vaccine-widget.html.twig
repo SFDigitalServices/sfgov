@@ -1,24 +1,8 @@
 {{ attach_library('sfgovpl/filters') }}
 {{ attach_library('sfgov_vaccine/filter_sites') }}
 
-<header class="hero-banner color">
-  <div class="hero-banner--container">
-    <h1>
-      {{ template_strings.page.title|t }}
-    </h1>
-    <p class="lead-paragraph notranslate">
-      {{ template_strings.page.description|t }}
-    </p>
-  </div>
-</header>
-
-<div class="sfgov-full-bleed light-blue vaccine-filter__filter-top">
-  <div class="sfgov-section-container">
-    <div class="sfgov-filters vaccine-filter__filters">
-      {{ filters }}
-    </div>
-  </div>
-</div>
+{% include '@theme/vaccine/vaccine-widget--header.twig' %}
+{% include '@theme/vaccine/vaccine-widget--filters.twig' %}
 
 <!-- Microservice info. {{ api_data.api_url }} {{ api_data.timestamp }} -->
 <div class="sfgov-full-bleed vaccine-filter__body">
@@ -32,7 +16,7 @@
     </div>
     <div class="group--left">
       {{ api_data.error }}
-      <div class="vaccine-filter__sites" aria-live="polite" >
+      <div class="vaccine-filter__sites" aria-live="polite">
         {% for result in results %}
           {% set description %}
             {# address_url #}
@@ -84,9 +68,9 @@
           {% endset %}
 
           {% set booking_info %}
-            {% include '@theme/atoms/vaccine-site-booking.twig' %}
+            {% include '@theme/vaccine/vaccine-site--booking.twig' %}
           {% endset %}
-          {% include '@theme/molecules/vaccine-site-card.twig' with {
+          {% include '@theme/vaccine/vaccine-site.twig' with {
             attributes: result.attributes,
             title: result.site_name,
             description: description,
