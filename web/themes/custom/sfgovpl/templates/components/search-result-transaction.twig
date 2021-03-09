@@ -1,10 +1,23 @@
-{% set fullClass = relatedDept is empty ? "full" : "" %}
-<div class="sfgov-transaction-search--container {{ fullClass }}">
-  <a class="title-url" href="{{ url.url }}" {{ url.external ? "target='_blank'" : '' }}><h4>{{ title }}</h4></a>
+{% set classes = [
+  'sfgov-transaction-search--container',
+  relatedDept is empty ? 'full' : ''
+] %}
+<div {{ attributes.addClass(classes) }}>
+  <a class="title-url"
+    href="{{ url.url }}"
+    {{ url.external ? "target='_blank'" : '' }}>
+    <h4>
+      {{ title }}
+    </h4>
+  </a>
   <div class="body-container">
     {% if relatedDept %}
-      <div class="related-dept">{{ relatedDept }}</div>
+      <div class="related-dept">
+        {{ relatedDept }}
+      </div>
     {% endif %}
-    <p class="body">{{ body|striptags('<a>')|raw }}</p>
+    <p class="body">
+      {{ body|striptags('<a>')|raw }}
+    </p>
   </div>
 </div>

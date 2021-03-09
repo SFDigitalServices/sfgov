@@ -24,10 +24,6 @@
         "asset-packagist": {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        "custom-simplesamlphp-auth": {
-            "type": "vcs",
-            "url": "https://github.com/SFDigitalServices/simplesamlphp_auth"
         }
     },
     "require": {
@@ -44,6 +40,7 @@
         "drupal/autodrop": "~1.0",
         "drupal/block_field": "^1.0@alpha",
         "drupal/bulk_update_fields": "^2.0@alpha",
+        "drupal/cache_control_override": "^1.0@alpha",
         "drupal/cer": "^4.0@alpha",
         "drupal/color_field": "^2.2",
         "drupal/components": "^1.0",
@@ -75,7 +72,6 @@
         "drupal/inline_entity_form": "^1.0@beta",
         "drupal/job_scheduler": "^3.1",
         "drupal/linkit": "^5.0",
-        "drupal/mandrill": "^1.0",
         "drupal/maxlength": "1.x-dev",
         "drupal/media_entity_file_replace": "^1.0@beta",
         "drupal/media_revisions_ui": "^2.0",
@@ -89,6 +85,7 @@
         "drupal/pathauto": "^1.6",
         "drupal/protected_pages": "^1.1",
         "drupal/public_preview": "^1.0@beta",
+        "drupal/quick_node_clone": "^1.13",
         "drupal/redirect": "^1.2",
         "drupal/rest_views": "^2.0",
         "drupal/restui": "^1.18",
@@ -117,7 +114,7 @@
         "drush/drush": "^8.4.5",
         "joachim-n/composer-manifest": "^1.0",
         "jsanahuja/jquery.instagramfeed": "^1.2",
-        "oomphinc/composer-installers-extender": "^1.1",
+        "oomphinc/composer-installers-extender": "^2",
         "pantheon-systems/drupal-integrations": "^8.0",
         "pantheon-systems/quicksilver-pushback": "^2",
         "rvtraveller/qs-composer-installer": "^1.1",
@@ -127,7 +124,7 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "drupal/coder": "^8.3",
         "drupal/core-dev": "^8.8",
-        "drupal/devel": "^1.2",
+        "drupal/devel": "^2",
         "drupal/drupal-extension": "^3.1",
         "drupal/search_kint": "^1.0",
         "drupal/stage_file_proxy": "^1.1"
@@ -139,7 +136,8 @@
     "prefer-stable": true,
     "autoload": {
         "classmap": [
-            "scripts/composer/ScriptHandler.php"
+            "scripts/composer/ScriptHandler.php",
+            "scripts/composer/SFGovSamlHandler.php"
         ]
     },
     "scripts": {
@@ -153,10 +151,12 @@
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "prepare-for-pantheon": "DrupalProject\\composer\\ScriptHandler::prepareForPantheon",
         "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "SFGovSaml\\SFGovSamlHandler::copyDependencies"
         ],
         "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "SFGovSaml\\SFGovSamlHandler::copyDependencies"
         ],
         "post-create-project-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
@@ -232,7 +232,8 @@
             "drupal/amplitude": {
                 "Page scroll depth": "patches/amplitude-scroll-depth.patch",
                 "Allow setting user properties": "https://www.drupal.org/files/issues/2020-07-05/3157006-user-properties-2.patch",
-                "JSON parse event property values": "patches/amplitude-parse-event-property-values.patch"
+                "JSON parse event property values": "patches/amplitude-parse-event-property-values.patch",
+                "Auto-capture href for anchors": "patches/auto-capture-anchor-href.patch"
             },
             "drupal/anonymous_redirect": {
                 "Do not redirect when maintenance mode is active": "https://www.drupal.org/files/issues/2020-09-10/anonymous_redirect-no_redirect_maintenance_mode-3170228-2.patch"

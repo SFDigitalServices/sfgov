@@ -41,7 +41,9 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $media = $event->getRequest()->attributes->get('media');
 
     if ($node && $node instanceof NodeInterface) {
-      if (!$node->isPublished()) {
+      $route_name = \Drupal::routeMatch()->getRouteName();
+
+      if (!$node->isPublished() || $route_name === 'public_preview.preview_link') {
         return;
       }
       else {

@@ -1,0 +1,128 @@
+{{ attach_library('sfgovpl/filters') }}
+{{ attach_library('sfgov_vaccine/filter_sites') }}
+
+<header class="hero-banner color">
+  <div class="hero-banner--container">
+    <h1>
+      {{ page_title }}
+    </h1>
+    <p class="lead-paragraph">
+      {{
+        "Find out where to get a vaccine if you're eligible. Keep checking for appointments. New locations will be added as they're available. <a href=/covid-19-vaccine-san-francisco>Learn more.</a>"|t
+      }}
+    </p>
+  </div>
+</header>
+
+<div class="sfgov-full-bleed light-blue vaccine-filter__filter-top">
+  <div class="sfgov-section-container">
+    <div class="sfgov-filters vaccine-filter__filters">
+      {{ filters }}
+    </div>
+  </div>
+</div>
+
+<!-- Microservice info. {{ api_data.api_url }} {{ api_data.timestamp }} -->
+<div class="sfgov-full-bleed vaccine-filter__body">
+  <div class="sfgov-section-container">
+    <div class="vaccine-filter__count">
+      {{
+        'Showing <span>@count</span> results'|t({
+          '@count': results|length
+        })
+      }}
+    </div>
+    <div class="group--left">
+      {{ api_data.error }}
+      <div class="vaccine-filter__sites">
+        {% for result in results %}
+          {% set description %}
+            {# address_url #}
+            {% if result.address_url %}
+              <div class="vaccine-site__address field notranslate">
+                <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+              </div>
+            {% endif %}
+
+            {# Open to .. #}
+            <div class="vaccine-site__eligibility-availability">
+              <label class="notranslate">{{ result.restrictions }}</label>
+
+              {# 65 and over, etc #}
+              <div class="vaccine-site__eligibilities notranslate">
+                {% for eligibility in result.eligibilities %}
+                  <span class="vaccine-site__eligibility">
+                    {{ eligibility }}
+                  </span>
+                {% endfor %}
+              </div>
+            </div>
+
+            {# Languages #}
+            {% if result.languages %}
+              <div class="field">
+                <label>{{ 'Languages'|t }}</label>
+                <div class="notranslate">
+                  {{ result.languages|join(', ') }}
+                </div>
+              </div>
+            {% endif %}
+
+            {# Drive thru, walk thru, wheelchair #}
+            {% if result.access_modes %}
+              <div class="field">
+                <label>{{ 'Access'|t }}</label>
+                {{ result.access_modes|join(', ') }}
+              </div>
+            {% endif %}
+
+            {% if result.info_url %}
+              <div class="field notranslate">
+                <a href="{{ result.info_url }}">
+                  {{ 'Learn more about this location'|t }}
+                </a>
+              </div>
+            {% endif %}
+          {% endset %}
+
+          {% set booking_info %}
+            {% include '@theme/atoms/vaccine-site-booking.twig' %}
+          {% endset %}
+          {% include '@theme/molecules/vaccine-site-card.twig' with {
+            attributes: result.attributes,
+            title: result.site_name,
+            description: description,
+            booking_info: booking_info
+          } %}
+        {% endfor %}
+      </div>
+
+      <div class="vaccine-filter__other">
+        <h3>
+          {{ 'More Vaccine Sites' }}
+        </h3>
+        <p>
+          {{
+            'We don’t have information about these sites. Contact them directly to find out what services they are offering.'|t
+          }}
+        </p>
+
+        <div class="vaccine-filter__other-sites"></div>
+      </div>
+
+      <div class="vaccine-filter__empty">
+        <h4>
+          {{ 'No sites match your search.'|t }}
+        </h4>
+        <p>
+          {{ 'Remove some of the filters to find more sites. '|t }}
+          <a href="/getvaccinated">
+            {{ 'You can also see more options to get vaccinated.'|t }}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="group--right"></div>
+  </div>
+</div>

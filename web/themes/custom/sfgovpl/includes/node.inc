@@ -19,12 +19,15 @@ use Drupal\Core\Link;
 function sfgovpl_preprocess_node(&$variables) {
   // Make sure we have a node object that works on revisions, diffs, etc.
   _sfgovpl_node_object($variables);
+  _sfgovpl_negotiate_translation($variables);
 
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
     $node = $variables['node'];
     $content_type = $node->bundle();
+    $view_mode = $variables['view_mode'];
 
-    if ($variables['view_mode'] == 'full') {
+    // Full node.
+    if ($view_mode == 'full') {
       switch ($content_type) {
         case 'department':
           $variables['dept_fields'] = dept_page_fields($node);
@@ -44,13 +47,13 @@ function sfgovpl_preprocess_node(&$variables) {
       }
     }
 
-    // If the node being displayed is a translation, add a "notranslate" wrapper
-    // class, to exclude it from gtranslate (the rest of the page, navigation,
-    // footer, etc., will be translated this way).
-    if ('en' != $variables['node']->language()->getId()) {
-      $variables['attributes']['class'][] = 'notranslate';
-    }
   }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function sfgovpl_preprocess_node__department__full(&$variables) {
 }
 
 /**
@@ -645,4 +648,44 @@ function sfgovpl_add_regions_to_node(array $regions, &$variables) {
     // Add build to region
     $variables[$region] = $build;
   }
+}
+
+/**
+ * Helper function for managing human- vs machine- translations.*
+ * Extends sfgovpl_preprocess_node().
+ * @see README.md for template advice.
+ */
+function _sfgovpl_negotiate_translation(&$variables) {
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+
+    // Node vars.
+    $node = $variables['node'];
+    $view_mode = $variables['view_mode'];
+
+    // If the current language matches an existing Drupal translation,
+    // show the Drupal-translated node and do not let Google translate it.
+    $node_languages = $node->getTranslationLanguages();
+    $current_language = \Drupal::languageManager()
+      ->getCurrentLanguage()
+      ->getId();
+
+    foreach ($node_languages as $language => $value) {
+      if ($current_language == $language && $language != 'en') {
+
+        // Do not let Google translate full pages that are not in English.
+        if ($view_mode == 'full') {
+          $variables['attributes']['class'][] = 'notranslate';
+        }
+
+        // Translate everything else.
+        else {
+          $variables['attributes']['class'][] = 'notranslate';
+          $translated = $node->getTranslation($language);
+          $variables['node'] = $translated;
+          $variables['url'] = $translated->toUrl();
+        }
+      }
+    }
+  }
+  return $variables;
 }
