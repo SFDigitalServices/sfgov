@@ -11,6 +11,11 @@
         'Breed',
       ];
 
+      // Add Drupal translations to the do not translate list.
+      if (typeof drupalTranslations !== "undefined") {
+        const translations = Object.keys(drupalTranslations.strings[""]);
+        Array.prototype.push.apply(do_not_translate, translations);
+      }
       $.each(do_not_translate, function (index, value) {
         $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-subtitle', context)
           .filter("*:contains(" + value + ")")

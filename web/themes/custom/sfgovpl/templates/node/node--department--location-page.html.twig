@@ -9,15 +9,17 @@
 {% block content %}
   <div class="sfgov-container-item--inner">
     <a href="{{ url }}">
-      <h5 class="at-location-label">{{ label }}</h5>
+      <h5 class="at-location-label">
+        {{ node.label }}
+      </h5>
     </a>
 
     {% if content.field_address|render %}
-      <div class="at-location-addrress">
+      <div class="at-location-address">
         {{ content.field_address }}
       </div>
     {% endif %}
 
     {{ content|without('field_address') }}
   </div>
-{% endblock %}
+{% endblock content %}

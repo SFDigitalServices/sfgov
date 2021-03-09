@@ -1,0 +1,180 @@
+.vaccine-filter__filter-top {
+  padding: 30px 0;
+
+  @include media($medium-screen) {
+    display: none;
+  }
+}
+
+.vaccine-filter__body {
+
+  @include media($medium-screen) {
+    padding-top: 60px;
+  }
+
+  .group--left {
+    @include columns-720(left);
+    @include media($medium-screen) {
+      padding-right: 60px;
+    }
+  }
+  .group--right {
+    display: none;
+    @include columns-350(right);
+    @include media($medium-screen) {
+      background-color: $c-blue-1;
+      border-radius: $radius;
+      display: block;
+      padding: 40px;
+    }
+  }
+}
+
+.vaccine-filter__count {
+  margin-bottom: 40px;
+}
+
+.vaccine-filter-form {
+   [data-drupal-selector="edit-single-checkboxes"] {
+     margin-bottom: 50px;
+
+     .js-form-type-checkbox label {
+      @include fs-body-short;
+       margin-bottom: 0;
+
+       &::before {
+         top: 2px;
+       }
+    }
+  }
+
+  .fieldset-wrapper .form-wrapper .form-item-access-mode {
+    margin-bottom: 60px;
+  }
+}
+
+.vaccine-filter__other {
+  display: none;
+}
+
+.vaccine-site {
+  margin-bottom: 40px;
+
+  label {
+    @include fs-body-bold;
+    margin-bottom: 0;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+}
+
+.vaccine-site__title {
+  @include fs-title-3-mobile;
+  margin: 0;
+}
+
+.vaccine-site__address {
+  a {
+    @include link-colors($c-light-slate, $c-bright-blue);
+  }
+}
+
+.vaccine-site__eligibility-availability {
+  margin-bottom: 9px;
+}
+
+.vaccine-site__eligibility {
+  @include fs-small-text;
+  background: $c-grey-2;
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  padding: 3px 8px;
+  word-break: keep-all;
+}
+
+.vaccine-site__booking_box {
+  background-color: $c-blue-1;
+  margin-top: 40px;
+  padding: 20px;
+
+  strong {
+    @include fs-body-bold;
+  }
+
+  @include media($medium-screen) {
+    padding: 40px;
+  }
+
+  &.yes {
+    @include background-image('check-green.svg', 20px 25px, $c-blue-1);
+
+    @include media($medium-screen) {
+      background-position: 40px 40px;
+    }
+
+    .field {
+      padding-left: 40px;
+    }
+    .vaccine-site__booking_info {
+      padding-top: 10px;
+    }
+  }
+
+  &.no {
+    @include background-image('close-red.svg', 20px 25px, $c-blue-1);
+
+    @include media($medium-screen) {
+      background-position: 40px 40px;
+    }
+
+    .field {
+      padding-left: 40px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .vaccine-site__booking_info {
+      padding-top: 10px;
+    }
+  }
+  .sfgov-cta-button__container {
+    text-align: center;
+
+    @include media($medium-screen) {
+      text-align: left;
+      padding-left: 40px;
+    }
+    &.no-pad {
+      @include media($medium-screen) {
+        padding-left: 0;
+      }
+    }
+  }
+  a {
+    display: block;
+
+    @include media($medium-screen) {
+      display: inline-block;
+    }
+  }
+}
+
+.vaccine-site__booking_info {
+
+  + .sfgov-cta-button__container {
+    margin-top: 20px;
+  }
+}
+
+.vaccine-filter__empty {
+  display: none;
+
+  h4 {
+    @include fs-title-5;
+  }
+}

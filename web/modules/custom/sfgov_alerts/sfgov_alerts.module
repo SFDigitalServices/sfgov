@@ -7,6 +7,7 @@
 
 use Drupal\sfgov_alerts\Alert;
 use Drupal\Core\Form\FormState;
+use Drupal\node\NodeInterface;
 
 /**
  * @param $entity Drupal\Core\Entity\Entity
@@ -23,7 +24,8 @@ function sfgov_alerts_entity_presave($entity) {
  * Implements hook_form_alter().
  */
 function sfgov_alerts_form_alter(&$form, FormState $form_state, $form_id) {
-  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($node) && $node instanceof NodeInterface) {
     if ($node->hasField('field_alert_expiration_date')) {
       $date_exp = $node->field_alert_expiration_date->value;
       $date_today = date('Y-m-d');

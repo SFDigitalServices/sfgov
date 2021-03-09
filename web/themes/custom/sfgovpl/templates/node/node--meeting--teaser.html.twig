@@ -66,49 +66,66 @@
  * @see template_preprocess_node()
 #}
 {% set bundle = node.bundle|clean_class %}
-{%
-  set classes = [
+{% set classes =
+  [
     bundle,
-    view_mode ? bundle ~ '--' ~ view_mode|clean_class,
+    view_mode ? bundle ~ '--' ~ (view_mode|clean_class),
     node.isPromoted() ? bundle ~ '--promoted',
     node.isSticky() ? bundle ~ '--sticky',
-    not node.isPublished() ? bundle ~ '--unpublished',
+    not node.isPublished() ? bundle ~ '--unpublished'
   ]|merge(classes|default([]))
 %}
-{%
-  set title_classes = [
-    'article__title',
-    'article--' ~ view_mode|clean_class ~ '__title',
-  ]
-%}
+{% set title_classes = [
+  'article__title',
+  'article--' ~ (view_mode|clean_class) ~ '__title'
+] %}
 {% block node %}
   <article {{ attributes.addClass(classes)|without('id') }}>
     {% block content %}
       {{ title_prefix }}
       {% block title %}
-      <h4{{ title_attributes.addClass(title_classes) }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h4>
+        <h4 {{ title_attributes.addClass(title_classes) }}>
+          <a href="{{ url }}" rel="bookmark">{{ node.label }}</a>
+        </h4>
       {% endblock title %}
       {{ title_suffix }}
 
-      <div{{ content_attributes.addClass(bundle ~ '__content') }}>
+      <div {{ content_attributes.addClass(bundle ~ '__content') }}>
         {% block body %}
-        {{ content|without('links', 'field_start_date', 'field_end_date', 'field_address') }}
+          {{
+            content|without(
+              'links',
+              'field_start_date',
+              'field_end_date',
+              'field_address'
+            )
+          }}
 
-        <div class="__footer">
-          <div class="field __time field__item">{{ meeting_time }}</div>
+          <div class="__footer">
+            <div class="field __time field__item">
+              {{ meeting_time }}
+            </div>
 
-          {% if meeting_address %}
-            <div class="field field--type-address __address field__item"><p class="address"><span class="organization"> {{ meeting_address }} </span><br></p></div>
-          {% endif %}
-          
-          {% if online %}
-            <div class="field field--type-address __address field__item"><p class="address"><span class="organization">Online</span><br></p></div>
-          {% endif %}
-        </div>
+            {% if meeting_address %}
+              <div class="field field--type-address __address field__item">
+                <p class="address">
+                  <span class="organization">{{ meeting_address }}</span><br />
+                </p>
+              </div>
+            {% endif %}
+
+            {% if online %}
+              <div class="field field--type-address __address field__item">
+                <p class="address">
+                  <span class="organization">{{ 'Online'|t }}</span><br />
+                </p>
+              </div>
+            {% endif %}
+          </div>
         {% endblock body %}
       </div>
 
       {{ content.links }}
-    {% endblock %}
+    {% endblock content %}
   </article>
 {% endblock node %}

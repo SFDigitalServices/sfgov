@@ -1,10 +1,13 @@
 <?php
 
+/**
+ * @file
+ * Preprocess functions for 'node' theme hooks.
+ */
+
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
-use Drupal\eck\Entity\EckEntityBundle;
-use Drupal\Core\Entity;
-use Drupal\file\Entity\File;
+use Drupal\node\NodeInterface;
 use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
@@ -14,26 +17,36 @@ use Drupal\Core\Link;
  * Implements hook_preprocess_node().
  */
 function sfgovpl_preprocess_node(&$variables) {
-  if(!empty($variables['node'])) {
-    $content_type = $variables['node']->getType();
-    if ($content_type == 'department' && $variables['view_mode'] == 'full') {
-      $variables['dept_fields'] = dept_page_fields();
-      sfgovpl_add_regions_to_node(['department_news'], $variables);
-      sfgovpl_add_regions_to_node(['department_events'], $variables);
-    }
-    if($content_type == 'topic') {
-      $variables['service_section_ids'] = topic_page_services();
-    }
-    if($content_type == 'public_body') {
-      $variables['public_body_fields'] = public_body_page_fields();
+  // Make sure we have a node object that works on revisions, diffs, etc.
+  _sfgovpl_node_object($variables);
+  _sfgovpl_negotiate_translation($variables);
+
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $node = $variables['node'];
+    $content_type = $node->bundle();
+    $view_mode = $variables['view_mode'];
+
+    // Full node.
+    if ($view_mode == 'full') {
+      switch ($content_type) {
+        case 'department':
+          $variables['dept_fields'] = dept_page_fields($node);
+          sfgovpl_add_regions_to_node([
+            'department_news',
+            'department_events',
+          ], $variables);
+          break;
+
+        case 'topic':
+          $variables['service_section_ids'] = topic_page_services($node);
+          break;
+
+        case 'public_body':
+          $variables['public_body_fields'] = public_body_page_fields($node);
+          break;
+      }
     }
 
-    // If the node being displayed is a translation, add a "notranslate" wrapper
-    // class, to exclude it from gtranslate (the rest of the page, navigation,
-    // footer, etc., will be translated this way).
-    if ('en' != $variables['node']->language()->getId()) {
-      $variables['attributes']['class'][] = 'notranslate';
-    }
   }
 }
 
@@ -107,13 +120,14 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
   }
 }
 
-/*
-* retrieve the transaction ids in field_department_services that will be excluded from "more services" section on topic page
-* send the list of ids to a twig var which will then get passed to view contextual filters via twig_tweak
-*/
-function topic_page_services() {
-  $node = \Drupal::request()->attributes->get('node');
-  if($node) {
+/**
+ * Retrieve the transaction ids in field_department_services that will be
+ * excluded from "more services" section on topic page send the list of ids to a
+ * Twig var which will then get passed to view contextual filters via
+ * twig_tweak.
+ */
+function topic_page_services($node) {
+  if (!empty($node)) {
     if($node->hasField('field_department_services')) {
       $services = $node->get('field_department_services');
       if(!empty($services->getValue())) {
@@ -122,7 +136,7 @@ function topic_page_services() {
           $serviceSectionId = $service->getValue()['target_id'];
           $serviceSectionLoaded = Paragraph::load($serviceSectionId);
 
-          // load the paragraph and get the transactions
+          // Load the paragraph and get the transactions.
           $topicTransactions = $serviceSectionLoaded->get('field_dept_service_sect_services')->getValue();
           for($i=0; $i<count($topicTransactions); $i++) {
             $txId = $topicTransactions[$i]['target_id'];
@@ -136,8 +150,7 @@ function topic_page_services() {
   return null;
 }
 
-function dept_page_fields() {
-  $node = \Drupal::request()->attributes->get('node');
+function dept_page_fields($node) {
   $theFields = array(
     'featured_items' => array(),
     'services' => array(),
@@ -334,6 +347,13 @@ function dept_page_fields() {
         $theFields['about']['description'] = $aboutDescription;
       }
     }
+    // Override about_description field if new about_or_description field is set
+    if($node->hasField('field_about_or_description')) {
+      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
+      if($aboutDescription) {
+        $theFields['about']['description'] = $aboutDescription;
+      }
+    }
     if($node->hasField('field_divisions')) {
       $aboutDivisions = $node->get('field_divisions')->getValue();
       if($aboutDivisions) {
@@ -445,9 +465,8 @@ function dept_page_fields() {
   return $theFields;
 }
 
-function public_body_page_fields() {
+function public_body_page_fields($node) {
   $styleThumbnail = ImageStyle::load('thumbnail');
-  $node = \Drupal::request()->attributes->get('node');
   $theFields = array(
     'featured_items' => array(),
     'services' => array(),
@@ -623,4 +642,44 @@ function sfgovpl_add_regions_to_node(array $regions, &$variables) {
     // Add build to region
     $variables[$region] = $build;
   }
+}
+
+/**
+ * Helper function for managing human- vs machine- translations.*
+ * Extends sfgovpl_preprocess_node().
+ * @see README.md for template advice.
+ */
+function _sfgovpl_negotiate_translation(&$variables) {
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+
+    // Node vars.
+    $node = $variables['node'];
+    $view_mode = $variables['view_mode'];
+
+    // If the current language matches an existing Drupal translation,
+    // show the Drupal-translated node and do not let Google translate it.
+    $node_languages = $node->getTranslationLanguages();
+    $current_language = \Drupal::languageManager()
+      ->getCurrentLanguage()
+      ->getId();
+
+    foreach ($node_languages as $language => $value) {
+      if ($current_language == $language && $language != 'en') {
+
+        // Do not let Google translate full pages that are not in English.
+        if ($view_mode == 'full') {
+          $variables['attributes']['class'][] = 'notranslate';
+        }
+
+        // Translate everything else.
+        else {
+          $variables['attributes']['class'][] = 'notranslate';
+          $translated = $node->getTranslation($language);
+          $variables['node'] = $translated;
+          $variables['url'] = $translated->toUrl();
+        }
+      }
+    }
+  }
+  return $variables;
 }

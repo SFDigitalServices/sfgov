@@ -1,1 +1,0 @@
-../../simplesaml_config.php

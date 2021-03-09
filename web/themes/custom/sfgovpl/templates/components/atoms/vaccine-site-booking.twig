@@ -1,0 +1,46 @@
+{% set info %}
+  {% if result.booking_info %}
+    <div class="vaccine-site__booking_info">
+      {{ result.booking_info }}
+    </div>
+  {% endif %}
+{% endset %}
+
+{% if result.available != 'null' and result.booking_url %}
+  <div class="vaccine-site__booking_box notranslate {{ result.available }}">
+    {% if result.available == 'yes' %}
+      <div class="field">
+        <strong>
+          {{ 'Appointments available as of'|t }} {{ result.last_updated }}
+        </strong>
+        {{ info }}
+      </div>
+      <div class="sfgov-cta-button__container">
+        <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
+      </div>
+    {% elseif result.available == 'no' %}
+      <div class="field">
+        <strong>
+          {{ 'No appointments as of'|t }}
+          {{ result.last_updated }}
+        </strong>
+        {{ info }}
+      </div>
+      <div class="field">
+        <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
+      </div>
+    {% endif %}
+  </div>
+{% elseif result.booking_url or result.booking_info %}
+  <div class="vaccine-site__booking_box notranslate {{
+    result.booking_dropins
+      ? 'js-dropin'
+    }}">
+    {{ info }}
+    {% if result.booking_url %}
+      <div class="sfgov-cta-button__container no-pad">
+        <a href="{{ result.booking_url }}">{{ 'Check for availability'|t }}</a>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

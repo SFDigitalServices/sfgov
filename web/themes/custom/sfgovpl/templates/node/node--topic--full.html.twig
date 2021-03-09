@@ -18,21 +18,23 @@
   {% endblock header %}
 
   {% block content %}
-    {% if content.field_content_top|render %}
-      <div class="sfgov-full-bleed card-container">
-        <div class="sfgov-section-container">
-          {{ content.field_content_top }}
-        </div>
-      </div>
-    {% endif %}
-
-    {% if page_design == 2 %}
-      {% include 'node--topic--full-template-2.html.twig' %}
-    {% elseif page_design == 3 %}
+    {% if page_design == 3 %}
       {% include 'node--topic--full-template-3.html.twig' %}
     {% else %}
-      {% include 'node--topic--full-template-1.html.twig' %}
+      {% if content.field_content_top|render %}
+        <div class="sfgov-full-bleed card-container">
+          <div class="sfgov-section-container">
+            {{ content.field_content_top }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if page_design == 2 %}
+        {% include 'node--topic--full-template-2.html.twig' %}
+      {% else %}
+        {% include 'node--topic--full-template-1.html.twig' %}
+      {% endif %}
     {% endif %}
   {% endblock content %}
 
-{% endembed  %}
+{% endembed %}
