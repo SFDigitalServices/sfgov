@@ -199,10 +199,6 @@ class VaccineController extends ControllerBase {
           'boolean' => $site_data_eligibility["agriculture_and_food"],
           'text' => $this->t('Agriculture and food'),
         ],
-        'sd' => [
-          'boolean' => $site_data_eligibility["second_dose_only"],
-          'text' => $this->t('Second dose only'),
-        ],
         'es' => [
           'boolean' => $site_data_eligibility["emergency_services"],
           'text' => $this->t('Emergency services'),
