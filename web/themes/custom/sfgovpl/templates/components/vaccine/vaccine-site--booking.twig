@@ -16,11 +16,14 @@
 {% endset %}
 
 {% if result.available != 'null' and result.booking_url %}
-  <div class="vaccine-site__booking_box notranslate {{ result.available }}">
+  <div class="vaccine-site__booking_box {{ result.available }}">
     {% if result.available == 'yes' %}
       <div class="field">
         <strong>
-          {{ 'Appointments available as of'|t }} {{ result.last_updated }}
+          <span class="notranslate">
+            {{ 'Appointments available as of'|t }}
+          </span>
+          {{ result.last_updated }}
         </strong>
         {{ info }}
       </div>
@@ -30,7 +33,7 @@
     {% elseif result.available == 'no' %}
       <div class="field">
         <strong>
-          {{ 'No appointments as of'|t }}
+          <span class="notranslate">{{ 'No appointments as of'|t }}</span>
           {{ result.last_updated }}
         </strong>
         {{ info }}
