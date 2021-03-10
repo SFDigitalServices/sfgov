@@ -53,18 +53,6 @@ $fields = array(
   ),
 );
 
-// Set a Slack Attachments title
-$title = 'Post-Deploy Site Audit';
-
-// Prepare the slack payload as per:
-// https://api.slack.com/incoming-webhooks
-$text = 'Site Audit Report after deployment to the *'. $_ENV['PANTHEON_ENVIRONMENT'];
-$text .= ' environment of '. $_ENV['PANTHEON_SITE_NAME'] .' by '. $_POST['user_email'] .' complete!';
-$text .= ' <https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEON_ENVIRONMENT .'/deploys|View Dashboard>';
-$text .= "\n\n*SITE AUDIT REPORT*: \n\n$site_audit_all";
-// No need to render Site Audit All as a slack attachment,
-// full report is cut off due to character limit
-
 // get the latest release
 $latestRelease = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/releases/latest', [
   'User-Agent: SFDigitalServices/sfgov',
@@ -102,7 +90,7 @@ foreach($commits as $commit) {
 $suffix = ':point_up: possibly/probably truncated' . "\n\n";
 $suffix .= ':yolo: :all_the_things: :ahhhhhhhhh:';
 
-$charCount = strlen($pretext) + strlen($prefix) + strlen($suffix); // keep count of essential parts of message
+$charCount = strlen($pretext) + strlen($suffix); // keep count of essential parts of message
 $commitsStrLen = strlen($commitsStr); // commits character count
 
 if(($commitsStrLen + $charCount) > $slack_cutoff) { // cutoff exceeded
