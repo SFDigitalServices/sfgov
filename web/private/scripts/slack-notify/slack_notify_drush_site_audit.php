@@ -15,8 +15,7 @@ $slack_cutoff = 4000; // slack has a message size cutoff of 16kb (include json s
 
 // Default values for parameters
 $defaults = array(
-  // 'slack_channel' => '#proj-sfdotgov-eng',
-  'slack_channel' => '#ant-test',
+  'slack_channel' => '#proj-sfdotgov-eng',
   'slack_username' => 'pantheon-quicksilver',
   'always_show_text' => false,
 );

@@ -2,8 +2,8 @@
 
 function _get_secrets($requiredKeys, $defaults = [])
 {
-  // $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
-  $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
+  $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
+  // $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
 
   if (!file_exists($secretsFile)) {
     die('No secrets file found. Aborting!');
