@@ -12,6 +12,7 @@ $defaults = array(
 
 $secrets = _get_secrets(array('slack_url','github'), $defaults);
 $message = !empty($_POST['wf_type']) ? $_POST['wf_type'] : 'empty message';
+$fallbackText = 'fallback text';
 
 $attachment = array(
   'pretext' => 'test message',

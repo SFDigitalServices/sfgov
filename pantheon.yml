@@ -23,14 +23,14 @@ workflows:
   sync_code: # push code via git (dev/multidev)
     after:
       - type: webphp
-        description: 'sync_code workflow'
-        script: private/scripts/test/test_hook.php
-      - type: webphp
         description: 'Push changes back to GitHub if needed'
         script: private/scripts/quicksilver/quicksilver-pushback/push-back-to-github.php
       - type: webphp
         description: 'Log to New Relic'
         script: private/scripts/new_relic/new_relic_deploy.php
+      - type: webphp
+        description: 'sync_code workflow'
+        script: private/scripts/test/test_hook.php
 
   deploy: # deploy code to test or live
     after:
