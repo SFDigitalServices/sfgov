@@ -23,6 +23,9 @@ workflows:
   sync_code: # push code via git (dev/multidev)
     after:
       - type: webphp
+        description: 'sync_code workflow'
+        script: private/scripts/test/test_hook.php
+      - type: webphp
         description: 'Push changes back to GitHub if needed'
         script: private/scripts/quicksilver/quicksilver-pushback/push-back-to-github.php
       - type: webphp
@@ -43,6 +46,9 @@ workflows:
 
   clear_cache:
     after:
+      - type: webphp
+        description: 'Cache cleared'
+        script: private/scripts/test/clear_cache.php
       - type: webphp
         description: 'Import configuration from .yml files'
         script: private/scripts/drush_config_import/drush_config_import.php
