@@ -118,7 +118,7 @@ class VaccineController extends ControllerBase {
     return [
       'timestamp' => $allData['data']['generated'],
       'api_url' => $this->getAPIUrl(),
-      'error' => $allData == NULL ? $error_message : NULL,
+      'error' => $allData == NULL ? $this->t($error_message) : NULL,
     ];
   }
 
@@ -201,7 +201,7 @@ class VaccineController extends ControllerBase {
     foreach ($access_mode_options as $key => $value) {
       if ($value === TRUE) {
         $text = $this->settings('access_mode.' . $key . '.text');
-        array_push($printed, $text);
+        array_push($printed, $this->t($text));
       }
     }
 
