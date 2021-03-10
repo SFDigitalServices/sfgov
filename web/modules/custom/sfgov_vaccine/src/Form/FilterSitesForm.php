@@ -57,7 +57,7 @@ class FilterSitesForm extends FormBase {
 
     $form['container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->settings('form_strings.title'),
+      '#title' => $this->t($this->settings('form_strings.title')),
       '#attributes' => [
         'data-filter-toggle-container' => TRUE,
       ],
@@ -76,26 +76,32 @@ class FilterSitesForm extends FormBase {
     ];
     $form['container']['toggle']['items']['single_checkboxes']['restrictions'] = [
       '#type' => 'checkbox',
-      '#title' => $this->settings('form_strings.restrictions'),
+      '#title' => $this->t($this->settings('form_strings.restrictions')),
       '#default_value' => TRUE,
     ];
 
     $form['container']['toggle']['items']['single_checkboxes']['available'] = [
       '#type' => 'checkbox',
-      '#title' => $this->settings('form_strings.available'),
+      '#title' => $this->t($this->settings('form_strings.available')),
       '#default_value' => FALSE,
     ];
     $form['container']['toggle']['items']['single_checkboxes']['wheelchair'] = [
       '#type' => 'checkbox',
-      '#title' => $this->settings('access_mode.wheelchair.text'),
+      '#title' => $this->t($this->settings('access_mode.wheelchair.text')),
       '#default_value' => FALSE,
     ];
 
+    $settings_languages = $this->settings('languages');
+    $options_languages = [];
+    foreach ($settings_languages as $key => $value) {
+      $options_languages[$key] = $this->t($value);
+    }
+
     $form['container']['toggle']['items']['language'] = [
       '#type' => 'select',
-      '#title' => $this->settings('form_strings.language_label'),
+      '#title' => $this->t($this->settings('form_strings.language_label')),
       '#title_display' => 'invisible',
-      '#options' => $this->settings('languages'),
+      '#options' => $options_languages,
       '#default_value' => 'any',
       '#multiple' => FALSE,
     ];
@@ -106,13 +112,13 @@ class FilterSitesForm extends FormBase {
       if ($key != 'wheelchair') {
         $short_key = $value['short_key'];
         $text = $value['text'];
-        $options_access_mode[$short_key] = $text;
+        $options_access_mode[$short_key] = $this->t($text);
       }
     }
 
     $form['container']['toggle']['items']['access_mode'] = [
       '#type' => 'select',
-      '#title' => $this->settings('form_strings.access_mode_label'),
+      '#title' => $this->t($this->settings('form_strings.access_mode_label')),
       '#title_display' => 'invisible',
       '#options' => $options_access_mode,
       '#default_value' => 'all',
@@ -125,18 +131,18 @@ class FilterSitesForm extends FormBase {
       if ($key != 'second_dose_only') {
         $short_key = $value['short_key'];
         $text = $value['text'];
-        $options_eligibility[$short_key] = $text;
+        $options_eligibility[$short_key] = $this->t($text);
       }
     }
     $form['container']['toggle']['items']['eligibility'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->settings('form_strings.eligibility_label'),
+      '#title' => $this->t($this->settings('form_strings.eligibility_label')),
       '#options' => $options_eligibility,
     ];
 
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->settings('form_strings.submit_label'),
+      '#value' => $this->t($this->settings('form_strings.submit_label')),
     ];
 
     return $form;
