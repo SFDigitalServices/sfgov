@@ -1999,6 +1999,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 @media screen and (min-width: 768px) {
+  .vaccine-filter__body {
+    padding-top: 60px;
+  }
+}
+
+@media screen and (min-width: 768px) {
   .vaccine-filter__body .group--left {
     float: left;
     max-width: 720px;
@@ -2033,6 +2039,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   }
 }
 
+.vaccine-filter__count {
+  margin-bottom: 40px;
+}
+
 .vaccine-filter-form [data-drupal-selector="edit-single-checkboxes"] {
   margin-bottom: 50px;
 }
@@ -2056,6 +2066,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .vaccine-filter-form .fieldset-wrapper .form-wrapper .form-item-access-mode {
   margin-bottom: 60px;
+}
+
+.vaccine-filter__other {
+  display: none;
 }
 
 .vaccine-site {
@@ -2138,46 +2152,107 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   letter-spacing: 1px;
 }
 
-.vaccine-site__booking_info {
+.vaccine-site__booking_box {
   background-color: #edf4f7;
+  margin-top: 40px;
   padding: 20px;
 }
 
-.vaccine-site__booking_info.yes {
+.vaccine-site__booking_box strong {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.vaccine-site__booking_box strong.sfgov-translate-lang-zh-TW {
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  /* antialiased, none, subpixel-antialiased*/
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media screen and (min-width: 768px) {
+  .vaccine-site__booking_box {
+    padding: 40px;
+  }
+}
+
+.vaccine-site__booking_box.yes {
   background: url("/themes/custom/sfgovpl/src/img/check-green.svg") no-repeat 20px 25px #edf4f7;
 }
 
-.vaccine-site__booking_info.yes .field {
+@media screen and (min-width: 768px) {
+  .vaccine-site__booking_box.yes {
+    background-position: 40px 40px;
+  }
+}
+
+.vaccine-site__booking_box.yes .field {
   padding-left: 40px;
 }
 
-.vaccine-site__booking_info.no {
+.vaccine-site__booking_box.yes .vaccine-site__booking_info {
+  padding-top: 10px;
+}
+
+.vaccine-site__booking_box.no {
   background: url("/themes/custom/sfgovpl/src/img/close-red.svg") no-repeat 20px 25px #edf4f7;
 }
 
-.vaccine-site__booking_info.no .field {
+@media screen and (min-width: 768px) {
+  .vaccine-site__booking_box.no {
+    background-position: 40px 40px;
+  }
+}
+
+.vaccine-site__booking_box.no .field {
   padding-left: 40px;
 }
 
-.vaccine-site__booking_info .sfgov-cta-button__container {
+.vaccine-site__booking_box.no .field:last-child {
+  margin-bottom: 0;
+}
+
+.vaccine-site__booking_box.no .vaccine-site__booking_info {
+  padding-top: 10px;
+}
+
+.vaccine-site__booking_box .sfgov-cta-button__container {
   text-align: center;
 }
 
 @media screen and (min-width: 768px) {
-  .vaccine-site__booking_info .sfgov-cta-button__container {
+  .vaccine-site__booking_box .sfgov-cta-button__container {
     text-align: left;
     padding-left: 40px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .vaccine-site__booking_info .sfgov-cta-button__container.no-pad {
-    padding-left: 20px;
+  .vaccine-site__booking_box .sfgov-cta-button__container.no-pad {
+    padding-left: 0;
   }
 }
 
-.vaccine-site__booking_info a {
-  text-align: center;
+.vaccine-site__booking_box a {
+  display: block;
+}
+
+@media screen and (min-width: 768px) {
+  .vaccine-site__booking_box a {
+    display: inline-block;
+  }
+}
+
+.vaccine-site__booking_info + .sfgov-cta-button__container {
+  margin-top: 20px;
+}
+
+.vaccine-filter__empty {
+  display: none;
 }
 
 .vaccine-filter__empty h4 {
@@ -3185,6 +3260,84 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   text-decoration: none;
 }
 
+.page-node-type-campaign .__campaign-about-dept-wrapper {
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+@media screen and (min-width: 1280px) {
+  .page-node-type-campaign .__campaign-about-dept-wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.page-node-type-campaign .__campaign-about-dept-wrapper .field__item {
+  margin-bottom: 20px;
+}
+
+.page-node-type-campaign .__campaign-about-dept-wrapper .field__item a {
+  /* antialiased, none, subpixel-antialiased*/
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: auto !important;
+}
+
+.page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+@media screen and (min-width: 768px) {
+  .page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+  }
+}
+
+.page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items .field__item {
+  width: 100%;
+  margin-bottom: 1.1764rem;
+}
+
+@media screen and (min-width: 768px) {
+  .page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items .field__item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
+  }
+  .page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items .field__item > * {
+    margin-right: 1.1764rem;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items > .field__item {
+    width: 50%;
+  }
+  .page-node-type-campaign .__campaign-about-dept-wrapper .full-width .field__items > .field__item:nth-child(2n+2) > * {
+    margin-right: 0;
+  }
+}
+
 .page-node-type-campaign .__instagram-feed,
 .page-node-type-campaign .paragraph--type--instagram-embed--large {
   margin: 0 auto;
@@ -3536,6 +3689,14 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   margin-bottom: 60px;
 }
 
+.page-node-type-department .sfgov-featured-items {
+  margin-top: 20px;
+}
+
+.page-node-type-department .sfgov-featured-items .sfgov-container-item {
+  margin-bottom: 0;
+}
+
 .page-node-type-department .sfgov-dept-news .dept-heading--section,
 .page-node-type-department .sfgov-dept-events .dept-heading--section {
   margin-bottom: 40px;
@@ -3594,7 +3755,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;
-  margin-bottom: 60px;
 }
 
 @media screen and (min-width: 1280px) {
@@ -3972,7 +4132,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 .page-node-type-department .sfgov-dept-about .sfgov-dept-about-content .sfgov-dept-about-divisions ul,
 .page-node-type-department .sfgov-dept-about .sfgov-dept-about-content .sfgov-dept-about-public-bodies ul {
   list-style-type: none;
-  padding-left: 30px;
+  padding: 0;
 }
 
 .page-node-type-department .sfgov-dept-about .sfgov-dept-about-content .sfgov-dept-about-description ul li,
@@ -4185,6 +4345,43 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-department .sfgov-dept-about .about-page-link a:hover {
   color: #0c1464;
+}
+
+.page-node-type-department .sfgov-dept-about-divisions-wrapper {
+  margin: 0 auto;
+  max-width: 1090px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+@media screen and (min-width: 1280px) {
+  .page-node-type-department .sfgov-dept-about-divisions-wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.page-node-type-department .sfgov-dept-about-divisions-wrapper ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.page-node-type-department .sfgov-dept-about-divisions-wrapper ul li {
+  margin-bottom: 20px;
+}
+
+.page-node-type-department .sfgov-dept-about-divisions-wrapper ul li a {
+  /* antialiased, none, subpixel-antialiased*/
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: auto;
+}
+
+.page-node-type-department .sfgov-dept-about-divisions-wrapper ul li ul li {
+  margin-bottom: 0;
 }
 
 .page-node-type-department .sfgov-dept-about-people.sfgov-dept-section {
