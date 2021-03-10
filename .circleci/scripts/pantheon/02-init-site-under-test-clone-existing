@@ -15,6 +15,11 @@ if ! terminus -n env:info sfgov.$TERMINUS_ENV ; then # env does not exist
   clone_content="--clone-content"
 fi
 
+# if this is the develop branch, set the TERMINUS_ENV to develop
+if [[ $CIRCLE_BRANCH == "pantheon-hooks" ]] ; then
+  $TERMINUS_ENV="preview"
+fi
+
 # Create a new multidev site to test on
 terminus -n env:wake "$TERMINUS_SITE.dev"
 terminus -n build:env:create "$TERMINUS_SITE.dev" "$TERMINUS_ENV" --yes $clone_content --notify="$NOTIFY"
