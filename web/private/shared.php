@@ -2,7 +2,9 @@
 
 function _get_secrets($requiredKeys, $defaults = [])
 {
-  $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
+  // $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
+  $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
+
   if (!file_exists($secretsFile)) {
     die('No secrets file found. Aborting!');
   }
@@ -19,7 +21,7 @@ function _get_secrets($requiredKeys, $defaults = [])
   return $secrets;
 }
 
-function _post_json($url, $headers=[], $body='')
+function _curl_post($url, $headers=[], $body='')
 {
   $curl = curl_init();
   curl_setopt_array(
@@ -54,4 +56,48 @@ function _post_json($url, $headers=[], $body='')
   ];
 }
 
-?>
+/**
+ * Make a curl get request
+ * 
+ * @param string $url  url to curl
+ * @param array $headers  headers needed to make the request
+ */
+function _curl_get($url, $headers = []) 
+{
+  // create curl resource
+  $ch = curl_init();
+
+  // set url
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+  //return the transfer as a string
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+  // $output contains the output string
+  $output = curl_exec($ch);
+
+  // close curl resource to free up system resources
+  curl_close($ch);
+
+  return json_decode($output);
+}
+
+/**
+ * Send a notification to slack
+ */
+function _slack_notification($slack_url, $channel, $username, $text, $attachment, $alwaysShowText = false)
+{
+  $attachment['fallback'] = $text;
+  $post = array(
+    'username' => $username,
+    'channel' => $channel,
+    'icon_emoji' => ':pantheon2:',
+    'attachments' => array($attachment),
+  );
+  if ($alwaysShowText) {
+    $post['text'] = $text;
+  }
+  $payload = json_encode($post);
+  _curl_post($slack_url, ['Content-Type: application/json'], $payload);
+}

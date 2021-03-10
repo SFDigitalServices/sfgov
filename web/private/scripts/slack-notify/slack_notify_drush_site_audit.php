@@ -1,6 +1,6 @@
 <?php
 
-require '../shared.php';
+require dirname(__DIR__) . '/../shared.php';
 
 // Run a Drush Site Audit in case someone made a boo boo on Deploy
 // @TODO: Duplicate to Hipchat
@@ -15,7 +15,8 @@ $slack_cutoff = 4000; // slack has a message size cutoff of 16kb (include json s
 
 // Default values for parameters
 $defaults = array(
-  'slack_channel' => '#proj-sfdotgov-eng',
+  // 'slack_channel' => '#proj-sfdotgov-eng',
+  'slack_channel' => '#ant-test',
   'slack_username' => 'pantheon-quicksilver',
   'always_show_text' => false,
 );
@@ -56,7 +57,7 @@ $fields = array(
 );
 
 // get the latest release
-$latestRelease = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/releases/latest', [
+$latestRelease = _curl_get('https://api.github.com/repos/sfdigitalservices/sfgov/releases/latest', [
   'User-Agent: SFDigitalServices/sfgov',
   'Authorization: token ' . $secrets['github'],
 ]);
@@ -73,7 +74,7 @@ $pretext .= '<https://dashboard.pantheon.io/sites/'. PANTHEON_SITE .'#'. PANTHEO
 $pretext .= 'commits since tag/release `'. $tagName . '` (<https://github.com/SFDigitalServices/sfgov/commits/main?since=' . $sinceDate . '|full list>):' . "\n";
 
 // get commits since last tag/release date
-$commits = _curl('https://api.github.com/repos/sfdigitalservices/sfgov/commits?since=' . $sinceDate, [
+$commits = _curl_get('https://api.github.com/repos/sfdigitalservices/sfgov/commits?since=' . $sinceDate, [
   'User-Agent: SFDigitalServices/sfgov',
   'Authorization: token ' . $secrets['github'],
 ]);
@@ -108,60 +109,3 @@ $attachment = array(
 );
 
 _slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['slack_username'], $fallbackText, $attachment, $secrets['always_show_text']);
-
-/**
- * Make a curl request
- * 
- * @param string $url  url to curl
- * @param array $headers  headers needed to make the request
- */
-function _curl($url, $headers = []) {
-  // create curl resource
-  $ch = curl_init();
-  // set url
-  curl_setopt($ch, CURLOPT_URL, $url);
-  if(!empty($headers)) {
-    // set headers
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-  }
-  //return the transfer as a string
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  // $output contains the output string
-  $output = curl_exec($ch);
-  return json_decode($output);
-  // close curl resource to free up system resources
-  curl_close($ch);
-}
-
-/**
- * Send a notification to slack
- */
-function _slack_notification($slack_url, $channel, $username, $text, $attachment, $alwaysShowText = false)
-{
-  $attachment['fallback'] = $text;
-  $post = array(
-    'username' => $username,
-    'channel' => $channel,
-    'icon_emoji' => ':pantheon2:',
-    'attachments' => array($attachment),
-  );
-  if ($alwaysShowText) {
-    $post['text'] = $text;
-  }
-  $payload = json_encode($post);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $slack_url);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-  // Watch for messages with `terminus workflows watch --site=SITENAME`
-  print("\n==== Posting to Slack ====\n");
-  $result = curl_exec($ch);
-  print("RESULT: $result");
-  // $payload_pretty = json_encode($post,JSON_PRETTY_PRINT); // Uncomment to debug JSON
-  // print("JSON: $payload_pretty"); // Uncomment to Debug JSON
-  print("\n===== Post Complete! =====\n");
-  curl_close($ch);
-}
