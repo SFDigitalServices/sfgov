@@ -2,8 +2,8 @@
 
 function _get_secrets($requiredKeys, $defaults = [])
 {
-  $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
-  // $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
+  // $secretsFile = $_SERVER['HOME'] . '/files/private/secrets.json';
+  $secretsFile = $_SERVER['HOME'] . '/code/web/sites/default/files/private/secrets.json'; // uncomment to test locally with lando drush scr
 
   if (!file_exists($secretsFile)) {
     die('No secrets file found. Aborting!');
@@ -100,4 +100,25 @@ function _slack_notification($slack_url, $channel, $username, $text, $attachment
   }
   $payload = json_encode($post);
   _curl_post($slack_url, ['Content-Type: application/json'], $payload);
+}
+
+function _test_hook_slack_notification($message = '')
+{
+  $defaults = array(
+    // 'slack_channel' => '#proj-sfdotgov-eng',
+    'slack_channel' => '#ant-test',
+    'slack_username' => 'pantheon-quicksilver',
+    'always_show_text' => false,
+  );
+  
+  $secrets = _get_secrets(array('slack_url','github'), $defaults);
+  $workflowMessage = 'workflow type: ' . (!empty($_POST['wf_type']) ? $_POST['wf_type'] : 'none');
+  $message = $workflowMessage . "\n" . $message;
+  
+  $attachment = array(
+    'pretext' => 'test message',
+    'text' => '```'. $message .'```'
+  );
+  
+  _slack_notification($secrets['slack_url'], $secrets['slack_channel'], $secrets['slack_username'], $message, $attachment, $secrets['always_show_text']);
 }

@@ -1,4 +1,7 @@
 <?php
+
+require dirname(__DIR__) . '/../shared.php';
+
 // Database updates
 error_log("Running database updates...\n");
 passthru('drush updatedb --no-cache-clear');
@@ -15,3 +18,5 @@ error_log("Import of configuration complete.\n");
 error_log("Rebuilding cache.\n");
 passthru('drush cr');
 error_log("Rebuilding cache complete.\n");
+
+_test_hook_slack_notification("config import");
