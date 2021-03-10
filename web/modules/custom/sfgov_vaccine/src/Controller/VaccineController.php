@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
 
 /**
  * Creates the vaccine sites page.
@@ -93,11 +94,18 @@ class VaccineController extends ControllerBase {
    * Get data from the mircoservice.
    */
   public function dataFetch() {
-    $language = $this->languageManager()->getCurrentLanguage()->getId();
-    $url = $this->getAPIUrl() . '?lang=' . $language;
-    $request = $this->httpClient->get($url, ['http_errors' => FALSE]);
-    $response = $request->getBody();
 
+    try {
+      $language = $this->languageManager()->getCurrentLanguage()->getId();
+      $url = $this->getAPIUrl() . '?lang=' . $language;
+      $request = $this->httpClient->get($url, [
+        'http_errors' => FALSE,
+      ]);
+      $response = $request->getBody();
+    }
+    catch (ConnectException $e) {
+      $response = NULL;
+    }
     return Json::decode($response);
   }
 
