@@ -233,7 +233,7 @@ class VaccineController extends ControllerBase {
     $site_data_languages = $access_data['languages'];
     foreach ($site_data_languages as $short_key => $boolean) {
       if ($boolean === TRUE) {
-        $languages = $this->settings('languages.' . $short_key);
+        $languages = $this->t($this->settings('languages.' . $short_key));
         array_push($printed_languages, $languages);
       }
     }
