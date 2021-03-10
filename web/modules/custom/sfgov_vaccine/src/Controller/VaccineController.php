@@ -2,112 +2,184 @@
 
 namespace Drupal\sfgov_vaccine\Controller;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
 
 /**
- * Class VaccineController.
+ * Creates the vaccine sites page.
  */
 class VaccineController extends ControllerBase {
 
   /**
-   * Drupal\Core\Cache\Context\CacheContextInterface definition.
+   * The HTTP client.
    *
-   * @var \Drupal\Core\Cache\Context\CacheContextInterface
+   * @var \GuzzleHttp\ClientInterface
    */
-  protected $cacheContextIp;
+  protected $httpClient;
+
+  /**
+   * The language manager service.
+   *
+   * @var Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * The form builder.
+   *
+   * @var Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * The configuration factory.
+   *
+   * @var Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Data from the microservice.
+   *
+   * @var arrayorNULL
+   */
+  protected $allData = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client) {
+    $this->languageManager = $languageManager;
+    $this->formBuilder = $formBuilder;
+    $this->configFactory = $configFactory;
+    $this->httpClient = $http_client;
+    $this->allData = $this->dataFetch();
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->cacheContextIp = $container->get('cache_context.ip');
-    return $instance;
+    return new static(
+      $container->get('language_manager'),
+      $container->get('form_builder'),
+      $container->get('config.factory'),
+      $container->get('http_client')
+    );
   }
 
+  /**
+   * Get the microservice url from config.
+   */
+  private function getAPIUrl() {
+    return $this->configFactory->get('sfgov_vaccine.settings')->get('api_url');
+  }
+
+  /**
+   * Prepare page title for rendering.
+   */
   private function makeTitle() {
     // @todo Create admin form.
-    return t("COVID-19 vaccine sites");
+    return $this->t("COVID-19 vaccine sites");
   }
 
-  private function dataFetch() {
-    // @todo Figure out what to do if this fails.
-    /** @var \GuzzleHttp\Client $client */
-    $client = \Drupal::service('http_client_factory')->fromOptions([
-      'base_uri' => 'https://vaccination-site-microservice.vercel.app/',
-    ]);
+  /**
+   * Get data from the mircoservice.
+   */
+  public function dataFetch() {
 
-    // Optional language query.
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $query = NULL;
-    if ($language != 'en') {
-      $query = [
-        'query' => [
-          'lang' => $language,
-        ]];
+    try {
+      $language = $this->languageManager()->getCurrentLanguage()->getId();
+      $url = $this->getAPIUrl() . '?lang=' . $language;
+      $request = $this->httpClient->get($url, [
+        'http_errors' => FALSE,
+      ]);
+      $response = $request->getBody();
+    }
+    catch (ConnectException $e) {
+      $response = NULL;
+    }
+    return Json::decode($response);
+  }
+
+  /**
+   * Prepare API data for rendering.
+   */
+  private function makeAPIData($allData) {
+
+    $error_message = $this->t('We are having trouble reaching the service right now. Please try again later.');
+
+    return [
+      'timestamp' => $allData['data']['generated'],
+      'api_url' => $this->getAPIUrl(),
+      'error' => $allData == NULL ? $error_message : NULL,
+    ];
+  }
+
+  /**
+   * Get the filter form.
+   */
+  private function makeFilters($allData) {
+    return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
+  }
+
+  /**
+   * Prepare sites for rendering.
+   */
+  private function makeResults($allData) {
+
+    if ($allData == NULL) {
+      return [];
     }
 
-    // @todo - Creat ability to set value in $settings_array.
-    $response = $client->get('api/v1/appointments', $query);
-    return Json::decode($response->getBody());
-  }
-
-  private function makeTimeStamp() {
-    $all_data = $this->dataFetch();
-    return $all_data['data']['generated'];
-  }
-
-  private function makeFilters() {
-    return \Drupal::formBuilder()->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
-  }
-
-  private function makeResults() {
-
-    $all_data = $this->dataFetch();
-    $sites = $all_data['data']['sites'];
+    $sites = $allData['data']['sites'];
     $results = [];
-    foreach ($sites as $site_id => $site_data ) {
+    foreach ($sites as $site_id => $site_data) {
 
       // Pre-prep languages.
       $site_data_languages = $site_data['access']['languages'];
-      $site_date_remote_translation = $site_data['access']["remote_translation"];
+      $site_data_remote_translation = $site_data['access']["remote_translation"];
       $languages_with_text = [
         'en' => [
           'boolean' => $site_data_languages["en"],
-          'text' => t('English')
-         ],
+          'text' => $this->t('English'),
+        ],
         'es' => [
           'boolean' => $site_data_languages["es"],
-          'text' => t('Spanish')
+          'text' => $this->t('Spanish'),
         ],
         'zh' => [
           'boolean' => $site_data_languages["zh"],
-          'text' => t('Chinese')
+          'text' => $this->t('Chinese'),
         ],
         'fil' => [
           'boolean' => $site_data_languages["fil"],
-          'text' => t('Filipino')
+          'text' => $this->t('Filipino'),
         ],
         'vi' => [
           'boolean' => $site_data_languages["vi"],
-          'text' => t('Vietnamese')
+          'text' => $this->t('Vietnamese'),
         ],
-        'vi' => [
-          'boolean' => $site_data_languages["fil"],
-          'text' => t('Vietnamese')
+        'ru' => [
+          'boolean' => $site_data_languages["ru"],
+          'text' => $this->t('Russian'),
         ],
-        'remote_translation' => [
-          'boolean' => $site_date_remote_translation,
-          'text' => $site_date_remote_translation['available'] ? t($site_date_remote_translation['info']) : NULL
+        'rt' => [
+          'boolean' => $site_data_remote_translation['available'],
+          'text' => $site_data_remote_translation['available'] ? $site_data_remote_translation['info'] : NULL,
         ],
       ];
 
       $languages = [];
       $language_keys = [];
-      foreach ($languages_with_text as $key => $value){
+      foreach ($languages_with_text as $key => $value) {
         if ($value['boolean'] === TRUE) {
 
           array_push($languages, $value['text']);
@@ -121,35 +193,35 @@ class VaccineController extends ControllerBase {
       $eligibility_with_text = [
         'sf' => [
           'boolean' => $site_data_eligibility["65_and_over"],
-          'text' => t('65 and over')
+          'text' => $this->t('65 and over'),
         ],
         'hw' => [
           'boolean' => $site_data_eligibility["healthcare_workers"],
-          'text' => t('Healthcare workers')
+          'text' => $this->t('Healthcare workers'),
         ],
         'ec' => [
           'boolean' => $site_data_eligibility["education_and_childcare"],
-          'text' => t('Education and childcare')
+          'text' => $this->t('Education and childcare'),
         ],
         'af' => [
           'boolean' => $site_data_eligibility["agriculture_and_food"],
-          'text' => t('Agriculture and food')
+          'text' => $this->t('Agriculture and food'),
         ],
         'sd' => [
           'boolean' => $site_data_eligibility["second_dose_only"],
-          'text' => t('Second dose only')
+          'text' => $this->t('Second dose only'),
         ],
         'es' => [
           'boolean' => $site_data_eligibility["emergency_services"],
-          'text' => t('Emergency services')
-        ]
+          'text' => $this->t('Emergency services'),
+        ],
       ];
 
       // @todo make this a reusable method for languages and eligibility,
       // access_mode.
       $eligibilities = [];
       $eligibility_keys = [];
-      foreach ($eligibility_with_text as $key => $value){
+      foreach ($eligibility_with_text as $key => $value) {
         if ($value['boolean'] == TRUE) {
           array_push($eligibilities, $value['text']);
           array_push($eligibility_keys, $key);
@@ -162,36 +234,41 @@ class VaccineController extends ControllerBase {
       $access_mode_with_text = [
         'wa' => [
           'boolean' => $site_data_access_mode["walk"],
-          'text' => t('Walk-thru')
+          'text' => $this->t('Walk-thru'),
         ],
         'dr' => [
           'boolean' => $site_data_access_mode["drive"],
-          'text' => t('Drive-thru')
+          'text' => $this->t('Drive-thru'),
         ],
         'wh' => [
           'boolean' => $site_data['access']['wheelchair'],
-          'text' => t('Wheelchair accessible'),
+          'text' => $this->t('Wheelchair accessible'),
         ],
       ];
 
       $access_modes = [];
       $access_mode_keys = [];
-      foreach ($access_mode_with_text as $key => $value){
+      foreach ($access_mode_with_text as $key => $value) {
         if ($value['boolean'] == TRUE) {
           array_push($access_modes, $value['text']);
           if ($key != 'wh') {
-            array_push($access_mode_keys, $key);}
+            array_push($access_mode_keys, $key);
+          }
         }
       }
       array_push($access_mode_keys, 'all');
 
       // Usable variables.
-      $available = NULL;
       $info_url = NULL;
       $booking_info = NULL;
 
-      if (isset($site_data['appointments']) && isset($site_data['appointments']['available'])) {
-        $available = $site_data['appointments']['available'];
+      $available = $site_data['appointments']['available'];
+      if ($available === TRUE) {
+        $available = 'yes';
+      } else if($available === FALSE) {
+        $available = 'no';
+      } else if ($available === NULL) {
+        $available = 'null';
       }
 
       if (isset($site_data['info']) && isset($site_data['info']['url'])) {
@@ -218,14 +295,14 @@ class VaccineController extends ControllerBase {
           'class' => ['sfgov-service-card', 'vaccine-site', 'no-hover'],
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
-          'data-available' => $available ? 1 : 0,
+          'data-available' => $available,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
-          'data-language' => $language_keys ? implode('-',$language_keys) : 'en-es-zk-fil-vi-ru-all',
-          'data-access-mode' => implode('-',$access_mode_keys),
-          'data-eligibility' => implode('-',$eligibility_keys),
+          'data-language' => $language_keys ? implode('-', $language_keys) : 'en-es-zh-fil-vi-ru-rt-all',
+          'data-access-mode' => implode('-', $access_mode_keys),
+          'data-eligibility' => implode('-', $eligibility_keys),
         ]),
-        'last_updated' => date( "F j, Y, g:i a", strtotime($last_updated)),
+        'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
@@ -245,19 +322,17 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Display Page.
-   *
-   * @return array
-   *   Return Render Array.
+   * Display page content.
    */
   public function displayPage() {
     return [
-      '#cache' => ['max-age' => 0,],
-      '#theme' => 'vaccine-widget',
+      '#cache' => ['max-age' => 0],
+      '#theme' => 'vaccine_widget',
       '#page_title' => $this->makeTitle(),
-      '#timestamp' => $this->makeTimeStamp(),
-      '#filters' => $this->makeFilters(),
-      '#results' => $this->makeResults(),
-      ];
+      '#api_data' => $this->makeAPIData($this->allData),
+      '#filters' => $this->makeFilters($this->allData),
+      '#results' => $this->makeResults($this->allData),
+    ];
   }
+
 }
