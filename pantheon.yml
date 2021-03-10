@@ -2,27 +2,33 @@ api_version: 1
 web_docroot: true
 php_version: 7.2
 workflows:
-  deploy_product:
+  deploy_product: # create site (dev)
     after:
-      -
-        type: webphp
+      - type: webphp
         description: 'Run composer prepare-for-pantheon'
         script: private/scripts/deploy_product/prepare-for-pantheon.php
-      -
-        type: webphp
+      - type: webphp
         description: 'Run composer install & drupal-scaffold'
         script: private/scripts/deploy_product/composer-install.php
-      -
-        type: webphp
+      - type: webphp
         description: 'Notify in slack when deployed'
         script: private/scripts/slack-notify/slack_notify_drush_site_audit.php
-  sync_code:
+  sync_code: # push code via git (dev/multidev)
     after:
       - type: webphp
         description: Push changes back to GitHub if needed
         script: private/scripts/quicksilver/quicksilver-pushback/push-back-to-github.php
-  deploy:
+      - type: webphp
+        description: 'Log to New Relic'
+        script: private/scripts/new_relic/new_relic_deploy.php
+  deploy: # deploy code to test or live
     after:
       - type: webphp
+        description: Import configuration from .yml files
+        script: private/scripts/drush_config_import/drush_config_import.php
+      - type: webphp
         description: 'Notify in slack when deployed'
-        script: private/scripts/slack-notify/slack_notify_drush_site_audit.php      
+        script: private/scripts/slack-notify/slack_notify_drush_site_audit.php
+      - type: webphp
+        description: 'Log to New Relic'
+        script: private/scripts/new_relic/new_relic_deploy.php

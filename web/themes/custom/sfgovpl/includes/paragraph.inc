@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
@@ -155,4 +156,36 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
 function sfgovpl_preprocess_paragraph__document(&$variables) {
   // Don't translate document paragraphs by gtranslate.
   $variables['attributes']['class'][] = 'notranslate';
+}
+
+/**
+ * Preprocess paragraph section.
+ *
+ * @param $variables
+ */
+function sfgovpl_preprocess_paragraph__section(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  // Check if we are within a resource_collection node.
+  $parent = $paragraph->getParentEntity();
+  if (!($parent instanceof NodeInterface) || $parent->bundle() !== "resource_collection") {
+    return;
+  }
+
+  if ($variables['view_mode'] !== "resource_collection") {
+    return;
+  }
+
+  // Swap the view_mode for all document paragraphs.
+  foreach (Element::getVisibleChildren($variables['content']['field_content']) as $key) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $child */
+    $child = $variables['content']['field_content'][$key]['#paragraph'];
+    if ($child->bundle() !== "document") {
+      continue;
+    }
+
+    // We use a different view mode here so that old content still works.
+    $variables['content']['field_content'][$key]['#view_mode'] = 'resource_collection_multiple';
+  }
 }

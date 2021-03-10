@@ -53,6 +53,12 @@ function sfgovpl_preprocess_node(&$variables) {
 /**
  * Implements hook_preprocess_node().
  */
+function sfgovpl_preprocess_node__department__full(&$variables) {
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
 function sfgovpl_preprocess_node__meeting__full(&$variables) {
   $node = $variables['node'];
 
