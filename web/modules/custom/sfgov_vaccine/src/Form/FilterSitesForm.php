@@ -127,13 +127,14 @@ class FilterSitesForm extends FormBase {
 
     $settings_eligibility = $this->settings('eligibility');
     $options_eligibility = [];
+    $eligibility_keys = [];
     foreach ($settings_eligibility as $key => $value) {
-      if ($key != 'second_dose_only') {
-        $short_key = $value['short_key'];
-        $text = $value['text'];
-        $options_eligibility[$short_key] = $this->t($text);
-      }
+      $short_key = $value['short_key'];
+      $text = $value['text'];
+      $options_eligibility[$short_key] = $this->t($text);
+      array_push($eligibility_keys, $short_key);
     }
+    $form['#attached']['drupalSettings']['sfgov_vaccine']['eligibility_keys'] = $eligibility_keys;
     $form['container']['toggle']['items']['eligibility'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t($this->settings('form_strings.eligibility_label')),
