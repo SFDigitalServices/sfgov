@@ -10,14 +10,13 @@ set -eo pipefail
 # - Any needed code updates are done
 #
 
-DEVELOP_BRANCH="pantheon-hooks"
+DEVELOP_BRANCH="develop"
 PREVIEW_ENV="preview"
 
 # if this is the develop branch, set the TERMINUS_ENV to preview
 if [[ $CIRCLE_BRANCH == $DEVELOP_BRANCH ]] ; then
   DEFAULT_ENV=$PREVIEW_ENV
   TERMINUS_ENV=$PREVIEW_ENV
-  echo 'circle branch = develop branch'
   echo 'export DEFAULT_ENV="'$PREVIEW_ENV'"' >> $BASH_ENV
   echo 'export TERMINUS_ENV="'$PREVIEW_ENV'"' >> $BASH_ENV
   echo 'export MULTIDEV_SITE_URL="https://'${MULTIDEV_SITE_BASIC_AUTH}$PREVIEW_ENV-$TERMINUS_SITE'.pantheonsite.io/"' >> $BASH_ENV
