@@ -10,12 +10,13 @@ set -eo pipefail
 # - Any needed code updates are done
 #
 
-DEVELOP_BRANCH="pr-863"
+DEVELOP_BRANCH="pantheon-hooks"
+PREVIEW_ENV="preview"
 
 # if this is the develop branch, set the TERMINUS_ENV to preview
 if [[ $CIRCLE_BRANCH == $DEVELOP_BRANCH ]] ; then
-  echo 'export DEFAULT_ENV="'$DEVELOP_BRANCH'"' >> $BASH_ENV
-  echo 'export TERMINUS_ENV="'$DEVELOP_BRANCH'"' >> $BASH_ENV
+  echo 'export DEFAULT_ENV="'$PREVIEW_ENV'"' >> $BASH_ENV
+  echo 'export TERMINUS_ENV="'$PREVIEW_ENV'"' >> $BASH_ENV
 fi
 
 echo "Begin build for $DEFAULT_ENV. Pantheon test environment is $TERMINUS_SITE.$TERMINUS_ENV"
