@@ -1,0 +1,50 @@
+<div {{ result.attributes }}>
+  <h3 class="vaccine-site__title notranslate">
+    {{ result.site_name }}
+  </h3>
+  {# address_url #}
+  {% if result.address_url %}
+    <div class="vaccine-site__address field notranslate">
+      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+    </div>
+  {% endif %}
+
+  {# Open to .. #}
+  <div class="vaccine-site__eligibility-availability">
+    <label class="notranslate">{{ result.restrictions }}</label>
+
+    {# 65 and over, etc #}
+    <div class="vaccine-site__eligibilities notranslate">
+      {% for eligibility in result.eligibilities %}
+        <span class="vaccine-site__eligibility">{{ eligibility|t }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# Languages #}
+  {% if result.languages %}
+    <div class="field">
+      <label>{{ 'Languages'|t }}</label>
+      <div class="notranslate">
+        {{ result.languages|join(', ') }}
+      </div>
+    </div>
+  {% endif %}
+
+  {# Drive thru, walk thru, wheelchair #}
+  {% if result.access_modes %}
+    <div class="field">
+      <label>{{ 'Access'|t }}</label>
+      {{ result.access_modes|join(', ') }}
+    </div>
+  {% endif %}
+
+  {% if result.info_url %}
+    <div class="field notranslate">
+      <a href="{{ result.info_url }}">
+        {{ 'Learn more about this location'|t }}
+      </a>
+    </div>
+  {% endif %}
+  {% include '@theme/vaccine/vaccine-site--booking.twig' %}
+</div>
