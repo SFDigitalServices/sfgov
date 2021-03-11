@@ -112,8 +112,9 @@ function _test_hook_slack_notification($message = '')
   );
   
   $secrets = _get_secrets(array('slack_url','github'), $defaults);
+  $envMessage = 'environment: ' . (!empty($_ENV['PANTHEON_ENVIRONMENT']) ? $_ENV['PANTHEON_ENVIRONMENT'] : 'none');
   $workflowMessage = 'workflow type: ' . (!empty($_POST['wf_type']) ? $_POST['wf_type'] : 'none');
-  $message = $workflowMessage . "\n" . $message;
+  $message = $envMessage . "\n" . $workflowMessage . "\n" . $message;
   
   $attachment = array(
     'pretext' => 'test message',
