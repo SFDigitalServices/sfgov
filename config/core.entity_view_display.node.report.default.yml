@@ -4,8 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.node.report.body
+    - field.field.node.report.field_description
+    - field.field.node.report.field_spotlight
     - node.type.report
   module:
+    - entity_reference_revisions
     - text
     - user
 id: node.report.default
@@ -16,15 +19,31 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 101
+    weight: 2
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_description:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_spotlight:
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
     region: content
   links:
-    weight: 100
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

@@ -1,7 +1,10 @@
 <?php
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+use Drupal\toc_api\Entity\TocType;
 
 /**
  * Implements hook_form_alter().
@@ -29,6 +32,21 @@ function sfgov_doc_html_file_delete(EntityInterface $entity) {
   \Drupal::database()->delete('sfgov_doc_html_files')
     ->condition('fid', $entity->id())
     ->execute();
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function sfgov_doc_html_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $supported_content_types = sfgov_doc_html_supported_content_types();
+
+  if ($view_mode !== "full" || !($entity instanceof NodeInterface) || !isset($supported_content_types[$entity->bundle()])) {
+    return;
+  }
+
+  /** @var \Drupal\sfgov_doc_html\TableOfContentsBuilderInterface $toc_builder */
+  $toc_builder = \Drupal::service('sfgov_doc_html.toc_builder');
+  $toc_builder->attach($entity, $build, $supported_content_types[$entity->bundle()]['field']);
 }
 
 /**

@@ -1,0 +1,39 @@
+{% extends 'node--full.html.twig' %}
+
+{% block header %}
+  {{ title_prefix }}
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': node.label,
+      'text': node.field_description.value,
+    }
+  } %}
+  {{ title_suffix }}
+{% endblock %}
+
+{% block content %}
+  {% if content.field_spotlight %}
+    <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+      <div class="sfgov-section-container">
+        {{ content.field_spotlight }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="sfgov-section sfgov-section-container">
+    <div class="group--left">
+      {% if content.body|render %}
+        <div class="sfgov-section-overview sfgov-in-this-page-target">
+          <div class="sfgov-section--content">
+            {{ content.body[0].content }}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="group--right">
+      <div class="sfgov-toc">
+        {{ content.body[0].toc }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
