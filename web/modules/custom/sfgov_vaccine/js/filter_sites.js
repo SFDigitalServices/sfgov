@@ -183,11 +183,11 @@
       }
 
       function showNoResultsMessage() {
-        $(".vaccine-filter__empty").removeAttr("hidden");
+        $(".vaccine-filter__empty").show();
       }
 
       function hideNoResultsMessage() {
-        $(".vaccine-filter__empty").attr("hidden", true);
+        $(".vaccine-filter__empty").hide();
       }
 
       function showCount(speed) {
