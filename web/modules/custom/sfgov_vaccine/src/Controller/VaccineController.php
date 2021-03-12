@@ -215,8 +215,9 @@ class VaccineController extends ControllerBase {
     $printed = [];
     $site_data_group = $site_data[$group];
     foreach ($site_data_group as $data_key => $boolean) {
-      if ($boolean === TRUE && $data_key != 'info') {
-        $printed_value = $this->settings($group . '.' . $data_key . '.text');
+      $text = $this->settings($group . '.' . $data_key . '.text');
+      if ($boolean === TRUE && $data_key != 'info' && isset($text) ) {
+        $printed_value = $this->t($text);
         array_push($printed, $printed_value);
       }
     }
