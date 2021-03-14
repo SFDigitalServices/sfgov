@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
- * Class SettingsForm.
+ * Settings for the vaccine sites page.
  */
 class SettingsForm extends ConfigFormBase {
 
@@ -62,7 +62,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'url',
       '#title' => $this->t('Microservice URL'),
       '#description' => $this->t('e.g. https://vaccination-site-microservice.vercel.app/api/v1/appointments, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app/api/v1/appointments'),
-      '#default_value' => $config->get('api_url')
+      '#default_value' => $config->get('api_url'),
     ];
     $form['submit'] = [
       '#type' => 'submit',
@@ -82,15 +82,15 @@ class SettingsForm extends ConfigFormBase {
     $format = UrlHelper::isValid($values['api_url']);
 
     if ($format === TRUE) {
-      $request = $this->httpClient->get($url, ['http_errors' => false]);
+      $request = $this->httpClient->get($url, ['http_errors' => FALSE]);
       $code = $request->getStatusCode();
 
-      if($code != 200) {
+      if ($code != 200) {
         $message = $this->t(
           "Failed response with code @code. Try entering the microservice url again.", [
-          '@code' => $request->getStatusCode()
-        ]);
-        $form_state->setErrorByName('api_uri',$message);
+            '@code' => $request->getStatusCode(),
+          ]);
+        $form_state->setErrorByName('api_uri', $message);
       }
     }
 
@@ -105,4 +105,5 @@ class SettingsForm extends ConfigFormBase {
       ->set('api_url', trim($form_state->getValue('api_url')))
       ->save();
   }
+
 }
