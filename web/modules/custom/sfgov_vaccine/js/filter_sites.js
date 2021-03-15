@@ -2,7 +2,7 @@
   "use strict";
 
   Drupal.behaviors.filterSites = {
-    attach: function (context) {
+    attach: function (context, settings) {
       // @todo Banish the jquery!
 
       // Set media query and register event listener.
@@ -52,7 +52,7 @@
           wheelchair_chkBox.datatest = "";
         }
 
-        let eligibily_datatests = ["sf", "hw", "ec", "af", "sd", "es"];
+        let eligibily_datatests = drupalSettings.sfgov_vaccine.eligibility_keys;
         let eligibility_select = [];
 
         for (let i in eligibily_datatests) {
@@ -183,11 +183,11 @@
       }
 
       function showNoResultsMessage() {
-        $(".vaccine-filter__empty").removeAttr("hidden");
+        $(".vaccine-filter__empty").show();
       }
 
       function hideNoResultsMessage() {
-        $(".vaccine-filter__empty").attr("hidden", true);
+        $(".vaccine-filter__empty").hide();
       }
 
       function showCount(speed) {
