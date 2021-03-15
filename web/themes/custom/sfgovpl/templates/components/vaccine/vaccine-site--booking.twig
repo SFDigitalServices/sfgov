@@ -1,32 +1,44 @@
+{#
+  The following values are translated in the API and should not be registered for Drupal translation.
+  @see https://vaccination-site-microservice.vercel.app/api/v1/appointments?lang=es
+
+  - result.booking.info
+  - result.remote_translation.info
+  - result.open_to.text
+#}
+
 {% set info %}
   {% if result.booking_info %}
-    <div class="vaccine-site__booking_info">
+    <div class="vaccine-site__booking_info notranslate">
       {{ result.booking_info }}
     </div>
   {% endif %}
 {% endset %}
 
 {% if result.available != 'null' and result.booking_url %}
-  <div class="vaccine-site__booking_box notranslate {{ result.available }}">
+  <div class="vaccine-site__booking_box {{ result.available }}">
     {% if result.available == 'yes' %}
       <div class="field">
         <strong>
-          {{ 'Appointments available as of'|t }} {{ result.last_updated }}
+          <span class="notranslate">
+            {{ 'Appointments available as of'|t }}
+          </span>
+          {{ result.last_updated }}
         </strong>
         {{ info }}
       </div>
-      <div class="sfgov-cta-button__container">
+      <div class="sfgov-cta-button__container notranslate">
         <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
       </div>
     {% elseif result.available == 'no' %}
       <div class="field">
         <strong>
-          {{ 'No appointments as of'|t }}
+          <span class="notranslate">{{ 'No appointments as of'|t }}</span>
           {{ result.last_updated }}
         </strong>
         {{ info }}
       </div>
-      <div class="field">
+      <div class="field notranslate">
         <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
       </div>
     {% endif %}
