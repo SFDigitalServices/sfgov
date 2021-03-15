@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.report.body
+    - field.field.node.report.field_date_only
     - field.field.node.report.field_description
     - field.field.node.report.field_spotlight
     - node.type.report
   module:
+    - datetime
     - entity_reference_revisions
     - text
     - user
@@ -19,19 +21,28 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 2
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_date_only:
+    weight: 1
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: default
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_description:
-    weight: 3
+    weight: 4
     label: above
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_spotlight:
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       view_mode: default

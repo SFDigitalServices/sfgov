@@ -4,13 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.node.report.body
+    - field.field.node.report.field_date_only
     - field.field.node.report.field_description
     - field.field.node.report.field_spotlight
     - node.type.report
   module:
-    - allowed_formats
     - content_moderation
-    - maxlength
+    - datetime
     - path
     - scheduler
     - scheduler_content_moderation_integration
@@ -37,21 +37,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_description:
+  field_date_only:
     weight: 1
-    settings:
-      rows: 3
-      placeholder: ''
-    third_party_settings:
-      allowed_formats:
-        hide_help: '1'
-        hide_guidelines: '1'
-      maxlength:
-        maxlength_js: 300
-        maxlength_js_label: '<strong>@remaining</strong>'
-        maxlength_js_enforce: true
-        maxlength_js_truncate_html: false
-    type: text_textarea
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
     region: content
   field_spotlight:
     weight: 2
@@ -159,4 +149,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_description: true
