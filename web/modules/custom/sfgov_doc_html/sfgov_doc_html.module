@@ -4,7 +4,17 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
-use Drupal\toc_api\Entity\TocType;
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_doc_html_theme($existing, $type, $theme, $path) {
+  return [
+    'docsearch' => [
+      'render element' => 'element',
+    ],
+  ];
+}
 
 /**
  * Implements hook_form_alter().
@@ -47,6 +57,15 @@ function sfgov_doc_html_entity_view(array &$build, EntityInterface $entity, Enti
   /** @var \Drupal\sfgov_doc_html\TableOfContentsBuilderInterface $toc_builder */
   $toc_builder = \Drupal::service('sfgov_doc_html.toc_builder');
   $toc_builder->attach($entity, $build, $supported_content_types[$entity->bundle()]['field']);
+
+  // Attach the docsearch.
+  $build['docsearch'] = [
+    '#type' => 'docsearch',
+    '#search_target' => '.sfgov-section--content',
+    '#cache' => [
+      'keys' => ['docsearch'],
+    ],
+  ];
 }
 
 /**
@@ -59,4 +78,13 @@ function sfgov_doc_html_supported_content_types() {
       'field' => 'body',
     ]
   ];
+}
+
+/**
+ * Prepares variables for for docsearch templates.
+ *
+ * Default template: docsearch.html.twig.
+ */
+function template_preprocess_docsearch(&$variables) {
+  $variables['search_target'] = $variables['element']['#search_target'];
 }

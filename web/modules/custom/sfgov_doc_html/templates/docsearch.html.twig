@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the docsearch.
+ *
+ * @see template_preprocess_docsearch()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('docsearch') }}>
+  <form id="docsearch" role="search" data-search-target="{{ search_target }}">
+    <label for="keywords" class="visually-hidden">{{ "Search this page"|t }}</label>
+    <input type="text" id="keywords" name="keywords" spellcheck="false" placeholder="{{ "Document search"|t }}">
+    <input value="Submit" type="submit">
+    <button>
+      <span class="visually-hidden">{{ "Clear" }}</span>
+    </button>
+  </form>
+</div>
