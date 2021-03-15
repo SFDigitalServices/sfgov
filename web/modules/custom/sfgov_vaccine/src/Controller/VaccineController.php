@@ -125,7 +125,7 @@ class VaccineController extends ControllerBase {
   /**
    * Get the filter form.
    */
-  private function makeFilters($allData) {
+  private function makeFilters() {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
@@ -216,7 +216,7 @@ class VaccineController extends ControllerBase {
     $site_data_group = $site_data[$group];
     foreach ($site_data_group as $data_key => $boolean) {
       $text = $this->settings($group . '.' . $data_key . '.text');
-      if ($boolean === TRUE && $data_key != 'info' && isset($text) ) {
+      if ($boolean === TRUE && $data_key != 'info' && isset($text)) {
         $printed_value = $this->t($text);
         array_push($printed, $printed_value);
       }
@@ -228,16 +228,17 @@ class VaccineController extends ControllerBase {
    * Prepare each site's language text.
    */
   private function getSiteLanguageText($access_data) {
+
+    // Get remote vars.
     $site_data_remote_translation = $access_data["remote_translation"];
+    $site_data_languages = $access_data['languages'];
 
     $printed_languages = [];
-    $site_data_languages = $access_data['languages'];
     foreach ($site_data_languages as $short_key => $boolean) {
-      if ($boolean === TRUE) {
-        $languages = $this->settings('languages.' . $short_key);
-        if (!empty($languages)) {
-          array_push($printed_languages, $this->t($languages));
-        }
+      $language_label = $this->settings(sprintf('languages.%s.site_label', $short_key));
+      if ($boolean === TRUE && !empty($language_label)) {
+        array_push(
+          $printed_languages, $language_label);
       }
     }
 
