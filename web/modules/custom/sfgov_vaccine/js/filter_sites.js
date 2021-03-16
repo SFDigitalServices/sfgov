@@ -15,7 +15,7 @@
       const submitButton = $(".vaccine-filter-form #edit-submit", context);
 
       // Other variables.
-      let groupByAvailability = false;
+      let filterByAvailability = false;
       const speed = "slow";
       const class_match_available = "match-available";
 
@@ -44,7 +44,7 @@
           restrictions_chkBox.datatest = "";
         }
 
-        groupByAvailability = $("[name=available]").is(":checked");
+        filterByAvailability = $("[name=available]").is(":checked");
 
         if ($("[name=wheelchair]").is(":checked") === true) {
           wheelchair_chkBox.datatest = "1";
@@ -92,7 +92,7 @@
             );
 
             // "Only show sites with available appointments" checkbox.
-            if (groupByAvailability === true) {
+            if (filterByAvailability === true) {
               $(this).removeClass(class_match_available);
               if (
                 $(this).attr("data-available") === "yes" ||
@@ -100,11 +100,6 @@
               ) {
                 $(this).appendTo(".vaccine-filter__sites");
                 $(this).addClass(class_match_available);
-              } else if ($(this).attr("data-available") === "null") {
-                $(this).appendTo(".vaccine-filter__other-sites");
-                $(this).addClass(class_match_available);
-              } else {
-                $(this).removeClass(class_match_available);
               }
             } else {
               $(this).appendTo(".vaccine-filter__sites");
@@ -173,11 +168,6 @@
 
             return rtnData;
           })
-          .sort(function (a, b) {
-            const dataA = $(a).data("available");
-            const dataB = $(b).data("available");
-            return dataA < dataB;
-          })
           .show()
           .addClass("included");
       }
@@ -208,45 +198,22 @@
         $(".vaccine-filter__sites").hide();
       }
 
-      function showOtherSites() {
-        $(".vaccine-filter__other").show();
-      }
-
-      function hideOtherSites(speed) {
-        $(".vaccine-filter__other").hide();
-      }
-
       // This is the main function.
       function displaySites() {
         filterVaccineSites();
 
         if (
           // If there are no results.
-          $(".vaccine-filter__other-sites .included").length === 0 &&
           $(".vaccine-filter__sites .included").length === 0
         ) {
           hideCount();
           hideSites();
-          hideOtherSites();
           showNoResultsMessage();
-        } else if (
-          // If "Only show sites with available appointments" is checked and
-          // there are sites that don't meet the selected criteria.
-          groupByAvailability === true &&
-          $(".vaccine-filter__other-sites .included").length > 0
-        ) {
-          showSites();
-          showOtherSites();
-          hideNoResultsMessage();
-          // showCount() should be last because it depends on the other functions.
-          showCount();
         } else {
           // If "Only show sites with available appointments" is not checked and
           // there are sites that meet the selected criteria.
           hideNoResultsMessage();
           showSites();
-          hideOtherSites();
-          // showCount() should be last because it depends on the other functions.
           showCount();
         }
       }
