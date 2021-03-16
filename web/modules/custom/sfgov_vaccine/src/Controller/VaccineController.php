@@ -298,7 +298,7 @@ class VaccineController extends ControllerBase {
       }
       $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
-      $site_id = $site_data['site_id'];
+      $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = ($restrictions == FALSE) ? $site_data['open_to']['text'] : NULL;
       $address_text = $site_data['location']['address'];
