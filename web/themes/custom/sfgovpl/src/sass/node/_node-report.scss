@@ -178,6 +178,10 @@
         display: none;
       }
     }
+    > ol {
+      max-height: calc(100vh - 350px);
+      overflow: auto;
+    }
   }
 }
 
@@ -195,6 +199,14 @@
     width: 445px;
     right: -445px;
     max-width: 455px;
+  }
+
+  .toolbar-horizontal & {
+    top: 39px;
+  }
+
+  .toolbar-horizontal.toolbar-tray-open & {
+    top: 79px;
   }
 
   .sfgov-toc-tree {
@@ -219,7 +231,7 @@
       padding-left: $rhythm * 4;
     }
 
-    h4 {
+    .sfgov-toc-header-title {
       @include fs-title-4;
       color: $c-slate;
       margin: 0;
@@ -337,10 +349,18 @@
 
     .toolbar-horizontal & {
       top: 39px;
+
+      .sfgov-toc-drawer {
+        height: calc(100vh - 39px);
+      }
     }
 
     .toolbar-horizontal.toolbar-tray-open & {
       top: 79px;
+
+      .sfgov-toc-drawer {
+        height: calc(100vh - 79px);
+      }
     }
 
     .sfgov-toc-sticky {
