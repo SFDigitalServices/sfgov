@@ -324,7 +324,7 @@ class VaccineController extends ControllerBase {
           'data-eligibility' => implode('-', $eligibility_keys),
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
-        'restrictions' => $restrictions_text,
+        'restrictions_text' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
         'languages' => $language_text['printed_languages'],
