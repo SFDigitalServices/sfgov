@@ -276,7 +276,6 @@ class VaccineController extends ControllerBase {
 
       // Usable variables.
       $info_url = NULL;
-      $booking_info = NULL;
 
       $available = $site_data['appointments']['available'];
       if ($available === TRUE) {
@@ -293,9 +292,7 @@ class VaccineController extends ControllerBase {
         $info_url = $site_data['info']['url'];
       }
 
-      if (isset($site_data['booking']['info'])) {
-        $booking_info = $site_data['booking']['info'];
-      }
+      $booking = isset($site_data['booking']) ? $site_data['booking'] : NULL;
       $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
       $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
@@ -303,8 +300,6 @@ class VaccineController extends ControllerBase {
       $restrictions_text = ($restrictions == FALSE) ? $site_data['open_to']['text'] : NULL;
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
-      $booking_url = $site_data['booking']['url'];
-      $booking_dropins = $site_data['booking']['dropins'];
       $wheelchair = $site_data['access']['wheelchair'];
 
       // Map results.
@@ -332,9 +327,7 @@ class VaccineController extends ControllerBase {
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,
         'available' => $available,
-        'booking_url' => $booking_url,
-        'booking_dropins' => $booking_dropins,
-        'booking_info' => $booking_info,
+        'booking' => $booking,
       ];
       $results[] = $result;
     }
