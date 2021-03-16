@@ -298,8 +298,9 @@ class VaccineController extends ControllerBase {
       }
       $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
+      $site_id = $site_data['site_id'];
       $restrictions = $site_data['open_to']['everyone'];
-      $restrictions_text = $site_data['open_to']['text'];
+      $restrictions_text = ($restrictions == FALSE) ? $site_data['open_to']['text'] : NULL;
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
       $booking_url = $site_data['booking']['url'];
@@ -311,6 +312,7 @@ class VaccineController extends ControllerBase {
         'site_name' => $site_name,
         'attributes' => new Attribute([
           'class' => ['sfgov-service-card', 'vaccine-site', 'no-hover'],
+          'data-site-id' => $site_id,
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
           'data-available' => $available,
