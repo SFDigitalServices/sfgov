@@ -7,7 +7,43 @@
   - result.open_to.text
 #}
 
-{% set info %}
+{# Define dynamic text. #}
+{% if result.available != 'null' and result.booking.url %}
+  {% set booking_box_classes = [
+    'vaccine-site__booking_box',
+    result.available
+  ] %}
+
+  {% if result.available == 'yes' %}
+    {% set field_classes = ['field'] %}
+    {% set fancy = true %}
+    {% set fancy_text = 'Appointments available as of'|t %}
+    {% set btn_classes = ['sfgov-cta-button__container', 'notranslate'] %}
+    {% set btn_text = 'Book an appointment'|t %}
+  {% elseif result.available == 'no' %}
+    {% set field_classes = ['field'] %}
+    {% set fancy = true %}
+    {% set fancy_text = 'No appointments as of'|t %}
+    {% set btn_classes = ['field', 'notranslate'] %}
+    {% set btn_text = 'Visit booking website'|t %}
+  {% endif %}
+{% elseif result.booking.url or result.booking.info %}
+  {% set booking_box_classes = [
+    'vaccine-site__booking_box',
+    'notranslate',
+    result.booking.dropins ? 'js-dropin'
+  ] %}
+  {% set btn_classes = ['sfgov-cta-button__container', 'no-pad'] %}
+  {% set btn_text = 'Check for availability'|t %}
+{% endif %}
+
+{# Create attributes. #}
+{% set booking_box_attributes = create_attribute() %}
+{% set field_attributes = create_attribute() %}
+{% set btn_attributes = create_attribute() %}
+
+{# Define reusuable blocks of code. #}
+{% set block_info %}
   {% if result.booking.info %}
     <div class="vaccine-site__booking_info notranslate">
       {{ result.booking.info }}
@@ -15,45 +51,33 @@
   {% endif %}
 {% endset %}
 
-{% if result.available != 'null' and result.booking.url %}
-  <div class="vaccine-site__booking_box {{ result.available }}">
-    {% if result.available == 'yes' %}
-      <div class="field">
-        <strong>
-          <span class="notranslate">
-            {{ 'Appointments available as of'|t }}
-          </span>
-          {{ result.last_updated }}
-        </strong>
-        {{ info }}
-      </div>
-      <div class="sfgov-cta-button__container notranslate">
-        <a href="{{ result.booking.url }}">{{ 'Book an appointment'|t }}</a>
-      </div>
-    {% elseif result.available == 'no' %}
-      <div class="field">
-        <strong>
-          <span class="notranslate">{{ 'No appointments as of'|t }}</span>
-          {{ result.last_updated }}
-        </strong>
-        {{ info }}
-      </div>
-      <div class="field notranslate">
-        <a href="{{ result.booking.url }}">{{ 'Visit booking website'|t }}</a>
-      </div>
-    {% endif %}
-    {{ result.booking.phone }}
-  </div>
-{% elseif result.booking.url or result.booking.info %}
-  <div class="vaccine-site__booking_box notranslate {{
-    result.booking.dropins
-      ? 'js-dropin'
-    }}">
-    {{ info }}
-    {% if result.booking.url %}
-      <div class="sfgov-cta-button__container no-pad">
-        <a href="{{ result.booking.url }}">{{ 'Check for availability'|t }}</a>
-      </div>
-    {% endif %}
-  </div>
-{% endif %}
+{% set block_booking_link %}
+  {% if result.booking.url %}
+    <div {{ btn_attributes.addClass(btn_classes) }}>
+      <a href="{{ result.booking.url }}">{{ btn_text }}</a>
+    </div>
+  {% endif %}
+  {% if result.booking.phone %}
+    <div class="field">
+      {{ 'Or call'|t }}
+      <a href="tel:{{ result.booking.phone }}">{{ result.booking.phone }}</a>
+    </div>
+  {% endif %}
+{% endset %}
+
+{# Render box. #}
+<div {{ booking_box_attributes.addClass(booking_box_classes) }}>
+  {% if fancy == true %}
+    <div {{ field_attributes.addClass(field_classes) }}>
+      <strong>
+        <span class="notranslate">{{ fancy_text }}</span>
+        {{ result.last_updated }}
+      </strong>
+      {{ block_info }}
+    </div>
+    {{ block_booking_link }}
+  {% else %}
+    {{ block_info }}
+    {{ block_booking_link }}
+  {% endif %}
+</div>
