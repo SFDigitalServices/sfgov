@@ -238,7 +238,7 @@ class VaccineController extends ControllerBase {
       $language_label = $this->settings(sprintf('languages.%s.site_label', $short_key));
       if ($boolean === TRUE && !empty($language_label)) {
         array_push(
-          $printed_languages, $language_label);
+          $printed_languages, $this->t($language_label));
       }
     }
 
