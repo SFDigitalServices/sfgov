@@ -1,0 +1,7 @@
+parameters:
+  sfgov_doc_html.toc_type: 'default'
+
+services:
+  sfgov_doc_html.toc_builder:
+    class: Drupal\sfgov_doc_html\TableOfContentsBuilder
+    arguments: [ '@renderer' , '@toc_api.manager', '@toc_api.builder', '%sfgov_doc_html.toc_type%']
