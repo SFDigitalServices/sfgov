@@ -6,4 +6,9 @@ set -eo pipefail
 # This script runs any post-test operations that may be needed.
 #
 
+# if this is the develop branch, set the TERMINUS_ENV to preview
+if [[ $CIRCLE_BRANCH == "develop" ]] ; then
+  TERMINUS_ENV="preview"
+fi
+
 terminus -n secrets:set "$TERMINUS_SITE.$TERMINUS_ENV" token "$GITHUB_TOKEN" --file='github-secrets.json' --clear --skip-if-empty
