@@ -7,7 +7,6 @@
 }
 
 .vaccine-filter__body {
-
   @include media($medium-screen) {
     padding-top: 60px;
   }
@@ -35,16 +34,16 @@
 }
 
 .vaccine-filter-form {
-   [data-drupal-selector="edit-single-checkboxes"] {
-     margin-bottom: 50px;
+  [data-drupal-selector="edit-single-checkboxes"] {
+    margin-bottom: 50px;
 
-     .js-form-type-checkbox label {
+    .js-form-type-checkbox label {
       @include fs-body-short;
-       margin-bottom: 0;
+      margin-bottom: 0;
 
-       &::before {
-         top: 2px;
-       }
+      &::before {
+        top: 2px;
+      }
     }
   }
 
@@ -65,6 +64,15 @@
   }
 }
 
+.vaccine-filter__empty {
+  display: none;
+
+  h4 {
+    @include fs-title-5;
+  }
+}
+
+// Vaccine Site/Card.
 .vaccine-site {
   margin-bottom: 40px;
 
@@ -80,6 +88,12 @@
   .field {
     margin-bottom: 20px;
   }
+
+  .icon {
+    background-size: 20px 20px;
+    background-position: 0 5px;
+    padding-left: 38px;
+  }
 }
 
 .vaccine-site__title {
@@ -88,9 +102,16 @@
 }
 
 .vaccine-site__address {
+  @include background-image("icons/location-slate.svg");
+  background-position: 5px 5px;
+
   a {
-    @include link-colors($c-light-slate, $c-bright-blue);
+    @include link-colors($c-bright-blue);
   }
+}
+
+.vaccine-site__languages {
+  @include background-image("icons/globe-slate.svg");
 }
 
 .vaccine-site__restrictions {
@@ -113,6 +134,11 @@
   word-break: keep-all;
 }
 
+.vaccine-site__access-mode {
+  @include background-image("icons/accessibility-slate.svg");
+  padding-left: 38px;
+}
+
 .vaccine-site__booking_box {
   background-color: $c-blue-1;
   margin-top: 40px;
@@ -127,7 +153,7 @@
   }
 
   &.yes {
-    @include background-image('check-green.svg', 20px 25px, $c-blue-1);
+    @include background-image("check-green.svg", 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
@@ -142,7 +168,7 @@
   }
 
   &.no {
-    @include background-image('close-red.svg', 20px 25px, $c-blue-1);
+    @include background-image("close-red.svg", 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
@@ -183,7 +209,6 @@
 }
 
 .vaccine-site__booking_info {
-
   + .sfgov-cta-button__container {
     margin-top: 20px;
   }
