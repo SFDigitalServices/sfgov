@@ -16,7 +16,12 @@
 
 <div class="sfgov-spotlight">
   <div class="sfgov-spotlight-main">
-    <div class="sfgov-spotlight-section sfgov-spotlight-content">
+    {% if image %}
+      <div class="sfgov-spotlight-section sfgov-spotlight-content">
+    {% else %}
+      <div class="sfgov-spotlight-section sfgov-spotlight-content full-width">
+    {% endif %}
+    
       {% if content.field_title|render %}
         <h2 class="sfgov-spotlight-title">{{ content.field_title }}</h2>
       {% endif %}
