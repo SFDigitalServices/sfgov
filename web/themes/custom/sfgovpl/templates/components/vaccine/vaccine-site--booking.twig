@@ -9,20 +9,17 @@
 
 {# Define dynamic text. #}
 {% if result.available != 'null' and result.booking.url %}
-  {% set booking_box_classes = [
-    'vaccine-site__booking_box',
-    result.available
-  ] %}
+  {% set booking_box_classes = ['vaccine-site__booking_box'] %}
 
-  {% if result.available == 'yes' %}
+  {% if result.available != 'null' %}
     {% set field_classes = ['field'] %}
     {% set fancy = true %}
+  {% endif %}
+  {% if result.available == 'yes' %}
     {% set fancy_text = 'Appointments available as of'|t %}
     {% set btn_classes = ['sfgov-cta-button__container', 'notranslate'] %}
     {% set btn_text = 'Book an appointment'|t %}
   {% elseif result.available == 'no' %}
-    {% set field_classes = ['field'] %}
-    {% set fancy = true %}
     {% set fancy_text = 'No appointments as of'|t %}
     {% set btn_classes = ['field', 'notranslate'] %}
     {% set btn_text = 'Visit booking website'|t %}
