@@ -242,10 +242,16 @@ class VaccineController extends ControllerBase {
       }
     }
 
+    $remote_asl = NULL;
     if ($site_data_remote_translation['available']) {
       array_push($printed_languages, $site_data_remote_translation['info']);
+      $remote_asl = (strpos($site_data_remote_translation['info'], 'ASL')) ? TRUE : FALSE;
     }
-    return $printed_languages;
+
+    return [
+      'printed_languages' => $printed_languages,
+      'remote_asl' => $remote_asl,
+    ];
   }
 
   /**
@@ -311,6 +317,7 @@ class VaccineController extends ControllerBase {
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
+          'data-remote-asl' => $language_text['remote_asl'],
           'data-access-mode' => implode('-', $access_mode_keys),
           'data-eligibility' => implode('-', $eligibility_keys),
         ]),
@@ -318,7 +325,7 @@ class VaccineController extends ControllerBase {
         'restrictions' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
-        'languages' => $language_text,
+        'languages' => $language_text['printed_languages'],
         'eligibilities' => $eligibility_text,
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,
