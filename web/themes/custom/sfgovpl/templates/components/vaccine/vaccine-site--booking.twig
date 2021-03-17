@@ -43,7 +43,8 @@
 {% set block_info %}
   {% if result.booking.info %}
     <div class="vaccine-site__booking_info notranslate">
-      {{ result.booking.info }}
+      {# Raw tag is used here because this field can contain HTML. #}
+      {{ result.booking.safe_info|raw }}
     </div>
   {% endif %}
 {% endset %}
