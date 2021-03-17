@@ -2,6 +2,7 @@
 
 namespace Drupal\sfgov_vaccine\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\LanguageManager;
@@ -263,6 +264,16 @@ class VaccineController extends ControllerBase {
       return [];
     }
 
+    $allowed_html_tags = [
+      'br',
+      'a',
+      'em',
+      'strong',
+      'ul',
+      'ol',
+      'li',
+    ];
+
     $sites = $allData['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data) {
@@ -293,11 +304,13 @@ class VaccineController extends ControllerBase {
       }
 
       $booking = isset($site_data['booking']) ? $site_data['booking'] : NULL;
+      $booking['safe_info'] = isset($booking['info']) ? Xss::filter($booking['info'], $allowed_html_tags) : NULL;
+
       $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
       $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
       $restrictions = $site_data['open_to']['everyone'];
-      $restrictions_text = ($restrictions == FALSE) ? $site_data['open_to']['text'] : NULL;
+      $restrictions_text = ($restrictions == FALSE) ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
       $wheelchair = $site_data['access']['wheelchair'];

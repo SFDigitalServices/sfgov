@@ -13,7 +13,8 @@
     {# Open to .. #}
     {% if result.restrictions_text %}
       <div class="vaccine-site__restrictions notranslate">
-        <label>{{ result.restrictions_text }}</label>
+        {# Raw tag is used here because this field can contain HTML. #}
+        <label>{{ result.restrictions_text|raw }}</label>
       </div>
     {% endif %}
     {# 65 and over, etc #}
