@@ -8,6 +8,10 @@ const browsersync = require('browser-sync').create()
 const path = require('path')
 
 const assets = gulp.parallel(css, js)
+const watch = () => {
+  gulp.watch('./src/sass', css).on('change', browsersync.reload),
+  gulp.watch(['./src/js', 'babel.config.js'], js).on('change', browsersync.reload)
+}
 
 exports.css = css
 exports.js = js
@@ -45,11 +49,4 @@ function serve() {
   return browsersync.init({
     proxy: 'https://sfgov.lndo.site/'
   })
-}
-
-function watch() {
-  return gulp.parallel(
-    gulp.watch('./src/sass', css),
-    gulp.watch(['./src/js', 'babel.config.js'], js)
-  )
 }

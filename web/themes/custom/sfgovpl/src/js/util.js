@@ -1,4 +1,5 @@
 var SFGOV = {};
+
 SFGOV.util = {
   getParam: function(name) {
     var result = null,

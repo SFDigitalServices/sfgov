@@ -70,7 +70,9 @@ function _sfgov_utilities_referenced_node_titles($node, $fieldName) {
 
   foreach($fieldNodes as $fieldNode) {
     $referencedNode = Node::load($fieldNode['target_id']);
-    $titles[] = $referencedNode->getTitle();
+    if($referencedNode) {
+      $titles[] = $referencedNode->getTitle();
+    }
   }
 
   return json_encode($titles);
