@@ -127,6 +127,26 @@
 
     h2, h3, h4 {
       scroll-margin-top: 100px;
+
+      b, strong {
+        font-weight: 500;
+      }
+    }
+
+    b, strong {
+      font-weight: 500;
+    }
+
+    h2, h3 {
+      margin-top: 80px;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+
+    h4 {
+      margin-top: 60px;
     }
   }
 }
@@ -159,6 +179,7 @@
   opacity: 1;
   margin-left: -20px;
   margin-right: -20px;
+  border-radius: $radius;
   @media screen and (min-width: $medium-screen) {
     border-bottom: 0;
     margin: 0;
@@ -247,6 +268,10 @@
     justify-content: center;
     margin: 0;
     border-radius: 0;
+
+    &:hover, &:focus {
+      background-color: $c-dark-blue;
+    }
   }
 
   &-tree {
@@ -265,6 +290,7 @@
         &.active-target {
           color: $c-slate;
           text-decoration: none;
+          font-weight: 500;
         }
       }
       li + li {
@@ -272,9 +298,10 @@
       }
       li {
 
-        &.has-active-target > a{
+        &.has-active-target > a {
           color: $c-slate;
           text-decoration: none;
+          font-weight: 500;
         }
 
         ol {

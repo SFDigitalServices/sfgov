@@ -34,12 +34,45 @@
       const $anchors = $toc.find('a');
       const $content = $('.sfgov-section--content', context);
 
-      $anchors.on('click', function () {
+      const locationPath = filterPath(location.pathname);
+      $anchors.each(function () {
+        const thisPath = filterPath(this.pathname) || locationPath;
+        const hash = this.hash;
+        if ($("#" + hash.replace(/#/, '')).length) {
+          if (locationPath === thisPath && (location.hostname === this.hostname || !this.hostname) && this.hash.replace(/#/, '')) {
+            var $target = $(hash), target = this.hash;
+            if (target) {
+              $(this).click(function (event) {
+                event.preventDefault();
+                $('html, body').animate({scrollTop: $target.offset().top}, 1000, function() {
+                  location.hash = target;
+                  $target.focus();
+                  if ($target.is(":focus")) {
+                    return !1;
+                  } else {
+                    $target.attr('tabindex', '-1');
+                    $target.focus()
+                  }
+                })
+              });
+            }
+          }
+        }
+      })
+
+      $anchors.on('click', function (event) {
         if ($toc.hasClass('toc-expanded')) {
           $toc.removeClass("toc-expanded");
           $expandButton.focus();
         }
       });
+
+      function filterPath(string) {
+        return string
+          .replace(/^\//, '')
+          .replace(/(index|default).[a-zA-Z]{3,4}$/, '')
+          .replace(/\/$/, '');
+      }
 
       function setActiveAnchor(id) {
         $('.active-target').removeClass('active-target');
