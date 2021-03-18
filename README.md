@@ -100,7 +100,10 @@
     lando drush updb -y
     # 3. Update active config to include and changes pending in `develop`.
     lando drush cim -y
-    # 4. Clear the cache.
+    # 4. Run gulp from theme root. (requires npm)
+    cd web/themes/custom/sfgovpl
+    gulp
+    # 5. Clear the cache.
     lando drush cr
     ```
 
