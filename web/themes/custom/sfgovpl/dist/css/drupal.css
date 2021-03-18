@@ -2264,6 +2264,14 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.vaccine-site__booking_box div {
+  margin-bottom: 15px;
+}
+
+.vaccine-site__booking_box > div:last-child {
+  margin-bottom: 0;
+}
+
 @media screen and (min-width: 768px) {
   .vaccine-site__booking_box {
     padding: 40px;
@@ -2280,14 +2288,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   }
 }
 
-[data-available="yes"] .vaccine-site__booking_box .field {
-  padding-left: 40px;
-}
-
-[data-available="yes"] .vaccine-site__booking_box .vaccine-site__booking_info {
-  padding-top: 10px;
-}
-
 [data-available="no"] .vaccine-site__booking_box {
   background: url("/themes/custom/sfgovpl/src/img/close-red.svg") no-repeat 20px 25px #edf4f7;
 }
@@ -2298,60 +2298,46 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   }
 }
 
-[data-available="no"] .vaccine-site__booking_box .field {
+[data-available="no"] .vaccine-site__booking_box .box-item-indented,
+[data-available="yes"] .vaccine-site__booking_box .box-item-indented {
   padding-left: 40px;
-}
-
-[data-available="no"] .vaccine-site__booking_box .field:last-child {
-  margin-bottom: 0;
-}
-
-[data-available="no"] .vaccine-site__booking_box .vaccine-site__booking_info {
-  padding-top: 10px;
-}
-
-[data-available="no"] .vaccine-site__booking_box .vaccine-site__phone {
-  padding-left: 40px;
-}
-
-.vaccine-site__booking_box .sfgov-cta-button__container {
-  text-align: center;
 }
 
 @media screen and (min-width: 768px) {
-  .vaccine-site__booking_box .sfgov-cta-button__container {
-    text-align: left;
+  [data-available="yes"] .vaccine-site__booking_box .vaccine-site__booking-button,
+  [data-available="yes"] .vaccine-site__booking_box .vaccine-site__phone {
     padding-left: 40px;
   }
 }
 
+.vaccine-site__booking_box .vaccine-site__booking-button {
+  text-align: center;
+}
+
 @media screen and (min-width: 768px) {
-  .vaccine-site__booking_box .sfgov-cta-button__container.no-pad {
-    padding-left: 0;
+  .vaccine-site__booking_box .vaccine-site__booking-button {
+    text-align: left;
   }
 }
 
-.vaccine-site__booking_box .sfgov-cta-button__container a {
+.vaccine-site__booking_box .vaccine-site__booking-button a {
   display: block;
 }
 
 @media screen and (min-width: 768px) {
-  .vaccine-site__booking_box .sfgov-cta-button__container a {
+  .vaccine-site__booking_box .vaccine-site__booking-button a {
     display: inline-block;
   }
 }
 
-.vaccine-site__booking_box .sfgov-cta-button__container + .vaccine-site__phone {
-  padding-top: 20px;
+.vaccine-site__booking_box .vaccine-site__booking-button + .vaccine-site__phone {
   text-align: center;
 }
 
-.vaccine-site__booking_box .vaccine-site__phone {
-  margin-bottom: 0px;
-}
-
-.vaccine-site__booking_info + .sfgov-cta-button__container {
-  margin-top: 20px;
+@media screen and (min-width: 768px) {
+  .vaccine-site__booking_box .vaccine-site__booking-button + .vaccine-site__phone {
+    text-align: left;
+  }
 }
 
 .vaccine-filter__empty {
