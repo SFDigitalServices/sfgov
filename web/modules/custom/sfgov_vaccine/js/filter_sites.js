@@ -123,10 +123,16 @@
             let language_other_test = null;
 
             if (language_selected !== "en") {
-              let language_other_regExtest = new RegExp("rt", "ig");
-              language_other_test = $(this)
-                .attr("data-language")
-                .match(language_other_regExtest);
+              if (language_selected !== "asl") {
+                let language_other_regExtest = new RegExp("rt", "ig");
+                language_other_test = $(this)
+                  .attr("data-language")
+                  .match(language_other_regExtest);
+              } else {
+                language_other_test = $(this)[0].hasAttribute(
+                  "data-remote-asl"
+                );
+              }
             }
 
             const language_regExTest = new RegExp(language_selected, "ig");
