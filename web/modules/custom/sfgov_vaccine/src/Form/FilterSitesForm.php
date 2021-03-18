@@ -94,7 +94,7 @@ class FilterSitesForm extends FormBase {
     $settings_languages = $this->settings('languages');
     $options_languages = [];
     foreach ($settings_languages as $key => $value) {
-      $options_languages[$key] = $this->t($value);
+      $options_languages[$key] = $this->t($value['filter_label']);
     }
 
     $form['container']['toggle']['items']['language'] = [
