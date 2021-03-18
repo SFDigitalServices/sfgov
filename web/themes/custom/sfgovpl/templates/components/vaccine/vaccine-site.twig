@@ -9,21 +9,13 @@
     </div>
   {% endif %}
 
-  <div class="vaccine-site__eligibility-availability">
-    {# Open to .. #}
-    {% if result.restrictions_text %}
-      <div class="vaccine-site__restrictions notranslate">
-        {# Raw tag is used here because this field can contain HTML. #}
-        <label>{{ result.restrictions_text|raw }}</label>
-      </div>
-    {% endif %}
-    {# 65 and over, etc #}
-    <div class="vaccine-site__eligibilities notranslate">
-      {% for eligibility in result.eligibilities %}
-        <span class="vaccine-site__eligibility">{{ eligibility }}</span>
-      {% endfor %}
+  {# Open to .. #}
+  {% if result.restrictions_text %}
+    <div class="vaccine-site__restrictions notranslate">
+      {# Raw tag is used here because this field can contain HTML. #}
+      <label>{{ result.restrictions_text|raw }}</label>
     </div>
-  </div>
+  {% endif %}
 
   {# Languages #}
   {% if result.languages %}

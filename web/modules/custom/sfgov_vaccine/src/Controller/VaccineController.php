@@ -153,23 +153,6 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Prepare each site's data-eligibility value.
-   */
-  private function getSiteEligibilityKeys($site_data, $group, $extra) {
-    $keys = [];
-    $site_data_group = $site_data[$group];
-    foreach ($site_data_group as $data_key => $boolean) {
-      if ($boolean === TRUE && $data_key != 'info') {
-        $short_key = $this->settings($group . '.' . $data_key . '.short_key');
-        array_push($keys, $short_key);
-      }
-    }
-    array_push($keys, $extra);
-
-    return $keys;
-  }
-
-  /**
    * Prepare each site's data-language value.
    */
   private function getSiteLanguageKeys($access_data) {
@@ -206,22 +189,6 @@ class VaccineController extends ControllerBase {
       }
     }
 
-    return $printed;
-  }
-
-  /**
-   * Prepare each site's eligibility text.
-   */
-  private function getSiteEligibilityText($site_data, $group) {
-    $printed = [];
-    $site_data_group = $site_data[$group];
-    foreach ($site_data_group as $data_key => $boolean) {
-      $text = $this->settings($group . '.' . $data_key . '.text');
-      if ($boolean === TRUE && $data_key != 'info' && isset($text)) {
-        $printed_value = $this->t($text);
-        array_push($printed, $printed_value);
-      }
-    }
     return $printed;
   }
 
@@ -278,8 +245,6 @@ class VaccineController extends ControllerBase {
     $results = [];
     foreach ($sites as $site_id => $site_data) {
 
-      $eligibility_keys = $this->getSiteEligibilityKeys($site_data, 'eligibility', 'all');
-      $eligibility_text = $this->getSiteEligibilityText($site_data, 'eligibility');
       $language_keys = $this->getSiteLanguageKeys($site_data['access']);
       $language_text = $this->getSiteLanguageText($site_data['access']);
       $access_mode_keys = $this->getSiteAccessModeKeys($site_data);
@@ -329,14 +294,12 @@ class VaccineController extends ControllerBase {
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
           'data-remote-asl' => $language_text['remote_asl'],
           'data-access-mode' => implode('-', $access_mode_keys),
-          'data-eligibility' => implode('-', $eligibility_keys),
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions_text' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
         'languages' => $language_text['printed_languages'],
-        'eligibilities' => $eligibility_text,
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,
         'available' => $available,
