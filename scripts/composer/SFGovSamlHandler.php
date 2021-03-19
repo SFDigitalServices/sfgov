@@ -12,7 +12,13 @@ class SFGovSamlHandler
   }
 
   public static function copyDependencies(Event $event) 
-  {
+  { 
+    if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+      echo 'pantheon environment:' . $_ENV['PANTHEON_ENVIRONMENT'];   
+    } else {
+      echo 'no pantheon environment var';
+    }
+
     $root = static::getDrupalRoot(getcwd());
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
 
