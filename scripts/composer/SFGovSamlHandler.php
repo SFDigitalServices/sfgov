@@ -13,10 +13,10 @@ class SFGovSamlHandler
 
   public static function copyDependencies(Event $event) 
   { 
-    if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-      echo 'pantheon environment:' . $_ENV['PANTHEON_ENVIRONMENT'];   
+    if (isset($_ENV['TERMINUS_ENV'])) {
+      echo 'terminus environment:' . $_ENV['TERMINUS_ENV'];   
     } else {
-      echo 'no pantheon environment var';
+      echo 'no terminus environment var';
     }
 
     $root = static::getDrupalRoot(getcwd());
