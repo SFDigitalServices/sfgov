@@ -136,8 +136,7 @@
     "prefer-stable": true,
     "autoload": {
         "classmap": [
-            "scripts/composer/ScriptHandler.php",
-            "scripts/composer/SFGovSamlHandler.php"
+            "scripts/composer/ScriptHandler.php"
         ]
     },
     "scripts": {
@@ -152,11 +151,11 @@
         "prepare-for-pantheon": "DrupalProject\\composer\\ScriptHandler::prepareForPantheon",
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "SFGovSaml\\SFGovSamlHandler::copyDependencies"
+            "@php web/private/scripts/saml/copy_saml_dependencies.php"
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "SFGovSaml\\SFGovSamlHandler::copyDependencies"
+            "@php web/private/scripts/saml/copy_saml_dependencies.php"
         ],
         "post-create-project-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
