@@ -19,8 +19,9 @@
   $metadata_exists = file_exists($metadata_dir_source);
 
   if ($config_exists && $metadata_exists) {
-    exec(escapeshellcmd('cp -a ' . $config_dir_source . '/. ' . $config_dir_dest));
-    exec(escapeshellcmd('cp -a ' . $metadata_dir_source . '/. ' . $metadata_dir_dest));
+    // the /code/vendor directory is write protected on pantheon, hard link instead
+    symlink($config_dir_source, $config_dir_dest);
+    symlink($metadata_dir_source, $metadata_dir_dest);
   } else { // debug
     echo "Files not found\n";
     echo "config_dir_source: " . $config_dir_source . "\n";
