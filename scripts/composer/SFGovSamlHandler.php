@@ -28,11 +28,11 @@ class SFGovSamlHandler
     $metadata_dir_source = $sso_dir . '/metadata';
     $metadata_dir_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/metadata';
 
-    echo "config_dir_source: " . $config_dir_source;
-    echo "config_dir_dest: " . $config_dir_dest;
+    echo "config_dir_source: " . $config_dir_source . "\n";
+    echo "config_dir_dest: " . $config_dir_dest . "\n";
 
-    echo "metadata_dir_source: " . $metadata_dir_source;
-    echo "metadata_dir_dest: " . $metadata_dir_dest;
+    echo "metadata_dir_source: " . $metadata_dir_source . "\n";
+    echo "metadata_dir_dest: " . $metadata_dir_dest . "\n";
 
     if (file_exists($config_dir_source) && file_exists($metadata_dir_source)) {
       exec(escapeshellcmd('cp -a ' . $config_dir_source . '/. ' . $config_dir_dest));
