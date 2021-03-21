@@ -109,6 +109,14 @@ jobs:
           # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
 
       - run:
+          name: symlink saml secrets
+          command: |
+            mkdir -p ./web/sites/default/files/private/saml/test/config
+            mkdir -p ./web/sites/default/files/private/saml/test/metadata
+            mkdir -p ./web/sites/default/files/private/saml/live/config
+            mkdir -p ./web/sites/default/files/private/saml/live/metadata
+
+      - run:
           name: run composer install again to get dev dependencies
           command: composer install
 

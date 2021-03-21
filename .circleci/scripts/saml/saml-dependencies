@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -eo pipefail
+
+samlTestConfig=$(pwd)"/web/sites/default/files/private/saml/test/config"
+samlTestMetadata=$(pwd)"/web/sites/default/files/private/saml/test/metadata"
+samlLiveConfig=$(pwd)"/web/sites/default/files/private/saml/live/config"
+samlLiveMetadata=$(pwd)"/web/sites/default/files/private/saml/live/metadata"
+
+samlConfig=$(pwd)"/vendor/simplesamlphp/simplesamlphp/config"
+samlMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata"
+
+# create necessary directories
+mkdir -p $samlTestConfig
+mkdir -p $samlTestMetadata
+mkdir -p $samlLiveConfig
+mkdir -p $samlLiveMetadata
+
+linkConfig=$samlTestConfig
+linkMetadata=$samlTestMetadata
+
+# symlink
+if [[ $TERMINUS_ENV == "live" ]] ; then
+  linkConfig=$samlLiveConfig
+  linkMetadata=$samlLiveMetadata
+fi
+
+ln -s $linkConfig $samlConfig
+ln -s $linkMetadata $samlMetadata
