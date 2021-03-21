@@ -28,7 +28,10 @@ class SFGovSamlHandler
     $metadata_dir_source = $sso_dir . '/metadata';
     $metadata_dir_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/metadata';
 
-    if (file_exists($config_dir_source) && file_exists($metadata_dir_source)) {
+    $config_exists = file_exists($config_dir_source);
+    $metadata_exists = file_exists($metadata_dir_source);
+
+    if ($config_exists && $metadata_exists) {
       exec(escapeshellcmd('cp -a ' . $config_dir_source . '/. ' . $config_dir_dest));
       exec(escapeshellcmd('cp -a ' . $metadata_dir_source . '/. ' . $metadata_dir_dest));
     } else {
@@ -37,8 +40,8 @@ class SFGovSamlHandler
       echo "config_dir_dest: " . $config_dir_dest . "\n";
       echo "metadata_dir_source: " . $metadata_dir_source . "\n";
       echo "metadata_dir_dest: " . $metadata_dir_dest . "\n";
-      echo "config: " . $config_exists . "\n";
-      echo "metadata: " . $metadata_exists . "\n";
+      echo "config: " . (int) $config_exists . "\n";
+      echo "metadata: " . (int) $metadata_exists . "\n";
     }
   }
 }
