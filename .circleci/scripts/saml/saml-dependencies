@@ -10,6 +10,10 @@ samlLiveMetadata=$(pwd)"/web/sites/default/files/private/saml/live/metadata"
 samlConfig=$(pwd)"/vendor/simplesamlphp/simplesamlphp/config"
 samlMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata"
 
+# remove existing simplesamlphp config and metadata directories
+rm -vrf $samlConfig
+rm -vrf $samlMetadata
+
 # create necessary directories
 mkdir -p $samlTestConfig
 mkdir -p $samlTestMetadata
