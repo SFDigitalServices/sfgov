@@ -19,11 +19,11 @@ mkdir -p $samlLiveMetadata
 linkConfig=$samlTestConfig
 linkMetadata=$samlTestMetadata
 
-# symlink
 if [[ $TERMINUS_ENV == "live" ]] ; then
   linkConfig=$samlLiveConfig
   linkMetadata=$samlLiveMetadata
 fi
 
+# symlink config and metadata
 ln -s $linkConfig $samlConfig
 ln -s $linkMetadata $samlMetadata
