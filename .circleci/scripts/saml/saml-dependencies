@@ -15,20 +15,20 @@ rm -vrf $samlConfig
 rm -vrf $samlMetadata
 rm -vrf $(pwd)"/web/private/saml" # remove residual saml things from pantheon codebase
 
-# create necessary directories
+# create necessary (empty) directories to symlink
 mkdir -p $samlTestConfig
 mkdir -p $samlTestMetadata
 mkdir -p $samlLiveConfig
 mkdir -p $samlLiveMetadata
 
-linkConfig=$samlTestConfig
-linkMetadata=$samlTestMetadata
+# linkConfig=$samlTestConfig
+# linkMetadata=$samlTestMetadata
 
-if [[ $TERMINUS_ENV == "live" ]] ; then
-  linkConfig=$samlLiveConfig
-  linkMetadata=$samlLiveMetadata
-fi
+# if [[ $TERMINUS_ENV == "live" ]] ; then
+#   linkConfig=$samlLiveConfig
+#   linkMetadata=$samlLiveMetadata
+# fi
 
-# symlink config and metadata
-ln -s $linkConfig $samlConfig
-ln -s $linkMetadata $samlMetadata
+# # symlink config and metadata
+# ln -s $linkConfig $samlConfig
+# ln -s $linkMetadata $samlMetadata
