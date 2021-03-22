@@ -161,7 +161,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         }
       }
     }
-    return $redirect_url ? $redirect_url : NULL;
+    return isset($redirect_url) ? $redirect_url : NULL;
   }
 
   /**
@@ -183,13 +183,13 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $redirect = \Drupal::service('redirect.repository')->findMatchingRedirect($current_path_alias);
 
     // If the redirect exists, set the url to the destination.
-    if ($redirect) {
+    if ($redirect instanceof Redirect) {
       $redirect_value = $redirect->redirect_redirect->getValue();
       $redirect_uri = $redirect_value[0]['uri'];
       $redirect_url = Url::fromUri($redirect_uri)->toString();
     }
 
-    return $redirect_url ? $redirect_url : NULL;
+    return isset($redirect_url) ? $redirect_url : NULL;
   }
 
 }
