@@ -12,15 +12,17 @@ samlLiveMetadata="files/private/saml/live/metadata"
 
 syncConfig=$samlTestConfig
 syncMetadata=$samlTestMetadata
+syncEnv="test"
 
 if [[ $TERMINUS_ENV == "live" ]] ; then
   syncConfig=$samlLiveConfig
   syncMetadata=$samlLiveMetadata
+  syncEnv="live"
 fi
 
 # remove existing config and metadata directories
 rm -vrf $samlConfig
 rm -vrf $samlMetadata
 
-terminus rsync $TERMINUS_SITE.live:$syncConfig $samlConfig
-terminus rsync $TERMINUS_SITE.live:$syncMetadata $samlMetadata
+terminus rsync $TERMINUS_SITE.$syncEnv:$syncConfig $samlConfig
+terminus rsync $TERMINUS_SITE.$syncEnv:$syncMetadata $samlMetadata
