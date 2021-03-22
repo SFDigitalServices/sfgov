@@ -1,8 +1,33 @@
 parameters:
-   # Configure Cross-Site HTTP requests (CORS).
-   # Read https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-   # for more information about the topic in general.
-   # Note: By default the configuration is disabled.
+  session.storage.options:
+    # Default ini options for sessions.
+    #
+    # Some distributions of Linux (most notably Debian) ship their PHP
+    # installations with garbage collection (gc) disabled. Since Drupal depends
+    # on PHP's garbage collection for clearing sessions, ensure that garbage
+    # collection occurs by using the most common settings.
+    # @default 1
+    gc_probability: 1
+    # @default 100
+    gc_divisor: 100
+    #
+    # Set session lifetime (in seconds), i.e. the time from the user's last
+    # visit to the active session may be deleted by the session garbage
+    # collector. When a session is deleted, authenticated users are logged out,
+    # and the contents of the user's $_SESSION variable is discarded.
+    # @default 200000
+    gc_maxlifetime: 200000
+    #
+    # Set session cookie lifetime (in seconds), i.e. the time from the session
+    # is created to the cookie expires, i.e. when the browser is expected to
+    # discard the cookie. The value 0 means "until the browser is closed".
+    # @default 2000000
+    cookie_lifetime: 2000000
+
+    # Configure Cross-Site HTTP requests (CORS).
+    # Read https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+    # for more information about the topic in general.
+    # Note: By default the configuration is disabled.
   cors.config:
     enabled: true
     # Specify allowed headers, like 'x-allowed-header'.
