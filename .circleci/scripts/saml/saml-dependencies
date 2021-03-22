@@ -18,5 +18,9 @@ if [[ $TERMINUS_ENV == "live" ]] ; then
   syncMetadata=$samlLiveMetadata
 fi
 
+# remove existing config and metadata directories
+rm -vrf $samlConfig
+rm -vrf $samlMetadata
+
 terminus rsync $TERMINUS_SITE.live:$syncConfig $samlConfig
 terminus rsync $TERMINUS_SITE.live:$syncMetadata $samlMetadata
