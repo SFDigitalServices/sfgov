@@ -104,9 +104,9 @@ jobs:
           command: composer -n build-assets
 
       - run:
-          name: symlink saml secrets
+          name: sync saml dependencies
           command: ./.circleci/scripts/saml/saml-dependencies
-          
+
       - run:
           name: prepare database for site-under test
           command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
