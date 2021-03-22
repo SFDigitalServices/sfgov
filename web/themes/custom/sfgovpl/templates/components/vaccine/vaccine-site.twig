@@ -2,18 +2,19 @@
   <h3 class="vaccine-site__title notranslate">
     {{ result.site_name }}
   </h3>
-  {# address_url #}
-  {% if result.address_url %}
-    <div class="vaccine-site__address notranslate icon">
-      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
-    </div>
-  {% endif %}
 
   {# Open to .. #}
   {% if result.restrictions_text %}
     <div class="vaccine-site__restrictions notranslate">
       {# Raw tag is used here because this field can contain HTML. #}
-      <label>{{ result.restrictions_text|raw }}</label>
+      {{ result.restrictions_text|raw }}
+    </div>
+  {% endif %}
+
+  {# address_url #}
+  {% if result.address_url %}
+    <div class="vaccine-site__address notranslate icon">
+      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
     </div>
   {% endif %}
 
