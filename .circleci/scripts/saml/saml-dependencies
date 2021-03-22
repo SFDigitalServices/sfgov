@@ -13,13 +13,12 @@ samlMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata"
 # remove existing simplesamlphp config and metadata directories
 rm -vrf $samlConfig
 rm -vrf $samlMetadata
-rm -vrf $(pwd)"/web/private/saml" # remove residual saml things from pantheon codebase
 
 # create necessary (empty) directories to symlink
-mkdir -p $samlTestConfig
-mkdir -p $samlTestMetadata
-mkdir -p $samlLiveConfig
-mkdir -p $samlLiveMetadata
+mkdir -vp $samlTestConfig
+mkdir -vp $samlTestMetadata
+mkdir -vp $samlLiveConfig
+mkdir -vp $samlLiveMetadata
 
 linkConfig=$samlTestConfig
 linkMetadata=$samlTestMetadata
@@ -30,5 +29,5 @@ if [[ $TERMINUS_ENV == "live" ]] ; then
 fi
 
 # symlink config and metadata
-ln -sfn $linkConfig $samlConfig
-ln -sfn $linkMetadata $samlMetadata
+ln -vsfn $linkConfig $samlConfig
+ln -vsfn $linkMetadata $samlMetadata
