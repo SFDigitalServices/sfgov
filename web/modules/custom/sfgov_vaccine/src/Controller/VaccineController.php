@@ -236,6 +236,8 @@ class VaccineController extends ControllerBase {
       'a',
       'em',
       'strong',
+      'i',
+      'b',
       'ul',
       'ol',
       'li',
