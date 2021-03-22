@@ -2,32 +2,21 @@
 
 set -eo pipefail
 
-samlTestConfig=$(pwd)"/web/sites/default/files/private/saml/test/config"
-samlTestMetadata=$(pwd)"/web/sites/default/files/private/saml/test/metadata"
-samlLiveConfig=$(pwd)"/web/sites/default/files/private/saml/live/config"
-samlLiveMetadata=$(pwd)"/web/sites/default/files/private/saml/live/metadata"
-
 samlConfig=$(pwd)"/vendor/simplesamlphp/simplesamlphp/config"
 samlMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata"
 
-# remove existing simplesamlphp config and metadata directories
-rm -vrf $samlConfig
-rm -vrf $samlMetadata
+samlTestConfig="files/private/saml/test/config"
+samlTestMetadata="file/private/saml/test/metadata"
+samlLiveConfig="files/private/saml/live/config"
+samlLiveMetadata="files/private/saml/live/metadata"
 
-# create necessary (empty) directories to symlink
-mkdir -vp $samlTestConfig
-mkdir -vp $samlTestMetadata
-mkdir -vp $samlLiveConfig
-mkdir -vp $samlLiveMetadata
-
-linkConfig=$samlTestConfig
-linkMetadata=$samlTestMetadata
+syncConfig=$samlTestConfig
+syncMetadata=$samlTestMetadata
 
 if [[ $TERMINUS_ENV == "live" ]] ; then
-  linkConfig=$samlLiveConfig
-  linkMetadata=$samlLiveMetadata
+  syncConfig=$samlLiveConfig
+  syncMetadata=$samlLiveMetadata
 fi
 
-# symlink config and metadata
-ln -vsfn $linkConfig $samlConfig
-ln -vsfn $linkMetadata $samlMetadata
+terminus rsync $TERMINUS_SITE.live:$syncConfig $samlConfig
+terminus rsync $TERMINUS_SITE.live:$syncMetadata $samlMetadata
