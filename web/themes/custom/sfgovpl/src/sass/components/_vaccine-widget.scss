@@ -7,7 +7,6 @@
 }
 
 .vaccine-filter__body {
-
   @include media($medium-screen) {
     padding-top: 60px;
   }
@@ -35,16 +34,16 @@
 }
 
 .vaccine-filter-form {
-   [data-drupal-selector="edit-single-checkboxes"] {
-     margin-bottom: 50px;
+  [data-drupal-selector="edit-single-checkboxes"] {
+    margin-bottom: 50px;
 
-     .js-form-type-checkbox label {
+    .js-form-type-checkbox label {
       @include fs-body-short;
-       margin-bottom: 0;
+      margin-bottom: 0;
 
-       &::before {
-         top: 2px;
-       }
+      &::before {
+        top: 2px;
+      }
     }
   }
 
@@ -65,11 +64,37 @@
   }
 }
 
+.vaccine-filter__empty {
+  display: none;
+
+  h4 {
+    @include fs-title-5;
+  }
+}
+
+// Vaccine Site/Card.
 .vaccine-site {
+  @include rubik;
   margin-bottom: 40px;
+  padding: 17px;
+  background: $c-white;
+  border: 3px solid $c-grey-3;
+  border-radius: $radius;
+  color: $c-slate;
+  display: block;
+  text-decoration: none;
+
+  @include media($medium-screen) {
+    padding: 35px;
+  }
 
   &:last-child {
     margin-bottom: 100px;
+  }
+
+  strong,
+  b {
+    @include fs-body-bold;
   }
 
   label {
@@ -78,33 +103,49 @@
   }
 
   .field {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+  }
+
+  .icon {
+    background-size: 20px 20px;
+    background-position: 0 4px;
+    padding-left: 38px;
   }
 }
 
 .vaccine-site__title {
   @include fs-title-3-mobile;
-  margin: 0;
+  margin: 0 0 40px 0;
 }
 
 .vaccine-site__address {
+  @include background-image("icons/location-slate.svg");
+  margin-bottom: 20px;
+
   a {
-    @include link-colors($c-light-slate, $c-bright-blue);
+    @include link-colors($c-bright-blue);
   }
 }
 
-.vaccine-site__eligibility-availability {
-  margin-bottom: 9px;
+.vaccine-site__languages {
+  @include background-image("icons/globe-slate.svg");
+  margin-bottom: 20px;
 }
 
-.vaccine-site__eligibility {
-  @include fs-small-text;
-  background: $c-grey-2;
-  display: inline-block;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  padding: 3px 8px;
-  word-break: keep-all;
+.vaccine-site__restrictions {
+  background: $c-yellow-1;
+  padding: 20px;
+  margin-bottom: 40px;
+
+  @include media($medium-screen) {
+    padding: 40px;
+  }
+}
+
+.vaccine-site__access-mode {
+  @include background-image("icons/accessibility-slate.svg");
+  padding-left: 38px;
+  margin-bottom: 20px;
 }
 
 .vaccine-site__booking_box {
@@ -112,74 +153,72 @@
   margin-top: 40px;
   padding: 20px;
 
-  strong {
-    @include fs-body-bold;
+  div {
+    margin-bottom: 15px;
+  }
+
+  > div:last-child {
+    margin-bottom: 0;
   }
 
   @include media($medium-screen) {
     padding: 40px;
   }
 
-  &.yes {
-    @include background-image('check-green.svg', 20px 25px, $c-blue-1);
+  [data-available="yes"] & {
+    @include background-image("check-green.svg", 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
-    }
-
-    .field {
-      padding-left: 40px;
-    }
-    .vaccine-site__booking_info {
-      padding-top: 10px;
     }
   }
 
-  &.no {
-    @include background-image('close-red.svg', 20px 25px, $c-blue-1);
+  [data-available="no"] & {
+    @include background-image("close-red.svg", 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
     }
+  }
 
-    .field {
+  [data-available="no"] &,
+  [data-available="yes"] & {
+    .box-item-indented {
       padding-left: 40px;
+    }
+  }
 
-      &:last-child {
-        margin-bottom: 0;
+  [data-available="yes"] & {
+    .vaccine-site__booking-button,
+    .vaccine-site__phone {
+      @include media($medium-screen) {
+        padding-left: 40px;
       }
     }
-
-    .vaccine-site__booking_info {
-      padding-top: 10px;
-    }
   }
-  .sfgov-cta-button__container {
+
+  .vaccine-site__booking-button {
     text-align: center;
 
     @include media($medium-screen) {
       text-align: left;
-      padding-left: 40px;
     }
-    &.no-pad {
+
+    a {
+      display: block;
+
       @include media($medium-screen) {
-        padding-left: 0;
+        display: inline-block;
       }
     }
-  }
-  a {
-    display: block;
 
-    @include media($medium-screen) {
-      display: inline-block;
+    + .vaccine-site__phone {
+      text-align: center;
+
+      @include media($medium-screen) {
+        text-align: left;
+      }
     }
-  }
-}
-
-.vaccine-site__booking_info {
-
-  + .sfgov-cta-button__container {
-    margin-top: 20px;
   }
 }
 

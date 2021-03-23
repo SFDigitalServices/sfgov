@@ -52,33 +52,7 @@
           wheelchair_chkBox.datatest = "";
         }
 
-        let eligibily_datatests = drupalSettings.sfgov_vaccine.eligibility_keys;
-        let eligibility_select = [];
-
-        for (let i in eligibily_datatests) {
-          let eligibility_option = eligibily_datatests[i];
-
-          // No eligibility selected.
-          if ($(`[name^="eligibility"]:checked`).length === 0) {
-            eligibility_select.push("all");
-          }
-
-          // this option in the array selected
-          else if (
-            $(`[name="eligibility[${eligibility_option}]"]`).is(":checked") ===
-            true
-          ) {
-            eligibility_select.push(eligibility_option);
-
-            // this option in the array not selected
-          } else {
-            eligibility_select.push("none");
-          }
-        }
-
-        // `eligibility_select` should be an an array of strings.
-        // ["none", "hw", "none", "none", "none", "none"]
-        // ["all", "all", "all", "all", "all", "all"]
+        // Test and filter.
         $(".vaccine-site")
           .hide()
           .removeClass("included")
@@ -146,29 +120,10 @@
               "ig"
             );
 
-            // "Eligibility requirements" checkboxes.
-            $(this).removeClass("eligible");
-            for (const eligibility_option in eligibily_datatests) {
-              // `eligibility_regExTest` should be a string /hw/gi, /none/gi, /all/gi
-              let eligibility_regExTest = new RegExp(
-                eligibility_select[eligibility_option],
-                "ig"
-              );
-
-              const eligibility_test = $(this)
-                .attr("data-eligibility")
-                .match(eligibility_regExTest);
-
-              if (eligibility_test) {
-                $(this).addClass("eligible");
-              }
-            }
-
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
-              $(this).hasClass("eligible") &&
               $(this).hasClass("language-match") &&
               $(this).hasClass(class_match_available);
 
