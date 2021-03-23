@@ -115,6 +115,10 @@ jobs:
           command: composer -n build-assets
 
       - run:
+          name: build theme assets
+          command: ./scripts/custom/build-theme-assets.sh
+
+      - run:
           name: prepare database for site-under test
           command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
           # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
