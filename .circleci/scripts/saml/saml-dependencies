@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eo pipefail
+
+samlConfig=$(pwd)"/vendor/simplesamlphp/simplesamlphp/config"
+samlMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata"
+
+samlTestConfig="files/private/saml/test/config/"
+samlTestMetadata="files/private/saml/test/metadata/"
+samlLiveConfig="files/private/saml/live/config/"
+samlLiveMetadata="files/private/saml/live/metadata/"
+
+syncConfig=$samlTestConfig
+syncMetadata=$samlTestMetadata
+syncEnv="test"
+
+if [[ $TERMINUS_ENV == "live" ]] ; then
+  syncConfig=$samlLiveConfig
+  syncMetadata=$samlLiveMetadata
+  syncEnv="live"
+fi
+
+mkdir -vp $samlConfig
+mkdir -vp $samlMetadata
+
+terminus rsync $TERMINUS_SITE.$syncEnv:$syncConfig $samlConfig
+terminus rsync $TERMINUS_SITE.$syncEnv:$syncMetadata $samlMetadata
