@@ -68,18 +68,24 @@ class FilterSitesForm extends FormBase {
         'data-filter-toggle-content' => TRUE,
       ],
     ];
+
     $form['container']['toggle']['items'] = [
       '#type' => 'container',
     ];
+
+    // Single checkboxes.
     $form['container']['toggle']['items']['single_checkboxes'] = [
       '#type' => 'container',
     ];
+
+    // Single checkboxes - restrictions.
     $form['container']['toggle']['items']['single_checkboxes']['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.restrictions')),
       '#default_value' => TRUE,
     ];
 
+    // Single checkboxes - available.
     $form['container']['toggle']['items']['single_checkboxes']['available'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.available')),
@@ -91,6 +97,7 @@ class FilterSitesForm extends FormBase {
       '#default_value' => FALSE,
     ];
 
+    // Languages.
     $settings_languages = $this->settings('languages');
     $options_languages = [];
     foreach ($settings_languages as $key => $value) {
@@ -106,6 +113,7 @@ class FilterSitesForm extends FormBase {
       '#multiple' => FALSE,
     ];
 
+    // Access mode.
     $settings_access_mode = $this->settings('access_mode');
     $options_access_mode = [];
     foreach ($settings_access_mode as $key => $value) {
@@ -125,6 +133,40 @@ class FilterSitesForm extends FormBase {
       '#multiple' => FALSE,
     ];
 
+    // Distance.
+    $form['container']['toggle']['items']['distance_from'] = [
+      '#type' => 'container',
+    ];
+
+    $settings_distance = $this->settings('distance');
+    $options_distance = [];
+    foreach ($settings_distance as $key => $set) {
+      $value = $set['value'];
+      $text = $set['text'];
+      $options_distance[$value] = $this->t($text);
+    }
+
+    $form['container']['toggle']['items']['distance_from']['distance'] = [
+      '#type' => 'select',
+      '#title' => $this->t($this->settings('form_strings.distance_label')),
+      '#options' => $options_distance,
+      '#default_value' => 'all',
+      '#multiple' => FALSE,
+    ];
+
+    $form['container']['toggle']['items']['distance_from']['from'] = [
+      '#markup' => '<span>from</span>'
+    ];
+
+    $form['container']['toggle']['items']['location'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t($this->settings('form_strings.location_label')),
+      '#title_display' => 'invisible',
+    ];
+
+    $form['container']['toggle']['items']['location']['#attributes']['placeholder'] = $this->t($this->settings('form_strings.location_label'));
+
+    // Submit.
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t($this->settings('form_strings.submit_label')),
