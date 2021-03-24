@@ -13,6 +13,7 @@
       const sectionCount = $(".vaccine-filter__count");
       const leftColumn = $(".group--left");
       const submitButton = $(".vaccine-filter-form #edit-submit", context);
+      const locationInput = $("[name=location]");
 
       // Other variables.
       let filterByAvailability = false;
@@ -120,6 +121,18 @@
               "ig"
             );
 
+            // Distance.
+            const distance = getDistance(
+              locationInput.data("lat"), //input lat
+              locationInput.data("lng"), //input long
+              $(this).data("lat"), // this lat
+              $(this).data("lng") // this lng
+            );
+
+            $(this)
+              .find("span.distance")
+              .text(distance > 1 ? distance : "");
+
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
@@ -157,6 +170,28 @@
 
       function hideSites() {
         $(".vaccine-filter__sites").hide();
+      }
+
+      // @see https://en.wikipedia.org/wiki/Haversine_formula
+      // @see https://simplemaps.com/resources/location-distance
+      function getDistance(lat1, lng1, lat2, lng2) {
+        function deg2rad(deg) {
+          return deg * (Math.PI / 180);
+        }
+        function square(x) {
+          return Math.pow(x, 2);
+        }
+        const r = 6371; // radius of the earth in km
+        lat1 = deg2rad(lat1);
+        lat2 = deg2rad(lat2);
+        const lat_dif = lat2 - lat1;
+        const lng_dif = deg2rad(lng2 - lng1);
+        const a =
+          square(Math.sin(lat_dif / 2)) +
+          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2));
+        let d = 2 * r * Math.asin(Math.sqrt(a));
+
+        return d * 0.621371; // Return miles.
       }
 
       // This is the main function.
