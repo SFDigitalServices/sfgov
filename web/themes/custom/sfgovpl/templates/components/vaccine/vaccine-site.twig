@@ -3,6 +3,8 @@
     {{ result.site_name }}
   </h3>
 
+  <span class="distance"></span>
+
   {# Open to .. #}
   {% if result.restrictions_text %}
     <div class="vaccine-site__restrictions notranslate">
@@ -11,10 +13,10 @@
     </div>
   {% endif %}
 
-  {# address_url #}
-  {% if result.address_url %}
+  {# Address. #}
+  {% if result.result.location.url %}
     <div class="vaccine-site__address notranslate icon">
-      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+      <a href="{{ result.location.url }}">{{ result.location.address }}</a>
     </div>
   {% endif %}
 
