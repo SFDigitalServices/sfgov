@@ -4,6 +4,7 @@
   Drupal.behaviors.sfgovToc = {
     attach: function(context, settings) {
       const $toc = $('.sfgov-toc', context)
+      const $sticky = $toc.find('.sfgov-toc-sticky')
 
       if (!$toc.length) {
         return;
@@ -29,6 +30,21 @@
             $expandButton.focus();
           }
         }
+      });
+
+      $(window, context).on('load', function() {
+        var then = 0;
+        var now = 0;
+        $(window, context).once('scroll-toc').on('scroll', function() {
+          now = $(window, context).scrollTop();
+          if (then > now && now > 700) {
+            $sticky.addClass('show');
+          }
+          else {
+            $sticky.removeClass('show');
+          }
+          then = now;
+        });
       });
 
       const $anchors = $toc.find('a');

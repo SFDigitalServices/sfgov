@@ -8426,7 +8426,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   margin-top: 80px;
 }
 
-.page-node-type-report .sfgov-section--content h2:first-of-type, .page-node-type-report .sfgov-section--content h3:first-of-type {
+.page-node-type-report .sfgov-section--content h2:first-of-type {
   margin-top: 0;
 }
 
@@ -8462,14 +8462,27 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .sfgov-toc-sticky {
   border-bottom: 3px solid #e9e9e9;
+  -webkit-transition: opacity .5s, visibility .5s;
+  transition: opacity .5s, visibility .5s;
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.sfgov-toc-sticky.show {
   opacity: 1;
-  margin-left: -20px;
-  margin-right: -20px;
-  border-radius: 8px;
+  visibility: visible;
 }
 
 @media screen and (min-width: 768px) {
   .sfgov-toc-sticky {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    border-radius: 8px;
     border-bottom: 0;
     margin: 0;
   }
@@ -8509,7 +8522,6 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   top: 0;
   width: 100vw;
   right: -100vw;
-  max-width: 375px;
   height: 100%;
   z-index: 1000;
   display: -webkit-box;
@@ -8601,9 +8613,10 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
           justify-content: center;
   margin: 0;
   border-radius: 0;
+  outline: none;
 }
 
-.sfgov-toc-close-button:hover, .sfgov-toc-close-button:focus {
+.sfgov-toc-close-button:hover {
   background-color: #0c1464;
 }
 
