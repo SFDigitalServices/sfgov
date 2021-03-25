@@ -152,10 +152,7 @@ class FilterSitesForm extends FormBase {
       '#options' => $options_radius,
       '#default_value' => 'all',
       '#multiple' => FALSE,
-    ];
-
-    $form['container']['toggle']['items']['distance_from']['from'] = [
-      '#markup' => '<span>from</span>'
+      '#suffix' => '<span>from</span>'
     ];
 
     $form['container']['toggle']['items']['location'] = [
