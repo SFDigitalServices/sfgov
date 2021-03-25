@@ -12,6 +12,7 @@
       // Elements.
       const sectionCount = $(".vaccine-filter__count");
       const leftColumn = $(".group--left");
+      const sitesWrapper = $(".vaccine-filter__sites");
       const submitButton = $(".vaccine-filter-form #edit-submit", context);
 
       // Other variables.
@@ -126,20 +127,24 @@
 
             // Distance.
             $(this).addClass(class_match_radius);
-            const distance = getDistance(
-              locationInput[0].getAttribute("data-lat"), //input lat
-              locationInput[0].getAttribute("data-lng"), //input long
-              $(this).data("lat"), // this lat
-              $(this).data("lng") // this lng
-            );
+            if (userLocation) {
+              const distance = getDistance(
+                locationInput[0].getAttribute("data-lat"), //input lat
+                locationInput[0].getAttribute("data-lng"), //input long
+                $(this).data("lat"), // this lat
+                $(this).data("lng") // this lng
+              );
 
-            if (distance > radiusInput.val()) {
-              $(this).removeClass(class_match_radius);
+              if (distance > radiusInput.val()) {
+                $(this).removeClass(class_match_radius);
+              }
+              $(this)
+                .find(".distance")
+                .text(Math.round(distance * 10) / 10 + "mi");
+              $(this)[0].setAttribute("data-distance", distance);
+            } else {
+              $(this).find(".distance").text("");
             }
-
-            $(this)
-              .find("span.distance")
-              .text(userLocation ? Math.round(distance * 10) / 10 + "mi" : "");
 
             // Return list of matching sites.
             rtnData =
@@ -152,8 +157,19 @@
 
             return rtnData;
           })
+          .sort(function (a, b) {
+            let dataA = parseInt(a.getAttribute("data-order"), 10);
+            let dataB = parseInt(b.getAttribute("data-order"), 10);
+
+            if (userLocation) {
+              dataA = a.getAttribute("data-distance");
+              dataB = b.getAttribute("data-distance");
+            }
+            return dataA < dataB ? -1 : 1;
+          })
           .show()
-          .addClass("included");
+          .addClass("included")
+          .appendTo(sitesWrapper);
       }
 
       function showNoResultsMessage() {
