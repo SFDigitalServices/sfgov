@@ -292,17 +292,35 @@
   }
 
   .pac-item {
-    @include fs-small-text;
+    @include fs-body-short;
     border-top: 0;
     padding: 10px 4px;
     border-bottom: 3px solid #1c3e571a;
+    white-space: wrap;
+
+    &.pac-item-selected,
+    &:hover {
+      background: $c-blue-3;
+
+      .pac-icon {
+        @include background-image('icons/location-2.svg');
+      }
+    }
   }
 
   .pac-item-query {
     color: $c-slate;
     @include fs-body-short;
   }
+
   .pac-matched {
     @include fs-body-bold;
+  }
+
+  .pac-icon {
+    @include background-image('icons/location-slate.svg');
+    height: 24px;
+    width: 16px;
+    margin-top: 0;
   }
 }
