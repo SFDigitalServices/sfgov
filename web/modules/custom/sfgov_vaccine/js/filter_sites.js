@@ -161,13 +161,23 @@
             return rtnData;
           })
           .sort(function (a, b) {
-            let dataA = parseInt(a.getAttribute("data-order"), 10);
-            let dataB = parseInt(b.getAttribute("data-order"), 10);
+            const orderA = a.getAttribute("data-order");
+            const orderB = b.getAttribute("data-order");
 
+            let dataA = orderA;
+            let dataB = orderB;
+
+            // Sort by distance and then order if location is entered.
             if (userLocation) {
               dataA = a.getAttribute("data-distance");
               dataB = b.getAttribute("data-distance");
+
+              if (dataA === dataB) {
+                dataA = orderA;
+                dataB = orderB;
+              }
             }
+
             return dataA < dataB ? -1 : 1;
           })
           .show()
@@ -220,7 +230,7 @@
           Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2));
         let d = 2 * r * Math.asin(Math.sqrt(a));
 
-        return d * 0.621371; // Return miles.
+        return Math.round(d * 0.621371 * 10) / 10; // Return miles.
       }
 
       // This is the main function.
