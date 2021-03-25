@@ -274,3 +274,35 @@
     }
   }
 }
+
+// Google autocomplete dropdown.
+.pac-container {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+  border-radius: 8px;
+
+  padding: 15px 20px 60px;
+  &:after {
+    // Hide google logo.
+    display: none;
+  }
+
+  &[style] {
+    @include rubik;
+    @include fs-body-short;
+  }
+
+  .pac-item {
+    @include fs-small-text;
+    border-top: 0;
+    padding: 10px 4px;
+    border-bottom: 3px solid #1c3e571a;
+  }
+
+  .pac-item-query {
+    color: $c-slate;
+    @include fs-body-short;
+  }
+  .pac-matched {
+    @include fs-body-bold;
+  }
+}
