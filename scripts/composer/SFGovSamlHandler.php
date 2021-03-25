@@ -12,26 +12,36 @@ class SFGovSamlHandler
   }
 
   public static function copyDependencies(Event $event) 
-  {
+  { 
     $root = static::getDrupalRoot(getcwd());
+    $sso_dir = $root . '/sites/default/files/private/saml/test';
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
 
-    $config_dir_source = $root . '/private/saml/config';
+    if (isset($_ENV['TERMINUS_ENV']) && $_ENV['TERMINUS_ENV'] == 'live') {
+      echo 'terminus environment:' . $_ENV['TERMINUS_ENV'];
+      $sso_dir = $root . '/sites/default/files/private/saml/live';
+    }    
+
+    $config_dir_source = $sso_dir . '/config';
     $config_dir_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/config';
 
-    $config_file_source = $root . '/private/saml/simplesaml_config.php';
-    $config_file_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/config/config.php';
-
-    $metadata_dir_source = $root . '/private/saml/metadata';
+    $metadata_dir_source = $sso_dir . '/metadata';
     $metadata_dir_dest = $vendor_dir . '/simplesamlphp/simplesamlphp/metadata';
 
-    if (file_exists($config_dir_source)
-       && file_exists($config_file_source)
-       && file_exists($metadata_dir_source)
-    ) {
+    $config_exists = file_exists($config_dir_source);
+    $metadata_exists = file_exists($metadata_dir_source);
+
+    if ($config_exists && $metadata_exists) {
       exec(escapeshellcmd('cp -a ' . $config_dir_source . '/. ' . $config_dir_dest));
-      copy($config_file_source, $config_file_dest);
       exec(escapeshellcmd('cp -a ' . $metadata_dir_source . '/. ' . $metadata_dir_dest));
+    } else {
+      echo "Files not found\n";
+      echo "config_dir_source: " . $config_dir_source . "\n";
+      echo "config_dir_dest: " . $config_dir_dest . "\n";
+      echo "metadata_dir_source: " . $metadata_dir_source . "\n";
+      echo "metadata_dir_dest: " . $metadata_dir_dest . "\n";
+      echo "config: " . (int) $config_exists . "\n";
+      echo "metadata: " . (int) $metadata_exists . "\n";
     }
   }
 }

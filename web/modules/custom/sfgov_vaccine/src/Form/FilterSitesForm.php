@@ -94,7 +94,7 @@ class FilterSitesForm extends FormBase {
     $settings_languages = $this->settings('languages');
     $options_languages = [];
     foreach ($settings_languages as $key => $value) {
-      $options_languages[$key] = $this->t($value);
+      $options_languages[$key] = $this->t($value['filter_label']);
     }
 
     $form['container']['toggle']['items']['language'] = [
@@ -123,22 +123,6 @@ class FilterSitesForm extends FormBase {
       '#options' => $options_access_mode,
       '#default_value' => 'all',
       '#multiple' => FALSE,
-    ];
-
-    $settings_eligibility = $this->settings('eligibility');
-    $options_eligibility = [];
-    $eligibility_keys = [];
-    foreach ($settings_eligibility as $key => $value) {
-      $short_key = $value['short_key'];
-      $text = $value['text'];
-      $options_eligibility[$short_key] = $this->t($text);
-      array_push($eligibility_keys, $short_key);
-    }
-    $form['#attached']['drupalSettings']['sfgov_vaccine']['eligibility_keys'] = $eligibility_keys;
-    $form['container']['toggle']['items']['eligibility'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t($this->settings('form_strings.eligibility_label')),
-      '#options' => $options_eligibility,
     ];
 
     $form['container']['toggle']['items']['submit'] = [

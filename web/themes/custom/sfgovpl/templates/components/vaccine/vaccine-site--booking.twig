@@ -7,52 +7,89 @@
   - result.open_to.text
 #}
 
-{% set info %}
-  {% if result.booking_info %}
-    <div class="vaccine-site__booking_info notranslate">
-      {{ result.booking_info }}
+{# Define dynamic text. #}
+{% if result.available != 'null' and result.booking.url %}
+  {% set booking_box_classes = ['vaccine-site__booking_box'] %}
+
+  {% if result.available != 'null' %}
+    {% set field_classes = ['box-item-indented', 'vaccine-site__updated'] %}
+    {% set fancy = true %}
+  {% endif %}
+  {% if result.available == 'yes' %}
+    {% set fancy_text = 'Appointments available as of'|t %}
+    {% set btn_classes = [
+      'sfgov-cta-button__container',
+      'notranslate',
+      'vaccine-site__booking-button'
+    ] %}
+    {% set btn_text = 'Book an appointment'|t %}
+  {% elseif result.available == 'no' %}
+    {% set fancy_text = 'No appointments as of'|t %}
+    {% set btn_classes = [
+      'box-item-indented',
+      'notranslate',
+      'vaccine-site__booking-link'
+    ] %}
+    {% set btn_text = 'Visit booking website'|t %}
+  {% endif %}
+{% elseif result.booking.url or result.booking.info %}
+  {% set booking_box_classes = [
+    'vaccine-site__booking_box',
+    'notranslate',
+    result.booking.dropins ? 'js-dropin'
+  ] %}
+  {% set btn_classes = [
+    'sfgov-cta-button__container',
+    'vaccine-site__booking-button'
+  ] %}
+  {% set btn_text = 'Check for availability'|t %}
+{% endif %}
+
+{# Create attributes. #}
+{% set booking_box_attributes = create_attribute() %}
+{% set field_attributes = create_attribute() %}
+{% set btn_attributes = create_attribute() %}
+
+{# Define reusuable blocks of code. #}
+{% set block_info %}
+  {% if result.booking.info %}
+    <div class="box-item-indented vaccine-site__booking_info notranslate">
+      {# Raw tag is used here because this field can contain HTML. #}
+      {{ result.booking.safe_info|raw }}
     </div>
   {% endif %}
 {% endset %}
 
-{% if result.available != 'null' and result.booking_url %}
-  <div class="vaccine-site__booking_box {{ result.available }}">
-    {% if result.available == 'yes' %}
-      <div class="field">
-        <strong>
-          <span class="notranslate">
-            {{ 'Appointments available as of'|t }}
-          </span>
-          {{ result.last_updated }}
-        </strong>
-        {{ info }}
-      </div>
-      <div class="sfgov-cta-button__container notranslate">
-        <a href="{{ result.booking_url }}">{{ 'Book an appointment'|t }}</a>
-      </div>
-    {% elseif result.available == 'no' %}
-      <div class="field">
-        <strong>
-          <span class="notranslate">{{ 'No appointments as of'|t }}</span>
-          {{ result.last_updated }}
-        </strong>
-        {{ info }}
-      </div>
-      <div class="field notranslate">
-        <a href="{{ result.booking_url }}">{{ 'Visit booking website'|t }}</a>
-      </div>
-    {% endif %}
-  </div>
-{% elseif result.booking_url or result.booking_info %}
-  <div class="vaccine-site__booking_box notranslate {{
-    result.booking_dropins
-      ? 'js-dropin'
-    }}">
-    {{ info }}
-    {% if result.booking_url %}
-      <div class="sfgov-cta-button__container no-pad">
-        <a href="{{ result.booking_url }}">{{ 'Check for availability'|t }}</a>
-      </div>
-    {% endif %}
-  </div>
-{% endif %}
+{% set block_booking_link %}
+  {% if result.booking.url %}
+    <div {{ btn_attributes.addClass(btn_classes) }}>
+      <a href="{{ result.booking.url }}">{{ btn_text }}</a>
+    </div>
+  {% endif %}
+  {% if result.booking.phone %}
+    <div class="vaccine-site__phone {{
+      result.available == 'no'
+        ? 'box-item-indented'
+      }}">
+      {{ template_strings.result.phone.label|t }}
+      <a href="tel:{{ result.booking.phone }}">{{ result.booking.phone }}</a>
+    </div>
+  {% endif %}
+{% endset %}
+
+{# Render box. #}
+<div {{ booking_box_attributes.addClass(booking_box_classes) }}>
+  {% if fancy == true %}
+    <div {{ field_attributes.addClass(field_classes) }}>
+      <strong>
+        <span class="notranslate">{{ fancy_text }}</span>
+        {{ result.last_updated }}
+      </strong>
+    </div>
+    {{ block_info }}
+    {{ block_booking_link }}
+  {% else %}
+    {{ block_info }}
+    {{ block_booking_link }}
+  {% endif %}
+</div>

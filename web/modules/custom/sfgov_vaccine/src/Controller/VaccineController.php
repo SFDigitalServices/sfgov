@@ -2,6 +2,7 @@
 
 namespace Drupal\sfgov_vaccine\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\LanguageManager;
@@ -125,7 +126,7 @@ class VaccineController extends ControllerBase {
   /**
    * Get the filter form.
    */
-  private function makeFilters($allData) {
+  private function makeFilters() {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
   }
 
@@ -147,23 +148,6 @@ class VaccineController extends ControllerBase {
       }
     }
     array_push($keys, 'all');
-
-    return $keys;
-  }
-
-  /**
-   * Prepare each site's data-eligibility value.
-   */
-  private function getSiteEligibilityKeys($site_data, $group, $extra) {
-    $keys = [];
-    $site_data_group = $site_data[$group];
-    foreach ($site_data_group as $data_key => $boolean) {
-      if ($boolean === TRUE && $data_key != 'info') {
-        $short_key = $this->settings($group . '.' . $data_key . '.short_key');
-        array_push($keys, $short_key);
-      }
-    }
-    array_push($keys, $extra);
 
     return $keys;
   }
@@ -209,42 +193,33 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Prepare each site's eligibility text.
-   */
-  private function getSiteEligibilityText($site_data, $group) {
-    $printed = [];
-    $site_data_group = $site_data[$group];
-    foreach ($site_data_group as $data_key => $boolean) {
-      $text = $this->settings($group . '.' . $data_key . '.text');
-      if ($boolean === TRUE && $data_key != 'info' && isset($text) ) {
-        $printed_value = $this->t($text);
-        array_push($printed, $printed_value);
-      }
-    }
-    return $printed;
-  }
-
-  /**
    * Prepare each site's language text.
    */
   private function getSiteLanguageText($access_data) {
+
+    // Get remote vars.
     $site_data_remote_translation = $access_data["remote_translation"];
+    $site_data_languages = $access_data['languages'];
 
     $printed_languages = [];
-    $site_data_languages = $access_data['languages'];
     foreach ($site_data_languages as $short_key => $boolean) {
-      if ($boolean === TRUE) {
-        $languages = $this->settings('languages.' . $short_key);
-        if (!empty($languages)) {
-          array_push($printed_languages, $this->t($languages));
-        }
+      $language_label = $this->settings(sprintf('languages.%s.site_label', $short_key));
+      if ($boolean === TRUE && !empty($language_label)) {
+        array_push(
+          $printed_languages, $this->t($language_label));
       }
     }
 
+    $remote_asl = NULL;
     if ($site_data_remote_translation['available']) {
       array_push($printed_languages, $site_data_remote_translation['info']);
+      $remote_asl = (strpos($site_data_remote_translation['info'], 'ASL')) ? TRUE : FALSE;
     }
-    return $printed_languages;
+
+    return [
+      'printed_languages' => $printed_languages,
+      'remote_asl' => $remote_asl,
+    ];
   }
 
   /**
@@ -256,12 +231,22 @@ class VaccineController extends ControllerBase {
       return [];
     }
 
+    $allowed_html_tags = [
+      'br',
+      'a',
+      'em',
+      'strong',
+      'i',
+      'b',
+      'ul',
+      'ol',
+      'li',
+    ];
+
     $sites = $allData['data']['sites'];
     $results = [];
     foreach ($sites as $site_id => $site_data) {
 
-      $eligibility_keys = $this->getSiteEligibilityKeys($site_data, 'eligibility', 'all');
-      $eligibility_text = $this->getSiteEligibilityText($site_data, 'eligibility');
       $language_keys = $this->getSiteLanguageKeys($site_data['access']);
       $language_text = $this->getSiteLanguageText($site_data['access']);
       $access_mode_keys = $this->getSiteAccessModeKeys($site_data);
@@ -269,7 +254,6 @@ class VaccineController extends ControllerBase {
 
       // Usable variables.
       $info_url = NULL;
-      $booking_info = NULL;
 
       $available = $site_data['appointments']['available'];
       if ($available === TRUE) {
@@ -286,45 +270,42 @@ class VaccineController extends ControllerBase {
         $info_url = $site_data['info']['url'];
       }
 
-      if (isset($site_data['booking']['info'])) {
-        $booking_info = $site_data['booking']['info'];
-      }
+      $booking = isset($site_data['booking']) ? $site_data['booking'] : NULL;
+      $booking['safe_info'] = isset($booking['info']) ? Xss::filter($booking['info'], $allowed_html_tags) : NULL;
+
       $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
+      $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
       $restrictions = $site_data['open_to']['everyone'];
-      $restrictions_text = $site_data['open_to']['text'];
+      $restrictions_text = ($restrictions == FALSE) ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
-      $booking_url = $site_data['booking']['url'];
-      $booking_dropins = $site_data['booking']['dropins'];
       $wheelchair = $site_data['access']['wheelchair'];
 
       // Map results.
       $result = [
         'site_name' => $site_name,
         'attributes' => new Attribute([
-          'class' => ['sfgov-service-card', 'vaccine-site', 'no-hover'],
+          'class' => ['vaccine-site', 'no-hover'],
+          'data-site-id' => $site_id,
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
           'data-available' => $available,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
+          'data-remote-asl' => $language_text['remote_asl'],
           'data-access-mode' => implode('-', $access_mode_keys),
-          'data-eligibility' => implode('-', $eligibility_keys),
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
-        'restrictions' => $restrictions_text,
+        'restrictions_text' => $restrictions_text,
         'address_text' => $address_text,
         'address_url' => $address_url,
-        'languages' => $language_text,
-        'eligibilities' => $eligibility_text,
+        'languages' => $language_text['printed_languages'],
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,
         'available' => $available,
-        'booking_url' => $booking_url,
-        'booking_dropins' => $booking_dropins,
-        'booking_info' => $booking_info,
+        'booking' => $booking,
       ];
       $results[] = $result;
     }
