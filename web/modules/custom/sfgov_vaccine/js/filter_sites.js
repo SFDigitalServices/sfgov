@@ -139,11 +139,14 @@
                 $(this).removeClass(class_match_radius);
               }
               $(this)
-                .find(".distance")
+                .find(".vaccine-site__distance")
                 .text(Math.round(distance * 10) / 10 + "mi");
               $(this)[0].setAttribute("data-distance", distance);
+              $(this)
+                .find(".vaccine-site__header")
+                .addClass("distance-visible");
             } else {
-              $(this).find(".distance").text("");
+              $(this).find(".vaccine-site__distance").text("");
             }
 
             // Return list of matching sites.
