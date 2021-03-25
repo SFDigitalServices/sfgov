@@ -13,12 +13,12 @@
       const sectionCount = $(".vaccine-filter__count");
       const leftColumn = $(".group--left");
       const submitButton = $(".vaccine-filter-form #edit-submit", context);
-      const locationInput = $("[name=location]");
 
       // Other variables.
       let filterByAvailability = false;
       const speed = "slow";
       const class_match_available = "match-available";
+      const class_match_radius = "match-radius";
 
       // On load.
       displaySites();
@@ -36,6 +36,9 @@
       function filterVaccineSites() {
         let restrictions_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
+        let locationInput = $("[name=location]");
+        let radiusInput = $("[name=radius]");
+        let userLocation = !!locationInput.val();
 
         if ($("[name=restrictions]").is(":checked") === true) {
           // show
@@ -122,23 +125,30 @@
             );
 
             // Distance.
+            $(this).addClass(class_match_radius);
             const distance = getDistance(
-              locationInput.data("lat"), //input lat
-              locationInput.data("lng"), //input long
+              locationInput[0].getAttribute("data-lat"), //input lat
+              locationInput[0].getAttribute("data-lng"), //input long
               $(this).data("lat"), // this lat
               $(this).data("lng") // this lng
             );
 
+            if (distance > radiusInput.val()) {
+              $(this).removeClass(class_match_radius);
+            }
+
             $(this)
               .find("span.distance")
-              .text(distance > 1 ? distance : "");
+              .text(userLocation ? Math.round(distance * 10) / 10 + "mi" : "");
 
+            // Return list of matching sites.
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
               $(this).hasClass("language-match") &&
-              $(this).hasClass(class_match_available);
+              $(this).hasClass(class_match_available) &&
+              $(this).hasClass(class_match_radius);
 
             return rtnData;
           })
