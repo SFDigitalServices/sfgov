@@ -10,8 +10,6 @@ function locationAutocomplete() {
   };
   const autocomplete = new google.maps.places.Autocomplete(input, options);
   const infowindow = new google.maps.InfoWindow();
-  const infowindowContent = document.getElementById("infowindow-content");
-  infowindow.setContent(infowindowContent);
 
   autocomplete.addListener("place_changed", () => {
     infowindow.close();
@@ -22,7 +20,6 @@ function locationAutocomplete() {
 
     if (!place.geometry || !place.geometry.location) {
       window.alert("No details available for input: '" + place.name + "'");
-      return;
     }
   });
 }
