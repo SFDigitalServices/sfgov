@@ -34,7 +34,7 @@
 }
 
 .vaccine-filter-form {
-  [data-drupal-selector="edit-single-checkboxes"] {
+  [data-drupal-selector='edit-single-checkboxes'] {
     margin-bottom: 50px;
 
     .js-form-type-checkbox label {
@@ -113,13 +113,28 @@
   }
 }
 
+.distance-visible {
+  display: flex;
+}
+
 .vaccine-site__title {
   @include fs-title-3-mobile;
   margin: 0 0 40px 0;
+
+  .distance-visible & {
+    width: calc(100% - 66px);
+  }
+}
+
+.vaccine-site__distance {
+  .distance-visible & {
+    text-align: right;
+    width: 66px;
+  }
 }
 
 .vaccine-site__address {
-  @include background-image("icons/location-slate.svg");
+  @include background-image('icons/location-slate.svg');
   margin-bottom: 20px;
 
   a {
@@ -128,7 +143,7 @@
 }
 
 .vaccine-site__languages {
-  @include background-image("icons/globe-slate.svg");
+  @include background-image('icons/globe-slate.svg');
   margin-bottom: 20px;
 }
 
@@ -143,7 +158,7 @@
 }
 
 .vaccine-site__access-mode {
-  @include background-image("icons/accessibility-slate.svg");
+  @include background-image('icons/accessibility-slate.svg');
   padding-left: 38px;
   margin-bottom: 20px;
 }
@@ -165,30 +180,30 @@
     padding: 40px;
   }
 
-  [data-available="yes"] & {
-    @include background-image("check-green.svg", 20px 25px, $c-blue-1);
+  [data-available='yes'] & {
+    @include background-image('check-green.svg', 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
     }
   }
 
-  [data-available="no"] & {
-    @include background-image("close-red.svg", 20px 25px, $c-blue-1);
+  [data-available='no'] & {
+    @include background-image('close-red.svg', 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
     }
   }
 
-  [data-available="no"] &,
-  [data-available="yes"] & {
+  [data-available='no'] &,
+  [data-available='yes'] & {
     .box-item-indented {
       padding-left: 40px;
     }
   }
 
-  [data-available="yes"] & {
+  [data-available='yes'] & {
     .vaccine-site__booking-button,
     .vaccine-site__phone {
       @include media($medium-screen) {
