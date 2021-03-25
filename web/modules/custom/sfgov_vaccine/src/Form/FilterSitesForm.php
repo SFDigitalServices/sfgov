@@ -138,18 +138,18 @@ class FilterSitesForm extends FormBase {
       '#type' => 'container',
     ];
 
-    $settings_distance = $this->settings('distance');
-    $options_distance = [];
-    foreach ($settings_distance as $key => $set) {
+    $settings_radius = $this->settings('radius');
+    $options_radius = [];
+    foreach ($settings_radius as $key => $set) {
       $value = $set['value'];
       $text = $set['text'];
-      $options_distance[$value] = $this->t($text);
+      $options_radius[$value] = $this->t($text);
     }
 
-    $form['container']['toggle']['items']['distance_from']['distance'] = [
+    $form['container']['toggle']['items']['distance_from']['radius'] = [
       '#type' => 'select',
       '#title' => $this->t($this->settings('form_strings.distance_label')),
-      '#options' => $options_distance,
+      '#options' => $options_radius,
       '#default_value' => 'all',
       '#multiple' => FALSE,
     ];
