@@ -4,7 +4,7 @@ function locationAutocomplete() {
   const input = document.getElementById("edit-location");
   const options = {
     componentRestrictions: { country: "us" },
-    fields: ["geometry", "name", "formatted_address"],
+    fields: ["geometry", "name"],
     origin: { lat: 37.7576792, lng: -122.5078107 },
     strictBounds: false,
   };
