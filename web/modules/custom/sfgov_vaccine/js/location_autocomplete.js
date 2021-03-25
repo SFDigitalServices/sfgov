@@ -24,9 +24,5 @@ function locationAutocomplete() {
       window.alert("No details available for input: '" + place.name + "'");
       return;
     }
-
-    infowindowContent.children["place-name"].textContent = place.name;
-    infowindowContent.children["place-address"].textContent =
-      place.formatted_address;
   });
 }
