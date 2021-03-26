@@ -184,10 +184,11 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $current_language = \Drupal::languageManager()
       ->getCurrentLanguage()
       ->getId();
-    $lang_prefix = '/'. $current_language . '/';
-    if (str_starts_with($requested_path_alias, $lang_prefix )) {
-      $test_path = substr($requested_path_alias, 3 );
-      $english_alias_array = \Drupal::service('path_alias.repository')->lookupBySystemPath($test_path, 'en');
+    $lang_prefix = '/' . $current_language . '/';
+    if (str_starts_with($requested_path_alias, $lang_prefix)) {
+      $test_path = substr($requested_path_alias, 3);
+      $english_alias_array = \Drupal::service('path_alias.repository')
+        ->lookupBySystemPath($test_path, 'en');
       $english_alias = $english_alias_array['alias'];
     }
 
@@ -195,16 +196,40 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $alias_to_look_up = isset($english_alias) ? $english_alias : $requested_path_alias;
 
     // Check to see if a redirect matches the alias.
-    $redirect = \Drupal::service('redirect.repository')->findMatchingRedirect($alias_to_look_up);
+    $redirect = \Drupal::service('redirect.repository')
+      ->findMatchingRedirect($alias_to_look_up);
 
-    // If the redirect exists, set the url to the destination.
+    // If the redirect exists, keep going.
     if ($redirect instanceof Redirect) {
+
+      // Get the redirect uri.
       $redirect_value = $redirect->redirect_redirect->getValue();
       $redirect_uri = $redirect_value[0]['uri'];
-      $redirect_url = Url::fromUri($redirect_uri)->toString();
-    }
 
+      // Set some helper strings.
+      $internal_prefix = 'internal:';
+      $node_prefix = '/node/';
+      $path_prefix = $internal_prefix . $node_prefix;
+
+      // If this isn't a translated node path, we need to find what it is the alias to.
+      if (!str_starts_with($redirect_uri, $path_prefix) && $current_language != 'en') {
+        $clean_alias = str_replace($internal_prefix, '', $redirect_uri);
+
+        $destination_array = \Drupal::service('path_alias.repository')
+          ->lookupByAlias($clean_alias, 'en');
+
+        // Now that we have the alias destination, get the destination nid.
+        if ($destination_array) {
+          $destination_nid = str_replace($node_prefix, '', $destination_array['path']);
+          $redirect_url = '/' . $current_language . $node_prefix . $destination_nid;
+        }
+      }
+
+      // If this isn't a translated node path, we can get the url from uri.
+      else {
+        $redirect_url = Url::fromUri($redirect_uri)->toString();
+      }
+    }
     return isset($redirect_url) ? $redirect_url : NULL;
   }
-
 }
