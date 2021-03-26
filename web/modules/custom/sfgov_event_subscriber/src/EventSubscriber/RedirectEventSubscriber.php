@@ -178,10 +178,24 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
 
     // Get the requested path alias.
     $request = $event->getRequest();
-    $current_path_alias = $request->getPathInfo();
+    $requested_path_alias = $request->getPathInfo();
+
+    // Get original alias for translated nodes.
+    $current_language = \Drupal::languageManager()
+      ->getCurrentLanguage()
+      ->getId();
+    $lang_prefix = '/'. $current_language . '/';
+    if (str_starts_with($requested_path_alias, $lang_prefix )) {
+      $test_path = substr($requested_path_alias, 3 );
+      $english_alias_array = \Drupal::service('path_alias.repository')->lookupBySystemPath($test_path, 'en');
+      $english_alias = $english_alias_array['alias'];
+    }
+
+    // Set the alias to check against redirect repository.
+    $alias_to_look_up = isset($english_alias) ? $english_alias : $requested_path_alias;
 
     // Check to see if a redirect matches the alias.
-    $redirect = \Drupal::service('redirect.repository')->findMatchingRedirect($current_path_alias);
+    $redirect = \Drupal::service('redirect.repository')->findMatchingRedirect($alias_to_look_up);
 
     // If the redirect exists, set the url to the destination.
     if ($redirect instanceof Redirect) {
