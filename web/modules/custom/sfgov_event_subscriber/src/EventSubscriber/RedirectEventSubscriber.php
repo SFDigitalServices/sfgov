@@ -211,7 +211,8 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       $node_prefix = '/node/';
       $path_prefix = $internal_prefix . $node_prefix;
 
-      // If this isn't a translated node path, we need to find what it is the alias to.
+      // If this isn't a translated node path,
+      // we need to find what it is the alias to.
       if (!str_starts_with($redirect_uri, $path_prefix) && $current_language != 'en') {
         $clean_alias = str_replace($internal_prefix, '', $redirect_uri);
 
@@ -232,4 +233,5 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     }
     return isset($redirect_url) ? $redirect_url : NULL;
   }
+
 }
