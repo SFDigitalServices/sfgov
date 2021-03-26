@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\node\NodeInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
+use Drupal\redirect\Entity\Redirect;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
