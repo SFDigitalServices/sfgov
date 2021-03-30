@@ -2,6 +2,10 @@
 
 namespace Drupal\sfgov_event_subscriber\EventSubscriber;
 
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\path_alias\AliasRepository;
+use Drupal\redirect\RedirectRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Routing\TrustedRedirectResponse;
@@ -11,11 +15,71 @@ use Drupal\node\NodeInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Drupal\redirect\Entity\Redirect;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
  */
 class RedirectEventSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The current account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $account;
+
+  /**
+   * The Language Manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * The alias repository.
+   *
+   * @var \Drupal\path_alias\AliasRepository
+   */
+  protected $aliasRepository;
+
+  /**
+   * The redirect repository.
+   *
+   * @var \Drupal\redirect\RedirectRepository
+   */
+  protected $redirectRepository;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   * @param \Drupal\Core\Language\LanguageManager $languageManager
+   *   The Language manager.
+   * @param \Drupal\path_alias\AliasRepository $aliasRepository
+   *   Object to search aliases.
+   * @param \Drupal\redirect\RedirectRepository $redirectRepository
+   *   Object to search redirect.
+   */
+  public function __construct(AccountInterface $account, LanguageManager $languageManager, AliasRepository $aliasRepository, RedirectRepository $redirectRepository) {
+    $this->account = $account;
+    $this->languageManager = $languageManager;
+    $this->aliasRepository = $aliasRepository;
+    $this->redirectRepository = $redirectRepository;
+  }
+
+  /**
+   * Create function.
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_user'),
+      $container->get('language_manager'),
+      $container->get('path_alias.repository'),
+      $container->get('redirect.repository')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -33,7 +97,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
    */
   public function sfgovRedirect(GetResponseEvent $event) {
     // Don't redirect authenticated users.
-    $account = \Drupal::currentUser();
+    $account = $this->account;
     if (!in_array('anonymous', $account->getRoles())) {
       return;
     }
@@ -177,20 +241,19 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   public function redirectBasedOnAlias(GetResponseEvent $event) {
 
     $node = $event->getRequest()->attributes->get('node');
-    $current_language = \Drupal::languageManager()
+    $current_language = $this->languageManager
       ->getCurrentLanguage()
       ->getId();
 
     if ($node instanceof NodeInterface) {
       $nid = $node->id();
       $path = '/node/' . $nid;
-      $english_alias_array = \Drupal::service('path_alias.repository')
+      $english_alias_array = $this->aliasRepository
         ->lookupBySystemPath($path, 'en');
       $english_alias = $english_alias_array['alias'];
 
       // Look up redirect by English alias.
-      $redirect = \Drupal::service('redirect.repository')
-        ->findMatchingRedirect($english_alias);
+      $redirect = $this->redirectRepository->findMatchingRedirect($english_alias);
 
       // If the redirect exists, keep going.
       if ($redirect instanceof Redirect) {
@@ -209,7 +272,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         if (!str_starts_with($redirect_uri, $path_prefix) && $current_language != 'en') {
           $clean_alias = str_replace($internal_prefix, '', $redirect_uri);
 
-          $destination_array = \Drupal::service('path_alias.repository')
+          $destination_array = $this->aliasRepository
             ->lookupByAlias($clean_alias, 'en');
 
           // Now that we have the alias destination, get the destination nid.

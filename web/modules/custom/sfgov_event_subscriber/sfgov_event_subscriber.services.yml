@@ -1,5 +1,6 @@
 services:
   sfgov_event_subscriber.redirect_event:
     class: \Drupal\sfgov_event_subscriber\EventSubscriber\RedirectEventSubscriber
+    arguments: ['@current_user', '@language_manager', '@path_alias.repository', '@redirect.repository']
     tags:
       - { name: event_subscriber }
