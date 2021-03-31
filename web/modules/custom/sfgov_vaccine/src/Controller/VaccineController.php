@@ -277,7 +277,7 @@ class VaccineController extends ControllerBase {
       $site_name = $site_data['name'];
       $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
       $restrictions = $site_data['open_to']['everyone'];
-      $restrictions_text = ($restrictions == FALSE) ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
+      $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
       $address_text = $site_data['location']['address'];
       $address_url = $site_data['location']['url'];
       $wheelchair = $site_data['access']['wheelchair'];
