@@ -263,23 +263,31 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         $redirect_uri = $redirect_value[0]['uri'];
 
         // Set some helper strings.
-        $internal_prefix = 'internal:';
         $node_prefix = '/node/';
+        $internal_prefix = 'internal:';
         $path_prefix = $internal_prefix . $node_prefix;
+        $entity_prefix = 'entity:';
+        $entity_node_prefix = 'entity:node';
 
         // If this isn't a translated node path,
         // we need to find what it is the alias to.
-        if (!str_starts_with($redirect_uri, $path_prefix) && $current_language != 'en') {
+        if (!str_starts_with($redirect_uri, $path_prefix)) {
           $clean_alias = str_replace($internal_prefix, '', $redirect_uri);
 
           $destination_array = $this->aliasRepository
             ->lookupByAlias($clean_alias, 'en');
 
           // Now that we have the alias destination, get the destination nid.
+          $destination = '';
           if ($destination_array) {
-            $destination_nid = str_replace($node_prefix, '', $destination_array['path']);
-            $redirect_url = '/' . $current_language . $node_prefix . $destination_nid;
+            $destination = $destination_array['path'];
           }
+          elseif (str_starts_with($redirect_uri, $entity_node_prefix)) {
+            $clean_alias = str_replace($entity_prefix, '', $redirect_uri);
+            $destination = '/' . $clean_alias;
+          }
+
+          $redirect_url = '/' . $current_language . $destination;
         }
 
         // If this isn't a translated node path, we can get the url from uri.
