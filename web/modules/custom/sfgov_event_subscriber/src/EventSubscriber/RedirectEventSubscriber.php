@@ -90,7 +90,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Method to manage custom redirects.
+   * Method to negotiate custom redirects.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The event object.
