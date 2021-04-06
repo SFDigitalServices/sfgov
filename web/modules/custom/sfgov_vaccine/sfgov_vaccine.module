@@ -49,8 +49,8 @@ function sfgov_vaccine_theme() {
 function sfgov_vaccine_library_info_alter(&$libraries, $extension) {
 
   // Dynamically add gmaps script to filter library.
-  $gmaps_api_key = Settings::get('gmaps_api_key');
-  $gmaps_url = sprintf("//maps.googleapis.com/maps/api/js?key=%s&callback=locationAutocomplete&libraries=places&v=weekly", $gmaps_api_key);
+  $google_places_api_key = Settings::get('google_places_api_key');
+  $gmaps_url = sprintf("//maps.googleapis.com/maps/api/js?key=%s&callback=locationAutocomplete&libraries=places&v=weekly", $google_places_api_key);
 
   if (isset($libraries['location'])) {
     $libraries['location']['js'][$gmaps_url] = [
