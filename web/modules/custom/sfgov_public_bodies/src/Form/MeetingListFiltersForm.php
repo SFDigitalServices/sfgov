@@ -22,6 +22,7 @@ class MeetingListFiltersForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['#attributes']['class'][] = 'sfgov-filters-form';
     $form['container'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Filters'),
