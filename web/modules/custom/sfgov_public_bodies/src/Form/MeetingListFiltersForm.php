@@ -30,7 +30,7 @@ class MeetingListFiltersForm extends FormBase {
       ],
       '#attached' => [
         'library' => [
-          'sfgovpl/meetings',
+          'sfgovpl/filters',
         ],
       ],
     ];
