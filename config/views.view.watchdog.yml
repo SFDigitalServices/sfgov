@@ -49,21 +49,21 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 50
+          items_per_page: 100
           offset: 0
           id: 0
           total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
           tags:
             previous: ‹‹
             next: ››
+          expose:
+            items_per_page: true
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50, 100, 200'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: true
+            offset_label: Offset
       style:
         type: table
         options:
@@ -137,7 +137,7 @@ display:
             link:
               align: ''
               separator: ''
-              empty_column: false
+              empty_column: true
               responsive: priority-low
           default: wid
           empty_table: false
@@ -201,7 +201,7 @@ display:
           group_type: group
           admin_label: ''
           label: WID
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -419,7 +419,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: 56
+            max_length: 150
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -495,8 +495,8 @@ display:
           type: user_name
           settings:
             link_to_entity: true
-          group_column: value
-          group_columns: {  }
+          group_column: null
+          group_columns: null
           group_rows: true
           delta_limit: 0
           delta_offset: 0
@@ -505,6 +505,13 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+          set_precision: false
+          precision: 0
+          decimal: .
+          format_plural: false
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
           entity_type: user
           entity_field: name
           plugin_id: field
@@ -516,7 +523,7 @@ display:
           group_type: group
           admin_label: ''
           label: Operations
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -566,7 +573,10 @@ display:
           group_type: group
           admin_label: ''
           operator: in
-          value: {  }
+          value:
+            form: form
+            php: php
+            user: user
           group: 1
           exposed: true
           expose:
@@ -575,6 +585,8 @@ display:
             description: ''
             use_operator: false
             operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: type
             required: false
             remember: false
@@ -582,10 +594,10 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
+              writer: '0'
+              publisher: '0'
               administrator: '0'
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -640,6 +652,54 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: in_operator
+        wid:
+          id: wid
+          table: watchdog
+          field: wid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: wid_op
+            label: WID
+            description: ''
+            use_operator: true
+            operator: wid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: wid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: numeric
       sorts:
         wid:
           id: wid
@@ -675,7 +735,7 @@ display:
           field: uid
           relationship: none
           group_type: group
-          admin_label: User
+          admin_label: uid
           required: false
           plugin_id: standard
       arguments: {  }
@@ -685,6 +745,7 @@ display:
         groups:
           1: AND
       css_class: admin-dblog
+      group_by: false
     cache_metadata:
       max-age: -1
       contexts:
