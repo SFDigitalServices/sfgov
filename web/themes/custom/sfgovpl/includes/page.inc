@@ -16,7 +16,7 @@ function sfgovpl_preprocess_page__node__campaign(&$variables) {
 
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
     $node = $variables['node'];
-    $view_mode = $variables['view_mode'];
+    $view_mode = !empty($variables['view_mode']) ? $variables['view_mode'] : 'none';
     $node_variables =  _sfgovpl_node_notranslate($node, $view_mode);
 
     $class = '';
