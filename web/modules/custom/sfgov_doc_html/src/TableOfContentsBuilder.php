@@ -50,7 +50,7 @@ class TableOfContentsBuilder implements TableOfContentsBuilderInterface {
    * @param $toc_type
    *   The TocType ID to use.
    */
-  public function __construct(RendererInterface $renderer, TocManagerInterface $toc_manager, TocBuilderInterface $toc_builder, $toc_type) {
+  public function __construct(RendererInterface $renderer,  $toc_type) {
     assert(is_string($toc_type));
     $this->renderer = $renderer;
     $this->tocManager = $toc_manager;
