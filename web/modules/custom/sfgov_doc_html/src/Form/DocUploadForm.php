@@ -78,6 +78,7 @@ class DocUploadForm extends FormBase {
 
         $normalized = HtmlHeadingNormalizer::demote($clean_content, 1);
         $normalized = $this->convertBase64($normalized);
+        $normalized = $this->cleanupEncoding($normalized);
 
         if (!empty($clean_content)) {
           \Drupal::database()->insert('sfgov_doc_html_files')
@@ -151,6 +152,13 @@ class DocUploadForm extends FormBase {
     else {
       return $content;
     }
+  }
+
+  /**
+   * Cleanup encoding issues.
+   */
+  protected function cleanupEncoding($text) {
+    return mb_convert_encoding($text, "HTML-ENTITIES", "UTF-8");
   }
 
 }
