@@ -21,20 +21,20 @@
   {% endif %}
 
   <div class="sfgov-section sfgov-section-container">
-    {% if content.body[0].toc %}
-      <div class="group--right">
-        {{ content.docsearch }}
-        {{ content.body[0].toc }}
-      </div>
-    {% endif %}
+    <div class="group--right">
+      {{ content.docsearch }}
+      {{ content.body[0].toc }}
+    </div>
     <div class="group--left">
-      {% if content.body|render %}
-        <div class="sfgov-section-overview sfgov-in-this-page-target">
-          <div class="sfgov-section--content">
+      <div class="sfgov-section-overview sfgov-in-this-page-target">
+        <div class="sfgov-section--content">
+          {% if content.body[0].content %}
             {{ content.body[0].content }}
-          </div>
+          {% else %}
+            {{ content.body }}
+          {% endif %}
         </div>
-      {% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}
