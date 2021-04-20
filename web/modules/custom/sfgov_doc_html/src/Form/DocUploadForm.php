@@ -125,6 +125,7 @@ class DocUploadForm extends FormBase {
             $tag->setAttribute('data-entity-type', 'file');
             $tag->setAttribute('data-entity-uuid', $file->uuid());
             $tag->setAttribute('src', file_url_transform_relative(file_create_url($file->getFileUri())));
+            $imageFound = TRUE;
           }
           else {
             $directory = 'public://inline-images/' . date("Y-m") . '/';
@@ -158,7 +159,9 @@ class DocUploadForm extends FormBase {
    * Cleanup encoding issues.
    */
   protected function cleanupEncoding($text) {
-    return mb_convert_encoding($text, "HTML-ENTITIES", "UTF-8");
+    $text = str_replace('&Acirc;', '', $text);
+    $text = mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
+    return $text;
   }
 
 }
