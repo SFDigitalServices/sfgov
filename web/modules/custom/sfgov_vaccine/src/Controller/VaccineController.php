@@ -14,6 +14,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
+use Drupal\sfgov_vaccine\Services\VaxValues;
 
 /**
  * Creates the vaccine sites page.
@@ -63,14 +64,23 @@ class VaccineController extends ControllerBase {
   protected $allData = NULL;
 
   /**
+   * Get Vaccine-related data.
+   *
+   * @var \Drupal\sfgov_vaccine\Services\VaxValues
+   */
+  protected $vaxValues;
+
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client, LoggerChannelFactoryInterface $loggerFactory) {
+  public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client, LoggerChannelFactoryInterface $loggerFactory, VaxValues $vaxValues) {
     $this->languageManager = $languageManager;
     $this->formBuilder = $formBuilder;
     $this->configFactory = $configFactory;
     $this->httpClient = $http_client;
     $this->loggerFactory = $loggerFactory;
+    $this->vaxValues = $vaxValues;
     $this->allData = $this->dataFetch();
   }
 
@@ -83,22 +93,16 @@ class VaccineController extends ControllerBase {
       $container->get('form_builder'),
       $container->get('config.factory'),
       $container->get('http_client'),
-      $container->get('logger.factory')
+      $container->get('logger.factory'),
+      $container->get('sfgov_vaccine.values')
     );
-  }
-
-  /**
-   * Get config.
-   */
-  private function settings($value) {
-    return $this->configFactory->get('sfgov_vaccine.settings')->get($value);
   }
 
   /**
    * Get the microservice url from config.
    */
   private function getAPIUrl() {
-    return $this->settings('api_url');
+    return $this->vaxValues->settings('api_url');
   }
 
   /**
@@ -129,7 +133,7 @@ class VaccineController extends ControllerBase {
    */
   private function makeAPIData($allData) {
 
-    $error_message = $this->settings('error_message');
+    $error_message = $this->vaxValues->settings('error_message');
 
     return [
       'timestamp' => $allData['data']['generated'],
@@ -158,7 +162,7 @@ class VaccineController extends ControllerBase {
     $keys = [];
     foreach ($access_mode_options as $key => $value) {
       if ($value === TRUE) {
-        $key = $this->settings('access_mode.' . $key . '.short_key');
+        $key = $this->vaxValues->settings('access_mode.' . $key . '.short_key');
         array_push($keys, $key);
       }
     }
@@ -199,7 +203,7 @@ class VaccineController extends ControllerBase {
     $printed = [];
     foreach ($access_mode_options as $key => $value) {
       if ($value === TRUE) {
-        $text = $this->settings('access_mode.' . $key . '.text');
+        $text = $this->vaxValues->settings('access_mode.' . $key . '.text');
         array_push($printed, $this->t($text));
       }
     }
@@ -218,7 +222,7 @@ class VaccineController extends ControllerBase {
 
     $printed_languages = [];
     foreach ($site_data_languages as $short_key => $boolean) {
-      $language_label = $this->settings(sprintf('languages.%s.site_label', $short_key));
+      $language_label = $this->vaxValues->settings(sprintf('languages.%s.site_label', $short_key));
       if ($boolean === TRUE && !empty($language_label)) {
         array_push(
           $printed_languages, $this->t($language_label));
@@ -307,7 +311,7 @@ class VaccineController extends ControllerBase {
           'data-available' => $available,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
-          'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
+          'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->vaxValues->settings('languages')),
           'data-remote-asl' => $language_text['remote_asl'],
           'data-access-mode' => implode('-', $access_mode_keys),
           'data-lat' => $location['lat'],
@@ -335,7 +339,8 @@ class VaccineController extends ControllerBase {
     return [
       '#cache' => ['max-age' => 0],
       '#theme' => 'vaccine_widget',
-      '#template_strings' => $this->settings('template_strings'),
+      '#alert' => $this->vaxValues->getAlert(),
+      '#template_strings' => $this->vaxValues->settings('template_strings'),
       '#api_data' => $this->makeAPIData($this->allData),
       '#filters' => $this->makeFilters($this->allData),
       '#results' => $this->makeResults($this->allData),
