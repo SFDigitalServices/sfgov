@@ -320,3 +320,14 @@ function sfgov_admin_views_pre_view(&$view) {
     $view->display_handler->overrideOption('filters', $filters);
   }
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_admin_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Disable Available menus setting.
+  $form['menu']['menu_options']['#default_value'] = [];
+  $form['menu']['menu_options']['#description'] = t('<i>This option is disabled in code.</i>');
+  $form['menu']['#disabled'] = TRUE;
+}
