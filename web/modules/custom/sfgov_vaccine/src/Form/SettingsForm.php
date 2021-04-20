@@ -64,6 +64,16 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('e.g. https://vaccination-site-microservice.vercel.app/api/v1/appointments, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app/api/v1/appointments'),
       '#default_value' => $config->get('api_url'),
     ];
+
+    $form['alert'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Vaccine Page Alert Message'),
+      '#description' => $this->t('Enter a message for the yellow alert area at /vaccine-sites.'),
+      '#default_value' => $config->get('template_strings.page.alert.value'),
+      '#format' => 'sf_restricted_html',
+      '#allowed_formats' => ['sf_restricted_html']
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
@@ -103,6 +113,7 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('sfgov_vaccine.settings')
       ->set('api_url', trim($form_state->getValue('api_url')))
+      ->set('template_strings.page.alert', $form_state->getValue('alert'))
       ->save();
   }
 
