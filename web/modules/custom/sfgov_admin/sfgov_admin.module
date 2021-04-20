@@ -329,3 +329,45 @@ function sfgov_admin_form_node_type_form_alter(&$form, FormStateInterface $form_
   $form['menu']['menu_options']['#description'] = t('<i>This option is disabled in code.</i>');
   $form['menu']['#disabled'] = TRUE;
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_admin_form_entity_form_display_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Disable Available menus setting.
+  $form['fields']['sticky']['region']['#default_value'] = "hidden";
+  $form['fields']['sticky']['plugin']['type']['#default_value'] = "hidden";
+
+  $form['fields']['promote']['region']['#default_value'] = "hidden";
+  $form['fields']['promote']['plugin']['type']['#default_value'] = "hidden";
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_admin_preprocess_field_ui_table(&$variables, $hook) {
+
+  // Disable moving sticky and promoted fields out of hidden region.
+  // @todo Check for type of data first.
+
+  $rows = $variables['rows'];
+
+  foreach($rows as $row => $value) {
+    $content = $value['cells'][0]['content'];
+
+    if (is_array($content)) {
+      $id = $content['#id'];
+      if ($id == 'edit-fields-sticky-human-name') {
+        $new_row = $rows[$row];
+        unset($variables['rows'][$row]);
+        $variables['footer'][] = $new_row;
+      }
+    }
+
+    // @todo Add promoted.
+    // @todo Theme and disable our new "footer" rows.
+
+  }
+}
