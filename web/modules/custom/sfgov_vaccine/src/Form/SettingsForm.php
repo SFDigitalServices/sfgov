@@ -5,9 +5,10 @@ namespace Drupal\sfgov_vaccine\Form;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\sfgov_vaccine\Services\VaxValues;
+use Drupal\sfgov_vaccine\VaxValues\Alert;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use GuzzleHttp\ClientInterface;
-use Drupal\Core\State\State;
 use Drupal\Core\Config\ConfigFactory;
 
 /**
@@ -22,12 +23,6 @@ class SettingsForm extends ConfigFormBase {
    */
   protected $httpClient;
 
-  /**
-   * State object.
-   *
-   * @var \Drupal\Core\State\State
-   */
-  protected $state;
 
   /**
    * The configuration factory.
@@ -37,12 +32,19 @@ class SettingsForm extends ConfigFormBase {
   protected $configFactory;
 
   /**
+   * The configuration factory.
+   *
+   * @var Drupal\sfgov_vaccine\VaxValues
+   */
+  protected $vaxValues;
+
+  /**
    * Class constructor.
    */
-  public function __construct(ClientInterface $httpClient, State $state, ConfigFactory $configFactory) {
+  public function __construct(ClientInterface $httpClient, ConfigFactory $configFactory, VaxValues $vaxValues) {
     $this->httpClient = $httpClient;
-    $this->state = $state;
-    $this->configFactory = $configFactory;
+      $this->configFactory = $configFactory;
+      $this->vaxValues = $vaxValues;
   }
 
   /**
@@ -51,8 +53,8 @@ class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('http_client'),
-      $container->get('state'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('sfgov_vaccine.values')
     );
   }
 
@@ -80,16 +82,6 @@ class SettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Utility function to get alert text.
-   */
-  public function alertText() {
-    $alert_db = $this->state->get('alert');
-    $alert_db_val = $alert_db['value'];
-    $alert_config_val = $this->settings('template_strings.page.alert.value');
-    return isset($alert_db) ? $alert_db_val : $alert_config_val;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -98,14 +90,14 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'url',
       '#title' => $this->t('Microservice URL'),
       '#description' => $this->t('e.g. https://vaccination-site-microservice.vercel.app/api/v1/appointments, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app/api/v1/appointments'),
-      '#default_value' => $this->settings('api_url'),
+      '#default_value' => $this->vaxValues->settings('api_url'),
     ];
 
     $form['alert'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Vaccine Page Alert Message'),
       '#description' => $this->t('Enter a message for the yellow alert area at /vaccine-sites.'),
-      '#default_value' => $this->alertText(),
+      '#default_value' => $this->vaxValues->getAlert(),
       '#format' => 'sf_restricted_html',
       '#allowed_formats' => ['sf_restricted_html'],
     ];
@@ -151,7 +143,7 @@ class SettingsForm extends ConfigFormBase {
       ->set('api_url', trim($form_state->getValue('api_url')))
       ->save();
 
-    $this->state->set('alert', $form_state->getValue('alert'));
+    $this->vaxValues->setAlert($form_state->getValue('alert'));
   }
 
 }
