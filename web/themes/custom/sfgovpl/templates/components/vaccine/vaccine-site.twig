@@ -15,6 +15,13 @@
     </div>
   {% endif %}
 
+  {# 65 and over, etc #}
+  <div class="vaccine-site__eligibilities notranslate">
+    {% for eligibility in result.eligibilities %}
+      <span class="vaccine-site__eligibility">{{ eligibility }}</span>
+    {% endfor %}
+  </div>
+
   {# Address. #}
   {% if result.location.url %}
     <div class="vaccine-site__address notranslate icon">

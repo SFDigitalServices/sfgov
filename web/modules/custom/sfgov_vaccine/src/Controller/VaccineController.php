@@ -242,6 +242,21 @@ class VaccineController extends ControllerBase {
   }
 
   /**
+   * Prepare each site's eligibility text.
+   */
+  private function getSiteEligibilityText($site_data, $group) {
+
+    $printed = [];
+    if (isset($site_data[$group]['allowed'])) {
+      $site_minor_status = $site_data[$group]['allowed'] ? 'true': 'false';
+      $text = $this->vaxValues->settings($group . '.' . $site_minor_status . '_text');
+      $printed_value = $this->t($text);
+      array_push($printed, $printed_value);
+    }
+    return $printed;
+  }
+
+  /**
    * Prepare sites for rendering.
    */
   private function makeResults($allData) {
@@ -266,6 +281,7 @@ class VaccineController extends ControllerBase {
     $results = [];
     foreach ($sites as $site_id => $site_data) {
 
+      $eligibility_text = $this->getSiteEligibilityText($site_data, 'minors');
       $language_keys = $this->getSiteLanguageKeys($site_data['access']);
       $language_text = $this->getSiteLanguageText($site_data['access']);
       $access_mode_keys = $this->getSiteAccessModeKeys($site_data);
@@ -321,6 +337,7 @@ class VaccineController extends ControllerBase {
         'restrictions_text' => $restrictions_text,
         'location' => $location,
         'languages' => $language_text['printed_languages'],
+        'eligibilities' => $eligibility_text,
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,
         'available' => $available,
