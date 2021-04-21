@@ -7,6 +7,8 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Template\Attribute;
@@ -33,6 +35,13 @@ class VaccineController extends ControllerBase {
   protected $languageManager;
 
   /**
+   * The logger factory service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * The form builder.
    *
    * @var Drupal\Core\Form\FormBuilderInterface
@@ -56,11 +65,12 @@ class VaccineController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client) {
+  public function __construct(LanguageManager $languageManager, FormBuilderInterface $formBuilder, ConfigFactory $configFactory, ClientInterface $http_client, LoggerChannelFactoryInterface $loggerFactory) {
     $this->languageManager = $languageManager;
     $this->formBuilder = $formBuilder;
     $this->configFactory = $configFactory;
     $this->httpClient = $http_client;
+    $this->loggerFactory = $loggerFactory;
     $this->allData = $this->dataFetch();
   }
 
@@ -72,7 +82,8 @@ class VaccineController extends ControllerBase {
       $container->get('language_manager'),
       $container->get('form_builder'),
       $container->get('config.factory'),
-      $container->get('http_client')
+      $container->get('http_client'),
+      $container->get('logger.factory')
     );
   }
 
@@ -103,8 +114,12 @@ class VaccineController extends ControllerBase {
       ]);
       $response = $request->getBody();
     }
-    catch (ConnectException $e) {
+    catch (ConnectException | RequestException $e) {
       $response = NULL;
+      $this->loggerFactory->get('sfgov_vaccine')->error('Could not fetch data from %url. %message', [
+        '%url' => isset($url) ? $url : 'url',
+        '%message' => $e->getMessage(),
+      ]);
     }
     return Json::decode($response);
   }
@@ -277,9 +292,8 @@ class VaccineController extends ControllerBase {
       $site_name = $site_data['name'];
       $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
       $restrictions = $site_data['open_to']['everyone'];
-      $restrictions_text = ($restrictions == FALSE) ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
-      $address_text = $site_data['location']['address'];
-      $address_url = $site_data['location']['url'];
+      $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
+      $location = $site_data['location'];
       $wheelchair = $site_data['access']['wheelchair'];
 
       // Map results.
@@ -296,11 +310,12 @@ class VaccineController extends ControllerBase {
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
           'data-remote-asl' => $language_text['remote_asl'],
           'data-access-mode' => implode('-', $access_mode_keys),
+          'data-lat' => $location['lat'],
+          'data-lng' => $location['lng'],
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions_text' => $restrictions_text,
-        'address_text' => $address_text,
-        'address_url' => $address_url,
+        'location' => $location,
         'languages' => $language_text['printed_languages'],
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,

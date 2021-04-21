@@ -49,21 +49,21 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 50
+          items_per_page: 100
           offset: 0
           id: 0
           total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
           tags:
             previous: ‹‹
             next: ››
+          expose:
+            items_per_page: true
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50, 100, 200'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: true
+            offset_label: Offset
       style:
         type: table
         options:
@@ -82,8 +82,8 @@ display:
             type: type
             timestamp: timestamp
             message: message
-            name: name
             link: link
+            uid: uid
           info:
             nothing:
               sortable: false
@@ -127,18 +127,18 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            name:
+            link:
+              align: ''
+              separator: ''
+              empty_column: true
+              responsive: priority-low
+            uid:
               sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
-              responsive: priority-medium
-            link:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: priority-low
+              responsive: ''
           default: wid
           empty_table: false
       row:
@@ -201,7 +201,7 @@ display:
           group_type: group
           admin_label: ''
           label: WID
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -419,7 +419,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: 56
+            max_length: 150
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -443,11 +443,60 @@ display:
           hide_alter_empty: true
           replace_variables: true
           plugin_id: dblog_message
-        name:
-          id: name
-          table: users_field_data
-          field: name
-          relationship: uid
+        link:
+          id: link
+          table: watchdog
+          field: link
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: dblog_operations
+        uid:
+          id: uid
+          table: watchdog
+          field: uid
+          relationship: none
           group_type: group
           admin_label: ''
           label: User
@@ -491,72 +540,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: value
-          type: user_name
-          settings:
-            link_to_entity: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: user
-          entity_field: name
-          plugin_id: field
-        link:
-          id: link
-          table: watchdog
-          field: link
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: Operations
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin_id: dblog_operations
+          plugin_id: standard
       filters:
         type:
           id: type
@@ -575,6 +559,8 @@ display:
             description: ''
             use_operator: false
             operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: type
             required: false
             remember: false
@@ -582,10 +568,10 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
+              writer: '0'
+              publisher: '0'
               administrator: '0'
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -640,6 +626,94 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: in_operator
+        wid:
+          id: wid
+          table: watchdog
+          field: wid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: between
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: wid_op
+            label: 'Watchdog ID (WID)'
+            description: ''
+            use_operator: true
+            operator: wid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: wid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: numeric
+        type_1:
+          id: type_1
+          table: watchdog
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: 'not in'
+          value:
+            cron: cron
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: dblog_types
       sorts:
         wid:
           id: wid
@@ -668,16 +742,7 @@ display:
           tokenize: false
           content: 'No log messages available.'
           plugin_id: text_custom
-      relationships:
-        uid:
-          id: uid
-          table: watchdog
-          field: uid
-          relationship: none
-          group_type: group
-          admin_label: User
-          required: false
-          plugin_id: standard
+      relationships: {  }
       arguments: {  }
       display_extenders: {  }
       filter_groups:
@@ -685,10 +750,10 @@ display:
         groups:
           1: AND
       css_class: admin-dblog
+      group_by: false
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
@@ -697,15 +762,196 @@ display:
   page:
     display_plugin: page
     id: page
-    display_title: Page
+    display_title: 'Page - Log entries'
     position: 1
     display_options:
       display_extenders: {  }
       path: admin/reports/dblog
+      menu:
+        type: 'default tab'
+        title: Logs
+        description: ''
+        expanded: false
+        parent: ''
+        weight: -10
+        context: '0'
+        menu_name: main
+      tab_options:
+        type: none
+        title: 'Log Entries'
+        description: 'Log entries except cron.'
+        weight: 0
+      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: 'Page - Cron log entries'
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: admin/reports/dblog/cron
+      menu:
+        type: tab
+        title: 'Cron logs'
+        description: ''
+        expanded: false
+        parent: ''
+        weight: -5
+        context: '0'
+        menu_name: main
+      filters:
+        type:
+          id: type
+          table: watchdog
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            cron: cron
+          group: 1
+          exposed: false
+          expose:
+            operator_id: type_op
+            label: Type
+            description: ''
+            use_operator: true
+            operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: dblog_types
+        severity:
+          id: severity
+          table: watchdog
+          field: severity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: severity_op
+            label: Severity
+            description: ''
+            use_operator: false
+            operator: severity_op
+            identifier: severity
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: in_operator
+        wid:
+          id: wid
+          table: watchdog
+          field: wid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: between
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: wid_op
+            label: 'Watchdog ID (WID)'
+            description: ''
+            use_operator: true
+            operator: wid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: wid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: numeric
+      defaults:
+        filters: false
+        filter_groups: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      display_description: ''
+    cache_metadata:
+      max-age: -1
+      contexts:
         - 'languages:language_interface'
         - url
         - url.query_args

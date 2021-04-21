@@ -5,6 +5,8 @@
  * Contains sfgov_vaccine.module.
  */
 
+use Drupal\Core\Site\Settings;
+
 /**
  * Defaults for settings form.
  */
@@ -39,4 +41,22 @@ function sfgov_vaccine_theme() {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function sfgov_vaccine_library_info_alter(&$libraries, $extension) {
+
+  // Dynamically add gmaps script to filter library.
+  $google_places_api_key = Settings::get('google_places_api_key');
+  $gmaps_url = sprintf("//maps.googleapis.com/maps/api/js?key=%s&callback=locationAutocomplete&libraries=places&v=weekly", $google_places_api_key);
+
+  if (isset($libraries['location'])) {
+    $libraries['location']['js'][$gmaps_url] = [
+      'attributes' => [
+        'async' => TRUE,
+      ],
+    ];
+  }
 }
