@@ -1,7 +1,11 @@
-<div {{ result.attributes }}>
-  <h3 class="vaccine-site__title notranslate">
-    {{ result.site_name }}
-  </h3>
+<div {{ result.attributes.setAttribute('data-order', loop.index) }}>
+  <div class="vaccine-site__header">
+    <h3 class="vaccine-site__title notranslate">
+      {{ result.site_name }}
+    </h3>
+
+    <div class="vaccine-site__distance"></div>
+  </div>
 
   {# Open to .. #}
   {% if result.restrictions_text %}
@@ -11,10 +15,10 @@
     </div>
   {% endif %}
 
-  {# address_url #}
-  {% if result.address_url %}
+  {# Address. #}
+  {% if result.location.url %}
     <div class="vaccine-site__address notranslate icon">
-      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+      <a href="{{ result.location.url }}">{{ result.location.address }}</a>
     </div>
   {% endif %}
 
