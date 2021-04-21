@@ -293,8 +293,7 @@ class VaccineController extends ControllerBase {
       $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
-      $address_text = $site_data['location']['address'];
-      $address_url = $site_data['location']['url'];
+      $location = $site_data['location'];
       $wheelchair = $site_data['access']['wheelchair'];
 
       // Map results.
@@ -311,11 +310,12 @@ class VaccineController extends ControllerBase {
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->settings('languages')),
           'data-remote-asl' => $language_text['remote_asl'],
           'data-access-mode' => implode('-', $access_mode_keys),
+          'data-lat' => $location['lat'],
+          'data-lng' => $location['lng'],
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions_text' => $restrictions_text,
-        'address_text' => $address_text,
-        'address_url' => $address_url,
+        'location' => $location,
         'languages' => $language_text['printed_languages'],
         'access_modes' => $access_mode_text,
         'info_url' => $info_url,
