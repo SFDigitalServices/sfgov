@@ -1,31 +1,32 @@
-<div {{ result.attributes }}>
-  <h3 class="vaccine-site__title notranslate">
-    {{ result.site_name }}
-  </h3>
-  {# address_url #}
-  {% if result.address_url %}
-    <div class="vaccine-site__address field notranslate">
-      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+<div {{ result.attributes.setAttribute('data-order', loop.index) }}>
+  <div class="vaccine-site__header">
+    <h3 class="vaccine-site__title notranslate">
+      {{ result.site_name }}
+    </h3>
+
+    <div class="vaccine-site__distance"></div>
+  </div>
+
+  {# Open to .. #}
+  {% if result.restrictions_text %}
+    <div class="vaccine-site__restrictions notranslate">
+      {# Raw tag is used here because this field can contain HTML. #}
+      {{ result.restrictions_text|raw }}
     </div>
   {% endif %}
 
-  {# Open to .. #}
-  <div class="vaccine-site__eligibility-availability">
-    <label class="notranslate">{{ result.restrictions }}</label>
-
-    {# 65 and over, etc #}
-    <div class="vaccine-site__eligibilities notranslate">
-      {% for eligibility in result.eligibilities %}
-        <span class="vaccine-site__eligibility">{{ eligibility }}</span>
-      {% endfor %}
+  {# Address. #}
+  {% if result.location.url %}
+    <div class="vaccine-site__address notranslate icon">
+      <a href="{{ result.location.url }}">{{ result.location.address }}</a>
     </div>
-  </div>
+  {% endif %}
 
   {# Languages #}
   {% if result.languages %}
-    <div class="field">
-      <label>{{ 'Languages'|t }}</label>
-      <div class="notranslate">
+    <div class="vaccine-site__languages notranslate icon">
+      <label>{{ template_strings.result.languages.label|t }}</label>
+      <div>
         {{ result.languages|join(', ') }}
       </div>
     </div>
@@ -33,16 +34,16 @@
 
   {# Drive thru, walk thru, wheelchair #}
   {% if result.access_modes %}
-    <div class="field">
-      <label>{{ 'Access'|t }}</label>
+    <div class="vaccine-site__access-mode notranslate icon">
+      <label>{{ template_strings.result.access_modes.label|t }}</label>
       {{ result.access_modes|join(', ') }}
     </div>
   {% endif %}
 
   {% if result.info_url %}
-    <div class="field notranslate">
+    <div class="notranslate">
       <a href="{{ result.info_url }}">
-        {{ 'Learn more about this location'|t }}
+        {{ template_strings.result.info_url.label|t }}
       </a>
     </div>
   {% endif %}

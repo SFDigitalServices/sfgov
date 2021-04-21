@@ -6,6 +6,8 @@ use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Url;
+use Druapl\views\Views;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -304,5 +306,17 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
     $form['revision_log']['#title'] = t('Add a revision note');
     $form['revision_log']['#placeholder'] = t('Log message');
     $form['revision_log']['#size'] = NULL;
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+*/
+function sfgov_admin_views_pre_view(&$view) {
+  if ($view->id() == 'content') {
+    // Set english as default langcode for admin content list
+    $filters = $view->getDisplay()->getOption('filters'); 
+    $filters["langcode"]["value"] = "en";
+    $view->display_handler->overrideOption('filters', $filters);
   }
 }

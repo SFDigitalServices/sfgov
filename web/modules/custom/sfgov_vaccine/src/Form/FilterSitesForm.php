@@ -68,18 +68,24 @@ class FilterSitesForm extends FormBase {
         'data-filter-toggle-content' => TRUE,
       ],
     ];
+
     $form['container']['toggle']['items'] = [
       '#type' => 'container',
     ];
+
+    // Single checkboxes.
     $form['container']['toggle']['items']['single_checkboxes'] = [
       '#type' => 'container',
     ];
+
+    // Single checkboxes - restrictions.
     $form['container']['toggle']['items']['single_checkboxes']['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.restrictions')),
       '#default_value' => TRUE,
     ];
 
+    // Single checkboxes - available.
     $form['container']['toggle']['items']['single_checkboxes']['available'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.available')),
@@ -91,10 +97,11 @@ class FilterSitesForm extends FormBase {
       '#default_value' => FALSE,
     ];
 
+    // Languages.
     $settings_languages = $this->settings('languages');
     $options_languages = [];
     foreach ($settings_languages as $key => $value) {
-      $options_languages[$key] = $this->t($value);
+      $options_languages[$key] = $this->t($value['filter_label']);
     }
 
     $form['container']['toggle']['items']['language'] = [
@@ -106,6 +113,7 @@ class FilterSitesForm extends FormBase {
       '#multiple' => FALSE,
     ];
 
+    // Access mode.
     $settings_access_mode = $this->settings('access_mode');
     $options_access_mode = [];
     foreach ($settings_access_mode as $key => $value) {
@@ -125,22 +133,37 @@ class FilterSitesForm extends FormBase {
       '#multiple' => FALSE,
     ];
 
-    $settings_eligibility = $this->settings('eligibility');
-    $options_eligibility = [];
-    $eligibility_keys = [];
-    foreach ($settings_eligibility as $key => $value) {
-      $short_key = $value['short_key'];
-      $text = $value['text'];
-      $options_eligibility[$short_key] = $this->t($text);
-      array_push($eligibility_keys, $short_key);
-    }
-    $form['#attached']['drupalSettings']['sfgov_vaccine']['eligibility_keys'] = $eligibility_keys;
-    $form['container']['toggle']['items']['eligibility'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t($this->settings('form_strings.eligibility_label')),
-      '#options' => $options_eligibility,
+    // Distance.
+    $form['container']['toggle']['items']['distance_from'] = [
+      '#type' => 'container',
     ];
 
+    $settings_radius = $this->settings('radius');
+    $options_radius = [];
+    foreach ($settings_radius as $key => $set) {
+      $value = $set['value'];
+      $text = $set['text'];
+      $options_radius[$value] = $this->t($text);
+    }
+
+    $form['container']['toggle']['items']['distance_from']['radius'] = [
+      '#type' => 'select',
+      '#title' => $this->t($this->settings('form_strings.distance_label')),
+      '#options' => $options_radius,
+      '#default_value' => 'all',
+      '#multiple' => FALSE,
+      '#suffix' => '<span>from</span>'
+    ];
+
+    $form['container']['toggle']['items']['location'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t($this->settings('form_strings.location_label')),
+      '#title_display' => 'invisible',
+    ];
+
+    $form['container']['toggle']['items']['location']['#attributes']['placeholder'] = $this->t($this->settings('form_strings.location_label'));
+
+    // Submit.
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t($this->settings('form_strings.submit_label')),
