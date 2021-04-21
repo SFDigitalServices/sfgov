@@ -7,6 +7,13 @@
     <div class="vaccine-site__distance"></div>
   </div>
 
+  {# Eligibility chicklets. #}
+  <div class="vaccine-site__eligibilities notranslate">
+    {% for eligibility in result.eligibilities %}
+      <span class="vaccine-site__eligibility">{{ eligibility }}</span>
+    {% endfor %}
+  </div>
+
   {# Open to .. #}
   {% if result.restrictions_text %}
     <div class="vaccine-site__restrictions notranslate">
@@ -14,13 +21,6 @@
       {{ result.restrictions_text|raw }}
     </div>
   {% endif %}
-
-  {# 65 and over, etc #}
-  <div class="vaccine-site__eligibilities notranslate">
-    {% for eligibility in result.eligibilities %}
-      <span class="vaccine-site__eligibility">{{ eligibility }}</span>
-    {% endfor %}
-  </div>
 
   {# Address. #}
   {% if result.location.url %}
