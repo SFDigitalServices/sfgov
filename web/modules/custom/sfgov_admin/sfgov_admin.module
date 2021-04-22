@@ -312,11 +312,11 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
 /**
  * Implements hook_views_pre_view().
 */
-function sfgov_admin_views_pre_view(&$view) {
+function sfgov_admin_views_pre_view(ViewExecutable $view) {
   if ($view->id() == 'content') {
-    // Set english as default langcode for admin content list
-    $filters = $view->getDisplay()->getOption('filters'); 
-    $filters["langcode"]["value"] = "en";
+    // Set english as default langcode for admin content list.
+    $filters = $view->getDisplay()->getOption('filters');
+    $filters["langcode"]["value"] = ["en"];
     $view->display_handler->overrideOption('filters', $filters);
   }
 }
