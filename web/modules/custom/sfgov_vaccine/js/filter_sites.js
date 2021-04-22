@@ -161,8 +161,8 @@
             return rtnData;
           })
           .sort(function (a, b) {
-            const orderA = a.getAttribute("data-order");
-            const orderB = b.getAttribute("data-order");
+            const orderA = parseInt(a.getAttribute("data-order"));
+            const orderB = parseInt(b.getAttribute("data-order"));
 
             let dataA = orderA;
             let dataB = orderB;
