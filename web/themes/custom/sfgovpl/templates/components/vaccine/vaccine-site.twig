@@ -39,11 +39,19 @@
     </div>
   {% endif %}
 
-  {# Drive thru, walk thru, wheelchair #}
+  {# Access - Drive thru, walk thru, wheelchair #}
   {% if result.access_modes %}
     <div class="vaccine-site__access-mode notranslate icon">
       <label>{{ template_strings.result.access_modes.label|t }}</label>
       {{ result.access_modes|join(', ') }}
+    </div>
+  {% endif %}
+
+  {# Brands - Pfizer, Moderna, etc #}
+  {% if result.brands.administered %}
+    <div class="vaccine-site__brands notranslate icon">
+      <label>{{ template_strings.result.brands.label|t }}</label>
+      {{ result.brands.administered|join(', ') }}
     </div>
   {% endif %}
 
