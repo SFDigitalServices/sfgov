@@ -2,33 +2,44 @@
   "use strict";
 
   Drupal.behaviors.filterSites = {
-    attach: function (context) {
+    attach: function (context, settings) {
       // @todo Banish the jquery!
 
-      // Set media query.
+      // Set media query and register event listener.
       const mediaQuery = window.matchMedia("(min-width: 768px)");
-
-      // On load.
-      filterVaccineSites();
-      layoutChange(mediaQuery);
-
-      // Register event listener.
       mediaQuery.addListener(layoutChange);
 
-      $(".vaccine-filter-form #edit-submit", context).on(
-        "click",
-        function (event) {
-          event.preventDefault();
-          filterVaccineSites();
-          showNoResultsMessage();
-        }
-      );
+      // Elements.
+      const sectionCount = $(".vaccine-filter__count");
+      const leftColumn = $(".group--left");
+      const sitesWrapper = $(".vaccine-filter__sites");
+      const submitButton = $(".vaccine-filter-form #edit-submit", context);
+
+      // Other variables.
+      let filterByAvailability = false;
+      const speed = "slow";
+      const class_match_available = "match-available";
+      const class_match_radius = "match-radius";
+
+      // On load.
+      displaySites();
+      layoutChange(mediaQuery);
+
+      // On Click.
+      submitButton.on("click", function (event) {
+        event.preventDefault();
+        leftColumn.fadeOut(0);
+        displaySites();
+        leftColumn.fadeIn(speed);
+        scrollUp(speed);
+      });
 
       function filterVaccineSites() {
         let restrictions_chkBox = { datatest: null };
-        let available_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
-        let groupByAvailability = false;
+        let locationInput = $("[name=location]");
+        let radiusInput = $("[name=radius]");
+        let userLocation = !!locationInput.val();
 
         if ($("[name=restrictions]").is(":checked") === true) {
           // show
@@ -38,9 +49,7 @@
           restrictions_chkBox.datatest = "";
         }
 
-        if ($("[name=available]").is(":checked") === true) {
-          groupByAvailability = true;
-        }
+        filterByAvailability = $("[name=available]").is(":checked");
 
         if ($("[name=wheelchair]").is(":checked") === true) {
           wheelchair_chkBox.datatest = "1";
@@ -48,119 +57,203 @@
           wheelchair_chkBox.datatest = "";
         }
 
-        let eligibily_datatests = ["sf", "hw", "ec", "af", "sd", "es"];
-        let eligibility_select = [];
-
-        for (let i in eligibily_datatests) {
-          let eligibility_option = eligibily_datatests[i];
-
-          // No eligibility selected.
-          if ($(`[name^="eligibility"]:checked`).length === 0) {
-            eligibility_select.push("all");
-          }
-
-          // this option in the array selected
-          else if (
-            $(`[name="eligibility[${eligibility_option}]"]`).is(":checked") ===
-            true
-          ) {
-            eligibility_select.push(eligibility_option);
-
-            // this option in the array not selected
-          } else {
-            eligibility_select.push("none");
-          }
-        }
-
-        // `elibibility_select` should be an an array of strings
-        // ["none", "hw", "none", "none", "none", "none"]
-        // ["all", "all", "all", "all", "all", "all"]
+        // Test and filter.
         $(".vaccine-site")
           .hide()
+          .removeClass("included")
           .filter(function () {
             let rtnData = "";
 
+            // "Only show sites open to the general public" checkbox.
             const restrictions_regExTest = new RegExp(
               restrictions_chkBox.datatest,
               "ig"
             );
-            const available_regExTest = new RegExp(
-              available_chkBox.datatest,
-              "ig"
-            );
 
-            if (groupByAvailability === true) {
-              $(".vaccine-filter__other").removeAttr("hidden");
+            // "Only show sites with available appointments" checkbox.
+            if (filterByAvailability === true) {
+              $(this).removeClass(class_match_available);
               if (
-                $(this).attr("data-available") === "1" ||
-                $(this).find(".dropin").length !== 0
+                $(this).attr("data-available") === "yes" ||
+                $(this).find(".js-dropin").length !== 0
               ) {
                 $(this).appendTo(".vaccine-filter__sites");
-              } else {
-                $(this).appendTo(".vaccine-filter__other-sites");
+                $(this).addClass(class_match_available);
               }
             } else {
               $(this).appendTo(".vaccine-filter__sites");
-              $(".vaccine-filter__other").attr("hidden", true);
+              $(this).addClass(class_match_available);
             }
 
+            // "Wheelchair accessible" checkbox.
             const wheelchair_regExTest = new RegExp(
               wheelchair_chkBox.datatest,
               "ig"
             );
 
-            const language_regExTest = new RegExp(
-              $("[name=language]").val().trim(),
-              "ig"
-            );
+            // Languages.
+            $(this).removeClass("language-match");
+            const language_selected = $("[name=language]").val().trim();
+            let language_other_test = null;
 
+            if (language_selected !== "en") {
+              if (language_selected !== "asl") {
+                let language_other_regExtest = new RegExp("rt", "ig");
+                language_other_test = $(this)
+                  .attr("data-language")
+                  .match(language_other_regExtest);
+              } else {
+                language_other_test = $(this)[0].hasAttribute(
+                  "data-remote-asl"
+                );
+              }
+            }
+
+            const language_regExTest = new RegExp(language_selected, "ig");
+
+            const language_test = $(this)
+              .attr("data-language")
+              .match(language_regExTest);
+
+            if (language_test || language_other_test) {
+              $(this).addClass("language-match");
+            }
+
+            // "Drive-thru or walk-thru" select (Access mode).
             const access_mode_regExTest = new RegExp(
               $("[name=access_mode]").val().trim(),
               "ig"
             );
 
-            $(this).removeClass("eligible");
-            for (const eligibility_option in eligibily_datatests) {
-              // `eligibility_regExTest` should be a string /hw/gi, /none/gi, /all/gi
-              let eligibility_regExTest = new RegExp(
-                eligibility_select[eligibility_option],
-                "ig"
+            // Distance.
+            $(this).addClass(class_match_radius);
+            if (userLocation) {
+              const distance = getDistance(
+                locationInput[0].getAttribute("data-lat"), //input lat
+                locationInput[0].getAttribute("data-lng"), //input long
+                $(this).data("lat"), // this lat
+                $(this).data("lng") // this lng
               );
 
-              const eligibility_test = $(this)
-                .attr("data-eligibility")
-                .match(eligibility_regExTest);
-
-              if (eligibility_test) {
-                $(this).addClass("eligible");
+              if (distance > radiusInput.val()) {
+                $(this).removeClass(class_match_radius);
               }
+              $(this)
+                .find(".vaccine-site__distance")
+                .text(Math.round(distance * 10) / 10 + "mi");
+              $(this)[0].setAttribute("data-distance", distance);
+              $(this)
+                .find(".vaccine-site__header")
+                .addClass("distance-visible");
+            } else {
+              $(this).find(".vaccine-site__distance").text("");
             }
 
+            // Return list of matching sites.
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
-              $(this).attr("data-language").match(language_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
-              $(this).hasClass("eligible");
+              $(this).hasClass("language-match") &&
+              $(this).hasClass(class_match_available) &&
+              $(this).hasClass(class_match_radius);
 
             return rtnData;
           })
           .sort(function (a, b) {
-            const dataA = $(a).data("available");
-            const dataB = $(b).data("available");
-            return dataA < dataB;
+            const orderA = parseInt(a.getAttribute("data-order"));
+            const orderB = parseInt(b.getAttribute("data-order"));
+
+            let dataA = orderA;
+            let dataB = orderB;
+
+            // Sort by distance and then order if location is entered.
+            if (userLocation) {
+              dataA = a.getAttribute("data-distance");
+              dataB = b.getAttribute("data-distance");
+
+              if (dataA === dataB) {
+                dataA = orderA;
+                dataB = orderB;
+              }
+            }
+
+            return dataA < dataB ? -1 : 1;
           })
-          .show();
+          .show()
+          .addClass("included")
+          .appendTo(sitesWrapper);
       }
 
       function showNoResultsMessage() {
-        if ($(".vaccine-site:visible").length === 0) {
-          $(".vaccine-filter__empty").removeAttr("hidden");
+        $(".vaccine-filter__empty").show();
+      }
+
+      function hideNoResultsMessage() {
+        $(".vaccine-filter__empty").hide();
+      }
+
+      function showCount(speed) {
+        let count = $(".vaccine-site.included").length;
+        sectionCount.find("span").text(count);
+        sectionCount.show();
+      }
+
+      function hideCount() {
+        sectionCount.hide();
+      }
+
+      function showSites() {
+        $(".vaccine-filter__sites").show();
+      }
+
+      function hideSites() {
+        $(".vaccine-filter__sites").hide();
+      }
+
+      // @see https://en.wikipedia.org/wiki/Haversine_formula
+      // @see https://simplemaps.com/resources/location-distance
+      function getDistance(lat1, lng1, lat2, lng2) {
+        function deg2rad(deg) {
+          return deg * (Math.PI / 180);
+        }
+        function square(x) {
+          return Math.pow(x, 2);
+        }
+        const r = 6371; // radius of the earth in km
+        lat1 = deg2rad(lat1);
+        lat2 = deg2rad(lat2);
+        const lat_dif = lat2 - lat1;
+        const lng_dif = deg2rad(lng2 - lng1);
+        const a =
+          square(Math.sin(lat_dif / 2)) +
+          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2));
+        let d = 2 * r * Math.asin(Math.sqrt(a));
+
+        return Math.round(d * 0.621371 * 10) / 10; // Return miles.
+      }
+
+      // This is the main function.
+      function displaySites() {
+        filterVaccineSites();
+
+        if (
+          // If there are no results.
+          $(".vaccine-filter__sites .included").length === 0
+        ) {
+          hideCount();
+          hideSites();
+          showNoResultsMessage();
         } else {
-          $(".vaccine-filter__empty").attr("hidden", true);
+          // If "Only show sites with available appointments" is not checked and
+          // there are sites that meet the selected criteria.
+          hideNoResultsMessage();
+          showSites();
+          showCount();
         }
       }
 
+      // Responsive layout.
       function layoutChange(e) {
         if (e.matches) {
           $(".vaccine-filter__filters").appendTo(".group--right");
@@ -169,6 +262,12 @@
             ".vaccine-filter__filter-top > div"
           );
         }
+      }
+
+      // Scroll to Top.
+      function scrollUp(speed) {
+        let newPosition = sectionCount.offset().top - 150;
+        $("html, body").animate({ scrollTop: newPosition }, speed);
       }
     },
   };
