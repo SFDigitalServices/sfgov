@@ -79,12 +79,13 @@ class PowerBiEmbedFormatter extends FormatterBase {
 
     $element = [];
     if (($source = $media->getSource()) && $source instanceof PowerBi) {
-      /** @var \Drupal\media\MediaTypeInterface $item */
+      /** @var \Drupal\Core\Field\Plugin\Field\FieldType\StringItem $item */
       foreach ($items as $delta => $item) {
-        if ($url = $source->getMetadata($media, 'embed_url')) {
+        if ($url = $item->value) {
           $element[$delta] = [
             '#theme' => 'media_power_bi',
             '#url' => $url,
+            '#device' => $items->getName() === "field_media_power_bi_mobile" ? "mobile" : "desktop",
             '#width' => $this->getSetting('width'),
             '#height' => $this->getSetting('height'),
           ];
