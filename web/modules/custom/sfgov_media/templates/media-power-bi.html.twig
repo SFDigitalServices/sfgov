@@ -11,6 +11,7 @@
  */
 #}
 {{ attach_library("sfgov_media/power_bi") }}
-<div data-power-bi data-device="{{ device }}" data-src="{{ url }}" style="display: none">
-  <iframe width="{{ width }}" height="{{ height }}" loading="lazy"></iframe>
+{% set padding = device == "desktop" ? "100%" : "225%" %}
+<div data-power-bi data-device="{{ device }}" data-src="{{ url }}" style="display: none; position: relative; padding-top: calc({{ padding }} + 37px)">
+  <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;"></iframe>
 </div>
