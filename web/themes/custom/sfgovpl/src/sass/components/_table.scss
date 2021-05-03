@@ -1,10 +1,53 @@
 // @see qless-table.html.twig
 .sfgov-table {
+  border-spacing: 0;
+  margin-bottom: 50px;
   width: 100%;
 
+  caption {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
   thead {
-    @include fs-body-bold;
     background: $c-slate;
     color: $c-white;
+    text-align: left;
+  }
+
+  th {
+    padding: 10px 20px;
+    @include fs-body-bold;
+  }
+
+  tr.even {
+    background: $c-grey-2;
+  }
+
+  tbody {
+    td {
+      border-color: $c-slate;
+      border-style: solid;
+      padding: 16px 20px;
+
+      &:first-child {
+        border-width: 0 0 0 1px;
+      }
+
+      &:last-child {
+        border-width: 0 1px 0 0;
+      }
+    }
+    tr:last-child td {
+      border-bottom: 1px solid $c-slate;
+    }
+  }
+
+  tfoot td {
+    @include fs-small-text;
+
+    color: $c-light-slate;
+    padding-top: 10px;
+    text-align: right;
   }
 }
