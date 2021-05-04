@@ -58,20 +58,51 @@ class QLess {
       "data" => [
         "timestamp" => "2021-05-04T00:03:18.089Z",
         "queues" => [
-      [
-        "id" => 2879556,
-        "name" => "Some queue",
-        "state" => "ACTIVE",
-        "location_id" => 3294872,
-        "wait_time" => 60,
-      ],
-      [
-        "id" => 2897234,
-        "name" => "Some other queue",
-        "state" => "CLOSED",
-        "location_id" => 3294872,
-        "wait_time" => NULL,
-      ],
+          [
+            "id" => 2879556,
+            "name" => "Some queue",
+            "state" => "ACTIVE",
+            "location_id" => 3294872,
+            "wait_time" => 60,
+          ],
+          [
+            "id" => 2897234,
+            "name" => "Some other queue",
+            "state" => "CLOSED",
+            "location_id" => 3294872,
+            "wait_time" => NULL,
+          ],
+          [
+            "id" => 2895557234,
+            "name" => "Some other third queue",
+            "state" => "ACTIVE",
+            "location_id" => 3294872,
+            "wait_time" => 85,
+          ],
+
+          [
+            "id" => 2895557234,
+            "name" => "Fourth queue",
+            "state" => "ACTIVE",
+            "location_id" => 3294872,
+            "wait_time" => 15,
+          ],
+
+          [
+            "id" => 2895557234,
+            "name" => "Inactive queue",
+            "state" => "INACTIVE",
+            "location_id" => 3294872,
+            "wait_time" => 15,
+          ],
+
+          [
+            "id" => 2895557234,
+            "name" => "Closing queue",
+            "state" => "CLOSING",
+            "location_id" => 3294872,
+            "wait_time" => 15,
+          ],
         ],
       ],
     ];
@@ -86,14 +117,52 @@ class QLess {
     $class = '';
     $text = '';
 
-    if ($value < 60 && $value > 0) {
-      $class = 'open';
-      $text = $value . 'minutes';
+    if ($value == NULL) {
+      $state = 'CLOSED';
     }
+
     else {
-      $class = 'open';
-      $text = $value . 'minutes';
+
+      $hours = floor($value / 60);
+      $minutes = $value % 60;
+
+      $min_text = '';
+
+      if ($minutes == 1) {
+        $min_text = sprintf('%s minute', $minutes);
+      }
+      elseif ($minutes > 1) {
+        $min_text = sprintf('%s minutes', $minutes);
+      }
+
+      $hour_text = '';
+
+      if ($hours == 1) {
+        $hour_text = sprintf('%s hour', $hours);
+      }
+      elseif ($hours > 1) {
+        $hour_text = sprintf('%s hours', $hours);
+      }
+
+      $text = sprintf('%s %s', $hour_text, $min_text);
     }
+
+    switch ($state) :
+      case 'ACTIVE':
+        $class = 'open';
+        break;
+
+      case 'INACTIVE':
+      case 'CLOSED':
+        $class = 'closed';
+        $text = 'Closed';
+        break;
+
+      case 'CLOSING':
+        $class = 'closed';
+        $text = 'Full';
+        break;
+    endswitch;
 
     return [
       'data' => [
