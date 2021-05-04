@@ -5,26 +5,13 @@
  * Contains sfgov_qless.module.
  */
 
+
 /**
  * Implements hook_preprocess_HOOK().
  */
-function sfgov_qless_preprocess_html(&$variables) {
-  $route = \Drupal::routeMatch()->getRouteName();
-  if ($route == 'sfgov_qless.qless_controller_display_page') {
-    $variables['attributes']['class'][] = 'page-sfgov-qless';
+function sfgov_qless_preprocess_node(&$variables) {
+  if ($variables['node']->id() == '1699') {
+    $values = \Drupal::service('sfgov_qless');
+    $variables['qless'] = $values->renderTable();
   }
-}
-
-/**
- * Implements hook_theme().
- */
-function sfgov_qless_theme() {
-  return [
-    'qless' => [
-      'variables' => [
-        'results' => NULL,
-        'api_data' => NULL,
-      ],
-    ],
-  ];
 }
