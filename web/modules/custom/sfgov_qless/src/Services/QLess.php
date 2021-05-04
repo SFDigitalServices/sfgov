@@ -51,11 +51,66 @@ class QLess {
 
   /**
    * Get config settings for this module.
-   *
-   * $value Int|NUll
    */
-  private function displayWaitTime( $value) {
-    return;
+  private function getQLessData() {
+    return [
+      "status" => "success",
+      "data" => [
+        "timestamp" => "2021-05-04T00:03:18.089Z",
+        "queues" => [
+      [
+        "id" => 2879556,
+        "name" => "Some queue",
+        "state" => "ACTIVE",
+        "location_id" => 3294872,
+        "wait_time" => 60,
+      ],
+      [
+        "id" => 2897234,
+        "name" => "Some other queue",
+        "state" => "CLOSED",
+        "location_id" => 3294872,
+        "wait_time" => NULL,
+      ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Get config settings for this module.
+   *
+   * $value Int|NUll.
+   */
+  private function displayWaitTime($value, $state) {
+    $class = '';
+    $text = '';
+
+    if ($value < 60 && $value > 0) {
+      $class = 'open';
+      $text = $value . 'minutes';
+    }
+    else {
+      $class = 'open';
+      $text = $value . 'minutes';
+    }
+
+    return [
+      'data' => [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => $text,
+        '#attributes' => ['class' => $class],
+      ],
+    ];
+  }
+
+  /**
+   *
+   */
+  private function buildRow($title, $value, $state) {
+
+    return [$title, $this->displayWaitTime($value, $state)];
   }
 
   /**
@@ -63,23 +118,25 @@ class QLess {
    */
   public function renderTable() {
 
-    $caption = t($this->settings('caption'));
     $title = t($this->settings('title'));
+    $caption = t($this->settings('caption'));
     $thead1 = t($this->settings('thead1'));
     $thead2 = t($this->settings('thead2'));
-
     $header = [
       $thead1,
-      $thead2
+      $thead2,
     ];
 
-    $rows = [
-      ['Buidling: Architectural Review', '15 min'],
-      ['ODI: Architectural Review', '45 min'],
-    ];
+    $data = $this->getQLessData();
+    $queues = $data['data']['queues'];
+    $rows = [];
+
+    foreach ($queues as $id => $queue) {
+      array_push($rows, $this->buildRow($queue['name'], $queue['wait_time'], $queue['state']));
+    }
 
     $footer = [
-      ['', 'time']
+      ['', $data['timestamp']],
     ];
 
     return [
@@ -90,7 +147,8 @@ class QLess {
       '#caption' => $caption,
       '#header' => $header,
       '#rows' => $rows,
-      '#footer' => $footer
+      '#footer' => $footer,
     ];
   }
+
 }
