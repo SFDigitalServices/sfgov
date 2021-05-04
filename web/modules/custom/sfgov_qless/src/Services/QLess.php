@@ -52,7 +52,7 @@ class QLess {
   /**
    * Get config settings for this module.
    */
-  private function getQLessData() {
+  private function getQLessJson() {
     return [
       "status" => "success",
       "data" => [
@@ -197,8 +197,8 @@ class QLess {
       $thead2,
     ];
 
-    $data = $this->getQLessData();
-    $queues = $data['data']['queues'];
+    $json = $this->getQLessJson();
+    $queues = $json['data']['queues'];
     $rows = [];
 
     foreach ($queues as $id => $queue) {
@@ -211,8 +211,12 @@ class QLess {
       ]);
     }
 
+    $day = date("F j", strtotime($json['data']['timestamp']));
+    $time = date("g:i a", strtotime($json['data']['timestamp']));
+    $label =
+      'Last Updated';
     $footer = [
-      ['', $data['timestamp']],
+      ['', sprintf('%s: %s at %s', $label, $day, $time)],
     ];
 
     return [
