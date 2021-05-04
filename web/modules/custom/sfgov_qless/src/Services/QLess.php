@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  *
  */
-class QlessValues {
+class QLess {
   /**
    * State object.
    *
@@ -49,4 +49,35 @@ class QlessValues {
     return $this->configFactory->get('sfgov_qless.settings')->get($value);
   }
 
+  /**
+   * Render the Queue as a Table.
+   */
+  public function renderTable() {
+
+    $caption = $this->settings('template_strings.table.caption');
+    $header = [
+      'queue' => 'Queue',
+      'time' => 'Wait time'
+    ];
+
+    $rows = [
+      ['Buidling: Architectural Review', '15 min'],
+      ['ODI: Architectural Review', '45 min'],
+    ];
+
+    $footer = [
+      ['', 'time']
+    ];
+
+    return [
+      '#type' => 'table',
+      '#prefix' => '<h2>Wait times</h2>',
+      '#attributes' => ['class' => 'sfgov-table'],
+      '#responsive' => FALSE,
+      '#caption' => $caption,
+      '#header' => $header,
+      '#rows' => $rows,
+      '#footer' => $footer
+    ];
+  }
 }
