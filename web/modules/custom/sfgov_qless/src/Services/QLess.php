@@ -202,7 +202,13 @@ class QLess {
     $rows = [];
 
     foreach ($queues as $id => $queue) {
-      array_push($rows, $this->buildRow($queue['name'], $queue['wait_time'], $queue['state']));
+
+      $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
+      array_push($rows, [
+        'class' => $stripe_class,
+        'data'  => $this->buildRow($queue['name'], $queue['wait_time'], $queue['state']),
+
+      ]);
     }
 
     $footer = [
