@@ -115,6 +115,9 @@ class QLess {
    */
   private function displayWaitTime($value, $state) {
 
+    $open = '';
+    $text = '';
+
     if ($value == NULL) {
       $state = 'CLOSED';
     }
@@ -145,8 +148,6 @@ class QLess {
       $text = sprintf('%s %s', $hour_text, $min_text);
     }
 
-    $open = '';
-    $text = '';
     switch ($state) :
       case 'ACTIVE':
         $open = TRUE;
