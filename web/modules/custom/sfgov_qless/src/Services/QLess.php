@@ -50,14 +50,27 @@ class QLess {
   }
 
   /**
+   * Get config settings for this module.
+   *
+   * $value Int|NUll
+   */
+  private function displayWaitTime( $value) {
+    return;
+  }
+
+  /**
    * Render the Queue as a Table.
    */
   public function renderTable() {
 
-    $caption = $this->settings('template_strings.table.caption');
+    $caption = t($this->settings('caption'));
+    $title = t($this->settings('title'));
+    $thead1 = t($this->settings('thead1'));
+    $thead2 = t($this->settings('thead2'));
+
     $header = [
-      'queue' => 'Queue',
-      'time' => 'Wait time'
+      $thead1,
+      $thead2
     ];
 
     $rows = [
@@ -71,7 +84,7 @@ class QLess {
 
     return [
       '#type' => 'table',
-      '#prefix' => '<h2>Wait times</h2>',
+      '#prefix' => '<h2>' . $title . '</h2>',
       '#attributes' => ['class' => 'sfgov-table'],
       '#responsive' => FALSE,
       '#caption' => $caption,
