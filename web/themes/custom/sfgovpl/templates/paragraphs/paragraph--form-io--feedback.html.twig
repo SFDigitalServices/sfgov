@@ -48,11 +48,20 @@
             if (event.changed) {
               var key = event.changed.component.key;
 
+
               // The value of 'isHelpful' (hidden field, default value "Yes") is
               // set via field Logic. It listens for a custom event named
               // 'notHelpfulEvent', which is triggered on click for the "No"
               // (helpfulNo) and "Report a problem..." (reportIssue) buttons,
               // and changes the value of isHelpful to "No".
+
+              if (form.data.helpfulYes == true) {
+                console.log('clicked yes');
+                $(messageComponent.element).find('textarea').focus();
+                //$('.formio-component-textarea').text('What was helpful about this page?');
+                $('.formio-component-textarea').show();
+              }
+
               if (key === 'isHelpful') {
                 // Focus the next field.
                 $(messageComponent.element).find('textarea').focus();
@@ -65,7 +74,7 @@
                   }
                   if (form.data.reportIssue === true) {
                     eventDescription = 'Report issue button clicked';
-                  }
+                    }
                   amplitudeData.feedback = {
                     'type': 'change',
                     'description': eventDescription,
@@ -90,7 +99,9 @@
             if (typeof amplitude != 'undefined') {
               amplitudeData.feedback = {
                 'type': 'submit',
-                'description': submission.data.isHelpful === 'Yes' ? 'Helpful' : 'Not Helpful',
+                // updated feedback description logic
+                'description': form.data.helpfulYes == true ? 'Helpful' : 'Not Helpful',
+                //'description': submission.data.isHelpful === 'Yes' ? 'Helpful' : 'Not Helpful',
                 'data': submission.data,
               }
               amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
