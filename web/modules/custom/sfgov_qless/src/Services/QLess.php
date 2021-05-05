@@ -83,7 +83,7 @@ class QLess {
   /**
    * Get the microservice url from config.
    */
-  private function getAPIUrl() {
+  private function getApiUrl() {
     return $this->settings('api_url');
   }
 
@@ -95,7 +95,7 @@ class QLess {
     $url = '';
 
     try {
-      $url = $this->getAPIUrl();
+      $url = $this->getApiUrl();
       $request = $this->httpClient->get($url, [
         'http_errors' => FALSE,
       ]);
@@ -108,7 +108,6 @@ class QLess {
         '%message' => $e->getMessage(),
       ]);
     }
-
     return Json::decode($response);
   }
 
@@ -210,14 +209,15 @@ class QLess {
     $json = $this->allData;
     $queues = $json['data']['queues'];
     $rows = [];
+
     foreach ($queues as $id => $queue) {
       $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
       array_push($rows, [
         'class' => $stripe_class,
         'data'  => $this->buildRow(
           $queue['description'] ?? $queue['description'] ?? '',
-          isset($queue['wait_time']) ?? $queue['wait_time'],
-          isset($queue['state']) ?? $queue['state']
+          $queue['wait_time'] ?? $queue['wait_time'] ?? '',
+          $queue['state'] ?? $queue['state'] ?? ''
         ),
       ]);
     }
