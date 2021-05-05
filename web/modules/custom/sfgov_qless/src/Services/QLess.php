@@ -255,7 +255,8 @@ class QLess {
       '#header' => $header,
       '#rows' => $rows,
       '#footer' => $footer,
-      '#suffix' => Markup::create(sprintf('<!-- %s -->', $this->getApiUrl()))
+      '#suffix' => Markup::create(sprintf('<!-- %s -->', $this->getApiUrl())),
+      '#cache' => ['max-age' => 0]
     ];
   }
 
