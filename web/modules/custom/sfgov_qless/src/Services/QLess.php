@@ -2,8 +2,13 @@
 
 namespace Drupal\sfgov_qless\Services;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\State\State;
 use Drupal\Core\Config\ConfigFactory;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,11 +30,35 @@ class QLess {
   protected $configFactory;
 
   /**
+   * The HTTP client.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * The logger factory service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
+   * Data from the microservice.
+   *
+   * @var arrayorNULL
+   */
+  protected $allData = NULL;
+
+  /**
    * Class constructor.
    */
-  public function __construct(State $state, ConfigFactory $configFactory) {
+  public function __construct(State $state, ConfigFactory $configFactory, ClientInterface $http_client, LoggerChannelFactoryInterface $loggerFactory) {
     $this->state = $state;
     $this->configFactory = $configFactory;
+    $this->httpClient = $http_client;
+    $this->loggerFactory = $loggerFactory;
+    $this->allData = $this->dataFetch();
   }
 
   /**
@@ -38,7 +67,9 @@ class QLess {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('state'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('http_client'),
+      $container->get('logger.factory')
     );
   }
 
@@ -50,62 +81,35 @@ class QLess {
   }
 
   /**
-   * Get config settings for this module.
+   * Get the microservice url from config.
    */
-  private function getQLessJson() {
-    return [
-      "status" => "success",
-      "data" => [
-        "timestamp" => "2021-05-04T00:03:18.089Z",
-        "queues" => [
-          [
-            "id" => 2879556,
-            "name" => "Some queue",
-            "state" => "ACTIVE",
-            "location_id" => 3294872,
-            "wait_time" => 60,
-          ],
-          [
-            "id" => 2897234,
-            "name" => "Some other queue",
-            "state" => "CLOSED",
-            "location_id" => 3294872,
-            "wait_time" => NULL,
-          ],
-          [
-            "id" => 2895557234,
-            "name" => "Some other third queue",
-            "state" => "ACTIVE",
-            "location_id" => 3294872,
-            "wait_time" => 85,
-          ],
+  private function getAPIUrl() {
+    return $this->settings('api_url');
+  }
 
-          [
-            "id" => 2895557234,
-            "name" => "Fourth queue",
-            "state" => "ACTIVE",
-            "location_id" => 3294872,
-            "wait_time" => 15,
-          ],
+  /**
+   * Get data from the mircoservice.
+   */
+  public function dataFetch() {
 
-          [
-            "id" => 2895557234,
-            "name" => "Inactive queue",
-            "state" => "INACTIVE",
-            "location_id" => 3294872,
-            "wait_time" => 15,
-          ],
+    $url = '';
 
-          [
-            "id" => 2895557234,
-            "name" => "Closing queue",
-            "state" => "CLOSING",
-            "location_id" => 3294872,
-            "wait_time" => 15,
-          ],
-        ],
-      ],
-    ];
+    try {
+      $url = $this->getAPIUrl();
+      $request = $this->httpClient->get($url, [
+        'http_errors' => FALSE,
+      ]);
+      $response = $request->getBody();
+    }
+    catch (ConnectException | RequestException $e) {
+      $response = NULL;
+      $this->loggerFactory->get('sfgov_qless')->error('Could not fetch data from %url. %message', [
+        '%url' => $url ?: 'url',
+        '%message' => $e->getMessage(),
+      ]);
+    }
+
+    return Json::decode($response);
   }
 
   /**
@@ -182,6 +186,10 @@ class QLess {
    */
   public function renderTable() {
 
+    if ($this->allData == NULL) {
+      return NULL;
+    }
+
     // Get settings from Config.
     $title = t($this->settings('title'));
     $caption = t($this->settings('caption'));
@@ -195,30 +203,36 @@ class QLess {
       [
         'class' => 'visually-hidden-medium-below',
         'data' => $thead2,
-
-      ]
+      ],
     ];
 
     // Rows.
-    $json = $this->getQLessJson();
+    $json = $this->allData;
     $queues = $json['data']['queues'];
     $rows = [];
     foreach ($queues as $id => $queue) {
       $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
       array_push($rows, [
         'class' => $stripe_class,
-        'data'  => $this->buildRow($queue['name'], $queue['wait_time'], $queue['state']),
-
+        'data'  => $this->buildRow(
+          $queue['description'] ?? $queue['description'] ?? '',
+          isset($queue['wait_time']) ?? $queue['wait_time'],
+          isset($queue['state']) ?? $queue['state']
+        ),
       ]);
     }
 
     // Footer Rows.
-    $day = date("F j", strtotime($json['data']['timestamp']));
-    $time = date("g:i a", strtotime($json['data']['timestamp']));
-    $footer = [
-      ['', sprintf('%s: %s at %s', $footer_label, $day, $time)],
-    ];
+    $footer = NULL;
+    if (isset($json['data']['generated'])) {
+      $day = date("F j", strtotime($json['data']['generated']));
+      $time = date("g:i a", strtotime($json['data']['generated']));
+      $footer = [
+        ['', sprintf('%s: %s at %s', $footer_label, $day, $time)],
+      ];
+    }
 
+    // Render.
     return [
       '#type' => 'table',
       '#prefix' => '<h2>' . $title . '</h2>',
