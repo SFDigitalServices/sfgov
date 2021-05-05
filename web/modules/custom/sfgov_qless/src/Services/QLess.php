@@ -192,7 +192,11 @@ class QLess {
     // Header row.
     $header = [
       $thead1,
-      $thead2,
+      [
+        'class' => 'visually-hidden-medium-below',
+        'data' => $thead2,
+
+      ]
     ];
 
     // Rows.
