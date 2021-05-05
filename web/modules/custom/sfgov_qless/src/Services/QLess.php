@@ -10,6 +10,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Get and Display QLess data.
@@ -254,6 +255,7 @@ class QLess {
       '#header' => $header,
       '#rows' => $rows,
       '#footer' => $footer,
+      '#suffix' => Markup::create(sprintf('<!-- %s -->', $this->getApiUrl()))
     ];
   }
 
