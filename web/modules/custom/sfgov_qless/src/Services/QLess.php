@@ -7,7 +7,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- *
+ * Get and Display QLess data.
  */
 class QLess {
   /**
@@ -33,7 +33,7 @@ class QLess {
   }
 
   /**
-   *
+   * Create QLess object.
    */
   public static function create(ContainerInterface $container) {
     return new static(
@@ -109,6 +109,19 @@ class QLess {
   }
 
   /**
+   * Get the 'X hours X minutes' string.
+   */
+  private function getHoursMinutes($value, $label, $label_plural) {
+    $text = '';
+    if ($value > 0) {
+      $label = t($label)->render();
+      $label_plural = t($label_plural)->render();
+      $text = sprintf('%s %s', $value, ($value == 1) ? $label : $label_plural);
+    }
+    return $text;
+  }
+
+  /**
    * Get config settings for this module.
    *
    * $value Int|NUll.
@@ -123,28 +136,10 @@ class QLess {
     }
 
     else {
-
       $hours = floor($value / 60);
       $minutes = $value % 60;
-
-      $min_text = '';
-
-      if ($minutes == 1) {
-        $min_text = sprintf('%s minute', $minutes);
-      }
-      elseif ($minutes > 1) {
-        $min_text = sprintf('%s minutes', $minutes);
-      }
-
-      $hour_text = '';
-
-      if ($hours == 1) {
-        $hour_text = sprintf('%s hour', $hours);
-      }
-      elseif ($hours > 1) {
-        $hour_text = sprintf('%s hours', $hours);
-      }
-
+      $hour_text = $this->getHoursMinutes($hours, 'hour', 'hours');
+      $min_text = $this->getHoursMinutes($minutes, 'minute', 'minutes');
       $text = sprintf('%s %s', $hour_text, $min_text);
     }
 
@@ -176,10 +171,9 @@ class QLess {
   }
 
   /**
-   *
+   * Render Row.
    */
   private function buildRow($title, $value, $state) {
-
     return [$title, $this->displayWaitTime($value, $state)];
   }
 
@@ -188,21 +182,24 @@ class QLess {
    */
   public function renderTable() {
 
+    // Get settings from Config.
     $title = t($this->settings('title'));
     $caption = t($this->settings('caption'));
     $thead1 = t($this->settings('thead1'));
     $thead2 = t($this->settings('thead2'));
+    $footer_label = t($this->settings('footer_label'));
+
+    // Header row.
     $header = [
       $thead1,
       $thead2,
     ];
 
+    // Rows.
     $json = $this->getQLessJson();
     $queues = $json['data']['queues'];
     $rows = [];
-
     foreach ($queues as $id => $queue) {
-
       $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
       array_push($rows, [
         'class' => $stripe_class,
@@ -211,12 +208,11 @@ class QLess {
       ]);
     }
 
+    // Footer Rows.
     $day = date("F j", strtotime($json['data']['timestamp']));
     $time = date("g:i a", strtotime($json['data']['timestamp']));
-    $label =
-      'Last Updated';
     $footer = [
-      ['', sprintf('%s: %s at %s', $label, $day, $time)],
+      ['', sprintf('%s: %s at %s', $footer_label, $day, $time)],
     ];
 
     return [
