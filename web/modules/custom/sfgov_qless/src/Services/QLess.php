@@ -210,16 +210,28 @@ class QLess {
     $queues = $json['data']['queues'];
     $rows = [];
 
-    foreach ($queues as $id => $queue) {
-      $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
-      array_push($rows, [
-        'class' => $stripe_class,
-        'data'  => $this->buildRow(
-          $queue['description'] ?? $queue['description'] ?? '',
-          $queue['wait_time'] ?? $queue['wait_time'] ?? '',
-          $queue['state'] ?? $queue['state'] ?? ''
-        ),
-      ]);
+    $queues_to_display = ['1069', '1068', '2510', '1077', '1081'];
+
+    // Filter out the queues we want and display them in order.
+    foreach ($queues_to_display as $queue_id) {
+      foreach ($queues as $id => $queue) {
+
+        if ($queue_id == $queue['id']) {
+          $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
+
+          array_push($rows, [
+            'class' => $stripe_class,
+            'data'  => $this->buildRow(
+              $queue['description'] ?? $queue['description'] ?? '',
+              $queue['wait_time'] ?? $queue['wait_time'] ?? '',
+              $queue['state'] ?? $queue['state'] ?? ''
+            ),
+          ]);
+
+        }
+
+      }
+
     }
 
     // Footer Rows.
