@@ -214,11 +214,11 @@ class QLess {
     $queues_to_display = ['1069', '1068', '2510', '1077', '1081'];
 
     // Filter out the queues we want and display them in order.
-    foreach ($queues_to_display as $queue_id) {
+    foreach ($queues_to_display as $index => $queue_id) {
       foreach ($queues as $id => $queue) {
 
         if ($queue_id == $queue['id']) {
-          $stripe_class = $id % 2 == 0 ? 'odd' : 'even';
+          $stripe_class = $index % 2 == 0 ? 'odd' : 'even';
 
           array_push($rows, [
             'class' => $stripe_class,
