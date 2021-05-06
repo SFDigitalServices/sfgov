@@ -223,7 +223,7 @@ class QLess {
           array_push($rows, [
             'class' => $stripe_class,
             'data'  => $this->buildRow(
-              $queue['description'] ?? $queue['description'] ?? '',
+              $queue['name'] ?? $queue['name'] ?? '',
               $queue['wait_time'] ?? $queue['wait_time'] ?? '',
               $queue['state'] ?? $queue['state'] ?? ''
             ),
@@ -237,9 +237,9 @@ class QLess {
 
     // Footer Rows.
     $footer = NULL;
-    if (isset($json['data']['generated'])) {
-      $day = date("F j", strtotime($json['data']['generated']));
-      $time = date("g:i a", strtotime($json['data']['generated']));
+    if (isset($json['data']['timestamp'])) {
+      $day = date("F j", strtotime($json['data']['timestamp']));
+      $time = date("g:i a", strtotime($json['data']['timestamp']));
       $footer = [
         ['', sprintf('%s: %s at %s', $footer_label, $day, $time)],
       ];
