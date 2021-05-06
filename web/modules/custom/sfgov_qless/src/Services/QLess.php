@@ -256,7 +256,7 @@ class QLess {
     // Render.
     return [
       '#type' => 'table',
-      '#prefix' => '<h2>' . $title . '</h2>',
+      '#prefix' => '<h2 class="qless-h2">' . $title . '</h2>',
       '#attributes' => ['class' => 'sfgov-table'],
       '#responsive' => FALSE,
       '#caption' => $caption,
