@@ -186,7 +186,15 @@ class QLess {
    */
   public function renderTable() {
 
-    if ($this->allData == NULL) {
+    if ($this->allData == NULL || $this->allData['status'] == "error") {
+
+      $status = $queue['status'] ?? $queue['status'] ?? 'unknown';
+      $message = $queue['status'] ?? $queue['status'] ?? 'unknown';
+
+      $this->loggerFactory->get('sfgov_qless')->error('No QLess data. Status: %status Message: %message', [
+        '%status' => $status,
+        '%message' => $message,
+      ]);
       return NULL;
     }
 
