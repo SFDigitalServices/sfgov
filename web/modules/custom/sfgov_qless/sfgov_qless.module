@@ -10,7 +10,7 @@
  */
 function sfgov_qless_preprocess_node(&$variables) {
   if ($variables['node']->id() == '1699') {
-    $values = \Drupal::service('sfgov_qless');
-    $variables['qless'] = $values->renderTable();
+    $qless = \Drupal::service('sfgov_qless');
+    $variables['qless'] = $qless->renderTable();
   }
 }
