@@ -207,9 +207,12 @@ class QLess {
 
     // Header row.
     $header = [
-      $thead1,
       [
-        'class' => 'visually-hidden-medium-below',
+        'class' => 'notranslate',
+        'data' => $thead1,
+      ],
+      [
+        'class' => ['visually-hidden-medium-below', 'notranslate'],
         'data' => $thead2,
       ],
     ];
@@ -223,13 +226,13 @@ class QLess {
 
     // Filter out the queues we want and display them in order.
     foreach ($queues_to_display as $index => $queue_id) {
-      foreach ($queues as $id => $queue) {
+      foreach ($queues as $queue) {
 
         if ($queue_id == $queue['id']) {
           $stripe_class = $index % 2 == 0 ? 'odd' : 'even';
 
           array_push($rows, [
-            'class' => $stripe_class,
+            'class' => [$stripe_class, 'notranslate'],
             'data'  => $this->buildRow(
               $queue['name'] ?? $queue['name'] ?? '',
               $queue['wait_time'] ?? $queue['wait_time'] ?? '',
@@ -256,15 +259,20 @@ class QLess {
     // Render.
     return [
       '#type' => 'table',
-      '#prefix' => '<h2 class="qless-h2">' . $title . '</h2>',
+      '#prefix' => '<h2 class="qless-h2 notranslate">' . $title . '</h2>',
       '#attributes' => ['class' => 'sfgov-table'],
       '#responsive' => FALSE,
-      '#caption' => $caption,
+      '#caption' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $caption,
+        '#attributes' => ['class' => 'notranslate'],
+      ],
       '#header' => $header,
       '#rows' => $rows,
       '#footer' => $footer,
       '#suffix' => Markup::create(sprintf('<!-- %s -->', $this->getApiUrl())),
-      '#cache' => ['max-age' => 0]
+      '#cache' => ['max-age' => 0],
     ];
   }
 
