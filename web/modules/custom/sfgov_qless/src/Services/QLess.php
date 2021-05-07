@@ -252,7 +252,9 @@ class QLess {
       $day = date("F j", strtotime($json['data']['timestamp']));
       $time = date("g:i a", strtotime($json['data']['timestamp']));
       $footer = [
-        ['', sprintf('%s: %s at %s', $footer_label, $day, $time)],
+        ['',
+          Markup::create(sprintf('<span class="notranslate">%s</span>: %s at %s ', $footer_label, $day, $time)),
+        ],
       ];
     }
 
