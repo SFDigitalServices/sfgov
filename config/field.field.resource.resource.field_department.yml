@@ -1,0 +1,33 @@
+uuid: 849a520b-f428-4af4-b7c7-2ee5181b2ad2
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.resource.resource
+    - field.storage.resource.field_department
+    - node.type.department
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: resource.resource.field_department
+field_name: field_department
+entity_type: resource
+bundle: resource
+label: Department
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

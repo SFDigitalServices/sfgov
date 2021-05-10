@@ -52,6 +52,7 @@ h5 {
 
 a {
   @include link-colors($c-bright-blue, $c-dark-blue);
+  overflow-wrap: break-word;
 }
 
 li {
@@ -111,6 +112,12 @@ img {
 }
 .is-hidden {
   display: none;
+}
+
+.visually-hidden-medium-below {
+  @include media-max($medium-screen) {
+    @include visually-hidden;
+  }
 }
 
 *:focus {

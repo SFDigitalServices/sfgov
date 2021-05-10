@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_public_body
+    - node.type.department
     - node.type.meeting
     - node.type.public_body
   module:
@@ -15,7 +16,7 @@ id: node.meeting.field_public_body
 field_name: field_public_body
 entity_type: node
 bundle: meeting
-label: 'Public body'
+label: 'Public body or Department'
 description: ''
 required: true
 translatable: false
@@ -25,6 +26,7 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
+      department: department
       public_body: public_body
     sort:
       field: _none

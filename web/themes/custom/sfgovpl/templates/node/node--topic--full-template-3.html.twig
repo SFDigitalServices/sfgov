@@ -7,6 +7,14 @@
       </div>
     {% endif %}
 
+    {% if content.field_content_top|render %}
+      <div class="sfgov-full-bleed card-container">
+        <div class="sfgov-section-container">
+          {{ content.field_content_top }}
+        </div>
+      </div>
+    {% endif %}
+
     {% set services_field = content.field_department_services %}
     {% set services_view = services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') %}
     {% if services_field|render|striptags|trim or services_view|render|striptags|trim %}

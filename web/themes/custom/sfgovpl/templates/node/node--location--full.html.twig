@@ -66,18 +66,19 @@
  * @see template_preprocess_node()
 #}
 
-<article{{ attributes.addClass(classes) }}>
+<article {{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
-    'banner': {
-      'title': node.label(),
-      'text': node.field_title.value
+    banner: {
+      title: node.label(),
+      text: node.field_title.value,
+      notranslate: notranslate
     }
   } %}
 
   {# Alert #}
   {% include '@theme/alert.twig' with {
-    date_exp: node.field_alert_expiration_date.0.value,
-    style: 'department',
+    date_exp: node.field_alert_expiration_date[0].value,
+    style: 'department'
   } %}
 
   <div class="sfgov-section-container">
@@ -89,91 +90,109 @@
         </div>
       </div>
 
-      {% if node.field_intro_text is not empty or node.field_getting_here_items is not empty %}
-      <div class="sfgov-section sfgov-section-getting-here">
-        <h2 class="sfgov-section--heading">{{ "Getting here"|t }}</h2>
-        <div class="sfgov-section--content">
-          {{ content.field_intro_text }}
-          {{ content.field_getting_here_items }}
+      {{ qless }}
+
+      {% if
+        node.field_intro_text is not empty
+          or node.field_getting_here_items is not empty %}
+        <div class="sfgov-section sfgov-section-getting-here">
+          <h2 class="sfgov-section--heading">
+            {{ 'Getting here'|t }}
+          </h2>
+          <div class="sfgov-section--content">
+            {{ content.field_intro_text }}
+            {{ content.field_getting_here_items }}
+          </div>
         </div>
-      </div>
       {% endif %}
     </div>
 
     <div class="group--right">
       {% if node.field_phone_numbers is not empty %}
-      <div class="sfgov-section sfgov-section-contact">
-        <h2 class="sfgov-section--heading">{{ "Contact"|t }}</h2>
-        <div class="sfgov-section--content">
-          {{ content.field_phone_numbers }}
+        <div class="sfgov-section sfgov-section-contact">
+          <h2 class="sfgov-section--heading">
+            {{ 'Contact'|t }}
+          </h2>
+          <div class="sfgov-section--content">
+            {{ content.field_phone_numbers }}
+          </div>
         </div>
-      </div>
       {% endif %}
 
       {% if node.field_address is not empty %}
-      <div class="sfgov-section sfgov-section-address">
-        <div class="sfgov-section--content">
-          {{ content.field_address }}
+        <div class="sfgov-section sfgov-section-address">
+          <div class="sfgov-section--content">
+            {{ content.field_address }}
+          </div>
         </div>
-      </div>
       {% endif %}
     </div>
   </div>
 
   {% if node.field_services is not empty %}
-  <div class="sfgov-section sfgov-section-services">
-    <div class="sfgov-section-container">
-      <h2 class="sfgov-section--heading">{{ "Services"|t }}</h2>
-      <div class="sfgov-section--content">
-        {{ content.field_services }}
-      </div>
-    </div>
-  </div>
-  {% endif %}
-
-  {% if content.field_at_this_location|render %}
-  <div class="sfgov-section sfgov-section-at-location">
-    <div class="sfgov-section-container">
-      <h2 class="sfgov-section--heading">{{ "At"|t }} {{ label }}</h2>
-      <div class="sfgov-section--content">
-        {{ content.field_at_this_location }}
-      </div>
-    </div>
-  </div>
-  {% endif %}
-
-  {% if node.field_locations is not empty %}
-  <div class="sfgov-section sfgov-section-locations">
-    <div class="sfgov-section-container">
-      <h2 class="sfgov-section--heading">{{ "Related locations"|t }}</h2>
-      <div class="sfgov-section--content">
-        {{ content.field_locations }}
-      </div>
-    </div>
-  </div>
-  {% endif %}
-
-  {% if node.field_about_description is not empty or node.field_departments is not empty %}
-  <div class="sfgov-section sfgov-section-about">
-    <div class="sfgov-section-container">
-      <div class="group--left">
-        <h2 class="sfgov-section--heading">{{ "About"|t }}</h2>
+    <div class="sfgov-section sfgov-section-services">
+      <div class="sfgov-section-container">
+        <h2 class="sfgov-section--heading">
+          {{ 'Services'|t }}
+        </h2>
         <div class="sfgov-section--content">
-          {{ content.field_about_description }}
-          {{ content.field_departments }}
+          {{ content.field_services }}
         </div>
       </div>
     </div>
-  </div>
+  {% endif %}
+
+  {% if content.field_at_this_location|render %}
+    <div class="sfgov-section sfgov-section-at-location">
+      <div class="sfgov-section-container">
+        <h2 class="sfgov-section--heading">
+          {{ 'At'|t }} {{ label }}
+        </h2>
+        <div class="sfgov-section--content">
+          {{ content.field_at_this_location }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if node.field_locations is not empty %}
+    <div class="sfgov-section sfgov-section-locations">
+      <div class="sfgov-section-container">
+        <h2 class="sfgov-section--heading">
+          {{ 'Related locations'|t }}
+        </h2>
+        <div class="sfgov-section--content">
+          {{ content.field_locations }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if
+    node.field_about_description is not empty
+      or node.field_departments is not empty %}
+    <div class="sfgov-section sfgov-section-about">
+      <div class="sfgov-section-container">
+        <div class="group--left">
+          <h2 class="sfgov-section--heading">
+            {{ 'About'|t }}
+          </h2>
+          <div class="sfgov-section--content">
+            {{ content.field_about_description }}
+            {{ content.field_departments }}
+          </div>
+        </div>
+      </div>
+    </div>
   {% endif %}
 
   {% if node.field_people is not empty %}
-  <div class="sfgov-section sfgov-section-people">
-    <div class="sfgov-section-container">
-      <div class="sfgov-section--content">
-        {{ content.field_people }}
+    <div class="sfgov-section sfgov-section-people">
+      <div class="sfgov-section-container">
+        <div class="sfgov-section--content">
+          {{ content.field_people }}
+        </div>
       </div>
     </div>
-  </div>
   {% endif %}
 </article>

@@ -1,0 +1,14 @@
+diff --git a/js/amplitude-events.js b/js/amplitude-events.js
+index a23add7..9792547 100644
+--- a/js/amplitude-events.js
++++ b/js/amplitude-events.js
+@@ -48,6 +48,9 @@
+           event_properties_parsed[prop] = selector ? $(elem).find(selector).text() : $(elem).text();
+         }
+       }
++      if($(elem).prop('tagName') === 'A') { // this is an anchor link, automatically capture the href
++        event_properties_parsed['link_target_url'] = $(elem).attr('href');
++      }
+     }
+ 
+     amplitude_instance.logEvent(event_name, event_properties_parsed);

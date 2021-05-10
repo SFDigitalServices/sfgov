@@ -17,6 +17,8 @@ dependencies:
     - content_moderation
     - maxlength
     - paragraphs
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 id: node.information_page.default
 targetEntityType: node
@@ -106,13 +108,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -131,13 +133,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -150,4 +157,3 @@ hidden:
   status: true
   sticky: true
   uid: true
-  url_redirects: true

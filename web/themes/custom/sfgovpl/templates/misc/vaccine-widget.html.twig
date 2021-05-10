@@ -1,0 +1,20 @@
+{{ attach_library('sfgovpl/filters') }}
+{{ attach_library('sfgov_vaccine/filter_sites') }}
+{{ attach_library('sfgov_vaccine/location') }}
+
+{% include '@theme/vaccine/vaccine-widget--header.twig' %}
+{% include '@theme/vaccine/vaccine-widget--alert.twig' %}
+{% include '@theme/vaccine/vaccine-widget--filters.twig' %}
+
+<!-- Microservice info. {{ api_data.api_url }} {{ api_data.timestamp }} -->
+<div class="sfgov-full-bleed vaccine-filter__body">
+  <div class="sfgov-section-container">
+    {% include '@theme/vaccine/vaccine-widget--count.twig' %}
+    <div class="group--right"></div>
+    <div class="group--left">
+      {{ api_data.error }}
+      {% include '@theme/vaccine/vaccine-widget--sites.twig' %}
+      {% include '@theme/vaccine/vaccine-widget--empty.twig' %}
+    </div>
+  </div>
+</div>

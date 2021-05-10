@@ -1,6 +1,11 @@
-<div class="sidebar-card">
+{% set classes = ['sidebar-card'] %}
+<div {{ attributes.addClass(classes) }}>
+  <div class="sidebar-card">
     <div class="sidebar-card-container">
-        <a href="{{ url }}" class="sidebar-card--link">{{ title }}</a>
-        <div class="sidebar-card__body">{{ description }}</div>
+      <a href="{{ url }}" class="sidebar-card--link">{{ title }}</a>
+      <div class="sidebar-card__body">
+        {{ description }}
+      </div>
     </div>
+  </div>
 </div>

@@ -80,8 +80,6 @@
   bundle ~ '__title--' ~ view_mode|clean_class,
 ] %}
 
-{{ content.content_moderation_control }}
-
 <article{{ attributes.addClass(classes) }}>
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
@@ -99,7 +97,14 @@
         <div class="__campaign-about-wrapper sfgov-full-bleed">
           <div class="sfgov-section-container">
             {{ content.field_campaign_about }}
+          </div>
+        </div>
+
+        <div class="__campaign-about-dept-wrapper {% if node.field_dept.value|length < 4 and node.field_links.value|length < 4 %}sfgov-container-two-column{% endif %}">
+          <div class="sfgov-container-item {% if node.field_dept.value|length >= 4 %}full-width{% endif %}">
             {{ content.field_dept }}
+          </div>
+          <div class="sfgov-container-item {% if node.field_links.value|length >= 4 %}full-width{% endif %}">
             {{ content.field_links }}
           </div>
         </div>

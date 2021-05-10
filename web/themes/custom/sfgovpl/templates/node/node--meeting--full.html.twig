@@ -1,18 +1,48 @@
-{% set meeting_list_label = content.field_public_body[0]['#node'].label() %}
-{% set hero_banner_label = 
-    meeting_is_past
-    ? 'Part of <a href="@url">@public_body Archive</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_past', {arg_0: content.field_public_body[0]['#node'].id() })})
-    : 'Part of <a href="@url">@public_body meetings</a>'|t({'@public_body': meeting_list_label, '@url': path('view.meetings.page_upcoming', {arg_0: content.field_public_body[0]['#node'].id() })})
+{% set label_entity = node.field_public_body.entity %}
+{% set label_type = label_entity.type.entity.id %}
+
+{% set label_view = meeting_is_past
+  ? 'view.meetings.page_past'
+  : 'view.meetings.page_upcoming'
+%}
+{% if label_type == 'department' %}
+  {% set label_archive_text = '' %}
+  {% set label_path =
+    path(
+      'entity.node.canonical',
+      {
+        node: label_entity.id
+      }
+    )
+  %}
+{% else %}
+  {% set label_archive_text = ' Archive' %}
+  {% set label_path =
+    path(
+      label_view,
+      {
+        arg_0: label_entity.id
+      }
+    )
+  %}
+{% endif %}
+
+{% set label =
+  'Part of <a href="@url">@public_body@archive</a>'|t({
+    '@public_body': label_entity.label,
+    '@archive': label_archive_text,
+    '@url': label_path
+  })
 %}
 
 {{ content.content_moderation_control }}
 
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
-    'banner': {
-      'title': node.label,
-      'text': node.field_start_date.date|date('F d, Y'),
-      'label': hero_banner_label
+    banner: {
+      title: node.label,
+      text: node.field_start_date.date|date('F d, Y'),
+      label: label
     }
   } %}
 
