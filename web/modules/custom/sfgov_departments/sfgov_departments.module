@@ -1,6 +1,14 @@
 <?php
 
+/**
+ * @file
+ * Extends functionality for the department content type.
+ */
+
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * Implements hook_form_alter().
@@ -10,6 +18,7 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
     case 'node_department_edit_form':
       $form['field_about_description']['#disabled'] = 'disabled';
       break;
+
     case 'node_transaction_form':
     case 'node_transaction_edit_form':
       // Set form wrapper.
@@ -128,4 +137,89 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
   }
 
   return $form['field_departments'];
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ *   Can't load user object.
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *   Thrown if the entity type doesn't exist.
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ *   Thrown if the storage handler couldn't be loaded.
+ */
+function sfgov_departments_node_access(
+  NodeInterface $node,
+  $op,
+  AccountInterface $account
+) {
+  switch ($node->bundle()) {
+
+    case 'department':
+      switch ($op) {
+
+        case 'update':
+          // Allow department writers to update their department.
+          $allowed_roles = ['writer', 'publisher'];
+
+          $is_member = in_array($node->id(),
+            _sfgov_departments_account_department_ids($account));
+          $has_roles = _sfgov_departments_current_user_role($allowed_roles);
+
+          if ($is_member && $has_roles) {
+            return AccessResult::allowed();
+          }
+
+          break;
+
+      }
+      break;
+
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Get departments nodes associated with an account.
+ *
+ * @return \Drupal\node\Entity\Node[]
+ *   List of department nodes.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ *   Can't load user object.
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *   Thrown if the entity type doesn't exist.
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ *   Thrown if the storage handler couldn't be loaded.
+ */
+function _sfgov_departments_account_department_ids(AccountInterface $account) {
+  /** @var \Drupal\user\Entity\User $user */
+  $user = Drupal::entityTypeManager()
+    ->getStorage('user')
+    ->load($account->id());
+  /** @var Drupal\Core\Field\EntityReferenceFieldItemList $departments */
+  $departments = $user->get('field_departments');
+  return array_map(function ($department) {
+    /** @var \Drupal\node\Entity\Node $department */
+    return $department->id();
+  }, $departments->referencedEntities());
+}
+
+/**
+ * True if current user is assigned one of roles.
+ *
+ * @return bool
+ *   Boolean to indicate whether current user has one of the roles.
+ */
+function _sfgov_departments_current_user_role(array $roles) {
+  $current_user = \Drupal::currentUser();
+
+  foreach ($roles as $role) {
+    if (in_array($role, $current_user->getRoles())) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
