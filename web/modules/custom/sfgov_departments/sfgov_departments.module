@@ -160,7 +160,7 @@ function sfgov_departments_node_access(
       switch ($op) {
 
         case 'update':
-          // Allow department writers to update their department.
+          // Allow writers and publishers to update their department.
           $allowed_roles = ['writer', 'publisher'];
 
           $is_member = in_array($node->id(),
@@ -172,7 +172,19 @@ function sfgov_departments_node_access(
           }
 
           break;
+        case 'publish':
+          // Allow publishers to publish their department.
+          $allowed_roles = ['publisher'];
 
+          $is_member = in_array($node->id(),
+            _sfgov_departments_account_department_ids($account));
+          $has_roles = _sfgov_departments_current_user_role($allowed_roles);
+
+          if ($is_member && $has_roles) {
+            return AccessResult::allowed();
+          }
+
+          break;
       }
       break;
 
