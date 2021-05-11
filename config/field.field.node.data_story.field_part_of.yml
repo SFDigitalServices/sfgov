@@ -1,0 +1,44 @@
+uuid: 942ff975-72f8-436f-8f51-09d9fe70669d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_part_of
+    - node.type.campaign
+    - node.type.data_story
+    - node.type.information_page
+    - node.type.landing
+    - node.type.location
+    - node.type.resource_collection
+    - node.type.transaction
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.data_story.field_part_of
+field_name: field_part_of
+entity_type: node
+bundle: data_story
+label: 'Part of'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      campaign: campaign
+      data_story: data_story
+      information_page: information_page
+      landing: landing
+      location: location
+      resource_collection: resource_collection
+      transaction: transaction
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: information_page
+field_type: entity_reference

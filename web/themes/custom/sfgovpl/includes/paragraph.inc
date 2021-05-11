@@ -189,3 +189,36 @@ function sfgovpl_preprocess_paragraph__section(&$variables) {
     $variables['content']['field_content'][$key]['#view_mode'] = 'resource_collection_multiple';
   }
 }
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  // Format data source link.
+  if ($data_source = $paragraph->get('field_source_data')->value) {
+    $variables['content']['field_source_data'] = [
+      '#type' => 'inline_template',
+      '#template' => '<p><a href="{{ url }}" target="_blank">{{ "View source data"}}</a></p>',
+      "#context" => [
+        'url' => $data_source,
+      ],
+    ];
+  }
+
+  if ($paragraph->get('field_data_notes')->value) {
+    $variables['content']['field_data_notes'][0]['link'] = $variables['content']['field_source_data'];
+  }
+
+  // Calculate aspect ratios.
+  $variables['charts'] = [];
+  foreach (['desktop', 'mobile'] as $device) {
+    $variables['charts'][$device]["embed_url"] = $paragraph->get("field_{$device}_embed_url")->value;
+    $variables['charts'][$device]["padding_top"] = '100%';
+    if (($device_width = $paragraph->get("field_{$device}_width")->value) && ($device_height = $paragraph->get("field_{$device}_height")->value)) {
+      $variables['charts'][$device]["padding_top"] = ((int) $device_height / (int) $device_width) * 100;
+    }
+  }
+}

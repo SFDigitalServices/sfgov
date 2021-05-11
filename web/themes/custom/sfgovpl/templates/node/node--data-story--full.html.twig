@@ -1,0 +1,55 @@
+{% extends 'node--full.html.twig' %}
+
+{% block header %}
+  {{ title_prefix }}
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'label': node.field_part_of.value ? 'Part of <a href="@url">@parent</a>'|t({'@parent': node.field_part_of.entity.label(), '@url': path('entity.node.canonical', {node: node.field_part_of.entity.id() })}),
+      'title': node.label,
+      'text': content.field_description|render
+    }
+  } %}
+  {{ title_suffix }}
+{% endblock %}
+
+{% block content %}
+  <div class="sfgov-section sfgov-section-container clearfix">
+    <div class="group--right">
+      {% if sections|length >= 2 %}
+        {{ attach_library("sfgovpl/sfgov-data-story") }}
+        <div class="sfgov-toc">
+          <div class="sfgov-toc-sticky">
+            <button class="sfgov-toc-expand-button">
+              {{ "See all sections"|t }}
+            </button>
+          </div>
+
+          <div class="sfgov-toc-drawer">
+            <div class="sfgov-toc-header">
+              <h2 class="sfgov-toc-header-title">{{ "Sections"|t }}</h2>
+              <button class="sfgov-toc-close-button">
+                <span class="visually-hidden">{{ "Collapse sections" }}</span>
+              </button>
+            </div>
+            <div class="sfgov-toc-tree">
+              <ul>
+                {% for section in sections %}
+                  <li>
+                    <a href="#{{ section.title|clean_class }}">{{ section.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="group--left">
+      <div class="sfgov-section-overview sfgov-in-this-page-target">
+        <div class="sfgov-section--content">
+          {{ content.field_content }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

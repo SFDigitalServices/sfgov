@@ -1,0 +1,26 @@
+{% set parent = paragraph.getParentEntity() %}
+{% set child = paragraph.field_content.entity.bundle %}
+{% set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished',
+  "parent--bundle--" ~ parent.bundle,
+  'paragraph-child--' ~ child,
+  not paragraph.field_title.isEmpty ? 'paragraph--title--' ~ paragraph.field_title.getString|clean_class,
+] %}
+
+{% block paragraph %}
+  <div {{ attributes.addClass(classes) }}>
+    {% block content %}
+      {% if (not paragraph.field_title.isEmpty) %}
+        {% set title = paragraph.field_title.getString %}
+        <h2 class="sfgov-header-section" id="{{ title|clean_class }}">
+          {{ title }}
+        </h2>
+      {% endif %}
+
+      {{ content|without('field_title') }}
+    {% endblock %}
+  </div>
+{% endblock paragraph %}

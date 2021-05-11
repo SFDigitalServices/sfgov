@@ -1,0 +1,46 @@
+uuid: 81497f8b-bc54-4b93-900a-1fcf4ce68ce7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.data_story.field_content
+    - field.field.node.data_story.field_description
+    - field.field.node.data_story.field_part_of
+    - node.type.data_story
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.data_story.default
+targetEntityType: node
+bundle: data_story
+mode: default
+content:
+  field_content:
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_description:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_part_of:
+    type: entity_reference_label
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  links: true
+  search_api_excerpt: true
