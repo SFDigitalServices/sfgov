@@ -315,6 +315,7 @@ class VaccineController extends ControllerBase {
       $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
       $location = $site_data['location'];
       $wheelchair = $site_data['access']['wheelchair'];
+      $brands = $site_data['brands'];
 
       // Map results.
       $result = [
@@ -342,6 +343,7 @@ class VaccineController extends ControllerBase {
         'info_url' => $info_url,
         'available' => $available,
         'booking' => $booking,
+        'brands' => $brands,
       ];
       $results[] = $result;
     }
