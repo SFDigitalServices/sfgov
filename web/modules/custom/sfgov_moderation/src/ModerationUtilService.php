@@ -34,7 +34,8 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       case 'public_body':
       case 'location':
         return 'field_departments';
-        break;
+
+      break;
 
       case 'news':
       case 'event':
