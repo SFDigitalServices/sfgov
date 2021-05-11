@@ -50,7 +50,7 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
   $moderationUtil = \Drupal::service('sfgov_moderation.util');
 
   $fieldName = $moderationUtil->getDepartmentFieldName($node->bundle());
-  if (empty($form['reviewer']) || empty($fieldName) || empty($form[$fieldName])) {
+  if (empty($form['reviewer']) || empty($fieldName)) {
     return;
   }
 
@@ -68,33 +68,39 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
       $form['reviewer']['#group'] = 'footer';
     }
 
-    // Only show "reviewer" field if a department has been selected.
-    $form['reviewer']['widget']['#states'] = [
-      'visible' => [
-        ':input[name="' . $fieldName .'[0][target_id]"]' => ['filled' => TRUE],
-      ],
-    ];
+    if ($fieldName != 'self') {
+      // Only show "reviewer" field if a department has been selected.
+      $form['reviewer']['widget']['#states'] = [
+        'visible' => [
+          ':input[name="' . $fieldName . '[0][target_id]"]' => ['filled' => TRUE],
+        ],
+      ];
 
-    // Change field type to textfield to allow custom autocomplete widget.
-    $departmentIds = $form_state->isRebuilding() ?
-      array_column($form_state->getValue($fieldName, []), 'target_id') :
-      array_column($node->get($fieldName)->getValue(), 'target_id');
+      // Change field type to textfield to allow custom autocomplete widget.
+      $departmentIds = $form_state->isRebuilding() ?
+        array_column($form_state->getValue($fieldName, []), 'target_id') :
+        array_column($node->get($fieldName)->getValue(), 'target_id');
+
+      // Add ajax callback to departments field autocomplete widgets.
+      foreach (Element::children($form[$fieldName]['widget']) as $key) {
+        if (!is_numeric($key)) {
+          continue;
+        }
+
+        $form[$fieldName]['widget'][$key]['target_id']['#ajax'] = [
+          'callback' => '_sfgov_moderation_departments_callback',
+          'event' => 'autocompleteclose change',
+        ];
+      }
+    }
+    else {
+      $departmentIds = [$node->id()];
+    }
 
     $form['reviewer']['widget']['#options'] = _sfgov_moderation_reviewer_options($departmentIds, $form['reviewer']['widget']['#default_value']);
     $form['reviewer']['widget']['#prefix'] = '<div id="node-reviewer-wrapper">';
     $form['reviewer']['widget']['#suffix'] = '</div>';
 
-    // Add ajax callback to departments field autocomplete widgets.
-    foreach (Element::children($form[$fieldName]['widget']) as $key) {
-      if (!is_numeric($key)) {
-        continue;
-      }
-
-      $form[$fieldName]['widget'][$key]['target_id']['#ajax'] = [
-        'callback' => '_sfgov_moderation_departments_callback',
-        'event' => 'autocompleteclose change',
-      ];
-    }
   }
 
   // If bundle is not moderated, disable "reviewer" field.
