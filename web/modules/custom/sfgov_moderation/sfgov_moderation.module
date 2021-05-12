@@ -45,6 +45,7 @@ function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_typ
 function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
+  $bundle = $node->bundle();
 
   /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
   $moderationUtil = \Drupal::service('sfgov_moderation.util');
@@ -58,7 +59,7 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
   $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
 
   // If bundle is moderated.
-  if ($moderation_info->shouldModerateEntitiesOfBundle($entity_type, $node->bundle())) {
+  if ($moderation_info->shouldModerateEntitiesOfBundle($entity_type, $bundle)) {
 
     // Custom validation callback.
     $form['#validate'][] = '_sfgov_moderation_form_node_form_validate';
@@ -68,7 +69,7 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
       $form['reviewer']['#group'] = 'footer';
     }
 
-    if ($fieldName != 'self') {
+    if ($bundle != 'department') {
       // Only show "reviewer" field if a department has been selected.
       $form['reviewer']['widget']['#states'] = [
         'visible' => [
