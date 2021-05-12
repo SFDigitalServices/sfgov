@@ -45,17 +45,20 @@ function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_typ
 function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
+
+  /** @var string $bundle */
   $bundle = $node->bundle();
 
   /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
   $moderationUtil = \Drupal::service('sfgov_moderation.util');
 
-  $fieldName = $moderationUtil->getDepartmentFieldName($node->bundle());
-  if (empty($form['reviewer']) || empty($fieldName)) {
-    return;
-  }
+  /** @var string $fieldName */
+  $fieldName = $moderationUtil->getDepartmentFieldName($bundle);
 
+  /** @var \Drupal\content_moderation\ModerationInformation $moderation_info */
   $moderation_info = \Drupal::service('content_moderation.moderation_information');
+
+  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
   $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
 
   // If bundle is moderated.
