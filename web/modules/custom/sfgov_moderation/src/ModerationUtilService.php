@@ -17,6 +17,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
    */
   protected $entityTypeManager;
 
+
   /**
    * Constructs a new ModerationUtilService object.
    */
@@ -49,7 +50,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       case 'resource_collection':
       case 'step_by_step':
         return 'field_dept';
-        break;
+      break;
     }
 
     return NULL;
@@ -86,6 +87,11 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       ->sort('name', 'DESC');
 
     $ids = $query->execute();
+
+    // Remove current user from the reviewer options list.
+    $current_user_id = \Drupal::currentUser()->id();
+    unset($ids[$current_user_id]);
+
     return $ids ? array_values($ids) : [];
   }
 
