@@ -10,6 +10,8 @@ dependencies:
     - content_moderation
     - paragraphs
     - path
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 id: node.form_page.default
 targetEntityType: node
@@ -24,7 +26,7 @@ content:
     third_party_settings: {  }
   field_form_id:
     type: entity_reference_paragraphs
-    weight: 12
+    weight: 10
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -35,7 +37,7 @@ content:
     third_party_settings: {  }
     region: content
   field_intro_text:
-    weight: 11
+    weight: 9
     settings:
       rows: 5
       placeholder: ''
@@ -51,32 +53,25 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 9
+    weight: 7
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 7
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 5
-    region: content
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -84,14 +79,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 10
-    region: content
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 6
+    weight: 8
     region: content
     third_party_settings: {  }
   title:
@@ -119,19 +107,21 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 30
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 8
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  promote: true
+  sticky: true
