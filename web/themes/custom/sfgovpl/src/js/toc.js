@@ -11,15 +11,18 @@
 
       const $closeButton = $toc.find("button.sfgov-toc-close-button");
       const $expandButton = $toc.find("button.sfgov-toc-expand-button");
+      const $feedbackForm = $('.paragraph--formio--feedback');
 
       $expandButton.on("click", function () {
         $toc.addClass("toc-expanded")
         $closeButton.focus();
+        $feedbackForm.addClass('toc-expanded-feedback');
       });
 
       $closeButton.on("click", function () {
         $toc.removeClass("toc-expanded");
         $expandButton.focus();
+        $feedbackForm.removeClass('toc-expanded-feedback');
       })
 
       $(document, context).on('keyup', function (event) {
@@ -27,6 +30,7 @@
           if ($toc.hasClass('toc-expanded')) {
             $toc.removeClass("toc-expanded");
             $expandButton.focus();
+            $feedbackForm.removeClass('toc-expanded-feedback');
           }
         }
       });
@@ -38,6 +42,7 @@
         if ($toc.hasClass('toc-expanded')) {
           $toc.removeClass("toc-expanded");
           $expandButton.focus();
+          $feedbackForm.removeClass('toc-expanded-feedback');
         }
       });
 
