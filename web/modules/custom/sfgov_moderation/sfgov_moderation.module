@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Enhancements to Workflow.
+ */
+
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -181,7 +186,7 @@ function _sfgov_moderation_departments_callback(&$form, $form_state) {
  * @return array
  *   The list of reviewers keyed by UID.
  */
-function _sfgov_moderation_reviewer_options($department_ids = [], &$default_value = NULL) {
+function _sfgov_moderation_reviewer_options(array $department_ids = [], &$default_value = NULL) {
   $empty = [
     '_none' => t('- None -'),
   ];
@@ -216,17 +221,17 @@ function _sfgov_moderation_reviewer_options($department_ids = [], &$default_valu
  */
 function sfgov_moderation_views_data_alter(array &$data) {
 
-  $data['node']['latest_moderation_state'] = array(
+  $data['node']['latest_moderation_state'] = [
     'title' => t('Latest moderation state'),
     'base' => [
       'field' => 'id',
     ],
     'real field' => 'nid',
-    'field' => array(
+    'field' => [
       'title' => t('Latest moderation state'),
       'help' => t('The moderation state of the latest revision.'),
       'id' => 'latest_moderation_state',
       'click sortable' => TRUE,
-    )
-  );
+    ],
+  ];
 }
