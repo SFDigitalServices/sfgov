@@ -3,7 +3,6 @@
 namespace Drupal\sfgov_moderation;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Interface ModerationUtilServiceInterface.
@@ -35,8 +34,8 @@ interface ModerationUtilServiceInterface {
    *   The department node or a department node ID.
    *
    * @return bool
-   * If the node belongs to a department, returns true or false. True if the
-   * node has no department assigned.
+   *   If the node belongs to a department, returns true or false. True if the
+   *   node has no department assigned.
    */
   public function accountBelongsToDepartment(AccountInterface $account, $department): bool;
 
