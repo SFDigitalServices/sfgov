@@ -17,12 +17,19 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
    */
   protected $entityTypeManager;
 
+  /**
+   * The account object.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
 
   /**
    * Constructs a new ModerationUtilService object.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $currentUser) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->currentUser = $currentUser;
   }
 
   /**
@@ -50,6 +57,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       case 'resource_collection':
       case 'step_by_step':
         return 'field_dept';
+
       break;
     }
 
@@ -89,7 +97,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
     $ids = $query->execute();
 
     // Remove current user from the reviewer options list.
-    $current_user_id = \Drupal::currentUser()->id();
+    $current_user_id = $this->currentUser->id();
     unset($ids[$current_user_id]);
 
     return $ids ? array_values($ids) : [];

@@ -21,6 +21,9 @@ class LatestModerationState extends FieldPluginBase {
 
   }
 
+  /**
+   * Get moderation state of most recent revision by nid.
+   */
   private function nidToModeration(string $nid) {
     $vid = \Drupal::entityTypeManager()
       ->getStorage('node')
@@ -34,4 +37,5 @@ class LatestModerationState extends FieldPluginBase {
 
     return isset($state[0]['value']) ? $state[0]['value'] : '';
   }
+
 }

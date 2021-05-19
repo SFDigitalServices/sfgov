@@ -41,10 +41,14 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
    * @var string[]
    */
   protected const REVIEWER_ALLOWED_TRANSITIONS = [
-    'archived_draft', // Restore to Draft.
-    'create_new_draft', // Create New Draft.
-    'publish', // Publish.
-    'submit_for_review', // Submit for review.
+  // Restore to Draft.
+    'archived_draft',
+  // Create New Draft.
+    'create_new_draft',
+  // Publish.
+    'publish',
+  // Submit for review.
+    'submit_for_review',
   ];
 
   /**
@@ -53,8 +57,10 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
    * @var string[]
    */
   protected const AUTHOR_ALLOWED_TRANSITIONS = [
-    'create_new_draft', // Create New Draft.
-    'submit_for_review', // Submit for review.
+  // Create New Draft.
+    'create_new_draft',
+  // Submit for review.
+    'submit_for_review',
   ];
 
   /**
@@ -139,7 +145,6 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
     }
 
     // Act on moderated content that belongs to a department.
-
     // Restrict transitions based if $user is the reviewer.
     if ($this->userIsReviewer($entity, $user)) {
       return array_filter($this->getAllTransitionsFromState($entity), function (TransitionInterface $transition) {
@@ -159,7 +164,8 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       return $validTransitions;
     }
 
-    // Finally, if it does have departments, only allow transitions if current user (non-admin) belongs to the department.
+    // Finally, if it does have departments, only allow transitions if current
+    // user (non-admin) belongs to the department.
     foreach ($departments as $department) {
       if ($accountBelongsToDepartment = $this->moderationUtil->accountBelongsToDepartment($user->getAccount(), $department->id())) {
         break;
@@ -257,6 +263,7 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
 
   /**
    * @return string
+   *   The machine name of the publisher role.
    */
   protected function publisher() {
     return self::PUBLISHER_ROLE;
