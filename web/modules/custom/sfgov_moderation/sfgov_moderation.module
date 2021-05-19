@@ -210,3 +210,23 @@ function _sfgov_moderation_reviewer_options($department_ids = [], &$default_valu
 
   return $options;
 }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function sfgov_moderation_views_data_alter(array &$data) {
+
+  $data['node']['latest_moderation_state'] = array(
+    'title' => t('Latest moderation state'),
+    'base' => [
+      'field' => 'id',
+    ],
+    'real field' => 'nid',
+    'field' => array(
+      'title' => t('Latest moderation state'),
+      'help' => t('The moderation state of the latest revision.'),
+      'id' => 'latest_moderation_state',
+      'click sortable' => TRUE,
+    )
+  );
+}
