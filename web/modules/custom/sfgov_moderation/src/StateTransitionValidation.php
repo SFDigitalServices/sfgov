@@ -31,6 +31,11 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
   protected $moderationUtil;
 
   /**
+   * The publisher role machine name.
+   */
+  public const PUBLISHER_ROLE = 'publisher';
+
+  /**
    * Transitions allowed for a reviewer role.
    *
    * @var string[]
@@ -125,7 +130,8 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       $entity->isNew() ||
       $user->hasPermission('administer nodes') ||
       $user->hasPermission('bypass node access') ||
-     empty($fieldName) ||
+      in_array($this->publisher(), $user->getRoles()) ||
+      empty($fieldName) ||
       !$entity->hasField($fieldName) ||
       (!$departments = $entity->{$fieldName}->referencedEntities())
     ) {
@@ -247,6 +253,13 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
    */
   protected function userIsAuthor(ContentEntityInterface $entity, AccountInterface $user): bool {
     return $entity->getOwnerId() == $user->id();
+  }
+
+  /**
+   * @return string
+   */
+  protected function publisher() {
+    return self::PUBLISHER_ROLE;
   }
 
 }

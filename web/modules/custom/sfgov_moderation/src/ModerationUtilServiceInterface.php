@@ -16,11 +16,6 @@ interface ModerationUtilServiceInterface {
   public const DEPARTMENTS_ACCOUNT_FIELD = 'field_departments';
 
   /**
-   * The publisher role machine name.
-   */
-  public const PUBLISHER_ROLE = 'publisher';
-
-  /**
    * Get the department field name given the node bundle.
    *
    * @param string $bundle
