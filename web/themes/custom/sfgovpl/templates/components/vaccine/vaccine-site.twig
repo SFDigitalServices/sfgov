@@ -1,7 +1,18 @@
-<div {{ result.attributes }}>
-  <h3 class="vaccine-site__title notranslate">
-    {{ result.site_name }}
-  </h3>
+<div {{ result.attributes.setAttribute('data-order', loop.index) }}>
+  <div class="vaccine-site__header">
+    <h3 class="vaccine-site__title notranslate">
+      {{ result.site_name }}
+    </h3>
+
+    <div class="vaccine-site__distance"></div>
+  </div>
+
+  {# Eligibility chicklets. #}
+  <div class="vaccine-site__eligibilities notranslate">
+    {% for eligibility in result.eligibilities %}
+      <span class="vaccine-site__eligibility">{{ eligibility }}</span>
+    {% endfor %}
+  </div>
 
   {# Open to .. #}
   {% if result.restrictions_text %}
@@ -11,10 +22,18 @@
     </div>
   {% endif %}
 
-  {# address_url #}
-  {% if result.address_url %}
+  {# Address. #}
+  {% if result.location.url %}
     <div class="vaccine-site__address notranslate icon">
-      <a href="{{ result.address_url }}">{{ result.address_text }}</a>
+      <a href="{{ result.location.url }}">{{ result.location.address }}</a>
+    </div>
+  {% endif %}
+
+  {# Brands - Pfizer, Moderna, etc #}
+  {% if result.brands.administered %}
+    <div class="vaccine-site__brands notranslate icon">
+      <label>{{ template_strings.result.brands.label|t }}</label>
+      {{ result.brands.administered|join(', ') }}
     </div>
   {% endif %}
 
@@ -28,7 +47,7 @@
     </div>
   {% endif %}
 
-  {# Drive thru, walk thru, wheelchair #}
+  {# Access - Drive thru, walk thru, wheelchair #}
   {% if result.access_modes %}
     <div class="vaccine-site__access-mode notranslate icon">
       <label>{{ template_strings.result.access_modes.label|t }}</label>

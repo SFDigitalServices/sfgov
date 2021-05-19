@@ -12,12 +12,14 @@
       // Elements.
       const sectionCount = $(".vaccine-filter__count");
       const leftColumn = $(".group--left");
+      const sitesWrapper = $(".vaccine-filter__sites");
       const submitButton = $(".vaccine-filter-form #edit-submit", context);
 
       // Other variables.
       let filterByAvailability = false;
       const speed = "slow";
       const class_match_available = "match-available";
+      const class_match_radius = "match-radius";
 
       // On load.
       displaySites();
@@ -35,6 +37,9 @@
       function filterVaccineSites() {
         let restrictions_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
+        let locationInput = $("[name=location]");
+        let radiusInput = $("[name=radius]");
+        let userLocation = !!locationInput.val();
 
         if ($("[name=restrictions]").is(":checked") === true) {
           // show
@@ -120,17 +125,64 @@
               "ig"
             );
 
+            // Distance.
+            $(this).addClass(class_match_radius);
+            if (userLocation) {
+              const distance = getDistance(
+                locationInput[0].getAttribute("data-lat"), //input lat
+                locationInput[0].getAttribute("data-lng"), //input long
+                $(this).data("lat"), // this lat
+                $(this).data("lng") // this lng
+              );
+
+              if (distance > radiusInput.val()) {
+                $(this).removeClass(class_match_radius);
+              }
+              $(this)
+                .find(".vaccine-site__distance")
+                .text(Math.round(distance * 10) / 10 + "mi");
+              $(this)[0].setAttribute("data-distance", distance);
+              $(this)
+                .find(".vaccine-site__header")
+                .addClass("distance-visible");
+            } else {
+              $(this).find(".vaccine-site__distance").text("");
+            }
+
+            // Return list of matching sites.
             rtnData =
               $(this).attr("data-restrictions").match(restrictions_regExTest) &&
               $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
               $(this).attr("data-access-mode").match(access_mode_regExTest) &&
               $(this).hasClass("language-match") &&
-              $(this).hasClass(class_match_available);
+              $(this).hasClass(class_match_available) &&
+              $(this).hasClass(class_match_radius);
 
             return rtnData;
           })
+          .sort(function (a, b) {
+            const orderA = parseInt(a.getAttribute("data-order"));
+            const orderB = parseInt(b.getAttribute("data-order"));
+
+            let dataA = orderA;
+            let dataB = orderB;
+
+            // Sort by distance and then order if location is entered.
+            if (userLocation) {
+              dataA = a.getAttribute("data-distance");
+              dataB = b.getAttribute("data-distance");
+
+              if (dataA === dataB) {
+                dataA = orderA;
+                dataB = orderB;
+              }
+            }
+
+            return dataA < dataB ? -1 : 1;
+          })
           .show()
-          .addClass("included");
+          .addClass("included")
+          .appendTo(sitesWrapper);
       }
 
       function showNoResultsMessage() {
@@ -157,6 +209,28 @@
 
       function hideSites() {
         $(".vaccine-filter__sites").hide();
+      }
+
+      // @see https://en.wikipedia.org/wiki/Haversine_formula
+      // @see https://simplemaps.com/resources/location-distance
+      function getDistance(lat1, lng1, lat2, lng2) {
+        function deg2rad(deg) {
+          return deg * (Math.PI / 180);
+        }
+        function square(x) {
+          return Math.pow(x, 2);
+        }
+        const r = 6371; // radius of the earth in km
+        lat1 = deg2rad(lat1);
+        lat2 = deg2rad(lat2);
+        const lat_dif = lat2 - lat1;
+        const lng_dif = deg2rad(lng2 - lng1);
+        const a =
+          square(Math.sin(lat_dif / 2)) +
+          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2));
+        let d = 2 * r * Math.asin(Math.sqrt(a));
+
+        return Math.round(d * 0.621371 * 10) / 10; // Return miles.
       }
 
       // This is the main function.

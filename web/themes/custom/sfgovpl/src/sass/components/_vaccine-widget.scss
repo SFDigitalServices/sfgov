@@ -34,7 +34,7 @@
 }
 
 .vaccine-filter-form {
-  [data-drupal-selector="edit-single-checkboxes"] {
+  [data-drupal-selector='edit-single-checkboxes'] {
     margin-bottom: 50px;
 
     .js-form-type-checkbox label {
@@ -47,20 +47,40 @@
     }
   }
 
-  .fieldset-wrapper .form-wrapper .form-item-access-mode {
-    margin-bottom: 60px;
-  }
-}
+  [data-drupal-selector='edit-distance-from'] {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
 
-.vaccine-filter__other {
-  display: none;
-
-  h2 {
-    @include fs-title-3-mobile;
-
-    @include media($medium-screen) {
-      @include fs-title-3;
+    label {
+      @include fs-body-bold;
     }
+
+    .js-form-item-radius {
+      flex-grow: 1;
+    }
+
+    span {
+      padding-left: 20px;
+      margin-bottom: 20px;
+      padding-bottom: 9px;
+      text-align: right;
+
+      @media screen and (min-width: $medium-screen) and (max-width: 991px) {
+        margin-bottom: 0;
+        padding-left: 0;
+      }
+
+      @media screen and (min-width: 992px) and (max-width: 1134px) {
+        padding-left: 6px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .fieldset-wrapper .form-wrapper .form-item-access-mode {
+    margin-bottom: 40px;
   }
 }
 
@@ -113,13 +133,29 @@
   }
 }
 
+.distance-visible {
+  display: flex;
+}
+
 .vaccine-site__title {
   @include fs-title-3-mobile;
-  margin: 0 0 40px 0;
+  margin: 0 0 10px 0;
+
+  .distance-visible & {
+    width: calc(100% - 66px);
+  }
+}
+
+.vaccine-site__distance {
+  .distance-visible & {
+    color: $c-light-slate;
+    text-align: right;
+    width: 66px;
+  }
 }
 
 .vaccine-site__address {
-  @include background-image("icons/location-slate.svg");
+  @include background-image('icons/location-slate.svg');
   margin-bottom: 20px;
 
   a {
@@ -128,8 +164,22 @@
 }
 
 .vaccine-site__languages {
-  @include background-image("icons/globe-slate.svg");
+  @include background-image('icons/globe-slate.svg');
   margin-bottom: 20px;
+}
+
+.vaccine-site__eligibilities {
+  margin-bottom: 18px;
+}
+
+.vaccine-site__eligibility {
+  @include fs-small-text;
+  background: $c-grey-2;
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  padding: 3px 8px;
+  word-break: keep-all;
 }
 
 .vaccine-site__restrictions {
@@ -143,8 +193,12 @@
 }
 
 .vaccine-site__access-mode {
-  @include background-image("icons/accessibility-slate.svg");
-  padding-left: 38px;
+  @include background-image('icons/accessibility-slate.svg');
+  margin-bottom: 20px;
+}
+
+.vaccine-site__brands {
+  @include background-image('icons/info-slate.svg');
   margin-bottom: 20px;
 }
 
@@ -165,30 +219,30 @@
     padding: 40px;
   }
 
-  [data-available="yes"] & {
-    @include background-image("check-green.svg", 20px 25px, $c-blue-1);
+  [data-available='yes'] & {
+    @include background-image('check-green.svg', 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
     }
   }
 
-  [data-available="no"] & {
-    @include background-image("close-red.svg", 20px 25px, $c-blue-1);
+  [data-available='no'] & {
+    @include background-image('close-red.svg', 20px 25px, $c-blue-1);
 
     @include media($medium-screen) {
       background-position: 40px 40px;
     }
   }
 
-  [data-available="no"] &,
-  [data-available="yes"] & {
+  [data-available='no'] &,
+  [data-available='yes'] & {
     .box-item-indented {
       padding-left: 40px;
     }
   }
 
-  [data-available="yes"] & {
+  [data-available='yes'] & {
     .vaccine-site__booking-button,
     .vaccine-site__phone {
       @include media($medium-screen) {
@@ -236,5 +290,52 @@
     @include media($medium-screen) {
       display: block;
     }
+  }
+}
+
+// Google autocomplete dropdown.
+.pac-container {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+  border-radius: 8px;
+  padding: 0 15px 13px;
+
+  &:after {
+    // Hide google logo.
+    display: none;
+  }
+
+  &[style] {
+    @include rubik;
+    @include fs-body-short;
+  }
+
+  .pac-item {
+    @include fs-body-short;
+    border-top: 0;
+    padding: 10px 0;
+    border-bottom: 3px solid #1c3e571a;
+    white-space: wrap;
+
+    &.pac-item-selected,
+    &:hover {
+      background: $c-blue-3;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .pac-item-query {
+    color: $c-slate;
+    @include fs-body-short;
+  }
+
+  .pac-matched {
+    @include fs-body-bold;
+  }
+
+  .pac-icon {
+    display: none;
   }
 }

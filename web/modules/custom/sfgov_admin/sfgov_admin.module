@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Url;
+use Druapl\views\Views;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -304,5 +304,46 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
     $form['revision_log']['#title'] = t('Add a revision note');
     $form['revision_log']['#placeholder'] = t('Log message');
     $form['revision_log']['#size'] = NULL;
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+*/
+function sfgov_admin_views_pre_view(ViewExecutable $view) {
+  if ($view->id() == 'content') {
+    // Set english as default langcode for admin content list.
+    $filters = $view->getDisplay()->getOption('filters');
+    $filters["langcode"]["value"] = ["en"];
+    $view->display_handler->overrideOption('filters', $filters);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_admin_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Disable Available menus setting.
+  $form['menu']['menu_options']['#default_value'] = [];
+  $form['menu']['menu_options']['#description'] = t('<i>This option is disabled in code.</i>');
+  $form['menu']['#disabled'] = TRUE;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_admin_form_entity_form_display_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Prevent sticky and promote fields from being modified.
+  $fields = ['sticky', 'promote'];
+  $notice = t('<i class="field-plugin-summary">This option is disabled in code.</i>');
+  foreach ($fields as $field) {
+    $form['fields'][$field]['#attributes']['class'] = [];
+    $form['fields'][$field]['weight']['#access'] = FALSE;
+    $form['fields'][$field]['parent_wrapper']['#access'] = FALSE;
+    $form['fields'][$field]['region']['#access'] = FALSE;
+    $form['fields'][$field]['plugin']['type']['#disabled'] = TRUE;
+    $form['fields'][$field]['plugin']['type']['#suffix'] = $notice;
   }
 }
