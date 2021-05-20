@@ -25,9 +25,9 @@
 {% set has_spotlight_button = false %}
 {% if content.field_spotlight_button|render %}
   {% set has_spotlight_button = true %}
-  {% set button_link = paragraph.field_spotlight_button.entity.get('field_link').get(0) %}
-  {% set button_content = button_link.getValue().title %}
-  {% set button_url = button_link.getUrl().toString() %}
+  {% set button_link = paragraph.field_spotlight_button.entity.field_link.0 %}
+  {% set button_content = button_link.title %}
+  {% set button_url = button_link.url %}
 {% endif %}
 
 {% embed 'paragraph.html.twig' with {
@@ -57,9 +57,9 @@
 
         {% if has_spotlight_button %}
           <div class="sfgov-campaign-spotlight-button">
-            {% include "@sfgov-design-system/button/button.twig" with {
+            {% include "@sfgov-design-system/button/link.twig" with {
                 "href": button_url,
-                "content": button_content,
+                "text": button_content,
                 "classes": campaign_theme_label != 'blue' ? ['btn-inverse'] : []
             } %}
           </div>
