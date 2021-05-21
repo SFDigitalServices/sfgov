@@ -61,6 +61,23 @@
   .group--left {
     @include columns-720(left);
     max-width: 700px !important;
+
+    p {
+      @include fs-body-long;
+    }
+
+    h2 {
+      @include fs-title-2;
+
+      @media screen and (max-width: $mobile-screen) {
+        @include fs-title-2-mobile;
+      }
+    }
+
+    h3 {
+      @include fs-title-4;
+      margin-top: 40px;
+    }
   }
 
   .group--right {
@@ -322,6 +339,7 @@
   @media screen and (min-width: $medium-screen) {
     position: static;
     width: auto;
+    border-radius: 8px;
   }
 
   .toolbar-horizontal & {
