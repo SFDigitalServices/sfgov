@@ -153,34 +153,38 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
 
     $item_bundles = $this->bundleInfo->getBundleInfo('paragraph');
     if ($element['#paragraph_type'] === "data_story_section") {
-      $paragraphs_entity = $items[$delta]->entity;
-      /** @var \Drupal\paragraphs\ParagraphInterface[] $child_paragraphs */
-      $child_paragraphs = $paragraphs_entity->get('field_content')->referencedEntities();
-      $content = [];
-
-      if ($heading = $paragraphs_entity->get('field_title')->value) {
-        $content[] = $heading;
-      }
-
       $child_bundles = [];
-      foreach ($child_paragraphs as $child_paragraph) {
-        $localized_paragraph = $child_paragraph->getTranslation($form_state->get('langcode'));
-        $child_bundles[] = $item_bundles[$child_paragraph->bundle()]['label'];
-        $row_content = $child_paragraph->bundle() === "powerbi_embed" ? $item_bundles[$child_paragraph->bundle()]['label'] : '';
-        if (!$heading && $child_paragraph->hasField('field_text')) {
-          if ($text = $localized_paragraph->get('field_text')->value) {
-            $text = strip_tags($text);
-            $row_content = $text;
-          }
+      $paragraphs_entity = $items[$delta]->entity;
+      if ($paragraphs_entity) {
+        /** @var \Drupal\paragraphs\ParagraphInterface[] $child_paragraphs */
+        $child_paragraphs = $paragraphs_entity->get('field_content')->referencedEntities();
+        $content = [];
+
+        if ($heading = $paragraphs_entity->get('field_title')->value) {
+          $content[] = $heading;
         }
 
-        $content[] = $row_content;
-      }
-      $element['top']['summary']['fields_info']['#summary']['content'] = array_filter($content);
-    }
 
-    if (count($child_bundles)) {
-      $element['top']['type']['label']['#markup'] .= ' (' . implode(', ', $child_bundles) . ')';
+        foreach ($child_paragraphs as $child_paragraph) {
+          $localized_paragraph = $child_paragraph->getTranslation($form_state->get('langcode'));
+          $child_bundles[] = $item_bundles[$child_paragraph->bundle()]['label'];
+          $row_content = $child_paragraph->bundle() === "powerbi_embed" ? $item_bundles[$child_paragraph->bundle()]['label'] : '';
+          if (!$heading && $child_paragraph->hasField('field_text')) {
+            if ($text = $localized_paragraph->get('field_text')->value) {
+              $text = strip_tags($text);
+              $row_content = $text;
+            }
+          }
+
+          $content[] = $row_content;
+        }
+
+        $element['top']['summary']['fields_info']['#summary']['content'] = array_filter($content);
+      }
+
+      if (count($child_bundles)) {
+        $element['top']['type']['label']['#markup'] .= ' (' . implode(', ', $child_bundles) . ')';
+      }
     }
 
     return $element;
