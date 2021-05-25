@@ -32,6 +32,7 @@
 
       $closeButton.on("click", function () {
         $input.val("");
+        $searchInfo.hide();
       });
 
       const $searchTargets = $searchTarget.find("a, p, h2, h3, h5, h5, li").map(function () {
@@ -77,12 +78,13 @@
         $('mark').removeClass('current');
         $el.addClass('current');
         $('html, body').stop().animate({
-          scrollTop: $el.offset().top
+          scrollTop: $el.offset().top - 100
         }, 500);
       }
 
       function resultsInfo() {
         const total = $('.report--full').find('mark').length;
+        $searchInfo.show();
         if (total == 0) {
           currentIndex = 0;
           $input.attr('aria-label', Drupal.t('No results. Please refine your keywords'));
