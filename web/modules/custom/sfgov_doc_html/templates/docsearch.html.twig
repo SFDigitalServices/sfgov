@@ -11,9 +11,16 @@
 <div{{ attributes.addClass('docsearch') }}>
   <form id="docsearch" role="search" data-search-target="{{ search_target }}">
     <label for="keywords" class="visually-hidden">{{ "Search this page"|t }}</label>
-    <input type="text" id="keywords" name="keywords" spellcheck="false" placeholder="{{ "Document search"|t }}">
+    <input type="text" id="keywords" name="keywords" spellcheck="false" aria-label="{{ "Enter keywords to search in the report"|t }}" placeholder="{{ "Document search"|t }}">
+    <div class="results-info">
+      <div class="results-index"></div>
+      <div class="results-nav">
+        <a href="#" class="results-index-next" aria-label="{{ "Next match"|t }}">{{ "Next match"|t }}</a>
+        <a href="#" class="results-index-prev" aria-label="{{ "Previous match"|t }}">{{ "Previous match"|t }}</a>
+      </div>
+    </div>
     <input value="Submit" type="submit">
-    <button>
+    <button aria-label="{{ "Close"|t }}">
       <span class="visually-hidden">{{ "Clear" }}</span>
     </button>
   </form>

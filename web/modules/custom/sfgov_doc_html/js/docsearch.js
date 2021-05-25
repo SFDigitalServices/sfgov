@@ -14,6 +14,8 @@
 
       const $input = $form.find("input[name=\"keywords\"]");
       const $closeButton = $form.find("button");
+      let currentText = '';
+      let currentIndex = 1;
 
       $input.on("focus", function () {
         $form.addClass('is-focused');
@@ -36,17 +38,20 @@
 
       function search(event) {
         event.preventDefault();
-        const keywords = $input.val().trim().replace(/(\s+)/,"(<[^>]+>)*$1(<[^>]+>)*");
+        const keywords = $input.val().trim().replace(/(\s+)/, "(<[^>]+>)*$1(<[^>]+>)*");
         if (keywords.length <= 3) {
           reset();
           return;
         }
 
-        const pattern = new RegExp("("+keywords+")","gi");
+        const pattern = new RegExp("(" + keywords + ")", "gi");
+        if (currentText.length != 0 && currentText !== keywords) {
+          currentIndex = 0;
+        }
         $searchTargets.each(function (index, target) {
           let resultText = target.source.replace(pattern, "<mark>$1</mark>");
-          resultText.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
-          target.el.html(resultText)
+          resultText.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/, "$1</mark>$2<mark>$4");
+          target.el.html(resultText);
         });
 
         $form.addClass('has-results');
@@ -60,8 +65,54 @@
         })
       }
 
+      function jumpToMatch(index) {
+        $('html, body').stop().animate({
+          scrollTop: $('mark').eq( (index == 0) ? index : index - 1 ).offset().top
+        }, 500);
+      }
+
+      const $searchInfo = $form.find('.results-info');
+      const $searchIndex = $searchInfo.find('.results-index');
+
+      function resultsInfo() {
+        const total = $('.report--full').find('mark').length;
+        if (total == 0) {
+          currentIndex = 0;
+        }
+        else {
+          currentIndex = 1;
+        }
+        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
+        jumpToMatch(currentIndex);
+      }
+
+      $searchInfo.find('.results-index-next').on('click', function(e) {
+        e.preventDefault();
+        const total = $('.report--full').find('mark').length;
+        if (currentIndex == total) {
+          currentIndex = 0;
+        }
+        currentIndex++;
+        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
+        jumpToMatch(currentIndex);
+      });
+
+      $searchInfo.find('.results-index-prev').on('click', function(e) {
+        e.preventDefault();
+        const total = $('.report--full').find('mark').length;
+        if (currentIndex < 2) {
+          currentIndex = total;
+        }
+        else {
+          currentIndex--;
+        }
+        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
+        jumpToMatch(currentIndex);
+      });
+
       $input.on("keyup", function (event) {
         search(event);
+        resultsInfo();
         if ($(this).val()) {
           $form.addClass('has-input');
         }
@@ -72,6 +123,7 @@
 
       $form.on('submit', function (event) {
         search(event);
+        //resultsInfo();
         return false;
       });
     }
