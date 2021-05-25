@@ -18,6 +18,8 @@
       const $searchInfo = $form.find('.results-info');
       const $searchIndex = $searchInfo.find('.results-index');
       const $searchNav = $searchInfo.find('.results-nav');
+      const $searchResultNext = $searchInfo.find('.results-index-next');
+      const $searchResultPrev = $searchInfo.find('.results-index-prev');
       $searchNav.hide();
       let currentText = '';
       let currentIndex = 1;
@@ -96,18 +98,19 @@
         jumpToMatch(currentIndex);
       }
 
-      $searchInfo.find('.results-index-next').on('click', function(e) {
+      $searchResultNext.on('click', function(e) {
         e.preventDefault();
         const total = $('.report--full').find('mark').length;
         if (currentIndex == total) {
           currentIndex = 0;
         }
         currentIndex++;
+        $(this).attr('aria-label', Drupal.t('Match @current of @total. Click to get to the next match.', {'@current': currentIndex, '@total': total}));
         $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
         jumpToMatch(currentIndex);
       });
 
-      $searchInfo.find('.results-index-prev').on('click', function(e) {
+      $searchResultPrev.on('click', function(e) {
         e.preventDefault();
         const total = $('.report--full').find('mark').length;
         if (currentIndex < 2) {
@@ -116,6 +119,7 @@
         else {
           currentIndex--;
         }
+        $(this).attr('aria-label', Drupal.t('Match @current of @total. Click to get to the previous match.', {'@current': currentIndex, '@total': total}));
         $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
         jumpToMatch(currentIndex);
       });
