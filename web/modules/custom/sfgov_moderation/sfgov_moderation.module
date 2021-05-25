@@ -105,7 +105,12 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
       }
 
       else {
-        $departmentIds = ['229'];
+        $array = $form_state->getCompleteForm();
+        if ($array != NULL) {
+          $departmentIds = [229];
+        } else {
+          $departmentIds = array_column($node->get($fieldName)->getValue(), 'target_id');
+        }
 
         $form['data_fetch'] = [
           '#title' => 'Data',
@@ -185,7 +190,6 @@ function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $f
 function _sfgov_moderation_departments_callback(&$form, $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#node-reviewer-wrapper', $form['reviewer']['widget']));
-
   return $response;
 }
 
