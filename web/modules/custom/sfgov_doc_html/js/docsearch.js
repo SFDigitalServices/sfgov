@@ -14,6 +14,11 @@
 
       const $input = $form.find("input[name=\"keywords\"]");
       const $closeButton = $form.find("button");
+
+      const $searchInfo = $form.find('.results-info');
+      const $searchIndex = $searchInfo.find('.results-index');
+      const $searchNav = $searchInfo.find('.results-nav');
+      $searchNav.hide();
       let currentText = '';
       let currentIndex = 1;
 
@@ -66,21 +71,26 @@
       }
 
       function jumpToMatch(index) {
+        const $el = $('mark').eq( (index == 0) ? index : index - 1 );
+        $('mark').removeClass('current');
+        $el.addClass('current');
         $('html, body').stop().animate({
-          scrollTop: $('mark').eq( (index == 0) ? index : index - 1 ).offset().top
+          scrollTop: $el.offset().top
         }, 500);
       }
-
-      const $searchInfo = $form.find('.results-info');
-      const $searchIndex = $searchInfo.find('.results-index');
 
       function resultsInfo() {
         const total = $('.report--full').find('mark').length;
         if (total == 0) {
           currentIndex = 0;
+          $input.attr('aria-label', Drupal.t('No results. Please refine your keywords'));
+          $searchNav.hide();
         }
         else {
           currentIndex = 1;
+          if (total > 1) {
+            $searchNav.show();
+          }
         }
         $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
         jumpToMatch(currentIndex);
@@ -123,7 +133,6 @@
 
       $form.on('submit', function (event) {
         search(event);
-        //resultsInfo();
         return false;
       });
     }
