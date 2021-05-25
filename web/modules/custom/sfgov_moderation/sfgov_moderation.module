@@ -85,20 +85,37 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
         ],
       ];
 
-      // Change field type to textfield to allow custom autocomplete widget.
-      $departmentIds = $form_state->isRebuilding() ?
-        array_column($form_state->getValue($fieldName, []), 'target_id') :
-        array_column($node->get($fieldName)->getValue(), 'target_id');
+      if ($bundle != 'transaction') {
 
-      // Add ajax callback to departments field autocomplete widgets.
-      foreach (Element::children($form[$fieldName]['widget']) as $key) {
-        if (!is_numeric($key)) {
-          continue;
+        $departmentIds = $form_state->isRebuilding() ?
+          array_column($form_state->getValue($fieldName, []), 'target_id') :
+          array_column($node->get($fieldName)->getValue(), 'target_id');
+
+        // Add ajax callback to departments field autocomplete widgets.
+        foreach (Element::children($form[$fieldName]['widget']) as $key) {
+          if (!is_numeric($key)) {
+            continue;
+          }
+
+          $form[$fieldName]['widget'][$key]['target_id']['#ajax'] = [
+            'callback' => '_sfgov_moderation_departments_callback',
+            'event' => 'autocompleteclose changed',
+          ];
         }
+      }
 
-        $form[$fieldName]['widget'][$key]['target_id']['#ajax'] = [
-          'callback' => '_sfgov_moderation_departments_callback',
-          'event' => 'autocompleteclose change',
+      else {
+        $departmentIds = ['229'];
+
+        $form['data_fetch'] = [
+          '#title' => 'Data',
+          '#value' => 'Fetch reviewers',
+          '#type' => 'submit',
+          '#name' =>'sfgov_reviewer_fetch',
+          '#ajax' => [
+            'callback' => '_sfgov_moderation_departments_callback',
+            'event' => 'click',
+          ]
         ];
       }
     }
