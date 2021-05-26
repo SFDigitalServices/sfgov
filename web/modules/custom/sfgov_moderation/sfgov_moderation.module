@@ -12,6 +12,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\sfgov_moderation\ModerationUtilServiceInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_entity_base_field_info().
@@ -77,7 +78,11 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
       $form['reviewer']['#group'] = 'footer';
     }
 
-    if ($bundle != 'department') {
+    if ($bundle == 'department') {
+      // Just get the nid for departments.
+      $departmentIds = [$node->id()];
+    }
+    else {
       // Only show "reviewer" field if a department has been selected.
       $form['reviewer']['widget']['#states'] = [
         'visible' => [
@@ -86,7 +91,7 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
       ];
 
       if ($bundle != 'transaction') {
-
+        // Get department ids on nodes that are not transactions (nor departments).
         $departmentIds = $form_state->isRebuilding() ?
           array_column($form_state->getValue($fieldName, []), 'target_id') :
           array_column($node->get($fieldName)->getValue(), 'target_id');
@@ -103,29 +108,21 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
           ];
         }
       }
-
       else {
-        $array = $form_state->getCompleteForm();
-        if ($array != NULL) {
-          $departmentIds = [229];
-        } else {
-          $departmentIds = array_column($node->get($fieldName)->getValue(), 'target_id');
-        }
-
+        // Bundle is transaction.
+        $departmentIds = _sfgov_moderation_transaction_reviewers($form, $form_state, $fieldName, $node);
+        // Fire ajax to fetch reviewers.
         $form['data_fetch'] = [
           '#title' => 'Data',
           '#value' => 'Fetch reviewers',
           '#type' => 'submit',
           '#name' =>'sfgov_reviewer_fetch',
           '#ajax' => [
-            'callback' => '_sfgov_moderation_departments_callback',
+            'callback' => '_sfgov_moderation_transaction_departments_callback',
             'event' => 'click',
           ]
         ];
       }
-    }
-    else {
-      $departmentIds = [$node->id()];
     }
 
     $form['reviewer']['widget']['#options'] = _sfgov_moderation_reviewer_options($departmentIds, $form['reviewer']['widget']['#default_value']);
@@ -255,4 +252,60 @@ function sfgov_moderation_views_data_alter(array &$data) {
       'click sortable' => TRUE,
     ],
   ];
+}
+
+function _sfgov_moderation_transaction_reviewers($form, $form_state, $fieldName, $node) {
+
+  // Get department ids on transaction nodes.
+  // Transactions handle department loading in a special way. So we need
+  // to account for that when getting reviewers.
+  $complete_form = $form_state->getCompleteForm();
+  if ($complete_form == NULL) {
+    // Get department ids from saved node.
+    $departmentIds = array_column($node->get($fieldName)->getValue(), 'target_id');
+  }
+
+  else {
+    // Get department ids from form state.
+    $targets = array_column($complete_form[$fieldName]['widget'], 'target_id');
+
+    $departmentIds = [];
+    foreach ($targets as $i => $target) {
+      $default_value = $target['#default_value'];
+      if ($default_value instanceof NodeInterface) {
+        $nid = $default_value->id();
+        array_push($departmentIds, $nid);
+      } else {
+        $string = explode("(", $target['#value']);
+        $string = explode(")", $string[1]);
+        $nid = $string[0];
+        array_push($departmentIds, $nid);
+      }
+    }
+  }
+
+  return $departmentIds;
+}
+
+function _sfgov_moderation_transaction_departments_callback(&$form, $form_state) {
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+
+  /** @var string $bundle */
+  $bundle = $node->bundle();
+
+  /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
+  $moderationUtil = \Drupal::service('sfgov_moderation.util');
+
+  /** @var string $fieldName */
+  $fieldName = $moderationUtil->getDepartmentFieldName($bundle);
+
+  $departmentIds = _sfgov_moderation_transaction_reviewers($form, $form_state, $fieldName, $node);
+
+  $form['reviewer']['widget']['#options'] = _sfgov_moderation_reviewer_options($departmentIds, $form['reviewer']['widget']['#default_value']);
+
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#node-reviewer-wrapper', $form['reviewer']['widget']));
+  return $response;
 }
