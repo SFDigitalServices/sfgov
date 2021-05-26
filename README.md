@@ -10,6 +10,7 @@
 
 - Latest version of [Lando](https://docs.devwithlando.io) installed.
 - A global installation of [Composer](https://getcomposer.org)*
+- Building sfgovpl requires node 12.
 
 ### Instructions
 
