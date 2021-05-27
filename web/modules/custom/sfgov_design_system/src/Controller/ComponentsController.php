@@ -10,7 +10,8 @@ use Drupal\Core\Controller\ControllerBase;
 class ComponentsController extends ControllerBase {
   public function displayPage() {
     return [
-      '#markup' => 'Testing',
+      '#theme' => 'sfgov_design_system_components',
+      '#some_variable' => $this->t('some variable value'),
     ];
   }
 }
