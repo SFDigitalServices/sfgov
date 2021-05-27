@@ -3,7 +3,11 @@
     attach: function (context, settings) {
       $(document)
         .once("getReviewers")
-        .ajaxComplete(function (event, xhr, settings) {
+        .ajaxSuccess(function (event, xhr, settings) {
+          if (typeof settings.extraData == "undefined") {
+            return;
+          }
+
           if (
             settings.extraData._triggering_element_name ===
             "sfgov_department_fetch"
