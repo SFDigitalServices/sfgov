@@ -1,8 +1,30 @@
-<p>content from twig template</p>
+<ul>
+{% for sfds_component in sfds_components %}
+  <li>
+    {{ sfds_component.title }}
+    <ul>
+      <li class="mb-10">
+        {% include "@sfgov-design-system/button/link.twig" with {
+            "href": "https://sf.gov",
+            "text": sfds_component.context.text,
+            "classes": sfds_component.context.class
+        } %}
+      </li>
+      <li>Variants
+        <ul>
+          {% for variant in sfds_component.variants %}
+            <li>
+              {% include "@sfgov-design-system/button/link.twig" with {
+                  "href": "https://sf.gov",
+                  "text": sfds_component.context.text,
+                  "classes": variant.context.class
+              } %}
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
 
-<p>some_variable: {{ some_variable }}</p>
-
-{% include "@sfgov-design-system/button/link.twig" with {
-    "href": "https://sf.gov",
-    "text": "link text"
-} %}
+    </ul>
+  </li>
+{% endfor %}
+</ul>
