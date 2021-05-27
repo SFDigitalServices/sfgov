@@ -117,6 +117,7 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
           '#value' => 'Fetch reviewers',
           '#type' => 'submit',
           '#name' =>'sfgov_reviewer_fetch',
+          '#attributes' => ['style' => ['display: none;']],
           '#ajax' => [
             'callback' => '_sfgov_moderation_transaction_departments_callback',
             'event' => 'click',
