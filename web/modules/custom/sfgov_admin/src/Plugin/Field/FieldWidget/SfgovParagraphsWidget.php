@@ -150,11 +150,20 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
-
+    $field_name = $this->fieldDefinition->getName();
+    $parents = $element['#field_parents'];
     $item_bundles = $this->bundleInfo->getBundleInfo('paragraph');
+
+    $widget_state = static::getWidgetState($parents, $field_name, $form_state);
+    $paragraphs_entity = NULL;
     if ($element['#paragraph_type'] === "data_story_section") {
       $child_bundles = [];
-      $paragraphs_entity = $items[$delta]->entity;
+      if (isset($widget_state['paragraphs'][$delta]['entity'])) {
+        $paragraphs_entity = $widget_state['paragraphs'][$delta]['entity'];
+      }
+      elseif (isset($items[$delta]->entity)) {
+        $paragraphs_entity = $items[$delta]->entity;
+      }
       if ($paragraphs_entity) {
         /** @var \Drupal\paragraphs\ParagraphInterface[] $child_paragraphs */
         $child_paragraphs = $paragraphs_entity->get('field_content')->referencedEntities();
