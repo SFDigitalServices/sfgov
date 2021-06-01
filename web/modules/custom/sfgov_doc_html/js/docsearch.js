@@ -47,7 +47,7 @@
       function search(event) {
         event.preventDefault();
         const keywords = $input.val().trim().replace(/(\s+)/, "(<[^>]+>)*$1(<[^>]+>)*");
-        if (keywords.length <= 3) {
+        if (keywords.length <= 1) {
           reset();
           return;
         }
