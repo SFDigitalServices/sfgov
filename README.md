@@ -91,7 +91,14 @@
 
     _See [Disable Drupal 8 caching during development](https://www.drupal.org/node/2598914) for more details_.
 
-10. **Update dependencies and active config** in the following order:
+10. Add drush configuration file `/drush/drush.yml` (Optional)
+
+    ```yaml
+    options:
+      uri: 'https://sfgov.lndo.site/'
+    ```
+
+11. **Update dependencies and active config** in the following order:
 
     ```sh
     # 1. After updating the codebase, install any pending composer dependencies.
