@@ -200,14 +200,11 @@ function _sfgov_moderation_departments_callback(&$form, $form_state) {
  *
  * @param array $department_ids
  *   The department node IDs.
- * @param mixed $default_value
- *   The select list default value. It could need to be changed/nulled to avoid
- *   an "invalid value" warning.
  *
  * @return array
  *   The list of reviewers keyed by UID.
  */
-function _sfgov_moderation_reviewer_options(array $department_ids = [], &$default_value = NULL) {
+function _sfgov_moderation_reviewer_options(array $department_ids = []) {
   $empty = [
     '_none' => t('- None -'),
   ];
@@ -220,7 +217,6 @@ function _sfgov_moderation_reviewer_options(array $department_ids = [], &$defaul
 
   $userStorage = \Drupal::entityTypeManager()->getStorage('user');
   $users = $ids ? $userStorage->loadMultiple($ids) : [];
-  $default_value = (!empty($default_value) && is_array($default_value) || in_array($default_value[0], $ids)) ? $default_value : NULL;
   $options = $empty;
 
   foreach ($users as $user) {
