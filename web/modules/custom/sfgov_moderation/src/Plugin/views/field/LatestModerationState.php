@@ -64,7 +64,7 @@ class LatestModerationState extends FieldPluginBase {
     $state = $revision->moderation_state->getValue();
     $reviewer = $revision->reviewer->getValue();
 
-    if (isset($user[0]['target_id'])) {
+    if (isset($reviewer[0]['target_id'])) {
       $account = User::load($reviewer[0]['target_id']);
       $username = $account->getUsername();
     }
