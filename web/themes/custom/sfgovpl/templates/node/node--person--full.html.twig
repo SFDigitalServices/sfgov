@@ -1,15 +1,151 @@
-{% extends 'node--full.html.twig' %}
+{% extends 'node.html.twig' %}
+{% block node %}
+{% set bio_trim = content.field_biography|render|striptags %}
 
-{% block title %}
-{% endblock title %}
+{% set roles = [] %}
+{% for key, item in content['#node'].field_departments %}
+  {% set roles = series|merge( [item.get('entity').getTarget().getValue().getName()] )  %}
+{% endfor %}
 
-{% block content %}
-  {% include '@theme/person-card.twig' with {
-    "url": url,
-    "first_name": node.field_first_name.value,
-    "last_name": node.field_last_name.value,
-    "position_title": node.field_title.value,
-    "position_subtitle": node.field_sub_title.value,
-    "photo": file_url(node.field_photo.entity.fileuri)
-  } %}
-{% endblock content %}
+{{ attach_library('sfgovpl/sfgov-person') }}
+
+<div class="profile--info">
+
+  <div class="profile--name">
+    {{ node.field_first_name.0.value|striptags }} {{ node.field_last_name.0.value|striptags }}
+  </div>
+
+  <div class="profile--photo">
+    {{ content.field_photo }}
+  </div>
+  
+  <div class="profile--job">
+    {% if node.field_title.value|length %}
+      {{ node.field_title.value|striptags }}{% if (node.field_title.value|length) and (node.field_sub_title.value) %},<br>{% endif %}
+    {% endif %}
+    {% if node.field_sub_title.value %}
+      {{ node.field_sub_title.value|striptags }}
+    {% endif %}
+  </div>
+  
+  {% for key, item in node.field_departments if key|first != '#'%}
+    <div class="profile--role">
+      {% if item.entity.title.value %}
+        <div class="role-title">
+          Placeholder Role,
+        </div>
+        <div class="role-agency-title">
+          <a href="{{ path('entity.node.canonical', {'node':  item.entity.id}) }}">{{ item.entity.title.value }}</a>
+        </div>
+        <div class="role-time">
+          Placeholder Type: 2019 - 2023
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+  
+  <div class="profile--bio">
+    <div class="bio-trimmed">
+      {{ bio_trim|slice(0, 600) ~ '...' }}
+    </div>
+    <div class="bio-full hidden">
+      {{ content.field_biography }}
+    </div>
+    <div class="show-hide-bio"><button>Show more</button></div>
+  </div>
+</div>
+
+<div class="profile--contact">
+  <h2>Contact</h2>
+  
+  <div class="contact-wrapper">
+  
+    <div class="contact-phone">
+      <label data-contact="phone">Phone</label>
+      {% for key, item in node.field_phone_numbers if key|first != '#'%}
+        
+        <div class="phone-wrapper">
+        {% if item.entity.field_tel.value %}
+          <div class="phone-title">
+            {{ item.entity.field_owner.value|raw }}
+          </div>
+          <div class="phone-number">
+            <a href="tel:+{{ item.entity.field_tel.value|raw }}">
+              {{ item.entity.field_tel.value|raw }}
+            </a>
+          </div>
+          <div class="phone-desc">
+            {{ item.entity.field_text.value|raw }}
+          </div>
+        {% endif %}
+        
+        {% if not item.entity.field_tel.value is defined %}
+          {% if item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|length %}
+            <div class="phone-title">
+              {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_owner.value|raw }}
+            </div>
+            <div class="phone-number">
+              <a href="tel:+{{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|raw }}">
+                {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|raw }}
+              </a>
+            </div>
+            <div class="phone-desc">
+              {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_text.value|raw }}
+            </div>
+            
+          {% else %}
+          
+            <span>We do not have contact info for this agency. Add a new phone number instead.</span>
+            
+          {% endif %}
+        {% endif %}
+        </div>
+        
+      {% endfor %}
+    </div>
+    
+    
+    <div class="contact-email">
+      <label data-contact="email">Email</label>
+      
+      {% for key, item in node.field_email if key|first != '#'%}
+                
+        <div class="email-wrapper">
+        {% if item.entity.field_email.value|length %}
+          <div class="email-title">
+            {{ item.entity.field_title.value|raw }}
+          </div>
+          <div class="email-email">
+            <a href="mailto:{{ item.entity.field_email.value|raw }}">
+              {{ item.entity.field_email.value|raw }}
+            </a>
+          </div>
+        {% endif %}
+        
+        {% if not item.entity.field_email.value is defined %}
+          {% if item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|length %}
+          
+            <div class="email-title-ref">
+              {{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_title.value|raw }}
+            </div>
+            <div class="email-email">
+              <a href="mailto:{{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|raw }}">
+                {{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|raw }}
+              </a>
+            </div>
+                        
+          {% else %}
+            <span>We do not have contact info for this agency. Add a new email instead.</span>
+          {% endif %}
+        {% endif %}
+        </div>
+        
+      {% endfor %}
+        
+        
+              
+    </div>
+  </div>
+</div>
+
+{% endblock node %}
