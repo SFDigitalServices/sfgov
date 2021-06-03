@@ -2,9 +2,11 @@
 
 namespace Drupal\sfgov_moderation\Plugin\views\field;
 
+use Drupal\node\Entity\Node;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\user\Entity\User;
+use Drupal\sfgov_moderation\ModerationUtilService;
 
 /**
  * Field showing moderation details about the latest revision.
@@ -61,17 +63,32 @@ class LatestModerationState extends FieldPluginBase {
       ->getStorage('node')
       ->loadRevision($vid);
 
+    // Get State.
     $state = $revision->moderation_state->getValue();
-    $reviewer = $revision->reviewer->getValue();
 
+    // Get Reviewer.
+    $reviewer = $revision->reviewer->getValue();
     if (isset($reviewer[0]['target_id'])) {
       $account = User::load($reviewer[0]['target_id']);
       $username = $account->getUsername();
     }
 
+    // Get Department.
+    $bundle = $revision->bundle();
+    $dept_field_name = \Drupal::service('sfgov_moderation.util')->getDepartmentFieldName($bundle);
+    if ($revision->hasField($dept_field_name)) {
+      $department = $revision->get($dept_field_name)->getValue();
+
+      if(isset($department[0]['target_id'])) {
+        $node = Node::load($department[0]['target_id']);
+        $department_label = $node->label();
+      }
+    }
+
     return [
       'state' => isset($state[0]['value']) ? $state[0]['value'] : '',
       'username' => $username ?? NULL,
+      'department' => $department_label ?? NULL,
     ];
   }
 
