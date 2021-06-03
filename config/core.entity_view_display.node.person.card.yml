@@ -4,13 +4,22 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.card
+    - field.field.node.person.field_address
+    - field.field.node.person.field_biography
+    - field.field.node.person.field_commission_role
+    - field.field.node.person.field_departments
     - field.field.node.person.field_direct_external_url
+    - field.field.node.person.field_email
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
+    - field.field.node.person.field_optional_content
+    - field.field.node.person.field_phone_numbers
     - field.field.node.person.field_photo
+    - field.field.node.person.field_profile_type
+    - field.field.node.person.field_social_media
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
-    - image.style.medium
+    - image.style.large
     - node.type.person
   module:
     - image
@@ -55,13 +64,14 @@ content:
     type: string
     region: content
   field_photo:
+    type: image
     weight: 5
+    region: content
     label: hidden
     settings:
       image_style: large
+      image_link: ''
     third_party_settings: {  }
-    type: image_url
-    region: content
   field_sub_title:
     weight: 4
     label: hidden
@@ -79,6 +89,15 @@ content:
     type: string
     region: content
 hidden:
+  field_address: true
+  field_biography: true
+  field_commission_role: true
+  field_departments: true
+  field_email: true
+  field_optional_content: true
+  field_phone_numbers: true
+  field_profile_type: true
+  field_social_media: true
   langcode: true
   links: true
   search_api_excerpt: true

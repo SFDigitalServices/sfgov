@@ -4,10 +4,19 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.person.field_address
+    - field.field.node.person.field_biography
+    - field.field.node.person.field_commission_role
+    - field.field.node.person.field_departments
     - field.field.node.person.field_direct_external_url
+    - field.field.node.person.field_email
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
+    - field.field.node.person.field_optional_content
+    - field.field.node.person.field_phone_numbers
     - field.field.node.person.field_photo
+    - field.field.node.person.field_profile_type
+    - field.field.node.person.field_social_media
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
     - node.type.person
@@ -18,16 +27,31 @@ targetEntityType: node
 bundle: person
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 100
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_address: true
+  field_biography: true
+  field_commission_role: true
+  field_departments: true
   field_direct_external_url: true
+  field_email: true
   field_first_name: true
   field_last_name: true
+  field_optional_content: true
+  field_phone_numbers: true
   field_photo: true
+  field_profile_type: true
+  field_social_media: true
   field_sub_title: true
   field_title: true
   langcode: true
+  search_api_excerpt: true
