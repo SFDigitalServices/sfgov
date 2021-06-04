@@ -3,8 +3,8 @@
 set -eo pipefail
 
 # the config and metadata directories do not exist yet in the /vendor/simplesamlphp/simplesamlphp
-samlVendorConfig=$(pwd)"/vendor/simplesamlphp/simplesamlphp/config"
-samlVendorMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata"
+samlVendorConfig=$(pwd)"/vendor/simplesamlphp/simplesamlphp/config/"
+samlVendorMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata/"
 
 # the /web/sites/default/files/private/saml directory isn't source controlled, so the necessary configs aren't available yet in this build step
 # we'll need to get these files from live via terminus rsync (these files are uploaded via sftp separately, manually to the live env)
@@ -16,8 +16,8 @@ samlRemoteDir="files/private/saml/"
 samlLocalDir=$(pwd)"/web/sites/default/files/private/saml/"
 
 # the common configurations to be copied to the vendor directory
-samlCommonConfig=$samlLocalDir"/common/config/"
-samlCommonMetadata=$samlLocalDir"/common/metadata/"
+samlCommonConfig=$samlLocalDir"common/config/"
+samlCommonMetadata=$samlLocalDir"common/metadata/"
 
 # the locations of the remote live saml configurations
 samlLiveConfig="files/private/saml/live/config/"
@@ -27,7 +27,7 @@ syncEnv="live"
 
 # create the config and metadata directories
 mkdir --parents --verbose $samlVendorConfig
-mkdir --parents --verbose $samlVendorConfig
+mkdir --parents --verbose $samlVendorMetadata
 
 # create the local private directory
 mkdir --parents --verbose $samlLocalDir
