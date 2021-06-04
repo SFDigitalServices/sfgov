@@ -17,7 +17,7 @@ samlLocalDir=$(pwd)"/web/sites/default/files/private/saml/"
 
 # the common configurations to be copied to the vendor directory
 samlCommonConfig=$samlLocalDir"/common/config"
-samlCommonMetada=$samlLocalDir"/common/metadata"
+samlCommonMetadata=$samlLocalDir"/common/metadata"
 
 # the locations of the remote live saml configurations
 samlLiveConfig="files/private/saml/live/config/"
@@ -39,7 +39,7 @@ terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteDir $samlLocalDir
 cp -r $samlCommonConfig $samlVendorConfig
 
 # copy the common metadata dir to the simplesamlphp config dir
-cp -r $samlCommonMetadaD $samlVendorMetadata
+cp -r $samlCommonMetadata $samlVendorMetadata
 
 # these lines will copy the live config to the vendor directory
 # syncConfig=$samlLiveConfig
