@@ -73,6 +73,10 @@
         })
       }
 
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
       function jumpToMatch(index) {
         const $el = $('mark').eq( (index == 0) ? index : index - 1 );
         $('mark').removeClass('current');
@@ -96,7 +100,7 @@
             $searchNav.show();
           }
         }
-        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
+        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': numberWithCommas(total) }));
         jumpToMatch(currentIndex);
       }
 
@@ -107,8 +111,8 @@
           currentIndex = 0;
         }
         currentIndex++;
-        $(this).attr('aria-label', Drupal.t('Match @current of @total. Click to get to the next match.', {'@current': currentIndex, '@total': total}));
-        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
+        $(this).attr('aria-label', Drupal.t('Match @current of @total. Click to get to the next match.', {'@current': currentIndex, '@total': numberWithCommas(total) }));
+        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': numberWithCommas(total) }));
         jumpToMatch(currentIndex);
       });
 
@@ -121,8 +125,8 @@
         else {
           currentIndex--;
         }
-        $(this).attr('aria-label', Drupal.t('Match @current of @total. Click to get to the previous match.', {'@current': currentIndex, '@total': total}));
-        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': total}));
+        $(this).attr('aria-label', Drupal.t('Match @current of @total. Click to get to the previous match.', {'@current': currentIndex, '@total': numberWithCommas(total) }));
+        $searchIndex.html(Drupal.t('@current of @total', {'@current': currentIndex, '@total': numberWithCommas(total) }));
         jumpToMatch(currentIndex);
       });
 
