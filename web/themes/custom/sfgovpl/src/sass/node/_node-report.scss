@@ -73,7 +73,6 @@
     }
 
     .sfgov-spotlight-button {
-
       .field {
         margin-top: 40px;
       }
@@ -82,28 +81,28 @@
 
   .results-info {
     position: absolute;
-    top: 12px;
+    top: 15px;
     right: 125px;
     color: #647887;
     .results-nav {
+      display: none;
       position: absolute;
       right: -63px;
       top: 0;
     }
     .results-index-next {
-      @include background-image('icons/chevron-down.svg');
       text-indent: -9999px;
       height: 20px;
       width: 20px;
       white-space: nowrap;
     }
     .results-index-prev {
-      @include background-image('icons/chevron-up.svg');
       text-indent: -9999px;
+      text-decoration: none;
       height: 20px;
       width: 20px;
       white-space: nowrap;
-      padding-right: 5px;
+      margin-right: 5px;
     }
   }
 
@@ -111,7 +110,7 @@
     background-color: $c-yellow-2;
     &.current {
       background-color: $c-yellow-3;
-      border-bottom: 2px solid #000;
+      border-bottom: 2px solid $c-slate;
     }
   }
 
@@ -155,7 +154,9 @@
   .sfgov-section--content {
     line-height: 28px;
 
-    h2, h3, h4 {
+    h2,
+    h3,
+    h4 {
       scroll-margin-top: 100px;
     }
   }
@@ -238,7 +239,6 @@
 }
 
 .sfgov-toc {
-
   &-header {
     background-color: $c-white;
     display: flex;
@@ -289,8 +289,7 @@
         margin-top: 20px;
       }
       li {
-
-        &.has-active-target > a{
+        &.has-active-target > a {
           color: $c-slate;
           text-decoration: none;
         }
@@ -400,16 +399,25 @@
   }
 
   form {
+    @include fs-small-text;
     position: relative;
   }
 
-  [type="text"] {
-    padding-right: 100px;
+  [type='text'] {
+    @include fs-small-text;
+    @include background-image(
+      'search-slate-blue.svg',
+      right 12px top 11px,
+      transparent
+    );
+    padding: 13px 100px 13px 20px;
+    &::placeholder {
+      color: $c-light-slate;
+    }
   }
 
   button,
-  [type="submit"] {
-    @include background-image('search-white.svg', 50% 50%, $c-slate);
+  [type='submit'] {
     @include rubik;
     width: 48px;
     height: 48px;
@@ -439,13 +447,13 @@
   }
 
   form.is-focused {
-    [type="submit"] {
+    [type='submit'] {
       background-color: $c-bright-blue;
     }
   }
 
   form.has-input {
-    [type="text"] {
+    [type='text'] {
       border-color: $c-bright-blue;
       box-shadow: inset 0 0 0 2px $c-bright-blue;
       outline: none;

@@ -8762,19 +8762,19 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-report .results-info {
   position: absolute;
-  top: 12px;
+  top: 15px;
   right: 125px;
   color: #647887;
 }
 
 .page-node-type-report .results-info .results-nav {
+  display: none;
   position: absolute;
   right: -63px;
   top: 0;
 }
 
 .page-node-type-report .results-info .results-index-next {
-  background: url("/themes/custom/sfgovpl/src/img/icons/chevron-down.svg") no-repeat 50% 50% transparent;
   text-indent: -9999px;
   height: 20px;
   width: 20px;
@@ -8782,12 +8782,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .page-node-type-report .results-info .results-index-prev {
-  background: url("/themes/custom/sfgovpl/src/img/icons/chevron-up.svg") no-repeat 50% 50% transparent;
   text-indent: -9999px;
+  text-decoration: none;
   height: 20px;
   width: 20px;
   white-space: nowrap;
-  padding-right: 5px;
+  margin-right: 5px;
 }
 
 .page-node-type-report mark {
@@ -8796,7 +8796,7 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 
 .page-node-type-report mark.current {
   background-color: #f4c435;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid #1c3e57;
 }
 
 .page-node-type-report .sfgov-section-container {
@@ -8881,7 +8881,9 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   line-height: 28px;
 }
 
-.page-node-type-report .sfgov-section--content h2, .page-node-type-report .sfgov-section--content h3, .page-node-type-report .sfgov-section--content h4 {
+.page-node-type-report .sfgov-section--content h2,
+.page-node-type-report .sfgov-section--content h3,
+.page-node-type-report .sfgov-section--content h4 {
   scroll-margin-top: 100px;
 }
 
@@ -9196,16 +9198,54 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .docsearch form {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
   position: relative;
 }
 
-.docsearch [type="text"] {
-  padding-right: 100px;
+.docsearch form.sfgov-translate-lang-zh-TW {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 1px;
+}
+
+.docsearch [type='text'] {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  background: url("/themes/custom/sfgovpl/src/img/search-slate-blue.svg") no-repeat right 12px top 11px transparent;
+  padding: 13px 100px 13px 20px;
+}
+
+.docsearch [type='text'].sfgov-translate-lang-zh-TW {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 1px;
+}
+
+.docsearch [type='text']::-webkit-input-placeholder {
+  color: #607889;
+}
+
+.docsearch [type='text']::-moz-placeholder {
+  color: #607889;
+}
+
+.docsearch [type='text']:-ms-input-placeholder {
+  color: #607889;
+}
+
+.docsearch [type='text']::-ms-input-placeholder {
+  color: #607889;
+}
+
+.docsearch [type='text']::placeholder {
+  color: #607889;
 }
 
 .docsearch button, .docsearch .field-m13 .file-custom::before, .field-m13 .docsearch .file-custom::before,
-.docsearch [type="submit"] {
-  background: url("/themes/custom/sfgovpl/src/img/search-white.svg") no-repeat 50% 50% #1c3e57;
+.docsearch [type='submit'] {
   font-family: "Rubik", sans-serif;
   width: 48px;
   height: 48px;
@@ -9220,12 +9260,12 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
 }
 
 .docsearch button:focus, .docsearch .field-m13 .file-custom:focus::before, .field-m13 .docsearch .file-custom:focus::before,
-.docsearch [type="submit"]:focus {
+.docsearch [type='submit']:focus {
   outline: 2px dotted #aeb0b5;
 }
 
 .docsearch button:hover, .docsearch .field-m13 .file-custom:hover::before, .field-m13 .docsearch .file-custom:hover::before,
-.docsearch [type="submit"]:hover {
+.docsearch [type='submit']:hover {
   background-color: #1c3e57;
 }
 
@@ -9239,11 +9279,11 @@ header[role="banner"] .sfgov-mobile-nav-btn.sfgov-mobile-search {
   background-color: #4f66ee;
 }
 
-.docsearch form.is-focused [type="submit"] {
+.docsearch form.is-focused [type='submit'] {
   background-color: #4f66ee;
 }
 
-.docsearch form.has-input [type="text"] {
+.docsearch form.has-input [type='text'] {
   border-color: #4f66ee;
   -webkit-box-shadow: inset 0 0 0 2px #4f66ee;
           box-shadow: inset 0 0 0 2px #4f66ee;
