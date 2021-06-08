@@ -1,38 +1,28 @@
-uuid: db0ce644-8534-43da-99e7-8305537659c1
+uuid: f40eb010-3d9b-425a-95e9-1ba9c8d9d5b3
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.paragraph.field_content
-    - paragraphs.paragraphs_type.block
-    - paragraphs.paragraphs_type.button
-    - paragraphs.paragraphs_type.campaign
-    - paragraphs.paragraphs_type.content_link
-    - paragraphs.paragraphs_type.document
-    - paragraphs.paragraphs_type.events
-    - paragraphs.paragraphs_type.list
-    - paragraphs.paragraphs_type.news
-    - paragraphs.paragraphs_type.people
-    - paragraphs.paragraphs_type.phone
-    - paragraphs.paragraphs_type.section
-    - paragraphs.paragraphs_type.spotlight
+    - paragraphs.paragraphs_type.callout
+    - paragraphs.paragraphs_type.data_story_section
+    - paragraphs.paragraphs_type.image
+    - paragraphs.paragraphs_type.powerbi_embed
     - paragraphs.paragraphs_type.text
-    - paragraphs.paragraphs_type.timeline
-    - paragraphs.paragraphs_type.top_search_suggestion
   module:
     - entity_reference_revisions
     - tmgmt_content
 third_party_settings:
   tmgmt_content:
     excluded: false
-id: paragraph.section.field_content
+id: paragraph.data_story_section.field_content
 field_name: field_content
 entity_type: paragraph
-bundle: section
+bundle: data_story_section
 label: 'Section Content'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -40,202 +30,195 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      people: people
-      block: block
-      top_search_suggestion: top_search_suggestion
-      button: button
-      document: document
-      campaign: campaign
-      events: events
-      list: list
-      phone: phone
-      timeline: timeline
       text: text
-      content_link: content_link
-      news: news
-      spotlight: spotlight
+      callout: callout
+      image: image
+      powerbi_embed: powerbi_embed
     target_bundles_drag_drop:
       accordion:
-        weight: 54
+        weight: 88
         enabled: false
       accordion_item:
-        weight: 55
+        weight: 90
         enabled: false
       accordion_item_simple:
-        weight: 63
+        weight: 91
         enabled: false
       acuity_embed:
-        weight: 42
+        weight: 92
         enabled: false
       additional_info:
-        weight: 20
+        weight: 93
         enabled: false
       agenda_item:
-        weight: 66
+        weight: 94
         enabled: false
       basic_html_section:
-        weight: 67
+        weight: 95
         enabled: false
       block:
-        enabled: true
-        weight: 22
+        weight: 96
+        enabled: false
       button:
-        enabled: true
-        weight: 23
+        weight: 97
+        enabled: false
       call_to_action:
-        weight: 34
+        weight: 98
         enabled: false
       callout:
-        weight: 24
-        enabled: false
+        enabled: true
+        weight: 85
       campaign:
-        enabled: true
-        weight: 30
-      campaign_resource_section:
-        weight: 64
-        enabled: false
-      campaign_resources:
-        weight: 63
-        enabled: false
-      campaign_spotlight:
-        weight: 65
-        enabled: false
-      content_link:
-        enabled: true
-        weight: 44
-      cost:
-        weight: 25
-        enabled: false
-      custom_section:
-        weight: 26
-        enabled: false
-      department_content:
-        weight: 52
-        enabled: false
-      department_service_section:
-        weight: 38
-        enabled: false
-      document:
-        enabled: true
-        weight: 27
-      email:
-        weight: 28
-        enabled: false
-      email_addresses:
-        weight: 49
-        enabled: false
-      events:
-        enabled: true
-        weight: 32
-      fact:
-        weight: 75
-        enabled: false
-      facts:
-        weight: 76
-        enabled: false
-      featured_item:
-        weight: 41
-        enabled: false
-      form:
-        weight: 52
-        enabled: false
-      form_io:
-        weight: 60
-        enabled: false
-      help:
-        weight: 30
-        enabled: false
-      image_with_text:
-        weight: 81
-        enabled: false
-      in_person_location:
-        weight: 31
-        enabled: false
-      instagram_embed:
-        weight: 82
-        enabled: false
-      instagram_feed:
-        weight: 83
-        enabled: false
-      link:
-        weight: 44
-        enabled: false
-      list:
-        enabled: true
-        weight: 32
-      list_item:
-        weight: 33
-        enabled: false
-      mailing_address:
-        weight: 34
-        enabled: false
-      news:
-        enabled: true
-        weight: 49
-      other_info_card:
         weight: 99
         enabled: false
-      other_info_document:
+      campaign_resource_section:
+        weight: 101
+        enabled: false
+      campaign_resources:
         weight: 100
         enabled: false
-      people:
-        enabled: true
-        weight: 21
-      phone:
-        enabled: true
-        weight: 35
-      phone_numbers:
-        weight: 62
+      campaign_spotlight:
+        weight: 102
         enabled: false
-      power_bi_chart:
-        enabled: true
+      content_link:
+        weight: 103
+        enabled: false
+      cost:
         weight: 104
+        enabled: false
+      custom_section:
+        weight: 105
+        enabled: false
+      data_story_section:
+        weight: 106
+        enabled: false
+      department_content:
+        weight: 107
+        enabled: false
+      department_service_section:
+        weight: 108
+        enabled: false
+      document:
+        weight: 109
+        enabled: false
+      email:
+        weight: 110
+        enabled: false
+      email_addresses:
+        weight: 111
+        enabled: false
+      events:
+        weight: 112
+        enabled: false
+      fact:
+        weight: 113
+        enabled: false
+      facts:
+        weight: 114
+        enabled: false
+      featured_item:
+        weight: 115
+        enabled: false
+      form:
+        weight: 116
+        enabled: false
+      form_io:
+        weight: 117
+        enabled: false
+      help:
+        weight: 118
+        enabled: false
+      image:
+        enabled: true
+        weight: 86
+      image_with_text:
+        weight: 89
+        enabled: false
+      in_person_location:
+        weight: 120
+        enabled: false
+      instagram_embed:
+        weight: 119
+        enabled: false
+      link:
+        weight: 121
+        enabled: false
+      list:
+        weight: 122
+        enabled: false
+      list_item:
+        weight: 123
+        enabled: false
+      mailing_address:
+        weight: 124
+        enabled: false
+      news:
+        weight: 125
+        enabled: false
+      other_info_card:
+        weight: 126
+        enabled: false
+      other_info_document:
+        weight: 127
+        enabled: false
+      people:
+        weight: 128
+        enabled: false
+      phone:
+        weight: 129
+        enabled: false
+      phone_numbers:
+        weight: 130
+        enabled: false
+      powerbi_embed:
+        enabled: true
+        weight: 87
       process_step:
-        weight: 63
+        weight: 131
         enabled: false
       resources:
-        weight: 50
+        weight: 132
         enabled: false
       section:
-        weight: 21
+        weight: 133
         enabled: false
       social_media:
-        weight: 52
+        weight: 134
         enabled: false
       special_case:
-        weight: 36
+        weight: 135
         enabled: false
       spotlight:
-        enabled: true
-        weight: 54
+        weight: 136
+        enabled: false
       step:
-        weight: 37
+        weight: 137
         enabled: false
       text:
         enabled: true
-        weight: 38
+        weight: 84
       thing_to_know:
-        weight: 39
+        weight: 138
         enabled: false
       timeline:
-        enabled: true
-        weight: 37
+        weight: 139
+        enabled: false
       timeline_item:
-        weight: 81
+        weight: 140
         enabled: false
       top_search_suggestion:
-        enabled: true
-        weight: 22
+        weight: 141
+        enabled: false
       twitter_embed:
-        weight: 105
+        weight: 142
         enabled: false
       video:
-        weight: 106
+        weight: 143
         enabled: false
       video_external:
-        weight: 120
+        weight: 145
         enabled: false
       videos:
-        weight: 119
+        weight: 144
         enabled: false
 field_type: entity_reference_revisions
