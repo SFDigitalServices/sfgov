@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_social_media_embed
     - node.type.campaign
-    - paragraphs.paragraphs_type.instagram_embed
     - paragraphs.paragraphs_type.twitter_embed
   module:
     - entity_reference_revisions
@@ -28,7 +27,6 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      instagram_embed: instagram_embed
       twitter_embed: twitter_embed
     target_bundles_drag_drop:
       accordion:
@@ -37,11 +35,20 @@ settings:
       accordion_item:
         weight: 52
         enabled: false
+      accordion_item_simple:
+        weight: 62
+        enabled: false
       acuity_embed:
         weight: 53
         enabled: false
       additional_info:
         weight: 54
+        enabled: false
+      agenda_item:
+        weight: 65
+        enabled: false
+      basic_html_section:
+        weight: 66
         enabled: false
       block:
         weight: 55
@@ -119,8 +126,8 @@ settings:
         weight: 79
         enabled: false
       instagram_embed:
-        enabled: true
         weight: 80
+        enabled: false
       link:
         weight: 80
         enabled: false
@@ -135,6 +142,12 @@ settings:
         enabled: false
       news:
         weight: 84
+        enabled: false
+      other_info_card:
+        weight: 98
+        enabled: false
+      other_info_document:
+        weight: 99
         enabled: false
       people:
         weight: 85
@@ -184,4 +197,13 @@ settings:
       twitter_embed:
         enabled: true
         weight: 100
+      video:
+        weight: 116
+        enabled: false
+      video_external:
+        weight: 118
+        enabled: false
+      videos:
+        weight: 117
+        enabled: false
 field_type: entity_reference_revisions
