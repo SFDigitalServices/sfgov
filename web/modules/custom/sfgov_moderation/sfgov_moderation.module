@@ -50,6 +50,7 @@ function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_typ
  */
 function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
+  $form['#attached']['library'][] = 'sfgov_moderation/suggest_reviewer';
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
@@ -165,21 +166,6 @@ function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $f
     $validReviewers = \Drupal::service('sfgov_moderation.util')->getValidReviewers($departmentIds);
     if (!in_array($reviewer[0]['target_id'], $validReviewers)) {
       $form_state->setErrorByName('reviewer', t('Reviewer should belong to the departments.'));
-    }
-  }
-
-  // Require selecting a reviewer if departments are tagged in form.
-  if (empty($reviewer[0]['target_id']) && !empty($departmentIds)) {
-    $currentUser = \Drupal::currentUser();
-    $toState = $form_state->getValue('moderation_state')[0]['value'];
-
-    if (
-      // State "ready_for_review" always requires selecting a reviewer.
-      $toState == 'ready_for_review' ||
-      // Only publishers belonging to a node's departments can publish without selecting a reviewer.
-      ($toState == 'publish' && !$moderationUtil->canPublishFromDraftWithoutReviewer($currentUser, $departmentIds))
-    ) {
-      $form_state->setErrorByName('reviewer', t('A reviewer is required to change the moderation status.'));
     }
   }
 }
