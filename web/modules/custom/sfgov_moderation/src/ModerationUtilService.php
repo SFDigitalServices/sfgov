@@ -4,6 +4,8 @@ namespace Drupal\sfgov_moderation;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 
 /**
  * Class ModerationUtilService.
@@ -123,6 +125,72 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
     }
 
     return TRUE;
+  }
+
+
+  /**
+   * @inheritDoc
+   */
+  public function getModerationFields($node):array {
+
+    /** @var \Drupal\node\Entity\Node $revision */
+    $revision = $this->getLatestRevision($node);
+
+    // Get State.
+    $state = $revision->moderation_state->getValue();
+
+    // Get Reviewer.
+    $reviewer = $revision->reviewer->getValue();
+    if (isset($reviewer[0]['target_id'])) {
+      $account = User::load($reviewer[0]['target_id']);
+      $username = $account->getUsername();
+    }
+
+    // Get Department.
+    $bundle = $revision->bundle();
+    $dept_field_name = $this->getDepartmentFieldName($bundle);
+    $department_labels = '';
+
+    if ($revision->hasField($dept_field_name)) {
+      $departments = $revision->get($dept_field_name)->getValue();
+
+      if (isset($departments)) {
+
+
+        foreach($departments as $i => $department) {
+          $node = Node::load($department['target_id']);
+          $department_label = $node->label();
+
+          $department_labels .= $department_label . ', ' ;
+        }
+
+      }
+    }
+
+    return [
+      'state' => isset($state[0]['value']) ? $state[0]['value'] : '',
+      'username' => $username ?? NULL,
+      'department' => $department_labels,
+    ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLatestRevision($node): Node {
+
+    $nid = $node->id();
+
+    $vid = $this->entityTypeManager
+      ->getStorage('node')
+      ->getLatestRevisionId($nid);
+
+    /** @var \Drupal\node\Entity\Node $revision */
+    $revision = $this->entityTypeManager
+      ->getStorage('node')
+      ->loadRevision($vid);
+
+    return $revision;
   }
 
 }
