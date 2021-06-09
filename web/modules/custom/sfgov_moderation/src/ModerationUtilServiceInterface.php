@@ -3,6 +3,7 @@
 namespace Drupal\sfgov_moderation;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Interface ModerationUtilServiceInterface.
@@ -65,5 +66,25 @@ interface ModerationUtilServiceInterface {
    *   departments.
    */
   public function canPublishFromDraftWithoutReviewer(AccountInterface $account, array $departmentIds): bool;
+
+
+  /**
+   * Get moderation state of most recent revision by nid.
+   *
+   * @param \Drupal\node\Entity\Node $node
+   *   A node object.
+   *
+   * @return array
+   *   An array of revision values.
+   */
+  public function getModerationFields($node): array;
+
+  /***
+   * @param $node
+   *  A node object.
+   *
+   * @return \Drupal\node\Entity\Node
+   */
+  public function getLatestRevision($node): Node;
 
 }
