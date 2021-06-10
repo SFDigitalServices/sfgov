@@ -222,7 +222,7 @@ class QLess {
     $queues = $json['data']['queues'];
     $rows = [];
 
-    $queues_to_display = ['1069', '1068', '2510', '1077', '1081'];
+    $queues_to_display = ['1069', '2510', '1077', '1076', '1079', '1080', '1081', '1085', '1087', '1068'];
 
     // Filter out the queues we want and display them in order.
     foreach ($queues_to_display as $index => $queue_id) {

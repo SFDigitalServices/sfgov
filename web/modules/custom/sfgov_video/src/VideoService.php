@@ -106,7 +106,7 @@ class VideoService {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getYoutubeMetadata($video_id, $languageCode = 'en') {
-    $video_info_url = "https://www.youtube.com/get_video_info?&video_id=" . $video_id;
+    $video_info_url = "https://www.youtube.com/get_video_info?video_id=" . $video_id . "&html5=1";
     $request = $this->httpClient->request('GET', $video_info_url);
     $contents = $request->getBody()->getContents();
 
