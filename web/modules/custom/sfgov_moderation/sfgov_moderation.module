@@ -13,6 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\sfgov_moderation\ModerationUtilServiceInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * Implements hook_entity_base_field_info().
@@ -328,4 +330,39 @@ function _sfgov_moderation_transaction_departments_callback(array &$form, FormSt
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#node-reviewer-wrapper', $form['reviewer']['widget']));
   return $response;
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function sfgov_moderation_node_access(
+  NodeInterface $node,
+  $op,
+  AccountProxy $account
+) {
+  switch ($node->bundle()) {
+
+    case 'department':
+      switch ($op) {
+
+        case 'update':
+
+          /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
+          $moderationUtil = \Drupal::service('sfgov_moderation.util');
+
+          // Allow writers and publishers to update their department.
+          $is_member = $moderationUtil->accountBelongsToDepartment($account, $node->id());
+          $has_roles = $moderationUtil->canModifyDepartment($account);
+
+          if ($is_member && $has_roles) {
+            return AccessResult::allowed();
+          }
+
+          break;
+      }
+      break;
+
+  }
+
+  return AccessResult::neutral();
 }

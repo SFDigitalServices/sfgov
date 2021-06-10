@@ -6,7 +6,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\Node;
 
 /**
- * Interface ModerationUtilServiceInterface.
+ * Interface for Moderation utilities.
  */
 interface ModerationUtilServiceInterface {
 
@@ -14,6 +14,16 @@ interface ModerationUtilServiceInterface {
    * The field name that contains the departments a user belongs to.
    */
   public const DEPARTMENTS_ACCOUNT_FIELD = 'field_departments';
+
+  /**
+   * The publisher role machine name.
+   */
+  public const PUBLISHER_ROLE = 'publisher';
+
+  /**
+   * The writer role machine name.
+   */
+  public const WRITER_ROLE = 'writer';
 
   /**
    * Get the department field name given the node bundle.
@@ -67,6 +77,16 @@ interface ModerationUtilServiceInterface {
    */
   public function canPublishFromDraftWithoutReviewer(AccountInterface $account, array $departmentIds): bool;
 
+  /**
+   * Check if an account can modify department node.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The given account.
+   *
+   * @return bool
+   *   True if the user has a role that can modify departments.
+   */
+  public function canModifyDepartment(AccountInterface $account):bool;
 
   /**
    * Get moderation state of most recent revision by nid.
@@ -77,14 +97,17 @@ interface ModerationUtilServiceInterface {
    * @return array
    *   An array of revision values.
    */
-  public function getModerationFields($node): array;
+  public function getModerationFields(Node $node): array;
 
   /***
-   * @param $node
-   *  A node object.
+   * Gets the latest node revision.
+   *
+   * @param \Drupal\node\Entity\Node $node
+   *   A (typically default revision) node object.
    *
    * @return \Drupal\node\Entity\Node
+   *   The latest revision's node object.
    */
-  public function getLatestRevision($node): Node;
+  public function getLatestRevision(Node $node): Node;
 
 }

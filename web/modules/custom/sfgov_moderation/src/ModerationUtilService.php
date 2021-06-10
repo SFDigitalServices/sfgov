@@ -5,10 +5,9 @@ namespace Drupal\sfgov_moderation;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
 
 /**
- * Class ModerationUtilService.
+ * Moderation Service.
  */
 class ModerationUtilService implements ModerationUtilServiceInterface {
 
@@ -35,7 +34,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getDepartmentFieldName(string $bundle): ?string {
     switch ($bundle) {
@@ -67,7 +66,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function accountBelongsToDepartment(AccountInterface $account, $department): bool {
     // Get full user object, not just the session.
@@ -82,7 +81,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getValidReviewers(array $departmentIds = []): array {
     if (empty($departmentIds)) {
@@ -106,7 +105,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function canPublishFromDraftWithoutReviewer(AccountInterface $account, array $departmentIds): bool {
     if (!in_array(static::PUBLISHER_ROLE, $account->getRoles())) {
@@ -127,9 +126,22 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function canModifyDepartment(AccountInterface $account):bool {
+    $allowed_roles = [self::PUBLISHER_ROLE, self::WRITER_ROLE];
+
+    foreach ($allowed_roles as $role) {
+      if (in_array($role, $account->getRoles())) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getModerationFields($node):array {
 
@@ -142,8 +154,11 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
     // Get Reviewer.
     $reviewer = $revision->reviewer->getValue();
     if (isset($reviewer[0]['target_id'])) {
-      $account = User::load($reviewer[0]['target_id']);
-      $username = $account->getUsername();
+
+      /** @var \Drupal\user\Entity\User $accountEntity */
+      $accountEntity = $this->entityTypeManager->getStorage('user')->load($reviewer[0]['target_id']);
+
+      $username = $accountEntity->getUsername();
     }
 
     // Get Department.
@@ -156,12 +171,11 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
 
       if (isset($departments)) {
 
-
-        foreach($departments as $i => $department) {
-          $node = Node::load($department['target_id']);
+        foreach ($departments as $department) {
+          $node = $this->entityTypeManager->getStorage('node')->load($department['target_id']);
           $department_label = $node->label();
 
-          $department_labels .= $department_label . ', ' ;
+          $department_labels .= $department_label . ', ';
         }
 
       }
@@ -175,7 +189,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getLatestRevision($node): Node {
 
