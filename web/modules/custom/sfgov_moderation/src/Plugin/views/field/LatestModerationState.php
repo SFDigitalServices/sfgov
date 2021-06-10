@@ -2,11 +2,8 @@
 
 namespace Drupal\sfgov_moderation\Plugin\views\field;
 
-use Drupal\node\Entity\Node;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
-use Drupal\user\Entity\User;
-use Drupal\sfgov_moderation\ModerationUtilService;
 
 /**
  * Field showing moderation details about the latest revision.
