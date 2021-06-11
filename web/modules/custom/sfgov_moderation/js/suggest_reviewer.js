@@ -1,27 +1,54 @@
 (function ($) {
   Drupal.behaviors.reviewerWarning = {
     attach: function (context) {
-      const $reviewer = $('[name="reviewer"]');
-      const $moderationState = $('[name="moderation_state[0][state]"]');
-      const $inputs = $(
-        '[name="reviewer"], [name="moderation_state[0][state]"]'
+      // Set variables.
+      const $reviewerWrapper = $(
+        '[data-drupal-selector="edit-reviewer-wrapper"]'
       );
+      const $reviewerField = $reviewerWrapper.find('[name="reviewer"]');
+      const $moderationStateField = $('[name="moderation_state[0][state]"]');
+      const $departmentsField = $(
+        '[data-drupal-selector="edit-field-dept-wrapper"] input[type="text"]'
+      );
+      const $inputs = $(
+        '[name="reviewer"], [name="moderation_state[0][state]"], input[name^="field_dept["]'
+      );
+      const $message = $reviewerField.next(".description");
+      const $er = "error";
+      let $has_fields = false;
 
-      $inputs.on("change", function () {
-        const $message = $reviewer.next(".description");
+      // Evaluate state and respond.
+      const reviewFieldState = () => {
+        if ($departmentsField.length > 0) {
+          $has_fields = $departmentsField.val().length > 0;
+        }
 
         if (
-          $reviewer.val() === "_none" &&
-          $moderationState.val() === "ready_for_review" &&
-          $reviewer.find("option").length > 1
+          $moderationStateField.val() === "ready_for_review" &&
+          $reviewerField.find("option").length > 1 &&
+          $has_fields
         ) {
-          $reviewer.addClass("error");
-          $message.addClass("error");
+          // Show reviewer field.
+          $reviewerWrapper.show();
+
+          if ($reviewerField.val() === "_none") {
+            // Highlight field.
+            $reviewerField.addClass($er);
+            $message.addClass($er);
+          } else {
+            // Remove field highlight.
+            $reviewerField.removeClass($er);
+            $message.removeClass($er);
+          }
         } else {
-          $reviewer.removeClass("error");
-          $message.removeClass("error");
+          // Hide reviewer field.
+          $reviewerWrapper.hide();
         }
-      });
+      };
+
+      // Run function on page load and on change.
+      reviewFieldState();
+      $inputs.on("change", reviewFieldState);
     },
   };
 })(jQuery);

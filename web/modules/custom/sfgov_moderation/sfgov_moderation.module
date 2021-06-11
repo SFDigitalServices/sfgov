@@ -91,13 +91,6 @@ function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_
       $departmentIds = [$node->id()];
     }
     else {
-      // Only show "reviewer" field if a department has been selected.
-      $form['reviewer']['widget']['#states'] = [
-        'visible' => [
-          ':input[name="' . $fieldName . '[0][target_id]"]' => ['filled' => TRUE],
-          ':input[name="' . $fieldName . '_add_more"]' => ['value' => 'Add another item'],
-        ],
-      ];
 
       if ($bundle != 'transaction') {
         // Get department on nodes that are not transactions (nor departments).
