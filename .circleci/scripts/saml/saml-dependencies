@@ -9,17 +9,17 @@ samlVendorMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata/"
 # the /web/sites/default/files/private/saml directory isn't source controlled, so the necessary configs aren't available yet in this build step
 # we'll need to get these files from live via terminus rsync (these files are uploaded via sftp separately, manually to the live env)
 
-# the remote pantheon directory with saml related configurations
+# the remote pantheon directories with saml related configurations
 samlRemoteCommonConfigDir="files/private/saml/common/config/"
 samlRemoteCommonMetadataDir="files/private/saml/common/metadata/"
 
 syncEnv="dev"
 
-# create the config and metadata directories
+# create the vendor config and metadata directories
 mkdir -pv $samlVendorConfig
 mkdir -pv $samlVendorMetadata
 
-# copy the entire saml folder from live to local build env
+# copy the common saml config and metadata from pantheon to respective vendor directory
 if [[ ! -z "$TERMINUS_SITE" ]]; then
   terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteCommonConfigDir $samlVendorConfig
   terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteCommonMetadataDir $samlVendorMetadata
