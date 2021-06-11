@@ -1,0 +1,42 @@
+<?php
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * @file
+ * Implements hook for sfgov_media module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_media_theme($existing, $type, $theme, $path) {
+  return [
+    'media_power_bi' => [
+      'variables' => [
+        'url' => NULL,
+        'device' => NULL,
+        'width' => NULL,
+        'height' => NULL,
+      ],
+      'file' => 'sfgov_media.theme.inc',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function sfgov_media_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  $power_bi_url_fields = [
+    'field_desktop_embed_url',
+    'field_mobile_embed_url',
+  ];
+
+  // Add power bi url constraint.
+  foreach ($power_bi_url_fields as $power_bi_url_field) {
+    if (!empty($fields[$power_bi_url_field])) {
+      $fields[$power_bi_url_field]->addConstraint('PowerBiUrl');
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation to embed a Power BI chart.
+ *
+ * Available variables:
+ * - width: The width of the iframe.
+ * - height: The height of the iframe.
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library("sfgov_media/power_bi") }}
+{% set padding = device == "desktop" ? "100%" : "225%" %}
+<div data-power-bi data-device="{{ device }}" data-src="{{ url }}" style="display: none; position: relative; padding-top: calc({{ padding }} + 37px)">
+  <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;"></iframe>
+</div>
