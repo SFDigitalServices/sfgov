@@ -9,34 +9,21 @@ samlVendorMetadata=$(pwd)"/vendor/simplesamlphp/simplesamlphp/metadata/"
 # the /web/sites/default/files/private/saml directory isn't source controlled, so the necessary configs aren't available yet in this build step
 # we'll need to get these files from live via terminus rsync (these files are uploaded via sftp separately, manually to the live env)
 
-# the remote pantheon directory with saml related configurations
-samlRemoteDir="files/private/saml/"
+# the remote pantheon directories with saml related configurations
+samlRemoteCommonConfigDir="files/private/saml/common/config/"
+samlRemoteCommonMetadataDir="files/private/saml/common/metadata/"
 
-# the local saml directory
-samlLocalDir=$(pwd)"/web/sites/default/files/private/saml/"
+syncEnv="dev"
 
-# the common configurations to be copied to the vendor directory
-samlCommonConfig=$samlLocalDir"common/config/"
-samlCommonMetadata=$samlLocalDir"common/metadata/"
-
-syncEnv="live"
-
-# create the config and metadata directories
+# create the vendor config and metadata directories
 mkdir -pv $samlVendorConfig
 mkdir -pv $samlVendorMetadata
 
-# create the local private directory
-mkdir -pv $samlLocalDir
-
-# copy the entire saml folder from live to local build env
+# copy the common saml config and metadata from pantheon to respective vendor directory
 if [[ ! -z "$TERMINUS_SITE" ]]; then
-  terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteDir $samlLocalDir
+  terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteCommonConfigDir $samlVendorConfig
+  terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteCommonMetadataDir $samlVendorMetadata
 fi
-
-# copy the common config dir to the simplesamlphp config dir
-cp -r $samlCommonConfig"/." $samlVendorConfig"/."
-# copy the common metadata dir to the simplesamlphp config dir
-cp -r $samlCommonMetadata"/." $samlVendorMetadata"/."
 
 # these lines will copy the live config to the vendor directory
 # the locations of the remote live saml configurations
