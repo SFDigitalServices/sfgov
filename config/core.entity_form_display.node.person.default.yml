@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.field.node.person.field_address
     - field.field.node.person.field_biography
-    - field.field.node.person.field_commission_role
     - field.field.node.person.field_departments
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_email
@@ -39,7 +38,7 @@ third_party_settings:
         - field_phone_numbers
         - field_email
       parent_name: ''
-      weight: 10
+      weight: 9
       format_type: fieldset
       region: content
       format_settings:
@@ -55,7 +54,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 15
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -70,23 +69,15 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_biography:
-    weight: 8
+    weight: 7
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
     region: content
-  field_commission_role:
-    weight: 3
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_departments:
-    weight: 6
+    weight: 5
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -96,7 +87,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_direct_external_url:
-    weight: 12
+    weight: 11
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -138,7 +129,7 @@ content:
     type: string_textfield
     region: content
   field_optional_content:
-    weight: 11
+    weight: 10
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -174,7 +165,7 @@ content:
     type: paragraphs
     region: content
   field_photo:
-    weight: 7
+    weight: 6
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -188,7 +179,7 @@ content:
     type: options_select
     region: content
   field_social_media:
-    weight: 9
+    weight: 8
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -206,14 +197,6 @@ content:
     type: paragraphs
     region: content
   field_sub_title:
-    weight: 5
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_title:
     weight: 4
     settings:
       size: 60
@@ -221,22 +204,23 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  langcode:
-    type: language_select
-    weight: 13
-    region: content
+  field_title:
+    weight: 3
     settings:
-      include_locked: true
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   moderation_state:
     type: moderation_state_default
-    weight: 19
+    weight: 17
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -249,13 +233,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 24
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 22
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -263,7 +247,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 20
+    weight: 18
     region: content
     third_party_settings: {  }
   sticky:
@@ -275,20 +259,20 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 21
+    weight: 19
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 16
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 14
+    weight: 12
     settings:
       match_operator: CONTAINS
       size: 60
@@ -298,19 +282,20 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 23
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 25
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 18
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  langcode: true
