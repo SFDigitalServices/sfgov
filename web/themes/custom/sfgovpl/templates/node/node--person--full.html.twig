@@ -30,17 +30,107 @@
   
   {% for key, item in node.field_departments if key|first != '#'%}
     <div class="profile--role">
+    
       {% if item.entity.title.value %}
         <div class="role-title">
-          Placeholder Role,
+          <!-- For departments -->
+          {% if item.entity.field_people.value %}
+            {% for keyp, itemp in item.entity.field_people.value if keyp|first != '#'%}
+              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
+              
+              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
+                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
+                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
+                  {% if profilecomp2['#paragraph'].field_commision_position.value %}
+                    {{ profilecomp2['#paragraph'].field_commision_position.value }}
+                  {% else %}
+                    <span>No title available</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              
+            {% endfor %}
+          {% endif %}
+          
+          <!-- For public bodies -->
+          {% if item.entity.field_board_members.value %}
+            {% for keyp, itemp in item.entity.field_board_members.value if keyp|first != '#'%}
+              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
+              
+              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
+                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
+                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
+                  {% if profilecomp2['#paragraph'].field_commision_position.value %}
+                    {{ profilecomp2['#paragraph'].field_commision_position.value }}
+                  {% else %}
+                    <span>No title available</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              
+            {% endfor %}
+          {% endif %}
         </div>
+        
         <div class="role-agency-title">
           <a href="{{ path('entity.node.canonical', {'node':  item.entity.id}) }}">{{ item.entity.title.value }}</a>
         </div>
+        
         <div class="role-time">
-          Placeholder Type: 2019 - 2023
+          <!-- For departments -->
+          {% if item.entity.field_people.value %}
+            {% for keyp, itemp in item.entity.field_people.value if keyp|first != '#'%}
+              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
+              
+              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
+                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
+                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
+                  {% if profilecomp2['#paragraph'].field_position_type.value %}
+                    {{ profilecomp2['#paragraph'].field_position_type.value }}: 
+                  {% else %}
+                    <span>No position information available: </span>
+                  {% endif %}
+                  
+                  <!-- position type/timeframe -->
+                  {% if profilecomp2['#paragraph'].field_starting_year.value %}
+                    {{ profilecomp2['#paragraph'].field_starting_year.value|date('Y') }} - {{ profilecomp2['#paragraph'].field_ending_year.value|date('Y') }}
+                  {% else %}
+                    <span>No starting year available</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              
+            {% endfor %}
+          {% endif %}
+          
+          <!-- For public bodies -->
+          {% if item.entity.field_board_members.value %}
+            {% for keyp, itemp in item.entity.field_board_members.value if keyp|first != '#'%}
+              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
+              
+              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
+                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
+                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
+                  {% if profilecomp2['#paragraph'].field_position_type.value %}
+                    {{ profilecomp2['#paragraph'].field_position_type.value }}: 
+                  {% else %}
+                    <span>No position information available: </span>
+                  {% endif %}
+                  
+                  <!-- position type/timeframe -->
+                  {% if profilecomp2['#paragraph'].field_starting_year.value %}
+                    {{ profilecomp2['#paragraph'].field_starting_year.value|date('Y') }} - {{ profilecomp2['#paragraph'].field_ending_year.value|date('Y') }}
+                  {% else %}
+                    <span>No starting year available</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              
+            {% endfor %}
+          {% endif %}
         </div>
       {% endif %}
+      
     </div>
   {% endfor %}
   
@@ -141,9 +231,7 @@
         </div>
         
       {% endfor %}
-        
-        
-              
+      
     </div>
   </div>
 </div>
