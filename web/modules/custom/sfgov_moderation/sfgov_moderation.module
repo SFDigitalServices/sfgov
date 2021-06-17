@@ -225,6 +225,64 @@ function _sfgov_moderation_reviewer_options(array $department_ids = []) {
  * Implements hook_views_data_alter().
  */
 function sfgov_moderation_views_data_alter(array &$data) {
+  $data['content_moderation_state_field_revision']['table'] = [
+    'group' => t('SF.gov Moderation'),
+    'base' =>  [
+      'field' => 'content_entity_id',
+      'title' => t('Sf.gov Moderation'),
+      'help' => t('Content Moderation State Field Table.'),
+    ]
+  ];
+
+  $data['content_moderation_state_field_revision']['table']['join'] = [
+    'node_field_data' => [
+      'left_field' => 'nid',
+      'field' => 'content_entity_id',
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['content_entity_id'] = [
+    'title' => t('Sf.gov Moderation - Entity ID'),
+    'help' => t('Moderation State.'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'standard',
+    ],
+    'argument' => [
+      'id' => 'string',
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['moderation_state'] = [
+    'title' => t('Sf.gov Moderation - Moderation State'),
+    'help' => t('Moderation State.'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'standard',
+    ],
+    'argument' => [
+      'id' => 'string',
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['content_entity_revision_id'] = [
+    'title' => t('Sf.gov Moderation - Entity Revision Id'),
+    'help' => t('Moderation State.'),
+    'field' => [
+      'id' => 'standard',
+    ]
+  ];
+
 
   $data['node']['latest_moderation_state'] = [
     'title' => t('Latest moderation state'),
