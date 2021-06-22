@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.resource_collection.field_content
     - field.field.node.resource_collection.field_content_bottom
     - field.field.node.resource_collection.field_data_dashboard
+    - field.field.node.resource_collection.field_departments
     - field.field.node.resource_collection.field_description
     - field.field.node.resource_collection.field_introductory_text
     - field.field.node.resource_collection.field_sidebar
@@ -46,11 +47,19 @@ content:
   field_data_dashboard:
     type: entity_reference_revisions_entity_view
     weight: 8
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    region: content
+  field_departments:
+    weight: 9
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_description:
     type: text_default
