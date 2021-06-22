@@ -127,6 +127,27 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ */
+function sfgovpl_preprocess_node__data_story(&$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  /** @var \Drupal\paragraphs\ParagraphInterface[] $sections */
+  $sections = $node->get('field_content')->referencedEntities();
+
+  $variables['sections'] = [];
+  if (!count($sections)) {
+    return;
+  }
+
+  foreach ($sections as $section) {
+    if ($title = $section->get('field_title')->value) {
+      $variables['sections'][] = ['title' => $title];
+    }
+  }
+}
+
+/**
  * Retrieve the transaction ids in field_department_services that will be
  * excluded from "more services" section on topic page send the list of ids to a
  * Twig var which will then get passed to view contextual filters via
