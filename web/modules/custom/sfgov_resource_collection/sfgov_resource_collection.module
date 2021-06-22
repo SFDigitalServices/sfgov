@@ -12,13 +12,16 @@ function sfgov_resource_collection_node_prepare_form(EntityInterface $entity, $o
     $langcode = $form_state->get('langcode');
 
     // Append items into Custom Sections.
-    foreach ([
-      'Documents',
-      'Data',
-      'Resources'
-    ] as $title) {
+
+    $template = [
+      'Documents' => 'section',
+      'Data' => 'data_story_section',
+      'Resources' => 'resource_section'
+    ];
+
+    foreach ($template as $title => $paragraph_type) {
       $paragraphs_entity = $storage->create([
-        'type' => 'section',
+        'type' => $paragraph_type,
         'langcode' => $langcode,
         'field_title' => $title,
       ]);
