@@ -20,6 +20,7 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - sfgov_admin
     - text
 id: node.resource_collection.default
 targetEntityType: node
@@ -38,18 +39,36 @@ content:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: closed
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: section
-      features:
-        add_above: '0'
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
+      paragraph_settings:
+        section:
+          field_settings:
+            field_content:
+              label: ''
+              target_bundles:
+                block: '0'
+                button: '0'
+                campaign: '0'
+                content_link: '0'
+                data_story_section: data_story_section
+                document: document
+                events: '0'
+                list: '0'
+                news: '0'
+                people: '0'
+                phone: '0'
+                resources: resources
+                spotlight: '0'
+                text: '0'
+                timeline: '0'
+                top_search_suggestion: '0'
+            field_title:
+              label: ''
+          disabled_new: false
     third_party_settings: {  }
-    type: paragraphs
+    type: sfgov_customizable_paragraphs
     region: content
   field_content_bottom:
     weight: 12
