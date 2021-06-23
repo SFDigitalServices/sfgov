@@ -8,6 +8,19 @@
 use Drupal\node\NodeInterface;
 
 /**
+ * Implements theme_preprocess_page_title(). 
+ */
+function sfgovpl_preprocess_page_title(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($node) && $node instanceof NodeInterface) {
+    if ($node->bundle() == 'report') {
+      // Hide page title on report nodes.
+      $variables['title'] = '';
+    }
+  }
+}
+
+/**
  * Implements theme_preprocess_HOOK().
  */
 function sfgovpl_preprocess_page__node__campaign(&$variables) {
