@@ -82,6 +82,11 @@ class SearchForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Search'),
       '#button_type' => 'primary',
+      '#attributes' => array(
+        'class' => array(
+          'btn', // button class from design system
+        ),
+      )
     );
 
     return $form;
