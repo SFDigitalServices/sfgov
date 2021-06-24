@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Modify resource collection nodes.
+ */
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -12,19 +17,38 @@ function sfgov_resource_collection_node_prepare_form(EntityInterface $entity, $o
     $langcode = $form_state->get('langcode');
 
     // Append items into Custom Sections.
-
     $template = [
-      'Documents' => 'section',
-      'Data' => 'data_story_section',
-      'Resources' => 'resource_section'
+      'Documents' => [
+        'paragraph_type' => 'section',
+        'sub_paragraph_type' => NULL,
+      ],
+      'Data' =>
+        [
+          'paragraph_type' => 'section',
+          'sub_paragraph_type' => 'data_story_section',
+        ],
+      'Resources' => [
+        'paragraph_type' => 'section',
+        'sub_paragraph_type' => 'resource_section',
+      ],
     ];
 
-    foreach ($template as $title => $paragraph_type) {
+    foreach ($template as $title => $paragraphs) {
       $paragraphs_entity = $storage->create([
-        'type' => $paragraph_type,
+        'type' => $paragraphs['paragraph_type'],
         'langcode' => $langcode,
         'field_title' => $title,
       ]);
+
+      if ($paragraphs['sub_paragraph_type'] != NULL) {
+        $sub_paragraph_entity = $storage->create([
+          'type' => $paragraphs['sub_paragraph_type'],
+          'langcode' => $langcode,
+          'field_title' => $title,
+        ]);
+        $paragraphs_entity->get('field_content')->appendItem($sub_paragraph_entity);
+      }
+
       $entity->get('field_content')->appendItem($paragraphs_entity);
     }
   }
