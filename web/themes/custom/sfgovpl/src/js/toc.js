@@ -84,6 +84,7 @@
         if ($toc.hasClass('toc-expanded')) {
           $toc.removeClass("toc-expanded");
           $expandButton.focus();
+          $feedbackForm.removeClass('toc-expanded-feedback');
         }
       });
 
@@ -93,17 +94,6 @@
           .replace(/(index|default).[a-zA-Z]{3,4}$/, '')
           .replace(/\/$/, '');
       }
-
-      const $anchors = $toc.find('a');
-      const $content = $('.sfgov-section--content', context);
-
-      $anchors.on('click', function () {
-        if ($toc.hasClass('toc-expanded')) {
-          $toc.removeClass("toc-expanded");
-          $expandButton.focus();
-          $feedbackForm.removeClass('toc-expanded-feedback');
-        }
-      });
 
       function setActiveAnchor(id) {
         $('.active-target').removeClass('active-target');
