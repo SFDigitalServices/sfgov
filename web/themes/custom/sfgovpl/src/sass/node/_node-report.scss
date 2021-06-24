@@ -182,283 +182,291 @@
       margin-top: 60px;
     }
   }
-}
 
-.toc-responsive {
-  @include rubik;
-  border: 0;
-  border-radius: $radius;
-  color: $c-slate;
-  display: block;
-  padding: $rhythm * 2;
-  margin: 0 -20px $rhythm * 4;
-  background: $c-white;
-
-  @include media($medium-screen) {
-    margin: 0;
-    padding: 0;
-    background: $c-grey-1;
-  }
-}
-
-.sfgov-toc-sticky,
-.sfgov-toc-drawer {
-  transition: all ease-in-out 0.25s;
-  background: $c-grey-1;
-}
-
-.sfgov-toc-sticky {
-  border-bottom: 3px solid $c-grey-3;
-  transition: opacity .5s, visibility .5s;
-  opacity: 0;
-  visibility: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: $c-white;
-
-  &.show {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  @media screen and (min-width: $medium-screen) {
-    background: $c-grey-1;
-    position: static;
-    opacity: 1;
-    visibility: visible;
+  .toc-responsive {
+    @include rubik;
+    border: 0;
     border-radius: $radius;
-    border-bottom: 0;
-    margin: 0;
-  }
-
-  .sfgov-toc-tree {
-    padding: 16px $rhythm * 2;
-    @media screen and (min-width: $medium-screen) {
-      padding: $rhythm * 4;
-    }
-    ol {
-      display: none;
-      @media screen and (min-width: $medium-screen) {
-        display: block;
-      }
-      ol {
-        display: none;
-      }
-    }
-    > ol {
-      max-height: calc(100vh - 350px);
-      overflow: auto;
-    }
-  }
-}
-
-.sfgov-toc-drawer {
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  right: -100vw;
-  max-width: 375px;
-  height: 100%;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  @media screen and (min-width: $medium-screen) {
-    width: 445px;
-    right: -445px;
-    max-width: 455px;
-  }
-
-  .toolbar-horizontal & {
-    top: 39px;
-  }
-
-  .toolbar-horizontal.toolbar-tray-open & {
-    top: 79px;
-  }
-
-  .sfgov-toc-tree {
-    flex: 1;
-    overflow: scroll;
-
-    > ol ol {
-      display: block;
-    }
-  }
-}
-
-.sfgov-toc {
-
-  &-header {
-    background-color: $c-white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: $rhythm * 2;
-    @media screen and (min-width: $medium-screen) {
-      padding-left: $rhythm * 4;
-    }
-
-    .sfgov-toc-header-title {
-      @include fs-title-4;
-      color: $c-slate;
-      margin: 0;
-    }
-  }
-
-  &-close-button {
-    @include background-image('x-close-white.svg', 50% 50%, $c-bright-blue);
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    border-radius: 0;
-    outline: none;
-
-    &:hover,
-    &:focus {
-      background-color: $c-bright-blue;
-      border-color: $c-bright-blue;
-    }
-  }
-
-  &-tree {
+    color: $c-slate;
+    display: block;
     padding: $rhythm * 2;
-    @media screen and (min-width: $medium-screen) {
-      padding: $rhythm * 4;
-    }
-    ol {
+    margin: 0 -20px $rhythm * 4;
+    background: $c-white;
+
+    @include media($medium-screen) {
       margin: 0;
       padding: 0;
-      a {
-        line-height: 24px;
-        display: block;
-        max-width: 300px;
-
-        &.active-target {
-          color: $c-slate;
-          text-decoration: none;
-          font-weight: 500;
-        }
-      }
-      li + li {
-        margin-top: 20px;
-      }
-      li {
-
-        &.has-active-target > a {
-          color: $c-slate;
-          text-decoration: none;
-          font-weight: 500;
-        }
-
-        ol {
-          margin-top: 20px;
-          padding-left: 20px;
-          display: none;
-        }
-      }
-    }
-
-    hr {
-      border-width: 3px 0 0;
-      border-color: $c-grey-4;
-      border-style: solid;
-      margin: $rhythm * 4 0 $rhythm * 2;
-      display: none;
-      @media screen and (min-width: $medium-screen) {
-        display: block;
-      }
+      background: $c-grey-1;
     }
   }
 
-  &-expand-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $c-slate;
-    color: $c-white;
-    margin: 0;
-    border: 0;
-    width: 100%;
-
-    @media screen and (min-width: $medium-screen) {
-      color: $c-bright-blue;
-      background-color: transparent;
-      justify-content: flex-start;
-      line-height: 1;
-      text-align: left;
-      padding: $rhythm 0;
-    }
-
-    svg {
-      width: 20px;
-      height: 20px;
-      margin-left: 5px;
-      display: none;
-
-      @media screen and (min-width: $medium-screen) {
-        display: block;
-      }
-    }
-
-    &:hover,
-    &:focus {
-      background-color: $c-slate;
-      color: $c-white;
-
-      @media screen and (min-width: $medium-screen) {
-        color: $c-slate;
-        background-color: transparent;
-      }
-    }
+  .sfgov-toc-sticky,
+  .sfgov-toc-drawer {
+    transition: all ease-in-out 0.25s;
+    background: $c-grey-1;
   }
 
-  &.toc-expanded {
-    background-color: rgba($c-black, 0.25);
+  .sfgov-toc-sticky {
+    border-bottom: 3px solid $c-grey-3;
+    transition: opacity .5s, visibility .5s;
+    opacity: 0;
+    visibility: hidden;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    background: $c-white;
+
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      display: block !important;
+    }
+
+    @media screen and (min-width: $medium-screen) {
+      background: $c-grey-1;
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      border-radius: $radius;
+      border-bottom: 0;
+      margin: 0;
+
+      &.show {
+        opacity: 1;
+        visibility: visible;
+        display: block !important;
+      }
+    }
+
+    .sfgov-toc-tree {
+      padding: 16px $rhythm * 2;
+      @media screen and (min-width: $medium-screen) {
+        padding: $rhythm * 4;
+      }
+      ol {
+        display: none;
+        @media screen and (min-width: $medium-screen) {
+          display: block;
+        }
+        ol {
+          display: none;
+        }
+      }
+      > ol {
+        max-height: calc(100vh - 350px);
+        overflow: auto;
+      }
+    }
+  }
+
+  .sfgov-toc-drawer {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    right: -100vw;
+    max-width: 375px;
     height: 100%;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    @media screen and (min-width: $medium-screen) {
+      width: 445px;
+      right: -445px;
+      max-width: 455px;
+    }
 
     .toolbar-horizontal & {
       top: 39px;
-
-      .sfgov-toc-drawer {
-        height: calc(100vh - 39px);
-      }
     }
 
     .toolbar-horizontal.toolbar-tray-open & {
       top: 79px;
+    }
+
+    .sfgov-toc-tree {
+      flex: 1;
+      overflow: scroll;
+
+      > ol ol {
+        display: block;
+      }
+    }
+  }
+
+  .sfgov-toc {
+
+    &-header {
+      background-color: $c-white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: $rhythm * 2;
+      @media screen and (min-width: $medium-screen) {
+        padding-left: $rhythm * 4;
+      }
+
+      .sfgov-toc-header-title {
+        @include fs-title-4;
+        color: $c-slate;
+        margin: 0;
+      }
+    }
+
+    &-close-button {
+      @include background-image('x-close-white.svg', 50% 50%, $c-bright-blue);
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      border-radius: 0;
+      outline: none;
+
+      &:hover,
+      &:focus {
+        background-color: $c-bright-blue;
+        border-color: $c-bright-blue;
+      }
+    }
+
+    &-tree {
+      padding: $rhythm * 2;
+      @media screen and (min-width: $medium-screen) {
+        padding: $rhythm * 4;
+      }
+      ol {
+        margin: 0;
+        padding: 0;
+        a {
+          line-height: 24px;
+          display: block;
+          max-width: 300px;
+
+          &.active-target {
+            color: $c-slate;
+            text-decoration: none;
+            font-weight: 500;
+          }
+        }
+        li + li {
+          margin-top: 20px;
+        }
+        li {
+
+          &.has-active-target > a {
+            color: $c-slate;
+            text-decoration: none;
+            font-weight: 500;
+          }
+
+          ol {
+            margin-top: 20px;
+            padding-left: 20px;
+            display: none;
+          }
+        }
+      }
+
+      hr {
+        border-width: 3px 0 0;
+        border-color: $c-grey-4;
+        border-style: solid;
+        margin: $rhythm * 4 0 $rhythm * 2;
+        display: none;
+        @media screen and (min-width: $medium-screen) {
+          display: block;
+        }
+      }
+    }
+
+    &-expand-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $c-slate;
+      color: $c-white;
+      margin: 0;
+      border: 0;
+      width: 100%;
+
+      @media screen and (min-width: $medium-screen) {
+        color: $c-bright-blue;
+        background-color: transparent;
+        justify-content: flex-start;
+        line-height: 1;
+        text-align: left;
+        padding: $rhythm 0;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 5px;
+        display: none;
+
+        @media screen and (min-width: $medium-screen) {
+          display: block;
+        }
+      }
+
+      &:hover,
+      &:focus {
+        background-color: $c-slate;
+        color: $c-white;
+
+        @media screen and (min-width: $medium-screen) {
+          color: $c-slate;
+          background-color: transparent;
+        }
+      }
+    }
+
+    &.toc-expanded {
+      background-color: rgba($c-black, 0.25);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      .toolbar-horizontal & {
+        top: 39px;
+
+        .sfgov-toc-drawer {
+          height: calc(100vh - 39px);
+        }
+      }
+
+      .toolbar-horizontal.toolbar-tray-open & {
+        top: 79px;
+
+        .sfgov-toc-drawer {
+          height: calc(100vh - 79px);
+        }
+      }
+
+      .sfgov-toc-sticky {
+        opacity: 0;
+
+        .sfgov-toc-tree {
+          display: none;
+        }
+      }
 
       .sfgov-toc-drawer {
-        height: calc(100vh - 79px);
+        right: 0;
       }
     }
+  }
 
-    .sfgov-toc-sticky {
-      opacity: 0;
-
-      .sfgov-toc-tree {
-        display: none;
-      }
-    }
-
-    .sfgov-toc-drawer {
-      right: 0;
-    }
+  .toc-expanded-feedback {
+    position: relative;
+    z-index: -1;
   }
 }
 
-.toc-expanded-feedback {
-  position: relative;
-  z-index: -1;
-}
 
 .docsearch {
   margin-bottom: $rhythm * 4;
