@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Use this component to override Drupal field templates.
+ *
+ * @see field.html.twig
+ */
+#}
+
+{% set item_tag = item_tag ? item_tag : 'div' %}
+
+{% if label_hidden %}
+  {% if multiple %}
+    <div{{ attributes }}>
+      {% for item in items %}
+        <div{{ item.attributes }}>{{ item.content }}</div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% for item in items %}
+      <{{ item_tag }} {{ attributes }}>{{ item.content }}</{{ item_tag }}>
+    {% endfor %}
+  {% endif %}
+{% else %}
+  <div{{ attributes }}>
+    <h4{{ title_attributes.addClass(title_classes) }}>{{ label }}</h4>
+    {% if multiple %}
+    <div>
+      {% endif %}
+      {% for item in items %}
+        <div{{ item.attributes }}>{{ item.content }}</div>
+      {% endfor %}
+      {% if multiple %}
+    </div>
+    {% endif %}
+  </div>
+{% endif %}
