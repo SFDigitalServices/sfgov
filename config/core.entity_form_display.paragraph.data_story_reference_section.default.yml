@@ -1,0 +1,34 @@
+uuid: b50bde47-0a87-4a36-8014-ed6888a35a8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.data_story_reference_section.field_data_story
+    - field.field.paragraph.data_story_reference_section.field_title
+    - paragraphs.paragraphs_type.data_story_reference_section
+id: paragraph.data_story_reference_section.default
+targetEntityType: paragraph
+bundle: data_story_reference_section
+mode: default
+content:
+  field_data_story:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

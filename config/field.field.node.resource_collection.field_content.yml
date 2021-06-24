@@ -5,7 +5,8 @@ dependencies:
   config:
     - field.storage.node.field_content
     - node.type.resource_collection
-    - paragraphs.paragraphs_type.data_story_section
+    - paragraphs.paragraphs_type.data_story_reference_section
+    - paragraphs.paragraphs_type.document
     - paragraphs.paragraphs_type.section
   module:
     - entity_reference_revisions
@@ -29,7 +30,8 @@ settings:
     negate: 0
     target_bundles:
       section: section
-      data_story_section: data_story_section
+      document: document
+      data_story_reference_section: data_story_reference_section
     target_bundles_drag_drop:
       accordion:
         weight: 62
@@ -85,9 +87,12 @@ settings:
       custom_section:
         weight: 46
         enabled: false
-      data_story_section:
+      data_story_reference_section:
         enabled: true
+        weight: 83
+      data_story_section:
         weight: 81
+        enabled: false
       department_content:
         weight: 84
         enabled: false
@@ -95,8 +100,8 @@ settings:
         weight: 47
         enabled: false
       document:
+        enabled: true
         weight: 49
-        enabled: false
       email:
         weight: 50
         enabled: false
