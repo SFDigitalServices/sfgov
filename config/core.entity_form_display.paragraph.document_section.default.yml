@@ -1,0 +1,42 @@
+uuid: 0b3410ff-fe36-438c-b141-e0782f5c10b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.file
+    - field.field.paragraph.document_section.field_file
+    - field.field.paragraph.document_section.field_title
+    - paragraphs.paragraphs_type.document_section
+  module:
+    - entity_browser
+id: paragraph.document_section.default
+targetEntityType: paragraph
+bundle: document_section
+mode: default
+content:
+  field_file:
+    weight: 2
+    settings:
+      entity_browser: file
+      field_widget_display: rendered_entity
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

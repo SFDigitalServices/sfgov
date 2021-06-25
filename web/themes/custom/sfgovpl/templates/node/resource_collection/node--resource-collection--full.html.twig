@@ -37,6 +37,15 @@
     </div>
 
     <div class="{{ bundle }}--content">
+      {#
+      This is a bit of a hack to keep the H2 on nodes created before
+      Resource Collections were changed.
+      #}
+      {% if node.created.value < 1624582143 %}
+        <h2>
+          {{ 'Documents'|t }}
+        </h2>
+      {% endif %}
       {{ content.field_content }}
     </div>
 
