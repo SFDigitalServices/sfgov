@@ -166,6 +166,11 @@ class FilterSitesForm extends FormBase {
     // Submit.
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
+      '#attributes' => [
+        'class' => [
+          'btn'
+        ]
+      ],
       '#value' => $this->t($this->settings('form_strings.submit_label')),
     ];
 
