@@ -1,6 +1,7 @@
 {# Campaign theme background color #}
 {% set parent = paragraph.getParentEntity() %}
 {% set campaign_theme = parent.field_campaign_theme.entity %}
+{% set campaign_theme_label = campaign_theme.label|lower %}
 {% set background_color = campaign_theme.field_primary_color.color|default('none') %}
 
 {# Spotlight Image #}
@@ -18,6 +19,15 @@
       background-repeat: no-repeat;
     ',
   }) %}
+{% endif %}
+
+{# Spotlight button link #}
+{% set has_spotlight_button = false %}
+{% if content.field_spotlight_button|render %}
+  {% set has_spotlight_button = true %}
+  {% set button_link = paragraph.field_spotlight_button.entity.field_link.0 %}
+  {% set button_content = button_link.title %}
+  {% set button_url = button_link.url %}
 {% endif %}
 
 {% embed 'paragraph.html.twig' with {
@@ -45,9 +55,13 @@
           </div>
         {% endif %}
 
-        {% if content.field_spotlight_button|render %}
-          <div class="sfgov-campaign-spotlight-button">
-            {{ content.field_spotlight_button }}
+        {% if has_spotlight_button %}
+          <div class="mb-20">
+            {% include "@sfgov-design-system/button/link.twig" with {
+                "href": button_url,
+                "text": button_content,
+                "classes": campaign_theme_label != 'blue' ? ['btn-inverse'] : []
+            } %}
           </div>
         {% endif %}
       </div>
