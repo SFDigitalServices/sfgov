@@ -1,14 +1,22 @@
+<!-- start campaign facts -->
 <div class="campaign-facts">
   <div class="row">
   {% for item in items %}
     <div class="fact-item">{{ item.content }}</div>
-    {% if loop.index is divisible by(3) %}
-      </div>
-      {% if loop.last == true %}
+    {% if loop.last == true %}
+      <!-- last item, just close the row -->
+      </div> 
+    {% else %}
+      {% if loop.index is divisible by(3) %}
+        <!-- close the row every 3rd item -->
         </div>
-      {% else %}
+        <!-- not the last item, open another row -->
         <div class="row">
+      {% else %}
+        <!-- insert spacer after each item -->
+        <div class="spacer"></div>
       {% endif %}
     {% endif %}
   {% endfor %}
 </div>
+<!-- end campaign facts -->

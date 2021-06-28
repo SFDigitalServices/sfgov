@@ -56,7 +56,6 @@
     display: flex;
     flex-direction: column;
     .fact-item {
-      flex-basis: 33.333%;
       margin-bottom: 60px;
       .image {
         margin-bottom: 19px;
@@ -86,16 +85,17 @@
         }
       }
     }
+    .spacer {
+      display: none;
+    }
     @include media($medium-screen) {
       flex-direction: row;
-      > div {
-        &.fact-item {
-          flex-basis: 33.333%;
-          padding-right: 20px;
-        }
-        &:last-of-type {
-          padding-right: 0;
-        }
+      .fact-item {
+        width: 33%;
+      }
+      .spacer {
+        display: block;
+        width: 20px;
       }
     }
   }
