@@ -2,13 +2,14 @@
 
 namespace Drupal\sfgov_media\Plugin\Validation\Constraint;
 
+use Drupal\Component\Utility\UrlHelper;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Validates the PowerBiUrl constraint.
+ * Validates the PowerBiSourceDataUrl constraint.
  */
-class PowerBiUrlConstraintValidator extends ConstraintValidator {
+class PowerBiSourceDataUrlConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
@@ -17,7 +18,7 @@ class PowerBiUrlConstraintValidator extends ConstraintValidator {
     $item = $items->first();
 
     // Validate URL.
-    if ($item && strpos($item->value, 'https://app.powerbigov.us/view?r=') !== 0) {
+    if ($item && !UrlHelper::isValid($item->value, TRUE)) {
       $this->context->addViolation($constraint->message);
     }
   }
