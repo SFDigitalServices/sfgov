@@ -66,5 +66,12 @@
     <div class="{{ bundle }}--content-bottom">
       {{ content.field_content_bottom }}
     </div>
+
+    {# Ankle. See _node-transaction.scss #}
+    {% if node.field_parent_department.value %}
+      <div class="resource-collection--department-list">
+        {{ content.field_parent_department }}
+      </div>
+    {% endif %}
   {% endblock content %}
 {% endembed %}
