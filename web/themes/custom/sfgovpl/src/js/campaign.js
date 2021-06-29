@@ -2,7 +2,7 @@
   'use strict';
   function resizeFactItems() {
     $('body.page-node-type-campaign').each(function() {
-      $('.campaign-facts .row').each(function() {
+      $('.campaign-facts').each(function() {
         var images = $(this).find('img');
         if(images.length > 0) {
           var tallestImage = images[0];

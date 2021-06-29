@@ -55,7 +55,11 @@
   .fact-item {
     .image {
       margin-bottom: 19px;
+    }
+    .item-wrapper {
+      display: flex;
       img {
+        margin-top: auto;
         width: 100%;
       }
     }
@@ -79,8 +83,15 @@
   }
   @include media($medium-screen) {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 32% 32% 32%;
     column-gap: 20px;
     row-gap: 60px;
+    .fact-item {
+      .item-wrapper {
+        img {
+          width: auto;
+        }
+      }
+    }
   }
 }
