@@ -16,6 +16,7 @@ dependencies:
   module:
     - allowed_formats
     - content_moderation
+    - field_group
     - maxlength
     - paragraphs
     - path
@@ -23,6 +24,27 @@ dependencies:
     - scheduler_content_moderation_integration
     - sfgov_admin
     - text
+third_party_settings:
+  field_group:
+    group_custom_section:
+      children:
+        - field_content_bottom
+      parent_name: ''
+      weight: 11
+      format_type: html_element
+      region: content
+      format_settings:
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Custom Section'
 id: node.resource_collection.default
 targetEntityType: node
 bundle: resource_collection
@@ -79,7 +101,7 @@ content:
     type: sfgov_customizable_paragraphs
     region: content
   field_content_bottom:
-    weight: 11
+    weight: 12
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -144,7 +166,7 @@ content:
     third_party_settings: {  }
     region: content
   field_dept:
-    weight: 18
+    weight: 19
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -189,7 +211,7 @@ content:
     third_party_settings: {  }
     region: content
   field_topics:
-    weight: 12
+    weight: 13
     settings:
       match_operator: CONTAINS
       size: 60
@@ -200,7 +222,7 @@ content:
     region: content
   moderation_state:
     type: moderation_state_default
-    weight: 17
+    weight: 18
     settings: {  }
     region: content
     third_party_settings: {  }
@@ -212,13 +234,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -254,13 +276,13 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
