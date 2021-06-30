@@ -20,9 +20,10 @@
       const $searchNav = $searchInfo.find('.results-nav');
       const $searchResultNext = $searchInfo.find('.results-index-next');
       const $searchResultPrev = $searchInfo.find('.results-index-prev');
-      $searchNav.hide();
       let currentText = '';
       let currentIndex = 1;
+
+      $searchNav.hide();
 
       $input.on("focus", function () {
         $form.addClass('is-focused');
@@ -31,8 +32,10 @@
       });
 
       $closeButton.on("click", function () {
-        $input.val("");
+        $('.report--full').find('mark').contents().unwrap();
         $searchInfo.hide();
+        $input.val('');
+        reset();
       });
 
       const $searchTargets = $searchTarget.find("a, p, h2, h3, h5, h5, li").map(function () {
@@ -49,8 +52,11 @@
         const keywords = $input.val().trim().replace(/(\s+)/, "(<[^>]+>)*$1(<[^>]+>)*");
         if (keywords.length <= 1) {
           reset();
+          $searchInfo.hide();
           return;
         }
+
+        $searchInfo.show();
 
         const pattern = new RegExp("(" + keywords + ")", "gi");
         if (currentText.length != 0 && currentText !== keywords) {
@@ -70,7 +76,8 @@
         $form.removeClass('has-input');
         $searchTargets.each(function (index, target) {
           target.el.html(target.source)
-        })
+        });
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
       }
 
       function numberWithCommas(x) {
@@ -97,13 +104,11 @@
       function resultsInfo() {
         const total = $('.report--full').find('mark').length;
         if (total == 0) {
-          $searchInfo.hide();
           currentIndex = 0;
           $input.attr('aria-label', Drupal.t('No results. Please refine your keywords'));
           $searchNav.hide();
         }
         else {
-          $searchInfo.show();
           currentIndex = 1;
           if (total > 1) {
             $searchNav.show();
@@ -140,18 +145,27 @@
       });
 
       $input.on("keyup", function (event) {
-        search(event);
-        resultsInfo();
-        if ($(this).val()) {
+        const keyword = $(this).val();
+        if (currentText.length != 0 && currentText === keyword) {
+          if (event.key == 'Enter' || event.key == 'ArrowDown') {
+            $searchResultNext.trigger('click');
+          }
+          else if (event.key == 'ArrowUp') {
+            $searchResultPrev.trigger('click');
+          }
           $form.addClass('has-input');
         }
         else {
           $form.removeClass('has-input');
+          search(event);
+          resultsInfo();
+          currentText = keyword;
         }
       })
 
       $form.on('submit', function (event) {
-        search(event);
+        event.preventDefault();
+        //search(event);
         return false;
       });
     }
