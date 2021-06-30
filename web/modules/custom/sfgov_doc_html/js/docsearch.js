@@ -52,7 +52,6 @@
         const keywords = $input.val().trim().replace(/(\s+)/, "(<[^>]+>)*$1(<[^>]+>)*");
         if (keywords.length <= 1) {
           reset();
-          $searchInfo.hide();
           return;
         }
 
@@ -69,6 +68,7 @@
         });
 
         $form.addClass('has-results');
+        $form.addClass('has-input');
       }
 
       function reset() {
@@ -77,6 +77,7 @@
         $searchTargets.each(function (index, target) {
           target.el.html(target.source)
         });
+        $searchInfo.hide();
       }
 
       function numberWithCommas(x) {
@@ -144,6 +145,9 @@
       });
 
       $input.on("keyup", function (event) {
+        if (event.key == 'Escape') {
+          $closeButton.trigger('click');
+        }
         const keyword = $(this).val();
         if (currentText.length != 0 && currentText === keyword) {
           if (event.key == 'Enter' || event.key == 'ArrowDown') {
