@@ -17,6 +17,6 @@ class PowerBiSourceDataUrlConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public $message = 'The source data URL is invalid. Format: https://example.com.';
+  public $message = 'The source data URL is invalid. You must enter a URL link to a website.';
 
 }
