@@ -77,7 +77,6 @@
         $searchTargets.each(function (index, target) {
           target.el.html(target.source)
         });
-        $('html, body').animate({ scrollTop: 0 }, 'fast');
       }
 
       function numberWithCommas(x) {
