@@ -24,10 +24,12 @@
 {# Spotlight button link #}
 {% set has_spotlight_button = false %}
 {% if content.field_spotlight_button|render %}
-  {% set has_spotlight_button = true %}
   {% set button_link = paragraph.field_spotlight_button.entity.field_link.0 %}
-  {% set button_content = button_link.title %}
-  {% set button_url = button_link.url %}
+  {% if button_link %}
+    {% set has_spotlight_button = true %}
+    {% set button_url = button_link.url %}
+    {% set button_content = button_link.title %}
+  {% endif %}
 {% endif %}
 
 {% embed 'paragraph.html.twig' with {
