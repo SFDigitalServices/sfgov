@@ -53,13 +53,15 @@
 {% set parent = paragraph._referringItem.parent.parent.entity %}
 
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {% include "@sfgov-design-system/button/link.twig" with {
-          "href": href,
-          "text": text,
-          "classes": parent.getType() == 'spotlight' ? ['btn-inverse'] : []
-      } %}
-    {% endblock content %}
-  </div>
+  {% if field_link %}
+    <div{{ attributes.addClass(classes) }}>
+      {% block content %}
+        {% include "@sfgov-design-system/button/link.twig" with {
+            "href": href,
+            "text": text,
+            "classes": parent.getType() == 'spotlight' ? ['btn-inverse'] : []
+        } %}
+      {% endblock content %}
+    </div>
+  {% endif %}
 {% endblock paragraph %}
