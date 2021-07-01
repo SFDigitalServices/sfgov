@@ -3,22 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.document_section.field_file
+    - field.field.paragraph.document_section.field_content
     - field.field.paragraph.document_section.field_title
     - paragraphs.paragraphs_type.document_section
+  module:
+    - entity_reference_revisions
 id: paragraph.document_section.default
 targetEntityType: paragraph
 bundle: document_section
 mode: default
 content:
-  field_file:
-    weight: 2
+  field_content:
+    weight: 3
     label: hidden
     settings:
-      link: true
-      view_mode: default
+      view_mode: resource_collection_multiple
+      link: ''
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    type: entity_reference_revisions_entity_view
     region: content
   field_title:
     weight: 0

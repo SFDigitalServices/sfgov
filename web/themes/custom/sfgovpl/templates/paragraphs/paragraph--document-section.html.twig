@@ -6,9 +6,12 @@
  * @see paragraph.html.twig
  */
 #}
+<h3>
+  {{ 'Documents'|t }}
+</h3>
 {% if paragraph.field_title is not null %}
   <h4 class="title-4-resource-collection">
     {{ paragraph.field_title.value }}
   </h4>
 {% endif %}
-{% include 'paragraph--document--resource-collection-multiple.html.twig' %}
+{{ content|without('field_title') }}

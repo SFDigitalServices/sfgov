@@ -30,7 +30,7 @@ third_party_settings:
       children:
         - field_content_bottom
       parent_name: ''
-      weight: 11
+      weight: 12
       format_type: html_element
       region: content
       format_settings:
@@ -45,6 +45,25 @@ third_party_settings:
         effect: none
         speed: fast
       label: 'Custom Section'
+    group_body:
+      children:
+        - field_content
+      parent_name: ''
+      weight: 10
+      format_type: html_element
+      region: content
+      format_settings:
+        id: ''
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Body
 id: node.resource_collection.default
 targetEntityType: node
 bundle: resource_collection
@@ -57,46 +76,46 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_content:
-    weight: 10
+    weight: 11
     settings:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: closed
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: section
+      default_paragraph_type: _none
       paragraph_settings:
-        section:
-          field_settings:
-            field_content:
-              label: Sections
-              target_bundles:
-                block: '0'
-                button: '0'
-                campaign: '0'
-                content_link: '0'
-                data_story_reference_section: data_story_reference_section
-                document: '0'
-                document_section: document_section
-                events: '0'
-                list: '0'
-                news: '0'
-                people: '0'
-                phone: '0'
-                resource_section: resource_section
-                resources: '0'
-                spotlight: '0'
-                text: '0'
-                timeline: '0'
-                top_search_suggestion: '0'
-            field_title:
-              label: ''
-          disabled_new: false
         document:
           disabled_new: true
           field_settings:
             field_file:
               label: ''
+        data_story_reference_section:
+          field_settings:
+            field_data_story:
+              label: ''
+            field_title:
+              label: 'Data Story'
+          disabled_new: false
+        document_section:
+          field_settings:
+            field_content:
+              label: ''
+              target_bundles:
+                document: '0'
+                text: '0'
+            field_title:
+              label: Documents
+          disabled_new: false
+        resource_section:
+          field_settings:
+            field_resources:
+              label: ''
+              target_bundles:
+                resources: '0'
+            field_title:
+              label: Resources
+          disabled_new: false
     third_party_settings: {  }
     type: sfgov_customizable_paragraphs
     region: content
