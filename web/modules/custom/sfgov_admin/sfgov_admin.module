@@ -347,3 +347,34 @@ function sfgov_admin_form_entity_form_display_form_alter(&$form, FormStateInterf
     $form['fields'][$field]['plugin']['type']['#suffix'] = $notice;
   }
 }
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function sfgov_admin_toolbar_alter(&$items) {
+  $nid = \Drupal::routeMatch()->getRawParameter('node');
+
+  if (is_numeric($nid)) {
+
+    /** @var \Drupal\Core\Url $node_edit_url */
+    $node_edit_url = Url::fromRoute('entity.node.edit_form', ['node' => $nid]);
+
+    if ($node_edit_url->access() == true) {
+      $items['node'] = [
+        '#type' => 'toolbar_item',
+        'tab' => [
+          '#type' => 'link',
+          '#url' => $node_edit_url,
+          '#title' => t('NID: %nid', ['%nid' => $nid]) ,
+        ],
+        '#wrapper_attributes' => ['class' => 'user-toolbar-tab']
+
+      ];
+    }
+
+
+
+  }
+
+
+}
