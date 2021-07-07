@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 class GroupMediaDeriver extends DeriverBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach (MediaType::loadMultiple() as $name => $type) {

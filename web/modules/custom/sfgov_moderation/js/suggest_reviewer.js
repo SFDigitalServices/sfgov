@@ -7,26 +7,17 @@
       );
       const $reviewerField = $reviewerWrapper.find('[name="reviewer"]');
       const $moderationStateField = $('[name="moderation_state[0][state]"]');
-      const $departmentsField = $(
-        '[data-drupal-selector="edit-field-dept-wrapper"] input[type="text"]'
-      );
       const $inputs = $(
-        '[name="reviewer"], [name="moderation_state[0][state]"], input[name^="field_dept["]'
+        '[name="reviewer"], [name="moderation_state[0][state]"]'
       );
       const $message = $reviewerField.next(".description");
       const $er = "error";
-      let $has_fields = false;
 
       // Evaluate state and respond.
       const reviewFieldState = () => {
-        if ($departmentsField.length > 0) {
-          $has_fields = $departmentsField.val().length > 0;
-        }
-
         if (
           $moderationStateField.val() === "ready_for_review" &&
-          $reviewerField.find("option").length > 1 &&
-          $has_fields
+          $reviewerField.find("option").length > 1
         ) {
           // Show reviewer field.
           $reviewerWrapper.show();

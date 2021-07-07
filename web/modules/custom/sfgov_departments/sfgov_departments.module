@@ -54,7 +54,7 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
       $form['field_departments_submit'] = [
         '#type' => 'submit',
         '#value' => 'Fetch parent departments',
-        '#name' => 'sfgov_department_fetch',
+        '#submit' => ['_fetch_departments_submit'],
         '#ajax' => [
           'callback' => '_fetch_departments_submit',
           'wrapper' => 'field-departments-wrapper',
