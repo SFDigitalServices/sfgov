@@ -1,18 +1,18 @@
-uuid: 3c7d05fa-ac2a-4d64-b70a-e60883b8d617
+uuid: a6f7c6f5-6a56-40c7-bbae-266b876cf6d3
 langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.location.physical
-    - field.storage.node.field_address
+    - field.storage.node.field_locations
+    - node.type.location
     - node.type.person
   module:
     - tmgmt_content
 third_party_settings:
   tmgmt_content:
     excluded: false
-id: node.person.field_address
-field_name: field_address
+id: node.person.field_locations
+field_name: field_locations
 entity_type: node
 bundle: person
 label: Address
@@ -22,10 +22,10 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:location'
+  handler: 'default:node'
   handler_settings:
     target_bundles:
-      physical: physical
+      location: location
     sort:
       field: _none
     auto_create: false

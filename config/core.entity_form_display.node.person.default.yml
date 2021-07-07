@@ -3,16 +3,19 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.person.field_address
+    - entity_browser.browser.location_physical
     - field.field.node.person.field_biography
     - field.field.node.person.field_departments
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_email
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
+    - field.field.node.person.field_locations
     - field.field.node.person.field_optional_content
     - field.field.node.person.field_phone_numbers
     - field.field.node.person.field_photo
+    - field.field.node.person.field_primary_email
+    - field.field.node.person.field_primary_phone_number
     - field.field.node.person.field_profile_type
     - field.field.node.person.field_social_media
     - field.field.node.person.field_sub_title
@@ -22,6 +25,7 @@ dependencies:
     - workflows.workflow.editorial
   module:
     - content_moderation
+    - entity_browser
     - field_group
     - image
     - link
@@ -29,16 +33,17 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - telephone
     - text
 third_party_settings:
   field_group:
     group_contact_footer:
       children:
-        - field_address
+        - field_locations
         - field_phone_numbers
         - field_email
       parent_name: ''
-      weight: 9
+      weight: 11
       format_type: fieldset
       region: content
       format_settings:
@@ -54,20 +59,10 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 13
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_address:
-    weight: 11
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_biography:
     weight: 7
     settings:
@@ -87,7 +82,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_direct_external_url:
-    weight: 11
+    weight: 13
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -95,7 +90,7 @@ content:
     type: link_default
     region: content
   field_email:
-    weight: 13
+    weight: 29
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -128,8 +123,22 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_locations:
+    weight: 27
+    settings:
+      entity_browser: location_physical
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
   field_optional_content:
-    weight: 10
+    weight: 12
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -147,7 +156,7 @@ content:
     type: paragraphs
     region: content
   field_phone_numbers:
-    weight: 12
+    weight: 28
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -172,6 +181,21 @@ content:
     third_party_settings: {  }
     type: image_image
     region: content
+  field_primary_email:
+    weight: 8
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_primary_phone_number:
+    weight: 9
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
+    region: content
   field_profile_type:
     weight: 2
     settings: {  }
@@ -179,7 +203,7 @@ content:
     type: options_select
     region: content
   field_social_media:
-    weight: 8
+    weight: 10
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -214,13 +238,13 @@ content:
     region: content
   moderation_state:
     type: moderation_state_default
-    weight: 17
+    weight: 19
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 15
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -233,13 +257,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 22
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 20
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -247,7 +271,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 20
     region: content
     third_party_settings: {  }
   sticky:
@@ -259,20 +283,20 @@ content:
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 19
+    weight: 21
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 14
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 12
+    weight: 14
     settings:
       match_operator: CONTAINS
       size: 60
@@ -282,18 +306,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 21
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 23
+    weight: 25
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 16
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
