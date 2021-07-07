@@ -129,17 +129,13 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
     /** @var \Drupal\node\NodeInterface $entity */
 
     $validTransitions = parent::getValidTransitions($entity, $user);
-    $fieldName = $this->moderationUtil->getDepartmentFieldName($entity->bundle());
 
     // For admins, new content or other entity types, inherit behavior.
     if ($entity->getEntityTypeId() != 'node' ||
       $entity->isNew() ||
       $user->hasPermission('administer nodes') ||
       $user->hasPermission('bypass node access') ||
-      in_array($this->publisher(), $user->getRoles()) ||
-      empty($fieldName) ||
-      !$entity->hasField($fieldName) ||
-      (!$departments = $entity->{$fieldName}->referencedEntities())
+      in_array($this->publisher(), $user->getRoles())
     ) {
       return $validTransitions;
     }
@@ -160,19 +156,7 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
     }
 
     // If node has no departments, allow access.
-    if (empty($departments)) {
-      return $validTransitions;
-    }
-
-    // Finally, if it does have departments, only allow transitions if current
-    // user (non-admin) belongs to the department.
-    foreach ($departments as $department) {
-      if ($accountBelongsToDepartment = $this->moderationUtil->accountBelongsToDepartment($user->getAccount(), $department->id())) {
-        break;
-      }
-    }
-
-    return $accountBelongsToDepartment ? $validTransitions : [];
+    return $validTransitions;
   }
 
   /**

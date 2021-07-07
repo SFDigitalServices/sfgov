@@ -36,63 +36,12 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDepartmentFieldName(string $bundle): ?string {
-    switch ($bundle) {
-      case 'transaction':
-      case 'topic':
-      case 'public_body':
-      case 'location':
-        return 'field_departments';
-
-      break;
-
-      case 'news':
-      case 'event':
-      case 'information_page':
-      case 'meeting':
-      case 'campaign':
-      case 'department_table':
-      case 'form_confirmation_page':
-      case 'page':
-      case 'person':
-      case 'resource_collection':
-      case 'step_by_step':
-        return 'field_dept';
-
-      break;
-    }
-
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function accountBelongsToDepartment(AccountInterface $account, $department): bool {
-    // Get full user object, not just the session.
-    $accountEntity = $this->entityTypeManager->getStorage('user')->load($account->id());
-
-    $accountDepartments = [];
-    foreach ($accountEntity->get(static::DEPARTMENTS_ACCOUNT_FIELD)->getValue() as $item) {
-      $accountDepartments[] = $item['target_id'];
-    }
-
-    return in_array(is_object($department) ? $department->id() : $department, $accountDepartments);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getValidReviewers(array $departmentIds = []): array {
-    if (empty($departmentIds)) {
-      return [];
-    }
+  public function getValidReviewers(): array {
 
     $query = $this->entityTypeManager->getStorage('user')
       ->getQuery()
       ->condition('uid', 0, '>')
       ->condition('status', 1)
-      ->condition(ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD, $departmentIds, 'IN')
       ->sort('name', 'DESC');
 
     $ids = $query->execute();
@@ -107,37 +56,12 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function canPublishFromDraftWithoutReviewer(AccountInterface $account, array $departmentIds): bool {
+  public function canPublishFromDraftWithoutReviewer(AccountInterface $account): bool {
     if (!in_array(static::PUBLISHER_ROLE, $account->getRoles())) {
       return FALSE;
     }
 
-    $belongsTo = FALSE;
-    foreach ($departmentIds as $departmentId) {
-      if ($this->accountBelongsToDepartment($account, $departmentId)) {
-        $belongsTo = TRUE;
-        break;
-      }
-    }
-    if (!$belongsTo) {
-      return FALSE;
-    }
-
     return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function canModifyDepartment(AccountInterface $account):bool {
-    $allowed_roles = [self::PUBLISHER_ROLE, self::WRITER_ROLE];
-
-    foreach ($allowed_roles as $role) {
-      if (in_array($role, $account->getRoles())) {
-        return TRUE;
-      }
-    }
-    return FALSE;
   }
 
   /**
@@ -161,30 +85,9 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       $username = $accountEntity->getUsername();
     }
 
-    // Get Department.
-    $bundle = $revision->bundle();
-    $dept_field_name = $this->getDepartmentFieldName($bundle);
-    $department_labels = '';
-
-    if ($revision->hasField($dept_field_name)) {
-      $departments = $revision->get($dept_field_name)->getValue();
-
-      if (isset($departments)) {
-
-        foreach ($departments as $department) {
-          $node = $this->entityTypeManager->getStorage('node')->load($department['target_id']);
-          $department_label = $node->label();
-
-          $department_labels .= $department_label . ', ';
-        }
-
-      }
-    }
-
     return [
       'state' => isset($state[0]['value']) ? $state[0]['value'] : '',
       'username' => $username ?? NULL,
-      'department' => $department_labels,
     ];
   }
 
