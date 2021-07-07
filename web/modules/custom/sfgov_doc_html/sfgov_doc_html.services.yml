@@ -2,6 +2,9 @@ parameters:
   sfgov_doc_html.toc_type: 'default'
 
 services:
+  plugin.manager.sfgov_doc_html.doc_formatter:
+    class: Drupal\sfgov_doc_html\Plugin\DocFormatterManager
+    parent: default_plugin_manager
   sfgov_doc_html.toc_builder:
     class: Drupal\sfgov_doc_html\TableOfContentsBuilder
     arguments: [ '@renderer', '@toc_api.manager', '@toc_api.builder', '%sfgov_doc_html.toc_type%']

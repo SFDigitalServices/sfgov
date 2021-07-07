@@ -7,7 +7,10 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\sfgov_doc_html\Plugin\DocFormatterManagerInterface;
+use Masterminds\HTML5;
 use PhpOffice\PhpWord\IOFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Vikpe\HtmlHeadingNormalizer;
 
 /**
@@ -16,6 +19,31 @@ use Vikpe\HtmlHeadingNormalizer;
  * @ingroup digital_product
  */
 class DocUploadForm extends FormBase {
+
+  /**
+   * The doc_formatter manager.
+   *
+   * @var \Drupal\sfgov_doc_html\Plugin\DocFormatterManagerInterface
+   */
+  protected $docFormatterManager;
+
+  /**
+   * DocUploadForm constructor.
+   *
+   * @param \Drupal\sfgov_doc_html\Plugin\DocFormatterManagerInterface $doc_formatter_manager
+   */
+  public function __construct(DocFormatterManagerInterface $doc_formatter_manager) {
+    $this->docFormatterManager = $doc_formatter_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.sfgov_doc_html.doc_formatter')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -79,6 +107,18 @@ class DocUploadForm extends FormBase {
         $normalized = HtmlHeadingNormalizer::demote($clean_content, 1);
         $normalized = $this->convertBase64($normalized);
         $normalized = $this->cleanupEncoding($normalized);
+
+        // Format document using DocFormatter plugins.
+        $html5 = new HTML5();
+        $document = $html5->loadHTML($normalized);
+
+        foreach ($this->docFormatterManager->getDefinitions() as $name => $plugin) {
+          /** @var \Drupal\sfgov_doc_html\Plugin\DocFormatterInterface $doc_formatter */
+          $doc_formatter = $this->docFormatterManager->createInstance($name);
+          $doc_formatter->format($document);
+        }
+
+        $normalized = $html5->saveHTML($document);
 
         if (!empty($clean_content)) {
           \Drupal::database()->insert('sfgov_doc_html_files')
