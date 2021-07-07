@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "browser-sync": "browser-sync start --proxy https://sfgov.lndo.site --files dist",
     "build": "run-p build-css build-js",
     "build-css": "postcss --verbose -d dist/css 'src/sass/*.css'",
     "build-js": "babel -d dist/js 'src/js/*.js'",
@@ -9,7 +10,7 @@
     "lint-css": "prettier --check 'src/sass/**/*.scss'",
     "lint-js": "prettier --check 'src/js/**/*.js'",
     "lint-fix": "prettier --write src",
-    "start": "browser-sync start --proxy https://sfgov.lndo.site --files dist",
+    "start": "run-p watch browser-sync",
     "watch": "run-p watch-css watch-js",
     "watch-css": "npm run build-css -- --watch",
     "watch-js": "npm run build-js -- --watch"

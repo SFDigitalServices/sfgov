@@ -36,7 +36,7 @@ npm install
 There are several [npm scripts] defined in [`package.json`](./package.json) for
 running different tasks. The ones you're most likely to run directly are:
 
-- `npm run develop` launches [BrowserSync] and `npm run watch-all` in parallel.
+- `npm start` launches [BrowserSync] and `npm run watch-all` in parallel.
   Press <kbd>Control + C</kbd> to exit.
 - `npm run build` builds the CSS and JavaScript assets to the `dist` directory
   and exits
@@ -46,7 +46,7 @@ running different tasks. The ones you're most likely to run directly are:
 These tasks are long-running, so you'll need to press <kbd>Control + C</kbd> to
 quit them:
 
-- `npm start` runs only [BrowserSync], assuming that you already have a server running with built assets
+- `npm run browser-sync` runs only [BrowserSync], assuming that you already have a server running with built assets
 - `npm run watch` watches both the (S)CSS and JavaScript source files and rebuilds when they change
 - `npm run watch-css` watches only the (S)CSS source files and rebuilds when they change
 - `npm run watch-js` watches only the JavaScript source files and rebuilds when they change
