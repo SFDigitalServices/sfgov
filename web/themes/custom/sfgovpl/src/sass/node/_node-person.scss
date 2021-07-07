@@ -19,16 +19,81 @@
       display: inline-block;
       width: 100%;
       
-      .profile--photo {
+      .profile--photo,
+      .profile--social,
+      .profile--direct-contact {
         display: inline-block;
         float: right;
+        width: 100%;
+        max-width: 33%;
+      }
+      
+      .profile--direct-contact,
+      .profile--social {
+        clear: right;
+        @include media-max($narrow-screen) {
+          display: none;
+        }
+      }
+      
+      .profile--social {
+        margin-top: 40px;
+        span {
+          @include fs-title-5;
+        }
+        ul {
+          list-style: none;
+          padding: 20px 0 0 6px;
+          margin: 0;
+          li {
+            margin-bottom: 26px;
+            padding-left: 37px;
+          }
+        }
+        .facebook {
+          background: url(../../src/img/icons/facebook.svg) no-repeat center left;
+        }
+        .instagram {
+          background: url(../../src/img/icons/instagram.svg) no-repeat center left;
+        }
+        .twitter {
+          background: url(../../src/img/icons/twitter.svg) no-repeat center left;
+        }
+        .youtube {
+          background: url(../../src/img/icons/twitter.svg) no-repeat center left;
+        }
+        .medium {
+          background: url(../../src/img/icons/twitter.svg) no-repeat center left;
+        }
+        .linkedin {
+          background: url(../../src/img/icons/twitter.svg) no-repeat center left;
+        }
+        
+      }
+      
+      .profile--direct-contact {
+        margin-top: 10px;
+        .direct-email,
+        .direct-phone {
+          clear: both;
+          margin-top: 20px;
+          span {
+            display: inline-block;
+            min-width: 20px;
+            margin-right: 10px;
+          }
+        }
+      }
+      
+      .profile--photo {
         img {
           border-radius: 15px;
         }
         
         @include media-max($narrow-screen) {
           float: none;
-          margin-bottom: 40px; 
+          margin-bottom: 40px;
+          max-width: 350px;
         }
       }
       
@@ -38,11 +103,18 @@
         margin-bottom: 40px;
       }
       
+      .profile--job,
+      .profile--role,
+      .profile--bio {
+        max-width: 62%;
+        @include media-max($narrow-screen) {
+          max-width: 100%;
+        }
+      }
+      
       .profile--job {
         @include fs-title-3;
         margin-bottom: 40px;
-        max-width: 64%;
-        
         @include media-max($narrow-screen) {
           clear: both;
           margin-bottom: 50px;
@@ -51,9 +123,7 @@
       
       .profile--role {
         @include fs-big-description;
-        margin-bottom: 25px;
-        max-width: 64%;
-        
+        margin-bottom: 25px;        
         div {
           display: inline-block;
         }
@@ -72,11 +142,17 @@
       }
       
       .profile--bio {
-        max-width: 64%;
         margin-top: 40px;
-        .show-hide-bio {
-          padding-left: 30px;
+        .show-bio {
           background: url('/themes/custom/sfgovpl/src/img/chevron-down.svg') no-repeat 0 8px;
+        }
+        .hide-bio {
+          background: url('/themes/custom/sfgovpl/src/img/chevron-up.svg') no-repeat 0 8px;
+          display: none;
+        }
+        .show-bio,
+        .hide-bio {
+          padding-left: 30px;
           margin-top: 20px;
           button {
             border: none;
@@ -98,6 +174,8 @@
       padding-top: 20px;
       border-top: 3px solid $c-border;
       
+      h2 { margin: 0 0 20px 0; }
+      
       .contact-wrapper {
         width: 100%;
         .contact-phone,
@@ -106,6 +184,10 @@
           display: inline-block;
           vertical-align: top;
           padding-right: 90px;
+          @include media-max($narrow-screen) {
+            width: 100%;
+            clear: both;
+          }
           label {
             background-position: 0px 7px;
             padding-left: 35px;
@@ -115,20 +197,13 @@
           }
           .phone-wrapper,
           .email-wrapper {
-            margin-top: 25px;
-          }
-        }
-        
-        .contact-phone {
-          .phone-title {
-          
+            margin-top: 0;
           }
         }
         
         .contact-email {
-          
-          .phone-title {
-          
+          @include media-max($narrow-screen) {
+            margin-top: 40px;
           }
         }
         

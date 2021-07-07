@@ -295,6 +295,7 @@ class SFgovDepartment {
     // Escape for some node types.
     switch ($node->bundle()) {
       case 'public_body':
+      case 'person':
       case 'location':
         return;
     }

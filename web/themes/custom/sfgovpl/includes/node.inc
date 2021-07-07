@@ -44,6 +44,9 @@ function sfgovpl_preprocess_node(&$variables) {
         case 'public_body':
           $variables['public_body_fields'] = public_body_page_fields($node);
           break;
+        case 'person':
+          $variables['profile_fields'] = profile_page_fields($node);
+          break;
       }
     }
 
@@ -615,6 +618,90 @@ function public_body_page_fields($node) {
       }
     }
   }
+  return $theFields;
+}
+
+/*
+ * Prepare profile field data from entities referencing the profile
+ */
+function profile_page_fields($node) {
+  if($node) {
+    // Get field data related to profile
+    $nid = $node->id();
+    $dept_nids = array();
+    $pbody_nids = array();
+    $pids = array();
+    
+    // Find paragraphs referencing profile nid
+    $query = \Drupal::database()->select('paragraph__field_profile', 'pfp');
+    $query->addField('pfp', 'entity_id');
+    $query->condition('pfp.field_profile_target_id', $nid, '=');
+    $profile_ids = $query->execute()->fetchAll();
+    // Find container/group paragraphs
+    foreach ($profile_ids as $key => $pid) {
+      $query = \Drupal::database()->select('paragraph__field_profiles', 'pfp');
+      $query->addField('pfp', 'entity_id');
+      $query->condition('pfp.field_profiles_target_id', $pid->entity_id, '=');
+      $pids[] = $query->execute()->fetchAll();
+    }
+    
+    // Find dept nodes referencing container paragraphs
+    foreach ($pids as $key => $pid) {
+      $query = \Drupal::database()->select('node__field_people', 'nfp');
+      $query->addField('nfp', 'entity_id');
+      $query->condition('nfp.field_people_target_id', $pid[0]->entity_id, '=');
+      $temp = $query->execute()->fetchAll();
+      if(isset($temp[0]->entity_id)) {
+        $dept_nids[] = $temp[0]->entity_id;
+      }
+    }
+    
+    // Find public body nodes referencing container paragraphs
+    foreach ($pids as $key => $pid) {
+      $query = \Drupal::database()->select('node__field_board_members', 'nfp');
+      $query->addField('nfp', 'entity_id');
+      $query->condition('nfp.field_board_members_target_id', $pid[0]->entity_id, '=');
+      $temp = $query->execute()->fetchAll();
+      if(isset($temp[0]->entity_id)) {
+        $pbody_nids[] = $temp[0]->entity_id;
+      }
+    }
+    
+    if ($dept_nids[0] > 1) {
+      $theFields['dept_ref_nids'] = $dept_nids;
+    }
+    if ($pbody_nids[0] > 1) {
+      $theFields['pbody_ref_nids'] = $pbody_nids;
+    }
+    
+    // Get social media field data
+    if($node->hasField('field_social_media')) {
+      $aboutSocial = $node->get('field_social_media');
+      if($aboutSocial && $aboutSocial->getValue()) {
+        $socialMediaLabel = $aboutSocial->getFieldDefinition()->getLabel();
+        $theFields['about']['social']['title'] = $socialMediaLabel;
+        $aboutSocialId = $aboutSocial->getValue()[0]['target_id'];
+        if ($aboutSocialParagraph = Paragraph::load($aboutSocialId)) {
+          $socialFields = $aboutSocialParagraph->getFields();
+          foreach($socialFields as $socialField) {
+            if($socialField->getFieldDefinition()->getType() == 'link') {
+              $socialFieldKey = $socialField->getFieldDefinition()->getName();
+              $socialLabel = $socialField->getFieldDefinition()->getLabel();
+              $socialUrl = $aboutSocialParagraph->get($socialFieldKey)->getValue() ? $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'] : null;
+              if($socialUrl) {
+                $theFields['about']['social']['values'][] = array(
+                  'label' => $socialLabel,
+                  'url' => $socialUrl,
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+    
+  }
+  
   return $theFields;
 }
 

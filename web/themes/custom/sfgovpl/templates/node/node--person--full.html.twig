@@ -19,9 +19,37 @@
     {{ content.field_photo }}
   </div>
   
+  {% if node.field_primary_email.value|length and node.field_primary_phone_number.value|length %}
+  <div class="profile--direct-contact">
+    {% if node.field_primary_email.value|length %}
+      <div class="direct-email">
+        <span data-contact="email">&nbsp;</span><a href="mailto:{{ node.field_primary_email.value }}">{{ node.field_primary_email.value }}</a>
+      </div>
+    {% endif %}
+    {% if node.field_primary_phone_number.value|length %}
+      <div class="direct-phone">
+        <span data-contact="phone">&nbsp;</span><a href="tel:{{ node.field_primary_phone_number.value }}">{{ node.field_primary_phone_number.value }}</a>
+      </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  
+  <div class="profile--social">
+    {% if profile_fields.about.social.values %}
+      <div class="sfgov-profile-social sfgov-social">
+        <span class="title">{{ profile_fields.about.social.title }}</span>
+        <ul class="sfgov-social-list">
+        {% for socialMedia in profile_fields.about.social.values %}
+          <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+  
   <div class="profile--job">
     {% if node.field_title.value|length %}
-      {{ node.field_title.value|striptags }}{% if (node.field_title.value|length) and (node.field_sub_title.value) %},<br>{% endif %}
+      {{ node.field_title.value|striptags }}{% if (node.field_title.value|length) and (node.field_sub_title.value) %}<br>{% endif %}
     {% endif %}
     {% if node.field_sub_title.value %}
       {{ node.field_sub_title.value|striptags }}
@@ -136,17 +164,18 @@
   
   <div class="profile--bio">
     <div class="bio-trimmed">
-      {{ bio_trim|slice(0, 600) ~ '...' }}
+      {{ bio_trim|slice(0, 600)|convert_encoding('UTF-8', 'HTML-ENTITIES') ~ '...' }}
     </div>
     <div class="bio-full hidden">
       {{ content.field_biography }}
     </div>
-    <div class="show-hide-bio"><button>Show more</button></div>
+    <div class="show-bio"><button>{{ 'Show more'|t }}</button></div>
+    <div class="hide-bio"><button>{{ 'Show less'|t }}</button></div>
   </div>
 </div>
 
 <div class="profile--contact">
-  <h2>Contact</h2>
+  <h2>{{ 'Contact'|t }}</h2>
   
   <div class="contact-wrapper">
   
@@ -171,6 +200,7 @@
         
         {% if not item.entity.field_tel.value is defined %}
           {% if item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|length %}
+          
             <div class="phone-title">
               {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_owner.value|raw }}
             </div>
@@ -181,12 +211,7 @@
             </div>
             <div class="phone-desc">
               {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_text.value|raw }}
-            </div>
-            
-          {% else %}
-          
-            <span>We do not have contact info for this agency. Add a new phone number instead.</span>
-            
+            </div>            
           {% endif %}
         {% endif %}
         </div>
@@ -225,7 +250,7 @@
             </div>
                         
           {% else %}
-            <span>We do not have contact info for this agency. Add a new email instead.</span>
+            <span>{{ 'We do not have contact info for this agency. Add a new email instead.'|t }}</span>
           {% endif %}
         {% endif %}
         </div>
