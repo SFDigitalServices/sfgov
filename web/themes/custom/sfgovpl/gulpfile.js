@@ -39,9 +39,7 @@ function js() {
 
 function css() {
   return gulp
-    // we have to explicitly exclude partials here,
-    // otherwise postcss will attempt to process them
-    .src(['src/sass/*.scss', '!**/_*.scss'])
+    .src(['src/sass/*.css'])
     .pipe(sourcemaps.init())
     .pipe(postcss()) // see postcss.config.js
     .pipe(sourcemaps.write('.'))
