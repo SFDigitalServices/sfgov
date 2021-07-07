@@ -1,0 +1,45 @@
+uuid: 9426b43d-fbd0-4514-9ad1-86141914e9a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.data_story_section.field_content
+    - field.field.paragraph.data_story_section.field_title
+    - paragraphs.paragraphs_type.data_story_section
+  module:
+    - sfgov_admin
+id: paragraph.data_story_section.default
+targetEntityType: paragraph
+bundle: data_story_section
+mode: default
+content:
+  field_content:
+    weight: 1
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: '0'
+      add_mode: dropdown_custom
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: 0
+    third_party_settings: {  }
+    type: sfgov_paragraphs
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
