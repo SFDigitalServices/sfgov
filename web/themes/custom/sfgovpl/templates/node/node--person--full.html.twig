@@ -56,109 +56,32 @@
     {% endif %}
   </div>
   
-  {% for key, item in node.field_departments if key|first != '#'%}
-    <div class="profile--role">
     
-      {% if item.entity.title.value %}
-        <div class="role-title">
-          <!-- For departments -->
-          {% if item.entity.field_people.value %}
-            {% for keyp, itemp in item.entity.field_people.value if keyp|first != '#'%}
-              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
-              
-              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
-                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
-                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
-                  {% if profilecomp2['#paragraph'].field_commision_position.value %}
-                    {{ profilecomp2['#paragraph'].field_commision_position.value }}
-                  {% else %}
-                    <span>No title available</span>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-              
-            {% endfor %}
-          {% endif %}
-          
-          <!-- For public bodies -->
-          {% if item.entity.field_board_members.value %}
-            {% for keyp, itemp in item.entity.field_board_members.value if keyp|first != '#'%}
-              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
-              
-              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
-                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
-                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
-                  {% if profilecomp2['#paragraph'].field_commision_position.value %}
-                    {{ profilecomp2['#paragraph'].field_commision_position.value }}
-                  {% else %}
-                    <span>No title available</span>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-              
-            {% endfor %}
-          {% endif %}
-        </div>
-        
-        <div class="role-agency-title">
-          <a href="{{ path('entity.node.canonical', {'node':  item.entity.id}) }}">{{ item.entity.title.value }}</a>
-        </div>
-        
-        <div class="role-time">
-          <!-- For departments -->
-          {% if item.entity.field_people.value %}
-            {% for keyp, itemp in item.entity.field_people.value if keyp|first != '#'%}
-              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
-              
-              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
-                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
-                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
-                  {% if profilecomp2['#paragraph'].field_position_type.value %}
-                    {{ profilecomp2['#paragraph'].field_position_type.value }}: 
-                  {% else %}
-                    <span>No position information available: </span>
-                  {% endif %}
-                  
-                  <!-- position type/timeframe -->
-                  {% if profilecomp2['#paragraph'].field_starting_year.value %}
-                    {{ profilecomp2['#paragraph'].field_starting_year.value|date('Y') }} - {{ profilecomp2['#paragraph'].field_ending_year.value|date('Y') }}
-                  {% else %}
-                    <span>No starting year available</span>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-              
-            {% endfor %}
-          {% endif %}
-          
-          <!-- For public bodies -->
-          {% if item.entity.field_board_members.value %}
-            {% for keyp, itemp in item.entity.field_board_members.value if keyp|first != '#'%}
-              {% set profilecomp1 = drupal_entity('paragraph',itemp.target_id) %}
-              
-              {% for keyt, itemt in profilecomp1['#paragraph'].field_profiles.value %}
-                {% set profilecomp2 = drupal_entity('paragraph', itemt.target_id) %}
-                {% if profilecomp2['#paragraph'].field_profile.value.0.target_id == node.id %}
-                  {% if profilecomp2['#paragraph'].field_position_type.value %}
-                    {{ profilecomp2['#paragraph'].field_position_type.value }}: 
-                  {% else %}
-                    <span>No position information available: </span>
-                  {% endif %}
-                  
-                  <!-- position type/timeframe -->
-                  {% if profilecomp2['#paragraph'].field_starting_year.value %}
-                    {{ profilecomp2['#paragraph'].field_starting_year.value|date('Y') }} - {{ profilecomp2['#paragraph'].field_ending_year.value|date('Y') }}
-                  {% else %}
-                    <span>No starting year available</span>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-              
-            {% endfor %}
-          {% endif %}
-        </div>
-      {% endif %}
-      
+  {% for key, item in profile_fields.dept_ref_data %}
+    <div class="profile--role">
+      <div class="role-title">
+        {{ item.profile.job.position }}
+      </div>
+      <div class="role-agency-title">
+        <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
+      </div>
+      <div class="role-time">
+        {{ item.profile.job.position_type }}: {{ item.profile.job.start_year }} - {{ item.profile.job.end_year }}
+      </div>
+    </div>
+  {% endfor %}
+    
+  {% for key, item in profile_fields.pubbody_ref_data %}
+    <div class="profile--role">
+      <div class="role-title">
+        {{ item.profile.job.position }}
+      </div>
+      <div class="role-agency-title">
+        <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
+      </div>
+      <div class="role-time">
+        {{ item.profile.job.position_type }}: {{ item.profile.job.start_year }} - {{ item.profile.job.end_year }}
+      </div>
     </div>
   {% endfor %}
   
@@ -181,83 +104,108 @@
   
     <div class="contact-phone">
       <label data-contact="phone">Phone</label>
-      {% for key, item in node.field_phone_numbers if key|first != '#'%}
-        
-        <div class="phone-wrapper">
-        {% if item.entity.field_tel.value %}
-          <div class="phone-title">
-            {{ item.entity.field_owner.value|raw }}
-          </div>
-          <div class="phone-number">
-            <a href="tel:+{{ item.entity.field_tel.value|raw }}">
-              {{ item.entity.field_tel.value|raw }}
-            </a>
-          </div>
-          <div class="phone-desc">
-            {{ item.entity.field_text.value|raw }}
+            
+      {% for key, item in profile_fields.dept_ref_data %}
+        {% if item.profile.phone %}
+          <div class="phone-wrapper">
+            <div class="phone-org">
+              {{ item.profile.node_title }}
+            </div>
+          {% for pkey, phone in item.profile.phone %}
+            {% if phone.tel %}
+              <div class="phone-item">
+                <div class="phone-title">
+                  {{ phone.owner }}
+                </div>
+                <div class="phone-number">
+                  <a href="tel:+{{ phone.tel }}"> {{ phone.tel }} </a>
+                </div>
+                <div class="phone-desc">
+                  {{ phone.text }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
           </div>
         {% endif %}
-        
-        {% if not item.entity.field_tel.value is defined %}
-          {% if item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|length %}
-          
-            <div class="phone-title">
-              {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_owner.value|raw }}
-            </div>
-            <div class="phone-number">
-              <a href="tel:+{{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|raw }}">
-                {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|raw }}
-              </a>
-            </div>
-            <div class="phone-desc">
-              {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_text.value|raw }}
-            </div>            
-          {% endif %}
-        {% endif %}
-        </div>
-        
       {% endfor %}
+      
+      {% for key, item in profile_fields.pubbody_ref_data %}
+        {% if item.profile.phone %}
+          <div class="phone-wrapper">
+            <div class="phone-org">
+              {{ item.profile.node_title }}
+            </div>
+          {% for pkey, phone in item.profile.phone %}
+            {% if phone.tel %}
+              <div class="phone-item">
+                <div class="phone-title">
+                  {{ phone.owner }}
+                </div>
+                <div class="phone-number">
+                  <a href="tel:+{{ phone.tel }}"> {{ phone.tel }} </a>
+                </div>
+                <div class="phone-desc">
+                  {{ phone.text }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+      
     </div>
-    
     
     <div class="contact-email">
       <label data-contact="email">Email</label>
       
-      {% for key, item in node.field_email if key|first != '#'%}
-                
-        <div class="email-wrapper">
-        {% if item.entity.field_email.value|length %}
-          <div class="email-title">
-            {{ item.entity.field_title.value|raw }}
-          </div>
-          <div class="email-email">
-            <a href="mailto:{{ item.entity.field_email.value|raw }}">
-              {{ item.entity.field_email.value|raw }}
-            </a>
+      {% for key, item in profile_fields.dept_ref_data %}
+        {% if item.profile.email %}
+          <div class="email-wrapper">
+            <div class="email-org">
+              {{ item.profile.node_title }}
+            </div>
+          {% for ekey, email in item.profile.email %}
+            {% if email.email_address %}
+              <div class="email-item">
+                <div class="email-title">
+                  {{ email.title }}
+                </div>
+                <div class="email-email">
+                  <a href="mailto:{{ email.email_address }}"> {{ email.email_address }} </a>
+                </div>
+              </div>    
+            {% endif %}
+          {% endfor %}
           </div>
         {% endif %}
-        
-        {% if not item.entity.field_email.value is defined %}
-          {% if item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|length %}
-          
-            <div class="email-title-ref">
-              {{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_title.value|raw }}
+      {% endfor %}
+      
+      {% for key, item in profile_fields.pubbody_ref_data %}
+        {% if item.profile.email %}
+          <div class="email-wrapper">
+            <div class="email-org">
+              {{ item.profile.node_title }}
             </div>
-            <div class="email-email">
-              <a href="mailto:{{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|raw }}">
-                {{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|raw }}
-              </a>
-            </div>
-                        
-          {% else %}
-            <span>{{ 'We do not have contact info for this agency. Add a new email instead.'|t }}</span>
-          {% endif %}
+          {% for ekey, email in item.profile.email %}
+            {% if email.email_address %}
+              <div class="email-item">
+                <div class="email-title">
+                  {{ email.title }}
+                </div>
+                <div class="email-email">
+                  <a href="mailto:{{ email.email_address }}"> {{ email.email_address }} </a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+          </div>
         {% endif %}
-        </div>
-        
       {% endfor %}
       
     </div>
+    
   </div>
 </div>
 

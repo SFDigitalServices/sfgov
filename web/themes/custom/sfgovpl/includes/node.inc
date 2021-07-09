@@ -667,32 +667,42 @@ function profile_page_fields($node) {
     }
     
     // Find dept nodes referencing container paragraphs
+    $temp_ids = array();
     foreach ($pids as $key => $pid) {
-      $query = \Drupal::database()->select('node__field_people', 'nfp');
-      $query->addField('nfp', 'entity_id');
-      $query->condition('nfp.field_people_target_id', $pid[0]->entity_id, '=');
-      $temp = $query->execute()->fetchAll();
-      if(isset($temp[0]->entity_id)) {
-        $dept_nids[] = $temp[0]->entity_id;
+      if (isset($pid[0]->entity_id)) {
+        $query = \Drupal::database()->select('node__field_people', 'nfp');
+        $query->addField('nfp', 'entity_id');
+        $query->condition('nfp.field_people_target_id', $pid[0]->entity_id, '=');
+        $temp_ids = $query->execute()->fetchAll();
+        if(isset($temp_ids[0]->entity_id)) {
+          $dept_nids[]['entity_id'] = $temp_ids[0]->entity_id;
+        }
       }
     }
+    // Build data variable for twig template
+    $dept_data = sfgovpl_profile_reference_nodes($dept_nids, 'department', $nid);
     
     // Find public body nodes referencing container paragraphs
+    $temp_ids = array();
     foreach ($pids as $key => $pid) {
-      $query = \Drupal::database()->select('node__field_board_members', 'nfp');
-      $query->addField('nfp', 'entity_id');
-      $query->condition('nfp.field_board_members_target_id', $pid[0]->entity_id, '=');
-      $temp = $query->execute()->fetchAll();
-      if(isset($temp[0]->entity_id)) {
-        $pbody_nids[] = $temp[0]->entity_id;
+      if (isset($pid[0]->entity_id)) {
+        $query = \Drupal::database()->select('node__field_board_members', 'nfp');
+        $query->addField('nfp', 'entity_id');
+        $query->condition('nfp.field_board_members_target_id', $pid[0]->entity_id, '=');
+        $temp_ids = $query->execute()->fetchAll();
+        if(isset($temp_ids[0]->entity_id)) {
+          $pbody_nids[]['entity_id'] = $temp_ids[0]->entity_id;
+        }
       }
     }
+    // Build data variable for twig template
+    $pbody_data = sfgovpl_profile_reference_nodes($pbody_nids, 'public body', $nid);
     
-    if ($dept_nids[0] > 1) {
-      $theFields['dept_ref_nids'] = $dept_nids;
+    if (isset($dept_nids[0]) && $dept_nids[0] > 1) {
+      $theFields['dept_ref_data'] = $dept_data;
     }
-    if ($pbody_nids[0] > 1) {
-      $theFields['pbody_ref_nids'] = $pbody_nids;
+    if (isset($pbody_nids[0]) && $pbody_nids[0] > 1) {
+      $theFields['pubbody_ref_data'] = $pbody_data;
     }
     
     // Get social media field data
@@ -700,7 +710,7 @@ function profile_page_fields($node) {
       $aboutSocial = $node->get('field_social_media');
       if($aboutSocial && $aboutSocial->getValue()) {
         $socialMediaLabel = $aboutSocial->getFieldDefinition()->getLabel();
-        $theFields['about']['social']['title'] = $socialMediaLabel;
+        $theFields['social']['title'] = $socialMediaLabel;
         $aboutSocialId = $aboutSocial->getValue()[0]['target_id'];
         if ($aboutSocialParagraph = Paragraph::load($aboutSocialId)) {
           $socialFields = $aboutSocialParagraph->getFields();
@@ -710,7 +720,7 @@ function profile_page_fields($node) {
               $socialLabel = $socialField->getFieldDefinition()->getLabel();
               $socialUrl = $aboutSocialParagraph->get($socialFieldKey)->getValue() ? $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'] : null;
               if($socialUrl) {
-                $theFields['about']['social']['values'][] = array(
+                $theFields['social']['values'][] = array(
                   'label' => $socialLabel,
                   'url' => $socialUrl,
                 );
@@ -722,8 +732,103 @@ function profile_page_fields($node) {
     }
     
   }
-  
   return $theFields;
+}
+
+/*
+ * Helper function for building profile page data
+ */
+function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
+  // Build department data for profile apge
+  foreach($ref_nids as $key => $value) {
+    $node =  \Drupal\node\Entity\Node::load(intval($value['entity_id']));
+    $ref_data[$key]['profile']['node_title'] = $node->label();
+    $ref_data[$key]['profile']['node_url'] = $node->toUrl()->toString();
+    // Address
+    if ($address = $node->get('field_address')->referencedEntities()) {
+      $ref_data[$key]['profile']['address'] = $address[0]->get('field_address')->getValue();
+    } else {
+      $ref_data[$key]['profile']['address'] = 'No address found';
+    }
+    // Email
+    if ($email = $node->get('field_email')->referencedEntities()) {
+      foreach($email as $ekey => $eitem) {
+        $temp = $eitem->get('field_title')->getValue();
+        if (isset($temp[0]['value'])) {
+          $ref_data[$key]['profile']['email'][$ekey]['title'] = $temp[0]['value'];
+        }
+        $temp = $eitem->get('field_email')->getValue();
+        if (isset($temp[0]['value'])) {
+          $ref_data[$key]['profile']['email'][$ekey]['email_address'] = $temp[0]['value'];
+        }
+      }
+    }
+
+    // Phone
+    if ($phone = $node->get('field_phone_numbers')->referencedEntities()) {
+      foreach($phone as $pkey => $pitem) {
+        $temp = $pitem->get('field_tel')->getValue();
+        if (isset($temp[0]['value'])) {
+          $ref_data[$key]['profile']['phone'][$pkey]['tel'] = $temp[0]['value'];
+        }
+        $temp = $pitem->get('field_text')->getValue();
+        if (isset($temp[0]['value'])) {
+          $ref_data[$key]['profile']['phone'][$pkey]['text'] = $temp[0]['value'];
+        }
+        $temp = $pitem->get('field_owner')->getValue();
+        if (isset($temp[0]['value'])) {
+          $ref_data[$key]['profile']['phone'][$pkey]['owner'] = $temp[0]['value'];
+        } 
+      }
+    }
+
+    // Job titles
+    if ($reftype == 'public body') {
+      $profile_field = 'field_board_members';
+    }
+    if ($reftype == 'department') {
+      $profile_field = 'field_people';
+    }
+    
+    if ($people = $node->get($profile_field)->referencedEntities()) {
+      foreach($people as $pkey => $pitem) {
+        $bundle = $pitem->bundle();
+        if($bundle == 'profile_group') {
+          $profiles = $pitem->get('field_profiles')->getValue();
+          foreach ($profiles as $rkey => $ritem) {
+            $profile = Paragraph::load($ritem['target_id']);
+            $pnid = $profile->get('field_profile')->getValue();
+            if ($pnid[0]['target_id'] == $nid) {
+              $temp = $profile->get('field_commision_position')->getValue();
+              if (isset($temp[0]['value'])) {
+                $ref_data[$key]['profile']['job']['position'] = $temp[0]['value'];
+              }
+              $temp = $profile->get('field_profile')->getValue();
+              if (isset($temp[0]['value'])) {
+                $ref_data[$key]['profile']['job']['profile'] = $temp[0]['value'];
+              }
+              $temp = $profile->get('field_position_type')->getValue();
+              if (isset($temp[0]['value'])) {
+                $ref_data[$key]['profile']['job']['position_type'] = $temp[0]['value'];
+              }
+              $temp = $profile->get('field_starting_year')->getValue();
+              if (isset($temp[0]['value'])) {
+                $sdate = new DateTime($temp[0]['value']);
+                $ref_data[$key]['profile']['job']['start_year'] = $sdate->format('Y');
+              }
+              $temp = $profile->get('field_ending_year')->getValue();
+              if (isset($temp[0]['value'])) {
+                $edate = new DateTime($temp[0]['value']);
+                $ref_data[$key]['profile']['job']['end_year'] = $edate->format('Y');
+                //$ref_data[$key]['profile']['job']['end_year'] = $temp[0]['value'];
+              }
+            } 
+          }
+        }
+      }
+    }
+  }
+  return $ref_data;
 }
 
 /**
