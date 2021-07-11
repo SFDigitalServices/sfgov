@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Theme override for Document Subsection paragraph.
+ *
+ * @see paragraph.html.twig
+ */
+#}
+<div class="paragraph--type--document-subsection">
+  {% if paragraph.field_title is not null %}
+    <h4 class="title-4-resource-collection">
+      {{ paragraph.field_title.value }}
+    </h4>
+  {% endif %}
+  {{ content|without('field_title') }}
+</div>
