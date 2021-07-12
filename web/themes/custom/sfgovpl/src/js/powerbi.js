@@ -38,16 +38,22 @@
       // See https://stackoverflow.com/questions/5456239/detecting-when-an-iframe-gets-or-loses-focus
       // Instead we bind to the wrapper container and then shift focus to the iframe.
       $charts.on('focus', function () {
-        // Add the focus class to the iframe to show visual guides.
-        $(this).find('> iframe')
-          .addClass('focus')
-          .focus();
-        $('.sfgov-powerbi-embed__kbd').removeClass('hidden');
+        const $this = $(this);
+        const $iframe = $this.find('> iframe')
+        const $kbd = $this.prev('.sfgov-powerbi-embed__kbd')
+
+        // Show all keyboard instructions.
+        if ($kbd.hasClass('hidden')) {
+          $('.sfgov-powerbi-embed__kbd').removeClass('hidden')
+          $kbd.focus();
+        }
+
+        $iframe.addClass('focus').focus()
       })
 
       // Handles tabbing away from iframe.
       $(window).on('focus', function () {
-        $('iframe.focus').removeClass('focus');
+        $('iframe.focus').removeClass('focus')
       })
 
     }
