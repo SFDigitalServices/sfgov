@@ -166,14 +166,14 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
   // Now get section paragraphs that reference the subsection.
   $query_step_2 = \Drupal::entityQuery('paragraph')
     ->condition('type','data_story_reference_section')
-    ->condition('field_content.entity:paragraph.id', $paragraph_subsectionids);
+    ->condition('field_content.entity:paragraph.id', $paragraph_subsectionids,'IN');
   $paragraph_sectionids = $query_step_2->execute();
 
   // Next get the nodes that reference the section paragraphs.
   $query_step_3 = \Drupal::entityQuery('node')
     ->condition('type','resource_collection')
     ->condition('status', 1)
-    ->condition('field_paragraphs.entity:paragraph.id', $paragraph_sectionids);
+    ->condition('field_paragraphs.entity:paragraph.id', $paragraph_sectionids, 'IN');
 
   $resource_collection_nids = $query_step_3->execute();
 
