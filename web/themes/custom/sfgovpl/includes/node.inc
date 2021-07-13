@@ -148,6 +148,59 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ */
+
+function sfgovpl_preprocess_node__data_story__full(&$variables) {
+
+  /** @var\Drupal\node\NodeInterface $node*/
+  $node = $variables['node'];
+  $nid = $node->id();
+
+  // Get subsection paragraphs that reference this node.
+  $query_step_1 = \Drupal::entityQuery('paragraph')
+    ->condition('type','data_story_reference_subsection')
+    ->condition('field_data_story.entity:node.nid', $nid);
+  $paragraph_subsectionids = $query_step_1->execute();
+
+  // Now get section paragraphs that reference the subsection.
+  $query_step_2 = \Drupal::entityQuery('paragraph')
+    ->condition('type','data_story_reference_section')
+    ->condition('field_content.entity:paragraph.id', $paragraph_subsectionids,'IN');
+  $paragraph_sectionids = $query_step_2->execute();
+
+  // Next get the nodes that reference the section paragraphs.
+  $query_step_3 = \Drupal::entityQuery('node')
+    ->condition('type','resource_collection')
+    ->condition('status', 1)
+    ->condition('field_paragraphs.entity:paragraph.id', $paragraph_sectionids, 'IN');
+
+  $resource_collection_nids = $query_step_3->execute();
+
+  if (empty($resource_collection_nids)) {
+    return;
+  }
+
+  // Create the "Part of.." label for banner.
+  $links = [];
+  foreach ($resource_collection_nids as $resource_collection_nid) {
+    $node_object = Node::load($resource_collection_nid);
+
+    $links[] = Link::fromTextAndUrl(
+      t($node_object->label()),
+      Url::fromRoute('entity.node.canonical', ['node' => $node_object->id()])
+    )->toString();
+
+  }
+
+  $links = implode(', ', $links);
+  $part_of = t('Part of ') . $links;
+
+  $variables['part_of'] = $part_of;
+}
+
+
+/**
  * Retrieve the transaction ids in field_department_services that will be
  * excluded from "more services" section on topic page send the list of ids to a
  * Twig var which will then get passed to view contextual filters via
