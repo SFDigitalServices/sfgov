@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.person.field_dept
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
@@ -21,12 +20,12 @@ bundle: person
 mode: default
 content:
   content_moderation_control:
-    weight: 0
+    weight: -20
     region: content
     settings: {  }
     third_party_settings: {  }
   field_direct_external_url:
-    weight: 6
+    weight: 5
     label: hidden
     settings:
       trim_length: 80
@@ -38,7 +37,7 @@ content:
     type: link
     region: content
   field_first_name:
-    weight: 1
+    weight: 0
     label: hidden
     settings:
       link_to_entity: false
@@ -46,7 +45,7 @@ content:
     type: string
     region: content
   field_last_name:
-    weight: 2
+    weight: 1
     label: hidden
     settings:
       link_to_entity: false
@@ -54,7 +53,7 @@ content:
     type: string
     region: content
   field_photo:
-    weight: 5
+    weight: 4
     label: hidden
     settings:
       image_style: ''
@@ -62,7 +61,7 @@ content:
     type: image_url
     region: content
   field_sub_title:
-    weight: 4
+    weight: 3
     label: hidden
     settings:
       link_to_entity: false
@@ -70,7 +69,7 @@ content:
     type: string
     region: content
   field_title:
-    weight: 3
+    weight: 2
     label: hidden
     settings:
       link_to_entity: false
