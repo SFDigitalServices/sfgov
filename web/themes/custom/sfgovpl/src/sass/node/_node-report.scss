@@ -545,9 +545,15 @@
 
 .page-node-type-report {
 
+  .sfgov-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .sfgov-table {
     border: 1px solid $c-slate;
     border-collapse: collapse;
+    width: 100%;
 
     thead {
 
@@ -558,17 +564,21 @@
     }
 
     tr {
+      background-color: $c-white;
 
-      &.header-row {
-
-        td {
-          background-color: $c-slate;
-          color: $c-white;
-        }
+      td {
+        background-color: transparent;
+        display: table-cell;
+        width: auto;
       }
 
       &:nth-child(even) {
         background-color: $c-grey-2;
+      }
+
+      th {
+        background-color: $c-slate;
+        color: $c-white;
       }
     }
 

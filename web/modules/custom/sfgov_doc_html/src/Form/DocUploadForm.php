@@ -146,8 +146,10 @@ class DocUploadForm extends FormBase {
     if ($tags = $dom->getElementsByTagName('img')) {
       foreach ($tags as $tag) {
         $src = $tag->getAttribute('src');
-        $ext = end(explode('/', (explode(';', $src))[0]));
-        $base64 = end(explode(';base64,', $src));
+        $array = explode('/', (explode(';', $src))[0]);
+        $ext = end($array);
+        $array1 = explode(';base64,', $src);
+        $base64 = end($array1);
         $base64 = str_replace(' ', '+', $base64);
         $base64 = str_replace('%0D%0A', '', $base64);
 

@@ -17,6 +17,16 @@ use Drupal\sfgov_doc_html\Plugin\DocFormatterBase;
 class Table extends DocFormatterBase {
 
   /**
+   * An array of bgcolor values to treat as header cells.
+   *
+   * phpword converts all cells to td so there's no way to determine which are
+   * header cells.
+   *
+   * We use a bgcolor attribute to set header cells.
+   */
+  const HEADER_CELL_BGCOLORS = ['#CCCCCC', '#E6E6E6', '#556B2F'];
+
+  /**
    * {@inheritdoc}
    */
   public function format(DOMDocument &$document) {
@@ -42,6 +52,13 @@ class Table extends DocFormatterBase {
 
         $caption->parentNode->removeChild($caption);
       }
+
+      // Wrap table in a responsive div.
+      $table_wrapper = $document->createElement('div');
+      $table_wrapper->setAttribute('class', 'sfgov-table-wrapper');
+      $table_copy = $table->cloneNode(TRUE);
+      $table_wrapper->appendChild($table_copy);
+      $table->parentNode->replaceChild($table_wrapper, $table);
     }
 
 
@@ -105,8 +122,8 @@ class Table extends DocFormatterBase {
         // phpword converts all cells to td.
         // Since there's no way to really determine which ones are th,
         // We assume the ones with a bgcolor value are th.
-        if ($td->getAttribute('bgcolor') !== '') {
-          $td->parentNode->setAttribute('class', 'header-row');
+        if (in_array($td->getAttribute('bgcolor'), static::HEADER_CELL_BGCOLORS)) {
+          //$td->parentNode->setAttribute('class', 'header-row');
           $td->parentNode->setAttribute('data-is-header', TRUE);
         }
 
