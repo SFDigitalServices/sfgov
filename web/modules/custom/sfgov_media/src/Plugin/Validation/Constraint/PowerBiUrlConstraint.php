@@ -5,7 +5,7 @@ namespace Drupal\sfgov_media\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Validates a Power BI URL>
+ * Validates a Power BI URL
  *
  * @Constraint(
  *   id = "PowerBiUrl",
@@ -17,6 +17,6 @@ class PowerBiUrlConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public $incorrectDurationFormat = 'The Power BI embed URL is invalid. The URL must start with "https://app.powerbigov.us/view".';
+  public $message = 'The Power BI embed URL is invalid. The URL must start with "https://app.powerbigov.us/view".';
 
 }

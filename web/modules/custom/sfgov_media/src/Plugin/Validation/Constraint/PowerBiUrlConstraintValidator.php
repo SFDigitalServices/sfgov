@@ -18,7 +18,7 @@ class PowerBiUrlConstraintValidator extends ConstraintValidator {
 
     // Validate URL.
     if ($item && strpos($item->value, 'https://app.powerbigov.us/view?r=') !== 0) {
-      $this->context->addViolation($constraint->incorrectDurationFormat);
+      $this->context->addViolation($constraint->message);
     }
   }
 }

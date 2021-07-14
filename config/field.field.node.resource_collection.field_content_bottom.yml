@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_content_bottom
     - node.type.resource_collection
+    - paragraphs.paragraphs_type.custom_section
     - paragraphs.paragraphs_type.section
   module:
     - entity_reference_revisions
@@ -16,7 +17,7 @@ id: node.resource_collection.field_content_bottom
 field_name: field_content_bottom
 entity_type: node
 bundle: resource_collection
-label: 'Content Bottom'
+label: 'Content Section'
 description: ''
 required: false
 translatable: false
@@ -27,10 +28,29 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
+      custom_section: custom_section
       section: section
     target_bundles_drag_drop:
+      accordion:
+        weight: 63
+        enabled: false
+      accordion_item:
+        weight: 64
+        enabled: false
+      accordion_item_simple:
+        weight: 65
+        enabled: false
+      acuity_embed:
+        weight: 66
+        enabled: false
       additional_info:
         weight: 38
+        enabled: false
+      agenda_item:
+        weight: 68
+        enabled: false
+      basic_html_section:
+        weight: 69
         enabled: false
       block:
         weight: 39
@@ -47,6 +67,15 @@ settings:
       campaign:
         weight: 43
         enabled: false
+      campaign_resource_section:
+        weight: 75
+        enabled: false
+      campaign_resources:
+        weight: 76
+        enabled: false
+      campaign_spotlight:
+        weight: 77
+        enabled: false
       content_link:
         weight: 44
         enabled: false
@@ -54,13 +83,25 @@ settings:
         weight: 45
         enabled: false
       custom_section:
+        enabled: true
         weight: 46
+      data_story_reference_section:
+        weight: 84
+        enabled: false
+      data_story_section:
+        weight: 81
+        enabled: false
+      department_content:
+        weight: 82
         enabled: false
       department_service_section:
         weight: 47
         enabled: false
       document:
         weight: 48
+        enabled: false
+      document_section:
+        weight: 89
         enabled: false
       email:
         weight: 49
@@ -71,17 +112,35 @@ settings:
       events:
         weight: 51
         enabled: false
+      fact:
+        weight: 88
+        enabled: false
+      facts:
+        weight: 89
+        enabled: false
       featured_item:
         weight: 52
         enabled: false
       form:
         weight: 53
         enabled: false
+      form_io:
+        weight: 92
+        enabled: false
       help:
         weight: 54
         enabled: false
+      image:
+        weight: 94
+        enabled: false
+      image_with_text:
+        weight: 95
+        enabled: false
       in_person_location:
         weight: 55
+        enabled: false
+      instagram_embed:
+        weight: 97
         enabled: false
       link:
         weight: 56
@@ -98,6 +157,12 @@ settings:
       news:
         weight: 60
         enabled: false
+      other_info_card:
+        weight: 103
+        enabled: false
+      other_info_document:
+        weight: 104
+        enabled: false
       people:
         weight: 61
         enabled: false
@@ -107,8 +172,14 @@ settings:
       phone_numbers:
         weight: 63
         enabled: false
+      powerbi_embed:
+        weight: 108
+        enabled: false
       process_step:
         weight: 64
+        enabled: false
+      resource_section:
+        weight: 116
         enabled: false
       resources:
         weight: 65
@@ -137,7 +208,22 @@ settings:
       timeline:
         weight: 73
         enabled: false
+      timeline_item:
+        weight: 119
+        enabled: false
       top_search_suggestion:
         weight: 74
+        enabled: false
+      twitter_embed:
+        weight: 121
+        enabled: false
+      video:
+        weight: 122
+        enabled: false
+      video_external:
+        weight: 123
+        enabled: false
+      videos:
+        weight: 124
         enabled: false
 field_type: entity_reference_revisions

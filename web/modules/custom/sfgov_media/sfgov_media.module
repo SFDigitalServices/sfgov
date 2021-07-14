@@ -39,4 +39,8 @@ function sfgov_media_entity_bundle_field_info_alter(&$fields, EntityTypeInterfac
       $fields[$power_bi_url_field]->addConstraint('PowerBiUrl');
     }
   }
+
+  if (!empty($fields['field_source_data'])) {
+    $fields['field_source_data']->addConstraint('PowerBiSourceDataUrl');
+  }
 }
