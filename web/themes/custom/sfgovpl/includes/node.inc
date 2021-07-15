@@ -150,31 +150,37 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
 /**
  * Implements hook_preprocess_node().
  */
-
 function sfgovpl_preprocess_node__data_story__full(&$variables) {
 
-  /** @var\Drupal\node\NodeInterface $node*/
+  /* @var\Drupal\node\NodeInterface $node */
   $node = $variables['node'];
   $nid = $node->id();
 
   // Get subsection paragraphs that reference this node.
   $query_step_1 = \Drupal::entityQuery('paragraph')
-    ->condition('type','data_story_reference_subsection')
+    ->condition('type', 'data_story_reference_subsection')
     ->condition('field_data_story.entity:node.nid', $nid);
   $paragraph_subsectionids = $query_step_1->execute();
 
+  if (empty($paragraph_subsectionids)) {
+    return;
+  }
+
   // Now get section paragraphs that reference the subsection.
   $query_step_2 = \Drupal::entityQuery('paragraph')
-    ->condition('type','data_story_reference_section')
-    ->condition('field_content.entity:paragraph.id', $paragraph_subsectionids,'IN');
+    ->condition('type', 'data_story_reference_section')
+    ->condition('field_content.entity:paragraph.id', $paragraph_subsectionids, 'IN');
   $paragraph_sectionids = $query_step_2->execute();
+
+  if (empty($paragraph_sectionids)) {
+    return;
+  }
 
   // Next get the nodes that reference the section paragraphs.
   $query_step_3 = \Drupal::entityQuery('node')
-    ->condition('type','resource_collection')
+    ->condition('type', 'resource_collection')
     ->condition('status', 1)
     ->condition('field_paragraphs.entity:paragraph.id', $paragraph_sectionids, 'IN');
-
   $resource_collection_nids = $query_step_3->execute();
 
   if (empty($resource_collection_nids)) {
@@ -198,7 +204,6 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
 
   $variables['part_of'] = $part_of;
 }
-
 
 /**
  * Retrieve the transaction ids in field_department_services that will be
