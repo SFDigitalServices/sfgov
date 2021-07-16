@@ -31,7 +31,7 @@ class Table extends DocFormatterBase {
    */
   public function format(DOMDocument &$document) {
     /** @var \DOMElement $table */
-    foreach ($document->getElementsByTagName("table") as $table) {
+    foreach ($document->getElementsByTagName("table") as $index => $table) {
       $rows = $table->getElementsByTagName('tr');
       $last_row = $rows[count($rows) - 1];
       $last_row_value = $last_row->nodeValue;
@@ -44,13 +44,17 @@ class Table extends DocFormatterBase {
         }
       }
 
-      // Add table caption.
+      // Add table caption before responsive wrapper.
       if ($caption = $this->findTableCaption($table)) {
-        $table_caption = $document->createElement('caption');
-        $table_caption->nodeValue = $caption->nodeValue;
-        $table->appendChild($table_caption);
-
+        $table_index = $index + 1;
+        $table_id = "table-{$table_index}-caption";
         $caption->parentNode->removeChild($caption);
+        $table_caption = $document->createElement('p');
+        $table_caption->setAttribute('id', $table_id);
+        $table_caption->setAttribute('class', 'sfgov-table-caption');
+        $table_caption->nodeValue = $caption->nodeValue;
+        $table->parentNode->insertBefore($table_caption, $table);
+        $table->setAttribute('aria-labelledby', $table_id);
       }
 
       // Wrap table in a responsive div.
@@ -126,6 +130,9 @@ class Table extends DocFormatterBase {
           //$td->parentNode->setAttribute('class', 'header-row');
           $td->parentNode->setAttribute('data-is-header', TRUE);
         }
+
+        // Remove the bgcolor attributes.
+        $td->removeAttribute('bgcolor');
 
         if ($td_value === "&nbsp;" || $td_value === "") {
           $td->nodeValue = NULL;
