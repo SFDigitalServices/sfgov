@@ -3,6 +3,7 @@
 {% set bio_trim = content.field_biography|render|striptags %}
 
 {% set roles = [] %}
+{% set profile_type = node.field_profile_type.value %}
 {% for key, item in content['#node'].field_departments %}
   {% set roles = series|merge( [item.get('entity').getTarget().getValue().getName()] )  %}
 {% endfor %}
@@ -10,7 +11,6 @@
 {{ attach_library('sfgovpl/sfgov-person') }}
 
 <div class="profile--info">
-
   <div class="profile--name">
     {{ node.field_first_name.0.value|striptags }} {{ node.field_last_name.0.value|striptags }}
   </div>
@@ -35,11 +35,11 @@
   {% endif %}
   
   <div class="profile--social">
-    {% if profile_fields.about.social.values %}
+    {% if profile_fields.social.values %}
       <div class="sfgov-profile-social sfgov-social">
-        <span class="title">{{ profile_fields.about.social.title }}</span>
+        <span class="title">{{ profile_fields.social.title }}</span>
         <ul class="sfgov-social-list">
-        {% for socialMedia in profile_fields.about.social.values %}
+        {% for socialMedia in profile_fields.social.values %}
           <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
         {% endfor %}
         </ul>
@@ -56,34 +56,35 @@
     {% endif %}
   </div>
   
-    
-  {% for key, item in profile_fields.dept_ref_data %}
-    <div class="profile--role">
-      <div class="role-title">
-        {{ item.profile.job.position }}
+  {% if profile_type == 'External' %}
+    {% for key, item in profile_fields.dept_ref_data %}
+      <div class="profile--role">
+        <div class="role-title">
+          {{ item.profile.job.position }}
+        </div>
+        <div class="role-agency-title">
+          <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
+        </div>
+        <div class="role-time">
+          {{ item.profile.job.position_type }}: {{ item.profile.job.start_year }} - {{ item.profile.job.end_year }}
+        </div>
       </div>
-      <div class="role-agency-title">
-        <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
+    {% endfor %}
+      
+    {% for key, item in profile_fields.pubbody_ref_data %}
+      <div class="profile--role">
+        <div class="role-title">
+          {{ item.profile.job.position }}
+        </div>
+        <div class="role-agency-title">
+          <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
+        </div>
+        <div class="role-time">
+          {{ item.profile.job.position_type }}: {{ item.profile.job.start_year }} - {{ item.profile.job.end_year }}
+        </div>
       </div>
-      <div class="role-time">
-        {{ item.profile.job.position_type }}: {{ item.profile.job.start_year }} - {{ item.profile.job.end_year }}
-      </div>
-    </div>
-  {% endfor %}
-    
-  {% for key, item in profile_fields.pubbody_ref_data %}
-    <div class="profile--role">
-      <div class="role-title">
-        {{ item.profile.job.position }}
-      </div>
-      <div class="role-agency-title">
-        <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
-      </div>
-      <div class="role-time">
-        {{ item.profile.job.position_type }}: {{ item.profile.job.start_year }} - {{ item.profile.job.end_year }}
-      </div>
-    </div>
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
   
   <div class="profile--bio">
     <div class="bio-trimmed">
@@ -97,6 +98,10 @@
   </div>
 </div>
 
+<div class="profile--optional-content">
+  {{ content.field_optional_content }}
+</div>
+
 <div class="profile--contact">
   <h2>{{ 'Contact'|t }}</h2>
   
@@ -104,7 +109,50 @@
   
     <div class="contact-phone">
       <label data-contact="phone">Phone</label>
+                  
+      <div class="phone-wrapper">
+        {% for key, item in node.field_phone_numbers if key|first != '#'%}
+          
+          <div class="phone-wrapper">
+          {% if item.entity.field_tel.value %}
+            <div class="phone-title">
+              {{ item.entity.field_owner.value|raw }}
+            </div>
+            <div class="phone-number">
+              <a href="tel:+{{ item.entity.field_tel.value|raw }}">
+                {{ item.entity.field_tel.value|raw }}
+              </a>
+            </div>
+            <div class="phone-desc">
+              {{ item.entity.field_text.value|raw }}
+            </div>
+          {% endif %}
+          
+          {% if not item.entity.field_tel.value is defined %}
+            {% if item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|length %}
+              <div class="phone-title">
+                {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_owner.value|raw }}
+              </div>
+              <div class="phone-number">
+                <a href="tel:+{{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|raw }}">
+                  {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_tel.value|raw }}
+                </a>
+              </div>
+              <div class="phone-desc">
+                {{ item.entity.field_agency_reference[0].entity.field_phone_numbers[0].entity.field_text.value|raw }}
+              </div>
+              
+            {% else %}
             
+              <span>We do not have contact info for this agency. Add a new phone number instead.</span>
+              
+            {% endif %}
+          {% endif %}
+          </div>
+          
+        {% endfor %}
+      </div>
+      
       {% for key, item in profile_fields.dept_ref_data %}
         {% if item.profile.phone %}
           <div class="phone-wrapper">
@@ -159,6 +207,39 @@
     
     <div class="contact-email">
       <label data-contact="email">Email</label>
+      
+      {% for key, item in node.field_email if key|first != '#'%}
+        <div class="email-wrapper">
+        {% if item.entity.field_email.value|length %}
+          <div class="email-title">
+            {{ item.entity.field_title.value|raw }}
+          </div>
+          <div class="email-email">
+            <a href="mailto:{{ item.entity.field_email.value|raw }}">
+              {{ item.entity.field_email.value|raw }}
+            </a>
+          </div>
+        {% endif %}
+        
+        {% if not item.entity.field_email.value is defined %}
+          {% if item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|length %}
+          
+            <div class="email-title-ref">
+              {{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_title.value|raw }}
+            </div>
+            <div class="email-email">
+              <a href="mailto:{{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|raw }}">
+                {{ item.entity.field_agency_reference[0].entity.field_email[0].entity.field_email.value|raw }}
+              </a>
+            </div>
+                        
+          {% else %}
+            <span>We do not have contact info for this agency. Add a new email instead.</span>
+          {% endif %}
+        {% endif %}
+        </div>
+        
+      {% endfor %}
       
       {% for key, item in profile_fields.dept_ref_data %}
         {% if item.profile.email %}

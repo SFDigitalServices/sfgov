@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_profiles_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_person_edit_form':
+      // Make department field show for staff
+      $form['field_city_department']['#states'] = [
+        'visible' => [':input[name^="field_profile_type"]' => ['value' => 'City Employee']],
+      ];
+      break;
+  }
+}
