@@ -546,14 +546,31 @@
 .page-node-type-report {
 
   .sfgov-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    margin-bottom: 50px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    background: radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)), radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 100% 0;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: 10px 100%;
+    width: 100%;
+    border: 1px solid $c-slate;
   }
 
   .sfgov-table {
-    border: 1px solid $c-slate;
     border-collapse: collapse;
     width: 100%;
+    margin-bottom: 0;
+    white-space: nowrap;
+    background: linear-gradient(to right, white 30%, rgba(255,255,255,0)), linear-gradient(to left, white 30%, rgba(255,255,255,0)) 100% 0;
+    background-size: 50px 100%;
+    background-repeat: no-repeat;
+    max-width: none;
+
+    &-caption {
+      margin-bottom: 20px;
+      text-align: left;
+    }
 
     thead {
 
@@ -570,7 +587,7 @@
     }
 
     tr {
-      background-color: $c-white;
+      background-color: transparent;
 
       &:nth-child(even) {
         background-color: $c-grey-2;
