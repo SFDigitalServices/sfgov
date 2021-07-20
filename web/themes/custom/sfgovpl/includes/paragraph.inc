@@ -226,4 +226,12 @@ function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
       $variables['charts'][$device]['padding_top'] = ((int) $device_height / (int) $device_width) * 100;
     }
   }
+
+  // Add kbd instructions.
+  $variables['kbd_instructions'] = NULL;
+
+  if ($kbd_instructions = \Drupal::config('sfgov_media.settings')->get('powerbi_kbd_instructions')) {
+    $variables['kbd_instructions'] = \Drupal\Core\Render\Markup::create($kbd_instructions);
+  }
+
 }

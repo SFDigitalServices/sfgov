@@ -40,18 +40,28 @@
 #}
 {%
   set classes = [
-  'paragraph',
-  'paragraph--type--' ~ paragraph.bundle|clean_class,
-  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-  not paragraph.isPublished() ? 'paragraph--unpublished',
-  'sfgov-cta-button__container'
-]
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
+  ]
 %}
 
+{% set field_link = content.field_link.0 %}
+{% set text = field_link['#title'] %}
+{% set href = field_link['#url'].toString() %}
+{% set parent = paragraph._referringItem.parent.parent.entity %}
+
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {{ content }}
-    {% endblock %}
-  </div>
+  {% if field_link %}
+    <div{{ attributes.addClass(classes) }}>
+      {% block content %}
+        {% include "@sfgov-design-system/button/link.twig" with {
+            "href": href,
+            "text": text,
+            "classes": parent.getType() == 'spotlight' ? ['btn-inverse'] : []
+        } %}
+      {% endblock content %}
+    </div>
+  {% endif %}
 {% endblock paragraph %}
