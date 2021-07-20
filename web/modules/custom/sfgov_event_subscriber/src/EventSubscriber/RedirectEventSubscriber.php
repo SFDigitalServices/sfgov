@@ -16,6 +16,7 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Drupal\redirect\Entity\Redirect;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Event Subscriber RedirectEventSubscriber.
@@ -105,11 +106,21 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     $redirectBasedOnField = $this->redirectBasedOnField($event);
     $redirectBasedOnAlias = $this->redirectBasedOnAlias($event);
 
+    if ($attributes = $event->getRequest()->attributes) {
+      // Check for specific news page view.
+      if ($attributes->get('view_id') === 'news' && $attributes->get('display_id') === 'page_1') {
+        $redirectBasedOnView = $this->redirectBasedOnView($attributes);
+      }
+    }
+
     if ($redirectBasedOnField) {
       $redirect_url = $redirectBasedOnField;
     }
     elseif ($redirectBasedOnAlias) {
       $redirect_url = $redirectBasedOnAlias;
+    }
+    elseif ($redirectBasedOnView) {
+      $redirect_url = $redirectBasedOnView;
     }
     else {
       return;
@@ -297,6 +308,34 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
       }
     }
 
+    return isset($redirect_url) ? $redirect_url : NULL;
+  }
+
+  /**
+   * Follow redirects from view.
+   *
+   * @param array $attributes
+   *   The attributes from the event object.
+   *
+   * @return string|null
+   *   String to redirect to.
+   */
+  public function redirectBasedOnView($attributes) {
+    // First load the news view.
+    $view = \Drupal\views\Views::getView('news');
+    // Nevermind, there is nothing in the view yet.
+    // Retrieve the department id for the news page view.
+    $dept_id = $attributes->get('arg_0'); //160
+    $dept_node = Node::load($dept_id);
+    if ($dept_node instanceof NodeInterface) {
+      $dept_title = $dept_node->getTitle();
+      // Create proper path alias from department title.
+      $input = substr(str_replace(" ", "-", trim(strtolower($dept_title))), 0, 60);
+      $stop_words = ['a', 'and', 'of', 'the'];
+      $encoded_title = preg_replace('/\b('.implode('|',$stop_words).')\b/','',$input);
+      $encoded_title = str_replace('--', '-', $encoded_title);
+      $redirect_url = '/news/' . $encoded_title;
+    }
     return isset($redirect_url) ? $redirect_url : NULL;
   }
 

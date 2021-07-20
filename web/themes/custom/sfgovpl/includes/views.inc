@@ -21,8 +21,8 @@ function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
  * Adds a twig template variable for department news
  */
 function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
-  // Retrieve dept id from contextual filter.
-  $deptId = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: null;
+  // Retrieve dept id.
+  $deptId = !empty($variables['view']->args[1]) ? $variables['view']->args[1]: null;
   if ($deptId) {
     $node = Node::load($deptId);
     $variables['field_dept'] = $node->getTitle();
