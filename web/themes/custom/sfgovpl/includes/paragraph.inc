@@ -42,8 +42,12 @@ function sfgovpl_preprocess_paragraph(&$variables) {
       $variables['sbsId'] = $paragraph->getParentEntity()->id();
       $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
       if(count($referencedEntities) > 0) {
-          $txId = $referencedEntities[0]->id();
-          $variables['txId'] = $txId;
+        $txNode = $referencedEntities[0];
+        $txId = $txNode->id();
+        $variables['txId'] = $txId;
+        $variables['txUrl'] = $txNode->toUrl('canonical', [
+          'language' => \Drupal::languageManager()->getCurrentLanguage(),
+        ])->toString();
       } 
   }
   
