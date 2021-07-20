@@ -2,6 +2,7 @@
 
 use Drupal\views\Views;
 use Drupal\Core\Link;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_preprocess_views_view()
@@ -12,6 +13,20 @@ function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
   $nid = \Drupal::routeMatch()->getParameter('arg_0');
   $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
   $variables['public_body'] = $node->toLink()->toString()->getGeneratedLink();
+}
+
+/**
+ * Implements hook_preprocess_views_view()
+ *
+ * Adds a twig template variable for department news
+ */
+function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
+  // Retrieve dept id from contextual filter.
+  $deptId = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: null;
+  if ($deptId) {
+    $node = Node::load($deptId);
+    $variables['field_dept'] = $node->getTitle();
+  }
 }
 
 /**
