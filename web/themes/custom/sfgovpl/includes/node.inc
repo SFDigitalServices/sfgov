@@ -141,8 +141,9 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
   }
 
   foreach ($sections as $section) {
-    if ($title = $section->get('field_title')->value) {
-      $variables['sections'][] = ['title' => $title];
+    $translatedSection = \Drupal::service('entity.repository')->getTranslationFromContext($section);
+    if ($translatedTitle = $translatedSection->get('field_title')->value) {
+      $variables['sections'][] = ['title' => $translatedTitle];
     }
   }
 }
