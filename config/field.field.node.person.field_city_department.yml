@@ -6,6 +6,7 @@ dependencies:
     - field.storage.node.field_city_department
     - node.type.department
     - node.type.person
+    - node.type.public_body
   module:
     - tmgmt_content
 third_party_settings:
@@ -15,7 +16,7 @@ id: node.person.field_city_department
 field_name: field_city_department
 entity_type: node
 bundle: person
-label: 'City department'
+label: 'City department or public body'
 description: ''
 required: false
 translatable: false
@@ -26,8 +27,9 @@ settings:
   handler_settings:
     target_bundles:
       department: department
+      public_body: public_body
     sort:
       field: _none
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: department
 field_type: entity_reference

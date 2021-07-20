@@ -1,6 +1,16 @@
 .page-node-type-person {
   
-  .page__title { 
+  .profile--container-narrow {
+    @include contain-1090;
+    @include clearfix;
+  }
+  
+  .profile--container-wide {
+    max-width: 100%;
+    @include clearfix;
+  }
+  
+  .page__title {
     display: none;
   }
   
@@ -10,7 +20,6 @@
   }
   
   .main-content-container {
-    @include contain-1090;
     @include clearfix;
     margin-bottom: 67px;
     position: relative;
@@ -120,6 +129,10 @@
           margin-bottom: 50px;
         }
       }
+      .profile--job .city-employee {
+        @include fs-big-description;
+        a { text-decoration: none; }
+      }
       
       .profile--role {
         @include fs-big-description;
@@ -168,6 +181,51 @@
       }
     }
     
+    .profile--optional-content {
+      margin-top: 40px;
+      .field__item {
+        display: inline-block;
+        width: 31%;
+        margin: 0 1% 0 1%;
+      }
+      .sfgov-spotlight {
+        padding-top: 0;
+      }
+    }
+    
+    .profile--container-wide.additional-roles {
+      background: $c-dark-blue;
+      padding: 60px 0 60px 0;
+      
+      h2 { 
+        margin: 0 0 40px 0;
+        color: #fff;
+      }
+      div,
+      a {
+        @include fs-title-5;
+        color: #fff;
+        text-decoration: none;
+      }
+      .profile--additional-role {
+        width: 50%;
+        float: left;
+        margin-bottom: 20px;
+        @include media-max($narrow-screen) {
+          clear: both;
+          width: 100%;
+        }
+      }
+    }
+    
+    .profile--contact.city-employee {
+      border-top: none;
+      padding-top: 0;
+      .contact-address {
+        padding-left: 40px;
+        background: url(../../src/img/icons/location-2.svg) no-repeat 0 7px;
+      }
+    }
     .profile--contact {
       clear: both;
       margin-top: 60px;
@@ -180,17 +238,12 @@
         width: 100%;
         .contact-phone,
         .contact-email {
-          width: 49%;
           display: inline-block;
           vertical-align: top;
           padding-right: 90px;
           @include media-max($narrow-screen) {
             width: 100%;
             clear: both;
-          }
-          label {
-            background-position: 0px 7px;
-            padding-left: 35px;
           }
           .__email .field__label {
             display: none;
@@ -204,13 +257,17 @@
             margin: 0 0 20px 0;
           }
         }
-        
+        .contact-phone {
+          background: url("/themes/custom/sfgovpl/src/img/icons/phone-2.svg") no-repeat 0 7px transparent;
+          padding-left: 40px;
+        }
         .contact-email {
+          background: url("/themes/custom/sfgovpl/src/img/icons/mail-2.svg") no-repeat 0 7px transparent;
+          padding-left: 40px;
           @include media-max($narrow-screen) {
             margin-top: 40px;
           }
         }
-        
         .paragraph--type--phone,
         .paragraph--type--email {
           background: none;
@@ -218,14 +275,6 @@
         }
       }
     }
-  }
-}
-
-// Mobile styling
-
-.page-node-type-profile {
-  @include media-max($narrow-screen) {
-    
   }
 }
 

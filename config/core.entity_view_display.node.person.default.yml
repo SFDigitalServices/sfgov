@@ -3,20 +3,21 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.person.field_address
     - field.field.node.person.field_biography
     - field.field.node.person.field_city_department
     - field.field.node.person.field_direct_external_url
     - field.field.node.person.field_email
+    - field.field.node.person.field_featured_items
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
-    - field.field.node.person.field_locations
-    - field.field.node.person.field_optional_content
     - field.field.node.person.field_phone_numbers
     - field.field.node.person.field_photo
     - field.field.node.person.field_primary_email
     - field.field.node.person.field_primary_phone_number
     - field.field.node.person.field_profile_type
     - field.field.node.person.field_social_media
+    - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
     - node.type.person
@@ -38,6 +39,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_address:
+    weight: 19
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_biography:
     weight: 7
     label: hidden
@@ -74,6 +83,15 @@ content:
     third_party_settings: {  }
     type: entity_reference_revisions_entity_view
     region: content
+  field_featured_items:
+    weight: 13
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
   field_first_name:
     weight: 1
     label: hidden
@@ -90,25 +108,8 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_locations:
-    weight: 16
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_optional_content:
-    weight: 11
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
-    region: content
   field_phone_numbers:
-    weight: 12
+    weight: 14
     label: above
     settings:
       view_mode: default
@@ -126,14 +127,14 @@ content:
     type: image
     region: content
   field_primary_email:
-    weight: 14
+    weight: 16
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_primary_phone_number:
-    weight: 15
+    weight: 17
     label: above
     settings:
       format: 1
@@ -150,8 +151,17 @@ content:
     type: list_default
     region: content
   field_social_media:
-    weight: 13
+    weight: 15
     label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_spotlight:
+    weight: 12
+    label: hidden
     settings:
       view_mode: default
       link: ''
