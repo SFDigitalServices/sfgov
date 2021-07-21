@@ -154,7 +154,10 @@
 
       {% if about_page_link %}
       <p class="about-page-link">
-        {{ about_page_link }}
+        {% include "@sfgov-design-system/button/link.twig" with {
+            "href": about_page_link['#url'],
+            "text": about_page_link['#title'],
+        } %}
       </p>
       {% endif %}
 

@@ -347,3 +347,30 @@ function sfgov_admin_form_entity_form_display_form_alter(&$form, FormStateInterf
     $form['fields'][$field]['plugin']['type']['#suffix'] = $notice;
   }
 }
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function sfgov_admin_toolbar_alter(&$items) {
+
+  // Add the Node ID and link to edit page to the toolbar for those that have access.
+  $nid = \Drupal::routeMatch()->getRawParameter('node');
+
+  if (is_numeric($nid)) {
+
+    $node_edit_url = Url::fromRoute('entity.node.edit_form', ['node' => $nid]);
+
+    if ($node_edit_url->access() == TRUE) {
+      $items['node'] = [
+        '#type' => 'toolbar_item',
+        'tab' => [
+          '#type' => 'link',
+          '#url' => $node_edit_url,
+          '#title' => t('NID: %nid', ['%nid' => $nid]),
+        ],
+        '#wrapper_attributes' => ['class' => 'user-toolbar-tab'],
+
+      ];
+    }
+  }
+}

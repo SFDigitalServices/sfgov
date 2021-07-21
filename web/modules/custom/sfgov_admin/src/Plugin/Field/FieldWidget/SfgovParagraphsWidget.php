@@ -175,7 +175,8 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
 
 
         foreach ($child_paragraphs as $child_paragraph) {
-          $localized_paragraph = $child_paragraph->getTranslation($form_state->get('langcode'));
+          $language = $form_state->get('langcode');
+          $localized_paragraph = ($child_paragraph->hasTranslation($language)) ? $child_paragraph->getTranslation($form_state->get('langcode')) : $child_paragraph;
           $child_bundles[] = $item_bundles[$child_paragraph->bundle()]['label'];
           $row_content = $child_paragraph->bundle() === "powerbi_embed" ? $item_bundles[$child_paragraph->bundle()]['label'] : '';
           if (!$heading && $child_paragraph->hasField('field_text')) {

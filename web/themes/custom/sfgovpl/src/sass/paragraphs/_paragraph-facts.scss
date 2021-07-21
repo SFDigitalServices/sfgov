@@ -52,49 +52,45 @@
 }
 
 .campaign-facts {
-  .row {
-    display: flex;
-    flex-direction: column;
-    .fact-item {
-      flex-basis: 33.333%;
-      margin-bottom: 60px;
-      .image {
+  .fact-item {
+    margin-bottom: 60px;
+    .image {
+      margin-bottom: 19px;
+    }
+    .item-wrapper {
+      display: flex;
+      img {
+        margin-top: auto;
+      }
+    }
+    .media-caption {
+      margin-top: 3px;
+    }
+    .text {
+      @include fs-body-short;
+      .fact-title {
+        @include fs-title-4;
         margin-bottom: 19px;
       }
-      .item-wrapper {
-        display: flex;
-        img {
-          margin-top: auto;
-        }
-      }
-      .media-caption {
-        margin-top: 3px;
-      }
-      .text {
+      p {
         @include fs-body-short;
-        .fact-title {
-          @include fs-title-4;
-          margin-bottom: 19px;
-        }
-        p {
-          @include fs-body-short;
-          margin: 0;
-
-          strong {
-            font-weight: $fw-medium;
-          }
+        margin: 0;
+        strong {
+          font-weight: $fw-medium;
         }
       }
     }
-    @include media($medium-screen) {
-      flex-direction: row;
-      > div {
-        &.fact-item {
-          flex-basis: 33.333%;
-          padding-right: 20px;
-        }
-        &:last-of-type {
-          padding-right: 0;
+  }
+  @include media($medium-screen) {
+    display: grid;
+    grid-template-columns: 32% 32% 32%;
+    column-gap: 20px;
+    row-gap: 60px;
+    .fact-item {
+      margin-bottom: 0;
+      .item-wrapper {
+        img {
+          width: auto;
         }
       }
     }

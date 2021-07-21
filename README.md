@@ -103,13 +103,18 @@
     ```sh
     # 1. After updating the codebase, install any pending composer dependencies.
     lando composer install
+    
     # 2. If any dependencies were updated, run database updates.
     lando drush updb -y
+    
     # 3. Update active config to include and changes pending in `develop`.
     lando drush cim -y
-    # 4. Run gulp from theme root. (@see theme readme for prerequisites.)
+    
+    # 4. Build the theme assets. (@see theme readme for prerequisites.)
     cd web/themes/custom/sfgovpl
-    gulp
+    npm ci
+    npm run build
+    
     # 5. Clear the cache.
     lando drush cr
     ```
