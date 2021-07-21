@@ -29,6 +29,25 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 
     }
 }
+/**
+ * Implements template_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__process_step(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $variables['sbsId'] = $paragraph->getParentEntity()->id();
+  $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
+  if (count($referencedEntities) > 0) {
+    $txNode = $referencedEntities[0];
+    $txId = $txNode->id();
+    // transaction id and url will be used
+    // as query parameters to conditionally display the step by step reference
+    // in the linked transaction
+    $variables['txId'] = $txId;
+    $variables['txUrl'] = $txNode->toUrl('canonical', [
+      'language' => \Drupal::languageManager()->getCurrentLanguage(),
+    ])->toString();
+  } 
+}
 
 function sfgovpl_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
@@ -36,19 +55,6 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   $preprocess = __FUNCTION__ . '__' . $paragraph_type;
   if (function_exists($preprocess)) {
     $preprocess($variables);
-  }
-
-  if($paragraph_type == 'process_step') {
-      $variables['sbsId'] = $paragraph->getParentEntity()->id();
-      $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
-      if(count($referencedEntities) > 0) {
-        $txNode = $referencedEntities[0];
-        $txId = $txNode->id();
-        $variables['txId'] = $txId;
-        $variables['txUrl'] = $txNode->toUrl('canonical', [
-          'language' => \Drupal::languageManager()->getCurrentLanguage(),
-        ])->toString();
-      } 
   }
   
   if($paragraph_type == 'mailing_address') {
