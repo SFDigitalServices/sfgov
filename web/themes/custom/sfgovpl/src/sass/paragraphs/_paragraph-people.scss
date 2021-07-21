@@ -1,4 +1,5 @@
-.paragraph--type--people {
+.paragraph--type--people,
+.paragraph--type--profile-group {
   .title {
     @include fs-title-3-mobile;
     margin-top: 20px;
@@ -95,5 +96,31 @@
 
   .person-subtitle {
     @include fs-body-short;
+  }
+}
+
+// Profile group specific overrides
+.paragraph--type--profile-group {
+  .inner {
+    padding: 0;
+  }
+  .field--type-entity-reference-revisions {
+    .field__item {
+      min-width: 100%;
+    }
+    @include media($medium-screen) {
+      display: flex;
+      align-items: stretch;
+      width: 33%;
+      margin-bottom: 40px;
+    }
+  }
+  .person-card.person-container {
+    display: inline-block;
+    min-width: 100%;
+  }
+  .field--type-entity-reference-revisions .field__item,
+  .paragraph--view-mode--card-paragraph-with-image-small- {
+  
   }
 }

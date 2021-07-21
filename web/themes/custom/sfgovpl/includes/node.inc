@@ -731,6 +731,7 @@ function profile_page_fields($node) {
       }
     }
     
+    // Address field data
     if($node->hasField('field_address')) {
       $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
       if($addressId) {
@@ -769,46 +770,33 @@ function profile_page_fields($node) {
  * Helper function for building profile page data
  */
 function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
+  $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  
   // Build department data for profile apge
   foreach($ref_nids as $key => $value) {
     $node =  \Drupal\node\Entity\Node::load(intval($value['entity_id']));
+    $node = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage) : $node;
     $ref_data[$key]['profile']['node_title'] = $node->label();
     $ref_data[$key]['profile']['node_url'] = $node->toUrl()->toString();
     // Address
     if ($address = $node->get('field_address')->referencedEntities()) {
       $ref_data[$key]['profile']['address'] = $address[0]->get('field_address')->getValue();
     } else {
-      $ref_data[$key]['profile']['address'] = 'No address found';
+      $ref_data[$key]['profile']['address'] = t('No address found');
     }
     // Email
     if ($email = $node->get('field_email')->referencedEntities()) {
-      foreach($email as $ekey => $eitem) {
-        $temp = $eitem->get('field_title')->getValue();
-        if (isset($temp[0]['value'])) {
-          $ref_data[$key]['profile']['email'][$ekey]['title'] = $temp[0]['value'];
-        }
-        $temp = $eitem->get('field_email')->getValue();
-        if (isset($temp[0]['value'])) {
-          $ref_data[$key]['profile']['email'][$ekey]['email_address'] = $temp[0]['value'];
-        }
+      foreach ($email as $ekey => $eitem) {
+        $ref_data[$key]['profile']['email'][$ekey]['title'] = $eitem->get('field_title')->value;
+        $ref_data[$key]['profile']['email'][$ekey]['email_address'] = $eitem->get('field_email')->value;
       }
     }
-
     // Phone
     if ($phone = $node->get('field_phone_numbers')->referencedEntities()) {
       foreach($phone as $pkey => $pitem) {
-        $temp = $pitem->get('field_tel')->getValue();
-        if (isset($temp[0]['value'])) {
-          $ref_data[$key]['profile']['phone'][$pkey]['tel'] = $temp[0]['value'];
-        }
-        $temp = $pitem->get('field_text')->getValue();
-        if (isset($temp[0]['value'])) {
-          $ref_data[$key]['profile']['phone'][$pkey]['text'] = $temp[0]['value'];
-        }
-        $temp = $pitem->get('field_owner')->getValue();
-        if (isset($temp[0]['value'])) {
-          $ref_data[$key]['profile']['phone'][$pkey]['owner'] = $temp[0]['value'];
-        } 
+        $ref_data[$key]['profile']['phone'][$pkey]['tel'] = $pitem->get('field_tel')->value;
+        $ref_data[$key]['profile']['phone'][$pkey]['text'] = $pitem->get('field_text')->value;
+        $ref_data[$key]['profile']['phone'][$pkey]['owner'] = $pitem->get('field_owner')->value;
       }
     }
 
@@ -829,29 +817,17 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
             $profile = Paragraph::load($ritem['target_id']);
             $pnid = $profile->get('field_profile')->getValue();
             if ($pnid[0]['target_id'] == $nid) {
-              $temp = $profile->get('field_commision_position')->getValue();
-              if (isset($temp[0]['value'])) {
-                $ref_data[$key]['profile']['job']['position'] = $temp[0]['value'];
+              $ref_data[$key]['profile']['job']['position'] = $profile->get('field_commision_position')->value;
+              $ref_data[$key]['profile']['job']['profile'] = $profile->get('field_profile')->value;
+              $ref_data[$key]['profile']['job']['position_type'] = $profile->get('field_position_type')->value;
+              if ($temp = $profile->get('field_starting_year')->value) {
+                $sdate = new DateTime($temp);
               }
-              $temp = $profile->get('field_profile')->getValue();
-              if (isset($temp[0]['value'])) {
-                $ref_data[$key]['profile']['job']['profile'] = $temp[0]['value'];
+              $ref_data[$key]['profile']['job']['start_year'] = $sdate ? $sdate->format('Y') : '';
+              if ($temp = $profile->get('field_ending_year')->value) {
+                $edate = new DateTime($temp);
               }
-              $temp = $profile->get('field_position_type')->getValue();
-              if (isset($temp[0]['value'])) {
-                $ref_data[$key]['profile']['job']['position_type'] = $temp[0]['value'];
-              }
-              $temp = $profile->get('field_starting_year')->getValue();
-              if (isset($temp[0]['value'])) {
-                $sdate = new DateTime($temp[0]['value']);
-                $ref_data[$key]['profile']['job']['start_year'] = $sdate->format('Y');
-              }
-              $temp = $profile->get('field_ending_year')->getValue();
-              if (isset($temp[0]['value'])) {
-                $edate = new DateTime($temp[0]['value']);
-                $ref_data[$key]['profile']['job']['end_year'] = $edate->format('Y');
-                //$ref_data[$key]['profile']['job']['end_year'] = $temp[0]['value'];
-              }
+              $ref_data[$key]['profile']['job']['start_year'] = $edate ? $edate->format('Y') : '';
             } 
           }
         }
