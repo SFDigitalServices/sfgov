@@ -25,14 +25,17 @@
 #}
 {% set parent = parent_entity %}
 
-{# Use Department for title if available, otherwise, Organization, then lastly, Location Name. #}
+{# Use Department for title if available, otherwise, Organization, Location Name, or Addressee. #}
 {% set department = parent.field_department.entity.label %}
 {% set first_title = department ? department : organization %}
-{% set title = first_title ? first_title : location_name %}
+{% set second_title = first_title ? first_title : location_name %}
+{% set title = second_title ? second_title : addressee %}
 {# Use Organization as subtitle, if it's not the same as Department name. #}
 {% set subtitle = (department and department != organization) ? organization : '' %}
-{# If Location Name is acting as title, do not display Location Name. #}
-{% set location_name = first_title ? location_name : '' %}
+{# If Location Name is acting as title, do not display. #}
+{% set location_name = (title == location_name) ? '' : location_name %}
+{# If Addressee is acting as title, do not display. #}
+{% set addressee = (title == addressee) ? '' : addressee %}
 
 {% include '@theme/address.twig' with {
   title_tag: 'h4',
