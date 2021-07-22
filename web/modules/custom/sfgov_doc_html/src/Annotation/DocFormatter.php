@@ -32,4 +32,11 @@ class DocFormatter extends Plugin {
    */
   public $description;
 
+  /**
+   * The weight of the plugin.
+   *
+   * @var int
+   */
+  public $weight;
+
 }

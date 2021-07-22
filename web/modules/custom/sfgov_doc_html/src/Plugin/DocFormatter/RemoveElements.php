@@ -12,6 +12,7 @@ use Drupal\sfgov_doc_html\Plugin\DocFormatterBase;
  * @DocFormatter(
  *  id = "remove_elements",
  *  label = "Remove Elements",
+ *  weight = 30,
  *  description = "Removes unwanted elements such as title and style tags."
  * )
  */

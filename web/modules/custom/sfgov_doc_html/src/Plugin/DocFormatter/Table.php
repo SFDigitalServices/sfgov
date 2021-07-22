@@ -11,6 +11,7 @@ use Drupal\sfgov_doc_html\Plugin\DocFormatterBase;
  * @DocFormatter(
  *  id = "table",
  *  label = "Table",
+ *  weight = 10,
  *  description = "Formats table."
  * )
  */

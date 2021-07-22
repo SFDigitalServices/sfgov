@@ -11,6 +11,7 @@ use Drupal\sfgov_doc_html\Plugin\DocFormatterBase;
  * @DocFormatter(
  *  id = "style",
  *  label = "Style",
+ *  weight = 20,
  *  description = "Strips inline styles."
  * )
  */

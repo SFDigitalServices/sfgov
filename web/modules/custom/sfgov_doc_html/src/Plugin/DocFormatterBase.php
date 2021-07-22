@@ -30,4 +30,11 @@ abstract class DocFormatterBase extends PluginBase implements DocFormatterInterf
     return $this->pluginDefinition['description'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->pluginDefinition['weight'];
+  }
+
 }

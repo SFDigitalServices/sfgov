@@ -11,6 +11,7 @@ use Drupal\sfgov_doc_html\Plugin\DocFormatterBase;
  * @DocFormatter(
  *  id = "empty_paragraphs",
  *  label = "Empty Paragraphs",
+ *  weight = 100,
  *  description = "Removes successive empty paragraphs."
  * )
  */

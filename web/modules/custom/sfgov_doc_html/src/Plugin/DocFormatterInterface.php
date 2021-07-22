@@ -32,6 +32,14 @@ interface DocFormatterInterface {
   public function getDescription(): string;
 
   /**
+   * Returns the weight of the plugin.
+   *
+   * @return int
+   *   The plugin weight.
+   */
+  public function getWeight();
+
+  /**
    * Formats DOM nodes.
    *
    * @param \DOMDocument $document

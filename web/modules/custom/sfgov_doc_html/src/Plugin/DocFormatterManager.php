@@ -35,4 +35,13 @@ class DocFormatterManager extends DefaultPluginManager implements DocFormatterMa
     $this->setCacheBackend($cache_backend, 'sfgov_doc_html_doc_formatter_plugins');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions() {
+    $definitions =  parent::getDefinitions();
+    uasort($definitions, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    return $definitions;
+  }
+
 }
