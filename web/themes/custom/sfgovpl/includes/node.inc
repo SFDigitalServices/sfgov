@@ -793,31 +793,45 @@ function profile_page_fields($node) {
     // Address field data
     if($node->hasField('field_address')) {
       $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
+      // If no profile address check city dept field
+      if(!$addressId) {
+        if($node->hasField('field_city_department')) {
+          $deptId = $node->get('field_city_department')->getValue() ? $node->get('field_city_department')->getValue()[0]['target_id'] : null;
+          if($deptId) {
+            // Get department address id
+            $dept_node =  \Drupal\node\Entity\Node::load(intval($deptId));
+            $addressId = $dept_node->get('field_address')->getValue() ? $dept_node->get('field_address')->getValue()[0]['target_id'] : null;
+            if($addressId) {
+              $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
+            }
+          }
+        }
+      }
       if($addressId) {
         $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
-        if($addressEntity) {
-          $addressValues = $addressEntity->get('field_address')->getValue()[0];
-          $theFields['address']['line1'] = $addressValues['address_line1'];
-          $theFields['address']['line2'] = $addressValues['address_line2'];
-          $theFields['address']['country_code'] = $addressValues['country_code'];
-          $theFields['address']['city'] = $addressValues['locality'];
-          $theFields['address']['state'] = $addressValues['administrative_area'];
-          $theFields['address']['zip'] = $addressValues['postal_code'];
-          $theFields['address']['organization'] = $addressValues['organization'];
-          $hours = $addressEntity->get('field_operating_hours')->getValue();
-          usort($hours, function($item1, $item2) {
-            return $item1['day'] <=> $item2['day'];
-          });
-          foreach($hours as $hour) {
-            $theFields['address']['hours'][] = array(
-              'day' => jddayofweek($hour['day'], 2),
-              'start' => date("g:i a", strtotime($hour['starthours'])),
-              'end' => date("g:i a", strtotime($hour['endhours'])),
-              'comment' => $hour['comment'],
-            );
-          }
-          $theFields['map'] = _sfgov_utilities_build_map($addressValues);
+      }
+      if($addressEntity) {
+        $addressValues = $addressEntity->get('field_address')->getValue()[0];
+        $theFields['address']['line1'] = $addressValues['address_line1'];
+        $theFields['address']['line2'] = $addressValues['address_line2'];
+        $theFields['address']['country_code'] = $addressValues['country_code'];
+        $theFields['address']['city'] = $addressValues['locality'];
+        $theFields['address']['state'] = $addressValues['administrative_area'];
+        $theFields['address']['zip'] = $addressValues['postal_code'];
+        $theFields['address']['organization'] = $addressValues['organization'];
+        $hours = $addressEntity->get('field_operating_hours')->getValue();
+        usort($hours, function($item1, $item2) {
+          return $item1['day'] <=> $item2['day'];
+        });
+        foreach($hours as $hour) {
+          $theFields['address']['hours'][] = array(
+            'day' => jddayofweek($hour['day'], 2),
+            'start' => date("g:i a", strtotime($hour['starthours'])),
+            'end' => date("g:i a", strtotime($hour['endhours'])),
+            'comment' => $hour['comment'],
+          );
         }
+        $theFields['map'] = _sfgov_utilities_build_map($addressValues);
       }
     }
     
@@ -840,9 +854,8 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
     // Address
     if ($address = $node->get('field_address')->referencedEntities()) {
       $ref_data[$key]['profile']['address'] = $address[0]->get('field_address')->getValue();
-    } else {
-      $ref_data[$key]['profile']['address'] = t('No address found');
     }
+    
     // Email
     if ($email = $node->get('field_email')->referencedEntities()) {
       foreach ($email as $ekey => $eitem) {
