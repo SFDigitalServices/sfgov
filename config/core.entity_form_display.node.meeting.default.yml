@@ -21,6 +21,7 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
     - workflows.workflow.editorial
@@ -34,7 +35,6 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
-    - sfgov_admin
     - text
 third_party_settings:
   field_group:
@@ -59,7 +59,7 @@ third_party_settings:
         - field_regulations_title
         - field_regulations_accordions
       parent_name: ''
-      weight: 8
+      weight: 7
       format_type: fieldset
       region: content
       format_settings:
@@ -159,7 +159,7 @@ content:
     third_party_settings: {  }
     region: content
   field_dept:
-    weight: 10
+    weight: 9
     settings:
       match_operator: CONTAINS
       size: 60
@@ -206,7 +206,7 @@ content:
     region: content
   field_meeting_artifacts:
     type: paragraphs
-    weight: 9
+    weight: 8
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -360,6 +360,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   field_title: true
@@ -367,4 +372,3 @@ hidden:
   promote: true
   sticky: true
   uid: true
-  url_redirects: true
