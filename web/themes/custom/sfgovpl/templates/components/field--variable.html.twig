@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Use this component to override Drupal field templates.
+ * Same as field.html without classes and with the ability to change wrapper tags.
+ *
+ * @see field.html.twig
+ */
+#}
+
+{% set item_tag = item_tag ? item_tag : 'div' %}
+
+{% if label_hidden %}
+  {% if multiple %}
+
+    {# Multiple, no label. #}
+    <div{{ attributes.addClass(wrapper_classes) }}>
+      {% for item in items %}
+        <div{{ item.attributes.addClass(item_classes) }}>{{ item.content }}</div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+
+    {# Single, no label. #}
+    {% for item in items %}
+      <{{ item_tag }} {{ attributes.addClass(item_classes) }}>{{ item.content }}</{{ item_tag }}>
+    {% endfor %}
+
+  {% endif %}
+{% else %}
+  {# Field has Label. #}
+<div{{ attributes.addClass(wrapper_classes) }}>
+  {# Label. #}
+  <h4{{ title_attributes.addClass(title_classes) }}>{{ label }}</h4>
+  {# Content. #}
+  {% if multiple %}
+  <div>
+{% endif %}
+  {% for item in items %}
+  <{{ item_tag }} {{ attributes.addClass(item_classes) }}>{{ item.content }}</{{ item_tag }}>
+{% endfor %}
+  {% if multiple %}
+    </div>
+  {% endif %}
+  </div>
+{% endif %}
