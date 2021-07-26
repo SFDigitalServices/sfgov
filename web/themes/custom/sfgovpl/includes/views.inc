@@ -6,7 +6,7 @@ use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_preprocess_views_view()
- *
+ * 
  * Adds a twig template variable for past events
  */
 function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
@@ -40,7 +40,7 @@ function sfgovpl_preprocess_views_view__events__page_1(&$variables) {
 
 /**
  * Implements hook_preprocess_views_view()
- *
+ * 
  * Adds a twig template variable for past events
  */
 function sfgovpl_preprocess_views_view__events__page_2(&$variables) {
