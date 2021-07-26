@@ -25,7 +25,9 @@ function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
   $nid = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: null;
   if ($nid) {
     $node = Node::load($nid);
-    $variables['field_dept'] = $node->getTitle();
+    if ($node) {
+      $variables['field_dept'] = $node->getTitle();
+    }
   }
 }
 
