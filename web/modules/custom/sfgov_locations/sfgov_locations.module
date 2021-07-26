@@ -9,6 +9,7 @@ use Drupal\sfgov_locations\Plugin\Field\FieldType\AddressItem;
 use Drupal\sfgov_locations\Plugin\Field\FieldFormatter\AddressPlainFormatter;
 use Drupal\sfgov_locations\Plugin\Validation\Constraint\AddressFormatConstraint;
 use Drupal\sfgov_locations\AddressField;
+use Drupal\Core\Messenger\MessengerInterface;
 
 /**
  * Implements hook_field_info_alter().
@@ -211,7 +212,7 @@ function _sfgov_locations_department_address(&$form, FormStateInterface $form_st
   $department = \Drupal::entityTypeManager()->getStorage('node')->load($department_id);
 
   if (!$department->field_address->entity) {
-    \Drupal\Core\Messenger\MessengerInterface::addMessage('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
+    MessengerInterface::addMessage('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
   }
 
   return $form['field_at_this_location'];
