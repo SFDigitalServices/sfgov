@@ -134,7 +134,7 @@ class SFgovDepartment {
     $ids = $query->execute();
 
     if (!empty($ids)) {
-      $group_storage = \Drupal::entityManager()->getStorage('group');
+      $group_storage = \Drupal::entityTypeManager()->getStorage('group');
       $groups = $group_storage->loadMultiple($ids);
       $group_storage->delete($groups);
     }

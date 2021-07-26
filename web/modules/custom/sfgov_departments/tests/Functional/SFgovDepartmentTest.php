@@ -10,7 +10,7 @@
 namespace Drupal\Tests\sfgov_departments\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\sfgov_departments\SFgovDepartment;
@@ -154,9 +154,9 @@ class SFgovDepartmentTest extends BrowserTestBase {
 
     // Test if department group gets deleted after deleting department node.
     // Need to clear storage caches first.
-    \Drupal::entityManager()->getStorage('node')->resetCache([$department_node->id(), $transaction_node->id()]);
-    \Drupal::entityManager()->getStorage('group')->resetCache([$group->id()]);
-    \Drupal::entityManager()->getStorage('group_content')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$department_node->id(), $transaction_node->id()]);
+    \Drupal::entityTypeManager()->getStorage('group')->resetCache([$group->id()]);
+    \Drupal::entityTypeManager()->getStorage('group_content')->resetCache();
     $department_node->delete();
     $group_reloaded = $this->entityTypeManager->getStorage('group')->load($group->id());
     $this->assertTrue(empty($group_reloaded), 'Related department group no longer exists.');
