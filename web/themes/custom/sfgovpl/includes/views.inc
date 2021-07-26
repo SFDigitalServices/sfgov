@@ -6,7 +6,7 @@ use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_preprocess_views_view()
- * 
+ *
  * Adds a twig template variable for past events
  */
 function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
@@ -22,16 +22,16 @@ function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
  */
 function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
   // Retrieve dept id.
-  $deptId = !empty($variables['view']->args[1]) ? $variables['view']->args[1]: null;
-  if ($deptId) {
-    $node = Node::load($deptId);
+  $nid = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: null;
+  if ($nid) {
+    $node = Node::load($nid);
     $variables['field_dept'] = $node->getTitle();
   }
 }
 
 /**
  * Implements hook_preprocess_views_view()
- * 
+ *
  * Adds a twig template variable for upcoming events
  */
 function sfgovpl_preprocess_views_view__events__page_1(&$variables) {
@@ -40,7 +40,7 @@ function sfgovpl_preprocess_views_view__events__page_1(&$variables) {
 
 /**
  * Implements hook_preprocess_views_view()
- * 
+ *
  * Adds a twig template variable for past events
  */
 function sfgovpl_preprocess_views_view__events__page_2(&$variables) {
