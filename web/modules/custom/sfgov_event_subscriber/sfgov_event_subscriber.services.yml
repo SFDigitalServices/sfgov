@@ -1,4 +1,13 @@
 services:
+  sfgov_event_subscriber.clone_editor_access_check:
+    class: Drupal\sfgov_event_subscriber\Access\CloneEditorAccessCheck
+    arguments: ['@current_user', '@current_route_match']
+    tags:
+      - { name: access_check, applies_to: _clone_editor_access_check }
+  sfgov_event_subscriber.routes_alter:
+    class: \Drupal\sfgov_event_subscriber\Routing\CloneRouteAlterSubscriber
+    tags:
+      - { name: event_subscriber }
   sfgov_event_subscriber.redirect_event:
     class: \Drupal\sfgov_event_subscriber\EventSubscriber\RedirectEventSubscriber
     arguments: ['@current_user', '@language_manager', '@path_alias.repository', '@redirect.repository']
