@@ -15,10 +15,9 @@ class RouteSubscriberAlter extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
 
-    // @todo - Do we need to include delete page as well?
+    // Allow the moderation module to modify access for the node edit form.
     if ($route = $collection->get('entity.node.edit_form')) {
-      // Allow the moderation module to modify access for the node edit form.
-      $route->setRequirement('_custom_access', 'Drupal\sfgov_moderation\Access\ModerationAccessCheck::access');
+      $route->setRequirement('_custom_access', 'sfgov_moderation.access_checker::access');
     }
   }
 
