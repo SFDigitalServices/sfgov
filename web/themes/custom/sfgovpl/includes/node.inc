@@ -810,7 +810,7 @@ function profile_page_fields($node) {
       if($addressId) {
         $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
       }
-      if($addressEntity) {
+      if(isset($addressEntity)) {
         $addressValues = $addressEntity->get('field_address')->getValue()[0];
         $theFields['address']['line1'] = $addressValues['address_line1'];
         $theFields['address']['line2'] = $addressValues['address_line2'];
@@ -895,11 +895,15 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
               if ($temp = $profile->get('field_starting_year')->value) {
                 $sdate = new DateTime($temp);
               }
-              $ref_data[$key]['profile']['job']['start_year'] = $sdate ? $sdate->format('Y') : '';
+              if (isset($sdate)) {
+                $ref_data[$key]['profile']['job']['start_year'] = $sdate ? $sdate->format('Y') : '';
+              }
               if ($temp = $profile->get('field_ending_year')->value) {
                 $edate = new DateTime($temp);
               }
-              $ref_data[$key]['profile']['job']['start_year'] = $edate ? $edate->format('Y') : '';
+              if (isset($edate)) {
+                $ref_data[$key]['profile']['job']['end_year'] = $edate ? $edate->format('Y') : '';
+              }
             } 
           }
         }
