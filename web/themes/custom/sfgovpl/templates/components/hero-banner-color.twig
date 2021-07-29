@@ -8,7 +8,9 @@
     <h1>{{ banner.title }}</h1>
     {% if banner.text %}
       <p class="lead-paragraph">{{ banner.text|striptags|raw }}</p>
-      <p>{{ department.title }}</p>
+      {% if banner_subtitle.title %}
+        <div class="hero-banner-subtitle">{{ banner_subtitle.title }}</div>
+      {% endif %}
     {% endif %}
   </div>
 </header>

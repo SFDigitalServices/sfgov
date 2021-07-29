@@ -18,15 +18,31 @@ function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
 /**
  * Implements hook_preprocess_views_view()
  *
- * Adds a twig template variable for department news
+ * Adds a twig template variable for department news.
  */
 function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
   // Retrieve dept id.
-  $nid = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: null;
+  $nid = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: NULL;
   if ($nid) {
     $node = Node::load($nid);
     if ($node) {
       $variables['field_dept'] = $node->getTitle();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view()
+ *
+ * Adds a twig template variable for topic news.
+ */
+function sfgovpl_preprocess_views_view__news__page_2(&$variables) {
+  // Retrieve dept id.
+  $nid = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: NULL;
+  if ($nid) {
+    $node = Node::load($nid);
+    if ($node) {
+      $variables['field_topic'] = $node->getTitle();
     }
   }
 }
