@@ -140,7 +140,6 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       return $validTransitions;
     }
 
-    // Act on moderated content that belongs to a department.
     // Restrict transitions based if $user is the reviewer.
     if ($this->userIsReviewer($entity, $user)) {
       return array_filter($this->getAllTransitionsFromState($entity), function (TransitionInterface $transition) {
@@ -155,7 +154,7 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
       });
     }
 
-    // If node has no departments, allow access.
+    // If user is not the author or reviewer, allow access.
     return $validTransitions;
   }
 
