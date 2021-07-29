@@ -56,6 +56,7 @@ function sfgov_utilities_update_8703() {
       }
   }
 }
+
 /**
  * Add path aliases for department news pages.
  */
@@ -70,7 +71,6 @@ function sfgov_utilities_update_8704() {
     ->condition('n.langcode', 'en')
     ->execute()
     ->fetchAllAssoc('nid');
-
 
   if ($nids) {
     foreach ($nids as $nid) {
@@ -88,4 +88,37 @@ function sfgov_utilities_update_8704() {
       $path_alias->save();
     }
   }
+
+/**
+ * Add path aliases for topic news pages.
+ */
+function sfgov_utilities_update_8705() {
+  $connection = \Drupal\Core\Database\Database::getConnection();
+
+  // Retrieve topic nodes.
+  $nids = $connection->select('node_field_data', 'n')
+    ->fields('n', ['nid'])
+    ->condition('n.type', 'topic')
+    ->condition('n.status', 1)
+    ->condition('n.langcode', 'en')
+    ->execute()
+    ->fetchAllAssoc('nid');
+
+  if ($nids) {
+    foreach ($nids as $nid) {
+      $alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid->nid);
+      // Retrieve only topic name part from alias.
+      $position = strrpos($alias, '/');
+      $topic_alias = $position === FALSE ? $alias : substr($alias, $position + 1);
+
+      // Add new alias to the database for the news page redirect.
+      $path_alias = \Drupal\path_alias\Entity\PathAlias::create([
+        'path' => '/news/topic/' . $nid->nid,
+        'alias' => '/news/topic/' . $topic_alias,
+        'langcode' => 'en',
+      ]);
+      $path_alias->save();
+    }
+  }
+
 }
