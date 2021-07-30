@@ -1,0 +1,86 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a Table of contents as a tree.
+ *
+ * Returns HTML for a nested list representation of a Table of contents..
+ *
+ * Available variables:
+ * - tree: A nested list of header items. Each header item contains:
+ *   - list_tag: HTML tag for the list.
+ *   - list_attributes: HTML attributes for the list.
+ *   - attributes: HTML attributes for the table of contents or list item.
+ *   - below: The table of contents child items.
+ *   - title: The table of contents or header title.
+ *   - url: The header fragrment (ie hash) URL, instance of \Drupal\Core\Url.
+ *
+ * @ingroup themeable
+ */
+#}
+{#
+We call a macro which calls itself to render the full tree.
+@see http://twig.sensiolabs.org/doc/tags/macro.html
+#}
+{% import _self as toc_api_tree %}
+{% set classes = ['toc', 'toc-tree', 'sfgov-toc'] %}
+
+{{ attach_library('sfgovpl/sfgov-toc') }}
+<div{{ attributes.addClass(classes) }}>
+
+  <div class="sfgov-toc-sticky">
+    <div class="sfgov-toc-tree">
+      {{ toc_api_tree.tree_links(tree) }}
+
+      {% if has_more_sections %}
+        <div class="sfgov-toc-footer">
+          <hr />
+          <button class="sfgov-toc-expand-button" aria-label="{{ "See all sections"|t }}">
+            {{ "See all sections"|t }}
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.75 1.5a1.245 1.245 0 01.885.365l7.5 7.5a1.26 1.26 0 010 1.77l-7.5 7.5a1.252 1.252 0 01-1.77-1.77l6.635-6.62L5.865 3.63a1.26 1.26 0 010-1.77 1.245 1.245 0 01.885-.36z" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="sfgov-toc-drawer">
+    <div class="sfgov-toc-header">
+      {% if tree.title and not options.block %}
+        <h2 class="sfgov-toc-header-title">{{ tree.title }}</h2>
+      {% endif %}
+      <button class="sfgov-toc-close-button">
+        <span class="visually-hidden">{{ "Collapse sections" }}</span>
+      </button>
+    </div>
+    <div class="sfgov-toc-tree">
+      {{ toc_api_tree.tree_links(tree) }}
+    </div>
+  </div>
+</div>
+
+{% macro tree_links(item) %}
+  {% import _self as toc_api_tree %}
+
+  {% if item.below_type %}
+    <ol class="{{ item.below_type }}">
+  {% else %}
+    <ul>
+  {% endif  %}
+
+  {% for child_item in item.below %}
+    <li{{ child_item.attributes.setAttribute('value', child_item.value) }}>
+      {{ link(child_item.html, child_item.url) }}
+      {% if child_item.below %}
+        {{ toc_api_tree.tree_links(child_item) }}
+      {% endif %}
+    </li>
+  {% endfor %}
+
+  {% if item.below_type %}
+    </ol>
+  {% else %}
+    </ul>
+  {% endif  %}
+{% endmacro %}

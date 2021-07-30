@@ -1,0 +1,90 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_doc_html_theme($existing, $type, $theme, $path) {
+  return [
+    'docsearch' => [
+      'render element' => 'element',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_doc_html_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $fid = \Drupal::request()->query->get('converted_file');
+  $data = \Drupal::database()->select('sfgov_doc_html_files', 't')
+    ->fields('t')
+    ->condition('t.fid', $fid)
+    ->execute()
+    ->fetchObject();
+  if (!empty($data->html)) {
+    if (!empty($data->title)) {
+      $form['title']['widget'][0]['value']['#default_value'] = $data->title;
+    }
+    $form['body']['widget'][0]['#default_value'] = $data->html;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function sfgov_doc_html_file_delete(EntityInterface $entity) {
+  // Deleting converted file record when source file is deleted.
+  \Drupal::database()->delete('sfgov_doc_html_files')
+    ->condition('fid', $entity->id())
+    ->execute();
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function sfgov_doc_html_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $supported_content_types = sfgov_doc_html_supported_content_types();
+
+  if ($view_mode !== "full" || !($entity instanceof NodeInterface) || !isset($supported_content_types[$entity->bundle()])) {
+    return;
+  }
+
+  /** @var \Drupal\sfgov_doc_html\TableOfContentsBuilderInterface $toc_builder */
+  $toc_builder = \Drupal::service('sfgov_doc_html.toc_builder');
+  $toc_builder->attach($entity, $build, $supported_content_types[$entity->bundle()]['field']);
+
+  // Attach the docsearch.
+  $build['docsearch'] = [
+    '#type' => 'docsearch',
+    '#search_target' => '.sfgov-section--content',
+    '#cache' => [
+      'keys' => ['docsearch'],
+    ],
+  ];
+}
+
+/**
+ * Supported content types with body field mapping.
+ */
+function sfgov_doc_html_supported_content_types() {
+  return [
+    'report' => [
+      'label' => t('Report'),
+      'field' => 'body',
+    ]
+  ];
+}
+
+/**
+ * Prepares variables for for docsearch templates.
+ *
+ * Default template: docsearch.html.twig.
+ */
+function template_preprocess_docsearch(&$variables) {
+  $variables['search_target'] = $variables['element']['#search_target'];
+}
