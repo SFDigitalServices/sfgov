@@ -1,0 +1,35 @@
+uuid: c3de1724-5d8f-428a-ab83-134d02bdabc4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_departments
+    - node.type.department
+    - node.type.public_body
+  module:
+    - tmgmt_content
+    - user
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: user.user.field_departments
+field_name: field_departments
+entity_type: user
+bundle: user
+label: 'Department or Public Body'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference

@@ -1,0 +1,223 @@
+<?php
+
+/**
+ * @file
+ * Enhancements to Workflow.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\sfgov_moderation\ModerationUtilServiceInterface;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function sfgov_moderation_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'node') {
+
+    $fields['reviewer'] = BaseFieldDefinition::create('entity_reference')
+      ->setName('reviewer')
+      ->setLabel(t('Reviewer'))
+      ->setDescription(t('Assign a user as a reviewer.'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setDefaultValue(NULL)
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 100,
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'region' => 'hidden',
+      ])
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * BASE_FORM_ID: node_form.
+ */
+function sfgov_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  $form['#attached']['library'][] = 'sfgov_moderation/suggest_reviewer';
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+
+  /** @var string $bundle */
+  $bundle = $node->bundle();
+
+  /** @var \Drupal\content_moderation\ModerationInformation $moderation_info */
+  $moderation_info = \Drupal::service('content_moderation.moderation_information');
+
+  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
+
+  // If bundle is moderated.
+  if ($moderation_info->shouldModerateEntitiesOfBundle($entity_type, $bundle)) {
+
+    // Custom validation callback.
+    $form['#validate'][] = '_sfgov_moderation_form_node_form_validate';
+
+    // Move "reviewer" field to the footer region, if available.
+    if (isset($form['footer'])) {
+      $form['reviewer']['#group'] = 'footer';
+    }
+
+    $form['reviewer']['widget']['#options'] = _sfgov_moderation_reviewer_options($form['reviewer']['widget']['#default_value']);
+    $form['reviewer']['widget']['#prefix'] = '<div id="node-reviewer-wrapper">';
+    $form['reviewer']['widget']['#suffix'] = '</div>';
+
+  }
+
+  // If bundle is not moderated, disable "reviewer" field.
+  else {
+    $form['reviewer']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Validation callback for the node form.
+ */
+function _sfgov_moderation_form_node_form_validate(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+
+  /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
+  $moderationUtil = \Drupal::service('sfgov_moderation.util');
+
+  // Reviewer should not be the same as the node author.
+  $reviewer = $form_state->getValue('reviewer');
+  if (!empty($reviewer[0]['target_id']) && $reviewer[0]['target_id'] == $node->getOwnerId()) {
+    $form_state->setErrorByName('reviewer', t('Reviewer should be a different user than the author.'));
+  }
+
+  if (!empty($reviewer[0]['target_id'])) {
+    $validReviewers = $moderationUtil->getValidReviewers();
+    if (!in_array($reviewer[0]['target_id'], $validReviewers)) {
+      $form_state->setErrorByName('reviewer', t('Reviewer is not valid.'));
+    }
+  }
+}
+
+/**
+ * Get users that can serve as reviewers.
+ *
+ * @return array
+ *   The list of reviewers keyed by UID.
+ */
+function _sfgov_moderation_reviewer_options() {
+  $empty = [
+    '_none' => t('- None -'),
+  ];
+
+  /** @var \Drupal\sfgov_moderation\ModerationUtilServiceInterface $moderationUtil */
+  $moderationUtil = \Drupal::service('sfgov_moderation.util');
+
+  $ids = $moderationUtil->getValidReviewers();
+
+  if (empty($ids)) {
+    return $empty;
+  }
+
+  $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+  $users = $ids ? $userStorage->loadMultiple($ids) : [];
+  $options = $empty;
+
+  foreach ($users as $user) {
+    $departments = [];
+    foreach ($user->{ModerationUtilServiceInterface::DEPARTMENTS_ACCOUNT_FIELD}->referencedEntities() as $department) {
+      $departments[] = $department->label();
+    }
+    $options[$user->id()] = t('%username%departments', [
+      '%username' => $user->label(),
+      '%departments' => !empty($departments) ? sprintf(' (%s)', implode(', ', $departments)) : '',
+    ]);
+  }
+
+  return $options;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function sfgov_moderation_views_data_alter(array &$data) {
+  $data['content_moderation_state_field_revision']['table'] = [
+    'group' => t('SF.gov Moderation'),
+    'base' => [
+      'field' => 'content_entity_id',
+      'title' => t('Sf.gov Moderation'),
+      'help' => t('Content Moderation State Field Table.'),
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['table']['join'] = [
+    'node_field_data' => [
+      'left_field' => 'nid',
+      'field' => 'content_entity_id',
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['content_entity_id'] = [
+    'title' => t('Sf.gov Moderation - Entity ID'),
+    'help' => t('Moderation State.'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'standard',
+    ],
+    'argument' => [
+      'id' => 'string',
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['moderation_state'] = [
+    'title' => t('Sf.gov Moderation - Moderation State'),
+    'help' => t('Moderation State.'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'standard',
+    ],
+    'argument' => [
+      'id' => 'string',
+    ],
+  ];
+
+  $data['content_moderation_state_field_revision']['content_entity_revision_id'] = [
+    'title' => t('Sf.gov Moderation - Entity Revision Id'),
+    'help' => t('Moderation State.'),
+    'field' => [
+      'id' => 'standard',
+    ],
+  ];
+
+  $data['node']['latest_moderation_state'] = [
+    'title' => t('Latest moderation state'),
+    'base' => [
+      'field' => 'id',
+    ],
+    'real field' => 'nid',
+    'field' => [
+      'title' => t('Latest moderation state'),
+      'help' => t('The moderation state of the latest revision.'),
+      'id' => 'latest_moderation_state',
+      'click sortable' => TRUE,
+    ],
+  ];
+}
