@@ -89,7 +89,7 @@ class SettingsForm extends ConfigFormBase {
     $form['api_url'] = [
       '#type' => 'url',
       '#title' => $this->t('Microservice URL'),
-      '#description' => $this->t('e.g. https://vaccination-site-microservice.vercel.app/api/v1/appointments, https://vaccination-site-microservice-git-automate-site-data-sfds.vercel.app/api/v1/appointments'),
+      '#description' => $this->t('e.g. https://sfgov-vaccine-sites.herokuapp.com/api/v1/appointments, https://sfgov-vaccine-sites-pr-xxx.herokuapp.com/api/v1/appointments'),
       '#default_value' => $this->vaxValues->settings('api_url'),
     ];
 
