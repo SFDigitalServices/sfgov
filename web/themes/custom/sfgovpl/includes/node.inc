@@ -835,6 +835,19 @@ function profile_page_fields($node) {
       }
     }
     
+    // Biography
+    if($node->hasField('field_biography')) {
+      $bio = $node->get('field_biography')->getValue()[0];
+      //$bio = $node->get('field_biography')->getValue()[0]->view('teaser');
+      $bio['value'] = substr($bio['value'], 0, 600);
+      $bio['value'] .= ' ...';
+      $dom = new DOMDocument();
+      $dom->loadHTML($bio['value'], LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+      $bio['value'] = $dom->saveHTML();
+      //$theFields['biotrim'] = $node->get('field_biography');
+      $theFields['biotrim'] = $bio['value'];
+    }
+    
   }
   return $theFields;
 }

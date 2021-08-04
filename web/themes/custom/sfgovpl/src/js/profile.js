@@ -1,16 +1,16 @@
 (function($) {
   $('.show-bio').click(function(e){
     e.preventDefault();
-    $('.bio-trimmed').hide();
-    $('.bio-full').show();
-    $('.show-bio').hide();
-    $('.hide-bio').show();
+    $('.bio-trimmed').css("display", "none");
+    $('.bio-full').css("display", "inline-block");  
+    $('.show-bio').css("display", "none");
+    $('.hide-bio').css("display", "inline-block");
   });
   $('.hide-bio').click(function(e){
     e.preventDefault();
-    $('.bio-trimmed').show();
-    $('.bio-full').hide();
-    $('.show-bio').show();
-    $('.hide-bio').hide();
+    $('.bio-trimmed').css("display", "inline-block");
+    $('.bio-full').css("display", "none");
+    $('.show-bio').css("display", "inline-block");
+    $('.hide-bio').css("display", "none");
   });
 })(jQuery);

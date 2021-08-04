@@ -51,7 +51,7 @@
         }
         ul {
           list-style: none;
-          padding: 20px 0 0 6px;
+          padding: 20px 0 0 0;
           margin: 0;
           li {
             margin-bottom: 26px;
@@ -88,7 +88,7 @@
           span {
             display: inline-block;
             min-width: 20px;
-            margin-right: 10px;
+            margin-right: 15px;
           }
         }
       }
@@ -155,8 +155,11 @@
       
       .profile--bio {
         margin-top: 40px;
+        border-bottom: 3px solid $c-border;
+        padding-bottom: 60px;
         .show-bio {
           background: url('/themes/custom/sfgovpl/src/img/chevron-down.svg') no-repeat 0 8px;
+          
         }
         .hide-bio {
           background: url('/themes/custom/sfgovpl/src/img/chevron-up.svg') no-repeat 0 8px;
@@ -166,16 +169,13 @@
         .hide-bio {
           padding-left: 30px;
           margin-top: 20px;
-          button {
-            border: none;
-            background: none;
-            color: #4f66ee;
-            margin: 0;
-            padding: 0;
-          }
-          span:hover {
-            color: #0c1464;
-          }
+          text-decoration: none;
+          color: $c-slate;
+        }
+        .show-bio:hover,
+        .hide-bio:hover {
+          color: #0c1464;
+          cursor: pointer;
         }
         .bio-full {
           display: none;
@@ -193,6 +193,7 @@
       }
       .sfgov-spotlight {
         padding-top: 0;
+        padding-bottom: 8px;
       }
     }
     
@@ -214,6 +215,9 @@
         width: 50%;
         float: left;
         margin-bottom: 20px;
+        .additional-role-agency-title {
+          text-decoration: underline;
+        }
         @include media-max($narrow-screen) {
           clear: both;
           width: 100%;
@@ -233,7 +237,6 @@
       clear: both;
       margin-top: 60px;
       padding-top: 20px;
-      border-top: 3px solid $c-border;
       
       h2 { margin: 0 0 20px 0; }
       

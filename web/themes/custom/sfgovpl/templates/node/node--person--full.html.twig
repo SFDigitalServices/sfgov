@@ -1,6 +1,5 @@
 {% extends 'node.html.twig' %}
 {% block node %}
-{% set bio_trim = content.field_biography|render|striptags %}
 
 {% set roles = [] %}
 {% set profile_type = node.field_profile_type.value %}
@@ -32,7 +31,7 @@
   </div>
 
   <div class="profile--photo">
-    {{ content.field_photo }}
+    {{ content.field_profile_photo }}
   </div>
   
   {% if node.field_primary_email.value|length and node.field_primary_phone_number.value|length %}
@@ -77,7 +76,7 @@
       {% endif %}
       
       {% if profile_type == 'City Employee' %}
-        {% if node.field_city_department.entity.title %}
+        {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) %}
           <div class="role-agency-title">
           <a href="{{ path('entity.node.canonical', {'node': node.field_city_department.entity.nid.value}) }}">
             {{ node.field_city_department.entity.title.value }}
@@ -135,9 +134,10 @@
     {% endfor %}
   {% endif %}
   
+  {% if node.field_biography.value|length %}
   <div class="profile--bio">
     <div class="bio-trimmed">
-      {{ bio_trim|slice(0, 600)|convert_encoding('UTF-8', 'HTML-ENTITIES') ~ '...' }}
+      {{ profile_fields.biotrim }}
     </div>
     <div class="bio-full">
       {{ content.field_biography }}
@@ -145,6 +145,7 @@
     <div class="show-bio">{{ 'Show more'|t }}</div>
     <div class="hide-bio">{{ 'Show less'|t }}</div>
   </div>
+  {% endif %}
 
   <div class="profile--optional-content">
     {{ content.field_spotlight }}
@@ -153,7 +154,8 @@
 </div>
 </div>
 
-{% if profile_type == 'City Employee' %}  
+{% if (profile_type == 'City Employee') %}
+{% if (profile_fields.dept_ref_data) or (profile_fields.pubbody_ref_data) %}
 <div class="profile--container-wide additional-roles">
   <div class="profile--container-narrow">
     <div class="profile--additional-roles">
@@ -181,7 +183,7 @@
         </div>
       </div>
     {% endfor %}
-      
+        
     {% for key, item in profile_fields.pubbody_ref_data %}
       <div class="profile--additional-role">
         <div class="additional-role-title">
@@ -208,7 +210,7 @@
   </div>
 </div>
 {% endif %}
-
+{% endif %}
 
 {% if (profile_type == 'City Employee') and (city_employee_contact == 'true') %}
   <div class="profile--container-narrow">
