@@ -1,10 +1,19 @@
 {% embed 'node--full.html.twig' %}
 
   {% block header %}
+    {% set partOfLabel = '' %}
+
+    {% if part_of and part_of_url %}
+      {% set partOfLabel %}
+        {{ 'Part of' | t }} <a href="{{ part_of_url }}">{{ part_of }}</a>
+      {% endset %}
+    {% endif %}
+
     {{ title_prefix }}
+
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
-        'label': '',
+        'label': partOfLabel,
         'title': node.label,
         'text': node.field_description.value
       }
@@ -91,5 +100,3 @@
   {% endblock content %}
 
 {% endembed %}
-
-{{ attach_library('sfgovpl/sfgov-transaction') }}

@@ -12,6 +12,7 @@ use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_preprocess_node().
@@ -144,6 +145,34 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
     $translatedSection = \Drupal::service('entity.repository')->getTranslationFromContext($section);
     if ($translatedTitle = $translatedSection->get('field_title')->value) {
       $variables['sections'][] = ['title' => $translatedTitle];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ * Creates the "Part of" label when coming from a step by step page
+ */
+function sfgovpl_preprocess_node__transaction(&$variables) {
+  $request = \Drupal::request();
+  // look at the referer to see how we got to this transaction
+  $referer = $request->headers->get('referer'); 
+  $base_url = Request::createFromGlobals()->getSchemeAndHttpHost();
+  // Getting the relative path.
+  $path = substr($referer, strlen($base_url));
+  $params = Url::fromUri("internal:" . $path)->getRouteParameters();
+  $entity_type = key($params);
+
+  if (empty($entity_type)) return;
+
+  $node = \Drupal::entityTypeManager()->getStorage($entity_type)->load($params[$entity_type]);
+  if (!empty($node)) {
+    $bundle = $node->bundle();
+    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $nodeTitle = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage)->getTitle() : $node->getTitle();
+    if ($bundle === 'step_by_step') {
+      $variables['part_of'] = ucfirst(str_replace('_', ' ', $bundle)) . ': ' . $nodeTitle;
+      $variables['part_of_url'] = $node->toUrl()->toString();
     }
   }
 }

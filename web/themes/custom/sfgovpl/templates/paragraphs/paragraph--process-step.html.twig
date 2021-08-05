@@ -73,12 +73,7 @@
           {% if content.field_transaction | render %}
             {% set txTitle = content.field_transaction.0['#title'] %}
             <div class="step-transaction-link">
-              {#
-                sbsId and txId are coming from paragraph_preprocess hook
-                these need to get passed to the linked transaction as url params, so js can populate the
-                "Part of Step by step: Step by step page title"
-              #}
-              <a href="{{ txUrl }}?from=sbs&sbsid={{ sbsId }}&txid={{ txId }}">{{ txTitle }}</a>
+              <a href="{{ txUrl }}">{{ txTitle }}</a>
             </div>
           {% endif %}
         </div>
