@@ -12,6 +12,7 @@ use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -166,7 +167,7 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
   if (empty($entity_type)) return;
 
   $node = \Drupal::entityTypeManager()->getStorage($entity_type)->load($params[$entity_type]);
-  if (!empty($node)) {
+  if (!empty($node) && $node instanceof TranslatableInterface) {
     $bundle = $node->bundle();
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $nodeTitle = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage)->getTitle() : $node->getTitle();
