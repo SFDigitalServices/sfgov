@@ -837,15 +837,20 @@ function profile_page_fields($node) {
     
     // Biography
     if($node->hasField('field_biography')) {
-      $bio = $node->get('field_biography')->getValue()[0];
-      //$bio = $node->get('field_biography')->getValue()[0]->view('teaser');
-      $bio['value'] = substr($bio['value'], 0, 600);
-      $bio['value'] .= ' ...';
-      $dom = new DOMDocument();
-      $dom->loadHTML($bio['value'], LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-      $bio['value'] = $dom->saveHTML();
-      //$theFields['biotrim'] = $node->get('field_biography');
-      $theFields['biotrim'] = $bio['value'];
+      // Get trimmed profile bio
+      $source = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
+
+      if ($source->hasField('field_biography') && $source->access('view')) {
+        $value = $source->get('field_biography');
+        $output = $viewBuilder->viewField($value, 'teaser');
+        $output['#cache']['tags'] = $source->getCacheTags();
+      }
+      
+      if (isset($output)) {
+        // Need to grab the proper html variable from $output
+        $theFields['biotrim'] = $output;
+      }
     }
     
   }
