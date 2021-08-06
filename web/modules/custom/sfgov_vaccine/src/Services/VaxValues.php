@@ -59,5 +59,16 @@ class VaxValues {
   public function setAlert($value) {
     $this->state->set('vaccine_alert', $value);
   }
+
+  public function getHeaderDescription() {
+    $header_db = $this->state->get('header_description');
+    $header_db_val = $header_db['value'];
+    $header_config_val = $this->settings('template_strings.page.description');
+    return isset($header_db) ? $header_db_val : $header_config_val;
+  }
+
+  public function setHeaderDescription($value) {
+    $this->state->set('header_description', $value);
+  }
 }
 
