@@ -711,7 +711,7 @@ function profile_page_fields($node) {
     $dept_nids = array();
     $pbody_nids = array();
     $pids = array();
-    
+
     // Find paragraphs referencing profile nid
     $query = \Drupal::database()->select('paragraph__field_profile', 'pfp');
     $query->addField('pfp', 'entity_id');
@@ -724,7 +724,7 @@ function profile_page_fields($node) {
       $query->condition('pfp.field_profiles_target_id', $pid->entity_id, '=');
       $pids[] = $query->execute()->fetchAll();
     }
-    
+
     // Find dept nodes referencing container paragraphs
     $temp_ids = array();
     foreach ($pids as $key => $pid) {
@@ -740,7 +740,7 @@ function profile_page_fields($node) {
     }
     // Build data variable for twig template
     $dept_data = sfgovpl_profile_reference_nodes($dept_nids, 'department', $nid);
-    
+
     // Find public body nodes referencing container paragraphs
     $temp_ids = array();
     foreach ($pids as $key => $pid) {
@@ -756,14 +756,14 @@ function profile_page_fields($node) {
     }
     // Build data variable for twig template
     $pbody_data = sfgovpl_profile_reference_nodes($pbody_nids, 'public body', $nid);
-    
+
     if (isset($dept_nids[0]) && $dept_nids[0] > 1) {
       $theFields['dept_ref_data'] = $dept_data;
     }
     if (isset($pbody_nids[0]) && $pbody_nids[0] > 1) {
       $theFields['pubbody_ref_data'] = $pbody_data;
     }
-    
+
     // Get social media field data
     if($node->hasField('field_social_media')) {
       $aboutSocial = $node->get('field_social_media');
@@ -789,7 +789,7 @@ function profile_page_fields($node) {
         }
       }
     }
-    
+
     // Address field data
     if($node->hasField('field_address')) {
       $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
@@ -834,7 +834,7 @@ function profile_page_fields($node) {
         $theFields['map'] = _sfgov_utilities_build_map($addressValues);
       }
     }
-    
+
     // Biography
     if($node->hasField('field_biography')) {
       // Get trimmed profile bio
@@ -844,15 +844,12 @@ function profile_page_fields($node) {
       if ($source->hasField('field_biography') && $source->access('view')) {
         $value = $source->get('field_biography');
         $output = $viewBuilder->viewField($value, 'teaser');
+        $output = $output[0] ?? [];
         $output['#cache']['tags'] = $source->getCacheTags();
       }
-      
-      if (isset($output)) {
-        // Need to grab the proper html variable from $output
-        $theFields['biotrim'] = $output;
-      }
+      $theFields['biotrim'] = !empty($output) ? $output : [];
     }
-    
+
   }
   return $theFields;
 }
@@ -862,7 +859,7 @@ function profile_page_fields($node) {
  */
 function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
   $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  
+
   // Build department data for profile apge
   foreach($ref_nids as $key => $value) {
     $node =  \Drupal\node\Entity\Node::load(intval($value['entity_id']));
@@ -873,7 +870,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
     if ($address = $node->get('field_address')->referencedEntities()) {
       $ref_data[$key]['profile']['address'] = $address[0]->get('field_address')->getValue();
     }
-    
+
     // Email
     if ($email = $node->get('field_email')->referencedEntities()) {
       foreach ($email as $ekey => $eitem) {
@@ -897,7 +894,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
     if ($reftype == 'department') {
       $profile_field = 'field_people';
     }
-    
+
     if ($people = $node->get($profile_field)->referencedEntities()) {
       foreach($people as $pkey => $pitem) {
         $bundle = $pitem->bundle();
@@ -922,7 +919,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
               if (isset($edate)) {
                 $ref_data[$key]['profile']['job']['end_year'] = $edate ? $edate->format('Y') : '';
               }
-            } 
+            }
           }
         }
       }

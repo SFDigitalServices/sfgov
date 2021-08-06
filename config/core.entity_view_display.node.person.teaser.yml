@@ -23,6 +23,7 @@ dependencies:
     - field.field.node.person.field_title
     - node.type.person
   module:
+    - smart_trim
     - user
 id: node.person.teaser
 targetEntityType: node
@@ -30,20 +31,35 @@ bundle: person
 mode: teaser
 content:
   content_moderation_control:
-    weight: -20
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_biography:
+    type: smart_trim
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      trim_length: 600
+      trim_type: chars
+      trim_suffix: ''
+      wrap_output: false
+      wrap_class: trimmed
+      more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
+      trim_options: {  }
+    third_party_settings: {  }
   links:
-    weight: 0
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_address: true
-  field_biography: true
   field_city_department: true
-  content_moderation_control: true
   field_direct_external_url: true
   field_email: true
   field_featured_items: true
