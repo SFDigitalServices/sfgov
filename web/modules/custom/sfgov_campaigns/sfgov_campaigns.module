@@ -41,10 +41,13 @@ function sfgov_campaigns_validate_resource_description(&$form, FormStateInterfac
               $has_http = (strpos($field_description_value, 'http://') !== FALSE) ? TRUE : FALSE;
               $has_https = (strpos($field_description_value, 'https://') !== FALSE) ? TRUE : FALSE;
               $regex = '/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})/';
-              $has_at = preg_match($regex, $field_description_value) ? TRUE : FALSE;
-              if ($has_http || $has_https || $has_at) {
+              $has_email = preg_match($regex, $field_description_value) ? TRUE : FALSE;
+              if ($has_http || $has_https) {
                 $error_message = t('The campaign resource Resource Description field cannot contain a web address.');
-                $error_message .= t(' The field also cannot contain the @ symbol unless it has spaces on either side');
+                $form_state->setErrorByName("field content", $error_message);
+              }
+              if ($has_email) {
+                $error_message = t('The campaign resource cannot contain the @ symbol unless it has spaces on either side.');
                 $form_state->setErrorByName("field content", $error_message);
               }
             }
