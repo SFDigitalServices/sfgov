@@ -217,6 +217,7 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
   if ($node->hasField('field_print_version') && ($media_entities = $node->field_print_version->referencedEntities())) {
     $media = reset($media_entities);
     $variables['print_version_url'] = file_create_url($media->field_media_file->entity->getFileUri());
+    $variables['print_version_label'] = $media->label();
   }
 }
 
