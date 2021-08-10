@@ -8,6 +8,7 @@
   ob_end_clean();
   $json = json_decode($roles);
 
+  $pw = _get_secrets(['drush_pw']);
   $debug = '';
 
   foreach ($json as $role => $val) {
@@ -18,7 +19,7 @@
       $email = $user . '@test.com';
       $exitStatus = null;
       $output = null;
-      exec("drush user:create ${user} --mail=\"${email}\" --password=\"password\"", $output, $exitStatus);
+      exec("drush user:create ${user} --mail=\"${email}\" --password=\"${pw}\"", $output, $exitStatus);
       if ($exitStatus == 0) {
         exec("drush user-add-role \"${machineNameRole}\" ${user}");
         $debug .= "  - user ${user} created with role {$machineNameRole}\n";
