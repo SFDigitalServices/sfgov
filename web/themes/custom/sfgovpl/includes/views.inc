@@ -22,7 +22,7 @@ function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
  */
 function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
   // Retrieve dept id.
-  $nid = !empty($variables['view']->args[0]) ? $variables['view']->args[0]: NULL;
+  $nid = $variables['view']->args[0] ?? NULL;
   if ($nid) {
     $node = Node::load($nid);
     if ($node) {
