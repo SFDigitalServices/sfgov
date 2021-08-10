@@ -172,7 +172,7 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $nodeTitle = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage)->getTitle() : $node->getTitle();
     if ($bundle === 'step_by_step') {
-      $variables['part_of'] = ucfirst(str_replace('_', ' ', $bundle)) . ': ' . $nodeTitle;
+      $variables['part_of'] = t(ucfirst(str_replace('_', ' ', $bundle))) . ': ' . $nodeTitle;
       $variables['part_of_url'] = $node->toUrl()->toString();
     }
   }
