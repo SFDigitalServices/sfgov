@@ -8,7 +8,7 @@
   ob_end_clean();
   $json = json_decode($roles);
 
-  $pw = _get_secrets(['drush_pw']);
+  $pw = _get_secrets(['drush_pw'])['drush_pw'];
   $debug = '';
 
   foreach ($json as $role => $val) {
