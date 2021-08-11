@@ -155,10 +155,13 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
  * Creates the "Part of" label when coming from a step by step page
  */
 function sfgovpl_preprocess_node__transaction(&$variables) {
+  $variables['#cache']['contexts'][] = 'url.query_args';
   $request = \Drupal::request();
   $fromId = $request->query->get('nid');
 
-  if (empty($fromId)) return;
+  if (empty($fromId)) {
+    return;
+  }
 
   $node = Node::load($fromId);
   if (!empty($node)) {
