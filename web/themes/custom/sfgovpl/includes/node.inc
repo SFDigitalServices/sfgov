@@ -161,16 +161,19 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
   if (empty($fromId)) return;
 
   $node = Node::load($fromId);
-  if (!empty($node) && $node instanceof TranslatableInterface) {
+  if (!empty($node)) {
     $bundle = $node->bundle();
-    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $nodeTitle = $node->hasTranslation($currentLanguage) ? 
-      $node->getTranslation($currentLanguage)->getTitle() : 
+    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
+    $currentLanguageId = $currentLanguage->getId();
+    $nodeTitle = $node->hasTranslation($currentLanguageId) ? 
+      $node->getTranslation($currentLanguageId)->getTitle() : 
       $node->getTitle();
 
     if ($bundle === 'step_by_step') {
       $variables['part_of'] = t(ucfirst(str_replace('_', ' ', $bundle))) . ': ' . $nodeTitle;
-      $variables['part_of_url'] = $node->toUrl()->toString();
+      $variables['part_of_url'] = $node->toUrl('canonical', [
+        'language' => $currentLanguage,
+      ])->toString();
     }
   }
 }
