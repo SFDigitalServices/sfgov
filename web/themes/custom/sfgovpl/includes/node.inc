@@ -156,21 +156,25 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
  */
 function sfgovpl_preprocess_node__transaction(&$variables) {
   $request = \Drupal::request();
-  // look at the referer to see how we got to this transaction
-  $referer = $request->headers->get('referer'); 
-  $base_url = Request::createFromGlobals()->getSchemeAndHttpHost();
-  // Getting the relative path.
-  $path = substr($referer, strlen($base_url));
-  $params = Url::fromUri("internal:" . $path)->getRouteParameters();
-  $entity_type = key($params);
+  $fromId = $request->query->get('nid');
+  // // look at the referer to see how we got to this transaction
+  // $referer = $request->headers->get('referer'); 
+  // $base_url = Request::createFromGlobals()->getSchemeAndHttpHost();
+  // // Getting the relative path.
+  // $path = substr($referer, strlen($base_url));
+  // $params = Url::fromUri("internal:" . $path)->getRouteParameters();
+  // $entity_type = key($params);
 
-  if (empty($entity_type)) return;
+  if (empty($fromId)) return;
 
-  $node = \Drupal::entityTypeManager()->getStorage($entity_type)->load($params[$entity_type]);
+  $node = Node::load($fromId);
   if (!empty($node) && $node instanceof TranslatableInterface) {
     $bundle = $node->bundle();
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $nodeTitle = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage)->getTitle() : $node->getTitle();
+    $nodeTitle = $node->hasTranslation($currentLanguage) ? 
+      $node->getTranslation($currentLanguage)->getTitle() : 
+      $node->getTitle();
+
     if ($bundle === 'step_by_step') {
       $variables['part_of'] = t(ucfirst(str_replace('_', ' ', $bundle))) . ': ' . $nodeTitle;
       $variables['part_of_url'] = $node->toUrl()->toString();

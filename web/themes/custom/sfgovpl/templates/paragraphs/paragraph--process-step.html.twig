@@ -73,7 +73,12 @@
           {% if content.field_transaction | render %}
             {% set txTitle = content.field_transaction.0['#title'] %}
             <div class="step-transaction-link">
-              <a href="{{ txUrl }}">{{ txTitle }}</a>
+              {#
+                sbsId is coming from paragraph_preprocess hook
+                sbsId needs to be passed to the linked transaction as a url param,
+                so hook_preprocess_node__transaction can apply the "Part of Step by step: Step by step page title" link and label
+              #}
+              <a href="{{ txUrl }}?nid={{ sbsId }}">{{ txTitle }}</a>
             </div>
           {% endif %}
         </div>
