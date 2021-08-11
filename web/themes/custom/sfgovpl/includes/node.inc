@@ -157,13 +157,6 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
 function sfgovpl_preprocess_node__transaction(&$variables) {
   $request = \Drupal::request();
   $fromId = $request->query->get('nid');
-  // // look at the referer to see how we got to this transaction
-  // $referer = $request->headers->get('referer'); 
-  // $base_url = Request::createFromGlobals()->getSchemeAndHttpHost();
-  // // Getting the relative path.
-  // $path = substr($referer, strlen($base_url));
-  // $params = Url::fromUri("internal:" . $path)->getRouteParameters();
-  // $entity_type = key($params);
 
   if (empty($fromId)) return;
 
