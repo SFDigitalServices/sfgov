@@ -64,7 +64,8 @@ class VaxValues {
     $header_db = $this->state->get('header_description');
     $header_db_val = $header_db['value'];
     $header_config_val = $this->settings('template_strings.page.description');
-    return isset($header_db) ? $header_db_val : $header_config_val;
+    $headerDescription = isset($header_db) ? $header_db_val : $header_config_val;
+    return t($headerDescription);
   }
 
   public function setHeaderDescription($value) {
