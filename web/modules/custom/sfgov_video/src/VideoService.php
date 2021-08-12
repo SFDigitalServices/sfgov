@@ -106,8 +106,18 @@ class VideoService {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getYoutubeMetadata($video_id, $languageCode = 'en') {
+    // FIXME: the endpoint below has been removed and we should use the official youtube api
+    // the request is made with http errors set to false so we can check the status code and return
+    // early if it's a bad status code (currently returns 4xx)
     $video_info_url = "https://www.youtube.com/get_video_info?video_id=" . $video_id . "&html5=1";
-    $request = $this->httpClient->request('GET', $video_info_url);
+    $request = $this->httpClient->request('GET', $video_info_url, [
+      'http_errors' => false
+    ]);
+
+    if ($request->getStatusCode() !== 200) {
+      return;
+    }
+
     $contents = $request->getBody()->getContents();
 
     parse_str($contents, $video_info_array);
