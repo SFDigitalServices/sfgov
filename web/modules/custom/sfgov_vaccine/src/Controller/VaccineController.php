@@ -359,6 +359,7 @@ class VaccineController extends ControllerBase {
       '#cache' => ['max-age' => 0],
       '#theme' => 'vaccine_widget',
       '#alert' => $this->vaxValues->getAlert(),
+      '#header_description' => $this->vaxValues->getHeaderDescription(),
       '#template_strings' => $this->vaxValues->settings('template_strings'),
       '#api_data' => $this->makeAPIData($this->allData),
       '#filters' => $this->makeFilters($this->allData),

@@ -102,6 +102,15 @@ class SettingsForm extends ConfigFormBase {
       '#allowed_formats' => ['sf_restricted_html'],
     ];
 
+    $form['header_description'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Vaccine Page Header Description Text'),
+      '#description' => $this->t('Enter the description for the light blue header'),
+      '#default_value' => $this->vaxValues->getHeaderDescription(),
+      '#format' => 'sf_restricted_html',
+      '#allowed_formats' => ['sf_restricted_html'],
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
@@ -144,6 +153,7 @@ class SettingsForm extends ConfigFormBase {
       ->save();
 
     $this->vaxValues->setAlert($form_state->getValue('alert'));
+    $this->vaxValues->setHeaderDescription($form_state->getValue('header_description'));
   }
 
 }
