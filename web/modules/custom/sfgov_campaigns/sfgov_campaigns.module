@@ -5,6 +5,60 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\job_scheduler\Entity\JobSchedule;
 
 /**
+ * Implements hook_form_alter().
+ */
+function sfgov_campaigns_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'node_campaign_edit_form') {
+    $form['#validate'][] = 'sfgov_campaigns_validate_resource_description';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_campaigns_validate_resource_description(&$form, FormStateInterface $form_state) {
+  // Retrieve the campaign node to check.
+  $node = $form_state->getFormObject()->getEntity();
+  if (!$node->hasField('field_contents') || $node->field_contents->isEmpty()) {
+    return;
+  }
+  if ($node->getType() != 'campaign') {
+    return;
+  }
+
+  // Navigate down through the fields and related entity fields to find Resource Description.
+  $node_contents = $node->get('field_contents');
+  foreach ($node_contents as $node_content) {
+    if ($node_content->entity->hasField('field_resources')) {
+      $resources = $node_content->entity->get('field_resources');
+      foreach ($resources as $resource) {
+        if ($resource->entity->hasField('field_content')) {
+          $content_subfields = $resource->entity->get('field_content');
+          foreach ($content_subfields as $content_subfield) {
+            if ($content_subfield->entity->hasField('field_description')) {
+              $field_description_value = $content_subfield->entity->get('field_description')->value;
+              // Finally check the description field, and throw error if needed.
+              $has_http = (strpos($field_description_value, 'http://') !== FALSE) ? TRUE : FALSE;
+              $has_https = (strpos($field_description_value, 'https://') !== FALSE) ? TRUE : FALSE;
+              $regex = '/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})/';
+              $has_email = preg_match($regex, $field_description_value) ? TRUE : FALSE;
+              if ($has_http || $has_https) {
+                $error_message = t('The campaign resource Resource Description field cannot contain a web address.');
+                $form_state->setErrorByName("field content", $error_message);
+              }
+              if ($has_email) {
+                $error_message = t('The campaign resource cannot contain the @ symbol unless it has spaces on either side.');
+                $form_state->setErrorByName("field content", $error_message);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_entity_update().
  */
 function sfgov_campaigns_entity_update(EntityInterface $entity) {
