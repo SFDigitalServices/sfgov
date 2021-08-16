@@ -151,6 +151,11 @@ function sfgov_utilities_entity_type_alter(array &$entity_types) {
 }
 
 function sfgov_utilities_page_attachments(array &$page) {
+  // Workaround for remove button not working for entity reference fields.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!empty($node) && $node instanceOf NodeInterface) {
+    $page['#attached']['library'][] = 'sfgov_utilities/remove_button_warning';
+  }
   // Don't run on admin pages
   if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
     $node = \Drupal::routeMatch()->getParameter('node');
