@@ -37,7 +37,9 @@
 ]
 %}
 
-{% if banner_news == 'topic' and field_topic %}
+{% if banner_news == 'department' and field_dept %}
+  {% set banner_subtitle = field_dept %}
+{% elseif banner_news == 'topic' and field_topic %}
   {% set banner_subtitle = field_topic %}
 {% endif %}
 
@@ -46,7 +48,8 @@
   "banner": {
     "title": "News",
     "text":  header
-  }
+  },
+  "banner_subtitle": banner_subtitle
 }
 %}
 {% endblock header %}
