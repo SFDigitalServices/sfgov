@@ -207,6 +207,21 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ */
+function sfgovpl_preprocess_node__report__full(&$variables) {
+  /* @var\Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+
+  $variables['print_version_url'] = NULL;
+  if ($node->hasField('field_print_version') && ($media_entities = $node->field_print_version->referencedEntities())) {
+    $media = reset($media_entities);
+    $variables['print_version_url'] = file_create_url($media->field_media_file->entity->getFileUri());
+    $variables['print_version_label'] = $media->label();
+  }
+}
+
+/**
  * Retrieve the transaction ids in field_department_services that will be
  * excluded from "more services" section on topic page send the list of ids to a
  * Twig var which will then get passed to view contextual filters via
