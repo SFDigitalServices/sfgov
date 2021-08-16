@@ -37,12 +37,17 @@
 ]
 %}
 
+{% if banner_news == 'department' and field_dept %}
+  {% set banner_subtitle = field_dept %}
+{% endif %}
+
 {% block header %}
 {% include "@theme/hero-banner-color.twig" with {
   "banner": {
     "title": "News",
     "text":  header
-  }
+  },
+  "banner_subtitle": banner_subtitle
 }
 %}
 {% endblock header %}

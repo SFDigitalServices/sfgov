@@ -2,6 +2,7 @@
 
 use Drupal\views\Views;
 use Drupal\Core\Link;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_preprocess_views_view()
@@ -16,7 +17,24 @@ function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
 
 /**
  * Implements hook_preprocess_views_view()
- * 
+ *
+ * Adds a twig template variable for department news.
+ */
+function sfgovpl_preprocess_views_view__news__page_1(&$variables) {
+  // Retrieve dept id.
+  $nid = $variables['view']->args[0] ?? NULL;
+  if ($nid) {
+    $node = Node::load($nid);
+    if ($node) {
+      $variables['field_dept'] = $node->getTitle();
+      $variables['banner_news'] = 'department';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view()
+ *
  * Adds a twig template variable for upcoming events
  */
 function sfgovpl_preprocess_views_view__events__page_1(&$variables) {
