@@ -12,6 +12,8 @@ use Drupal\views\Views;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\Core\TypedData\TranslatableInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_preprocess_node().
@@ -144,6 +146,37 @@ function sfgovpl_preprocess_node__data_story(&$variables) {
     $translatedSection = \Drupal::service('entity.repository')->getTranslationFromContext($section);
     if ($translatedTitle = $translatedSection->get('field_title')->value) {
       $variables['sections'][] = ['title' => $translatedTitle];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ * Creates the "Part of" label when coming from a step by step page
+ */
+function sfgovpl_preprocess_node__transaction(&$variables) {
+  $variables['#cache']['contexts'][] = 'url.query_args';
+  $request = \Drupal::request();
+  $fromId = $request->query->get('nid');
+
+  if (empty($fromId)) {
+    return;
+  }
+
+  $node = Node::load($fromId);
+  if (!empty($node)) {
+    $bundle = $node->bundle();
+    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
+    $currentLanguageId = $currentLanguage->getId();
+    $nodeTitle = $node->hasTranslation($currentLanguageId) ? 
+      $node->getTranslation($currentLanguageId)->getTitle() : 
+      $node->getTitle();
+
+    if ($bundle === 'step_by_step') {
+      $variables['part_of'] = t(ucfirst(str_replace('_', ' ', $bundle))) . ': ' . $nodeTitle;
+      $variables['part_of_url'] = $node->toUrl('canonical', [
+        'language' => $currentLanguage,
+      ])->toString();
     }
   }
 }
