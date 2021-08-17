@@ -585,12 +585,52 @@
     margin-bottom: 50px;
     overflow-x: scroll;
     overflow-y: hidden;
-    background: radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)), radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 100% 0;
     background-color: white;
-    background-repeat: no-repeat;
-    background-size: 10px 100%;
     width: 100%;
     border: 1px solid $c-slate;
+    overflow: auto;
+    background-image:
+
+      /* Shadows */
+      linear-gradient(to right, white, white),
+      linear-gradient(to right, white, white),
+
+        /* Shadow covers */
+      linear-gradient(to right, rgba(0,0,0,.25), rgba(255,255,255,0)),
+      linear-gradient(to left, rgba(0,0,0,.25), rgba(255,255,255,0));
+
+    background-position: left center, right center, left center, right center;
+    background-repeat: no-repeat;
+    // background-color: white;
+    background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+
+    /* Opera doesn't support this in the shorthand */
+    background-attachment: local, local, scroll, scroll;
+
+    //&:before,
+    //&:after {
+    //  content: "";
+    //  position: absolute;
+    //  top: 0;
+    //  width: 10px;
+    //  height: 100%;
+    //}
+    //
+    //&:before {
+    //  left: 0;
+    //  width: 100%;
+    //  background: radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)), radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 100% 0;
+    //  background-repeat: no-repeat;
+    //  background-size: 10px 100%;
+    //}
+    //
+    //&:after {
+    //  right: 0;
+    //  background: linear-gradient(to right, white 30%, rgba(255,255,255,0)), linear-gradient(to left, white 30%, rgba(255,255,255,0)) 100% 0;
+    //  background-size: 10px 100%;
+    //  background-repeat: no-repeat;
+    //  background-color: red;
+    //}
   }
 
   .sfgov-table {
@@ -598,9 +638,6 @@
     width: 100%;
     margin-bottom: 0;
     white-space: nowrap;
-    background: linear-gradient(to right, white 30%, rgba(255,255,255,0)), linear-gradient(to left, white 30%, rgba(255,255,255,0)) 100% 0;
-    background-size: 50px 100%;
-    background-repeat: no-repeat;
     max-width: none;
 
     &-caption {
@@ -626,7 +663,7 @@
       background-color: transparent;
 
       &:nth-child(even) {
-        background-color: $c-grey-2;
+        background-color: rgba(0, 0, 0, 0.05);
       }
 
       td {
