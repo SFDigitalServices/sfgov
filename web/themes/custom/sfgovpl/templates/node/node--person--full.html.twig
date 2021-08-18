@@ -89,28 +89,6 @@
   </div>
   
   {% if profile_type == 'External' %}
-    {% for key, item in profile_fields.dept_ref_data %}
-      <div class="profile--role">
-        <div class="role-title">
-          {{ item.profile.job.position }}
-        </div>
-        <div class="role-agency-title">
-          <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
-        </div>
-        <div class="role-time">
-          {% if item.profile.job.position_type|length %}
-            {{ item.profile.job.position_type }}
-          {% endif %}
-          {% if item.profile.job.start_year|length %}
-            : {{ item.profile.job.start_year }}
-          {% endif %}
-          {% if item.profile.job.end_year|length %} 
-            - {{ item.profile.job.end_year }}
-          {% endif %}
-        </div>
-      </div>
-    {% endfor %}
-      
     {% for key, item in profile_fields.dept_pbody_ref_data %}
       <div class="profile--role">
         <div class="role-title">
@@ -123,10 +101,13 @@
           {% if item.profile.job.position_type|length %}
             {{ item.profile.job.position_type }}
           {% endif %}
-          {% if item.profile.job.start_year|length %}
-            : {{ item.profile.job.start_year }}
+          {% if item.profile.job.position_type|length and (item.profile.job.start_year|length or item.profile.job.end_year|length) %}
+            {{ ": " }} 
           {% endif %}
-          {% if item.profile.job.end_year|length %} 
+          {% if item.profile.job.start_year|length %}
+            {{ item.profile.job.start_year }}
+          {% endif %}
+          {% if item.profile.job.end_year|length %}
             - {{ item.profile.job.end_year }}
           {% endif %}
         </div>
