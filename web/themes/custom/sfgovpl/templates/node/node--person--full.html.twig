@@ -11,7 +11,7 @@
   {% set city_employee_contact = false %}
 {% endif %}
 
-{% if (profile_fields.dept_ref_data is not empty) or (profile_fields.pubbody_ref_data is not empty) %}
+{% if (profile_fields.dept_pbody_ref_data is not empty) %}
   {% set external_contact = true %}
 {% else %}
   {% set external_contact = false %}
@@ -111,7 +111,7 @@
       </div>
     {% endfor %}
       
-    {% for key, item in profile_fields.pubbody_ref_data %}
+    {% for key, item in profile_fields.dept_pbody_ref_data %}
       <div class="profile--role">
         <div class="role-title">
           {{ item.profile.job.position }}
@@ -155,12 +155,13 @@
 </div>
 
 {% if (profile_type == 'City Employee') %}
-{% if (profile_fields.dept_ref_data) or (profile_fields.pubbody_ref_data) %}
+{% if (profile_fields.dept_pbody_ref_data) %}
 <div class="profile--container-wide additional-roles">
   <div class="profile--container-narrow">
     <div class="profile--additional-roles">
     <h2>{{ 'Additional city roles'|t }}</h2>
-    {% for key, item in profile_fields.dept_ref_data %}
+
+    {% for key, item in profile_fields.dept_pbody_ref_data %}
       <div class="profile--additional-role">
         <div class="additional-role-title">
         {% if item.profile.job.position %}
@@ -174,8 +175,11 @@
         {% if item.profile.job.position_type|length %}
           {{ item.profile.job.position_type }}
         {% endif %}
+        {% if item.profile.job.position_type|length and (item.profile.job.start_year|length or item.profile.job.end_year|length) %}
+          : 
+        {% endif %}
         {% if item.profile.job.start_year|length %}
-          : {{ item.profile.job.start_year }}
+          {{ item.profile.job.start_year }}
         {% endif %}
         {% if item.profile.job.end_year|length %} 
           - {{ item.profile.job.end_year }}
@@ -183,29 +187,7 @@
         </div>
       </div>
     {% endfor %}
-        
-    {% for key, item in profile_fields.pubbody_ref_data %}
-      <div class="profile--additional-role">
-        <div class="additional-role-title">
-          {{ item.profile.job.position }},
-        </div>
-        <div class="additional-role-agency-title">
-          <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
-        </div>
-        <div class="additional-role-time">
-          {% if item.profile.job.position_type|length %}
-            {{ item.profile.job.position_type }}
-          {% endif %}
-          {% if item.profile.job.start_year|length %}
-            : {{ item.profile.job.start_year }}
-          {% endif %}
-          {% if item.profile.job.end_year|length %} 
-            - {{ item.profile.job.end_year }}
-          {% endif %}
-        </div>
-      </div>
-    {% endfor %}
-  
+    
     </div>
   </div>
 </div>
@@ -318,44 +300,7 @@
           <div class="contact-phone sfgov-container-item">
             <label>{{ 'Phone'|t }}</label>
       
-            {% for key, item in profile_fields.dept_ref_data %}
-              {% if item.profile.phone %}
-                <div class="phone-wrapper">
-                  <div class="phone-org">
-                    {{ item.profile.node_title }}
-                  </div>
-                {% for pkey, phone in item.profile.phone %}
-                  {% if phone.tel %}
-                    <div class="phone-item">
-                      <div class="phone-title">
-                        {{ phone.owner }}
-                      </div>
-                      <div class="phone-number">
-                        <a href="tel:+{{ phone.tel }}"> {{ phone.tel }} </a>
-                      </div>
-                      <div class="phone-desc">
-                        {{ phone.text }}
-                      </div>
-                    </div>
-                  {% else %}
-                    <div class="phone-item">
-                      <div class="phone-title">
-                        {{ phone.owner }}
-                      </div>
-                      <div class="phone-number">
-                        <span>We do not have contact info for this agency. Add a new phone number instead.</span>
-                      </div>
-                      <div class="phone-desc">
-                        {{ phone.text }}
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endfor %}
-                </div>
-              {% endif %}
-            {% endfor %}
-      
-            {% for key, item in profile_fields.pubbody_ref_data %}
+            {% for key, item in profile_fields.dept_pbody_ref_data %}
               {% if item.profile.phone %}
                 <div class="phone-wrapper">
                   <div class="phone-org">
@@ -395,39 +340,8 @@
       
           <div class="contact-email sfgov-container-item">
             <label>{{ 'Email'|t }}</label>
-            
-            {% for key, item in profile_fields.dept_ref_data %}
-              {% if item.profile.email %}
-                <div class="email-wrapper">
-                  <div class="email-org">
-                    {{ item.profile.node_title }}
-                  </div>
-                {% for ekey, email in item.profile.email %}
-                  {% if email.email_address %}
-                    <div class="email-item">
-                      <div class="email-title">
-                        {{ email.title }}
-                      </div>
-                      <div class="email-email">
-                        <a href="mailto:{{ email.email_address }}"> {{ email.email_address }} </a>
-                      </div>
-                    </div>
-                  {% else %}
-                    <div class="email-item">
-                      <div class="email-title">
-                        {{ email.title }}
-                      </div>
-                      <div class="email-email">
-                        <span>We do not have contact info for this agency. Add a new email instead.</span>
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endfor %}
-                </div>
-              {% endif %}
-            {% endfor %}
         
-            {% for key, item in profile_fields.pubbody_ref_data %}
+            {% for key, item in profile_fields.dept_pbody_ref_data %}
               {% if item.profile.email %}
                 <div class="email-wrapper">
                   <div class="email-org">

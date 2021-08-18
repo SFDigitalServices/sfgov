@@ -758,12 +758,103 @@ function profile_page_fields($node) {
     $pbody_data = sfgovpl_profile_reference_nodes($pbody_nids, 'public body', $nid);
 
     if (isset($dept_nids[0]) && $dept_nids[0] > 1) {
-      $theFields['dept_ref_data'] = $dept_data;
+      $theFields['dept_pbody_ref_data'] = $dept_data;
     }
     if (isset($pbody_nids[0]) && $pbody_nids[0] > 1) {
-      $theFields['pubbody_ref_data'] = $pbody_data;
+      foreach ($pbody_data as $pkey => $pvalue) {
+        $theFields['dept_pbody_ref_data'][] = $pvalue;
+      }
     }
-
+    
+    // Sort and filter dept/pbody references by start/end dates
+    $chrono_sort = array();
+    $current_date = time();
+    foreach ($theFields['dept_pbody_ref_data'] as $dpkey => $dpvalue) {
+      if (isset($dpvalue['profile']['job']['start_year']) || isset($dpvalue['profile']['job']['end_year'])) {
+        $chrono_sort[$dpkey]['key'] = $dpkey;
+        $chrono_sort[$dpkey]['stime'] = strtotime($dpvalue['profile']['job']['stime']);
+        $chrono_sort[$dpkey]['etime'] = strtotime($dpvalue['profile']['job']['etime']);
+      }
+    }
+    // remove expired references
+    foreach ($chrono_sort as $ckey => $cvalue) {
+      if (isset($cvalue['etime']) && $cvalue['etime'] > 1000 && $cvalue['etime'] < $current_date) {
+        unset($theFields['dept_pbody_ref_data'][$cvalue['key']]);
+        unset($chrono_sort[$ckey]);
+      }
+    }
+    
+    $chrono_temp = array();
+    // Build sorting array
+    foreach ($chrono_sort as $ckey => $cvalue) {
+      $chrono_temp[intval($ckey )] = intval($cvalue['stime']);
+    }
+    // Sort by start time
+    $chrono_sorted = array();
+    // Counter to prevent infinite loop
+    // profiles likely will not have over 100 references
+    $counter= 0;
+    // No start time flag
+    $nsflag = 0;
+    while (count($chrono_temp) && $counter < 100 && !$nsflag) {
+      $counter += 1;
+      foreach($chrono_temp as $fvalue) {
+        $nsflag = 1;
+        if ($fvalue > 0) {
+          $nsflag = 0;
+        }
+      }
+      foreach ($chrono_temp as $key1 => $value1) {
+        $lowest = FALSE;
+        if ($value1 != 0 && !$lowest) {
+          foreach($chrono_temp as $key2 => $value2) {
+            if ($value2 < $value1 && $value2 != 0) {
+              $lowest = FALSE;
+            } else {
+              $lowest = TRUE;
+            }
+          }
+        }
+        if ($lowest) {
+          $chrono_sorted[] = $chrono_sort[$key1];
+          unset($chrono_temp[$key1]);
+        }
+      }
+    }
+    // Add items without start times
+    foreach ($chrono_temp as $key => $value) {
+      $chrono_sorted[] = $chrono_sort[$key];
+    }
+    $temp = $theFields['dept_pbody_ref_data'];
+    $theFields['dept_pbody_ref_data'] = array();
+    if (array_keys($chrono_sorted)) {
+      foreach ($chrono_sorted as $value) {
+        $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
+      }
+    }
+    /*
+    while (isset($chrono_temp) && $stop == 'no') {
+      // Find earliest start date
+      foreach ($chrono_temp as $key1 => $value1) {
+        foreach ($chrono_temp as $key2 => $value2) {
+          if ($value2['stime'] < $value1['stime']) {
+            continue;
+          }
+        }
+      }
+      // Check for more items to iterate
+      if (!array_keys($chrono_temp)) {
+        $stop = 'yes';
+        break;
+      }
+    }
+     */
+    
+    /*usort($chrono_sort, 'stime_sort');
+    function stime_sort($a,$b) {
+      return $a['stime']<$b['stime'];
+    }*/
+      
     // Get social media field data
     if($node->hasField('field_social_media')) {
       $aboutSocial = $node->get('field_social_media');
@@ -894,6 +985,9 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
     if ($reftype == 'department') {
       $profile_field = 'field_people';
     }
+    
+    // Set source type
+    $ref_data[$key]['profile']['source_type'] = $reftype;
 
     if ($people = $node->get($profile_field)->referencedEntities()) {
       foreach($people as $pkey => $pitem) {
@@ -912,12 +1006,14 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
               }
               if (isset($sdate)) {
                 $ref_data[$key]['profile']['job']['start_year'] = $sdate ? $sdate->format('Y') : '';
+                $ref_data[$key]['profile']['job']['stime'] = $temp;
               }
               if ($temp = $profile->get('field_ending_year')->value) {
                 $edate = new DateTime($temp);
               }
               if (isset($edate)) {
                 $ref_data[$key]['profile']['job']['end_year'] = $edate ? $edate->format('Y') : '';
+                $ref_data[$key]['profile']['job']['etime'] = $temp;
               }
             }
           }
