@@ -156,15 +156,6 @@
         {% if item.profile.job.position_type|length %}
           {{ item.profile.job.position_type }}
         {% endif %}
-        {% if item.profile.job.position_type|length and (item.profile.job.start_year|length or item.profile.job.end_year|length) %}
-          : 
-        {% endif %}
-        {% if item.profile.job.start_year|length %}
-          {{ item.profile.job.start_year }}
-        {% endif %}
-        {% if item.profile.job.end_year|length %} 
-          - {{ item.profile.job.end_year }}
-        {% endif %}
         </div>
       </div>
     {% endfor %}
@@ -182,7 +173,6 @@
       <div class="contact-wrapper">
         <div class="sfgov-container-three-column">
     
-        {% if (profile_type == 'City Employee') and (city_employee_contact == 'true') %}
           <div class="contact-address sfgov-container-item">
             <div class="sfgov-contact-section address">
               <label>{{ 'Mailing Address'|t }}</label>
@@ -242,6 +232,10 @@
               </div>
             {% endfor %}
             
+            {% if content.field_phone_numbers %}
+              {{ content.field_phone_numbers }}
+            {% endif %}  
+                      
             </div>
           </div>
           
@@ -263,10 +257,14 @@
               {% endif %}
               </div>
             {% endfor %}
+            
+            {% if content.field_email %}
+              {{ content.field_email }}
+            {% endif %}  
               
             </div>
           </div>
-        {% endif %}
+
       </div>
     </div>
   </div>
@@ -278,7 +276,9 @@
       <h2>{{ 'Contact'|t }}</h2>
       <div class="contact-wrapper">
         <div class="sfgov-container-two-column">
+        
           <div class="contact-phone sfgov-container-item">
+            <div class="sfgov-contact-section phone">
             <label>{{ 'Phone'|t }}</label>
       
             {% for key, item in profile_fields.dept_pbody_ref_data %}
@@ -317,9 +317,16 @@
                 </div>
               {% endif %}
             {% endfor %}
+            
+            {% if content.field_phone_numbers %}
+              {{ content.field_phone_numbers }}
+            {% endif %} 
+            
+            </div>
           </div>
       
           <div class="contact-email sfgov-container-item">
+            <div class="sfgov-contact-section email">
             <label>{{ 'Email'|t }}</label>
         
             {% for key, item in profile_fields.dept_pbody_ref_data %}
@@ -344,6 +351,11 @@
               {% endif %}
             {% endfor %}
             
+            {% if content.field_email %}
+              {{ content.field_email }}
+            {% endif %}  
+            
+            </div>
           </div>
         
         </div>
