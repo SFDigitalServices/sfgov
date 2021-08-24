@@ -29,7 +29,7 @@ function sfgov_campaigns_validate_resource_description(&$form, FormStateInterfac
   // Navigate down through the fields and related entity fields to find Resource Description.
   $node_contents = $node->get('field_contents');
   foreach ($node_contents as $node_content) {
-    if ($node_content->entity->hasField('field_resources')) {
+    if (!empty($node_content->entity) && $node_content->entity->hasField('field_resources')) {
       $resources = $node_content->entity->get('field_resources');
       foreach ($resources as $resource) {
         if ($resource->entity->hasField('field_content')) {
