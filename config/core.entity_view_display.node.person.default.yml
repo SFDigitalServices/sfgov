@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
     - field.field.node.person.field_phone_numbers
+    - field.field.node.person.field_photo
     - field.field.node.person.field_primary_email
     - field.field.node.person.field_primary_phone_number
     - field.field.node.person.field_profile_photo
@@ -24,6 +25,7 @@ dependencies:
     - node.type.person
   module:
     - entity_reference_revisions
+    - image
     - link
     - media
     - options
@@ -117,6 +119,14 @@ content:
       link: ''
     third_party_settings: {  }
     type: entity_reference_revisions_entity_view
+    region: content
+  field_photo:
+    weight: 4
+    label: hidden
+    settings:
+      image_style: ''
+    third_party_settings: {  }
+    type: image_url
     region: content
   field_primary_email:
     weight: 16

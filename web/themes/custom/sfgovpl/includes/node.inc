@@ -612,13 +612,23 @@ function public_body_page_fields($node) {
           $people = $peopleParagraph->get('field_person_2')->getValue();
           foreach($people as $person) {
             $personNode = Node::load($person['target_id']);
-            $theFields['people'][] = array(
-              'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
-              'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
-              'title' => $personNode->get('field_title')->getValue()[0]['value'],
-              'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
-              'photo' => $styleThumbnail->buildUrl($personNode->get('field_photo')->entity->uri->value),
-            );
+            if($personNode->get('field_profile_photo')->entity->uri->value) {
+              $theFields['people'][] = array(
+                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
+                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
+                'title' => $personNode->get('field_title')->getValue()[0]['value'],
+                'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
+                'photo' => $styleThumbnail->buildUrl($personNode->get('field_profile_photo')->entity->uri->value),
+              );
+            } elseif($personNode->get('field_photo')->entity->uri->value) {
+              $theFields['people'][] = array(
+                'first_name' => $personNode->get('field_first_name')->getValue()[0]['value'],
+                'last_name' => $personNode->get('field_last_name')->getValue()[0]['value'],
+                'title' => $personNode->get('field_title')->getValue()[0]['value'],
+                'url' => $personNode->get('field_direct_external_url')->getValue() ? $personNode->get('field_direct_external_url')->getValue()[0]['uri'] : '',
+                'photo' => $styleThumbnail->buildUrl($personNode->get('field_photo')->entity->uri->value),
+              );
+            }
           }
         }
       }

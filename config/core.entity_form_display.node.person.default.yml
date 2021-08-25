@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
     - field.field.node.person.field_phone_numbers
+    - field.field.node.person.field_photo
     - field.field.node.person.field_primary_email
     - field.field.node.person.field_primary_phone_number
     - field.field.node.person.field_profile_photo
@@ -21,12 +22,14 @@ dependencies:
     - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
+    - image.style.thumbnail
     - node.type.person
     - workflows.workflow.editorial
   module:
     - content_moderation
     - entity_browser
     - field_group
+    - image
     - link
     - paragraphs
     - path
@@ -201,6 +204,14 @@ content:
     third_party_settings: {  }
     type: paragraphs
     region: content
+  field_photo:
+    type: image_image
+    weight: 7
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
   field_primary_email:
     weight: 9
     settings:
