@@ -222,10 +222,6 @@
       // @see https://en.wikipedia.org/wiki/Haversine_formula
       // @see https://simplemaps.com/resources/location-distance
       function getDistance(lat1, lng1, lat2, lng2) {
-        // console.log('lat1:' + lat1)
-        // console.log('lng1:' + lng1)
-        // console.log('lat2:' + lat2)
-        // console.log('lng2:' + lng2)
         function deg2rad(deg) {
           return deg * (Math.PI / 180);
         }
