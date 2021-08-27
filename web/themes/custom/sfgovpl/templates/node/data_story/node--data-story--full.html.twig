@@ -19,9 +19,10 @@
         {{ attach_library('sfgovpl/sfgov-data-story') }}
         <div class="sfgov-toc">
           <div class="sfgov-toc-sticky">
-            <button class="sfgov-toc-expand-button">
-              {{ 'See all sections'|t }}
-            </button>
+            {% include "@sfgov-design-system/button/button.twig" with {
+                "classes": ['btn-block','sfgov-toc-expand-button'],
+                "text": 'See all sections'|t
+            } %}
           </div>
 
           <div class="sfgov-toc-drawer">
