@@ -29,7 +29,12 @@
       submitButton.on("click", function (event) {
         event.preventDefault();
         leftColumn.fadeOut(0);
-        displaySites();
+        // see location_autocomplete for this promise
+        locationSubmit().then(function (result) {
+          displaySites();
+        }, function (err) {
+          console.error(err);
+        });
         leftColumn.fadeIn(speed);
         scrollUp(speed);
       });
@@ -40,6 +45,9 @@
         let locationInput = $("[name=location]");
         let radiusInput = $("[name=radius]");
         let userLocation = !!locationInput.val();
+
+        // reset the data-place-changed attribute after each filter
+        locationInput[0].removeAttribute('data-place-changed');
 
         if ($("[name=restrictions]").is(":checked") === true) {
           // show
