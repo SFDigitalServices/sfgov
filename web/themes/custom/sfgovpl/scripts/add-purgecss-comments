@@ -1,16 +1,18 @@
-#!/bin/bash
-for path in $@; do
-  if egrep '/[\*/] .*purgecss .*ignore' $path; then
-    echo "- skipping $path: the file already has purgecss comments"
+#!/usr/bin/env node
+const { readFileSync, writeFileSync } = require('fs')
+
+const ignorePattern = new RegExp(`/[\*/] .*purgecss .*ignore`)
+for (const path of process.argv.slice(2)) {
+  let content = readFileSync(path, 'utf8')
+  if (ignorePattern.test(content)) {
+    console.log('- skipping %s: the file already has purgecss comments', path)
     continue
-  fi
-  if egrep -v '@import' $path; then
-    echo "+ wrapping $path in purgecss ignore comments"
-    (
-      echo '/* purgecss start ignore */'
-      cat $path
-      echo '/* purgecss end ignore */'
-    ) > "$path.tmp"
-    mv "$path.tmp" $path
-  fi
-done
+  } else {
+    console.log('+ wrapping %s in purgecss ignore comments', path)
+    if (content.includes('@import ')) {
+      console.warn('! %s: the file contains @import statements', path)
+    }
+    content = `/* purgecss start ignore */\n${content.trim()}\n/* purgecss end ignore */\n`
+    writeFileSync(path, content, 'utf8')
+  }
+}
