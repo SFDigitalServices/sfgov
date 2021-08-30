@@ -6,13 +6,14 @@ for (const path of process.argv.slice(2)) {
   let content = readFileSync(path, 'utf8')
   if (ignorePattern.test(content)) {
     console.log('- skipping %s: the file already has purgecss comments', path)
-    continue
-  } else {
+  } else if (content.includes('{')) {
     console.log('+ wrapping %s in purgecss ignore comments', path)
     if (content.includes('@import ')) {
       console.warn('! %s: the file contains @import statements', path)
     }
     content = `/* purgecss start ignore */\n${content.trim()}\n/* purgecss end ignore */\n`
     writeFileSync(path, content, 'utf8')
+  } else {
+    console.warn('- skipping %s: the file appears not to contain any CSS', path)
   }
 }
