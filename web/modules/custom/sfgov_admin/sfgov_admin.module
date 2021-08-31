@@ -132,6 +132,23 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
       }
     }
   }
+
+  // Update the default values for resource collection.
+  // See https://sfgovdt.jira.com/browse/SG-1433.
+  if ($field_definition->getName() == 'field_data_dashboard' && $field_definition->getTargetBundle() == 'resource_collection') {
+    $default_values = [
+      'field_desktop_width' => 1000,
+      'field_desktop_height' => 220,
+      'field_mobile_width' => 360,
+      'field_mobile_height' => 660,
+    ];
+
+    foreach ($default_values as $field => $value) {
+      if (isset($element['subform'][$field])) {
+        $element['subform'][$field]['widget'][0]['value']['#default_value'] = $value;
+      }
+    }
+  }
 }
 
 /**

@@ -73,6 +73,9 @@
     }
 
     .sfgov-spotlight-button {
+      .btn {
+        @include button;
+      }
 
       .field {
         margin-top: 40px;
@@ -155,6 +158,11 @@
   .sfgov-section--content {
     line-height: 28px;
 
+    p {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
     h2, h3, h4 {
       scroll-margin-top: 100px;
 
@@ -171,14 +179,36 @@
       margin-top: 80px;
     }
 
+    h1 {
+      @include fs-title-1-mobile;
+
+      @include media($medium-screen) {
+        @include fs-title-1;
+      }
+    }
+
     h2 {
+      @include fs-title-2-mobile;
+
+      @include media($medium-screen) {
+        @include fs-title-2;
+      }
 
       &:first-of-type {
         margin-top: 0;
       }
     }
 
+    h3 {
+      @include fs-title-3-mobile;
+
+      @include media($medium-screen) {
+        @include fs-title-3;
+      }
+    }
+
     h4 {
+      @include fs-title-4;
       margin-top: 60px;
     }
   }
@@ -323,6 +353,7 @@
       margin: 0;
       border-radius: 0;
       outline: none;
+      border: 0;
 
       &:hover,
       &:focus {
@@ -382,6 +413,7 @@
     }
 
     &-expand-button {
+      @include rubik;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -390,6 +422,10 @@
       margin: 0;
       border: 0;
       width: 100%;
+      font-weight: $fw-medium;
+      font-size: 17px;
+      height: 48px;
+      border-radius: 10px;
 
       @media screen and (min-width: $medium-screen) {
         color: $c-bright-blue;

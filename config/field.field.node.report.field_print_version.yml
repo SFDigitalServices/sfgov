@@ -1,32 +1,33 @@
-uuid: c6e5cd89-26c6-4123-b0d3-ed4cdc3b0120
+uuid: d99aa73c-6112-4dbe-ba36-dd9dab330251
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_subcommittees
-    - node.type.public_body
+    - field.storage.node.field_print_version
+    - media.type.file
+    - node.type.report
   module:
     - tmgmt_content
 third_party_settings:
   tmgmt_content:
     excluded: false
-id: node.public_body.field_subcommittees
-field_name: field_subcommittees
+id: node.report.field_print_version
+field_name: field_print_version
 entity_type: node
-bundle: public_body
-label: Subcommittees
+bundle: report
+label: 'Print version'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: unpublished
+  handler: 'default:media'
   handler_settings:
     target_bundles:
-      public_body: public_body
+      file: file
     sort:
       field: _none
-    auto_create: 0
+    auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference
