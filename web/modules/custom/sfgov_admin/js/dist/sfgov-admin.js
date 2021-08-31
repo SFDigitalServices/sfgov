@@ -85,19 +85,21 @@
   Drupal.behaviors.sfgovFormatTelephone = {
     attach: function (context, settings) {
       $('#edit-submit').once().on('click', function (e) {
-        var phoneField = $('.form-tel');
+        $('.form-tel').each(function () {
+          var phoneField = $(this);
 
-        if (phoneField.length > 0) {
-          var regex = new RegExp("\\d+", "g");
+          if (phoneField.length > 0) {
+            var regex = new RegExp("\\d+", "g");
 
-          if (phoneField.val().length > 0) {
-            var number = phoneField.val().match(regex).join("");
+            if (phoneField.val().length > 0) {
+              var number = phoneField.val().match(regex).join("");
 
-            if (number.length == 10) {
-              phoneField.val(number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6));
+              if (number.length == 10) {
+                phoneField.val(number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6));
+              }
             }
           }
-        }
+        });
       });
     }
   }; // populate the sort title for transactions based on the title (excluding stop words at the beginning of a title)

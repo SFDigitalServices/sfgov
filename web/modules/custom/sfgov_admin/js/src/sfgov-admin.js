@@ -93,18 +93,22 @@
 
   // Enforce telephone numbers have format XXX-XXX-XXXX
   Drupal.behaviors.sfgovFormatTelephone = {
-    attach: function(context, settings) {
-      $('#edit-submit').once().on('click', function(e) {
-        var phoneField = $('.form-tel');
-        if (phoneField.length > 0) {
-          var regex = new RegExp("\\d+", "g");
-          if(phoneField.val().length > 0) {
-            var number = phoneField.val().match(regex).join("");
-            if (number.length == 10) {
-              phoneField.val(number.slice(0,3) + "-" + number.slice(3,6) + "-" + number.slice(6));
+    attach: function (context, settings) {
+      $('#edit-submit').once().on('click', function (e) {
+        $('.form-tel').each(function() {
+          var phoneField = $(this);
+          if (phoneField.length > 0) {
+            var regex = new RegExp("\\d+", "g");
+
+            if (phoneField.val().length > 0) {
+              var number = phoneField.val().match(regex).join("");
+
+              if (number.length == 10) {
+                phoneField.val(number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6));
+              }
             }
           }
-        }
+        })
       })
     }
   }
