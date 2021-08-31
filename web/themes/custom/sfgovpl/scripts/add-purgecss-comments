@@ -4,6 +4,7 @@ const { readFileSync, writeFileSync } = require('fs')
 const IGNORE_START = '/* purgecss start ignore */'
 const IGNORE_END = '/* purgecss end ignore */'
 const ignorePattern = new RegExp(`/[\*/] .*purgecss .*ignore`)
+
 for (const path of process.argv.slice(2)) {
   let content = readFileSync(path, 'utf8')
   if (ignorePattern.test(content)) {
@@ -15,9 +16,17 @@ for (const path of process.argv.slice(2)) {
   }
 
   console.log('+ wrapping %s in purgecss ignore comments', path)
-  if (content.includes('@import ')) {
-    console.warn('! %s: the file contains @import statements', path)
+  const lines = content.split('\n')
+  const imports = lines
+    .map((line, index) => ({ line, index }))
+    .filter(({ line }) => line.startsWith('@import '))
+  if (imports.length) {
+    const { line, index} = imports.pop()
+    console.warn('! %s: the file contains @import statements; inserting after "%s"', path, line)
+    lines.splice(index + 1, 0, IGNORE_START)
+  } else {
+    lines.unshift(IGNORE_START)
   }
-  content = `${IGNORE_START}\n${content.trim()}\n${IGNORE_END}\n`
-  writeFileSync(path, content, 'utf8')
+  lines.push(IGNORE_END, '')
+  writeFileSync(path, lines.join('\n'), 'utf8')
 }
