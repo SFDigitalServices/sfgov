@@ -3,6 +3,6 @@ module.exports = {
   content: [
     'templates/**/*.{twig,html}',
     'src/**/*.js',
-    '../../../modules/custom/**/*.{html,inc,php,theme,twig}'
+    '../../../modules/custom/**/*.{html,inc,js,php,theme,twig}'
   ]
 }
