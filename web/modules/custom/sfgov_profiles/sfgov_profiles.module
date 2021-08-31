@@ -13,3 +13,18 @@ function sfgov_profiles_form_alter(&$form, \Drupal\Core\Form\FormStateInterface 
       break;
   }
 }
+
+/**  
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().  
+ */  
+function sfgov_profiles_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  if ($element['#paragraph_type'] == 'public_body_profiles') {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node->bundle() != 'public_body') {
+      $element['subform']['field_commission_position']['#access'] = FALSE;
+      $element['subform']['field_position_type']['#access'] = FALSE;
+      $element['subform']['field_ending_year']['#access'] = FALSE;
+      $element['subform']['field_starting_year']['#access'] = FALSE;
+    }
+  }
+}

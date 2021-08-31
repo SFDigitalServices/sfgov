@@ -1056,7 +1056,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
             $profile = Paragraph::load($ritem['target_id']);
             $pnid = $profile->get('field_profile')->getValue();
             if ($pnid[0]['target_id'] == $nid) {
-              $ref_data[$key]['profile']['job']['position'] = $profile->get('field_commision_position')->value;
+              $ref_data[$key]['profile']['job']['position'] = $profile->get('field_commission_position')->value;
               $ref_data[$key]['profile']['job']['profile'] = $profile->get('field_profile')->value;
               $ref_data[$key]['profile']['job']['position_type'] = $profile->get('field_position_type')->value;
               if ($temp = $profile->get('field_starting_year')->value) {
