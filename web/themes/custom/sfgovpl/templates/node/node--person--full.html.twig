@@ -30,9 +30,15 @@
     {{ node.field_first_name.0.value|striptags }} {{ node.field_last_name.0.value|striptags }}
   </div>
 
-  <div class="profile--photo">
-    {{ content.field_profile_photo }}
-  </div>
+  {% if content.field_profile_photo|render %}
+    <div class="profile--photo">
+      {{ content.field_profile_photo }}
+    </div>
+  {% elseif content.field_photo|render %}
+    <div class="profile--photo">
+      {{ content.field_photo }}
+    </div>
+  {% endif %}
   
   {% if node.field_primary_email.value|length and node.field_primary_phone_number.value|length %}
   <div class="profile--direct-contact">
@@ -114,18 +120,26 @@
       </div>
     {% endfor %}
   {% endif %}
-  
-  {% if node.field_biography.value|length %}
-  <div class="profile--bio">
-    <div class="bio-trimmed">
-      {{ profile_fields.biotrim }}
+
+  {% if profile_fields.biotrim|length %}
+    {% if node.field_biography.value|length %}
+      <div class="profile--bio">
+        <div class="bio-trimmed">
+          {{ profile_fields.biotrim }}
+        </div>
+        <div class="bio-full">
+          {{ content.field_biography }}
+        </div>
+        <div class="show-bio">{{ 'Show more'|t }}</div>
+        <div class="hide-bio">{{ 'Show less'|t }}</div>
+      </div>
+    {% endif %}
+  {% elseif node.field_biography.value|length %}
+    <div class="profile--bio">
+      <div class="biography">
+        {{ content.field_biography }}
+      </div>
     </div>
-    <div class="bio-full">
-      {{ content.field_biography }}
-    </div>
-    <div class="show-bio">{{ 'Show more'|t }}</div>
-    <div class="hide-bio">{{ 'Show less'|t }}</div>
-  </div>
   {% endif %}
 
   <div class="profile--optional-content">
@@ -134,7 +148,7 @@
   </div>
 </div>
 </div>
-
+    
 {% if (profile_type == 'City Employee') %}
 {% if (profile_fields.dept_pbody_ref_data) %}
 <div class="profile--container-wide additional-roles">

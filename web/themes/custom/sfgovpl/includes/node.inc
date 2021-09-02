@@ -890,29 +890,7 @@ function profile_page_fields($node) {
         $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
       }
     }
-    /*
-    while (isset($chrono_temp) && $stop == 'no') {
-      // Find earliest start date
-      foreach ($chrono_temp as $key1 => $value1) {
-        foreach ($chrono_temp as $key2 => $value2) {
-          if ($value2['stime'] < $value1['stime']) {
-            continue;
-          }
-        }
-      }
-      // Check for more items to iterate
-      if (!array_keys($chrono_temp)) {
-        $stop = 'yes';
-        break;
-      }
-    }
-     */
-    
-    /*usort($chrono_sort, 'stime_sort');
-    function stime_sort($a,$b) {
-      return $a['stime']<$b['stime'];
-    }*/
-      
+
     // Get social media field data
     if($node->hasField('field_social_media')) {
       $aboutSocial = $node->get('field_social_media');
@@ -989,14 +967,17 @@ function profile_page_fields($node) {
       // Get trimmed profile bio
       $source = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
       $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
-
-      if ($source->hasField('field_biography') && $source->access('view')) {
+      if ($source && $source->hasField('field_biography') && $source->access('view')) {
         $value = $source->get('field_biography');
-        $output = $viewBuilder->viewField($value, 'teaser');
-        $output = $output[0] ?? [];
-        $output['#cache']['tags'] = $source->getCacheTags();
+        $output_trim = $viewBuilder->viewField($value, 'teaser');
+        $output_trim = $output_trim[0] ?? [];
+        $output_full = $viewBuilder->viewField($value, 'default');
+        $output_full = $output_full[0] ?? [];
+        if (strlen($output_full['#text']) > strlen($output_trim['#text'])) {
+          $output_trim['#cache']['tags'] = $source->getCacheTags();
+          $theFields['biotrim'] = !empty($output_trim) ? $output_trim : [];
+        }
       }
-      $theFields['biotrim'] = !empty($output) ? $output : [];
     }
 
   }

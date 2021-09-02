@@ -5,7 +5,8 @@
  */
 function sfgov_profiles_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   switch ($form_id) {
-    case 'node_person_edit_form' || 'node_person_form':
+    case 'node_person_edit_form':
+    case 'node_person_form':
       // Make department field show for staff
       $form['field_city_department']['#states'] = [
         'visible' => [':input[name^="field_profile_type"]' => ['value' => 'City Employee']],
@@ -20,7 +21,7 @@ function sfgov_profiles_form_alter(&$form, \Drupal\Core\Form\FormStateInterface 
 function sfgov_profiles_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
   if ($element['#paragraph_type'] == 'public_body_profiles') {
     $node = \Drupal::routeMatch()->getParameter('node');
-    if ($node->bundle() != 'public_body') {
+    if ($node && $node->bundle() != 'public_body') {
       $element['subform']['field_commission_position']['#access'] = FALSE;
       $element['subform']['field_position_type']['#access'] = FALSE;
       $element['subform']['field_ending_year']['#access'] = FALSE;
