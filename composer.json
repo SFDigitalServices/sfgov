@@ -52,6 +52,7 @@
         "drupal/core-recommended": "^8.8",
         "drupal/ctools": "^3.0",
         "drupal/date_popup": "^1.1",
+        "drupal/devel": "^4",
         "drupal/diff": "^1.0",
         "drupal/eck": "dev-1.x",
         "drupal/embed": "^1.4",
@@ -108,7 +109,7 @@
         "drupal/toc_api": "^1.0",
         "drupal/toc_filter": "^2.0",
         "drupal/twig_tweak": "^2.0",
-        "drupal/upgrade_status": "^3.8",
+        "drupal/upgrade_status": "^3.10",
         "drupal/variationcache": "^1.0",
         "drupal/video_embed_field": "^2.4",
         "drupal/viewfield": "^3.0@alpha",
@@ -130,10 +131,11 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "drupal/coder": "^8.3",
         "drupal/core-dev": "^8.8",
-        "drupal/devel": "^4.1",
         "drupal/drupal-extension": "^3.1",
         "drupal/stage_file_proxy": "^1.1",
-        "drupal/twig_vardumper": "^2.2"
+        "drupal/twig_vardumper": "^2.2",
+        "phpstan/phpstan": "^0.12.97",
+        "phpunit/phpunit": "^7 | ^8 | ^9 | ^10"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -149,7 +151,7 @@
     "scripts": {
         "build-assets": [
             "@prepare-for-pantheon",
-            "composer install --optimize-autoloader --no-dev"
+            "composer install --optimize-autoloader"
         ],
         "lint": "find web/modules/custom web/themes/custom -name '*.php' -exec php -l {} \\;",
         "code-sniff": "echo 'No code sniff step defined.'",
@@ -260,7 +262,8 @@
             "drupal/entity_reference_unpublished": {
                 "Allow reference to unpublished media": "patches/entity_reference_unpublished-media.patch"
             }
-        }
+        },
+        "enable-patching": "true"
     },
     "config": {
         "optimize-autoloader": true,
