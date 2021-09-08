@@ -34,6 +34,11 @@ class ResponsiveTableFilter extends FilterBase {
         $table->setAttribute('class', $className . ' sfgov-table sfgov-table-with-padding');
       }
 
+      // Remove the default border and cell attributes.
+      $table->removeAttribute('border');
+      $table->removeAttribute('cellpadding');
+      $table->removeAttribute('cellspacing');
+
       // Wrap the table.
       if (strpos($table->parentNode->getAttribute('class'), 'sfgov-table') === FALSE) {
         $table_wrapper = $document->createElement('div');
