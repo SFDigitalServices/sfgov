@@ -39,33 +39,47 @@ class ResponsiveTableFilter extends FilterBase {
       $table->removeAttribute('cellpadding');
       $table->removeAttribute('cellspacing');
 
+      $table_copy = $table->cloneNode(TRUE);
+      $table_wrapper = $table->parentNode;
+
       // Wrap the table.
-      if (strpos($table->parentNode->getAttribute('class'), 'sfgov-table') === FALSE) {
+      if (strpos($table_wrapper->getAttribute('class'), 'sfgov-table-wrapper') === FALSE) {
         $table_wrapper = $document->createElement('div');
         $table_wrapper->setAttribute('class', 'sfgov-table-wrapper');
-        $table_copy = $table->cloneNode(TRUE);
         $table_wrapper->appendChild($table_copy);
         $table->parentNode->replaceChild($table_wrapper, $table);
+      }
 
-        // Add table caption before responsive wrapper.
-        if ($captions = $table->getElementsByTagName('caption')) {
-          $table_caption = $document->createElement('p');
-          $table_caption->setAttribute('id', $table_id);
-          $table_caption->setAttribute('class', 'sfgov-table-caption');
-          $table_caption->nodeValue = $captions->item(0)->nodeValue;
-          $table_wrapper->parentNode->insertBefore($table_caption, $table_wrapper);
-          $table_copy->setAttribute('aria-labelledby', $table_id);
+      // Add table caption before responsive wrapper.
+      if (($captions = $table->getElementsByTagName('caption')) && $captions->count()) {
+        $table_caption = $document->createElement('p');
+        $table_caption->setAttribute('id', $table_id);
+        $table_caption->setAttribute('class', 'sfgov-table-caption');
+        $table_caption->nodeValue = $captions->item(0)->nodeValue;
+        $table_wrapper->parentNode->insertBefore($table_caption, $table_wrapper);
+        $table_copy->setAttribute('aria-labelledby', $table_id);
+      }
 
-          // Delete captions.
-          foreach ($table_copy->childNodes as $child) {
-            if ($child->nodeName === 'caption') {
-              $table_copy->removeChild($child);
-            }
-          }
-        }
+      // Delete captions.
+      $this->deleteCaptions($table);
+      $this->deleteCaptions($table_copy);
+    }
+    
+    return new FilterProcessResult(Html::serialize($document));
+  }
+
+  /**
+   * Helper to delete table captions.
+   *
+   * @param \DOMElement $table
+   *   The table DOM element.
+   */
+  protected function deleteCaptions(\DOMElement $table) {
+    foreach ($table->childNodes as $child) {
+      if ($child->nodeName === 'caption') {
+        $table->removeChild($child);
       }
     }
-    return new FilterProcessResult(Html::serialize($document));
   }
 
 }
