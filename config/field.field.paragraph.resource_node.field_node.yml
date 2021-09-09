@@ -1,0 +1,39 @@
+uuid: 7723ed18-0d4a-4a2d-9c96-1f92c9844610
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_node
+    - node.type.data_story
+    - node.type.information_page
+    - node.type.page
+    - node.type.resource_collection
+    - paragraphs.paragraphs_type.resource_node
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.resource_node.field_node
+field_name: field_node
+entity_type: paragraph
+bundle: resource_node
+label: Node
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page: page
+      data_story: data_story
+      information_page: information_page
+      resource_collection: resource_collection
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: page
+field_type: entity_reference

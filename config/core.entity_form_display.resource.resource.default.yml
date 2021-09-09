@@ -6,7 +6,6 @@ dependencies:
     - eck.eck_type.resource.resource
     - field.field.resource.resource.field_department
     - field.field.resource.resource.field_description
-    - field.field.resource.resource.field_keywords
     - field.field.resource.resource.field_topic
     - field.field.resource.resource.field_url
   module:
@@ -17,12 +16,6 @@ targetEntityType: resource
 bundle: resource
 mode: default
 content:
-  created:
-    type: datetime_timestamp
-    weight: 6
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_department:
     weight: 3
     settings:
@@ -40,16 +33,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
-    region: content
-  field_keywords:
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_topic:
     weight: 4
@@ -69,20 +52,6 @@ content:
     third_party_settings: {  }
     type: link_default
     region: content
-  langcode:
-    type: language_select
-    weight: 8
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
-  status:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 100
-    region: content
-    third_party_settings: {  }
   title:
     type: string_textfield
     weight: 0
@@ -91,14 +60,8 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 7
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    region: content
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  created: true
+  langcode: true
+  status: true
+  uid: true

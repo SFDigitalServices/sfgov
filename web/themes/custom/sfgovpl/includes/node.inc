@@ -168,8 +168,8 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
     $bundle = $node->bundle();
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $currentLanguageId = $currentLanguage->getId();
-    $nodeTitle = $node->hasTranslation($currentLanguageId) ? 
-      $node->getTranslation($currentLanguageId)->getTitle() : 
+    $nodeTitle = $node->hasTranslation($currentLanguageId) ?
+      $node->getTranslation($currentLanguageId)->getTitle() :
       $node->getTitle();
 
     if ($bundle === 'step_by_step') {
@@ -382,21 +382,23 @@ function dept_page_fields($node) {
         }
       }
     }
-    if($node->hasField('field_resources')) {
+    if ($node->hasField('field_resources')) {
       $resources = $node->get('field_resources');
       $resourcesLabel = $resources->getFieldDefinition()->getLabel();
       $theFields['resources']['label'] = $resourcesLabel;
-      foreach($resources as $resource) {
+      foreach ($resources as $resource) {
         $resourceParagraphId = $resource->getValue()['target_id'];
         if ($resourceParagraph = Paragraph::load($resourceParagraphId)) {
-          $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
-          $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
-          $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
-          $theFields['resources']['items'][] = array(
-            'title' => $resourceItemTitle,
-            'description' => $resourceItemDescription,
-            'url' => $resourceItemUrl,
-          );
+          if ($resourceParagraph->bundle() === 'resources') {
+            $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
+            $resourceItemDescription = $resourceParagraph->get('field_description') ?? $resourceParagraph->get('field_description')->getValue()[0]['value'];
+            $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
+            $theFields['resources']['items'][] = [
+              'title' => $resourceItemTitle,
+              'description' => $resourceItemDescription,
+              'url' => $resourceItemUrl,
+            ];
+          }
         }
       }
     }

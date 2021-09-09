@@ -1,34 +1,33 @@
-uuid: 6fbd8d8a-2ef2-4fc4-8054-e6513b7d0f1c
+uuid: a9c3527e-b926-42d3-ad14-5ad66388bada
 langcode: en
 status: true
 dependencies:
   config:
     - eck.eck_type.resource.resource
-    - field.storage.resource.field_keywords
-    - taxonomy.vocabulary.keywords
+    - field.storage.paragraph.field_resource
+    - paragraphs.paragraphs_type.resource_entity
   module:
     - tmgmt_content
 third_party_settings:
   tmgmt_content:
     excluded: false
-id: resource.resource.field_keywords
-field_name: field_keywords
-entity_type: resource
-bundle: resource
-label: Keywords
+id: paragraph.resource_entity.field_resource
+field_name: field_resource
+entity_type: paragraph
+bundle: resource_entity
+label: Entity
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:taxonomy_term'
+  handler: 'default:resource'
   handler_settings:
     target_bundles:
-      keywords: keywords
+      resource: resource
     sort:
-      field: name
-      direction: asc
+      field: _none
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

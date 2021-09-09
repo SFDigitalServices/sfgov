@@ -1,0 +1,53 @@
+uuid: 0b282a1c-d620-44b7-9a05-cc2d22325633
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.resource.field_item
+    - paragraphs.paragraphs_type.resource
+  module:
+    - field_group
+    - sfgov_admin
+third_party_settings:
+  field_group:
+    group_wrapper:
+      children:
+        - field_resource
+        - field_node
+      parent_name: ''
+      weight: 0
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: false
+      label: 'Choose one'
+id: paragraph.resource.default
+targetEntityType: paragraph
+bundle: resource
+mode: default
+content:
+  field_item:
+    weight: 3
+    settings:
+      title: 'Resource item'
+      title_plural: 'Resource items'
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: '0'
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: 0
+    third_party_settings: {  }
+    type: sfgov_paragraphs
+    region: content
+hidden:
+  created: true
+  status: true
