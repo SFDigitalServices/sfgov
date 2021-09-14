@@ -12,7 +12,7 @@ STATUS='null'
 SUITE_RESULT=
 GI_PASSING=
 
-EXECUTE_URL="https://api.ghostinspector.com/v1/suites/$GI_SUITE/execute?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1"
+EXECUTE_URL="https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1"
 
 echo "Execute url: $EXECUTE_URL"
 
@@ -67,3 +67,44 @@ else # local
   export GI_PASSING=$PASSING
   export PR=$PR
 fi
+
+title="<$GI_START_URL|$GI_START_URL> | $PR | <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/$GI_RESULT_ID|results>"
+
+data=$(printf '{
+  "attachments": [{
+    "fallback": "sfgov tests complete",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "%s"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":ghost: *e2e test results*\n%s"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":accessibility: *scan results*\n```%s```"
+        }
+      }
+    ]
+  }]
+}' "$title" "$GI_SUITE_TEST_RESULTS_SLACK" "accessibility scan results from gi here")
+
+curl -g -X POST -H 'Content-type: application/json' --data "$data" $RONBOT_WEBHOOK_URL
+
+exit $GI_PASSING
