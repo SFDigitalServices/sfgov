@@ -6,6 +6,11 @@ dependencies:
     - field.storage.node.field_departments
     - node.type.department
     - node.type.transaction
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
 id: node.transaction.field_departments
 field_name: field_departments
 entity_type: node
@@ -17,13 +22,13 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: unpublished
   handler_settings:
     target_bundles:
       department: department
     sort:
       field: title
       direction: ASC
-    auto_create: false
+    auto_create: 0
     auto_create_bundle: ''
 field_type: entity_reference
