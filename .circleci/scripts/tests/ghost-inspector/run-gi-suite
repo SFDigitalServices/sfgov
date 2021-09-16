@@ -10,8 +10,8 @@ echo "Using start url: $GI_START_URL"
 curl -X POST \
     -H "Content-Type: application/json" \
     -H "X-GitHub-Event: push" \
-    -d '{"payload": "{\"repository\": {\"statuses_url\": \"https://api.github.com/repos/'$GITHUB_ORG'/'$CIRCLE_PROJECT_REPONAME'/statuses/'$CIRCLE_SHA1'\"},\"sha\": \"<sha>\"}"}' \
-    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$GI_START_URL"
+    -d '{"payload": "{\"repository\": {\"statuses_url\": \"https://api.github.com/repos/'$GITHUB_ORG'/'$CIRCLE_PROJECT_REPONAME'/statuses/'$CIRCLE_SHA1'\"},\"sha\": \"'$CIRCLE_SHA1'\"}"}' \
+    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=0"
 
 # # set up a couple variables to monitor result state
 # STATUS='null'
