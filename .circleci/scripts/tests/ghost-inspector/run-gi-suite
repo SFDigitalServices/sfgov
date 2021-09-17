@@ -16,7 +16,7 @@ GI_RESULT_ID=$(curl -X POST \
     -H "Content-Type: application/json" \
     -H "X-GitHub-Event: push" \
     -d '{"payload": "{\"repository\": {\"statuses_url\": \"https://api.github.com/repos/'$GITHUB_ORG'/'$CIRCLE_PROJECT_REPONAME'/statuses/'$CIRCLE_SHA1'\"},\"sha\": \"'$CIRCLE_SHA1'\"}"}' \
-    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1")
+    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1" | jq .data._id)
 
 # Poll for the suite result, sleep for a few seconds if it hasn't changed
 # Ghost Inspector currently does not support webhook for when an entire suite has finished executing, only for indidiviual tests within a suite
