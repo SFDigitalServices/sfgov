@@ -24,7 +24,6 @@ echo "Polling for suite results (ID: $GI_RESULT_ID)"
 while [ "$STATUS" = 'null' ]; do
   SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/?apiKey=$GI_API_KEY")
   RESPONSE_STATUS=$(echo $SUITE_RESULT | jq -r '.code')
-  echo "response status: $RESPONSE_STATUS"
   if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
     echo "API ERROR"
     break
@@ -53,9 +52,14 @@ PR_NUMBER=$(echo https://github.com/SFDigitalServices/sfgov/pull/1010 | awk -F "
 THREAD_TS=$(curl -H "Authorization: Bearer $SLACK_USER_TOKEN" "https://slack.com/api/search.messages?query=$PR_NUMBER%20$SHORT_SHA%20in%3A%23proj-sfdotgov-eng&sort=timestamp&pretty=1" | jq -r .messages.matches[0].ts)
 echo $THREAD_TS
 
+echo $GI_SUITE_TEST_RESULTS_SLACK
+
+$data=$(printf '{
+  "text":"%s"
+}' "threaded message in deployment status")
+
 # thread the results
-curl -X POST -H 'Content-type: application/json' --data \
- '{"text":"'$GI_SUITE_TEST_RESULTS_SLACK'","thread_ts":"'$THREAD_TS'"}' $RONBOT_WEBHOOK_URL
+curl -s -X POST -H 'Content-type: application/json' --data "$data" $RONBOT_WEBHOOK_URL
 
 exit $GI_PASSING
 
