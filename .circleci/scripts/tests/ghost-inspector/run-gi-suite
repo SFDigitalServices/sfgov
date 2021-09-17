@@ -73,7 +73,7 @@ threadData=$(printf '{
   "unfurl_links": "false",
   "text":"%s",
   "thread_ts":"%s"
-}' "threaded message in suite status status" "$threadTs")
+}' "$GI_SUITE_TEST_RESULTS_SLACK" "$threadTs")
 
 # thread the results
 curl -s -X POST -H 'Content-type: application/json' --data "$threadData" $RONBOT_WEBHOOK_TEST_URL
