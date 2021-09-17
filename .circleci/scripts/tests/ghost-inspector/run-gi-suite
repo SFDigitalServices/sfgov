@@ -57,11 +57,12 @@ echo $GI_SUITE_TEST_RESULTS_SLACK
 # send slack notification of completion
 suiteStatusData=$(printf '{
   "channel": "ant-test",
+  "unfurl_links": "false",
   "text": "%s"
 }' ":ghost: e2e tests for <$GI_START_URL|$GI_START_URL> complete.  results in thread")
 
 threadTs=$(curl -X POST \
-  -H "Authorization: Bearer $SLACK_USER_TOKEN" \
+  -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-type: application/json; charset=utf-8" \
   --data "$suiteStatusData" \
   https://slack.com/api/chat.postMessage | jq -r .ts)
@@ -69,6 +70,7 @@ threadTs=$(curl -X POST \
 echo "threadTs:$threadTs"
 
 threadData=$(printf '{
+  "unfurl_links": "false",
   "text":"%s",
   "thread_ts":"%s"
 }' "threaded message in suite status status" "$threadTs")
