@@ -27,5 +27,17 @@ function sfgov_profiles_field_widget_entity_reference_paragraphs_form_alter(&$el
       $element['subform']['field_ending_year']['#access'] = FALSE;
       $element['subform']['field_starting_year']['#access'] = FALSE;
     }
+    $element['subform']['field_starting_year']['#states'] = [
+      'visible' => [
+        [':input[name*="field_position_type"]' => ['value' => 'Appointed']],
+        [':input[name*="field_position_type"]' => ['value' => 'Elected']],
+      ],
+    ];
+    $element['subform']['field_ending_year']['#states'] = [
+      'visible' => [
+        [':input[name*="field_position_type"]' => ['value' => 'Appointed']],
+        [':input[name*="field_position_type"]' => ['value' => 'Elected']],
+      ],
+    ];
   }
 }
