@@ -50,7 +50,7 @@ SHORT_SHA=$(echo $CIRCLE_SHA1 | cut -c -7)
 PR_NUMBER=$(echo https://github.com/SFDigitalServices/sfgov/pull/1010 | awk -F "/" '{print $NF}')
 
 # search for the deployment status message, just grab the most recent based on pr number and commit sha :crossed-fingers:
-THREAD_TS=$(curl -H "Authorization: Bearer $SLACK_USER_TOKEN" "https://slack.com/api/search.messages?query=$PR_NUMBER%20$SHORT_SHA%20in%3A%23proj-sfdotgov-eng&sort=timestamp&pretty=1" | jq .messages.matches[0].ts)
+THREAD_TS=$(curl -H "Authorization: Bearer $SLACK_USER_TOKEN" "https://slack.com/api/search.messages?query=$PR_NUMBER%20$SHORT_SHA%20in%3A%23proj-sfdotgov-eng&sort=timestamp&pretty=1" | jq -r .messages.matches[0].ts)
 echo $THREAD_TS
 
 # thread the results
