@@ -23,7 +23,6 @@ GI_RESULT_ID=$(curl -s -X POST \
 echo "Polling for suite results (ID: $GI_RESULT_ID)"
 while [ "$STATUS" = 'null' ]; do
   SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/?apiKey=$GI_API_KEY")
-  echo "suite result:$SUITE_RESULT"
   RESPONSE_STATUS=$(echo $SUITE_RESULT | jq -r '.code')
   echo "response status: $RESPONSE_STATUS"
   if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
@@ -44,12 +43,19 @@ else
   GI_PASSING=0
 fi
 
+SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
+GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
+
 SHORT_SHA=$(echo $CIRCLE_SHA1 | cut -c -7)
 PR_NUMBER=$(echo https://github.com/SFDigitalServices/sfgov/pull/1010 | awk -F "/" '{print $NF}')
 
+# search for the deployment status message, just grab the most recent based on pr number and commit sha :crossed-fingers:
 THREAD_TS=$(curl -H "Authorization: Bearer $SLACK_USER_TOKEN" "https://slack.com/api/search.messages?query=$PR_NUMBER%20$SHORT_SHA%20in%3A%23proj-sfdotgov-eng&sort=timestamp&pretty=1" | jq .messages.matches[0].ts)
-
 echo $THREAD_TS
+
+# thread the results
+curl -X POST -H 'Content-type: application/json' --data \
+ '{"text":"'$GI_SUITE_TEST_RESULTS_SLACK'","thread_ts":"'$THREAD_TS'"}' $RONBOT_WEBHOOK_URL
 
 exit $GI_PASSING
 
