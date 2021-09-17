@@ -19,7 +19,7 @@ GI_RESULT_ID=$(curl -s -X POST \
     "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1" | jq -r '.data._id')
 
 # Poll for the suite result, sleep for a few seconds if it hasn't changed
-# Ghost Inspector currently does not support webhook for when an entire suite has finished executing, only for indidiviual tests within a suite
+# Ghost Inspector currently does not support webhook for when an entire suite has finished executing, only for individual tests within a suite
 echo "Polling for suite results (ID: $GI_RESULT_ID)"
 while [ "$STATUS" = 'null' ]; do
   SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/?apiKey=$GI_API_KEY")
@@ -60,7 +60,7 @@ suiteStatusData=$(printf '{
   "text": "%s"
 }' ":ghost: e2e tests for <$GI_START_URL|$GI_START_URL> complete.  results in thread")
 
-threadTs = $(curl -X POST \
+threadTs=$(curl -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-type: application/json; charset=utf-8" \
   --data "$suiteStatusData" \
