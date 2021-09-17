@@ -12,7 +12,7 @@ STATUS='null'
 SUITE_RESULT=
 GI_PASSING=
 
-GI_RESULT_ID=$(curl -X -s POST \
+GI_RESULT_ID=$(curl -s -X POST \
     -H "Content-Type: application/json" \
     -H "X-GitHub-Event: push" \
     -d '{"payload": "{\"repository\": {\"statuses_url\": \"https://api.github.com/repos/'$GITHUB_ORG'/'$CIRCLE_PROJECT_REPONAME'/statuses/'$CIRCLE_SHA1'\"},\"sha\": \"'$CIRCLE_SHA1'\"}"}' \
