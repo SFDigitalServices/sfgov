@@ -61,7 +61,7 @@ suiteStatusData=$(printf '{
 }' ":ghost: e2e tests for <$GI_START_URL|$GI_START_URL> complete.  results in thread")
 
 threadTs=$(curl -X POST \
-  -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+  -H "Authorization: Bearer $SLACK_USER_TOKEN" \
   -H "Content-type: application/json; charset=utf-8" \
   --data "$suiteStatusData" \
   https://slack.com/api/chat.postMessage | jq -r .ts)
@@ -71,7 +71,7 @@ echo "threadTs:$threadTs"
 threadData=$(printf '{
   "text":"%s",
   "thread_ts":"%s"
-}' "threaded message in deployment status" "$threadTs")
+}' "threaded message in suite status status" "$threadTs")
 
 # thread the results
 curl -s -X POST -H 'Content-type: application/json' --data "$threadData" $RONBOT_WEBHOOK_TEST_URL
