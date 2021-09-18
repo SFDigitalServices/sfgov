@@ -48,26 +48,30 @@ GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=
 SHORT_SHA=$(echo $CIRCLE_SHA1 | cut -c -7)
 PR_NUMBER=$(echo https://github.com/SFDigitalServices/sfgov/pull/1010 | awk -F "/" '{print $NF}')
 
-# search for the deployment status message, just grab the most recent based on pr number and commit sha :crossed-fingers:
-THREAD_TS=$(curl -H "Authorization: Bearer $SLACK_USER_TOKEN" "https://slack.com/api/search.messages?query=$PR_NUMBER%20$SHORT_SHA%20in%3A%23proj-sfdotgov-eng&sort=timestamp&pretty=1" | jq -r .messages.matches[0].ts)
-echo $THREAD_TS
+SUITE_TEST_RESULTS=$(curl -s https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results?apiKey=$GI_API_KEY)
+GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
-echo $GI_SUITE_TEST_RESULTS_SLACK
+HAS_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep redx)
+HAS_SCREENSHOT_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep orangedash)
+QUICK_STATUS=':greencheck: '
 
-# send slack notification of completion
+if [ -n "$HAS_FAILURE" ]; then
+  QUICK_STATUS=":redx: "
+elif [ -n "$HAS_SCREENSHOT_FAILURE" ]; then
+  QUICK_STATUS=":orangedash: "
+fi
+
 suiteStatusData=$(printf '{
   "channel": "ant-test",
   "unfurl_links": "false",
   "text": "%s"
-}' ":ghost: e2e tests for <$GI_START_URL|$GI_START_URL> complete.  results in thread")
+}' ":ghost: *e2e tests for* <$GI_START_URL|$GI_START_URL> *complete* $QUICK_STATUS:thread:")
 
-threadTs=$(curl -X POST \
+threadTs=$(curl -s -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-type: application/json; charset=utf-8" \
   --data "$suiteStatusData" \
   https://slack.com/api/chat.postMessage | jq -r .ts)
-
-echo "threadTs:$threadTs"
 
 threadData=$(printf '{
   "unfurl_links": "false",
@@ -75,7 +79,6 @@ threadData=$(printf '{
   "thread_ts":"%s"
 }' "$GI_SUITE_TEST_RESULTS_SLACK" "$threadTs")
 
-# thread the results
 curl -s -X POST -H 'Content-type: application/json' --data "$threadData" $RONBOT_WEBHOOK_TEST_URL
 
 exit $GI_PASSING
