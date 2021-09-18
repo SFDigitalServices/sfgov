@@ -42,23 +42,20 @@ else
   GI_PASSING=0
 fi
 
-SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
-GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
-
 SHORT_SHA=$(echo $CIRCLE_SHA1 | cut -c -7)
-PR_NUMBER=$(echo https://github.com/SFDigitalServices/sfgov/pull/1010 | awk -F "/" '{print $NF}')
+PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | awk -F "/" '{print $NF}')
 
 SUITE_TEST_RESULTS=$(curl -s https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results?apiKey=$GI_API_KEY)
 GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
 HAS_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep redx)
 HAS_SCREENSHOT_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep orangedash)
-QUICK_STATUS=':greencheck: '
+QUICK_STATUS=":greencheck:"
 
 if [ -n "$HAS_FAILURE" ]; then
-  QUICK_STATUS=":redx: "
+  QUICK_STATUS=":redx:"
 elif [ -n "$HAS_SCREENSHOT_FAILURE" ]; then
-  QUICK_STATUS=":orangedash: "
+  QUICK_STATUS=":orangedash:"
 fi
 
 suiteStatusData=$(printf '{
