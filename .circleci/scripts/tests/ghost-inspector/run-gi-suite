@@ -48,6 +48,8 @@ PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | awk -F "/" '{print $NF}')
 SUITE_TEST_RESULTS=$(curl -s https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results?apiKey=$GI_API_KEY)
 GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
 
+echo "GI_SUITE_TEST_RESULTS_SLACK:$GI_SUITE_TEST_RESULTS_SLACK"
+
 HAS_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep redx)
 HAS_SCREENSHOT_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep orangedash)
 QUICK_STATUS=":greencheck:"
@@ -58,11 +60,15 @@ elif [ -n "$HAS_SCREENSHOT_FAILURE" ]; then
   QUICK_STATUS=":orangedash:"
 fi
 
+echo "QUICK_STATUS:$QUICK_STATUS"
+
 suiteStatusData=$(printf '{
   "channel": "ant-test",
   "unfurl_links": "false",
   "text": "%s"
 }' ":ghost: *e2e tests for* <$GI_START_URL|$GI_START_URL> *complete* $QUICK_STATUS:thread:")
+
+echo "suiteStatusData:$suiteStatusData"
 
 threadTs=$(curl -s -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
@@ -70,11 +76,15 @@ threadTs=$(curl -s -X POST \
   --data "$suiteStatusData" \
   https://slack.com/api/chat.postMessage | jq -r .ts)
 
+echo "threadTs:$threadTs"
+
 threadData=$(printf '{
   "unfurl_links": "false",
   "text":"%s",
   "thread_ts":"%s"
 }' "$GI_SUITE_TEST_RESULTS_SLACK" "$threadTs")
+
+echo "threadData:$threadData"
 
 curl -s -X POST -H 'Content-type: application/json' --data "$threadData" $RONBOT_WEBHOOK_TEST_URL
 
