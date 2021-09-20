@@ -97,7 +97,7 @@ suiteThreadData=$(printf '{
   "thread_ts":"%s"
 }' "<https://app.ghostinspector.com/suite-results/$giResultId|suite results dashboard>" "$threadTs")
 
-curl -s -X POST -H 'Content-type: application/json' --data "$suiteThreadData" $RONBOT_WEBHOOK_TEST_URL
+curl -s -X POST -H 'Content-type: application/json' --data "$suiteThreadData" $RONBOT_WEBHOOK_URL
 
 e2eThreadData=$(printf '{
   "unfurl_links": "false",
@@ -118,7 +118,7 @@ e2eThreadData=$(printf '{
 
 echo "e2eThreadData:$e2eThreadData"
 
-curl -s -X POST -H 'Content-type: application/json' --data "$e2eThreadData" $RONBOT_WEBHOOK_TEST_URL
+curl -s -X POST -H 'Content-type: application/json' --data "$e2eThreadData" $RONBOT_WEBHOOK_URL
 
 adaThreadData=$(printf '{
   "unfurl_links": "false",
@@ -137,6 +137,6 @@ adaThreadData=$(printf '{
   "thread_ts":"%s"
 }' "$adaResultsSlack" "$threadTs")
 
-curl -s -X POST -H 'Content-type: application/json' --data "$adaThreadData" $RONBOT_WEBHOOK_TEST_URL
+curl -s -X POST -H 'Content-type: application/json' --data "$adaThreadData" $RONBOT_WEBHOOK_URL
 
 exit $giPassing
