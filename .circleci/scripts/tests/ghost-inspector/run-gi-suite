@@ -50,19 +50,19 @@ GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | if(.pa
 
 echo "GI_SUITE_TEST_RESULTS_SLACK:$GI_SUITE_TEST_RESULTS_SLACK"
 
-HAS_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep redx)
-HAS_SCREENSHOT_FAILURE=$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep orangedash)
+HAS_FAILURE=""
+HAS_SCREENSHOT_FAILURE=""
 QUICK_STATUS=":large_green_circle:"
 
-# if [ -n "$HAS_FAILURE" ]; then
-#   QUICK_STATUS=":red_circle:"
-# elif [ -n "$HAS_SCREENSHOT_FAILURE" ]; then
-#   QUICK_STATUS=":large_orange_circle:"
-# else
-#   QUICK_STATUS=":large_green_circle"
-# fi
+if [ -n "$HAS_FAILURE" ]; then
+  QUICK_STATUS=":red_circle:"
+elif [ -n "$HAS_SCREENSHOT_FAILURE" ]; then
+  QUICK_STATUS=":large_orange_circle:"
+else
+  QUICK_STATUS=":large_green_circle"
+fi
 
-# echo "QUICK_STATUS:$QUICK_STATUS"
+echo "QUICK_STATUS:$QUICK_STATUS"
 
 suiteStatusData=$(printf '{
   "channel": "ant-test",
