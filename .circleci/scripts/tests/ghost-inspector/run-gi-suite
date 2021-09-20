@@ -71,8 +71,15 @@ echo "quickStatus:$quickStatus"
 suiteStatusData=$(printf '{
   "channel": "ant-test",
   "unfurl_links": "false",
-  "text": "%s"
-}' "$quickStatus e2e tests for <$giStartUrl|pr-$prNumber> complete :thread:")
+  "text": "sfgov tests for pr-%s complete",
+  "blocks": [{
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "%s"
+    }
+  }]
+}' "$prNumber" "$quickStatus e2e tests for <$giStartUrl|pr-$prNumber> complete :thread:")
 
 echo "suiteStatusData:$suiteStatusData"
 
@@ -94,7 +101,18 @@ curl -s -X POST -H 'Content-type: application/json' --data "$suiteThreadData" $R
 
 e2eThreadData=$(printf '{
   "unfurl_links": "false",
-  "text":":ghost: *e2e test results*\n>>>%s",
+  "attachments": [{
+    "fallback": "sfgov e2e tests complete",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":ghost: *e2e test results*\n%s"
+        }
+      }
+    ]
+  }],
   "thread_ts":"%s"
 }' "$giResultsSlack" "$threadTs")
 
@@ -104,7 +122,18 @@ curl -s -X POST -H 'Content-type: application/json' --data "$e2eThreadData" $RON
 
 adaThreadData=$(printf '{
   "unfurl_links": "false",
-  "text":":accessibility: *ada scan results*\n>>>%s",
+  "attachments": [{
+    "fallback": "sfgov ada scan results",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":accessibility: *ada scan results*\n%s"
+        }
+      }
+    ]
+  }],
   "thread_ts":"%s"
 }' "$adaResultsSlack" "$threadTs")
 
