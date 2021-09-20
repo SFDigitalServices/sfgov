@@ -3,70 +3,76 @@
 set -eo pipefail
 
 # use the terminus env vars created by previous steps
-GI_START_URL="$MULTIDEV_SITE_URL"
+giStartUrl="$MULTIDEV_SITE_URL"
 
-echo "Using start url: $GI_START_URL"
+echo "Using start url: $giStartUrl"
 
 # set up a couple variables to monitor result state
-STATUS='null'
-SUITE_RESULT=
-GI_PASSING=
+status='null'
+suiteResult=
+giPassing=
 
-GI_RESULT_ID=$(curl -s -X POST \
+giResultId=$(curl -s -X POST \
     -H "Content-Type: application/json" \
     -H "X-GitHub-Event: push" \
     -d '{"payload": "{\"repository\": {\"statuses_url\": \"https://api.github.com/repos/'$GITHUB_ORG'/'$CIRCLE_PROJECT_REPONAME'/statuses/'$CIRCLE_SHA1'\"},\"sha\": \"'$CIRCLE_SHA1'\"}"}' \
-    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$GI_START_URL&immediate=1" | jq -r '.data._id')
+    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$giStartUrl&immediate=1" | jq -r '.data._id')
 
 # Poll for the suite result, sleep for a few seconds if it hasn't changed
 # Ghost Inspector currently does not support webhook for when an entire suite has finished executing, only for individual tests within a suite
-echo "Polling for suite results (ID: $GI_RESULT_ID)"
-while [ "$STATUS" = 'null' ]; do
-  SUITE_RESULT=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/?apiKey=$GI_API_KEY")
-  RESPONSE_STATUS=$(echo $SUITE_RESULT | jq -r '.code')
-  if [ $? -ne 0 ] || [ "$RESPONSE_STATUS" == 'ERROR' ]; then # invalid json or api error, break
+echo "Polling for suite results (ID: $giResultId)"
+while [ "$status" = 'null' ]; do
+  suiteResult=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$giResultId/?apiKey=$GI_API_KEY")
+  responseStatus=$(echo $suiteResult | jq -r '.code')
+  if [ $? -ne 0 ] || [ "$responseStatus" == 'ERROR' ]; then # invalid json or api error, break
     echo "API ERROR"
     break
   fi
-  STATUS=$(echo $SUITE_RESULT | jq -r '.data.passing')
-  echo " - status: $STATUS"
+  status=$(echo $suiteResult | jq -r '.data.passing')
+  echo " - status: $status"
   sleep 5
 done
 
 # status has been updated, check results for "passing"
-if [ "$(echo $SUITE_RESULT | jq -r '.data.passing')" != 'true' ]; then
+if [ "$(echo $suiteResult | jq -r '.data.passing')" != 'true' ]; then
   echo "Suite failed! ¯\_(ツ)_/¯"
-  GI_PASSING=1
+  giPassing=1
 else 
   echo "Suite passed! \o/"
-  GI_PASSING=0
+  giPassing=0
 fi
 
-SHORT_SHA=$(echo $CIRCLE_SHA1 | cut -c -7)
-PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | awk -F "/" '{print $NF}')
+shortSha=$(echo $CIRCLE_SHA1 | cut -c -7)
+prNumber=$(echo $CIRCLE_PULL_REQUEST | awk -F "/" '{print $NF}')
 
-SUITE_TEST_RESULTS=$(curl -s https://api.ghostinspector.com/v1/suite-results/$GI_RESULT_ID/results?apiKey=$GI_API_KEY)
-GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
+# get suite results
+suiteTestResults=$(curl -s https://api.ghostinspector.com/v1/suite-results/$giResultId/results?apiKey=$GI_API_KEY)
 
-echo "GI_SUITE_TEST_RESULTS_SLACK:$GI_SUITE_TEST_RESULTS_SLACK"
+# parse for e2e results
+giResultsSlack=$(echo $suiteTestResults | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
+echo "giResultsSlack:$giResultsSlack"
 
-QUICK_STATUS=""
+# parse for accessibility results
+adaResultsSlack=$(echo $suiteTestResults | jq -r '.data[] | {name: .name, url: .urls[-1], counts: .steps[] | select(.command | contains("assertAccessibility")) | .extra.accessibility.counts} | "*\(.name)*\n\t<\(.url)|scanned page>\n\t*total issues*:\(.counts.total)\n\tcritical:\(.counts.critical)\n\tserious:\(.counts.serious)\n\tmoderate:\(.counts.moderate)\n\tminor:\(.counts.minor)\n\n"')
+echo $adaResultsSlack
 
-if [[ $GI_SUITE_TEST_RESULTS_SLACK =~ "redx" ]]; then
-  QUICK_STATUS=":red_circle:"
-elif [[ $GI_SUITE_TEST_RESULTS_SLACK =~ "orangedash" ]]; then
-  QUICK_STATUS=":large_orange_circle:"
+quickStatus=""
+
+if [[ $giResultsSlack =~ "redx" ]]; then
+  quickStatus=":red_circle:"
+elif [[ $giResultsSlack =~ "orangedash" ]]; then
+  quickStatus=":large_orange_circle:"
 else
-  QUICK_STATUS=":large_green_circle:"
+  quickStatus=":large_green_circle:"
 fi
 
-echo "QUICK_STATUS:$QUICK_STATUS"
+echo "quickStatus:$quickStatus"
 
 suiteStatusData=$(printf '{
   "channel": "ant-test",
   "unfurl_links": "false",
   "text": "%s"
-}' "$QUICK_STATUS e2e tests for <$GI_START_URL|pr-$PR_NUMBER> complete :thread:")
+}' "$quickStatus e2e tests for <$giStartUrl|pr-$prNumber> complete :thread:")
 
 echo "suiteStatusData:$suiteStatusData"
 
@@ -82,24 +88,19 @@ suiteThreadData=$(printf '{
   "unfurl_links": "false",
   "text":"%s",
   "thread_ts":"%s"
-}' "<https://app.ghostinspector.com/suite-results/$GI_RESULT_ID|suite results dashboard>" "$threadTs")
+}' "<https://app.ghostinspector.com/suite-results/$giResultId|suite results dashboard>" "$threadTs")
 
 curl -s -X POST -H 'Content-type: application/json' --data "$suiteThreadData" $RONBOT_WEBHOOK_TEST_URL
 
-threadData=$(printf '{
+e2eThreadData=$(printf '{
   "unfurl_links": "false",
   "text":":ghost: *e2e test results*\n>>>%s",
   "thread_ts":"%s"
-}' "$GI_SUITE_TEST_RESULTS_SLACK" "$threadTs")
+}' "$giResultsSlack" "$threadTs")
 
-echo "threadData:$threadData"
+echo "e2eThreadData:$e2eThreadData"
 
-curl -s -X POST -H 'Content-type: application/json' --data "$threadData" $RONBOT_WEBHOOK_TEST_URL
-
-# get accessibility results
-adaResultsSlack=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | {name: .name, url: .urls[-1], counts: .steps[] | select(.command | contains("assertAccessibility")) | .extra.accessibility.counts} | "*\(.name)*\n\t<\(.url)|scanned page>\n\t*total issues*:\(.counts.total)\n\tcritical:\(.counts.critical)\n\tserious:\(.counts.serious)\n\tmoderate:\(.counts.moderate)\n\tminor:\(.counts.minor)\n\n"')
-
-echo $adaResultsSlack
+curl -s -X POST -H 'Content-type: application/json' --data "$e2eThreadData" $RONBOT_WEBHOOK_TEST_URL
 
 adaThreadData=$(printf '{
   "unfurl_links": "false",
@@ -109,72 +110,4 @@ adaThreadData=$(printf '{
 
 curl -s -X POST -H 'Content-type: application/json' --data "$adaThreadData" $RONBOT_WEBHOOK_TEST_URL
 
-exit $GI_PASSING
-
-# SUITE_TESTS=$(curl -s "https://api.ghostinspector.com/v1/suites/$GI_SUITE/tests/?apiKey=$GI_API_KEY")
-# GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TESTS | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
-
-# if [ -n "$CIRCLE_PULL_REQUEST" ]; then
-#   PR='<'$CIRCLE_PULL_REQUEST'|pr>'
-# else
-#   PR='`'$CIRCLE_BRANCH'`'
-# fi
-
-# # output suite tests with results
-# echo $SUITE_TESTS | jq -r '.data[] | if(.passing) then "\(.name): passed" else "\(.name): failed" end'
-
-# # pass some things along as env variables
-# if [ -n "$CIRCLE_BRANCH" ]; then # circleci
-#   echo 'export GI_START_URL="'$GI_START_URL'"' >> $BASH_ENV
-#   echo 'export GI_RESULT_ID="'$GI_RESULT_ID'"' >> $BASH_ENV
-#   echo 'export GI_SUITE_TEST_RESULTS_SLACK="'$GI_SUITE_TEST_RESULTS_SLACK'"' >> $BASH_ENV
-#   echo 'export PR="'$PR'"' >> $BASH_ENV
-#   echo 'export GI_PASSING="'$GI_PASSING'"' >> $BASH_ENV
-# else # local
-#   export GI_START_URL=$GI_START_URL
-#   export GI_RESULT_ID=$GI_RESULT_ID
-#   export GI_SUITE_TEST_RESULTS_SLACK=$GI_SUITE_TEST_RESULTS_SLACK
-#   export GI_PASSING=$PASSING
-#   export PR=$PR
-# fi
-
-# title="<$GI_START_URL|$GI_START_URL> | $PR | <http://ronswanbot.herokuapp.com/ghost-inspector/suite-results/$GI_RESULT_ID|results>"
-
-# data=$(printf '{
-#   "attachments": [{
-#     "fallback": "sfgov tests complete",
-#     "blocks": [
-#       {
-#         "type": "section",
-#         "text": {
-#           "type": "mrkdwn",
-#           "text": "%s"
-#         }
-#       },
-#       {
-#         "type": "divider"
-#       },
-#       {
-#         "type": "section",
-#         "text": {
-#           "type": "mrkdwn",
-#           "text": ":ghost: *e2e test results*\n%s"
-#         }
-#       },
-#       {
-#         "type": "divider"
-#       },
-#       {
-#         "type": "section",
-#         "text": {
-#           "type": "mrkdwn",
-#           "text": ":accessibility: *scan results*\n```%s```"
-#         }
-#       }
-#     ]
-#   }]
-# }' "$title" "$GI_SUITE_TEST_RESULTS_SLACK" "accessibility scan results from gi here")
-
-# curl -g -X POST -H 'Content-type: application/json' --data "$data" $RONBOT_WEBHOOK_URL
-
-# exit $GI_PASSING
+exit $giPassing
