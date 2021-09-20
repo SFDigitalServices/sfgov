@@ -50,16 +50,14 @@ GI_SUITE_TEST_RESULTS_SLACK=$(echo $SUITE_TEST_RESULTS | jq -r '.data[] | if(.pa
 
 echo "GI_SUITE_TEST_RESULTS_SLACK:$GI_SUITE_TEST_RESULTS_SLACK"
 
-HAS_FAILURE="$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep redx)"
-HAS_SCREENSHOT_FAILURE="$(echo $GI_SUITE_TEST_RESULTS_SLACK | grep orangedash)"
-QUICK_STATUS=":large_green_circle:"
+QUICK_STATUS=""
 
-if [ -n "$HAS_FAILURE" ]; then
+if [[ $GI_SUITE_TEST_RESULTS_SLACK =~ "redx" ]]; then
   QUICK_STATUS=":red_circle:"
-elif [ -n "$HAS_SCREENSHOT_FAILURE" ]; then
+elif [[ $GI_SUITE_TEST_RESULTS_SLACK =~ "orangedash" ]]; then
   QUICK_STATUS=":large_orange_circle:"
 else
-  QUICK_STATUS=":large_green_circle"
+  QUICK_STATUS=":large_green_circle:"
 fi
 
 echo "QUICK_STATUS:$QUICK_STATUS"
