@@ -24,7 +24,7 @@ function sfgovpl_preprocess_page_title(&$variables) {
  * Implements theme_preprocess_page
  * @see node.inc for _sfgovpl_negotiate_translation
  */
-function sfgovpl_preprocess_page(&$variables) {
+function sfgovpl_preprocess_page__node__form_page(&$variables) {
   _sfgovpl_negotiate_translation($variables);
 }
 
