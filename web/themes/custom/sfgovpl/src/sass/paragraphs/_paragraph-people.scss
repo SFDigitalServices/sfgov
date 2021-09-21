@@ -104,23 +104,52 @@
   .inner {
     padding: 0;
   }
-  .field--type-entity-reference-revisions {
-    .field__item {
-      min-width: 100%;
-    }
-    @include media($medium-screen) {
-      display: flex;
-      align-items: stretch;
-      width: 33%;
-      margin-bottom: 40px;
-    }
-  }
+  
   .person-card.person-container {
     display: inline-block;
     min-width: 100%;
+    .person-subtitle,
+    .person-title {
+      @include fs-small-text;
+      opacity: 1;
+    }
   }
-  .field--type-entity-reference-revisions .field__item,
-  .paragraph--view-mode--card-paragraph-with-image-small- {
+
+  .sfgov-people--content .field--type-entity-reference-revisions.__profiles.field__items {
+    display: block;
+    padding-top: 10px;
+    @include media($medium-screen) {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    
+    > .field__item {
+      display: block;
+      margin-bottom: 20px;
+      @include media($medium-screen) {
+        display: flex;
+        align-items: stretch;
+        width: 33%;
+        margin-bottom: 40px;
+      }
+    }
+  }
   
+  .sfgov-people--content {
+    padding-top: 0;
+    @include media($medium-screen) {
+      display: block;
+    }
+  }
+  
+  .person-card {
+    display: block;
+    margin-bottom: 0px;
+    @include media($medium-screen) {
+      display: block;
+      width: 100%;
+      margin-bottom: 0px;
+    }
   }
 }
