@@ -252,6 +252,39 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ */
+function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
+  $nid = $variables['node']->Id();
+  $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
+  $parent_node = Node::load($parent_nid);
+  
+  // Check for public body node, find profile's position field value
+  if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
+    $profile_groups = $parent_node->field_board_members->getValue();
+    // Loop through people paragraphs
+    foreach ($profile_groups as $pg_id) {
+      $pgroup = \Drupal\paragraphs\Entity\Paragraph::load($pg_id['target_id']);
+      if ($pgroup->hasField('field_profiles')) {
+        $profiles = $pgroup->field_profiles->getValue();
+        foreach ($profiles as $gprofile) {
+          $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
+          $pid = $pprofile->field_profile->getValue();
+          $pid = $pid[0]['target_id'];
+          // Find paragraph containing profile reference
+          if ($pid == $nid) {
+            $position = $pprofile->field_commission_position->getValue();
+            if (isset($position[0]['value']) && !empty($position[0]['value'])) {
+              $variables['profileposition'] = $position[0]['value'];
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Retrieve the transaction ids in field_department_services that will be
  * excluded from "more services" section on topic page send the list of ids to a
  * Twig var which will then get passed to view contextual filters via
