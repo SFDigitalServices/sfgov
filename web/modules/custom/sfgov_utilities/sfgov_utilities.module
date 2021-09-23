@@ -393,7 +393,7 @@ function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $for
 
 /**
  * Implements hook_cron().
- * 
+ *
  * TODO: find a way to write the updated array to an accessible var
  * accessing settings via \Drupal\Core\Site\Settings is readonly
  * so at the moment, we're really only swapping between two keys vs the entire array of keys
@@ -449,4 +449,24 @@ function sfgov_utilities_preprocess_views_view_field(&$variables) {
 
   }
 
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_utilities_preprocess_status_messages(&$variables) {
+  // If current user is not admin, hide the security update warnings.
+  if (!in_array('administrator', $variables['user']->getRoles())) {
+    foreach ($variables['message_list']['error'] as $key => $value) {
+      // Messages are just strings, which makes it harder to know whether to
+      // remove them. This removes the message if it links to the updates page.
+      if (str_contains($value, '<a href="/admin/reports/updates/update">')) {
+        unset($variables['message_list']['error'][$key]);
+      }
+    }
+    // Even if this array is empty it will display the warning box at the top.
+    if (empty($variables['message_list']['error'])) {
+      unset($variables['message_list']['error']);
+    }
+  }
 }
