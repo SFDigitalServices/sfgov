@@ -29,9 +29,11 @@ function sfgov_admin_page_attachments(array &$page) {
   $route = \Drupal::routeMatch()->getRouteObject();
   /** @var \Drupal\Core\Routing\AdminContext $is_admin */
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $is_user_page = $route_name == 'entity.user.canonical';
 
   $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
-  if ($is_admin && $active_theme == 'seven') {
+  if (($is_admin || $is_user_page) && $active_theme == 'seven') {
     $page['#attached']['library'][] = 'sfgov_admin/admin';
   }
 
