@@ -28,16 +28,20 @@ function sfgov_profiles_field_widget_entity_reference_paragraphs_form_alter(&$el
       $element['subform']['field_starting_year']['#access'] = FALSE;
     }
     $element['subform']['field_profile']['widget']['#title'] = '';
+    // For multiple profiles target parent and delta values
+    $parent = $element['subform']['#parents'][1];
+    $delta = $element['subform']['#parents'][4];
+    $input_filter = ':input[name*="field_board_members[' . $parent . '][subform][field_profiles][' . $delta . '][subform][field_position_type]"]';
     $element['subform']['field_starting_year']['#states'] = [
       'visible' => [
-        [':input[name*="field_position_type"]' => ['value' => 'Appointed']],
-        [':input[name*="field_position_type"]' => ['value' => 'Elected']],
+        [$input_filter => ['value' => 'Appointed']],
+        [$input_filter => ['value' => 'Elected']],
       ],
     ];
     $element['subform']['field_ending_year']['#states'] = [
       'visible' => [
-        [':input[name*="field_position_type"]' => ['value' => 'Appointed']],
-        [':input[name*="field_position_type"]' => ['value' => 'Elected']],
+        [$input_filter => ['value' => 'Appointed']],
+        [$input_filter => ['value' => 'Elected']],
       ],
     ];
     
