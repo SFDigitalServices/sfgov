@@ -1,0 +1,14 @@
+sfgov_user.start_page:
+  path: '/user/login'
+  defaults:
+    _controller: '\Drupal\sfgov_user\Controller\PageController::startPage'
+    _title: 'Employee login'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+
+sfgov_user.user_page:
+  path: '/user'
+  defaults:
+    _controller: '\Drupal\sfgov_user\Controller\PageController::userPage'
+  requirements:
+    _access: 'TRUE'
