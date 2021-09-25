@@ -38,14 +38,16 @@ function sfgovpl_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  * Implements template_preprocess_form_element().
  */
 function sfgovpl_preprocess_form_element(&$variables) {
-  if ($variables['element']['#form_id'] === 'user_login_form') {
-    if ($variables['name'] === 'name' || $variables['name'] === 'pass') {
-      $variables['description_display'] = 'before';
+  if (isset($variables['element']['#form_id'])) {
+    if ($variables['element']['#form_id'] === 'user_login_form') {
+      if ($variables['name'] === 'name' || $variables['name'] === 'pass') {
+        $variables['description_display'] = 'before';
+      }
     }
-  }
-  elseif ($variables['element']['#form_id'] === 'user_pass') {
-    if ($variables['name'] === 'name') {
-      $variables['description_display'] = 'before';
+    elseif ($variables['element']['#form_id'] === 'user_pass') {
+      if ($variables['name'] === 'name') {
+        $variables['description_display'] = 'before';
+      }
     }
   }
 }
