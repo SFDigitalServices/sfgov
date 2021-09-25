@@ -1,11 +1,13 @@
 <?php
 
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
 
 /**
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
  */
-function sfgov_utilities_deploy_profile_photos() {
+function sfgov_utilities_deploy_00_profile_photos() {
   $nids = \Drupal::entityQuery('node')->condition('type','person')->execute();
   $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
 
@@ -58,4 +60,100 @@ function sfgov_utilities_deploy_profile_photos() {
       echo "\n";
     }
   }
+}
+
+function sfgov_utilities_deploy_01_homepage_profile_group() {
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
+  $user = reset($users);
+  $user_id = $user->id();
+
+  // there's only one landing page
+  $landingPage = Node::load('2');
+
+  // get content sections
+  $contentFieldSections = $landingPage->get('field_content')->getValue();
+
+  // collect the people section indexes for removal
+  $peopleSectionRemoveIds = [];
+
+  foreach($contentFieldSections as $contentFieldSection) {
+    $sectionParagraph = Paragraph::load($contentFieldSection['target_id']);
+
+    if(!empty($sectionParagraph)) {
+      $sectionTitle = $sectionParagraph->get('field_title')->value;
+      // look for the elected officials section
+      if(strToLower($sectionTitle) == 'elected officials') {
+        // get all the people sections
+        $peopleSections = $sectionParagraph->get('field_content');
+        $peopleSectionsValue = $sectionParagraph->get('field_content')->getValue();
+        for($i=0; $i < count($peopleSectionsValue); $i++) {
+          $peopleSection = $peopleSectionsValue[$i];
+          $peopleSectionParagraph = Paragraph::load($peopleSection['target_id']);
+          // echo "peopleSection id: " + $peopleSectionParagraph->id() + "\n";
+          if($peopleSectionParagraph->getType() == 'people') {
+            // we will remove this later, so track the id
+            $peopleSectionRemoveIds[] = $peopleSectionParagraph->id();
+            // capture the people section data fields
+            $peopleSectionTitle = $peopleSectionParagraph->get('field_people_title')->value;
+            $peopleSectionDescription = $peopleSectionParagraph->get('field_description')->value;
+            $peopleSectionPersons = $peopleSectionParagraph->get('field_person_2')->getValue();
+            echo "found people section: \n";
+            echo "\ttitle: " . $peopleSectionTitle . "\n";
+            echo "\tdescription: " . $peopleSectionDescription . "\n";
+            echo "\tpeople: ";
+            
+            $publicBodyProfilesParagraphs = [];
+            
+            // iterate through people sections and create new paragraphs for each to attach to this section paragraph
+            foreach($peopleSectionPersons as $peopleSectionPerson) {
+              $publicBodyProfilesParagraph = Paragraph::create([
+                "type" => "public_body_profiles",
+              ]);
+              $personId = $peopleSectionPerson['target_id'];
+              $person = Node::load($personId);
+              echo $person->get('field_first_name')->value . ' ' . $person->get('field_last_name')->value . "(" . $person->id() . "), ";
+              $publicBodyProfilesParagraph->get('field_profile')->appendItem($peopleSectionPerson);
+              $publicBodyProfilesParagraph->save();
+              $publicBodyProfilesParagraphs[] = $publicBodyProfilesParagraph;
+            }
+            echo "\ncreate new profile group paragraph and insert data from previous people section\n";
+
+            $profileGroupParagraph = Paragraph::create([
+              "type" => "profile_group",
+              "field_title" => $peopleSectionTitle,
+              "field_description" => $peopleSectionDescription,
+              "field_profiles" => $publicBodyProfilesParagraphs
+            ]);
+  
+            $profileGroupParagraph->save();
+            echo "remove people section with id: " . $peopleSectionParagraph->id() . "\n---\n\n";
+            $sectionParagraph->field_content[] = $profileGroupParagraph;
+          } else {
+            echo "no people sections to update";
+          }
+        }
+
+        // loop through again with the saved remove ids
+        for($i=0; $i<count($peopleSectionRemoveIds); $i++) {
+          $removeId = $peopleSectionRemoveIds[$i];
+          // get a fresh list of field_content items because each removal rekeys the array
+          $contents = $sectionParagraph->get('field_content')->getValue();
+          for($j=0; $j<count($contents); $j++) {
+            $targetId = $contents[$j]['target_id'];
+            if($removeId == $targetId) {
+              echo "removing people section with id: $removeId at index: $j\n";
+              $sectionParagraph->get('field_content')->removeItem($j);
+              $sectionParagraph->save();
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $landingPage->setNewRevision(TRUE);
+  $landingPage->revision_log = 'Moved people section data to new profile group';
+  $landingPage->setRevisionCreationTime(REQUEST_TIME);
+  $landingPage->setRevisionUserId($user_id);
+  $landingPage->save();
 }
