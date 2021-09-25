@@ -89,7 +89,6 @@ function sfgov_utilities_deploy_01_homepage_profile_group() {
         for($i=0; $i < count($peopleSectionsValue); $i++) {
           $peopleSection = $peopleSectionsValue[$i];
           $peopleSectionParagraph = Paragraph::load($peopleSection['target_id']);
-          // echo "peopleSection id: " + $peopleSectionParagraph->id() + "\n";
           if($peopleSectionParagraph->getType() == 'people') {
             // we will remove this later, so track the id
             $peopleSectionRemoveIds[] = $peopleSectionParagraph->id();
