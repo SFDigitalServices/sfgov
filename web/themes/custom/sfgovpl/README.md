@@ -105,3 +105,8 @@ If it looks like PurgeCSS is over-aggressively purging selectors that _are_ used
 [pantheon build tools]: https://pantheon.io/docs/guides/build-tools/
 [pantheon node version]: https://quay.io/repository/pantheon-public/build-tools-ci/manifest/sha256:7288b1a1c30babb4e02446fd843e679c6c5807a3095df4746030cdc316ca5ad3#:~:text=NODE_VERSION%3D
 [prettier]: https://prettier.io
+[purgecss]: https://purgecss.com/
+[postcss-purgecss]: https://github.com/FullHuman/purgecss/tree/master/packages/postcss-purgecss#readme
+[postcss-import]: https://github.com/postcss/postcss-import
+[purge reporter]: https://github.com/SFDigitalServices/sfgov/blob/1016056b0a83e50095a01edfa870d39eecfb0409/web/themes/custom/sfgovpl/lib/postcss/purgecss-reporter.js
+[purgecss.config.js]: https://github.com/SFDigitalServices/sfgov/blob/1016056b0a83e50095a01edfa870d39eecfb0409/web/themes/custom/sfgovpl/purgecss.config.js
