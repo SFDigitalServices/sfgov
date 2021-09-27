@@ -6,8 +6,7 @@
 function sfgovpl_theme_suggestions_region_alter(array &$suggestions, array $variables) {
   if ($variables['elements']['#region'] === 'content') {
     $path = \Drupal::service('path.current')->getPath();
-    $current_user = \Drupal::currentUser();
-    if (!$current_user->id()) {
+    if (\Drupal::currentUser()->isAnonymous()) {
       // Anonymous user.
       switch ($path) {
         case '/user/sfgov-login':

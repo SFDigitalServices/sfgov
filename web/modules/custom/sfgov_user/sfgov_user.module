@@ -75,26 +75,26 @@ function sfgov_user_user_view(array &$build, EntityInterface $entity, EntityView
   $current = \Drupal::currentUser();
   if ($account instanceof \Drupal\user\UserInterface) {
     $is_own_account = $account->id() == $current->id();
-  }
 
-  if ($is_own_account && $display->getComponent('field_user_info')) {
-    $user_name = $account->getAccountName();
-    $build['field_user_info'] = [
-      '#markup' => '<h2>' . t('You are logged in as @user', ['@user' => $user_name]) . '</h2>',
-      '#prefix' => '<div class="sfgov-user-info">',
-      '#suffix' => '</div>',
-    ];
+    if ($is_own_account && $display->getComponent('field_user_info')) {
+      $user_name = $account->getAccountName();
+      $build['field_user_info'] = [
+        '#markup' => '<h2>' . t('You are logged in as @user', ['@user' => $user_name]) . '</h2>',
+        '#prefix' => '<div class="sfgov-user-info">',
+        '#suffix' => '</div>',
+      ];
+    }
+    if ($is_own_account && $display->getComponent('field_log_out')) {
+      $build['field_log_out'] = [
+        '#markup' => '<a class="button button--primary" href="/user/logout">' . t('Log out') . '</a>',
+        '#prefix' => '<div class="sfgov-log-out">',
+        '#suffix' => '</div>',
+      ];
+    }
   }
   if ($display->getComponent('field_quick_links')) {
     $build['field_quick_links'] = [
       '#theme' => 'sfgov_user_field_quick_links',
-    ];
-  }
-  if ($is_own_account && $display->getComponent('field_log_out')) {
-    $build['field_log_out'] = [
-      '#markup' => '<a class="button button--primary" href="/user/logout">' . t('Log out') . '</a>',
-      '#prefix' => '<div class="sfgov-log-out">',
-      '#suffix' => '</div>',
     ];
   }
 }
