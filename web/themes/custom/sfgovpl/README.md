@@ -108,5 +108,5 @@ If it looks like PurgeCSS is over-aggressively purging selectors that _are_ used
 [purgecss]: https://purgecss.com/
 [postcss-purgecss]: https://github.com/FullHuman/purgecss/tree/master/packages/postcss-purgecss#readme
 [postcss-import]: https://github.com/postcss/postcss-import
-[purge reporter]: https://github.com/SFDigitalServices/sfgov/blob/1016056b0a83e50095a01edfa870d39eecfb0409/web/themes/custom/sfgovpl/lib/postcss/purgecss-reporter.js
-[purgecss.config.js]: https://github.com/SFDigitalServices/sfgov/blob/1016056b0a83e50095a01edfa870d39eecfb0409/web/themes/custom/sfgovpl/purgecss.config.js
+[purge reporter]: https://github.com/SFDigitalServices/sfgov/blob/develop/web/themes/custom/sfgovpl/lib/postcss/purgecss-reporter.js
+[purgecss.config.js]: https://github.com/SFDigitalServices/sfgov/blob/develop/web/themes/custom/sfgovpl/purgecss.config.js
