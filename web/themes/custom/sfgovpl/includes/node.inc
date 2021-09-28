@@ -858,69 +858,71 @@ function profile_page_fields($node) {
     }
     
     // Sort and filter dept/pbody references by start/end dates
-    $chrono_sort = array();
-    $current_date = time();
-    foreach ($theFields['dept_pbody_ref_data'] as $dpkey => $dpvalue) {
-      if (isset($dpvalue['profile']['job']['start_year']) || isset($dpvalue['profile']['job']['end_year'])) {
-        $chrono_sort[$dpkey]['key'] = $dpkey;
-        $chrono_sort[$dpkey]['stime'] = strtotime($dpvalue['profile']['job']['stime']);
-        $chrono_sort[$dpkey]['etime'] = strtotime($dpvalue['profile']['job']['etime']);
-      }
-    }
-    // remove expired references
-    foreach ($chrono_sort as $ckey => $cvalue) {
-      if (isset($cvalue['etime']) && $cvalue['etime'] > 1000 && $cvalue['etime'] < $current_date) {
-        unset($theFields['dept_pbody_ref_data'][$cvalue['key']]);
-        unset($chrono_sort[$ckey]);
-      }
-    }
-    
-    $chrono_temp = array();
-    // Build sorting array
-    foreach ($chrono_sort as $ckey => $cvalue) {
-      $chrono_temp[intval($ckey )] = intval($cvalue['stime']);
-    }
-    // Sort by start time
-    $chrono_sorted = array();
-    // Counter to prevent infinite loop
-    // profiles likely will not have over 100 references
-    $counter= 0;
-    // No start time flag
-    $nsflag = 0;
-    while (count($chrono_temp) && $counter < 100 && !$nsflag) {
-      $counter += 1;
-      foreach($chrono_temp as $fvalue) {
-        $nsflag = 1;
-        if ($fvalue > 0) {
-          $nsflag = 0;
+    if (isset($theFields['dept_pbody_ref_data'])) {
+      $chrono_sort = array();
+      $current_date = time();
+      foreach ($theFields['dept_pbody_ref_data'] as $dpkey => $dpvalue) {
+        if (isset($dpvalue['profile']['job']['start_year']) || isset($dpvalue['profile']['job']['end_year'])) {
+          $chrono_sort[$dpkey]['key'] = $dpkey;
+          $chrono_sort[$dpkey]['stime'] = strtotime($dpvalue['profile']['job']['stime']);
+          $chrono_sort[$dpkey]['etime'] = strtotime($dpvalue['profile']['job']['etime']);
         }
       }
-      foreach ($chrono_temp as $key1 => $value1) {
-        $lowest = FALSE;
-        if ($value1 != 0 && !$lowest) {
-          foreach($chrono_temp as $key2 => $value2) {
-            if ($value2 < $value1 && $value2 != 0) {
-              $lowest = FALSE;
-            } else {
-              $lowest = TRUE;
-            }
+      // remove expired references
+      foreach ($chrono_sort as $ckey => $cvalue) {
+        if (isset($cvalue['etime']) && $cvalue['etime'] > 1000 && $cvalue['etime'] < $current_date) {
+          unset($theFields['dept_pbody_ref_data'][$cvalue['key']]);
+          unset($chrono_sort[$ckey]);
+        }
+      }
+
+      $chrono_temp = array();
+      // Build sorting array
+      foreach ($chrono_sort as $ckey => $cvalue) {
+        $chrono_temp[intval($ckey )] = intval($cvalue['stime']);
+      }
+      // Sort by start time
+      $chrono_sorted = array();
+      // Counter to prevent infinite loop
+      // profiles likely will not have over 100 references
+      $counter= 0;
+      // No start time flag
+      $nsflag = 0;
+      while (count($chrono_temp) && $counter < 100 && !$nsflag) {
+        $counter += 1;
+        foreach($chrono_temp as $fvalue) {
+          $nsflag = 1;
+          if ($fvalue > 0) {
+            $nsflag = 0;
           }
         }
-        if ($lowest) {
-          $chrono_sorted[] = $chrono_sort[$key1];
-          unset($chrono_temp[$key1]);
+        foreach ($chrono_temp as $key1 => $value1) {
+          $lowest = FALSE;
+          if ($value1 != 0 && !$lowest) {
+            foreach($chrono_temp as $key2 => $value2) {
+              if ($value2 < $value1 && $value2 != 0) {
+                $lowest = FALSE;
+              } else {
+                $lowest = TRUE;
+              }
+            }
+          }
+          if ($lowest) {
+            $chrono_sorted[] = $chrono_sort[$key1];
+            unset($chrono_temp[$key1]);
+          }
         }
       }
-    }
-    // Add items without start times
-    foreach ($chrono_temp as $key => $value) {
-      $chrono_sorted[] = $chrono_sort[$key];
-    }
-    $temp = $theFields['dept_pbody_ref_data'];
-    $theFields['dept_pbody_ref_data'] = array();
-    if (array_keys($chrono_sorted)) {
-      foreach ($chrono_sorted as $value) {
-        $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
+      // Add items without start times
+      foreach ($chrono_temp as $key => $value) {
+        $chrono_sorted[] = $chrono_sort[$key];
+      }
+      $temp = $theFields['dept_pbody_ref_data'];
+      $theFields['dept_pbody_ref_data'] = array();
+      if (array_keys($chrono_sorted)) {
+        foreach ($chrono_sorted as $value) {
+          $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
+        }
       }
     }
 
