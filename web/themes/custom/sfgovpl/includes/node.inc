@@ -258,7 +258,11 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
   $nid = $variables['node']->Id();
   $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
   $parent_node = Node::load($parent_nid);
-  
+
+  // This bundle's display mode should invalidate caches when there are any
+  // updates on public bodies nodes.
+  $variables['#cache']['tags'][] = 'node_list:public_body';
+
   // Check for public body node, find profile's position field value
   if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
     $profile_groups = $parent_node->field_board_members->getValue();
@@ -856,7 +860,7 @@ function profile_page_fields($node) {
         $theFields['dept_pbody_ref_data'][] = $pvalue;
       }
     }
-    
+
     // Sort and filter dept/pbody references by start/end dates
     if (isset($theFields['dept_pbody_ref_data'])) {
       $chrono_sort = array();
