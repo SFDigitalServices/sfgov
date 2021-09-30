@@ -7,6 +7,8 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_theme().
@@ -106,4 +108,24 @@ function sfgov_user_local_tasks_alter(&$local_tasks) {
   // Hide tabs.
   unset($local_tasks['user.login']);
   unset($local_tasks['user.pass']);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'user_pass') {
+    $form['actions']['submit']['#submit'][] = 'sfgov_user_password_form_redirect';
+  }
+}
+
+/**
+ * Custom submit handler for user password reset form.
+ */
+function sfgov_user_password_form_redirect(&$form, FormStateInterface $form_state) {
+  $messenger = \Drupal::messenger();
+  $messenger->addStatus(t('Further instructions have been sent to your email address.'));
+  // Change the redirect destination set in \Drupal\user\Form\UserPasswordForm::submitForm.
+  $url = Url::fromUserInput('/user/sfgov-login');
+  $form_state->setRedirectUrl($url);
 }
