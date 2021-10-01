@@ -278,7 +278,7 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
           // Find paragraph containing profile reference
           if ($pid == $nid) {
             $position = $pprofile->field_commission_position->getValue();
-            if (isset($position[0]['value']) && !empty($position[0]['value'])) {
+            if (!empty($position[0]['value'])) {
               $variables['profileposition'] = $position[0]['value'];
             }
           }
@@ -1012,7 +1012,7 @@ function profile_page_fields($node) {
         $output_trim = $output_trim[0] ?? [];
         $output_full = $viewBuilder->viewField($value, 'default');
         $output_full = $output_full[0] ?? [];
-        if (strlen($output_full['#text']) > strlen($output_trim['#text'])) {
+        if (!empty($output_full['#text']) && (strlen($output_full['#text']) > strlen($output_trim['#text']))) {
           $output_trim['#cache']['tags'] = $source->getCacheTags();
           $theFields['biotrim'] = !empty($output_trim) ? $output_trim : [];
         }
