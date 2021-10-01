@@ -803,9 +803,9 @@ function profile_page_fields($node) {
   if($node) {
     // Get field data related to profile
     $nid = $node->id();
-    $dept_nids = array();
-    $pbody_nids = array();
-    $pids = array();
+    $dept_nids = [];
+    $pbody_nids = [];
+    $pids = [];
 
     // Find paragraphs referencing profile nid
     $query = \Drupal::database()->select('paragraph__field_profile', 'pfp');
