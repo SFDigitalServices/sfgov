@@ -2,7 +2,7 @@
 
 This is the Drupal theme running on the front-end of SF.gov. It contains its
 own CSS and JavaScript source files, and includes assets from the [sf.gov
-design system][design system] via [npm].
+design system][design system] via [npm]
 
 _Note: See [`composer.json`](../../../../composer.json) for specific branch/release details._
 
