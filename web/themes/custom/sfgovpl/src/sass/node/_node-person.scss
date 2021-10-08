@@ -1,26 +1,26 @@
 .page-node-type-person {
-  
+
   .profile--container-narrow {
     @include contain-1090;
     @include clearfix;
     margin-bottom: 60px;
   }
-  
+
   .profile--container-wide {
     @include clearfix;
     max-width: 100%;
     margin-bottom: 60px;
   }
-  
+
   .page__title {
     display: none;
   }
-  
+
   #block-sfgovpl-content {
     border-top: 3px solid $c-border;
     padding-top: 60px;
   }
-  
+
   .main-content-container {
     @include clearfix;
     position: relative;
@@ -28,7 +28,7 @@
     .profile--info {
       display: inline-block;
       width: 100%;
-      
+
       .profile--photo,
       .profile--social,
       .profile--direct-contact {
@@ -37,7 +37,7 @@
         width: 100%;
         max-width: 33%;
       }
-      
+
       .profile--direct-contact,
       .profile--social {
         clear: right;
@@ -45,7 +45,7 @@
           display: none;
         }
       }
-      
+
       .profile--social {
         margin: 40px 0;
         span {
@@ -78,9 +78,9 @@
         .linkedin {
           background: url(../../src/img/icons/twitter.svg) no-repeat center left;
         }
-        
+
       }
-      
+
       .profile--direct-contact {
         margin-top: 10px;
         .direct-email,
@@ -94,25 +94,26 @@
           }
         }
       }
-      
+
       .profile--photo {
         img {
           border-radius: 15px;
         }
-        
+
         @include media-max($narrow-screen) {
           float: none;
           margin-bottom: 40px;
           max-width: 350px;
         }
       }
-      
+
       .profile--name {
         @include fs-display-1;
         color: $c-black;
         margin-bottom: 40px;
+        display: inherit;
       }
-      
+
       .profile--job,
       .profile--role,
       .profile--bio {
@@ -121,7 +122,7 @@
           max-width: 100%;
         }
       }
-      
+
       .profile--job {
         @include fs-title-3;
         margin-bottom: 40px;
@@ -134,10 +135,10 @@
         @include fs-big-description;
         a { text-decoration: none; }
       }
-      
+
       .profile--role {
         @include fs-big-description;
-        margin-bottom: 25px;        
+        margin-bottom: 25px;
         div {
           display: inline-block;
         }
@@ -154,14 +155,17 @@
           display: block;
         }
       }
-      
+
       .profile--bio {
         margin-top: 40px;
         border-bottom: 3px solid $c-border;
         padding-bottom: 80px;
+        .bio-trimmed {
+          display: inline-block;
+        }
         .show-bio {
           background: url('/themes/custom/sfgovpl/src/img/chevron-down.svg') no-repeat 0 8px;
-          
+
         }
         .hide-bio {
           background: url('/themes/custom/sfgovpl/src/img/chevron-up.svg') no-repeat 0 8px;
@@ -173,9 +177,15 @@
           padding-left: 30px;
           margin-top: 20px;
           text-decoration: none;
+          font-weight: 500;
         }
-        .show-bio:hover,
+        .show-bio:hover {
+          background: url('/themes/custom/sfgovpl/src/img/chevron-down-dark-blue.svg') no-repeat 0 8px;
+          color: #0c1464;
+          cursor: pointer;
+        }
         .hide-bio:hover {
+          background: url('/themes/custom/sfgovpl/src/img/chevron-up-dark-blue.svg') no-repeat 0 8px;
           color: #0c1464;
           cursor: pointer;
         }
@@ -184,7 +194,7 @@
         }
       }
     }
-    
+
     .profile--optional-content {
       clear: both;
       margin-top: 40px;
@@ -198,12 +208,12 @@
         padding-bottom: 8px;
       }
     }
-    
+
     .profile--container-wide.additional-roles {
       background: $c-dark-blue;
       padding: 60px 0 60px 0;
-      
-      h2 { 
+
+      h2 {
         margin: 0 0 40px 0;
         color: #fff;
       }
@@ -230,7 +240,7 @@
         }
       }
     }
-    
+
     .profile--contact.city-employee {
       border-top: none;
       padding-top: 0;
@@ -242,17 +252,17 @@
     .profile--contact {
       clear: both;
       padding-top: 20px;
-      
-      h2 { 
+
+      h2 {
         font-size: 62px;
         font-weight: 500;
         letter-spacing: 0;
         line-height: 70px;
-        margin: 0 0 20px 0; 
+        margin: 0 0 20px 0;
       }
-      
+
       p.title { margin-top: 0;}
-      
+
       .contact-wrapper {
         width: 100%;
         label {
@@ -310,7 +320,7 @@
 // No JS fallback using js enabled class
 html.js .page-node-type-profile {
   .bio-trimmed.hidden {
-    display: block;
+    display: inline-block;
   }
   .bio-full {
     display: none;

@@ -165,8 +165,8 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
     $bundle = $node->bundle();
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $currentLanguageId = $currentLanguage->getId();
-    $nodeTitle = $node->hasTranslation($currentLanguageId) ? 
-      $node->getTranslation($currentLanguageId)->getTitle() : 
+    $nodeTitle = $node->hasTranslation($currentLanguageId) ?
+      $node->getTranslation($currentLanguageId)->getTitle() :
       $node->getTitle();
 
     if ($bundle === 'step_by_step') {
@@ -1063,7 +1063,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
     if ($reftype == 'department') {
       $profile_field = 'field_people';
     }
-    
+
     // Set source type
     $ref_data[$key]['profile']['source_type'] = $reftype;
 
