@@ -922,8 +922,8 @@ function profile_page_fields($node) {
         $chrono_sorted[] = $chrono_sort[$key];
       }
       $temp = $theFields['dept_pbody_ref_data'];
-      $theFields['dept_pbody_ref_data'] = array();
       if (array_keys($chrono_sorted)) {
+        $theFields['dept_pbody_ref_data'] = array();
         foreach ($chrono_sorted as $value) {
           $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
         }
