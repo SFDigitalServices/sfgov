@@ -42,6 +42,10 @@ function sfgov_admin_page_attachments(array &$page) {
   if ($logged_in && $active_theme == 'sfgovpl') {
     $page['#attached']['library'][] = 'sfgovpl/sfgov-editorial';
   }
+  $current_uri = \Drupal::request()->getRequestUri();
+  if (strstr($current_uri, 'admin/tmgmt/items/')) {
+    $page['#attached']['library'][] = 'sfgov_admin/sg1498';
+  }
 }
 
 /**
