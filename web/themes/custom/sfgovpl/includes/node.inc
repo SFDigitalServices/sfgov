@@ -786,7 +786,7 @@ function sfgovpl_add_regions_to_node(array $regions, &$variables) {
 function _sfgovpl_negotiate_translation(&$variables) {
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
     $node = $variables['node'];
-    $view_mode = $variables['view_mode'] ?? 'full';
+    $view_mode = $variables['view_mode'] ?? '';
     $variables = array_merge($variables, _sfgovpl_node_notranslate($node, $view_mode));
   }
   return $variables;
