@@ -150,6 +150,14 @@ jobs:
             echo "create gh release for $CIRCLE_TAG"
             curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"target_commitish\":\"$CIRCLE_BRANCH\",\"name\":\"$CIRCLE_TAG\",\"body\":\"created via api, add release notes\",\"draft\":false,\"prerelease\":false}" https://api.github.com/repos/sfdigitalservices/sfgov/releases 
 
+  create_amplitude_release:
+    docker:
+      - image: cimg/node
+    steps:
+      - run:
+          name: create amplitude release
+          command: ./scripts/custom/create-amplitude-release
+  
 workflows:
   version: 2
   build_and_test:
@@ -166,6 +174,7 @@ workflows:
               only: /v.*/
             branches:
               ignore: /.*/
+      - create_amplitude_release
 
 experimental:
   notify:
