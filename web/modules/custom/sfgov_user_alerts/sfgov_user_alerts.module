@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Primary module hooks for SF Gov User Alerts module.
+ */
+
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -8,12 +13,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
-
-
-/**
- * @file
- * Primary module hooks for SF Gov User Alerts module.
- */
 
  /**
   * Implements hook_page_top().
@@ -85,6 +84,6 @@ use Drupal\update\UpdateManagerInterface;
  */
 function sfgov_user_alerts_module_implements_alter(&$implementations, $hook) {
   if ($hook === 'page_top') {
-    unset($implementations["update"]);
+    unset($implementations['update']);
   }
 }
