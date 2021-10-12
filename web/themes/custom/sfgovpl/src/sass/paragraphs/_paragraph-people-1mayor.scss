@@ -1,112 +1,120 @@
 // Mayor
-.paragraph--type--people.sfgov-title--elected-officials {
-  background: $c-dark-blue;
-  color: $c-white;
-  @include antialiasing;
-  padding-top: 80px;
-  padding-bottom: 40px;
-
-  @include media($medium-screen) {
-    margin-bottom: 60px;
-    padding-bottom: 0;
-  }
-
-  .title {
-    @include contain-1090;
-    @include fs-h1;
-    color: white;
-    margin-bottom: 34px;
-  }
-
-  .inner {
-    padding: 0;
-  }
-
-  .sfgov-people--content {
-    position: relative;
-    @include contain-1090;
-    padding-top: 0;
-  }
-
-  .person-card {
-    display: block;
-    margin: 0;
-  }
-
-  .person-container {
-    margin-bottom: 20px;
-    @include media($narrow-screen) {
-      width: 70%;
-    }
-  }
-
-  &.sfgov-paragraph-people-single article,
-  .__person-2 {
-    @include contain-1090;
-  }
-
-  .__description {
-    @include media($narrow-screen) {
-      top: 0;
-    }
-  }
-
-  .person-photo {
-    display: inline-block;
-    width: 110px;
-    height: 110px;
-    margin-bottom: 30px;
-    margin-right: 20px;
-    vertical-align: top;
-
-    @include media($medium-screen) {
-      width: 200px;
-      height: 200px;
-      float: left;
-      margin-bottom: 50px;
-      margin-right: 40px;
-    }
-
-    img {
-      max-width: 1px;
-      max-height: 1px;
-      position: relative;
-      left: -999px;
-    }
-  }
-
-  .person-bio {
-    display: inline-block;
-    text-align: left;
-    width: auto;
-
-    @include media($medium-screen) {
-      vertical-align: top;
-    }
-
-    .person-name a {
-      @include link-colors($c-white, $c-white);
-    }
-  }
-
-  .person-name {
-    @include fs-title-3-mobile;
-    margin-bottom: 9px;
-
-    @include media($medium-screen) {
-      @include fs-title-3;
-      margin-bottom: 9px;
-    }
-  }
-
-  .person-title {
-    @include fs-title-4;
+.path-frontpage {
+  .paragraph--type--profile-group.sfgov-title--elected-officials,
+  .paragraph--type--people.sfgov-title--elected-officials {
+    background: $c-dark-blue;
     color: $c-white;
-    opacity: .7;
-    margin-bottom: 12px;
-
+    @include antialiasing;
+    padding-top: 80px;
+    padding-bottom: 40px;
+  
     @include media($medium-screen) {
-      margin-bottom: 12px;
+      margin: 0 0 60px 0;
+      max-width: 100%;  
+    }
+  
+    .title {
+      @include contain-1090;
+      @include fs-h1;
+      color: white;
+      margin-bottom: 34px;
+    }
+  
+    .inner {
+      background: transparent;
+      padding: 0;
+    }
+  
+    .sfgov-people--content {
+      position: relative;
+      @include contain-1090;
+      padding-top: 0;
+    }
+  
+    .person-card {
+      display: block;
+      margin: 0;
+    }
+  
+    .person-container {
+      margin-bottom: 20px;
+      @include media($narrow-screen) {
+        width: 70%;
+      }
+    }
+  
+    &.sfgov-paragraph-people-single article,
+    .__person-2 {
+      @include contain-1090;
+    }
+  
+    .__description {
+      @include media($narrow-screen) {
+        top: 0;
+      }
+    }
+  
+    .person-photo {
+      display: inline-block;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 30px;
+      margin-right: 20px;
+      vertical-align: top;
+  
+      @include media($medium-screen) {
+        width: 200px;
+        height: 200px;
+        float: left;
+        margin-bottom: 50px;
+        margin-right: 40px;
+      }
+  
+      img {
+        max-width: 1px;
+        max-height: 1px;
+        position: relative;
+        left: -999px;
+      }
+    }
+  
+    .person-bio {
+      display: inline-block;
+      text-align: left;
+      width: auto;
+  
+      @include media($medium-screen) {
+        vertical-align: top;
+      }
+  
+      .person-name a {
+        @include link-colors($c-white, $c-white);
+      }
+    }
+  
+    .person-name {
+      @include fs-title-3-mobile;
+      margin-bottom: 9px;
+  
+      @include media($medium-screen) {
+        @include fs-title-3;
+        margin-bottom: 9px;
+      }
+    }
+
+    &.paragraph--type--profile-group {
+      .person-container {
+        .person-title {
+          @include fs-title-4;
+          color: $c-white;
+          opacity: .7;
+          margin-bottom: 12px;
+      
+          @include media($medium-screen) {
+            margin-bottom: 12px;
+          }
+        }
+      }
     }
   }
 }
