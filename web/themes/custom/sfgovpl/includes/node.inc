@@ -600,6 +600,7 @@ function dept_page_fields($node) {
 }
 
 function public_body_page_fields($node) {
+  $currentLanguageId = \Drupal::languageManager()->getCurrentLanguage()->getId();
   $styleThumbnail = ImageStyle::load('thumbnail');
   $theFields = array(
     'featured_items' => array(),
@@ -631,7 +632,7 @@ function public_body_page_fields($node) {
         $otherInfoParagraph = Paragraph::load($value['target_id']);
         $theFields['other_info'][$otherInfoKey] = [
           'bundle' => $otherInfoParagraph->bundle(),
-          'title' => $otherInfoParagraph->field_title->value,
+          'title' => $otherInfoParagraph->hasTranslation($currentLanguageId) ? $otherInfoParagraph->getTranslation($currentLanguageId)->get('field_title')->value : $otherInfoParagraph->field_title->value,
           'content' => [],
         ];
 
