@@ -149,8 +149,7 @@
 </div>
 </div>
     
-{% if (profile_type == 'City Employee') %}
-{% if (profile_fields.dept_pbody_ref_data) %}
+{% if (profile_type == 'City Employee') and (profile_fields.dept_pbody_ref_data) %}
 <div class="profile--container-wide additional-roles">
   <div class="profile--container-narrow">
     <div class="profile--additional-roles">
@@ -177,7 +176,6 @@
     </div>
   </div>
 </div>
-{% endif %}
 {% endif %}
 
 {% if (profile_type == 'City Employee') and (city_employee_contact == 'true') %}
@@ -215,7 +213,7 @@
                   {% endif %}
                   {% if profile_fields.map.map_directions_url %}
                     <p class="simple-gmap-link">
-                      <a href="{{ profile_fields.map.map_directions_url }}">Get directions</a>
+                      <a href="{{ profile_fields.map.map_directions_url }}">{{ 'Get directions'|t }}</a>
                     </p>
                   {% endif %}
                 </div>
@@ -320,7 +318,7 @@
                         {{ phone.owner }}
                       </div>
                       <div class="phone-number">
-                        <span>We do not have contact info for this agency. Add a new phone number instead.</span>
+                        <span>{{ 'We do not have contact info for this agency. Add a new phone number instead.'|t }}</span>
                       </div>
                       <div class="phone-desc">
                         {{ phone.text }}
