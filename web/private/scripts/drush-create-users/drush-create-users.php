@@ -2,11 +2,16 @@
   require dirname(__DIR__) . '/../shared.php';
 
   // get the roles
+  echo "get roles\n";
+
   ob_start();
   passthru('drush role:list --fields=label --format=json');
   $roles = ob_get_contents();
   ob_end_clean();
   $json = json_decode($roles);
+
+  echo "roles\n";
+  print_r($json);
 
   $pw = _get_secrets(['drush_pw'])['drush_pw'];
   $debug = '';
@@ -22,7 +27,9 @@
       exec("drush user:create ${user} --mail=\"${email}\" --password=\"${pw}\"", $output, $exitStatus);
       if ($exitStatus == 0) {
         exec("drush user-add-role \"${machineNameRole}\" ${user}");
-        $debug .= "  - user ${user} created with role {$machineNameRole}\n";
+        $msg = "user ${user} created with role ${machineNameRole}\n";
+        echo $msg;
+        $debug .= "  - " . $msg;
       }
     }
   }  
