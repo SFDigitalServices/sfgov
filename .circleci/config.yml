@@ -152,11 +152,17 @@ jobs:
 
   create_amplitude_release:
     docker:
-      - image: cimg/node
+      - image: cimg/base:2020.01
     steps:
       - run:
           name: create amplitude release
-          command: ./scripts/custom/create-amplitude-release.sh
+          command: |
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              export AMPLITUDE_AUTH="$AMPLITUDE_PROD_API_KEY:$AMPLITUDE_PROD_SECRET_KEY"
+            else
+              export AMPLITUDE_AUTH="$AMPLITUDE_TEST_API_KEY:$AMPLITUDE_TEST_SECRET_KEY"
+            fi
+            ./scripts/custom/create-amplitude-release.sh
   
 workflows:
   version: 2
