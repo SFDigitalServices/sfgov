@@ -18,12 +18,6 @@ targetEntityType: resource
 bundle: resource
 mode: default
 content:
-  created:
-    type: datetime_timestamp
-    weight: 6
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_department:
     weight: 3
     settings:
@@ -41,7 +35,7 @@ content:
       placeholder: ''
     third_party_settings:
       maxlength:
-        maxlength_js: 100
+        maxlength_js: 110
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
         maxlength_js_truncate_html: true
         maxlength_js_enforce: false
@@ -70,14 +64,14 @@ content:
     region: content
   langcode:
     type: language_select
-    weight: 8
+    weight: 5
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 100
+    weight: 6
     region: content
     settings:
       display_label: true
@@ -90,14 +84,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 7
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  created: true
+  uid: true
