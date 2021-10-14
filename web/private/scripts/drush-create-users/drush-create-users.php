@@ -4,13 +4,35 @@
   // get the roles
   echo "get roles\n";
 
-  ob_start();
-  passthru('drush role:list --fields=label --format=json');
-  $roles = ob_get_contents();
-  ob_end_clean();
-  $json = json_decode($roles);
+  // ob_start();
+  // passthru('drush role:list --fields=label --format=json');
+  // $roles = ob_get_contents();
+  // ob_end_clean();
+  // $json = json_decode($roles);
 
   echo "roles\n";
+
+  $json = (object) [
+    'anonymous' => [
+      'label' => 'Anonymous user'
+    ],
+    'authenticated' => [
+      'label' => 'Authenticated user'
+    ],
+    'writer' => [
+      'label' => 'Writer'
+    ],
+    'publisher' => [
+      'label' => 'Writer'
+    ],
+    'digital_services' => [
+      'label' => 'Writer'
+    ],
+    'administrator' => [
+      'label' => 'Administrator'
+    ],
+  ];
+
   print_r($json);
 
   $pw = _get_secrets(['drush_pw'])['drush_pw'];
