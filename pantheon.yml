@@ -22,6 +22,9 @@ workflows:
       - type: webphp
         description: 'Multidev created'
         script: private/scripts/test/test_hook.php
+      - type: webphp
+        description: 'Create test users'
+        script: private/scripts/drush_create_users/create_users.php
         
   sync_code: # push code via git (dev/multidev)
     after:
@@ -37,6 +40,9 @@ workflows:
       - type: webphp
         description: 'Import configuration from .yml files'
         script: private/scripts/drush_config_import/drush_config_import.php
+      - type: webphp
+        description: 'Create test users'
+        script: private/scripts/drush_create_users/create_users.php
 
   deploy: # deploy code to test or live
     after:
