@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
-if [ "$AMPLITUDE_API_KEY" = "" ]; then
-  echo "Skipping Amplitude release because AMPLITUDE_API_KEY is not set"
+if [ "$AMPLITUDE_AUTH" = "" ] then
+  echo "Skipping Amplitude release because AMPLITUDE_AUTH is not set"
   exit 0
-elif [ "$AMPLITUDE_SECRET_KEY" = "" ]; then
-  echo "Skipping Amplitude release because AMPLITUDE_SECRET_KEY is not set"
+elif [[ "$AMPLITUDE_SECRET_KEY" =~ (^:|:$) ]]; then
+  echo "Skipping Amplitude release because AMPLITUDE_AUTH is malformed (missing either API or secret)"
   exit 0
 fi
   
@@ -18,7 +18,7 @@ description=""
 # merge commit author?
 created_by=""
 
-curl -u "$AMPLITUDE_API_KEY:$AMPLITUDE_SECRET_KEY" -X POST \
+curl -u "$AMPLITUDE_AUTH" -X POST \
   -F release_start="$release_start" \
   -F version="$version" \
   -F title="$title" \
