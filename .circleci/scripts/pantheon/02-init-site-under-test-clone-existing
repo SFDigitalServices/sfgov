@@ -32,6 +32,3 @@ terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cache-rebuild
 if [ -f "config/system.site.yml" ] ; then
   terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- config-import --yes
 fi
-
-# create test users
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- scr web/private/scripts/drush-create-users/drush-create-users.php
