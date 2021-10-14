@@ -26,10 +26,10 @@
         'label' => 'Writer'
       ],
       'publisher' => [
-        'label' => 'Writer'
+        'label' => 'Publisher'
       ],
       'digital_services' => [
-        'label' => 'Writer'
+        'label' => 'Digital Services'
       ],
       'administrator' => [
         'label' => 'Administrator'
