@@ -158,7 +158,7 @@ lando behat --config=/app/tests/behat-pantheon.yml --tags sfgov
 
 ## Updating core with Composer
 
-PHP out of memory issues can occur when running updates with Composer. Drupal [documentation](https://www.drupal.org/docs/8/update/update-core-via-composer) suggests the following command, which will disable the `memory_limit`:
+PHP out of memory issues can occur when running updates with Composer. Drupal [documentation](https://www.drupal.org/docs/8/update/update-core-via-composer) suggests the following command, which will disable the `memory_limit` :
 
 ```sh
 php -d memory_limit=-1 `which composer` update drupal/core --with-dependencies
