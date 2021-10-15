@@ -3,7 +3,7 @@
 if [ "$AMPLITUDE_AUTH" = "" ] then
   echo "Skipping Amplitude release because AMPLITUDE_AUTH is not set"
   exit 0
-elif [[ "$AMPLITUDE_SECRET_KEY" =~ (^:|:$) ]]; then
+elif [[ "$AMPLITUDE_AUTH" =~ (^:|:$) ]]; then
   echo "Skipping Amplitude release because AMPLITUDE_AUTH is malformed (missing either API or secret)"
   exit 0
 fi
