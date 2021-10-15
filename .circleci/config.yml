@@ -173,7 +173,7 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
-  create_gh_release_from_tag:
+  release:
     jobs:
       - create_gh_release:
           filters:
@@ -183,7 +183,7 @@ workflows:
               ignore: /.*/
       - create_amplitude_release:
           requires:
-            - build_deploy_and_test
+            - build_and_test
           filters:
             branches:
               only:
