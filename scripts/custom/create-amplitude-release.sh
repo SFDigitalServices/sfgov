@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [ "$AMPLITUDE_AUTH" = "" ] then
+if [ "$AMPLITUDE_AUTH" = "" ]; then
   echo "Skipping Amplitude release because AMPLITUDE_AUTH is not set"
   exit 0
 elif [[ "$AMPLITUDE_AUTH" =~ (^:|:$) ]]; then
