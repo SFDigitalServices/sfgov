@@ -182,6 +182,8 @@ workflows:
             branches:
               ignore: /.*/
       - create_amplitude_release:
+          requires:
+            - build_deploy_and_test
           filters:
             branches:
               only:
