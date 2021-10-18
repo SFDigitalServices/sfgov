@@ -156,3 +156,93 @@ function sfgov_utilities_deploy_01_homepage_profile_group() {
   $landingPage->setRevisionUserId($user_id);
   $landingPage->save();
 }
+
+function sfgov_utilities_deploy_02_content_type_profile_group() {
+  $contentTypes = [
+    [
+      "bundle" => "public_body",
+      "field_name" => "field_board_members",
+    ],
+    [
+      "bundle" => "department",
+      "field_name" => "field_people",
+    ],
+    [
+      "bundle" => "location",
+      "field_name" => "field_people",
+    ],
+  ];
+
+  foreach ($contentTypes as $contentType) {
+    $bundle = $contentType["bundle"];
+    $fieldName = $contentType["field_name"];
+    $nids = \Drupal::entityQuery('node')->condition('type', $bundle)->execute();
+    $nodes = Node::loadMultiple($nids);
+    foreach($nodes as $node) {
+      echo "processing " . $bundle . ":" . $node->getTitle() . "(" . $node->id() . ")\n";
+      $people = $node->get($fieldName)->getValue();
+      migratePeopleSection($node, $fieldName, $people); 
+    }
+  }
+}
+
+function migratePeopleSection($node, $field_name, $peoples) {
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
+  $user = reset($users);
+  $user_id = $user->id();
+
+  $removeIds = []; // track id's to remove
+
+  foreach($peoples as $people) {
+    // collect the profiles
+    $profiles = [];
+    $peopleParagraphId = $people['target_id'];
+    $peopleParagraph = Paragraph::load($peopleParagraphId);
+    if ($peopleParagraph->getType() == 'people') {
+      $removeIds[] = $peopleParagraphId;
+      $peopleParagraphTitle = $peopleParagraph->get('field_people_title')->value;
+      $peopleParagraphDescription = $peopleParagraph->get('field_description')->value;
+      $persons = $peopleParagraph->get('field_person_2')->getValue();
+      $profiles = [];
+      echo "profiles:\n";
+      foreach($persons as $person) {
+        $personNode = Node::load($person['target_id']);
+        echo "\t" . $personNode->get('field_first_name')->value . ' ' . $personNode->get('field_last_name')->value . "(" . $personNode->id() . ")\n";
+        $profile = Paragraph::create([
+          "type" => "public_body_profiles",
+        ]);
+        $profile->get('field_profile')->appendItem($person);
+        $profiles[] = $profile;
+        $profile->save();
+      }
+      $profileGroup = Paragraph::create([
+        "type" => "profile_group",
+        "field_title" => $peopleParagraphTitle,
+        "field_description" => $peopleParagraphDescription,
+        "field_profiles" => $profiles
+      ]);
+      $profileGroup->save();
+      $node->get($field_name)->appendItem($profileGroup);
+    }
+  }
+
+  for($i=0; $i<count($removeIds); $i++) {
+    $removeId = $removeIds[$i];
+    $peoples = $node->get($field_name)->getValue();
+    for($j=0; $j<count($peoples); $j++) {
+      $people = $peoples[$j];
+      $peopleParagraphId = $people['target_id'];
+      $peopleParagraph = Paragraph::load($peopleParagraphId);
+      if($removeId == $peopleParagraphId) {
+        $node->get($field_name)->removeItem($j);
+        $peopleParagraph->save();
+      }
+    }
+  }
+
+  $node->setNewRevision(TRUE);
+  $node->revision_log = 'Moved people section data to new profile group';
+  $node->setRevisionCreationTime(REQUEST_TIME);
+  $node->setRevisionUserId($user_id);
+  $node->save();
+}
