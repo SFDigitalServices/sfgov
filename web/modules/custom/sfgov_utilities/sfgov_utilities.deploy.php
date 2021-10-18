@@ -221,6 +221,7 @@ function migratePeopleSection($node, $field_name, $peoples) {
         "field_description" => $peopleParagraphDescription,
         "field_profiles" => $profiles
       ]);
+      $profileGroup->field_description->format = 'sf_restricted_html';
       $profileGroup->save();
       $node->get($field_name)->appendItem($profileGroup);
     }
