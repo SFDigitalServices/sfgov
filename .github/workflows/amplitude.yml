@@ -16,12 +16,14 @@ on:
       tags: 'v*'
   - release:
       types:
+        - created
         - published
+        - released
 
 jobs:
   log:
-    runs-on: ubuntu-latest
     if: secrets.AMPLITUDE_API_KEY
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/node@v2
