@@ -257,7 +257,7 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
 function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
   $nid = $variables['node']->Id();
 
-  // if (\Drupal::routeMatch()->getParameter('node')) {
+  if (\Drupal::routeMatch()->getParameter('node')) {
     $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
     $parent_node = Node::load($parent_nid);
   
@@ -288,7 +288,7 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
         }
       }
     } 
-  // }
+  }
 }
 
 /**
