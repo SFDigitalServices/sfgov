@@ -165,8 +165,8 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
     $bundle = $node->bundle();
     $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $currentLanguageId = $currentLanguage->getId();
-    $nodeTitle = $node->hasTranslation($currentLanguageId) ? 
-      $node->getTranslation($currentLanguageId)->getTitle() : 
+    $nodeTitle = $node->hasTranslation($currentLanguageId) ?
+      $node->getTranslation($currentLanguageId)->getTitle() :
       $node->getTitle();
 
     if ($bundle === 'step_by_step') {
@@ -922,8 +922,8 @@ function profile_page_fields($node) {
         $chrono_sorted[] = $chrono_sort[$key];
       }
       $temp = $theFields['dept_pbody_ref_data'];
-      $theFields['dept_pbody_ref_data'] = array();
       if (array_keys($chrono_sorted)) {
+        $theFields['dept_pbody_ref_data'] = array();
         foreach ($chrono_sorted as $value) {
           $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
         }
@@ -1063,7 +1063,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
     if ($reftype == 'department') {
       $profile_field = 'field_people';
     }
-    
+
     // Set source type
     $ref_data[$key]['profile']['source_type'] = $reftype;
 
