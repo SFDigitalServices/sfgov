@@ -173,6 +173,15 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
+      - create_amplitude_release:
+          requires:
+            - build_deploy_and_test
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+                - amplitude-release
   release:
     jobs:
       - create_gh_release:
@@ -181,15 +190,6 @@ workflows:
               only: /v.*/
             branches:
               ignore: /.*/
-      - create_amplitude_release:
-          requires:
-            - build_and_test
-          filters:
-            branches:
-              only:
-                - main
-                - develop
-                - amplitude-release
 
 experimental:
   notify:
