@@ -1,19 +1,15 @@
 name: Amplitude events
 on:
-  # - check_run
-  # - check_suite
   - deployment_status
   - pull_request:
       types:
         - opened
+        - synchronize
+        - edited
         - closed
         - reopened
         - converted_to_draft
-        - ready_for_review
-        - review_request_removed
         - review_requested
-  - push:
-      tags: 'v*'
   - release:
       types:
         - created
