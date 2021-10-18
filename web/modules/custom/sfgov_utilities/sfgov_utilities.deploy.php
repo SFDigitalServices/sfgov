@@ -123,7 +123,7 @@ function sfgov_utilities_deploy_01_homepage_profile_group() {
               "field_description" => $peopleSectionDescription,
               "field_profiles" => $publicBodyProfilesParagraphs
             ]);
-  
+            $profileGroupParagraph->field_description->format = 'sf_restricted_html';
             $profileGroupParagraph->save();
             echo "remove people section with id: " . $peopleSectionParagraph->id() . "\n---\n\n";
             $sectionParagraph->field_content[] = $profileGroupParagraph;
