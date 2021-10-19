@@ -52,7 +52,7 @@
 %}
 
 {# set the class bottom for front page description #}
-{% set descriptionClass = (is_front and content.field_description.0 is not empty) ? ' bottom' : '' %} 
+{% set descriptionClass = is_front ? ' bottom' : '' %} 
 
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
@@ -68,9 +68,11 @@
             {{ content.field_profiles }}
           {% endif %}
         </div>
-        <div class="description {{ descriptionClass }}">
-          {{ content.field_description }}
-        </div>
+        {% if content.field_description.0 is not empty %}
+          <div class="description {{ descriptionClass }}">
+            {{ content.field_description }}
+          </div>
+        {% endif %}
       </div>
     {% endblock %}
   </div>
