@@ -51,15 +51,17 @@
 ]
 %}
 
-{# set the class bottom for front page description #}
-{% set descriptionClass = is_front ? ' bottom' : '' %} 
-
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
       <div class="inner">
         {% if content.field_title.0 is not empty %}
           <h3 class="title">{{ content.field_title.0 }}</h3>
+        {% endif %}
+        {% if content.field_description.0 is not empty and is_front is empty %}
+          <div class="description {{ descriptionClass }}">
+            {{ content.field_description }}
+          </div>
         {% endif %}
         <div class="sfgov-people--content">
           {% if single %}
@@ -68,8 +70,8 @@
             {{ content.field_profiles }}
           {% endif %}
         </div>
-        {% if content.field_description.0 is not empty %}
-          <div class="description {{ descriptionClass }}">
+        {% if content.field_description.0 is not empty and is_front %}
+          <div class="description bottom">
             {{ content.field_description }}
           </div>
         {% endif %}
