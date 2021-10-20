@@ -50,6 +50,10 @@
     paragraph.field_title.value ? 'sfgov-title--' ~ paragraph.field_title.value|clean_class,
 ]
 %}
+
+{# set the class bottom for front page description #}
+{% set descriptionClass = is_front ? ' bottom' : '' %} 
+
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
@@ -65,7 +69,7 @@
           {% endif %}
         </div>
         {% if content.field_description.0 is not empty %}
-          <div class="description bottom">
+          <div class="description {{ descriptionClass }}">
             {{ content.field_description }}
           </div>
         {% endif %}

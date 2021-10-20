@@ -256,35 +256,38 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
  */
 function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
   $nid = $variables['node']->Id();
-  $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
-  $parent_node = Node::load($parent_nid);
 
-  // This bundle's display mode should invalidate caches when there are any
-  // updates on public bodies nodes.
-  $variables['#cache']['tags'][] = 'node_list:public_body';
-
-  // Check for public body node, find profile's position field value
-  if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
-    $profile_groups = $parent_node->field_board_members->getValue();
-    // Loop through people paragraphs
-    foreach ($profile_groups as $pg_id) {
-      $pgroup = \Drupal\paragraphs\Entity\Paragraph::load($pg_id['target_id']);
-      if ($pgroup->hasField('field_profiles')) {
-        $profiles = $pgroup->field_profiles->getValue();
-        foreach ($profiles as $gprofile) {
-          $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
-          $pid = $pprofile->field_profile->getValue();
-          $pid = $pid[0]['target_id'];
-          // Find paragraph containing profile reference
-          if ($pid == $nid) {
-            $position = $pprofile->field_commission_position->getValue();
-            if (!empty($position[0]['value'])) {
-              $variables['profileposition'] = $position[0]['value'];
+  if (\Drupal::routeMatch()->getParameter('node')) {
+    $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
+    $parent_node = Node::load($parent_nid);
+  
+    // This bundle's display mode should invalidate caches when there are any
+    // updates on public bodies nodes.
+    $variables['#cache']['tags'][] = 'node_list:public_body';
+  
+    // Check for public body node, find profile's position field value
+    if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
+      $profile_groups = $parent_node->field_board_members->getValue();
+      // Loop through people paragraphs
+      foreach ($profile_groups as $pg_id) {
+        $pgroup = \Drupal\paragraphs\Entity\Paragraph::load($pg_id['target_id']);
+        if ($pgroup->hasField('field_profiles')) {
+          $profiles = $pgroup->field_profiles->getValue();
+          foreach ($profiles as $gprofile) {
+            $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
+            $pid = $pprofile->field_profile->getValue();
+            $pid = $pid[0]['target_id'];
+            // Find paragraph containing profile reference
+            if ($pid == $nid) {
+              $position = $pprofile->field_commission_position->getValue();
+              if (!empty($position[0]['value'])) {
+                $variables['profileposition'] = $position[0]['value'];
+              }
             }
           }
         }
       }
-    }
+    } 
   }
 }
 
@@ -397,10 +400,12 @@ function dept_page_fields($node) {
           $spotlightTitle = $deptSpotlightParagraph->get('field_title')->getValue()[0]['value'];
           $spotlightDescription = $deptSpotlightParagraph->get('field_description')->getValue()[0]['value'];
           $spotlightButtonId = $deptSpotlightParagraph->get('field_spotlight_button')->getValue()[0]['target_id'];
-          $spotlightButtonParagraph = Paragraph::load($spotlightButtonId);
-          if ($spotlightButtonParagraph && ($fieldLink = $spotlightButtonParagraph->get('field_link')->getValue())) {
-            $spotlightButtonTitle = $fieldLink[0]['title'];
-            $spotlightButtonUri = $fieldLink[0]['uri'];
+          if (!empty($spotlightButtonId)) {
+            $spotlightButtonParagraph = Paragraph::load($spotlightButtonId);
+            if ($spotlightButtonParagraph && ($fieldLink = $spotlightButtonParagraph->get('field_link')->getValue())) {
+              $spotlightButtonTitle = $fieldLink[0]['title'];
+              $spotlightButtonUri = $fieldLink[0]['uri'];
+            }
           }
           $spotlightImage = $deptSpotlightParagraph->get('field_spotlight_img');
           $spotlightImageUrl = ($spotlightImage && $spotlightImage->entity) ?
@@ -424,7 +429,8 @@ function dept_page_fields($node) {
         $resourceParagraphId = $resource->getValue()['target_id'];
         if ($resourceParagraph = Paragraph::load($resourceParagraphId)) {
           $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
-          $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
+          $resourceItemDescription = !empty($resourceParagraph->get('field_description')->getValue()) ? 
+                                        $resourceParagraph->get('field_description')->getValue()[0]['value'] : '';
           $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
           $theFields['resources']['items'][] = array(
             'title' => $resourceItemTitle,
@@ -563,7 +569,8 @@ function dept_page_fields($node) {
       if($aboutCta && $aboutCta->getValue()) {
         $aboutCtaId = $aboutCta->getValue()[0]['target_id'];
         if ($aboutCtaParagraph = Paragraph::load($aboutCtaId)) {
-          $ctaTitle = $aboutCtaParagraph->get('field_title')->getValue()[0]['value'];
+          $ctaTitle = !empty($aboutCtaParagraph->get('field_title')->getValue()) ?
+                        $aboutCtaParagraph->get('field_title')->getValue()[0]['value'] : '';
           $ctaButtonId = $aboutCtaParagraph->get('field_button')->getValue() ? $aboutCtaParagraph->get('field_button')->getValue()[0]['target_id'] : null;
           if($ctaButtonId && ($ctaButtonParagraph = Paragraph::load($ctaButtonId))) {
             $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
