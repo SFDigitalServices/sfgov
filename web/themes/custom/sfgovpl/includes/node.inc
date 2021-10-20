@@ -429,7 +429,8 @@ function dept_page_fields($node) {
         $resourceParagraphId = $resource->getValue()['target_id'];
         if ($resourceParagraph = Paragraph::load($resourceParagraphId)) {
           $resourceItemTitle = $resourceParagraph->get('field_title')->getValue()[0]['value'];
-          $resourceItemDescription = $resourceParagraph->get('field_description')->getValue()[0]['value'];
+          $resourceItemDescription = !empty($resourceParagraph->get('field_description')->getValue()) ? 
+                                        $resourceParagraph->get('field_description')->getValue()[0]['value'] : '';
           $resourceItemUrl = $resourceParagraph->get('field_link')->getValue()[0]['uri'];
           $theFields['resources']['items'][] = array(
             'title' => $resourceItemTitle,
@@ -568,7 +569,8 @@ function dept_page_fields($node) {
       if($aboutCta && $aboutCta->getValue()) {
         $aboutCtaId = $aboutCta->getValue()[0]['target_id'];
         if ($aboutCtaParagraph = Paragraph::load($aboutCtaId)) {
-          $ctaTitle = $aboutCtaParagraph->get('field_title')->getValue()[0]['value'];
+          $ctaTitle = !empty($aboutCtaParagraph->get('field_title')->getValue()) ?
+                        $aboutCtaParagraph->get('field_title')->getValue()[0]['value'] : '';
           $ctaButtonId = $aboutCtaParagraph->get('field_button')->getValue() ? $aboutCtaParagraph->get('field_button')->getValue()[0]['target_id'] : null;
           if($ctaButtonId && ($ctaButtonParagraph = Paragraph::load($ctaButtonId))) {
             $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
