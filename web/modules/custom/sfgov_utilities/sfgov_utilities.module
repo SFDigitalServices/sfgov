@@ -1,6 +1,6 @@
 <?php
 
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\pathauto\PathautoState;
@@ -236,6 +236,30 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_link_alter().
+ */
+function sfgov_utilities_link_alter(&$variables) {
+  if ($variables['text'] == 'Clone') {
+    if (isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+      if (strpos($variables['options']['attributes']['data-drupal-link-system-path'], 'quick_clone')) {
+        $variables['text'] = 'Duplicate';
+      }
+    }
+  }
+}
+
+function sfgov_utilities_cloned_node_alter(&$node) {
+  if ($node->getType() == 'meeting') {
+    if (!empty($node->field_start_date->getValue())) {
+      $node->set('field_start_date', NULL);
+    }
+    if (!empty($node->field_end_date->getValue())) {
+      $node->set('field_end_date', NULL);
+    }
+  }
+}
+
+/**
  * Implements hook_entity_update().
  */
 function sfgov_utilities_entity_update(EntityInterface $entity) {
@@ -393,7 +417,7 @@ function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $for
 
 /**
  * Implements hook_cron().
- * 
+ *
  * TODO: find a way to write the updated array to an accessible var
  * accessing settings via \Drupal\Core\Site\Settings is readonly
  * so at the moment, we're really only swapping between two keys vs the entire array of keys
