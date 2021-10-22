@@ -4,6 +4,10 @@
  * @file Contains sfgov_formio.module.
  */
 
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\sfgov_formio\FormioFieldProcessor;
+
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
@@ -134,3 +138,11 @@ function _sfgov_formio_sfds_source() {
 
   return $source;
 }
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function sfgov_formio_field_info_alter(&$info) {
+  $info['entity_reference_revisions']['tmgmt_field_processor'] = 'Drupal\sfgov_formio\FormioFieldProcessor';
+}
+
