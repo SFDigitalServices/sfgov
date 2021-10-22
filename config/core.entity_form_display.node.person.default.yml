@@ -3,10 +3,23 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.image
+    - field.field.node.person.field_address
+    - field.field.node.person.field_biography
+    - field.field.node.person.field_city_department
     - field.field.node.person.field_direct_external_url
+    - field.field.node.person.field_email
+    - field.field.node.person.field_featured_items
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
+    - field.field.node.person.field_phone_numbers
     - field.field.node.person.field_photo
+    - field.field.node.person.field_primary_email
+    - field.field.node.person.field_primary_phone_number
+    - field.field.node.person.field_profile_photo
+    - field.field.node.person.field_profile_type
+    - field.field.node.person.field_social_media
+    - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
     - image.style.thumbnail
@@ -14,11 +27,61 @@ dependencies:
     - workflows.workflow.editorial
   module:
     - content_moderation
+    - entity_browser
+    - field_group
     - image
     - link
+    - paragraphs
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - telephone
+    - text
+third_party_settings:
+  field_group:
+    group_contact_footer:
+      children:
+        - field_address
+        - field_phone_numbers
+        - field_email
+      parent_name: ''
+      weight: 12
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: true
+      label: 'Contact footer'
+    group_optional_content:
+      children:
+        - field_spotlight
+        - field_featured_items
+      parent_name: group_items
+      weight: 17
+      format_type: accordion_item
+      region: content
+      format_settings:
+        formatter: closed
+        id: ''
+        classes: ''
+        required_fields: false
+      label: 'Optional content'
+    group_items:
+      children:
+        - group_optional_content
+      parent_name: ''
+      weight: 13
+      format_type: accordion
+      region: content
+      format_settings:
+        formatter: closed
+        required_fields: '1'
+        id: ''
+        classes: ''
+        effect: none
+      label: 'OC Accordion'
 id: node.person.default
 targetEntityType: node
 bundle: person
@@ -26,17 +89,87 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 8
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_direct_external_url:
+  field_address:
+    weight: 28
+    settings:
+      entity_browser: location_physical
+      field_widget_display: rendered_entity
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_biography:
+    weight: 8
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_city_department:
     weight: 5
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_direct_external_url:
+    weight: 14
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
+    region: content
+  field_email:
+    weight: 31
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
+  field_featured_items:
+    weight: 31
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    type: paragraphs
     region: content
   field_first_name:
     weight: 0
@@ -54,16 +187,106 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_phone_numbers:
+    weight: 30
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
   field_photo:
-    weight: 4
+    type: image_image
+    weight: 7
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
+  field_primary_email:
+    weight: 9
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_primary_phone_number:
+    weight: 10
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
+    region: content
+  field_profile_photo:
+    weight: 6
+    settings:
+      entity_browser: image
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_profile_type:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_social_media:
+    weight: 11
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    type: paragraphs
+    region: content
+  field_spotlight:
+    weight: 30
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    type: paragraphs
     region: content
   field_sub_title:
-    weight: 3
+    weight: 4
     settings:
       size: 60
       placeholder: ''
@@ -71,41 +294,41 @@ content:
     type: string_textfield
     region: content
   field_title:
-    weight: 2
+    weight: 3
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  langcode:
-    type: language_select
-    weight: 6
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 12
+    weight: 20
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 9
+    region: content
+    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 25
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 15
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -113,25 +336,32 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 21
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 10
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 14
+    weight: 22
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 9
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 7
+    weight: 15
     settings:
       match_operator: CONTAINS
       size: 60
@@ -141,21 +371,20 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 18
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 16
+    weight: 26
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 11
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
-  promote: true
-  sticky: true
+  langcode: true
