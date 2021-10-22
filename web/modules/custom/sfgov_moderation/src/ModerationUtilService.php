@@ -67,7 +67,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getModerationFields($node):array {
+  public function getModerationFields(Node $node): array {
 
     /** @var \Drupal\node\Entity\Node $revision */
     $revision = $this->getLatestRevision($node);
@@ -82,11 +82,11 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
       /** @var \Drupal\user\Entity\User $accountEntity */
       $accountEntity = $this->entityTypeManager->getStorage('user')->load($reviewer[0]['target_id']);
 
-      $username = $accountEntity->getUsername();
+      $username = $accountEntity->getDisplayName();
     }
 
     return [
-      'state' => isset($state[0]['value']) ? $state[0]['value'] : '',
+      'state' => $state[0]['value'] ?? '',
       'username' => $username ?? NULL,
     ];
   }
@@ -94,7 +94,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLatestRevision($node): Node {
+  public function getLatestRevision(Node $node): Node {
 
     $nid = $node->id();
 

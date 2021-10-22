@@ -600,6 +600,7 @@ function dept_page_fields($node) {
 }
 
 function public_body_page_fields($node) {
+  $currentLanguageId = \Drupal::languageManager()->getCurrentLanguage()->getId();
   $styleThumbnail = ImageStyle::load('thumbnail');
   $theFields = array(
     'featured_items' => array(),
@@ -631,7 +632,7 @@ function public_body_page_fields($node) {
         $otherInfoParagraph = Paragraph::load($value['target_id']);
         $theFields['other_info'][$otherInfoKey] = [
           'bundle' => $otherInfoParagraph->bundle(),
-          'title' => $otherInfoParagraph->field_title->value,
+          'title' => $otherInfoParagraph->hasTranslation($currentLanguageId) ? $otherInfoParagraph->getTranslation($currentLanguageId)->get('field_title')->value : $otherInfoParagraph->field_title->value,
           'content' => [],
         ];
 
@@ -787,7 +788,7 @@ function sfgovpl_add_regions_to_node(array $regions, &$variables) {
 function _sfgovpl_negotiate_translation(&$variables) {
   if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
     $node = $variables['node'];
-    $view_mode = $variables['view_mode'];
+    $view_mode = $variables['view_mode'] ?? '';
     $variables = array_merge($variables, _sfgovpl_node_notranslate($node, $view_mode));
   }
   return $variables;

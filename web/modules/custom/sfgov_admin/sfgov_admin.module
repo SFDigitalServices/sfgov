@@ -42,6 +42,10 @@ function sfgov_admin_page_attachments(array &$page) {
   if ($logged_in && $active_theme == 'sfgovpl') {
     $page['#attached']['library'][] = 'sfgovpl/sfgov-editorial';
   }
+  $current_uri = \Drupal::request()->getRequestUri();
+  if (strstr($current_uri, 'admin/tmgmt/items/')) {
+    $page['#attached']['library'][] = 'sfgov_admin/sg1498';
+  }
 }
 
 /**
@@ -317,7 +321,7 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
 
     // Alter form elements.
     $form['current']['#title'] = t('Current state');
-    $form['current']['#markup'] = '<div class="' . implode($classes, ' ') . '">' . $current_state . '</div>';
+    $form['current']['#markup'] = '<div class="' . implode(' ', $classes) . '">' . $current_state . '</div>';
     $form['revision_log']['#title'] = t('Add a revision note');
     $form['revision_log']['#placeholder'] = t('Log message');
     $form['revision_log']['#size'] = NULL;
