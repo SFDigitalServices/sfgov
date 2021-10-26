@@ -4,13 +4,14 @@ namespace Drupal\sfgov_formio;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\tmgmt_content\DefaultFieldProcessor;
+use Drupal\tmgmt_content\MetatagsFieldProcessor;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 
 /**
  * Field processor for the metatags field.
  */
-class FormioFieldProcessor extends DefaultFieldProcessor {
+class FormioFieldProcessor extends MetatagsFieldProcessor {
 
   /**
    * {@inheritdoc}
@@ -36,18 +37,28 @@ class FormioFieldProcessor extends DefaultFieldProcessor {
               ];
             $data[$label] = $entry;
           }
+          $data['#multivalue_entry'] = TRUE;
         }
       }
     }
     // If there is no formio data, fallback to the default behavior.
-    return $data ?: parent::extractTranslatableData($field);
+    return $data ?: DefaultFieldProcessor::extractTranslatableData($field);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setTranslations($field_data, FieldItemListInterface $field) {
-    return parent::setTranslations($field_data, $field);
+    if (isset($field_data['#multivalue_entry'])) {
+      // Use the metatag setTranslation function because it allows for multiple
+      // values.
+      return parent::setTranslations($field_data, $field);
+    }
+    else {
+      // Use the default setTranslation.
+      return DefaultFieldProcessor::setTranslations($field_data, $field);
+    }
+    return;
   }
 
   /**
