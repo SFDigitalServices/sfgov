@@ -5,7 +5,7 @@
 {% set profile_type = node.field_profile_type.value %}
 {% set department = node.field_city_department.entity %}
 
-{% if (profile_fields.address.line1 is not empty) or (node.field_city_department[0].entity.field_email[0].entity.field_email.value|length) or (node.field_city_department[0].entity.field_phone_numbers[0].entity.field_tel.value|length) %}
+{% if (profile_fields.address.line1 is not empty) or (node.field_city_department[0].entity.field_email[0].entity.field_email.value|length) or (node.field_city_department[0].entity.field_phone_numbers[0].entity.field_tel.value|length) or content.field_phone_numbers|render or content.field_email|render %}
   {% set city_employee_contact = true %}
 {% else %}
   {% set city_employee_contact = false %}
@@ -179,43 +179,44 @@
       <h2>{{ 'Contact'|t }}</h2>
       <div class="contact-wrapper">
         <div class="sfgov-container-three-column">
+          {% if profile_fields.address %}
+            <div class="contact-address sfgov-container-item">
+              <div class="sfgov-contact-section address">
+                <label>{{ 'Mailing Address'|t }}</label>
 
-          <div class="contact-address sfgov-container-item">
-            <div class="sfgov-contact-section address">
-              <label>{{ 'Mailing Address'|t }}</label>
-
-              {% if profile_fields.address.organization %}
-                <p class="title">{{ profile_fields.address.organization }}</p>
-              {% endif %}
-                <p>
-                {% if profile_fields.address.line1 %}
-                  {{ profile_fields.address.line1 }} <br/>
+                {% if profile_fields.address.organization %}
+                  <p class="title">{{ profile_fields.address.organization }}</p>
                 {% endif %}
-                {% if profile_fields.address.line2 %}
-                  {{ profile_fields.address.line2 }} <br/>
-                {% endif %}
-                {% if (profile_fields.address.city) or (profile_fields.address.state) %}
-                  {{ profile_fields.address.city }}, {{ profile_fields.address.state }} {{ profile_fields.address.zip }}
-                {% endif %}
-                </p>
-
-                {% if profile_fields.map %}
-                <div class="map">
-                  {% if profile_fields.map.map_img_url %}
-                    <div class="simple-gmap-static-map">
-                      <a href="{{ profile_fields.map.map_site_url }}"><img src="{{ profile_fields.map.map_img_url }}" /></a>
-                    </div>
+                  <p>
+                  {% if profile_fields.address.line1 %}
+                    {{ profile_fields.address.line1 }} <br/>
                   {% endif %}
-                  {% if profile_fields.map.map_directions_url %}
-                    <p class="simple-gmap-link">
-                      <a href="{{ profile_fields.map.map_directions_url }}">{{ 'Get directions'|t }}</a>
-                    </p>
+                  {% if profile_fields.address.line2 %}
+                    {{ profile_fields.address.line2 }} <br/>
                   {% endif %}
+                  {% if (profile_fields.address.city) or (profile_fields.address.state) %}
+                    {{ profile_fields.address.city }}, {{ profile_fields.address.state }} {{ profile_fields.address.zip }}
+                  {% endif %}
+                  </p>
+
+                  {% if profile_fields.map %}
+                  <div class="map">
+                    {% if profile_fields.map.map_img_url %}
+                      <div class="simple-gmap-static-map">
+                        <a href="{{ profile_fields.map.map_site_url }}"><img src="{{ profile_fields.map.map_img_url }}" /></a>
+                      </div>
+                    {% endif %}
+                    {% if profile_fields.map.map_directions_url %}
+                      <p class="simple-gmap-link">
+                        <a href="{{ profile_fields.map.map_directions_url }}">{{ 'Get directions'|t }}</a>
+                      </p>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+
                 </div>
-                {% endif %}
-
-              </div>
-          </div>
+            </div>
+          {% endif %}
 
           <div class="contact-phone sfgov-container-item">
             <div class="sfgov-contact-section phone">

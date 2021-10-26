@@ -1037,30 +1037,35 @@ function profile_page_fields($node) {
 function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
   $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-  // Build department data for profile apge
+  // Build department data for profile page
   foreach($ref_nids as $key => $value) {
     $node =  \Drupal\node\Entity\Node::load(intval($value['entity_id']));
     $node = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage) : $node;
     $ref_data[$key]['profile']['node_title'] = $node->label();
     $ref_data[$key]['profile']['node_url'] = $node->toUrl()->toString();
+
     // Address
-    if ($address = $node->get('field_address')->referencedEntities()) {
+    $address = $node->hasField('field_address') ? $node->get('field_address')->referencedEntities() : [];
+    if (!empty($address)) {
       $ref_data[$key]['profile']['address'] = $address[0]->get('field_address')->getValue();
     }
 
     // Email
-    if ($email = $node->get('field_email')->referencedEntities()) {
+    $email = $node->hasField('field_email') ? $node->get('field_email')->referencedEntities() : [];
+    if (!empty($email)) {
       foreach ($email as $ekey => $eitem) {
         $ref_data[$key]['profile']['email'][$ekey]['title'] = $eitem->get('field_title')->value;
         $ref_data[$key]['profile']['email'][$ekey]['email_address'] = $eitem->get('field_email')->value;
       }
     }
+
     // Phone
-    if ($phone = $node->get('field_phone_numbers')->referencedEntities()) {
+    $phone = $node->hasField('field_phone_numbers') ? $node->get('field_phone_numbers')->referencedEntities() : [];
+    if (!empty($phone)) {
       foreach($phone as $pkey => $pitem) {
-        $ref_data[$key]['profile']['phone'][$pkey]['tel'] = $pitem->get('field_tel')->value;
-        $ref_data[$key]['profile']['phone'][$pkey]['text'] = $pitem->get('field_text')->value;
-        $ref_data[$key]['profile']['phone'][$pkey]['owner'] = $pitem->get('field_owner')->value;
+        $ref_data[$key]['profile']['phone'][$pkey]['tel'] = $pitem->hasField('field_tel') ? $pitem->get('field_tel')->value : '';
+        $ref_data[$key]['profile']['phone'][$pkey]['text'] = $pitem->hasField('field_text') ? $pitem->get('field_text')->value : '';
+        $ref_data[$key]['profile']['phone'][$pkey]['owner'] = $pitem->hasField('field_owner') ? $pitem->get('field_owner')->value : '';
       }
     }
 
