@@ -6,6 +6,7 @@ dependencies:
     - field.storage.node.field_board_members
     - node.type.public_body
     - paragraphs.paragraphs_type.people
+    - paragraphs.paragraphs_type.profile_group
   module:
     - entity_reference_revisions
     - tmgmt_content
@@ -28,12 +29,16 @@ settings:
     negate: 0
     target_bundles:
       people: people
+      profile_group: profile_group
     target_bundles_drag_drop:
       accordion:
         weight: 57
         enabled: false
       accordion_item:
         weight: 58
+        enabled: false
+      accordion_item_simple:
+        weight: 65
         enabled: false
       acuity_embed:
         weight: 59
@@ -43,6 +48,9 @@ settings:
         enabled: false
       agenda_item:
         weight: 61
+        enabled: false
+      basic_html_section:
+        weight: 69
         enabled: false
       block:
         weight: 62
@@ -95,6 +103,9 @@ settings:
       events:
         weight: 78
         enabled: false
+      existing_agency:
+        weight: 87
+        enabled: false
       fact:
         weight: 79
         enabled: false
@@ -121,9 +132,6 @@ settings:
         enabled: false
       instagram_embed:
         weight: 86
-        enabled: false
-      instagram_feed:
-        weight: 87
         enabled: false
       link:
         weight: 89
@@ -157,6 +165,12 @@ settings:
         enabled: false
       process_step:
         weight: 99
+        enabled: false
+      profile_group:
+        enabled: true
+        weight: 108
+      public_body_profiles:
+        weight: 109
         enabled: false
       resources:
         weight: 100
@@ -196,5 +210,11 @@ settings:
         enabled: false
       video:
         weight: 112
+        enabled: false
+      video_external:
+        weight: 124
+        enabled: false
+      videos:
+        weight: 123
         enabled: false
 field_type: entity_reference_revisions

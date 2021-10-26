@@ -1,0 +1,25 @@
+uuid: 1ff4297b-af66-4398-9449-5d452cc2bf11
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.existing_agency.field_agency_reference
+    - paragraphs.paragraphs_type.existing_agency
+id: paragraph.existing_agency.default
+targetEntityType: paragraph
+bundle: existing_agency
+mode: default
+content:
+  field_agency_reference:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true
