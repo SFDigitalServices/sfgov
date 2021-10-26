@@ -51,6 +51,7 @@ function sfgov_utilities_deploy_00_profile_photos() {
         $media_image->save();
   
         $node->field_profile_photo->target_id = $media_image->id();
+        $node->get('field_photo')->removeItem(0);
         $node->save();
   
       } else {
@@ -62,6 +63,9 @@ function sfgov_utilities_deploy_00_profile_photos() {
   }
 }
 
+/**
+ * Move existing people paragraphs to profile group paragraphs for the front page
+ */
 function sfgov_utilities_deploy_01_homepage_profile_group() {
   $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
   $user = reset($users);
@@ -157,6 +161,9 @@ function sfgov_utilities_deploy_01_homepage_profile_group() {
   $landingPage->save();
 }
 
+/**
+ * Move existing people paragraphs to profile groups for other content types
+ */
 function sfgov_utilities_deploy_02_content_type_profile_group() {
   $contentTypes = [
     [
