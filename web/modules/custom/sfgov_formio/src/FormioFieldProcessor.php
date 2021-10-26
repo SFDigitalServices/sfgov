@@ -3,14 +3,14 @@
 namespace Drupal\sfgov_formio;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\tmgmt_content\MetatagsFieldProcessor;
+use Drupal\tmgmt_content\DefaultFieldProcessor;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Field processor for the metatags field.
  */
-class FormioFieldProcessor extends MetatagsFieldProcessor {
+class FormioFieldProcessor extends DefaultFieldProcessor {
 
   /**
    * {@inheritdoc}
@@ -23,18 +23,9 @@ class FormioFieldProcessor extends MetatagsFieldProcessor {
       // reference field. If that field exists, make a call to the referenced
       // formio doc and set each field within as a new field in the translation.
       if ($formio_paragraph->hasfield('field_formio_data_source')) {
-        $formio_data_source = $formio_paragraph->get('field_formio_data_source')->value;
-
-        // If the results aren't in cache, set the cache.
-        $cid = 'formio_data:nid:' . $formio_paragraph->get('parent_id')->value;
-        if (!\Drupal::cache()->get($cid)) {
-          if ($formio_data = $this->getFormioData($formio_data_source)) {
-            \Drupal::cache()->set($cid, $formio_data);
-          }
-        }
-
-        if (\Drupal::cache()->get($cid)) {
-          foreach (\Drupal::cache()->get($cid)->data as $label => $value ) {
+        $formio_data = $this->setFormioData($formio_paragraph);
+        if (!empty($formio_data)) {
+          foreach ($formio_data as $label => $value ) {
             $label_values = explode ('.', $label);
               $entry = [
                 'description' => [
@@ -48,7 +39,8 @@ class FormioFieldProcessor extends MetatagsFieldProcessor {
         }
       }
     }
-    return $data;
+    // If there is no formio data, fallback to the default behavior.
+    return $data ?: parent::extractTranslatableData($field);
   }
 
   /**
@@ -59,23 +51,38 @@ class FormioFieldProcessor extends MetatagsFieldProcessor {
   }
 
   /**
-   * Gets the formio field labels and values.
+   * Cache and return the formio field labels and values.
    *
    * @param string $formio_data_source
    *   The url being used for the formio call.
    *
    * @return array
-   *   The array of json field labels and data
+   *   The array of json data from formio. Can return an empty array.
    */
-  protected function getFormioData($formio_data_source) {
+  protected function setFormioData($formio_paragraph) {
+    $paragraph_tag = $formio_paragraph->getCacheTags()[0];
+    $cid = 'formio_data:' . $paragraph_tag;
     $data = [];
-    // Do everything we can to ensure its a valid url source.
-    if (UrlHelper::isExternal($formio_data_source)) {
-      $formio_config = \Drupal::config('sfgov_formio.settings');
-      $formio_url = trim($formio_config->get('formio_base_url') . $formio_data_source);
-      if (UrlHelper::isValid($formio_url)) {
-        $data = (array) json_decode(file_get_contents($formio_url));
+    if (\Drupal::cache()->get($cid)) {
+      $data = \Drupal::cache()->get($cid)->data;
+    }
+    else {
+      $formio_data_source = $formio_paragraph->get('field_formio_data_source')->value;
+      // Do everything we can to ensure its a valid url source.
+      if (UrlHelper::isExternal($formio_data_source)) {
+        $formio_config = \Drupal::config('sfgov_formio.settings');
+        $formio_url = str_replace(
+          '[form_url]',
+          urlencode(trim($formio_data_source)),
+          $formio_config->get('formio_translations_api_url'));
+        if (UrlHelper::isValid($formio_url)) {
+          $data = (array) json_decode(file_get_contents($formio_url));
+          \Drupal::cache()->set($cid, $data, CACHE::PERMANENT, [$paragraph_tag]);
+        }
       }
+    }
+    if (empty($data)) {
+      \Drupal::logger('sfgov_formio')->notice('The url provided in field_formio_data_source on node @nid is not providing valid formio data for translations');
     }
     return $data;
   }
