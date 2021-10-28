@@ -102,6 +102,8 @@ if [ -n "$CIRCLE_PULL_REQUEST" ]; then
     "text":"%s",
     "thread_ts":"%s"
   }' "<$CIRCLE_PULL_REQUEST|$CIRCLE_PULL_REQUEST>" "$threadTs")
+
+  curl -s -X POST -H 'Content-type: application/json' --data "$prThreadData" $RONBOT_WEBHOOK_URL
 fi
 
 suiteThreadData=$(printf '{
