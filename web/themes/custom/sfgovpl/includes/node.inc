@@ -808,6 +808,8 @@ function public_body_page_fields($node) {
  * Prepare profile field data from entities referencing the profile
  */
 function profile_page_fields($node) {
+  $theFields = [];
+  
   if($node) {
     // Get field data related to profile
     $nid = $node->id();
@@ -993,6 +995,8 @@ function profile_page_fields($node) {
         $theFields['address']['state'] = $addressValues['administrative_area'];
         $theFields['address']['zip'] = $addressValues['postal_code'];
         $theFields['address']['organization'] = $addressValues['organization'];
+        $theFields['address']['addressee'] = $addressValues['addressee'];
+        $theFields['address']['location_name'] = $addressValues['location_name'];
         $hours = $addressEntity->get('field_operating_hours')->getValue();
         usort($hours, function($item1, $item2) {
           return $item1['day'] <=> $item2['day'];
