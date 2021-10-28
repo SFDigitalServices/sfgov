@@ -96,7 +96,7 @@ threadTs=$(curl -s -X POST \
 
 echo "threadTs:$threadTs"
 
-if [ -z "$CIRCLE_PULL_REQUEST" ]; then
+if [ -n "$CIRCLE_PULL_REQUEST" ]; then
   prThreadData=$(printf '{
     "unfurl_links": "false",
     "text":"%s",
