@@ -109,10 +109,13 @@
       }
 
       .profile--name {
-        @include fs-display-1;
+        @include fs-display-1-mobile;
         color: $c-black;
         margin-bottom: 40px;
         display: inherit;
+        @include media($medium-screen) {
+          @include fs-display-1;
+        }
       }
 
       .profile--job,
@@ -125,16 +128,24 @@
       }
 
       .profile--job {
-        @include fs-title-3;
+        @include fs-title-3-mobile;
         margin-bottom: 40px;
         @include media-max($narrow-screen) {
           clear: both;
           margin-bottom: 50px;
         }
+        @include media($medium-screen) {
+          @include fs-title-3;
+        }
       }
       .profile--job .city-employee {
-        @include fs-big-description;
-        a { text-decoration: none; }
+        @include fs-big-description-mobile;
+        a { 
+          text-decoration: none;
+        }
+        @include media($medium-screen) {
+          @include fs-big-description;
+        }
       }
 
       .profile--role {
@@ -213,8 +224,12 @@
       padding: 60px 0 60px 0;
 
       h2 {
+        @include fs-title-2-mobile;
         margin: 0 0 40px 0;
         color: #fff;
+        @include media($medium-screen) {
+          @include fs-title-2;
+        }
       }
       div,
       a {
@@ -253,11 +268,11 @@
       padding-top: 20px;
 
       h2 {
-        font-size: 62px;
-        font-weight: 500;
-        letter-spacing: 0;
-        line-height: 70px;
+        @include fs-title-1-mobile;
         margin: 0 0 20px 0;
+        @include media($medium-screen) {
+          @include fs-title-1;
+        }
       }
 
       p.title { margin-top: 0;}
