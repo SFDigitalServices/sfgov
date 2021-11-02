@@ -143,6 +143,7 @@ function _sfgov_formio_sfds_source() {
  * Implements hook_entity_base_field_info().
  */
 function sfgov_formio_entity_base_field_info(EntityTypeInterface $entity_type) {
+  // Add a computed field to get the formio url.
   if ($entity_type->id() === 'node') {
     $fields['formio_url'] = BaseFieldDefinition::create('string')
       ->setName('formio_url')
@@ -159,20 +160,10 @@ function sfgov_formio_entity_base_field_info(EntityTypeInterface $entity_type) {
 }
 
 /**
- * Implements hook_entity_presave().
- */
-function sfgov_formio_entity_presave($entity) {
-  if ($entity->bundle() === 'form_page' && $entity->language()->getId() === 'en') {
-    if ($formio_url = $entity->get('formio_url')->value) {
-      $formio_json_content = serialize(file_get_contents($formio_url));
-      $entity->set('field_formio_json_content', $formio_json_content);
-    }
-  }
-}
-
-/**
  * Implements hook_field_info_alter().
  */
 function sfgov_formio_field_info_alter(&$info) {
+  // New processors can only be added at the field level. But this class has
+  // logic in it to only operate on the Formio Json Content field.
   $info['string_long']['tmgmt_field_processor'] = 'Drupal\sfgov_formio\Plugin\Field\FormioFieldProcessor';
 }

@@ -4,14 +4,13 @@ namespace Drupal\sfgov_formio\Plugin\Field;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\tmgmt_content\DefaultFieldProcessor;
-use Drupal\tmgmt_content\MetatagsFieldProcessor;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 
 /**
- * Field processor for the text field.
+ * Field processor for the Formio Json Content text field.
  */
-class FormioFieldProcessor extends MetatagsFieldProcessor {
+class FormioFieldProcessor extends DefaultFieldProcessor {
 
   /**
    * {@inheritdoc}
@@ -56,7 +55,7 @@ class FormioFieldProcessor extends MetatagsFieldProcessor {
     }
     else {
       // Use the default setTranslation.
-      return DefaultFieldProcessor::setTranslations($field_data, $field);
+      return parent::setTranslations($field_data, $field);
     }
     return;
   }
@@ -64,21 +63,23 @@ class FormioFieldProcessor extends MetatagsFieldProcessor {
   /**
    * Cache and return the formio field labels and values.
    *
-   * @param string $formio_data_source
-   *   The url being used for the formio call.
+   * @param Drupal\Core\Field\FieldItemListInterface $field
+   *   The field being translated
    *
    * @return array
    *   The array of json data from formio. Can return an empty array.
    */
   protected function setFormioData(FieldItemListInterface $field) {
-    $node_tags = $field->getParent()->getEntity()->getCacheTags();
+    $parent = $field->getParent()->getEntity();
+    $node_tags = $parent->getCacheTags();
     $cid = 'formio_data:' . $node_tags[0];
     $data = [];
     if (\Drupal::cache()->get($cid)) {
       $data = \Drupal::cache()->get($cid)->data;
     }
-    else {
-      $data = (array) json_decode(unserialize($field->value));
+    elseif ($parent->get('formio_url')->value) {
+      $formio_url = $parent->get('formio_url')->value;
+      $data = (array) json_decode(file_get_contents($formio_url));
       \Drupal::cache()->set($cid, $data, CACHE::PERMANENT, $node_tags);
     }
     return $data;

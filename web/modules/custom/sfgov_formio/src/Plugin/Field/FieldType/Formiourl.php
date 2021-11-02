@@ -16,9 +16,9 @@ class Formiourl extends FieldItemList implements FieldItemListInterface {
    */
   protected function computeValue(){
     $parent_node = $this->getEntity();
-    // Only use this field on form page content types
+    // Only use this field on form page content types.
     if ($parent_node->bundle() === 'form_page') {
-      // Return False if any step fails
+      // Return FALSE if any step fails.
       $formio_url = FALSE;
       if ($paragraph_nid = $parent_node->get('field_form_id')->target_id) {
         $form_paragraph = \Drupal::entityTypeManager()->getStorage('paragraph')->load($paragraph_nid);
