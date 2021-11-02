@@ -14,47 +14,55 @@
 
 {% block content %}
   <div class="sfgov-section sfgov-section-container clearfix">
-    <div class="group--right">
-      {% if (sections|length) >= 2 %}
-        {{ attach_library('sfgovpl/sfgov-data-story') }}
-        <div class="sfgov-toc">
-          <div class="sfgov-toc-sticky">
-            {% include "@sfgov-design-system/button/button.twig" with {
-                "classes": ['btn-block','sfgov-toc-expand-button'],
-                "text": 'See all sections'|t
-            } %}
-          </div>
-
-          <div class="sfgov-toc-drawer">
-            <div class="sfgov-toc-header">
-              <h2 class="sfgov-toc-header-title">
-                {{ 'Sections'|t }}
-              </h2>
-              <button class="sfgov-toc-close-button">
-                <span class="visually-hidden">{{ 'Collapse sections' }}</span>
-              </button>
+    <div class="sfgov-section-container-narrow">
+      <div class="group--right">
+        {% if (sections|length) >= 2 %}
+          {{ attach_library('sfgovpl/sfgov-data-story') }}
+          <div class="sfgov-toc">
+            <div class="sfgov-toc-sticky">
+              {% include "@sfgov-design-system/button/button.twig" with {
+                  "classes": ['btn-block','sfgov-toc-expand-button'],
+                  "text": 'See all sections'|t
+              } %}
             </div>
-            <div class="sfgov-toc-tree">
-              <ul>
-                {% for section in sections %}
-                  <li>
-                    <a href="#{{ section.title|clean_class }}">
-                      {{ section.title }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
+  
+            <div class="sfgov-toc-drawer">
+              <div class="sfgov-toc-header">
+                <h2 class="sfgov-toc-header-title">
+                  {{ 'Sections'|t }}
+                </h2>
+                <button class="sfgov-toc-close-button">
+                  <span class="visually-hidden">{{ 'Collapse sections' }}</span>
+                </button>
+              </div>
+              <div class="sfgov-toc-tree">
+                <ul>
+                  {% for section in sections %}
+                    <li>
+                      <a href="#{{ section.title|clean_class }}">
+                        {{ section.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-      {% endif %}
-    </div>
-    <div class="group--left">
-      <div class="sfgov-section-overview sfgov-in-this-page-target">
-        <div class="sfgov-section--content">
-          {{ content.field_content }}
-        </div>
+        {% endif %}
       </div>
+      <div class="group--left">
+        <div class="sfgov-section-overview sfgov-in-this-page-target">
+          <div class="sfgov-section--content">
+            {{ content.field_content }}
+          </div>
+        </div>
+      </div>      
+    </div>
+  </div>
+  <div class="sfgov-section--departments">
+    <div class="related-departments">
+      <span class="field-departments-title">Department</span>
+      {{ content.field_departments }}
     </div>
   </div>
 {% endblock content %}
