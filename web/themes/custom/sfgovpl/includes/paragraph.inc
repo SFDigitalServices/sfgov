@@ -255,6 +255,6 @@ function sfgovpl_preprocess_paragraph__form_io(&$variables) {
   $parent_node = $paragraph->getParentEntity();
   if ($parent_node instanceof NodeInterface) {
     $json_data = $parent_node->get('field_formio_json_content')->value;
-    $variables['content']['json_data'] = $json_data;
+    $variables['content']['formio_json_data'] = $json_data;
   }
 }
