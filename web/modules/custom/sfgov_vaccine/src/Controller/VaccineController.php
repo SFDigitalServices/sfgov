@@ -244,10 +244,10 @@ class VaccineController extends ControllerBase {
   /**
    * Prepare each site's eligibility text.
    */
-  private function getSiteEligibilities($site_data, $group) {
+  private function getSiteEligibilities($site_data) {
 
     $printed = [];
-    foreach (['minors', 'kids5to11'] as $group) {
+    foreach (['kids5to11', 'minors'] as $group) {
       if (isset($site_data[$group]['allowed'])) {
         $allowed = $site_data[$group]['allowed'] ? 'true': 'false';
         $text = $this->vaxValues->settings($group . '.' . $allowed . '_text');
