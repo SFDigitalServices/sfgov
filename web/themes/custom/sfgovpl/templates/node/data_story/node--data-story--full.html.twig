@@ -59,10 +59,12 @@
       </div>      
     </div>
   </div>
-  <div class="sfgov-section--departments">
-    <div class="related-departments">
-      <span class="field-departments-title">Department</span>
-      {{ content.field_departments }}
+  {% if content.field_departments['#items'] is not empty %}
+    <div class="sfgov-section--departments">
+      <div class="related-departments">
+        <span class="field-departments-title">Department</span>
+        {{ content.field_departments }}
+      </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock content %}
