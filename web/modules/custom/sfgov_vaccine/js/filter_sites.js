@@ -48,10 +48,8 @@
         let userLocation = !!locationInput.val();
 
         if ($("[name=kids5to11]").is(":checked")) {
-          console.info('kids!')
           kids5to11_chkBox.datatest = '1'
         } else {
-          console.info('no kids')
           kids5to11_chkBox.datatest = ''
         }
 
