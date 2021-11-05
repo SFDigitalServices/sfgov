@@ -78,12 +78,21 @@ class FilterSitesForm extends FormBase {
       '#type' => 'container',
     ];
 
+    // Single checkboxes - kids 5 to 11
+    $form['container']['toggle']['items']['single_checkboxes']['kids5to11'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t($this->settings('form_strings.kids5to11')),
+      '#default_value' => TRUE,
+    ];
+
+    /*
     // Single checkboxes - restrictions.
     $form['container']['toggle']['items']['single_checkboxes']['restrictions'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.restrictions')),
       '#default_value' => TRUE,
     ];
+     */
 
     // Single checkboxes - available.
     $form['container']['toggle']['items']['single_checkboxes']['available'] = [
