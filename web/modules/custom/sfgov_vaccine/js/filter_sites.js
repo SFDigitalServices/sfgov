@@ -40,7 +40,6 @@
       });
 
       function filterVaccineSites() {
-        let restrictions_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
         let kids5to11_chkBox = { datatest: null };
         let locationInput = $("[name=location]")
@@ -79,7 +78,6 @@
           .filter(function () {
             const $site = $(this)
             // "Only show sites open to the general public" checkbox.
-            const restrictions_regExTest = new RegExp(restrictions_chkBox.datatest, "ig");
             const kids5to11_regExTest = new RegExp(kids5to11_chkBox.datatest, "ig");
 
             // "Only show sites with available appointments" checkbox.
@@ -166,7 +164,6 @@
             // Return list of matching sites.
             return (
               $site.attr("data-kids5to11").match(kids5to11_regExTest) &&
-              $site.attr("data-restrictions").match(restrictions_regExTest) &&
               $site.attr("data-wheelchair").match(wheelchair_regExTest) &&
               $site.attr("data-access-mode").match(access_mode_regExTest) &&
               $site.hasClass("language-match") &&
