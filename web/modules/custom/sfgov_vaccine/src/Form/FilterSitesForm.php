@@ -82,7 +82,7 @@ class FilterSitesForm extends FormBase {
     $form['container']['toggle']['items']['single_checkboxes']['kids5to11'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.kids5to11')),
-      '#default_value' => TRUE,
+      '#default_value' => FALSE,
     ];
 
     /*
