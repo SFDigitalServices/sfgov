@@ -329,6 +329,7 @@ class VaccineController extends ControllerBase {
           'data-site-id' => $site_id,
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
+          'data-kids5to11' => $site_data['kids5to11']['allowed'] ? 1 : 0,
           'data-available' => $available,
           'data-wheelchair' => $wheelchair ? 1 : 0,
           // Multi-selects.
