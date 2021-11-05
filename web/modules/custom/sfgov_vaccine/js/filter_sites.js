@@ -30,13 +30,13 @@
         event.preventDefault();
         leftColumn.fadeOut(0);
         // see location_autocomplete for this promise
-        locationSubmit().then(function (result) {
-          displaySites();
-        }, function (err) {
-          console.error(err);
-        });
-        leftColumn.fadeIn(speed);
-        scrollUp(speed);
+        locationSubmit()
+          .then(displaySites)
+          .catch(error => console.error(err))
+          .finally(() => {
+            leftColumn.fadeIn(speed);
+            scrollUp(speed);
+          })
       });
 
       function filterVaccineSites() {
