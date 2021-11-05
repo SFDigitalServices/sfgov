@@ -53,14 +53,6 @@
           kids5to11_chkBox.datatest = ''
         }
 
-        if ($("[name=restrictions]").is(":checked") === true) {
-          // show
-          restrictions_chkBox.datatest = "0";
-        } else {
-          //hide
-          restrictions_chkBox.datatest = "";
-        }
-
         filterByAvailability = $("[name=available]").is(":checked");
 
         if ($("[name=wheelchair]").is(":checked") === true) {
