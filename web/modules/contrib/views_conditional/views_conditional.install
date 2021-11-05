@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Contains update functions for Views Conditional.
+ */
+
+/**
+ * Update Views Conditional condition value configuration.
+ */
+function views_conditional_update_8001(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $mappings = [
+    1 => 'eq',
+    2 => 'neq',
+    3 => 'gt',
+    4 => 'lt',
+    5 => 'em',
+    6 => 'nem',
+    7 => 'cn',
+    8 => 'ncn',
+    9 => 'leq',
+    10 => 'lneq',
+    11 => 'lgt',
+    12 => 'llt',
+  ];
+
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $view = $config_factory->getEditable($view_config_name);
+    $save = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as $display_name => &$display) {
+      if (!empty($display['display_options']['fields'])) {
+        $fields = $display['display_options']['fields'];
+        foreach ($fields as $field_name => $field) {
+          if ($field['plugin_id'] == 'views_conditional_field') {
+            $condition = $field['condition'];
+            $display['display_options']['fields'][$field_name]['condition'] = $mappings[$condition];
+            \Drupal::logger('views_conditional')->notice("Updating condition setting in $field_name for $view_config_name");
+            $save = TRUE;
+          }
+        }
+      }
+    }
+    if ($save) {
+      $view->set('display', $displays);
+      $view->save(TRUE);
+    }
+  }
+}

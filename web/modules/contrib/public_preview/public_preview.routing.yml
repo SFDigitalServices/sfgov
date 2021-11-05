@@ -1,0 +1,28 @@
+public_preview.preview_links_form:
+  path: '/node/{node}/preview-links'
+  defaults:
+    _form: Drupal\public_preview\Form\PreviewLinksForm
+    _title: 'Preview links'
+  requirements:
+    _custom_access: '\Drupal\public_preview\Form\PreviewLinksForm:access'
+    node: \d+
+  options:
+    _node_operation_route: 'TRUE'
+    parameters:
+      node:
+        type: 'entity:node'
+
+public_preview.preview_link:
+  path: '/node/{node}/preview-link/{hash}'
+  defaults:
+    _controller: 'Drupal\public_preview\Controller\PreviewController::createPreview'
+    _title_callback: 'Drupal\public_preview\Controller\PreviewController::getTitle'
+  requirements:
+    hash: '[a-zA-Z0-9]+'
+    node: \d+
+    # Allow everyone to access the preview.
+    _access: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: 'entity:node'

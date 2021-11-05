@@ -1,0 +1,15 @@
+sendgrid_integration_reports.settings_form:
+  path: 'admin/config/services/sendgrid/reports'
+  defaults:
+    _title: 'Administer SendGrid Integration Reports'
+    _form: 'Drupal\sendgrid_integration_reports\Form\SendGridReportsSettingsForm'
+  requirements:
+    _permission: 'administer sendgrid integration reports+administer modules'
+
+sendgrid_integration_reports.reports:
+  path: 'admin/reports/sendgrid'
+  defaults:
+    _title: 'SendGrid Reports Dashboard'
+    _controller: 'Drupal\sendgrid_integration_reports\Controller\SendGridReportsController:getReports'
+  requirements:
+    _permission: 'access site reports'

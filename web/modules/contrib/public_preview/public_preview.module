@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @file
+ * Module file for the public_preview module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_help().
+ */
+function public_preview_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.public_preview':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Enables generating public preview links for nodes') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function public_preview_node_delete(NodeInterface $node) {
+  /** @var \Drupal\public_preview\Storage\PreviewStorageInterface $storage */
+  $storage = Drupal::service('public_preview.preview_storage');
+  $storage->delete(['nid' => $node->id()]);
+}
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function public_preview_entity_translation_delete(EntityInterface $translation) {
+  if ('node' === $translation->getEntityTypeId()) {
+    /** @var \Drupal\public_preview\Storage\PreviewStorageInterface $storage */
+    $storage = Drupal::service('public_preview.preview_storage');
+    $storage->delete([
+      'nid' => $translation->id(),
+      'langcode' => $translation->language()->getId(),
+    ]);
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function public_preview_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if (
+    $operation !== 'view'
+    || !($entity instanceof EntityPublishedInterface)
+    || $entity->isPublished()
+  ) {
+    return AccessResult::neutral();
+  }
+
+  $hash = Drupal::service('current_route_match')->getParameter('hash');
+
+  if (empty($hash)) {
+    return AccessResult::neutral();
+  }
+
+  $preview = Drupal::service('public_preview.preview_storage')->load(['hash' => $hash]);
+
+  if (empty($preview)) {
+    return AccessResult::neutral();
+  }
+
+  if (
+    (int) $entity->id() === (int) $preview->nid
+    && $entity->language()->getId() === $preview->langcode
+  ) {
+    return AccessResult::allowed();
+  }
+
+  return AccessResult::neutral();
+}

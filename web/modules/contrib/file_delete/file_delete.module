@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Contains file_delete.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function file_delete_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the file_delete module.
+    case 'help.page.file_delete':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module provides the ability to easily delete files within Drupal administration.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function file_delete_entity_type_build(array &$entity_types) {
+  $entity_types['file']->setFormClass('delete', 'Drupal\file_delete\Form\FileDeleteForm');
+  $entity_types['file']->setLinkTemplate('delete-form', '/admin/content/files/delete/{file}');
+}

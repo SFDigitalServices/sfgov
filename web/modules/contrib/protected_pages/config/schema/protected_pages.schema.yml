@@ -1,0 +1,56 @@
+protected_pages.settings:
+  type: config_object
+  translatable: true
+  label: 'Settings'
+  mapping:
+    password:
+      type: config_object
+      mapping:
+        per_page_or_global:
+          type: string
+          label: 'Global Password Setting'
+        global_password:
+          type: config_object
+          label: 'Global Password'
+          mapping:
+            pass1:
+              type: string
+              label: 'Password'
+            pass2:
+              type: string
+              label: 'Confirm Password'
+        protected_pages_session_expire_time:
+          type: string
+          label: 'Session Expire Time'
+    email:
+      label: 'Email settings'
+      type: mapping
+      mapping:
+        subject:
+          label: 'Subject'
+          type: text
+        body:
+          label: 'Message'
+          type: text
+    others:
+      label: 'Other settings'
+      type: mapping
+      mapping:
+        protected_pages_title:
+          label: 'Protected pages title'
+          type: text
+        protected_pages_description:
+          label: 'Protected pages description'
+          type: text
+        protected_pages_password_label:
+          label: 'Protected pages password label'
+          type: text
+        protected_pages_submit_button_text:
+          label: 'Protected pages submit button text'
+          type: text
+        protected_pages_incorrect_password_msg:
+          label: 'Protected pages password message'
+          type: text
+    langcode:
+      type: string
+      label: 'Language code'

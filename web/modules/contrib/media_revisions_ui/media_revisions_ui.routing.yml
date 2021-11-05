@@ -1,0 +1,46 @@
+entity.media.version_history:
+  path: '/media/{media}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: 'Drupal\media_revisions_ui\Controller\MediaRevisionController::revisionOverview'
+  options:
+    parameters:
+      media:
+        type: entity:media
+    _admin_route: TRUE
+  requirements:
+    _access_media_revision: 'view'
+    media: \d+
+
+entity.media.revision_revert_confirm:
+  path: '/media/{media}/revisions/{media_revision}/revert'
+  defaults:
+    _form: '\Drupal\media_revisions_ui\Form\MediaRevisionRevertForm'
+    _title: 'Revert to earlier revision'
+  requirements:
+    _access_media_revision: 'update'
+    media: \d+
+  options:
+    _admin_route: TRUE
+
+entity.media.revision_revert_translation_confirm:
+  path: '/media/{media}/revisions/{media_revision}/revert/{langcode}'
+  defaults:
+    _form: '\Drupal\media_revisions_ui\Form\MediaRevisionRevertTranslationForm'
+    _title: 'Revert to earlier revision of a translation'
+  requirements:
+    _access_media_revision: 'update'
+    media: \d+
+  options:
+    _admin_route: TRUE
+
+entity.media.revision_delete_confirm:
+  path: '/media/{media}/revisions/{media_revision}/delete'
+  defaults:
+    _form: '\Drupal\media_revisions_ui\Form\MediaRevisionDeleteForm'
+    _title: 'Delete earlier revision'
+  requirements:
+    _access_media_revision: 'delete'
+    media: \d+
+  options:
+    _admin_route: TRUE

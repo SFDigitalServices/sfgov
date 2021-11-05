@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a Table of contents header.
+ *
+ * Returns HTML for a Table of contents header.
+ *
+ * Available variables:
+ * - item: A table of contents header item.
+ * - options: Table of contents options.
+ * - header_options: Options associated with the current header item.
+ *
+ * @ingroup themeable
+ */
+#}
+
+<{{ tag }}{{ attributes }}>{% if header_options.display_number %}<span>{{ header_options.number_prefix }}{% if options.number_path and path %}{{ path }}{% else %}{{ value }}{%  endif %}{{ header_options.number_suffix }}</span>{%  endif %}{{ html }}</{{ tag }}>

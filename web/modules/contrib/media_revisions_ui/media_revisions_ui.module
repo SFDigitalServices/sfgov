@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Contains media_revisions_ui.module.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function media_revisions_ui_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the media_revisions_ui module.
+    case 'help.page.media_revisions_ui':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Media Revisions UI module adds a Revisions tab for Media entities, where revisions can be reverted or deleted.') . '</p>';
+      $output .= '<p>' . t('After a revision is added/saved, a new Revisions tab will be displayed on the media Edit page.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Administering media revisions') . '</dt>';
+      $output .= '<dd>' . t('The Media Revisions UI module enables you to revert to older versions of media or delete a revision using the Revisions tab.') . '</dd>';
+      $output .= '<dt>' . t('User permissions') . '</dt>';
+      $output .= '<dd>' . t('The Media Revisions UI module uses the Media permissions, which can be set by role on the <a href=":permissions">permissions page</a>.', [
+        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-media'])->toString(),
+      ]) . '</dd>';
+      $output .= '<dd>' . t('The Media Revisions UI module also uses the Node permissions, which can be set by role on the <a href=":permissions">permissions page</a>.', [
+        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-node'])->toString(),
+      ]) . '</dd>';
+
+      return $output;
+
+    default:
+      return '';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_revision_delete().
+ */
+function media_revisions_ui_media_revision_delete(EntityInterface $entity) {
+  Cache::invalidateTags([
+    'media:' . $entity->id() . ':revisions_list',
+  ]);
+}

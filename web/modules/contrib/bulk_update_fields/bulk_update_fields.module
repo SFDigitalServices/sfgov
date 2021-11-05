@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Contains bulk_update_fields.module..
+ */
+
+use Drupal\system\Entity\Action;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function bulk_update_fields_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  // TODO: tried to do this as suggested at https://www.drupal.org/node/2020549
+  // with // Loading all configured actions for the comment entity type.
+  // $actions = entity_load_multiple_by_properties('action')
+  // but caused an oom error.
+  // so we load the config table and do this manually instead.
+  // terrible.
+  // TODO: a hook to utilize on entity type creation is not obvious.
+  // tried hook_entity_type_build but got oom errors.
+  // This seems to work, but doesnt feel right.
+  $bulk_update_fields_config = 'system.action.bulk_update_fields_on_';
+  $db = Database::getConnection();
+  $query = $db->select('config')
+    ->fields('config', ['name'])
+    ->condition('config.name', "%" . $db->escapeLike($bulk_update_fields_config) . "%", 'LIKE');
+  $existing_config = $query->execute()->fetchAll(\PDO::FETCH_COLUMN);
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_machine_name => $entity_type) {
+    if (!in_array($bulk_update_fields_config . $entity_type_machine_name, $existing_config)) {
+      _bulk_update_fields_create_action($entity_type_machine_name, $entity_type->getLabel());
+    }
+  }
+}
+
+/**
+ * Create Action.
+ */
+function _bulk_update_fields_create_action($entity_type_machine_name, $entity_type_label) {
+  $label = 'Bulk Update ' . $entity_type_label . ' Fields';
+  // Creating a new configured action.
+  $action = Action::create([
+    'id' => 'bulk_update_fields_on_' . $entity_type_machine_name,
+    'label' => $label,
+    'type' => $entity_type_machine_name,
+    'configuration' => [],
+    'plugin' => 'bulk_update_fields_action_base',
+  ]);
+  $action->save();
+  \Drupal::messenger()->addStatus(t('Action @label created from bulk_update_fields module.', ['@label' => $label]));
+}

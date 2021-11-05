@@ -1,0 +1,42 @@
+<?php
+/**
+ * @file
+ * Example of a custom implementation of the TOC API that adds a table of contents to specified content types.
+ */
+
+use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\toc_api\Entity\TocType;
+
+/**
+ * Implements hook_node_view().
+ */
+function toc_api_example_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  // Add TOC to 'page' and 'article' content types that are being viewed as a full (page) with a body field.
+  if (in_array($node->getType(), ['page', 'article']) && $view_mode == 'full' && isset($build['body'][0])) {
+    // Get the completely render (and filtered) body value.
+    $body = (string) \Drupal::service('renderer')->render($build['body'][0]);
+
+    // Get 'default' TOC type options.
+    /** @var \Drupal\toc_api\TocTypeInterface $toc_type */
+    $toc_type = TocType::load('default');
+    $options = ($toc_type) ? $toc_type->getOptions() : [];
+
+    // Create a TOC instance using the TOC manager.
+    /** @var \Drupal\toc_api\TocManagerInterface $toc_manager */
+    $toc_manager = \Drupal::service('toc_api.manager');
+    /** @var \Drupal\toc_api\TocInterface $toc */
+    $toc = $toc_manager->create('toc_filter', $body, $options);
+
+    // If the TOC is visible (ie has more than X headers), replace the body
+    // render array with the TOC and update body content using the TOC builder.
+    if ($toc->isVisible()) {
+      /** @var \Drupal\toc_api\TocBuilderInterface $toc_builder */
+      $toc_builder = \Drupal::service('toc_api.builder');
+      $build['body'][0] = [
+        'toc' => $toc_builder->buildToc($toc),
+        'content' => $toc_builder->buildContent($toc),
+      ];
+    }
+  }
+}

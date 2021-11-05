@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for SendGrid Integration Reports.
+ */
+
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_install().
+ */
+function sendgrid_integration_reports_install() {
+  \Drupal::messenger()
+    ->addMessage(t('You can configure SendGrid settings under Administer > Configuration > @link',
+      [
+        '@link' => Link::createFromRoute(t('SendGrid settings'), 'sendgrid_integration.settings_form')
+          ->toString(),
+      ]
+    ));
+}

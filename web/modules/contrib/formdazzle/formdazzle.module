@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * The module that provides a set of utilities that make form theming easier.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\formdazzle\Dazzler;
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function formdazzle_module_implements_alter(&$implementations, $hook) {
+  Dazzler::moduleImplementsAlter($implementations, $hook);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function formdazzle_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  Dazzler::formAlter($form, $form_id);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function formdazzle_preprocess_form_element(array &$variables) {
+  // The ['label']['#theme'] can't be altered until this function because it is
+  // unconditionally created in template_preprocess_form_element().
+  // @see template_preprocess_form_element()
+  Dazzler::preprocessFormElement($variables);
+}

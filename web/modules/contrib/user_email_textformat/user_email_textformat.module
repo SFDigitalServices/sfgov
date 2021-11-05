@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Contains user_email_textformat.module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+use Drupal\Core\Render\Markup;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Routing\RouteMatchInterface;
+use \Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_help().
+ */
+function user_email_textformat_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the user_email_textformat module.
+    case 'help.page.user_email_textformat':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('User Email Textformat') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function user_email_textformat_mail_alter(&$message) {
+    // Check if this message is 'text_format' and sent from 'user' module.
+    if($message['module'] == 'user' && isset($message['body'])) {
+        $mail_content = $message['body'];
+        $remove_format = explode('{{user_email_textformat_FORMAT}}=', $mail_content[0]);
+        $message['body'][0] = $remove_format[0];
+    }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function user_email_textformat_form_user_admin_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+    // Form Loading.
+    if(empty($form_state->getUserInput())) {
+        foreach ($form as $key => &$value) {
+            // Iterate through email fields.
+            if(isset($value['#group']) && $value['#group'] == "email") {
+                foreach ($value as $key => &$value) {
+                    // Check for body value only.
+                    if(substr($key, -4) == 'body') {
+                        _user_email_textformat_textarea_to_textformat($value);
+                    }
+                    // Fields with checkbox have different structre.
+                    if(substr($key, -8) == 'settings') {
+                        foreach ($value as $key => &$value) {
+                            if(substr($key, -4) == 'body') {
+                                _user_email_textformat_textarea_to_textformat($value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $form['actions']['submit']['#validate'][] = 'user_email_textformat_user_email_textformat_validation';
+}
+
+/**
+ * Store the field format using the field value.
+ */
+function user_email_textformat_user_email_textformat_validation($form, FormStateInterface &$form_state) {
+    foreach ($form_state->getUserInput() as $key => $value) {
+
+        if(is_Array($value) && substr($key, -4) == 'body') {
+            $str = '{{user_email_textformat_FORMAT}}=';
+            $split = explode($str, $value['value']);
+            // Add format to string only when it's not present.
+            $format = count($split) < 2 ? $str . $value['format'] : '';
+            $value = $value['value'] . $format;
+            // Set value.
+            $form_state->setValue($key, $value);
+        }
+
+    }
+}
+
+/**
+ * Transform textarea field to text_format.
+ * @param array $field
+ *   The field array to be transformed.
+ */
+function _user_email_textformat_textarea_to_textformat(&$field) {
+    $val = explode('{{user_email_textformat_FORMAT}}=', $field['#default_value']);
+    $field['#type'] = 'text_format';
+    if(isset($val[1]))
+        $field['#format'] = $val[1];
+    $field['#default_value'] = $val[0];
+}

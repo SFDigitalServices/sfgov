@@ -1,0 +1,191 @@
+<?php
+/**
+ * @file
+ * Converts header tags into a hierarchical table of contents.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_help().
+ */
+function toc_api_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.toc_api':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The TOC API converts header tags into a hierarchical table of contents.') . '</p>';
+      return $output;
+
+    case 'entity.toc_type.collection':
+      $output = '<p>' . t('This page provides a list of all table of contents types on the site and allows you to manage the display settings for each.') . '</p>';
+      return $output;
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function toc_api_theme() {
+  return [
+    'toc_header' => [
+      'variables' => ['toc' => NULL, 'item' => NULL, 'attributes' => []],
+    ],
+    'toc_back_to_top' => [
+      'variables' => ['toc' => NULL, 'item' => NULL, 'attributes' => []],
+    ],
+    'toc_tree' => [
+      'variables' => ['toc' => NULL, 'attributes' => []],
+    ],
+    'toc_menu' => [
+      'variables' => ['toc' => NULL, 'attributes' => []],
+    ],
+    'toc_responsive' => [
+      'variables' => ['toc' => NULL, 'attributes' => []],
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for table of contents header.
+ *
+ * Default template: toc-header.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - toc: A TOC (table of contents) object.
+ *   - item: A table of contents header item.
+ */
+function template_preprocess_toc_header(&$variables) {
+  /** @var \Drupal\toc_api\TocInterface $toc */
+  $toc = $variables['toc'];
+
+  $item = $variables['item'];
+  $variables += $item;
+
+  // Set options to the header specific options.
+  $options = $toc->getOptions();
+  $variables['options'] = $options;
+  $variables['header_options'] = $options['headers'][$item['tag']];
+  $variables['header_options']['display_number'] = in_array($variables['header_options']['number_type'], ['decimal', 'lower-alpha', 'upper-alpha', 'lower-roman', 'upper-roman']);
+
+  $variables['attributes']['id'] = $variables['id'];
+  $variables['attributes'] = new Attribute($variables['attributes']);
+}
+
+/**
+ * Prepares variables for back to top link.
+ *
+ * Default template: toc-back-to-top.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - toc: A TOC (table of contents) object.
+ *   - item: A table of contents header item.
+ *   - attributes: Attributes to be added to back to top link.
+ */
+function template_preprocess_toc_back_to_top(&$variables) {
+  /** @var \Drupal\toc_api\TocInterface $toc */
+  $toc = $variables['toc'];
+
+  $options = $toc->getOptions();
+  $variables['attributes']['href'] = '#top';
+  $variables['attributes'] = new Attribute($variables['attributes']);
+
+  $variables['label'] = $options['top_label'] ?: t('Back to top');
+}
+
+/**
+ * Prepares variables for table of contents tree.
+ *
+ * Default template: toc-tree.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - toc: A TOC (table of contents) object.
+ *   - attributes: Attributes to be added to back to top link.
+ */
+function template_preprocess_toc_tree(&$variables) {
+  /** @var \Drupal\toc_api\TocInterface $toc */
+  $toc = $variables['toc'];
+
+  $variables['tree'] = $toc->getTree();
+
+  $variables['options'] = $toc->getOptions();
+
+  $variables['attributes'] = new Attribute($variables['attributes']);
+
+  $variables['#attached']['library'][] = 'toc_api/toc.tree';
+}
+
+/**
+ * Prepares variables for table of contents (select) menu.
+ *
+ * Default template: toc-menu.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - toc: A TOC (table of contents) object.
+ *   - attributes: Attributes to be added to back to top link.
+ */
+function template_preprocess_toc_menu(&$variables) {
+  /** @var \Drupal\toc_api\TocInterface $toc */
+  $toc = $variables['toc'];
+
+  $options = $toc->getOptions();
+  $variables['options'] = $options;
+  $variables['attributes'] = new Attribute($variables['attributes']);
+
+  $variables['title'] = ($options['title']) ? $options['title'] : t('- Select -');
+  $variables['index'] = $toc->getIndex();
+
+  foreach ($variables['index'] as &$item) {
+    $header_options = $options['headers'][$item['tag']];
+    if ($options['number_path']) {
+      // Make sure there is always a suffix to delimit the path from the title.
+      $suffix = $header_options['number_suffix'] ?: ' - ';
+      $prefix = $header_options['number_prefix'];
+      $item['prefix'] = $prefix . $item['path'] . $suffix;
+    }
+    else {
+      // Prefix using double dash indentation.
+      $item['prefix'] = ($item['indent']) ? str_repeat('--', $item['indent']) . ' ' : '';
+    }
+  }
+
+  $variables['#attached']['library'][] = 'toc_api/toc.menu';
+}
+
+/**
+ * Prepares variables for a responsive table of contents.
+ *
+ * Default template: toc-responsive.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - toc: A TOC (table of contents) object.
+ *   - attributes: Attributes to be added to back to top link.
+ */
+function template_preprocess_toc_responsive(&$variables) {
+  $variables['attributes'] = new Attribute($variables['attributes']);
+
+  $variables['desktop'] = [
+    '#theme' => 'toc_tree',
+    '#toc' => $variables['toc'],
+    '#attributes' => [
+      'class' => 'toc-desktop',
+    ],
+  ];
+
+  $variables['mobile'] = [
+    '#theme' => 'toc_menu',
+    '#toc' => $variables['toc'],
+    '#attributes' => [
+      'class' => 'toc-mobile',
+    ],
+  ];
+
+  $variables['#attached']['library'][] = 'toc_api/toc.responsive';
+}

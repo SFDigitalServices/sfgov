@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * CER keeps reference fields in sync.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function cer_entity_insert(EntityInterface $entity) {
+  cer_sync_corresponding_references($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function cer_entity_update(EntityInterface $entity) {
+  cer_sync_corresponding_references($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function cer_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  cer_sync_corresponding_references($entity, TRUE);
+}
+
+/**
+ * Synchronize corresponding references for an entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to synchronize corresponding references for.
+ * @param bool $deleted
+ *   Whether the entity is deleted.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function cer_sync_corresponding_references(EntityInterface $entity, $deleted = FALSE) {
+  if (!$entity instanceof FieldableEntityInterface) {
+    return;
+  }
+
+  /** @var \Drupal\cer\CorrespondingReferenceStorageInterface $storage */
+  $storage = \Drupal::entityTypeManager()->getStorage('corresponding_reference');
+
+  $references = $storage->loadValid($entity);
+
+  foreach ($references as $reference) {
+    $reference->synchronizeCorrespondingFields($entity, $deleted);
+  }
+}

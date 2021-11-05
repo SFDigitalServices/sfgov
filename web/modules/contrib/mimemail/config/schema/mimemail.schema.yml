@@ -1,0 +1,37 @@
+mimemail.settings:
+  type: config_object
+  mapping:
+    format:
+      type: string
+      label: 'Email format'
+    name:
+      type: string
+      label: 'Sender name'
+    mail:
+      type: email
+      label: 'Sender email address'
+    linkonly:
+      type: boolean
+      label: 'Disables the embedding of images, all images will be links to external content'
+    textonly:
+      type: boolean
+      label: 'Disables the use of email messages with graphics and styles, all messages will be converted to plain text'
+    sitestyle:
+      type: boolean
+      label: 'Gather all style sheets when no mail.css is found in the default theme directory'
+    simple_address:
+      type: boolean
+      label: 'Use simple format for all recipient email addresses'
+    preserve_class:
+      type: boolean
+      label: 'Whether to preserve CSS class attributes when inlining CSS using mimemail_compress'
+    advanced:
+      type: mapping
+      label: 'Advanced features - do not enable unless you know what you are doing'
+      mapping:
+        incoming:
+          type: boolean
+          label: 'Process incoming messages posted to this site'
+        key:
+          type: string
+          label: 'Message validation string'

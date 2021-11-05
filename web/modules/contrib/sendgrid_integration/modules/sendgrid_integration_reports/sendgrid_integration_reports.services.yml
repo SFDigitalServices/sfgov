@@ -1,0 +1,7 @@
+services:
+  cache.sendgrid_integration_reports:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [ sendgrid_integration_reports ]

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the formdazzle module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function formdazzle_install() {
+  // Ensure formdazzle_module_implements_alter comes after other module's
+  // hook_module_implements_alter().
+  module_set_weight('formdazzle', 10);
+}

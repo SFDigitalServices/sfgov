@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_update_N().
+ */
+function amplitude_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('amplitude.settings');
+  $config->set('config_options', '');
+  $config->save();
+}

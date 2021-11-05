@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Contains install and update functions for Bulk Update Fields.
+ */
+
+ /**
+ * Rename the action id to match the plugin.
+ * Needed for Contrib VBO compatibility
+ */
+function bulk_update_fields_update_8001(&$sandbox) {
+  $actions_storage = \Drupal::entityTypeManager()->getStorage('action');
+  $bulk_update_fields_action = $actions_storage->load('bulk_update_fields_to_another_value');
+  $bulk_update_fields_action
+    ->set('id', 'bulk_update_fields_action_base')
+    ->save();
+  $actions_storage->resetCache();
+}
+
+/**
+ * Implements hook_install().
+ */
+function bulk_update_fields_install() {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_machine_name => $entity_type) {
+    _bulk_update_fields_create_action($entity_type_machine_name, $entity_type->getLabel());
+  }
+}

@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Support module for TOC filter testing.
+ */
+
+/**
+ * Implements hook_toc_filter_alter().
+ */
+function toc_filter_toc_filter_alter(&$text, &$options) {
+  if (!empty($options['cancel'])) {
+    $options = FALSE;
+  }
+}

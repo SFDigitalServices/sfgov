@@ -1,0 +1,38 @@
+language: php
+
+php:
+  - hhvm
+
+# This triggers builds to run on the new TravisCI infrastructure.
+# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: false
+
+# Cache composer
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.3
+#    - php: 5.4
+#    - php: 5.5
+#    - php: 5.6
+    - php: 7.0
+
+install: travis_retry composer install --no-interaction --prefer-dist
+
+addons:
+  code_climate:
+    repo_token: a4fc4f63f683b37c79f6b0d1257a4079506c5b3fd017a41bf67d7c4d03c25987
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer install --no-interaction --prefer-dist
+
+script:
+  - vendor/bin/phpunit
+
+after_success:
+  - vendor/bin/test-reporter

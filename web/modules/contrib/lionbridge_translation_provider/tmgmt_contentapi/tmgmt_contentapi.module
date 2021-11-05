@@ -1,0 +1,878 @@
+<?php /** @noinspection PhpUnusedParameterInspection */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\Xss;
+use Drupal\file\Entity\File;
+use Drupal\tmgmt\Entity\Job;
+use Drupal\tmgmt\Entity\JobItem;
+use Drupal\tmgmt\JobInterface;
+use Drupal\tmgmt\TranslatorInterface;
+use Drupal\tmgmt_contentapi\Util\GeneralHelper;
+use Drupal\tmgmt_contentapi\Util\ConentApiHelper;
+use Drupal\tmgmt_contentapi\Swagger\Client\Api\ProviderApi;
+use Drupal\tmgmt_contentapi\Swagger\Client\Api\JobApi;
+use Drupal\tmgmt_contentapi\Swagger\Client\Model\ArrayOfRequestIds;
+use Drupal\tmgmt_contentapi\Swagger\Client\Api\RequestApi;
+use Drupal\tmgmt_contentapi\Swagger\Client\Api\FileApi;
+use Drupal\tmgmt_contentapi\Swagger\Client\Api\SourceFileApi;
+use Drupal\tmgmt_contentapi\Swagger\Client\Api\TranslationMemoryApi;
+
+use Drupal\tmgmt_contentapi\Swagger\Client\Model\StatusCodeEnum;
+use Drupal\tmgmt_contentapi\Swagger\Client\Model\CreateRequestUpdateTM;
+
+use Drupal\tmgmt_contentapi\Swagger\Client\Configuration;
+use Drupal\tmgmt_contentapi\Plugin\tmgmt_contentapi\Format\Xliff;
+
+
+/**
+ * @contentapi
+ * Module file of the translation management module.
+ */
+
+
+/**
+ * Import form submit callback.
+ */
+function tmgmt_contentapi_import_form_submit(array $form, FormStateInterface $form_state) {
+  // Ensure we have the file uploaded.
+  $job = $form_state->getFormObject()->getEntity();
+  if ($file = file_save_upload('file', array('file_validate_extensions' => array('xlf')), FALSE, 0)) {
+    $extension = pathinfo($file->getFileUri(), PATHINFO_EXTENSION);
+    $plugin = new Xliff();
+    if ($plugin) {
+      // Validate the file on job.
+      $validated_job = $plugin->validateImport($file->getFileUri(), $job);
+      if (!$validated_job) {
+        $job->addMessage('Failed to validate file, import aborted.', array(), 'error');
+      }
+      elseif ($validated_job->id() != $job->id()) {
+        $job->addMessage('The imported file job id @file_id does not match the job id @job_id.', array(
+          '@file_id' => $validated_job->id(),
+          '@job_id' => $job->id(),
+        ), 'error');
+      }
+      else {
+        try {
+          // Validation successful, start import.
+          // Check if it makes sense to check only the active state here?
+          GeneralHelper::resetJobandItemsToActive($job,$file);
+          $job->addTranslatedData($plugin->import($file->getFileUri()));
+          $job->addMessage('Successfully imported file.');
+          ConentApiHelper::checkJobFinishAndApproveRemote($job);
+        } catch (Exception $e) {
+          $job->addMessage('File import failed with the following message: @message', array('@message' => $e->getMessage()), 'error');
+        }
+      }
+    }
+  }
+  tmgmt_write_request_messages($job);
+}
+
+function tmgmt_contentapi_semi_import_form_submit(array $form, FormStateInterface $form_state) {
+  $job = $form_state->getFormObject()->getEntity();
+  $translator = $job->getTranslator();
+  if($translator){
+    try{
+      tmgmt_contentapi_downlaod_data_from_contentapi_by_job($translator,$job);
+    }
+    catch (Exception $exception){
+      $job->addMessage('Files could not be downlaoded or imported, see error message: '.$exception->getMessage());
+    }
+  }
+  tmgmt_write_request_messages($job);
+}
+
+function tmgmt_contentapi_update_tm_form_submit(array $form, FormStateInterface $form_state){
+  $job = $form_state->getFormObject()->getEntity();
+  $translator = $job->getTranslator();
+  if($translator && $job->getState() == Job::STATE_FINISHED){
+    $createdcpjob = NULL;
+    $token = NULL;
+    $zipPath = NULL;
+    $ziparchive = NULL;
+    $jobapi = NULL;
+    $allfilespath = NULL;
+    try {
+      // Message which will be displayed using drupa_set_message to disaplay download.
+      $messageTopass = 'TM update request successfully submitted.<br/>Exported files can be downoaded here:<br/>';
+      $contentapisettings = $translator->getSetting("capi-settings");
+      $oneexportfile = $translator->getSetting("one_export_file");
+      $token = $contentapisettings['token'];
+      // Export files: gernerate paths and other variables.
+      $exporter = new Xliff();
+      $filesystem = \Drupal::service('file_system');
+      $joblabel = GeneralHelper::getJobLabelNoSpeChars($job);
+      $dirnameallfiles = $joblabel . '_tmupdate_' . $job->id() . "_" . $job->getRemoteSourceLanguage() . "_" . $job->getRemoteTargetLanguage();
+      $zipName = 'zip_job_' . $dirnameallfiles . '.zip';
+      $allfilespath = $job->getSetting('scheme') . '://tmgmt_contentapi/LioxSentFiles/' . $dirnameallfiles;
+      $zipPath = $allfilespath . "/" . $zipName;
+      $filearraytodelte = array();
+      $filearrayexportedfiles = array();
+      $transferfiles = array();
+      // Create folder where all exported files will be stored.
+      if (file_prepare_directory($allfilespath, FILE_CREATE_DIRECTORY)) {
+        // Export each item of the job in same file.
+        if($oneexportfile){
+          $labelname = $joblabel;
+          $name = $labelname . "_" . $job->id() . "_all_"  . $job->getRemoteSourceLanguage() . '_' . $job->getRemoteTargetLanguage() . '.xlf';
+          $jobpath = $allfilespath . "/" . $name;
+          $file = file_save_data($exporter->export($job), $jobpath, FILE_EXISTS_REPLACE);
+          $filearraytodelte[] = $file;
+          $filearrayexportedfiles['all'] = $file;
+        }
+        else {
+          // Export each item of the job in separate file.
+          foreach ($job->getItems() as $item) {
+            $labelname = GeneralHelper::getStringNoSpeChars($item->label());
+            $name = $labelname . "_" . $job->id() . "_" . $item->id() . "_" . $job->getRemoteSourceLanguage() . '_' . $job->getRemoteTargetLanguage() . '.xlf';
+            $itempath = $allfilespath . "/" . $name;
+            $file = file_save_data($exporter->exportItem($item), $itempath, FILE_EXISTS_REPLACE);
+            $filearraytodelte[] = $file;
+            $filearrayexportedfiles[$item->id()] = $file;
+          }
+        }
+        // Zip the exported files.
+        $ziparchive = new ZipArchive();
+        $openresult = $ziparchive->open($filesystem->realpath($zipPath), ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
+        $zipcloseresult = FALSE;
+        if ($openresult) {
+          foreach ($filearrayexportedfiles as $tempfile) {
+            $ziparchive->addFile($filesystem->realpath($tempfile->getFileUri()), $tempfile->getFilename());
+          }
+          $zipcloseresult = $ziparchive->close();
+          if ($zipcloseresult) {
+            $zipfileobj = GeneralHelper::createFileObject($zipPath);
+            \Drupal::service('file.usage')->add($zipfileobj, 'tmgmt_contentapi', 'tmgmt_job', $job->id());
+          }
+        }
+        else {
+
+        }
+
+        $transferfiles = $filearrayexportedfiles;
+
+        // Create Job in Content API.
+        $contentapibundle = array();
+        $jobapi = new JobApi();
+        // Upload files from transferfiles array to CPA.
+        $fileapi = new SourceFileApi();
+        // Array to store temporally translation requst and associated files.
+        $contentapitrrequstfiles = array();
+        foreach ($transferfiles as $id => $tmpfile) {
+          $data = array();
+          $data["job_id"] = GeneralHelper::getCpJobIdfromLocJob($job);
+          $data["filename"] = $tmpfile->getFilename();
+          $data["filetype"] = $tmpfile->getMimeType();
+          $stmrg = \Drupal::service('stream_wrapper_manager')->getViaUri($tmpfile->getFileUri());
+          $extpath = $stmrg->realpath();
+          $filrequst = new SplFileObject($extpath);
+          //unarchive job, if archived
+          $actualcpjobinfo = $jobapi->jobsJobIdGet($token,GeneralHelper::getCpJobIdfromLocJob($job));
+          $wasarchived = $actualcpjobinfo->getArchived();
+          if($wasarchived){
+            $jobapi->jobsJobIdUnarchivePut($token, GeneralHelper::getCpJobIdfromLocJob($job));
+          }
+          $contentapitmpfile = $fileapi->jobsJobIdUploadPost($token, $data["job_id"], $data["filename"], $data["filetype"], $filrequst);
+          $tmupdateapi = new TranslationMemoryApi();
+          $tmupdaterequest = new CreateRequestUpdateTM(
+            array(
+              'file_id' => $contentapitmpfile->getFileId(),
+              'source_native_language_code' => $job->getRemoteSourceLanguage(),
+              'target_native_language_code' => $job->getRemoteTargetLanguage()
+            ));
+          $tmupdateresponse = $tmupdateapi->jobsJobIdTmUpdatefilePut($token,GeneralHelper::getCpJobIdfromLocJob($job), $tmupdaterequest);
+          $contentapibundle[] = $createdcpjob;
+        }
+
+        if ($wasarchived) {
+          // arvhive cpjob if it was archived before
+          $jobapi->jobsJobIdArchivePut($token, GeneralHelper::getCpJobIdfromLocJob($job));
+        }
+        foreach ($filearraytodelte as $tempfile) {
+          file_unmanaged_delete($tempfile->getFileUri());
+        }
+        $messageTopass .= '<a href="' . file_create_url($zipPath) . '">' . Xss::filter(GeneralHelper::getJobLabelNoSpeChars($job)) . '</a>';
+        drupal_set_message(\Drupal\Core\Render\Markup::create($messageTopass));
+      }
+      else {
+        throw new \Exception("Could not create directory for export: " . $allfilespath);
+      }
+    }
+    catch (\Exception $exception) {
+      // If exception occurs, clean up everything: delete exported files, cancel job in CA if any.
+      foreach ($filearraytodelte as $tempfile) {
+        if (file_exists($tempfile->getFileUri())) {
+          file_unmanaged_delete($tempfile->getFileUri());
+        }
+      }
+      if (!file_exists($zipPath) && $ziparchive != NULL) {
+        $ziparchive->close();
+      }
+      // TODO: Check why zip cannot be deleted. But after two tests seems to work?
+      $zipfileobj = GeneralHelper::createFileObject($zipPath);
+      file_unmanaged_delete($zipfileobj->getFileUri());
+      file_unmanaged_delete_recursive($allfilespath);
+      drupal_set_message($exception->getMessage(), "error");
+    }
+  }
+  tmgmt_write_request_messages($job);
+}
+
+function tmgmt_contentapi_import(JobInterface $job,$filedatastring,$name){
+  // Ensure we have the file uploaded.
+  $message='';
+  $path = $job->getSetting('scheme') . '://tmgmt_contentapi/LioxReceivedFiles/' . $name;
+  $dirname = dirname($path);
+  //file_prepare_directory($dirname, FILE_CREATE_DIRECTORY);
+  if (file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
+    $file = file_save_data($filedatastring, $path, FILE_EXISTS_REPLACE);
+    $mimetype = $file->getMimeType();//\Drupal::service('file.mime_type.guesser')->guess($path);
+    $filearray = null;
+    if ($mimetype == 'application/zip') {
+      $ziparchive = new ZipArchive();
+      $openachresult = $ziparchive->open(\Drupal::service('file_system')->realpath($path));
+      if ($openachresult) {
+        $pathtoextract = $job->getSetting('scheme') . '://tmgmt_contentapi/LioxReceivedFiles/' . pathinfo($path)['filename'];
+        if ($ziparchive->extractTo(\Drupal::service('file_system')->realpath($pathtoextract))) {
+          $ziparchive->close();
+          $file->delete();
+          $filearray = CpcreateFileObjectFromStdClass(file_scan_directory($pathtoextract, '/.*\.xlf$/'));
+        }
+
+      }
+    } else {
+      $filearray = array($file);
+    }
+    foreach ($filearray as $fileitem){
+      $extension = pathinfo($fileitem->getFileUri(), PATHINFO_EXTENSION);
+      $plugin = new Xliff();
+      if ($plugin) {
+        // Validate the file on job.
+        $validated_job = $plugin->validateImport($fileitem->getFileUri(), $job);
+        if (!$validated_job) {
+          \Drupal::logger('TMGMT_CONTENTAPI')->error('Failed to validate file %FILE for job %JOB, import aborted.', [
+            '%JOB' => $job->label(),
+            '%FILE' => $fileitem->getFileName(),
+          ]);
+          $job->addMessage('Failed to validate file, import aborted.', array(), 'error');
+        } elseif ($validated_job->id() != $job->id()) {
+          \Drupal::logger('TMGMT_CONTENTAPI')->notice('The imported file job id %file_id does not match the job id %job_id.', [
+            '%file_id' => $validated_job->id(),
+            '%job_id' => $job->id(),
+          ]);
+          $job->addMessage('The imported file job id @file_id does not match the job id @job_id.', array(
+            '@file_id' => $validated_job->id(),
+            '@job_id' => $job->id(),
+          ), 'error');
+        } else {
+          try {
+            // Validation successful, start import.
+            // TODO: Check if it makes sense to check only the active state here?
+            GeneralHelper::resetJobandItemsToActive($job,$file);
+            $job->addTranslatedData($plugin->import($fileitem->getFileUri()));
+            \Drupal::logger('TMGMT_CONTENTAPI')->notice('Successfully imported file %file_id for job %job_id.', [
+              '%file_id' => $fileitem->getFileName(),
+              '%job_id' => $job->label(),
+            ]);
+            $job->addMessage('File @filename imported successfully',array('@filename'=>$fileitem->getFileName()));
+          } catch (Exception $e) {
+            \Drupal::logger('TMGMT_CONTENTAPI')->error('File import for job %JOB failed with the following message: %message', [
+              '%JOB' => $job->label(),
+              '%message' => $e->getMessage(),
+            ]);
+            $job->addMessage('File import failed with the following message: @message', array('@message' => $e->getMessage()), 'error');
+
+          }
+        }
+      }
+    }
+  }
+}
+
+function tmgmt_contentapi_downlaod_data_from_contentapi(TranslatorInterface $translator){
+  try{
+    $allJobs = GeneralHelper::getAllJobsByTranslator($translator);
+    foreach ($allJobs as $job) {
+      $task = $job->getSetting('capi-settings')['task'];
+      if ($job->getState() == Job::STATE_ACTIVE && $task == 'trans') {
+        tmgmt_contentapi_downlaod_data_from_contentapi_by_job($translator,$job);
+      }
+    }
+  }
+  catch (Exception $exception){
+    \Drupal::logger('TMGMT_CONTENTAPI')->error('Could not check delivery list for provider %provider: %message', [
+      '%provider'=> $translator->id(),
+      '%message'=> $exception->getMessage(),
+    ]);
+    drupal_set_message('An error occured while fetching and importing files: '.$exception->getMessage(),'error');
+  }
+}
+
+function tmgmt_contentapi_downlaod_data_from_contentapi_by_job(TranslatorInterface $translator,JobInterface $job){
+  try{
+    // $jobcpcettings is an array of arrays, which contain the requests then.
+    $prId = GeneralHelper::getCpJobIdfromLocJob($job);
+    $token = ConentApiHelper::generateToken($translator);
+    $requestapi = new RequestApi();
+    $requestsarray = $requestapi->jobsJobIdRequestsGet($token,$prId);
+    $arrayfinishedrequests = array();
+    foreach ($requestsarray as $temprequest){
+      if($temprequest->getStatusCode()->getStatusCode() == StatusCodeEnum::REVIEW_TRANSLATION){
+        $arrayfinishedrequests[] = $temprequest;
+      }
+    }
+    // If no requests in state REVIEW_TRANSLATION, return with message.
+    if(count($arrayfinishedrequests)<=0){
+      drupal_set_message(t('no deliveries available for job:').$job->label());
+      return;
+    }
+    // Set folder where files should be stored.
+    $dir = $job->getSetting('scheme') . '://tmgmt_contentapi/LioxReceivedFiles/';
+    //file_prepare_directory($dirname, FILE_CREATE_DIRECTORY);
+    if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+      $stmrg = \Drupal::service('stream_wrapper_manager')->getViaUri($job->getSetting('scheme') . '://tmgmt_contentapi/LioxReceivedFiles/');
+      $tempfolder = $stmrg->realpath();
+      $config = new Configuration();
+      $config->setTempFolderPath($tempfolder);
+      Configuration::setDefaultConfiguration($config);
+      $requesttoapprove = array();
+      foreach ($arrayfinishedrequests as $request){
+        $fileapi = new FileApi();
+        // array with file, code and httpheader.
+        $spfilearray = $fileapi->jobsJobIdRequestsRequestIdRetrievefileGetWithHttpInfo($token,$prId,$request->getRequestId());
+        $spfile = $spfilearray[0];
+        $fcontent = $spfile->fread($spfile->getSize());
+        $fpath = $spfile->getRealPath();
+        $spfilearray[0] = NULL;
+        $spfile = NULL;
+        file_unmanaged_delete($fpath);
+        $filename = str_replace('"','',explode("=",explode(";",$spfilearray[2]['Content-Disposition'][0])[1])[1]);
+        tmgmt_contentapi_import($job,$fcontent,$filename);
+        // Check if item is accepted, add request array to ack later.
+        $requestSourceNativeId = explode("_",$request->getSourceNativeId())[1];
+        if(isset($requestSourceNativeId)&& $requestSourceNativeId != "all") {
+          $jobitem = array_values($job->getItems(['tjiid' => $requestSourceNativeId]))[0];
+          if($jobitem && $jobitem->getState() == JobItem::STATE_ACCEPTED){
+            $requesttoapprove[] = $request->getRequestId();
+          }
+        }
+        // All items has been sent in one request
+        else {
+          if ($requestSourceNativeId == 'all'){
+            $alljobitems = $job->getItems();
+            $acceptedItems = $job->getItems(array('state'=>JobItem::STATE_ACCEPTED));
+            if(count($alljobitems) == count($acceptedItems)){
+              $requesttoapprove[] = $request->getRequestId();
+            }
+          }
+        }
+      }
+      // Ack all requests and if job finished, archive job in contentAPI.
+      if (count($requesttoapprove) >0){
+        $arrayofrequestid = new ArrayOfRequestIds(array('request_ids'=>$requesttoapprove));
+        $requestapi = new RequestApi();
+        $requestapi->jobsJobIdRequestsApprovePut($token,$prId,$arrayofrequestid);
+      }
+      // not sure, if at this stage the local job has already been saved and status updated.
+      // might be that the status still in progress, even import run successfully.
+      // load refreshed job from DB.
+      $job = Job::load($job->id());
+      if($job->getState() == Job::STATE_FINISHED){
+        $jobapi = new JobApi();
+        $jobapi->jobsJobIdArchivePut($token,$prId);
+      }
+    }
+    else{
+      drupal_set_message(t('Directory could not be created: ') . $dir);
+      return;
+    }
+
+
+
+  }
+  catch (Exception $exception){
+    $respbody = $exception->getMessage();
+    if($exception instanceof \Drupal\tmgmt_contentapi\Swagger\Client\ApiException){
+      $respbody = $exception->getResponseBody();
+    }
+    drupal_set_message('An error occured while fetching and importing files: '.$respbody,'error');
+  }
+}
+
+
+
+/**
+ * Implements hook_file_download().
+ */
+function tmgtm_contentapi_file_download($uri) {
+  // Get the file record based on the URI. If not in the database just return.
+  $fids = \Drupal::entityQuery('file')
+    ->condition('uri', $uri)
+    ->execute();
+  if ($fids) {
+    $files = \Drupal\file\Entity\File::loadMultiple($fids);
+    foreach ($files as $item) {
+      // Since some database servers sometimes use a case-insensitive comparison
+      // by default, double check that the filename is an exact match.
+      if ($item->getFileUri() === $uri) {
+        $file = $item;
+        break;
+      }
+    }
+  }
+  if (!isset($file)) {
+    return;
+  }
+
+  // Check if this file belongs to a job.
+  $usage_list = \Drupal::service('file.usage')->listUsage($file);
+  if (!isset($usage_list['tmgmt_contentapi']['tmgmt_job'])) {
+    return;
+  }
+
+  foreach (Job::loadMultiple(array_keys($usage_list['tmgmt_fwconnector']['tmgmt_job'])) as $job) {
+    if ($job->access('view')) {
+      // Access is granted.
+      $headers = file_get_content_headers($file);
+      return $headers;
+    }
+  }
+  // Returning nothing means access denied unless another module specifically
+  // grants access.
+}
+
+
+function tmgmt_contentapi_cron() {
+  // Get all translators.
+  $translators = \Drupal::entityManager()->getStorage('tmgmt_translator')->loadByProperties(['plugin' => 'contentapi']);
+
+  if (!$translators) {
+    return;
+  }
+
+
+  foreach ($translators as $translator) {
+    // Receive all processed translations.
+    //module_load_include('inc', 'tmgmt_fwconnector', 'tmgmt_fwconnector.cron');
+    $config = $translator->getSetting('cron-settings');
+
+    // Make sure cron is enabled for this translator.
+    if (!$config['status']) {
+      \Drupal::logger('TMGMT_CONTENTAPI')->notice('Cron disabled for translator %translator', [
+        '%translator' => $translator->label(),
+      ]);
+      continue;
+    }
+    tmgmt_contentapi_downlaod_data_from_contentapi($translator);
+  }
+}
+
+
+/**
+ * Implements hook_tmgmt_job_delete().
+ */
+function tmgmt_contentapi_tmgmt_job_delete(JobInterface $job) {
+  // If job has not been processed yet, we don't need to delete remote job.
+
+  if($job->getState() == Job::STATE_UNPROCESSED){
+    return;
+  }
+  $translator = $job->getTranslator();
+  // Ignore jobs that don't have a file translator.
+  if (!$translator || $translator->getPlugin()->getPluginId() != 'contentapi') {
+    return;
+  }
+
+  try {
+    $token = ConentApiHelper::generateToken($translator);
+    $jobid = GeneralHelper::getCpJobIdfromLocJob($job);
+    $jobapi = new JobApi();
+    $jobapi->jobsJobIdDelete($token,$jobid);
+    drupal_set_message(t("Content API Job deleted:") . $jobid);
+  }
+  catch (Exception $ex) {
+    drupal_set_message(t('The job with ID @proj 
+    could not be deleted in content api. It probably doesn\'t extist. 
+    Please contact the responsible project manager in case of questions.', array('@proj' => $jobid)));
+  }
+  // Check if there are any files that need to be deleted.
+  // @todo There doesn't seem to be an API function for this...
+  $args = [
+    ':module' => 'tmgmt_contentapi',
+    ':type' => 'tmgmt_job',
+    ':id' => $job->id(),
+  ];
+  $result = db_query('SELECT fid FROM {file_usage} WHERE module = :module and type = :type and id = :id', $args);
+  $fids = $result->fetchCol();
+  if (!empty($fids)) {
+    // Remove file usage record.
+    $file_usage = \Drupal::service('file.usage');
+    foreach (File::loadMultiple($fids) as $file) {
+      $file_usage->delete($file, 'tmgmt_contentapi', 'tmgmt_job', $job->id());
+      // If this was the last usage, FileUsageBase marks the file as temporary
+      // for delayed deletion. Because we know it is not needed, delete the file
+      // immediately.
+      $usage = $file_usage->listUsage($file);
+      if (empty($usage)) {
+        $file->delete();
+      }
+    }
+
+  }
+
+}
+
+//first we set a header in tmgmt_fwconnector_views_pre_view and then modify the html content of the header in this hook
+function tmgmt_contentapi_views_pre_render(\Drupal\views\ViewExecutable $view) {
+  try {
+    if ($view->id() == 'tmgmt_job_overview') {
+      $view->header['area_deliveries_contentapi']->options['content'] .= CpprocessHtmlForJoboverview($view);
+    }
+  }
+  catch (Exception $ex){
+    drupal_set_message(t('Could not generate delivery list: ') . $ex->getMessage(),'warning');
+  }
+}
+
+
+function tmgmt_contentapi_views_pre_view(Drupal\views\ViewExecutable $view) {
+
+  if ($view->id() == 'tmgmt_job_overview') {
+    $deliveryhtml = '';
+    $options = array(
+      'id' => 'area_deliveries_contentapi',
+      'table' => 'views',
+      'field' => 'area_text_custom',
+      'relationship' => 'none',
+      'group_type' => 'none',
+      'admin_label' => '',
+      'empty' => TRUE,
+      'tokenize' => FALSE,
+      'content' => $deliveryhtml,
+      'plugin_id' => 'text_custom',
+    );
+    $view->setHandler($view->current_display, 'header', 'area_deliveries_contentapi', $options);
+  }
+}
+
+function CpprocessHtmlForJoboverview(&$view){
+  $activejobs = array();
+  $result = $view->result;
+  foreach ($result as $row) {
+    $job = $row->_entity;
+    if($job->hasTranslator()){
+      $jobtranslator = $job->getTranslator();
+      $trid = $jobtranslator->getPlugin()->getPluginId();
+      $trname = $job->getTranslatorId();
+      if($job->getState() == Job::STATE_ACTIVE && $trid == 'contentapi'){
+        if(!isset($activejobs[$trname])) {
+          $activejobs[$trname] = array($job);
+        }
+        else{
+          $activejobs[$trname] = array_merge( $activejobs[$trname],array($job));
+        }
+      }
+    }
+
+  }
+
+  $deliveryforjobs = array();
+  If(count($activejobs)> 0) {
+    foreach ($activejobs as $trid => $jobs) {
+      // Array with translators.
+      $translators = \Drupal::entityManager()->getStorage('tmgmt_translator')->loadByProperties(['name' => $trid]);
+      $token = ConentApiHelper::generateToken($translators[$trid]);
+      foreach ($jobs as $job){
+        $requestapi = new RequestApi();
+        $cpjobid = GeneralHelper::getCpJobIdfromLocJob($job);
+        $cprequestsforjob = $requestapi->jobsJobIdRequestsGet($token,$cpjobid);
+        $anyrequesttoreview = FALSE;
+        foreach ($cprequestsforjob as $tempreq){
+          if($tempreq->getStatusCode()->getStatusCode() == StatusCodeEnum::REVIEW_TRANSLATION){
+            $anyrequesttoreview = TRUE;
+            break;
+          }
+        }
+        if($anyrequesttoreview){
+          $deliveryforjobs = array_merge($deliveryforjobs,array($job));
+        }
+      }
+
+    }
+  }
+  $deliveryhtml = '';
+  if(count($deliveryforjobs)>0) {
+    $deliveryhtml = '<details data-drupal-selector="edit-deliveries-wrapper" style="background: #3cff75" id="edit-deliveries-wrapper" class="js-form-wrapper form-wrapper">    
+	<summary role="button" aria-controls="edit-deliveries-wrapper" aria-expanded="true" aria-pressed="true">
+		CONTENT API DELIVERIES
+	</summary>
+	<div class="details-wrapper">';
+    foreach ($deliveryforjobs as $job) {
+      $jobid = $job->get('tjid')->getValue()[0];
+      global $base_url;
+      // Using Id here, as job label returns @title@title and @more more.
+      $joblable = GeneralHelper::getJobLabel($job);
+      $pass_link = \Drupal::l(t($joblable), \Drupal\Core\Url::fromUri($base_url . '/admin/tmgmt/jobs/' . $jobid['value']));
+      $currentlink = $pass_link->getGeneratedLink();
+
+      $deliveryhtml .= '<li>'.$currentlink .'</li>';
+      // In drupal_set_message
+    }
+    $deliveryhtml .= '</div></details>';
+  }
+  return $deliveryhtml;
+}
+
+function CpcreateFileObjectFromStdClass($filearray){
+  $filsystem = \Drupal::service('file_system');
+  $toreturn = array();
+  foreach ($filearray as $fl) {
+    $file = File::create([
+      'uid' => \Drupal::currentUser()->id(),
+      'filename' => $filsystem->basename($fl->filename),
+      'uri' => $fl->uri,
+      'filemime' => \Drupal::service('file.mime_type.guesser')->guess($fl->uri),
+      'filesize' => filesize($fl->uri),
+      'status' => 1
+    ]);
+    $file->save();
+    array_push($toreturn,$file);
+  }
+  return $toreturn;
+}
+
+function tmgmt_contentapi_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+  if($form_id == 'tmgmt_job_item_edit_form') {
+    $item = $form_state->getFormObject()->getEntity();
+    $translator = $item->getJob()->getTranslator()->getPlugin()->getPluginId();
+    if(isset($translator) && $translator == 'contentapi') {
+      /**
+      $form['actions']['reject'] = [
+      '#type' => 'submit',
+      '#value' => t('Reject Translation'),
+      '#access' => !$form_state->get('all_preliminary'),
+      '#submit' => ['::submitForm', '::save'],
+      ];
+       * */
+      if($item->getJob()->getState() != Job::STATE_UNPROCESSED) {
+        if (isset($form['actions']['abort_job_item'])) {
+          unset($form['actions']['abort_job_item']);
+        }
+        if (isset($form['actions']['delete'])) {
+          unset($form['actions']['delete']);
+        }
+      }
+    }
+  }
+  if ($form_id == 'tmgmt_job_edit_form'){
+    try {
+      $job = $form_state->getFormObject()->getEntity();
+      $translator = $job->getTranslator();
+      $translatorid = $translator->getPluginId();
+      if (isset($translator) && $translatorid == 'contentapi') {
+        if ($job->getState() == Job::STATE_ACTIVE) {
+          // remove abort button
+          if (isset($form['actions']['abort_job'])) {
+            unset($form['actions']['abort_job']);
+          }
+          $jobapi = new JobApi();
+          $remotejob = $jobapi->jobsJobIdGet(ConentApiHelper::generateToken($translator), GeneralHelper::getCpJobIdfromLocJob($job));
+          $remotestatus = $remotejob->getStatusCode()->getStatusCode();
+          if ($remotestatus != StatusCodeEnum::COMPLETED && $remotestatus != StatusCodeEnum::CANCELLED && $remotestatus != StatusCodeEnum::TRANSLATION_REJECTED) {
+            //remove delete button
+            if (isset($form['actions']['delete'])) {
+              unset($form['actions']['delete']);
+            }
+          }
+        }
+      }
+    }
+    catch (Exception $exception){
+      $job->addMessage(t('an error occured while updating job\'s operations and state: ' . $exception->getMessage()));
+    }
+  }
+
+}
+
+/**
+ * Comment.
+ *
+ * @param array $form
+ *   Comment.
+ * @param FormStateInterface $form_state
+ *   Comment.
+ *
+ * @return mixed
+ *   Comment.
+ */
+function ajax_tmgmt_contentapi_provider_changed(array $form, &$form_state) {
+  return $form['translator_wrapper']['settings']['capi-settings']['quote'];
+
+}
+
+
+function tmgmt_contentapi_form_tmgmt_job_edit_form_alter(&$form, FormStateInterface &$form_state) {
+  setValidator($form, $form_state);
+}
+
+function tmgmt_contentapi_job_form_validate(&$form, &$form_state){
+  canTranslateByProvider($form, $form_state);
+}
+
+
+function canTranslateByProvider(&$form, FormStateInterface &$form_state){
+  $job = $form_state->getFormObject()->buildEntity($form, $form_state);
+  if($job->hasTranslator()) {
+    $translator = $job->getTranslator();
+    if ($translator->getPluginId() == 'contentapi') {
+      $plugin = $translator->getPlugin();
+      if (!canCustomTranslate($translator, $job, $plugin)) {
+        //drupal_set_message(t('@translator can not translate from @source to @target.', array('@translator' => $translator->label(), '@source' => $job->getSourceLanguage()->getName(), '@target' => $job->getTargetLanguage()->getName())), 'error');
+        $form_state->setError($form['translator_wrapper']['translator'],
+          t('@translator can not translate from @source to @target.', [
+            '@translator' => $translator->label(),
+            '@source' => $job->getSourceLanguage()->getName(),
+            '@target' => $job->getTargetLanguage()->getName()
+          ]));
+      }
+
+    }
+  }
+
+}
+
+function setValidator(&$form, FormStateInterface &$form_state){
+  if(!isset($form['#validate']['tmgmt_contentapi_job_form_validate'])) {
+    $form['#validate'][] = 'tmgmt_contentapi_job_form_validate';
+  }
+}
+
+function canCustomTranslate(TranslatorInterface $translator, JobInterface $job, \Drupal\tmgmt\TranslatorPluginInterface $plugin) {
+  $token = ConentApiHelper::generateToken($translator);
+  $langmappingsremote = $translator->getRemoteLanguagesMappings();
+  $capisettings = $translator->getSetting('capi-settings');
+  $defaultproviderkey = $capisettings['provider'];
+  $providerId = isset($job->getSetting('capi-settings')['provider']) ? $job->getSetting('capi-settings')['provider'] : $defaultproviderkey;
+  $provider = getProvider($token, $providerId);
+  $capabilities = isset($provider) ? $provider->getCapabilities() : NULL;
+  if(isset($capabilities)) {
+    $provider_supported_langs = $capabilities->getSupportedLanguages();
+    $supports_lang = FALSE;
+    if (!isset($provider_supported_langs)) {
+      return TRUE;
+    }
+    else {
+      foreach ($provider_supported_langs as $lang_pair) {
+        $job_remote_source_lang = $langmappingsremote[$job->getSourceLangcode()];
+        $job_remote_target_lang = $langmappingsremote[$job->getTargetLangcode()];
+        if (in_array($job_remote_source_lang, $lang_pair->getSources()) &&
+          in_array($job_remote_target_lang, $lang_pair->getTargets())) {
+          $supports_lang = TRUE;
+        }
+      }
+      if ($supports_lang) {
+        return TRUE;
+      }
+      else {
+        return FALSE;
+      }
+    }
+  }
+  else {
+    return TRUE;
+  }
+}
+
+
+function tmgmt_contentapi_check_empty_file($form,&$form_state){
+  $all_files = \Drupal::request()->files->get('files', []);
+  // Make sure there's an upload to process.
+  if (empty($all_files['file'])) {
+    $form_state->setErrorByName('file',t('No files selected, action cannot be completed.'));
+  }
+}
+
+function tmgmt_contentapi_entity_operation_alter(array &$operations,\Drupal\Core\Entity\EntityInterface  $entity) {
+
+  try {
+    // instance of tmgmt_job
+    if ($entity instanceof Job) {
+      // get local state of the job
+      $localjobstate = $entity->getState();
+      if ($localjobstate == Job::STATE_ACTIVE) {
+        $jobtranslator = $entity->getTranslator();
+        $jobtranslatorId = $jobtranslator->getPluginId();
+        // modify operations only for contentapi translator
+        if ($jobtranslatorId == 'contentapi') {
+          // TODO: check remote job's state, if canceled, do not remove delete operation
+          if (isset($operations['abort'])) {
+            unset($operations['abort']);
+          }
+          $jobapi = new JobApi();
+          $remotejob = $jobapi->jobsJobIdGet(ConentApiHelper::generateToken($jobtranslator), GeneralHelper::getCpJobIdfromLocJob($entity));
+          $remotestatus = $remotejob->getStatusCode()->getStatusCode();
+          if($remotestatus != StatusCodeEnum::COMPLETED && $remotestatus != StatusCodeEnum::CANCELLED && $remotestatus != StatusCodeEnum::TRANSLATION_REJECTED) {
+            if (isset($operations['delete'])) {
+              unset($operations['delete']);
+            }
+          }
+        }
+      }
+    }
+    if($entity instanceof JobItem){
+      $job = $entity->getJob();
+      $localjobstate = $job->getState();
+      if ($localjobstate != Job::STATE_UNPROCESSED) {
+        $jobtranslator = $job->getTranslator();
+        $jobtranslatorId = $jobtranslator->getPluginId();
+        // modify operations only for contentapi translator
+        if ($jobtranslatorId == 'contentapi') {
+          if (isset($operations['abort'])) {
+            unset($operations['abort']);
+          }
+          if (isset($operations['delete'])) {
+            unset($operations['delete']);
+          }
+        }
+      }
+    }
+  }
+  catch (Exception $exception){
+    $entity->addMessage(t('an error occured while updating job\'s operations and state: ' . $exception->getMessage()));
+  }
+}
+
+function getProviders($token){
+  $providers = NULL;
+  if(isset($token) && $token != '') {
+    try {
+      $providerapi = new ProviderApi();
+      $providers = $providerapi->providersGet($token);
+    } catch (Exception $e) {
+      drupal_set_message($e->getMessage());
+    }
+  }
+  $providersarray = array();
+  foreach ($providers as $provider) {
+    $prid = $provider->getProviderId();
+    $prname = $provider->getProviderName();
+    $providersarray[$prid] = $prname;
+  }
+  asort($providersarray, SORT_REGULAR);
+  return $providersarray;
+}
+
+
+function getProvider($token, $providerId){
+  $provider = NULL;
+  if(isset($token) && $token != '') {
+    try {
+      $providerapi = new ProviderApi();
+      $provider = $providerapi->providersProviderIdGet($token, $providerId);
+    } catch (Exception $e) {
+      drupal_set_message($e->getMessage());
+    }
+  }
+
+  return $provider;
+}

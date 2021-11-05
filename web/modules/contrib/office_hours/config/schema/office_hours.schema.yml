@@ -1,0 +1,135 @@
+# Schema for the configuration files of the Office Hours module.
+
+field.storage_settings.office_hours:
+  type: mapping
+  label: 'Office hours settings'
+  mapping:
+    time_format:
+      type: string
+      label: 'Time notation'
+    element_type:
+      type: string
+      label: 'Time element type'
+    increment:
+      type: integer
+      label: 'Restrict the input to fixed fractions of an hour'
+    required_start:
+      type: boolean
+      label: 'Required widget hours - from'
+    limit_start:
+      type: string
+      label: 'Limit widget hours - from'
+    required_end:
+      type: boolean
+      label: 'Required widget hours - until'
+    limit_end:
+      type: string
+      label: 'Limit widget hours - until'
+    comment:
+      type: integer
+      label: 'Allow a comment per time slot'
+    valhrs:
+      type: boolean
+      label: 'Validate hours'
+    cardinality_per_day:
+      type: integer
+      label: 'Cardinality per day'
+
+field.formatter.settings.office_hours:
+  type: mapping
+  label: 'Office hours display format settings'
+  mapping:
+    day_format:
+      type: string
+      label: 'Day notation'
+    time_format:
+      type: string
+      label: 'Time notation'
+    compress:
+      type: boolean
+      label: 'Compress all hours of a day into one set'
+    grouped:
+      type: boolean
+      label: 'Group consecutive days with same hours into one set'
+    show_closed:
+      type: string
+      label: 'Number of days to show'
+    closed_format:
+      type: text
+      label: 'Empty days notation'
+    separator:
+      type: mapping
+      label: 'Separators'
+      mapping:
+        days:
+          type: label
+          label: 'Separator between days'
+        grouped_days:
+          type: label
+          label: 'Separator between grouped days'
+        day_hours:
+         type: label
+         label: 'Separator between day and the hours'
+        hours_hours:
+         type: label
+         label: 'Separator between the hours of a time slot'
+        more_hours:
+          type: label
+          label: 'Separator between time slots'
+    current_status:
+      type: mapping
+      label: 'Current status'
+      mapping:
+        position:
+          type: string
+          label: 'Current status position'
+        open_text:
+          type: label
+          label: 'Currently open message'
+        closed_text:
+         type: label
+         label: 'Currently closed message'
+    timezone_field:
+      type: string
+      label: 'Timezone field'
+    office_hours_first_day:
+      type: string
+      label: 'First day of week'
+    schema:
+      type: mapping
+      label: 'Schema.org support'
+      mapping:
+        enabled:
+          type: boolean
+          label: 'Enable Schema.org openingHours support'
+
+field.formatter.settings.office_hours_table:
+  type: field.formatter.settings.office_hours
+
+field.formatter.settings.office_hours_status:
+  type: mapping
+  label: 'Office hours current status display format settings'
+  mapping:
+    open_text:
+      type: label
+      label: 'Currently open message'
+    closed_text:
+      type: label
+      label: 'Currently closed message'
+
+field.value.office_hours:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    day:
+      type: integer
+      label: 'Day'
+    starthours:
+      type: integer
+      label: 'Start hours'
+    endhours:
+      type: integer
+      label: 'End hours'
+    comment:
+      type: text
+      label: 'Comment'

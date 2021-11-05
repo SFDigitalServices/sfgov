@@ -1,0 +1,33 @@
+cer.corresponding_reference.*:
+  type: config_entity
+  label: 'Corresponding reference config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    enabled:
+      type: boolean
+      label: 'Enabled'
+    first_field:
+      type: string
+      label: 'First field'
+    second_field:
+      type: string
+      label: 'Second field'
+    bundles:
+      type: sequence
+      label: 'Corresponding bundles'
+      sequence:
+        type: mapping
+        mapping:
+          entity_type:
+            type: string
+            label: 'Entity type'
+          bundles:
+            type: sequence
+            label: 'Bundles'
+            sequence:
+              type: string

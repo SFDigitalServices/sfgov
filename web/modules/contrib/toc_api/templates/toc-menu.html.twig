@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a table of contents as a select menu.
+ *
+ * Returns HTML for a Table of contents select menu.
+ *
+ * Available variables:
+ * - index: List of header items. Each header item contains:
+ *   - prefix: The header option prefix. Either indentation or the complete path.
+ *   - title: The header title.
+ *   - url: The header fragrment (ie hash) URL, instance of \Drupal\Core\Url.
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = ['toc', 'toc-menu'] %}
+<form {{ attributes.addClass(classes) }}>
+  <select>
+    <option value="">{{ title }}</option>
+    {% for item in index %}
+      <option value="{{ item.url }}">{{ item.prefix }}{{ item.title }}</option>
+    {% endfor %}
+  </select>
+</form>
+

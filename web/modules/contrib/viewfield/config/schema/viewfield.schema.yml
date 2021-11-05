@@ -1,0 +1,62 @@
+field.storage_settings.viewfield:
+  type: mapping
+  label: 'Viewfield field storage settings'
+  mapping:
+    target_type:
+      type: string
+      label: 'Type of item to reference'
+
+field.value.viewfield:
+  type: field.value.entity_reference
+  label: 'Default value'
+  mapping:
+    target_id:
+      type: string
+      label: 'View'
+    display_id:
+      type: string
+      label: 'Display'
+    arguments:
+      type: string
+      label: 'Arguments'
+    items_to_display:
+      type: string
+      label: 'Items to display'
+
+field.field_settings.viewfield:
+  type: mapping
+  label: 'Viewfield field settings'
+  mapping:
+    force_default:
+      type: boolean
+      label: 'Always use default value'
+    allowed_views:
+      type: sequence
+      label: 'Allowed views'
+      sequence:
+        type: string
+    allowed_display_types:
+      type: sequence
+      label: 'Allowed displays'
+      sequence:
+        type: string
+    handler:
+      type: string
+      label: 'Reference method'
+    handler_settings:
+      type: entity_reference_selection.[%parent.handler]
+      label: 'Entity reference selection plugin settings'
+
+field.formatter.settings.viewfield_default:
+  type: mapping
+  label: 'Viewfield default formatter settings'
+  mapping:
+    view_title:
+      type: string
+      label: 'View title'
+    always_build_output:
+      type: boolean
+      label: 'Always build output'
+    empty_view_title:
+      type: string
+      label: 'Empty view title'

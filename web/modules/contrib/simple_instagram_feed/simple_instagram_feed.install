@@ -1,0 +1,45 @@
+<?php
+
+use Drupal\Core\Installer\InstallerKernel;
+
+/**
+ * @file
+ * Install, update and uninstall for simple instagram feed module.
+ */
+
+ /**
+  * Implements hook_install().
+  */
+ function simple_instagram_feed_install() {
+   if (function_exists('drupal_installation_attempted')) {
+     if (!drupal_installation_attempted()) {
+       \Drupal::service('simple_instagram_feed.library')->isAvailable(TRUE);
+     }
+   }
+   else {
+     if (!InstallerKernel::installationAttempted()) {
+       \Drupal::service('simple_instagram_feed.library')->isAvailable(TRUE);
+     }
+   }
+ }
+
+/**
+ * Implements hook_requirements().
+ */
+function simple_instagram_feed_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  $simpleInstagramFeedLibrary = \Drupal::service('simple_instagram_feed.library');
+  $exists = $simpleInstagramFeedLibrary->isAvailable();
+
+  return [
+    'simple_instagram_feed_library' => [
+      'title'       => t('Simple instagram feed library'),
+      'description' => $exists ? '' : $simpleInstagramFeedLibrary->getWarningMessage(),
+      'severity'    => $exists ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+      'value'       => $exists ? t('Installed') : t('Not installed'),
+    ],
+  ];
+}

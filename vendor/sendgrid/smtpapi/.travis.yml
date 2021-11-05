@@ -1,0 +1,32 @@
+language: php
+
+before_script:
+  - if [ -n "$GIT_HUB_TOKEN" ]; then composer config -g github-oauth.github.com "$GIT_HUB_TOKEN"; fi;
+  - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest --prefer-stable -n; fi;
+
+script:
+  - make test
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+env:
+  - dependencies=lowest
+  - dependencies=highest
+
+notifications:
+  slack:
+    if: branch = main
+    on_pull_requests: false
+    on_success: never
+    on_failure: change
+    rooms:
+      - secure: iuQayIxgjXO0Mitf0A9QOFF9tKg52WdKRYAvnyaMCMTwz8ofbdzVVli6m4rYYfq+2RV8pIzXDxII5B0heePbWwpPZV/vutY+Au7zzhVetphcsBn07M0+M9LwDHDGQ9A/JDkefyrx4AZhljkmXHpP08m1JdZsoKC3JBheQYQHNGw=

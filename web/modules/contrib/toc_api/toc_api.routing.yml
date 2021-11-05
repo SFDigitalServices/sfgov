@@ -1,0 +1,31 @@
+entity.toc_type.collection:
+  path: '/admin/structure/toc'
+  defaults:
+    _entity_list: 'toc_type'
+    _title: 'Table of contents types'
+  requirements:
+    _permission: 'administer table of contents types'
+
+entity.toc_type.add_form:
+  path: '/admin/structure/toc/add'
+  defaults:
+    _title: 'Add table of contents type'
+    _entity_form: toc_type.add
+  requirements:
+    _entity_create_access: toc_type
+
+entity.toc_type.edit_form:
+  path: '/admin/structure/toc/manage/{toc_type}'
+  defaults:
+    _title: 'Edit table of contents type'
+    _entity_form: toc_type.edit
+  requirements:
+    _entity_access: toc_type.update
+
+entity.toc_type.delete_form:
+  path: '/admin/structure/toc/manage/{toc_type}/delete'
+  defaults:
+    _title: 'Delete table of contents type'
+    _entity_form: toc_type.delete
+  requirements:
+    _entity_access: toc_type.delete

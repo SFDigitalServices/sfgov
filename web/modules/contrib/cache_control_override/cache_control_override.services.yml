@@ -1,0 +1,10 @@
+services:
+  cache_control_override.cache_control_override_subscriber:
+    class: Drupal\cache_control_override\EventSubscriber\CacheControlOverrideSubscriber
+    tags:
+      - { name: event_subscriber }
+  cache_control_override.page_cache_response_policy.deny_on_cache_override:
+    class: Drupal\cache_control_override\PageCache\DenyOnCacheControlOverride
+    public: false
+    tags:
+      - { name: page_cache_response_policy }
