@@ -31,12 +31,30 @@ function locationAutocomplete() {
  * @returns Promise
  */
 function locationSubmit() {
+  console.debug('location submit!')
+  if (typeof google === 'undefined') {
+    console.debug('google maps is not defined!')
+    $('#edit-distance-from').hide()
+    return Promise.resolve({
+      status: 'ok',
+      msg: 'Google Maps is not loaded'
+    })
+  } else {
+    console.debug('google maps is defined')
+    $('#edit-distance-from').show()
+  }
+
   return new Promise((resolve, reject) => {
     const input = document.getElementById("edit-location");
 
     // if an autocomplete place was selected, resolve and return early
     if (input.getAttribute('data-place-changed')) {
+      console.debug('autocomplete place selected; returning early')
       resolve({status: 'ok', msg: 'user selected place, further resolution not necessary'})
+      return;
+    } else if (!input.value) {
+      console.debug('no place requested; returning early')
+      resolve({status: 'ok', msg: 'no place selected, further resolution not necessary'})
       return;
     }
 
@@ -52,7 +70,9 @@ function locationSubmit() {
       componentRestrictions: { country: "US" }
     }
 
+    console.debug('getting place predictions...')
     acService.getPlacePredictions(acRequest, (predictions, status) => {
+      console.debug('place predictions:', predictions, status)
       if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
         reject({status: "error", msg: 'no predictions from AutocompleteService'})
         return;
@@ -60,7 +80,9 @@ function locationSubmit() {
 
       const firstPlaceId = predictions[0].place_id; // use the first place from predictions (too assuming?)
       const pdService = new google.maps.places.PlacesService(document.createElement('div')); // PlacesService requires an html element
+      console.debug('getting place details...')
       pdService.getDetails({placeId: firstPlaceId}, (placeResult, status) => {
+        console.debug('place details:', placeResult, status)
         if (status != google.maps.places.PlacesServiceStatus.OK || !placeResult) {
           reject({status: "error", msg: 'no place details from PlacesService'})
         } else {
