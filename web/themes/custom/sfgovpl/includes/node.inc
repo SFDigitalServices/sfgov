@@ -327,11 +327,6 @@ function dept_page_fields($node) {
     'services' => array(),
   );
   if($node) {
-    if($node->hasField('field_url')) {
-      $theUrl = $node->get('field_url')->getValue();
-      $deptUrl =  $theUrl ? $theUrl : null;
-      $theFields['dept_url'] = $deptUrl;
-    }
     if($node->hasField('field_address')) {
       $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
       if($addressId) {
