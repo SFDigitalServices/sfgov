@@ -14,8 +14,8 @@ dependencies:
     - paragraphs.paragraphs_type.events
     - paragraphs.paragraphs_type.list
     - paragraphs.paragraphs_type.news
-    - paragraphs.paragraphs_type.people
     - paragraphs.paragraphs_type.phone
+    - paragraphs.paragraphs_type.profile_group
     - paragraphs.paragraphs_type.resource_section
     - paragraphs.paragraphs_type.resources
     - paragraphs.paragraphs_type.section
@@ -44,7 +44,6 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      people: people
       top_search_suggestion: top_search_suggestion
       block: block
       button: button
@@ -62,6 +61,7 @@ settings:
       data_story_reference_section: data_story_reference_section
       document_section: document_section
       resource_section: resource_section
+      profile_group: profile_group
     target_bundles_drag_drop:
       accordion:
         weight: 57
@@ -120,6 +120,9 @@ settings:
       data_story_reference_section:
         enabled: true
         weight: 74
+      data_story_reference_subsection:
+        weight: 91
+        enabled: false
       data_story_section:
         weight: 72
         enabled: false
@@ -135,6 +138,9 @@ settings:
       document_section:
         enabled: true
         weight: 75
+      document_subsection:
+        weight: 97
+        enabled: false
       email:
         weight: 30
         enabled: false
@@ -144,6 +150,9 @@ settings:
       events:
         enabled: true
         weight: 34
+      existing_agency:
+        weight: 101
+        enabled: false
       fact:
         weight: 68
         enabled: false
@@ -196,8 +205,8 @@ settings:
         weight: 79
         enabled: false
       people:
-        enabled: true
         weight: 21
+        enabled: false
       phone:
         enabled: true
         weight: 39
@@ -210,9 +219,18 @@ settings:
       process_step:
         weight: 63
         enabled: false
+      profile_group:
+        enabled: true
+        weight: 124
+      public_body_profiles:
+        weight: 125
+        enabled: false
       resource_section:
         enabled: true
         weight: 76
+      resource_subsection:
+        weight: 128
+        enabled: false
       resources:
         enabled: true
         weight: 52

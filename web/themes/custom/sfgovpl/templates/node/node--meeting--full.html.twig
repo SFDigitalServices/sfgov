@@ -41,7 +41,7 @@
   {% include '@theme/hero-banner-color.twig' with {
     banner: {
       title: node.label,
-      text: node.field_start_date.date|date('F d, Y'),
+      text: node.field_start_date.date|date('F j, Y'),
       label: label
     }
   } %}
@@ -92,7 +92,7 @@
             <h4>Date & Time</h4>
             {% if content.field_start_date|render %}
             <div class="start-date">
-              {{ node.field_start_date.date|date('l, F d, Y') }}
+              {{ node.field_start_date.date|date('l, F j, Y') }}
               <br>
               {{ node.field_start_date.date|date('g:i a') }}
               {% if content.field_end_date|render %}
@@ -100,7 +100,7 @@
               {% endif %}
             </div>
             {% endif %}
-            
+
           </div>
           {% endif %}
 
@@ -195,7 +195,7 @@
 
   <div class="sfgov-section-updated">
     <div class="sfgov-section-container">
-      Last updated {{ node.changedtime|date('F d, Y') }}
+      Last updated {{ node.changedtime|date('F j, Y') }}
     </div>
   </div>
 
@@ -209,4 +209,3 @@
   </div>
   {% endif %}
 </article>
-
