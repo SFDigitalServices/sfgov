@@ -4,12 +4,16 @@
   .user-pass,
   .user-pass-reset {
     @include contain-1090;
+    padding-left: 0;
+    padding-right: 0;
     .js-form-item {
-      width: 50%;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       @include media-max($medium-screen) {
         width: auto;
       }
+    }
+    label {
+      margin-bottom: 0;
     }
     [data-drupal-selector="edit-name"],
     [data-drupal-selector="edit-pass"] {
@@ -18,34 +22,16 @@
       border-style: solid;
       border-width: 3px;
       height: 44px;
-      margin: 0;
+      margin: 0.5rem 0 0;
       max-width: initial;
       padding: 15px;
     }
     [data-drupal-selector="edit-actions"] {
-      width: 148px;
-      background: $c-bright-blue;
-      text-align: center;
-      border-radius: 8px;
-      [data-drupal-selector="edit-submit"] {
-        @include rubik;
-        @include fs-body-short;
-        border-radius: 8px;
-        border: 0;
-        display: block;
-        margin: 20px 0;
-        padding: 10px;
-        width: 100%;
-        background: $c-bright-blue;
-        color: $c-white;
-        &:hover {
-          border: 0;
-          &::before {
-            @include fs-body-short;
-            box-shadow: none;
-          }
-        }
-      }
+      display: flex;
+      height: 49px;
+      gap: 20px;
+      margin-bottom: 40px;
+      padding-top: 5px;
     }
   }
 }
