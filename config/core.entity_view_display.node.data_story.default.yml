@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.data_story.field_content
+    - field.field.node.data_story.field_departments
     - field.field.node.data_story.field_description
     - node.type.data_story
   module:
@@ -15,6 +16,11 @@ targetEntityType: node
 bundle: data_story
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_content:
     weight: 1
     label: hidden
@@ -23,6 +29,14 @@ content:
       link: ''
     third_party_settings: {  }
     type: entity_reference_revisions_entity_view
+    region: content
+  field_departments:
+    weight: 2
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_description:
     weight: 0

@@ -31,12 +31,26 @@ function locationAutocomplete() {
  * @returns Promise
  */
 function locationSubmit() {
+  if (typeof google === 'undefined') {
+    console.warn('google maps is not defined! hiding the location search UI')
+    $('#edit-distance-from').hide()
+    return Promise.resolve({
+      status: 'ok',
+      msg: 'Google Maps is not loaded'
+    })
+  } else {
+    $('#edit-distance-from').show()
+  }
+
   return new Promise((resolve, reject) => {
     const input = document.getElementById("edit-location");
 
     // if an autocomplete place was selected, resolve and return early
     if (input.getAttribute('data-place-changed')) {
       resolve({status: 'ok', msg: 'user selected place, further resolution not necessary'})
+      return;
+    } else if (!input.value) {
+      resolve({status: 'ok', msg: 'no place selected, further resolution not necessary'})
       return;
     }
 
