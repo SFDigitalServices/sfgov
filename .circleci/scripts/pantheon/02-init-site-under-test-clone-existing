@@ -24,8 +24,8 @@ fi
 # drush cache:rebuild
 # drush config:import
 # drush cache:rebuild
-# drush deploy:hook
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- deploy --yes
+# drush deploy:hook # maybe only run this
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- deploy:hook --yes
 
 # If exported configuration is available, then import it.
 if [ -f "config/system.site.yml" ] ; then
