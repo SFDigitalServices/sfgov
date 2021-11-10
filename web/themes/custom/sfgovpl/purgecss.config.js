@@ -6,9 +6,9 @@ module.exports = {
     '../../../modules/custom/**/*.{html,inc,js,php,theme,twig}'
   ],
   safelist: {
-    patterns: [
+    greedy: [
       // preserve all "basic" margin and padding utilities (for forms)
-      /[mp][trblxy]*-\d+/
+      /\b[mp][trblxy]?-\d+/
     ]
   }
 }
