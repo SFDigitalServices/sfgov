@@ -27,7 +27,7 @@
         }
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.2",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
         "drupal/address": "^1.3",
@@ -37,25 +37,26 @@
         "drupal/allowed_formats": "^1.1",
         "drupal/amplitude": "^1.3",
         "drupal/anonymous_redirect": "^2.1",
+        "drupal/autodrop": "~1.0",
         "drupal/block_field": "^1.0@alpha",
         "drupal/bulk_update_fields": "^2.0@alpha",
         "drupal/cache_control_override": "^1.0@alpha",
         "drupal/cer": "^4.0@alpha",
         "drupal/color_field": "^2.2",
-        "drupal/components": "^2.4",
+        "drupal/components": "^1.0",
         "drupal/config_direct_save": "^2.1",
+        "drupal/config_exclude": "1.x-dev",
         "drupal/config_ignore": "^2.1",
+        "drupal/config_installer": "^1.0",
         "drupal/config_split": "^1.3",
         "drupal/console": ">=1.8.0",
         "drupal/content_lock": "^2.1",
-        "drupal/core-composer-scaffold": "^9.2",
-        "drupal/core-project-message": "^9.2",
-        "drupal/core-recommended": "^9.2",
+        "drupal/core-composer-scaffold": "^8.9",
+        "drupal/core-recommended": "^8.8",
         "drupal/ctools": "^3.0",
         "drupal/date_popup": "^1.1",
         "drupal/diff": "^1.0",
-        "drupal/drupal-driver": "^2",
-        "drupal/eck": "^1.0@beta",
+        "drupal/eck": "dev-1.x",
         "drupal/embed": "^1.4",
         "drupal/entity": "^1.2",
         "drupal/entity_browser": "^2.5",
@@ -70,7 +71,7 @@
         "drupal/formdazzle": "^2.1",
         "drupal/google_analytics_reports": "^3.0",
         "drupal/google_tag": "^1.0",
-        "drupal/gtranslate": "^1.14",
+        "drupal/gtranslate": "1.13.0",
         "drupal/inline_entity_form": "^1.0@beta",
         "drupal/job_scheduler": "^3.1",
         "drupal/linkit": "^5.0",
@@ -96,7 +97,7 @@
         "drupal/role_delegation": "^1.1",
         "drupal/scheduler": "^1.1",
         "drupal/scheduler_content_moderation_integration": "^1.2",
-        "drupal/search_api": "^1.20",
+        "drupal/search_api_pantheon": "~1.0",
         "drupal/sendgrid_integration": "^1.2",
         "drupal/simple_block": "^1.0@beta",
         "drupal/simple_gmap": "^3.0",
@@ -111,6 +112,8 @@
         "drupal/toc_api": "^1.0",
         "drupal/toc_filter": "^2.0",
         "drupal/twig_tweak": "^2.0",
+        "drupal/twig_vardumper": "^1.1",
+        "drupal/user_email_textformat": "^1.5",
         "drupal/variationcache": "^1.0",
         "drupal/video_embed_field": "^2.4",
         "drupal/viewfield": "^3.0@alpha",
@@ -121,24 +124,21 @@
         "joachim-n/composer-manifest": "^1.0",
         "jsanahuja/jquery.instagramfeed": "^1.2",
         "oomphinc/composer-installers-extender": "^2",
-        "pantheon-systems/drupal-integrations": "9.0.2",
+        "pantheon-systems/drupal-integrations": "^8.0",
         "pantheon-systems/quicksilver-pushback": "^2",
         "phpoffice/phpword": "0.17.0",
         "rvtraveller/qs-composer-installer": "^1.1",
-        "symfony/validator": "^4.4",
         "vikpe/php-html-heading-normalizer": "^1.1",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "drupal/coder": "^8.3",
-        "drupal/core-dev": "^9.2",
-        "drupal/devel": "^4.1",
-        "drupal/drupal-extension": "^4.1",
-        "drupal/stage_file_proxy": "^1.1",
-        "drupal/twig_vardumper": "^2.2",
-        "phpstan/phpstan": "^0.12.98",
-        "phpunit/phpunit": "^4 | ^7 | ^8 | ^9 | ^10"
+        "drupal/core-dev": "^8.8",
+        "drupal/devel": "^2",
+        "drupal/drupal-extension": "^3.1",
+        "drupal/search_kint": "^1.0",
+        "drupal/stage_file_proxy": "^1.1"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -232,22 +232,20 @@
                 "Allow emergency and short codes.": "https://www.drupal.org/files/issues/2020-04-07/allow_emergency-2976959-6.patch"
             },
             "drupal/gtranslate": {
-                "Adds a new option to display links": "patches/gtranslate-sfgov-links.patch"
+                "Adds a new option to display links": "patches/gtranslate_sfgov_links.patch"
             },
             "drupal/core": {
                 "Entity links ignore language negotiation API": "https://www.drupal.org/files/issues/2019-07-31/3061761-38.patch",
                 "StringFormatter generates links in wrong language when linking to entity": "patches/stringformatter-ignores-language-negotiation-2648288.patch",
                 "Use hook_theme_suggestions in views": "https://www.drupal.org/files/issues/2018-04-07/2923634-35.patch",
-                "Allow for deletion of a single value of a multiple value field": "https://www.drupal.org/files/issues/2021-03-30/1038316-235.patch",
-                "Node local tasks tabs do not appear on node revisions": "https://www.drupal.org/files/issues/2019-11-12/drupal-node_revision_local_tasks_canonical-2885278-15.patch",
-                "UID base field override configs can still have old default value callbacks": "https://www.drupal.org/files/issues/2021-11-01/3153455-104.patch"
+                "Allow for deletion of a single value of a multiple value field": "https://www.drupal.org/files/issues/2021-03-16/1038316-228.patch",
+                "Node local tasks tabs do not appear on node revisions": "https://www.drupal.org/files/issues/2019-11-12/drupal-node_revision_local_tasks_canonical-2885278-15.patch"
             },
             "drupal/amplitude": {
                 "Page scroll depth": "patches/amplitude-scroll-depth.patch",
                 "Allow setting user properties": "https://www.drupal.org/files/issues/2020-07-05/3157006-user-properties-2.patch",
                 "JSON parse event property values": "patches/amplitude-parse-event-property-values.patch",
-                "Auto-capture href for anchors": "patches/auto-capture-anchor-href.patch",
-                "missing 'config_export' definition in its annotation": "https://www.drupal.org/files/issues/2020-11-24/amplitude-3184640-1.patch"
+                "Auto-capture href for anchors": "patches/auto-capture-anchor-href.patch"
             },
             "drupal/block_field": {
                 "Error when updating block fields": "https://www.drupal.org/files/issues/2019-05-02/block_field-available-blocks-2861670-34.patch"
@@ -267,15 +265,14 @@
             "drupal/entity_reference_unpublished": {
                 "Allow reference to unpublished media": "patches/entity_reference_unpublished-media.patch"
             }
-        },
-        "enable-patching": "true"
+        }
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "platform": {
-            "php": "7.4"
+            "php": "7.2"
         }
     }
 }
