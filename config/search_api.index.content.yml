@@ -1,10 +1,13 @@
 uuid: 273f2c1c-dcca-4b14-888a-46fd57f81bcd
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - node
+    - search_api_solr
     - search_api
+  config:
+    - search_api.server.pantheon
 id: content
 name: Content
 description: 'Content (node) index for Pantheon Solr'
@@ -43,7 +46,7 @@ field_settings:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
-    type: text
+    type: solr_text_wstoken
     boost: !!float 21
     dependencies:
       module:
@@ -121,4 +124,4 @@ tracker_settings:
 options:
   index_directly: true
   cron_limit: 50
-server: null
+server: pantheon

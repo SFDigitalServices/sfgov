@@ -74,7 +74,7 @@ function sfgov_utilities_update_8704() {
 
   if ($nids) {
     foreach ($nids as $nid) {
-      $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $nid->nid);
+      $alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid->nid);
       // Retrieve only department name part from alias.
       $position = strrpos($alias, '/');
       $department_alias = $position === FALSE ? $alias : substr($alias, $position + 1);
@@ -108,7 +108,7 @@ function sfgov_utilities_update_8705() {
 
   if ($nids) {
     foreach ($nids as $nid) {
-      $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $nid->nid);
+      $alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid->nid);
       // Retrieve only topic name part from alias.
       $position = strrpos($alias, '/');
       $topic_alias = $position === FALSE ? $alias : substr($alias, $position + 1);
