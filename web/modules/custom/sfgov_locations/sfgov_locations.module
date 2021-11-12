@@ -211,7 +211,7 @@ function _sfgov_locations_department_address(&$form, FormStateInterface $form_st
   $department = \Drupal::entityTypeManager()->getStorage('node')->load($department_id);
 
   if (!$department->field_address->entity) {
-    drupal_set_message('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
+    \Drupal::messenger()->addMessage('We don’t have a main address for this department, so the department name, but no address will show.', 'warning');
   }
 
   return $form['field_at_this_location'];
