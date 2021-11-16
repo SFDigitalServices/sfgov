@@ -18,12 +18,10 @@ dependencies:
     - field.field.node.location.field_phone_numbers
     - field.field.node.location.field_services
     - field.field.node.location.field_title
-    - image.style.700x500
     - node.type.location
   module:
     - datetime
     - entity_reference_revisions
-    - media
     - text
     - user
 id: node.location.default
@@ -38,6 +36,11 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_about_description:
     weight: 7
     label: hidden
@@ -100,10 +103,10 @@ content:
     weight: 5
     label: hidden
     settings:
-      image_style: 700x500
-      image_link: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
-    type: media_thumbnail
+    type: entity_reference_entity_view
     region: content
   field_intro_text:
     weight: 12

@@ -1,0 +1,57 @@
+uuid: 284c8086-0766-4880-8c02-c859e7eb0048
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.public_body_profiles.field_commission_position
+    - field.field.paragraph.public_body_profiles.field_ending_year
+    - field.field.paragraph.public_body_profiles.field_position_type
+    - field.field.paragraph.public_body_profiles.field_profile
+    - field.field.paragraph.public_body_profiles.field_starting_year
+    - paragraphs.paragraphs_type.public_body_profiles
+  module:
+    - datetime
+id: paragraph.public_body_profiles.default
+targetEntityType: paragraph
+bundle: public_body_profiles
+mode: default
+content:
+  field_commission_position:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_ending_year:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_position_type:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_profile:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_starting_year:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+hidden:
+  created: true
+  status: true

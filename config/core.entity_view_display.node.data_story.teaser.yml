@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.data_story.field_content
+    - field.field.node.data_story.field_departments
     - field.field.node.data_story.field_description
     - node.type.data_story
   module:
@@ -14,6 +15,11 @@ targetEntityType: node
 bundle: data_story
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     settings: {  }
@@ -21,6 +27,7 @@ content:
     region: content
 hidden:
   field_content: true
+  field_departments: true
   field_description: true
   langcode: true
   search_api_excerpt: true

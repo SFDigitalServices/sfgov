@@ -44,6 +44,11 @@ fi
 
 shortSha=$(echo $CIRCLE_SHA1 | cut -c -7)
 prNumber=$(echo $CIRCLE_PULL_REQUEST | awk -F "/" '{print $NF}')
+prText="pr-$prNumber"
+
+if [ -z "$prNumber" ]; then
+  prText=$CIRCLE_BRANCH
+fi
 
 # get suite results
 suiteTestResults=$(curl -s https://api.ghostinspector.com/v1/suite-results/$giResultId/results?apiKey=$GI_API_KEY)
@@ -71,7 +76,7 @@ echo "quickStatus:$quickStatus"
 suiteStatusData=$(printf '{
   "channel": "proj-sfdotgov-eng",
   "unfurl_links": "false",
-  "text": "sfgov tests for pr-%s complete",
+  "text": "sfgov tests for %s complete",
   "blocks": [{
     "type": "section",
     "text": {
@@ -79,7 +84,7 @@ suiteStatusData=$(printf '{
       "text": "%s"
     }
   }]
-}' "$prNumber" "$quickStatus e2e tests for <$giStartUrl|pr-$prNumber> complete :thread:")
+}' "$prText" "$quickStatus e2e tests for <$giStartUrl|$prText> complete :thread:")
 
 echo "suiteStatusData:$suiteStatusData"
 
@@ -90,6 +95,16 @@ threadTs=$(curl -s -X POST \
   https://slack.com/api/chat.postMessage | jq -r .ts)
 
 echo "threadTs:$threadTs"
+
+if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+  prThreadData=$(printf '{
+    "unfurl_links": "false",
+    "text":"%s",
+    "thread_ts":"%s"
+  }' "<$CIRCLE_PULL_REQUEST|$CIRCLE_PULL_REQUEST>" "$threadTs")
+
+  curl -s -X POST -H 'Content-type: application/json' --data "$prThreadData" $RONBOT_WEBHOOK_URL
+fi
 
 suiteThreadData=$(printf '{
   "unfurl_links": "false",
