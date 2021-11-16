@@ -254,3 +254,18 @@ function migratePeopleSection($node, $field_name, $peoples) {
   $node->setRevisionUserId($user_id);
   $node->save();
 }
+
+function sfgov_utilities_deploy_03_resources_migration() {
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
+  $user = reset($users);
+  $user_id = $user->id();
+
+  $nids = \Drupal::entityQuery('node')->condition('type','campaign')->execute();
+  $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+
+  foreach($nodes as $node) {
+    $title = $node->getTitle();
+    echo $node->$bundle . ": " . $title . "\n";
+  }
+
+}
