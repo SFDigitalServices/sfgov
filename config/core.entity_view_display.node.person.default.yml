@@ -3,16 +3,34 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.person.field_address
+    - field.field.node.person.field_biography
+    - field.field.node.person.field_city_department
     - field.field.node.person.field_direct_external_url
+    - field.field.node.person.field_email
+    - field.field.node.person.field_featured_items
     - field.field.node.person.field_first_name
     - field.field.node.person.field_last_name
+    - field.field.node.person.field_phone_numbers
     - field.field.node.person.field_photo
+    - field.field.node.person.field_primary_email
+    - field.field.node.person.field_primary_phone_number
+    - field.field.node.person.field_profile_photo
+    - field.field.node.person.field_profile_type
+    - field.field.node.person.field_social_media
+    - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
+    - image.style.profile
     - node.type.person
   module:
+    - entity_reference_revisions
     - image
     - link
+    - media
+    - options
+    - telephone_formatter
+    - text
     - user
 id: node.person.default
 targetEntityType: node
@@ -20,12 +38,35 @@ bundle: person
 mode: default
 content:
   content_moderation_control:
-    weight: -20
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_direct_external_url:
+  field_address:
+    weight: 18
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_biography:
+    weight: 8
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_city_department:
     weight: 5
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_direct_external_url:
+    weight: 10
     label: hidden
     settings:
       trim_length: 80
@@ -36,15 +77,25 @@ content:
     third_party_settings: {  }
     type: link
     region: content
-  field_first_name:
-    weight: 0
+  field_email:
+    weight: 11
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_featured_items:
+    weight: 13
     label: hidden
     settings:
-      link_to_entity: false
+      view_mode: default
+      link: ''
     third_party_settings: {  }
-    type: string
+    type: entity_reference_revisions_entity_view
     region: content
-  field_last_name:
+  field_first_name:
     weight: 1
     label: hidden
     settings:
@@ -52,16 +103,85 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_last_name:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_phone_numbers:
+    weight: 14
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
   field_photo:
     weight: 4
     label: hidden
     settings:
-      image_style: ''
+      image_style: profile
+      image_link: ''
     third_party_settings: {  }
-    type: image_url
+    type: image
+    region: content
+  field_primary_email:
+    weight: 16
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_primary_phone_number:
+    weight: 17
+    label: above
+    settings:
+      format: 1
+      link: true
+      default_country: null
+    third_party_settings: {  }
+    type: telephone_formatter
+    region: content
+  field_profile_photo:
+    type: media_thumbnail
+    weight: 7
+    label: hidden
+    settings:
+      image_style: profile
+      image_link: ''
+    third_party_settings: {  }
+    region: content
+  field_profile_type:
+    weight: 9
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_social_media:
+    weight: 15
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
+    region: content
+  field_spotlight:
+    weight: 12
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    type: entity_reference_revisions_entity_view
     region: content
   field_sub_title:
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       link_to_entity: false
@@ -69,7 +189,7 @@ content:
     type: string
     region: content
   field_title:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       link_to_entity: false

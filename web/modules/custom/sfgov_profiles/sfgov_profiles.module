@@ -1,0 +1,57 @@
+<?php
+
+use Drupal\sfgov_profiles\Profiles;
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function sfgov_profiles_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  if ($element['#paragraph_type'] == 'public_body_profiles') {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node && $node->bundle() != 'public_body') {
+      $element['subform']['field_commission_position']['#access'] = FALSE;
+      $element['subform']['field_position_type']['#access'] = FALSE;
+      $element['subform']['field_ending_year']['#access'] = FALSE;
+      $element['subform']['field_starting_year']['#access'] = FALSE;
+    }
+    $element['subform']['field_profile']['widget']['#title'] = '';
+    // For multiple profiles target parent and delta values
+    $parent = $element['subform']['#parents'][1];
+    $delta = $element['subform']['#parents'][4];
+    $input_filter = ':input[name*="field_board_members[' . $parent . '][subform][field_profiles][' . $delta . '][subform][field_position_type]"]';
+    $element['subform']['field_starting_year']['#states'] = [
+      'visible' => [
+        [$input_filter => ['value' => 'Appointed']],
+        [$input_filter => ['value' => 'Elected']],
+      ],
+    ];
+    $element['subform']['field_ending_year']['#states'] = [
+      'visible' => [
+        [$input_filter => ['value' => 'Appointed']],
+        [$input_filter => ['value' => 'Elected']],
+      ],
+    ];
+
+    // Hide redundant title/label
+    $element['top']['paragraph_type_title']['info']['#markup'] = '';
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function sfgov_profiles_entity_presave($entity) {
+  // When a profile node is added to a public body, break the cache of the
+  // corresponding profile node so that it can reload template data for
+  // display purposes.
+  if ($entity->bundle() === 'public_body_profiles') {
+    $profile_node = \Drupal::entityTypeManager()->getStorage('node')->load($entity->get('field_profile')->target_id);
+    if ($entity->isNew()) {
+      Cache::invalidateTags($profile_node->getCacheTags());
+    }
+    elseif ($entity->get('field_profile')->target_id != $entity->get('field_profile')->target_id) {
+      Cache::invalidateTags($profile_node->getCacheTags());
+    }
+  }
+}

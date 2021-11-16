@@ -150,6 +150,21 @@ jobs:
             echo "create gh release for $CIRCLE_TAG"
             curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"target_commitish\":\"$CIRCLE_BRANCH\",\"name\":\"$CIRCLE_TAG\",\"body\":\"created via api, add release notes\",\"draft\":false,\"prerelease\":false}" https://api.github.com/repos/sfdigitalservices/sfgov/releases 
 
+  create_amplitude_release:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - run:
+          name: create amplitude release
+          command: |
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              export AMPLITUDE_AUTH="$AMPLITUDE_PROD_API_KEY:$AMPLITUDE_PROD_SECRET_KEY"
+            else
+              export AMPLITUDE_AUTH="$AMPLITUDE_TEST_API_KEY:$AMPLITUDE_TEST_SECRET_KEY"
+            fi
+            ./scripts/custom/create-amplitude-release.sh
+  
 workflows:
   version: 2
   build_and_test:
@@ -158,6 +173,15 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
+      - create_amplitude_release:
+          requires:
+            - build_deploy_and_test
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+                - amplitude-release
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:
