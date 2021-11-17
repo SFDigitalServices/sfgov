@@ -156,7 +156,7 @@ function sfgov_utilities_deploy_01_homepage_profile_group() {
 
   $landingPage->setNewRevision(TRUE);
   $landingPage->revision_log = 'Moved people section data to new profile group';
-  $landingPage->setRevisionCreationTime(Drupal::time()->getRequestTime());
+  $landingPage->setRevisionCreationTime(REQUEST_TIME);
   $landingPage->setRevisionUserId($user_id);
   $landingPage->save();
 }
@@ -250,7 +250,7 @@ function migratePeopleSection($node, $field_name, $peoples) {
 
   $node->setNewRevision(TRUE);
   $node->revision_log = 'Moved people section data to new profile group';
-  $node->setRevisionCreationTime(Drupal::time()->getRequestTime());
+  $node->setRevisionCreationTime(REQUEST_TIME);
   $node->setRevisionUserId($user_id);
   $node->save();
 }
