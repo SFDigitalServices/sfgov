@@ -22,7 +22,7 @@ $nodesWithResources = [];
 // campaign nodes
 foreach($nodes as $node) {
   $title = $node->getTitle();
-  echo "\e[96m" . $node->gettype() . ": " . $title . " (". $node->id() . ")\n";
+  // echo "\e[96m" . $node->gettype() . ": " . $title . " (". $node->id() . ")\n";
   // check for field
   $nodeWithResource = [
     'id' => $node->id(),
@@ -38,7 +38,7 @@ foreach($nodes as $node) {
         $campaignResourcesParagraph = Paragraph::load($targetId);
         $campaignResourcesParagraphType = $campaignResourcesParagraph->getType();
         if ($campaignResourcesParagraphType == 'campaign_resources') {
-          echo "\e[32m  target_id:" . $targetId . ", paragraph type:" . $campaignResourcesParagraphType . ", title: " . $campaignResourcesParagraph->field_title->value . "\n";
+          // echo "\e[32m  target_id:" . $targetId . ", paragraph type:" . $campaignResourcesParagraphType . ", title: " . $campaignResourcesParagraph->field_title->value . "\n";
           $campaignResource = [
             'id' => $targetId,
             'title' => $campaignResourcesParagraph->field_title->value,
@@ -50,7 +50,7 @@ foreach($nodes as $node) {
             foreach ($campaignResourceSectionValues as $campaignResourceSectionValue) {
               $campaignResourceSectionId = $campaignResourceSectionValue['target_id'];
               $campaignResourceSectionParagraph = Paragraph::load($campaignResourceSectionId);
-              echo "\e[93m    target_id:" . $campaignResourceSectionId . ", paragraph type:" . $campaignResourceSectionParagraph->getType() . ", title: " . $campaignResourceSectionParagraph->field_title->value . "\n";
+              // echo "\e[93m    target_id:" . $campaignResourceSectionId . ", paragraph type:" . $campaignResourceSectionParagraph->getType() . ", title: " . $campaignResourceSectionParagraph->field_title->value . "\n";
               $campaignResourceSection = [
                 'id' => $campaignResourceSectionId,
                 'title' => $campaignResourceSectionParagraph->field_title->value,
@@ -62,12 +62,12 @@ foreach($nodes as $node) {
                   $resourceId = $resourcesValue['target_id'];
                   $resourcesParagraph = Paragraph::load($resourceId);
                   if ($resourcesParagraph->gettype() == 'resources') { // this is the old thing
-                    echo "\e[95m";
-                    echo "      resource id: " . $resourceId . "\n";
-                    echo "      resource_type: " . $resourcesParagraph->gettype() . "\n";
-                    echo "      field_title: " . $resourcesParagraph->field_title->value . "\n";
-                    echo "      field_description: " . $resourcesParagraph->field_description->value . "\n";
-                    echo "      field_link: " . $resourcesParagraph->field_link->uri . "\n\n";
+                    // echo "\e[95m";
+                    // echo "      resource id: " . $resourceId . "\n";
+                    // echo "      resource_type: " . $resourcesParagraph->gettype() . "\n";
+                    // echo "      field_title: " . $resourcesParagraph->field_title->value . "\n";
+                    // echo "      field_description: " . $resourcesParagraph->field_description->value . "\n";
+                    // echo "      field_link: " . $resourcesParagraph->field_link->uri . "\n\n";
 
                     $resource = [
                       'id' => $resourceId,
@@ -78,10 +78,10 @@ foreach($nodes as $node) {
                     ];
                     $campaignResourceSection['resources'][] = $resource;
                   } else { // this is the new thing
-                    echo "\e[95m";
-                    echo "      resource id: " . $resourceId . "\n";
-                    echo "      resource_type: " . $resourcesParagraph->gettype() . "\n";
-                    echo "\n";
+                    // echo "\e[95m";
+                    // echo "      resource id: " . $resourceId . "\n";
+                    // echo "      resource_type: " . $resourcesParagraph->gettype() . "\n";
+                    // echo "\n";
                   }
                 }
                 $campaignResource['campaign_resource_section'][] = $campaignResourceSection;
@@ -98,22 +98,40 @@ foreach($nodes as $node) {
 
 $json = json_encode($nodesWithResources);
 
-// echo "\e[97m campaigns with resources: " . $campaignsWithResources . "\n";
-echo "\e[97m";
-// print_r($nodesWithResources);
-// echo json_encode($nodesWithResources);
-echo "\n";
-
-// $campaignsWithResources = 0;
-// foreach($nodesWithResources as $nid => $item) {
-//   $campaignResources = $nodesWithResources[$nid]['campaign_resources'];
-//   if(!empty($campaignResources)) {
-//     echo $nid . ":" . $nodesWithResources[$nid]['title'] . "\n";
-//     echo "  campaign resource title: " . $campaignResources['title'] . "\n";
-
-//     $campaignsWithResources++;
-//   }
-// }
-
+// echo "\e[97m";
 // echo "\n";
-// echo "\e[97mcampaigns with resources: " . $campaignsWithResources . "\n";
+
+$campaignsWithResources = 0;
+foreach($nodesWithResources as $nodeWithResource) {
+  $campaignResources = $nodeWithResource['campaign_resources'];
+  if(!empty($campaignResources)) {
+    foreach($campaignResources as $campaignResource) {
+      echo "\e[96m";
+      echo "campaign: " . $nodeWithResource['title'] . " (" . $nodeWithResource['id'] . ")\n";
+      echo "\e[32m";
+      echo "  campaign_resource title: " . $campaignResource['title'] . "\n";
+      $campaignResourceSections = $campaignResource['campaign_resource_section'];
+      if(!empty($campaignResourceSection)) {
+        foreach($campaignResourceSections as $campaignResourceSection) {
+          echo "\e[93m";
+          echo "      campaign_resource_section title: " . $campaignResourceSection['title'] . "\n";
+          $resources = $campaignResourceSection['resources'];
+          if(!empty($resources)) {
+            foreach($resources as $resource) {
+              echo "\e[95m";
+              echo "        resource:\n";
+              echo "          field_title:\e[37m" . $resource['field_title'] . "\n";
+              echo "          \e[95mfield_description:\e[37m" . $resource['field_description'] . "\n";
+              echo "          \e[95mfield_link:\e[37m" . $resource['field_link'] . "\n";
+            }
+          }
+        }
+      }
+    }
+    echo "\n";
+    $campaignsWithResources++;
+  }
+}
+
+echo "\n";
+echo "\e[97mcampaigns with resources: " . $campaignsWithResources . "\n";
