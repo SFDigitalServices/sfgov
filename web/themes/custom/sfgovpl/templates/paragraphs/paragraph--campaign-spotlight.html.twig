@@ -58,8 +58,16 @@
         {% endif %}
 
         {% if has_spotlight_button %}
+          {% if campaign_theme_label in ['black', 'green', 'purple', 'red',] %}
+            {% set button_inverse = true %}
+          {% endif %}
+
           <div class="mb-20">
-            {{ content.field_spotlight_button }}
+            {% include "@sfgov-design-system/button/link.twig" with {
+                "href": button_url,
+                "text": button_content,
+                "classes": button_inverse ? ['btn-inverse'] : []
+            } %}
           </div>
         {% endif %}
       </div>
