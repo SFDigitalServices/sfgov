@@ -24,7 +24,7 @@ class SfgovDrushCommands extends DrushCommands {
     // or "complete" (5).
     $ids = \Drupal::entityQuery('tmgmt_job')
       ->condition('state', [4, 5], 'IN')
-      ->condition('translator', 'xtm')
+      ->condition('translator', ['xtm', 'xtm_test'], 'IN')
       ->execute();
     if (!empty($ids)) {
       $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
