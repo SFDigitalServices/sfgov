@@ -1,3 +1,5 @@
+# note: changes to pantheon.yml will not be processed when first creating the branch for multidevs
+# more: https://pantheon.io/docs/pantheon-yml#deploying-configuration-changes-to-multidev
 api_version: 1
 web_docroot: true
 php_version: 7.4
@@ -57,7 +59,7 @@ workflows:
         description: 'deploy workflow'
         script: private/scripts/test/test_hook.php
 
-  clear_cache: # execute hooks on cache clear
+  clear_cache:
     after:
       - type: webphp
         description: 'Cache cleared'
