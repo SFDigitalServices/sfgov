@@ -102,7 +102,7 @@ function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
   $node = $variables['node'];
 
   // Date time.
-  $date_settings = ['timezone' => drupal_get_user_timezone()];
+  $date_settings = ['timezone' => date_default_timezone_get()];
   $meeting_time = [$node->field_start_date->date->format('g:ia', $date_settings)];
   if ($node->field_end_date->value) {
     $meeting_time[] = $node->field_end_date->date->format('g:ia', $date_settings);
@@ -1015,13 +1015,14 @@ function sfgovpl_add_regions_to_node(array $regions, &$variables) {
   // Validate allowed regions with available regions
   $regions = array_intersect(array_keys($available_regions), $regions);
   foreach ($regions as $key => $region) {
-    $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme, 'region' => $region));
+    $blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(array('theme' => $theme, 'region' => $region));
     uasort($blocks, 'Drupal\block\Entity\Block::sort');
     // Capture viewable blocks and their settings to $build
     $build = array();
     foreach ($blocks as $key => $block) {
       if ($block->access('view')) {
-        $build[$key] = entity_view($block, 'block');
+        $builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+        $build[$key] = $builder->view($block);
       }
     }
     // Add build to region
