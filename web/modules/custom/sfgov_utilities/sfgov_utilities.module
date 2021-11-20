@@ -302,7 +302,7 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
         foreach ($alias_objects as $alias_object) {
           if ($alias_object->getPath() == $entity_path) {
             $retrieved_alias = $alias_object->getAlias();
-            $news_alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $entity->id());
+            $news_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id());
             $position = strrpos($news_alias, '/');
             $existing_alias = $position === FALSE ? $news_alias : substr($news_alias, $position + 1);
             if ($retrieved_alias != $news_alias) {
