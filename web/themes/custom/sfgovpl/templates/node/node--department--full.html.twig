@@ -170,7 +170,11 @@
       <div class="sfgov-dept-about-content">
         <div class="sfgov-dept-about-content-left sfgov-dept-about-content-section">
           <div class="sfgov-dept-about-description">
-            {{ content.field_about_or_description | raw }}
+            {% if content.field_about_or_description|render|striptags %}
+              {{ content.field_about_or_description | raw }}
+            {% elseif content.field_about_description|render|striptags %}
+              {{ content.field_about_description | raw }}
+            {% endif %}
 
             {% if about_page_link %}
               <p class="about-page-link">

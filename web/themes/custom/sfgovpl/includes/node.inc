@@ -327,25 +327,6 @@ function dept_page_fields($node) {
     'services' => array(),
   );
   if($node) {
-    // about fields
-    if($node->hasField('field_about_or_description') && isset($node->get('field_about_or_description')->getValue()[0]['value'])) {
-      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
-      if($aboutDescription) {
-        $theFields['about']['description'] = $aboutDescription;
-      }
-    } elseif($node->hasField('field_about_description')) {
-      $aboutDescription = $node->get('field_about_description')->getValue() ? $node->get('field_about_description')->getValue()[0]['value'] : null;
-      if($aboutDescription) {
-        $theFields['about']['description'] = $aboutDescription;
-      }
-    }
-    // Override about_description field if new about_or_description field is set
-    if($node->hasField('field_about_or_description')) {
-      $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
-      if($aboutDescription) {
-        $theFields['about']['description'] = $aboutDescription;
-      }
-    }
     if($node->hasField('field_divisions')) {
       $aboutDivisions = $node->get('field_divisions')->getValue();
       if($aboutDivisions) {
