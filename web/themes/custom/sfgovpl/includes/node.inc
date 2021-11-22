@@ -327,70 +327,6 @@ function dept_page_fields($node) {
     'services' => array(),
   );
   if($node) {
-    if($node->hasField('field_address')) {
-      $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
-      if($addressId) {
-        $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
-        if($addressEntity) {
-          $addressValues = $addressEntity->get('field_address')->getValue()[0];
-          $theFields['address']['line1'] = $addressValues['address_line1'];
-          $theFields['address']['line2'] = $addressValues['address_line2'];
-          $theFields['address']['country_code'] = $addressValues['country_code'];
-          $theFields['address']['city'] = $addressValues['locality'];
-          $theFields['address']['state'] = $addressValues['administrative_area'];
-          $theFields['address']['zip'] = $addressValues['postal_code'];
-          $theFields['address']['organization'] = $addressValues['organization'];
-          $hours = $addressEntity->get('field_operating_hours')->getValue();
-          usort($hours, function($item1, $item2) {
-            return $item1['day'] <=> $item2['day'];
-          });
-          foreach($hours as $hour) {
-            $theFields['address']['hours'][] = array(
-              'day' => jddayofweek($hour['day'], 2),
-              'start' => date("g:i a", strtotime($hour['starthours'])),
-              'end' => date("g:i a", strtotime($hour['endhours'])),
-              'comment' => $hour['comment'],
-            );
-          }
-        }
-      }
-    }
-    if($node->hasField('field_phone_numbers')) {
-      $phoneNumbers = $node->get('field_phone_numbers');
-      if($phoneNumbers->getValue()) {
-        foreach($phoneNumbers->getValue() as $phoneNumber) {
-          $phoneNumberId = $phoneNumber['target_id'];
-          if ($phoneParagraph = Paragraph::load($phoneNumberId)) {
-            $number = $phoneParagraph->get('field_tel')->getValue()[0]['value'];
-            $number = preg_replace("/[^\d]/","",$number); // remove non-digit characters
-            $length = strlen($number);
-            if($length == 10) {
-              $number = preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $number);
-            }
-            $phoneDetails = $phoneParagraph->get('field_text')->getValue() ? $phoneParagraph->get('field_text')->getValue()[0]['value'] : null;
-            $phoneOwner = $phoneParagraph->get('field_owner')->getValue() ? $phoneParagraph->get('field_owner')->getValue()[0]['value'] : null;
-            $theFields['phone_numbers'][] = array(
-              'number' => $number,
-              'details' => $phoneDetails,
-              'owner' => $phoneOwner,
-            );
-          }
-        }
-      }
-    }
-    if($node->hasField('field_email')) {
-      $emailField = $node->get('field_email');
-      if($emailField->getValue()) {
-        $emailId = $emailField->getValue()[0]['target_id'];
-        if ($emailParagraph = Paragraph::load($emailId)) {
-          $email = $emailParagraph->get('field_email')->getValue() ? $emailParagraph->get('field_email')->getValue()[0]['value'] : null;
-          $emailTitle = $emailParagraph->get('field_title')->getValue() ? $emailParagraph->get('field_title')->getValue()[0]['value'] : null;
-          $theFields['email']['email_address'] = $email ? $email : null;
-          $theFields['email']['email_title'] = $emailTitle ? $emailTitle : null;
-        }
-      }
-    }
-
     // about fields
     if($node->hasField('field_about_or_description') && isset($node->get('field_about_or_description')->getValue()[0]['value'])) {
       $aboutDescription = $node->get('field_about_or_description')->getValue() ? $node->get('field_about_or_description')->getValue()[0]['value'] : null;
@@ -439,55 +375,7 @@ function dept_page_fields($node) {
         }
       }
     }
-    if($node->hasField('field_image')) {
-      $aboutLogo = $node->get('field_image');
-      if($aboutLogo && $aboutLogo->getValue()) {
-        $logoUrl = file_create_url($aboutLogo->entity->field_media_image->entity->getFileUri());
-        $theFields['about']['logo_url'] = $logoUrl;
-      }
-    }
-    if($node->hasField('field_call_to_action')) {
-      $aboutCta = $node->get('field_call_to_action');
-      if($aboutCta && $aboutCta->getValue()) {
-        $aboutCtaId = $aboutCta->getValue()[0]['target_id'];
-        if ($aboutCtaParagraph = Paragraph::load($aboutCtaId)) {
-          $ctaTitle = !empty($aboutCtaParagraph->get('field_title')->getValue()) ?
-                        $aboutCtaParagraph->get('field_title')->getValue()[0]['value'] : '';
-          $ctaButtonId = $aboutCtaParagraph->get('field_button')->getValue() ? $aboutCtaParagraph->get('field_button')->getValue()[0]['target_id'] : null;
-          if($ctaButtonId && ($ctaButtonParagraph = Paragraph::load($ctaButtonId))) {
-            $ctaButtonText = $ctaButtonParagraph->get('field_link')->getValue()[0]['title'];
-            $ctaButtonUrl = $ctaButtonParagraph->get('field_link')->getValue()[0]['uri'];
-            $theFields['about']['cta']['title'] = $ctaTitle;
-            $theFields['about']['cta']['button_text'] = $ctaButtonText;
-            $theFields['about']['cta']['url'] = $ctaButtonUrl;
-          }
-        }
-      }
-    }
-    if($node->hasField('field_social_media')) {
-      $aboutSocial = $node->get('field_social_media');
-      if($aboutSocial && $aboutSocial->getValue()) {
-        $socialMediaLabel = $aboutSocial->getFieldDefinition()->getLabel();
-        $theFields['about']['social']['title'] = $socialMediaLabel;
-        $aboutSocialId = $aboutSocial->getValue()[0]['target_id'];
-        if ($aboutSocialParagraph = Paragraph::load($aboutSocialId)) {
-          $socialFields = $aboutSocialParagraph->getFields();
-          foreach($socialFields as $socialField) {
-            if($socialField->getFieldDefinition()->getType() == 'link') {
-              $socialFieldKey = $socialField->getFieldDefinition()->getName();
-              $socialLabel = $socialField->getFieldDefinition()->getLabel();
-              $socialUrl = $aboutSocialParagraph->get($socialFieldKey)->getValue() ? $aboutSocialParagraph->get($socialFieldKey)->getValue()[0]['uri'] : null;
-              if($socialUrl) {
-                $theFields['about']['social']['values'][] = array(
-                  'label' => $socialLabel,
-                  'url' => $socialUrl,
-                );
-              }
-            }
-          }
-        }
-      }
-    }
+    
     if($node->hasField('field_req_public_records')) {
       $reqPublicRecords = $node->get('field_req_public_records');
       if($reqPublicRecords && !empty($reqPublicRecords->getValue())) {
