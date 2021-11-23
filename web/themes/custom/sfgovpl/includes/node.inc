@@ -32,7 +32,6 @@ function sfgovpl_preprocess_node(&$variables) {
     if ($view_mode == 'full') {
       switch ($content_type) {
         case 'department':
-          $variables['dept_fields'] = dept_page_fields($node);
           sfgovpl_add_regions_to_node([
             'department_news',
             'department_events',
@@ -319,47 +318,6 @@ function topic_page_services($node) {
     }
   }
   return null;
-}
-
-function dept_page_fields($node) {
-  $theFields = array(
-    'featured_items' => array(),
-    'services' => array(),
-  );
-  if($node) {
-    
-    if($node->hasField('field_req_public_records')) {
-      $reqPublicRecords = $node->get('field_req_public_records');
-      if($reqPublicRecords && !empty($reqPublicRecords->getValue())) {
-        $reqPublicRecordsMethod = strtolower($reqPublicRecords->getValue()[0]['value']);
-        $reqPublicRecordsValue = null;
-        switch($reqPublicRecordsMethod) {
-          case 'link':
-            if(!empty($node->get('field_req_public_records_link')->getValue())) {
-              $reqPublicRecordsValue = $node->get('field_req_public_records_link')->getValue()[0]['uri'];
-            }
-            break;
-          case 'email':
-            if(!empty($node->get('field_req_public_records_email')->getValue())) {
-              $reqPublicRecordsValue = $node->get('field_req_public_records_email')->getValue()[0]['value'];
-            }
-            break;
-          case 'phone':
-            if(!empty($node->get('field_req_public_records_phone')->getValue())) {
-              $reqPublicRecordsValue = $node->get('field_req_public_records_phone')->getValue()[0]['value'];
-            }
-            break;
-          default:
-            $reqPublicRecordsValue = null;
-        }
-        if($reqPublicRecordsMethod && $reqPublicRecordsValue) {
-          $theFields['public_records']['method'] = $reqPublicRecordsMethod;
-          $theFields['public_records']['value'] = $reqPublicRecordsValue;
-        }
-      }
-    }
-  }
-  return $theFields;
 }
 
 function public_body_page_fields($node) {

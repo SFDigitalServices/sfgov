@@ -263,18 +263,23 @@
   </div>
 {% endif %}
 
-{% if dept_fields.public_records %}
+{% set publicRecordsMethod = content.field_req_public_records|render|striptags|trim|lower %}
+{% set publicRecordsLink = content.field_req_public_records_link|render|striptags|trim %}
+{% set publicRecordsEmail = content.field_req_public_records_email|render|striptags|trim %}
+{% set publicRecordsPhone = content.field_req_public_records_phone|render|striptags|trim %}
+
+{% if publicRecordsLink is not empty or publicRecordsEmail is not empty or publicRecordsPhone is not empty %}
   <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
     <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
       <div class="sfgov-dept-public-records-content">
         <p class="title">{{ 'Request public records'|t }}</p>
         <p>
-        {% if dept_fields.public_records.method == "phone" %}
-          <a href="tel:{{ dept_fields.public_records.value }}">{% trans %}Call {{ dept_fields.public_records.value }}</a> to submit a request.{% endtrans %}
-        {% elseif dept_fields.public_records.method == "email" %}
-          <a href="mailto:{{ dept_fields.public_records.value }}">{% trans %}Email {{ dept_fields.public_records.value }}</a> to submit a request.{% endtrans %}
-        {% elseif dept_fields.public_records.method == "link" %}
-          {% trans %}<a href="{{ dept_fields.public_records.value }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}
+        {% if publicRecordsMethod == "phone" %}
+          <a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}
+        {% elseif publicRecordsMethod == "email" %}
+          <a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsMethod }}</a> to submit a request.{% endtrans %}
+        {% elseif publicRecordsMethod == "link" %}
+          {% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}
         {% endif %}
         </p>
       </div>
