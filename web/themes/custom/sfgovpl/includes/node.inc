@@ -327,35 +327,6 @@ function dept_page_fields($node) {
     'services' => array(),
   );
   if($node) {
-    if($node->hasField('field_divisions')) {
-      $aboutDivisions = $node->get('field_divisions')->getValue();
-      if($aboutDivisions) {
-        foreach($aboutDivisions as $aboutDivision) {
-          if ($divisionDept = Node::load($aboutDivision['target_id'])) {
-            $theFields['about']['divisions'][] = array(
-              'dept_name' => $divisionDept->get('title')->getValue()[0]['value'],
-              'dept_url' => $divisionDept->toUrl('canonical', ['absolute'=>true])->toString(),
-            );
-          }
-        }
-      }
-    }
-    if($node->hasField('field_public_bodies')) {
-      $aboutPublicBodies = $node->get('field_public_bodies')->getValue();
-      if($aboutPublicBodies) {
-        foreach($aboutPublicBodies as $publicBody) {
-          $publicBodyId = $publicBody['target_id'];
-          if ($publicBodyParagraph = Paragraph::load($publicBodyId)) {
-            $publicBodyLink = $publicBodyParagraph->get('field_link');
-            $publicBodyValue = $publicBodyLink->getValue();
-            $theFields['about']['public_bodies'][] = array(
-              'name' => $publicBodyValue[0]['title'],
-              'url' => $publicBodyValue[0]['uri'],
-            );
-          }
-        }
-      }
-    }
     
     if($node->hasField('field_req_public_records')) {
       $reqPublicRecords = $node->get('field_req_public_records');

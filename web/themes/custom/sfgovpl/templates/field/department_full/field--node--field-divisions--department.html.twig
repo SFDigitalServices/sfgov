@@ -1,0 +1,11 @@
+<h3>{{ label }}</h3>
+<ul class="flex flex-wrap p-0 list-none">
+
+{% set itemCount = items|length %}
+{% set widthClass = itemCount >= 4 ? 'w-1/2' : 'w-full' %}
+
+{% for item in items %}
+  <li class="mb-20 {{ widthClass }}">{{ item.content }}</li>
+{% endfor %}
+
+</ul>
