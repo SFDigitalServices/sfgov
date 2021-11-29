@@ -445,19 +445,15 @@ function sfgov_utilities_cron() {
   // Find all tmgmt jobs from the xtm provider that are either "aborted" (4)
   // or "complete" (5).
   $ids = \Drupal::entityQuery('tmgmt_job')
-    ->condition('state', [4, 5], 'IN')
     ->condition('translator', ['xtm', 'xtm_test'], 'IN')
     ->execute();
   if (!empty($ids)) {
     $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
     $entities = $storage->loadMultiple($ids);
     foreach ($entities as $entity) {
-      // Double check that the entity is complete or aborted, and save.
-      if ($entity->isFinished() || $entity->isAborted()) {
-        // Give the entity a valid translator.
-        $entity->translator->target_id = 'contentapi';
-        $entity->save();
-      }
+      // Give the entity a valid translator.
+      $entity->translator->target_id = 'contentapi';
+      $entity->save();
     }
   }
 }
