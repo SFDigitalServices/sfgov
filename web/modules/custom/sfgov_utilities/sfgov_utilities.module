@@ -442,8 +442,7 @@ function sfgov_utilities_cron() {
 
   \Drupal::service('cache.render')->invalidateAll();
 
-  // Find all tmgmt jobs from the xtm provider that are either "aborted" (4)
-  // or "complete" (5).
+  // Find all tmgmt jobs from the xtm provider and save them with a valid provider.
   $ids = \Drupal::entityQuery('tmgmt_job')
     ->condition('translator', ['xtm', 'xtm_test'], 'IN')
     ->execute();
