@@ -9,19 +9,19 @@ elif [[ "$AMPLITUDE_AUTH" =~ (^:|:$) ]]; then
 fi
 
 # our base timestamp is up to the minute so that we can tweak the start and end
-timestamp=$(date +"%Y-%m-%d %H:%M")
+timestamp="$(date +'%Y-%m-%d %H:%M')"
 # releases without an end "stack" on top of one another in the Amplitude UI, so
 # we "end" our releases a second after they start
 release_start="$timestamp:00"
 release_end="$timestamp:01"
 # our version is just the timestamp rounded to the hour (YYYYMMDDHH), since it's
 # (currently) impossible to release more frequently
-version=$(date +"%Y%m%d%H")
-title=$(date)
+version="$(date +'%Y%m%d%H')"
+title="$timestamp (automated release)"
 # commit message
-description="Automated release from CI: $(git log -1)"
+description="$(git log -1)"
 # commit author
-created_by=$(git log -1 --format='%ae')
+created_by="$(git log -1 --format='%ae')"
 
 # API docs: https://developers.amplitude.com/docs/releases-api
 curl -u "$AMPLITUDE_AUTH" -X POST \
