@@ -19,7 +19,7 @@ release_end="$timestamp:01"
 version=$(date +"%Y%m%d%H")
 title=$(date)
 # commit message
-description="Automated release from CI. Git commit:\n\n$(git log -1)"
+description="Automated release from CI: $(git log -1)"
 # commit author
 created_by=$(git log -1 --format='%ae')
 
