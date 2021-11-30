@@ -316,7 +316,7 @@ function sfgov_locations_entity_presave($entity) {
   // change on entity save.
   if ($entity instanceof EckEntity) {
     if ($entity->language()->getId() != 'en') {
-      $country_code = $entity->getTranslation('en')->field_address->getValue()[0]['country_code'];
+      $country_code = $entity->original->field_address->getValue()[0]['country_code'];
       $address = $entity->field_address->getValue()[0];
       $address['country_code'] = $country_code;
       $entity->set('field_address', $address);
