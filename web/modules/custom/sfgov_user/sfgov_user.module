@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * The module file for SF Gov User module.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
+function sfgov_user_theme() {
+  return [
+    'sfgov_user_start_page' => [
+      'template' => 'sfgov-user-start-page',
+      'variables' => [],
+    ],
+    'sfgov_user_field_quick_links' => [
+      'template' => 'sfgov-user-field-quick-links',
+      'variables' => [
+        'user_name' => '',
+        'is_own_account' => FALSE,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_user_preprocess_sfgov_user_field_quick_links(&$variables) {
+  $account = \Drupal::routeMatch()->getParameter('user');
+  $current = \Drupal::currentUser();
+  if ($account instanceof \Drupal\user\UserInterface) {
+    $variables['user_name'] = $account->getAccountName();
+    $variables['is_own_account'] = $account->id() == $current->id();
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function sfgov_user_entity_extra_field_info() {
+  $extra = [];
+
+  $extra['user']['user']['display']['field_user_info'] = [
+    'label' => t('User info'),
+    'description' => t('User info pseudo field.'),
+    'weight' => 0,
+    'visible' => TRUE,
+  ];
+  $extra['user']['user']['display']['field_quick_links'] = [
+    'label' => t('Quick links'),
+    'description' => t('Quick links pseudo field.'),
+    'weight' => 10,
+    'visible' => TRUE,
+  ];
+  $extra['user']['user']['display']['field_log_out'] = [
+    'label' => t('Log out button'),
+    'description' => t('Log out button pseudo field.'),
+    'weight' => 10,
+    'visible' => TRUE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function sfgov_user_user_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $account = \Drupal::routeMatch()->getParameter('user');
+  $current = \Drupal::currentUser();
+  if ($account instanceof \Drupal\user\UserInterface) {
+    $is_own_account = $account->id() == $current->id();
+
+    if ($is_own_account && $display->getComponent('field_user_info')) {
+      $user_name = $account->getAccountName();
+      $build['field_user_info'] = [
+        '#markup' => '<h2>' . t('You are logged in as @user', ['@user' => $user_name]) . '</h2>',
+        '#prefix' => '<div class="sfgov-user-info">',
+        '#suffix' => '</div>',
+      ];
+    }
+    if ($is_own_account && $display->getComponent('field_log_out')) {
+      $build['field_log_out'] = [
+        '#markup' => '<a class="button button--primary" href="/user/logout">' . t('Log out') . '</a>',
+        '#prefix' => '<div class="sfgov-log-out">',
+        '#suffix' => '</div>',
+      ];
+    }
+  }
+  if ($display->getComponent('field_quick_links')) {
+    $build['field_quick_links'] = [
+      '#theme' => 'sfgov_user_field_quick_links',
+    ];
+  }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function sfgov_user_local_tasks_alter(&$local_tasks) {
+  // Hide tabs.
+  unset($local_tasks['user.login']);
+  unset($local_tasks['user.pass']);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'user_pass') {
+    $form['actions']['submit']['#submit'][] = 'sfgov_user_password_form_redirect';
+  }
+}
+
+/**
+ * Custom submit handler for user password reset form.
+ */
+function sfgov_user_password_form_redirect(&$form, FormStateInterface $form_state) {
+  $messenger = \Drupal::messenger();
+  $messenger->addStatus(t('Further instructions have been sent to your email address.'));
+  // Change the redirect destination set in \Drupal\user\Form\UserPasswordForm::submitForm.
+  $url = Url::fromUserInput('/user/sfgov-login');
+  $form_state->setRedirectUrl($url);
+}
