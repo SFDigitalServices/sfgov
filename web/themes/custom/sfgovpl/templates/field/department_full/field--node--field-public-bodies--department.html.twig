@@ -1,0 +1,14 @@
+<h3>{{ label }}</h3>
+<ul class="flex flex-wrap p-0 list-none">
+
+{% set itemCount = items|length %}
+{% set widthClass = itemCount >= 4 ? 'w-1/2' : 'w-full' %}
+
+{% for item in items %}
+  {% set uri = item.content['#paragraph'].get('field_link').getValue()[0].uri %}
+  {% set title = item.content['#paragraph'].get('field_link').getValue()[0].title %}
+
+  <li class="mb-20 {{ widthClass }}"><a href="{{ uri }}">{{ title  }}</a></li>
+{% endfor %}
+
+</ul>
