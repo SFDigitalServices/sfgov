@@ -178,10 +178,7 @@ workflows:
             - build_deploy_and_test
           filters:
             branches:
-              only:
-                - main
-                - develop
-                - amplitude-release
+              only: /^(main|develop|amplitude-release.*)$/
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:
