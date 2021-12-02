@@ -43,4 +43,42 @@ class SfgovDrushCommands extends DrushCommands {
     }
   }
 
+  /**
+   * Drush command that deletes completed tmgmt job items .
+   *
+   * @command SfgovDrushCommands:tmgmt_clean_completed
+   * @aliases tmgmt-clean-completed
+   */
+  public function tmgmt_clean_completed() {
+    $ids = \Drupal::entityQuery('tmgmt_job')
+      ->condition('state', '5')
+      ->execute();
+    if (!empty($ids)) {
+      $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
+      $entities = $storage->loadMultiple($ids);
+      foreach ($entities as $entity) {
+        $entity->delete();
+      }
+    }
+  }
+
+  /**
+   * Drush command that deletes aborted tmgmt job items .
+   *
+   * @command SfgovDrushCommands:tmgmt_clean_aborted
+   * @aliases tmgmt-clean-aborted
+   */
+  public function tmgmt_clean_aborted() {
+    $ids = \Drupal::entityQuery('tmgmt_job')
+      ->condition('state', '4')
+      ->execute();
+    if (!empty($ids)) {
+      $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
+      $entities = $storage->loadMultiple($ids);
+      foreach ($entities as $entity) {
+        $entity->delete();
+      }
+    }
+  }
+
 }
