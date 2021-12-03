@@ -3,6 +3,8 @@
 api_version: 1
 web_docroot: true
 php_version: 7.4
+database:
+  version: 10.4
 drush_version: 10
 workflows:
   deploy_product: # create site (dev)
@@ -59,7 +61,7 @@ workflows:
         description: 'deploy workflow'
         script: private/scripts/test/test_hook.php
 
-  clear_cache:
+  clear_cache: #
     after:
       - type: webphp
         description: 'Cache cleared'
