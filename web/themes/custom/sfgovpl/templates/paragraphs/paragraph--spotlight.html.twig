@@ -12,46 +12,52 @@
       background-repeat: no-repeat;
     ',
   }) %}
+  {% set parentContentType = paragraph.parentEntity.bundle %}
+  {% set parentFieldName = paragraph.parent_field_name.value %}
 {% endif %}
 
-<div class="sfgov-spotlight">
-  <div class="sfgov-spotlight-main">
-    {% if image %}
-      <div class="sfgov-spotlight-section sfgov-spotlight-content">
-    {% else %}
-      <div class="sfgov-spotlight-section sfgov-spotlight-content full-width">
-    {% endif %}
-    
-      {% if content.field_title|render %}
-        <h2 class="sfgov-spotlight-title">{{ content.field_title }}</h2>
+{% if parentContentType == "department" and parentFieldName == "field_spotlight2" %}
+  new spotlight stuff
+{% else %}
+  <div class="sfgov-spotlight">
+    <div class="sfgov-spotlight-main">
+      {% if image %}
+        <div class="sfgov-spotlight-section sfgov-spotlight-content">
+      {% else %}
+        <div class="sfgov-spotlight-section sfgov-spotlight-content full-width">
       {% endif %}
+      
+        {% if content.field_title|render %}
+          <h2 class="sfgov-spotlight-title">{{ content.field_title }}</h2>
+        {% endif %}
 
-      {% if content.field_description|render %}
-        <div class="mb-20 lg:mb-40">
-          {{ content.field_description }}
-        </div>
-      {% endif %}
+        {% if content.field_description|render %}
+          <div class="mb-20 lg:mb-40">
+            {{ content.field_description }}
+          </div>
+        {% endif %}
 
-      {% if content.field_spotlight_button[0] %}
-        <div class="sfgov-spotlight-button">
-          {{ content.field_spotlight_button }}
+        {% if content.field_spotlight_button[0] %}
+          <div class="sfgov-spotlight-button">
+            {{ content.field_spotlight_button }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if image %}
+        <div class="sfgov-spotlight-section sfgov-spotlight-image"{{ img_attributes }}>
+          {{ content.field_spotlight_img }}
         </div>
       {% endif %}
     </div>
 
     {% if image %}
-      <div class="sfgov-spotlight-section sfgov-spotlight-image"{{ img_attributes }}>
-        {{ content.field_spotlight_img }}
+      <div class="sfgov-spotlight-caption">
+        {% include '@theme/media-caption.twig' with {
+          entity: image,
+          align: 'right',
+        } only %}
       </div>
     {% endif %}
   </div>
-
-  {% if image %}
-    <div class="sfgov-spotlight-caption">
-      {% include '@theme/media-caption.twig' with {
-        entity: image,
-        align: 'right',
-      } only %}
-    </div>
-  {% endif %}
-</div>
+{% endif %}
