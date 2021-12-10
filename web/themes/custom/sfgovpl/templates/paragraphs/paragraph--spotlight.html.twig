@@ -17,7 +17,23 @@
 {% endif %}
 
 {% if parentContentType == "department" and parentFieldName == "field_spotlight2" %}
-  new spotlight stuff
+  <div class="flex p-40">
+    <div class="mr-20">
+      {{ content.field_spotlight_img }}
+    </div>
+    <div>
+      <div class="text-display-lg">{{ content.field_title }}</div>
+      <div class="text-big-desc">{{ content.field_description }}</div>
+        {# {% set field_link = paragraph.field_spotlight_button[0].entity.field_link.0 %}
+        {% set text = field_link['#title'] %}
+        {% set href = field_link['#url'].toString() %}
+        {% include "@sfgov-design-system/button/link.twig" with {
+            "href": href,
+            "text": text
+        } %} #}
+        {{ content.field_spotlight_button }}
+    </div>
+  </div>
 {% else %}
   <div class="sfgov-spotlight">
     <div class="sfgov-spotlight-main">
