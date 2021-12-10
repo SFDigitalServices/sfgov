@@ -19,14 +19,11 @@ else
   terminus -n build:env:push "$TERMINUS_SITE.$TERMINUS_ENV"
 fi
 
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cache-rebuild
+# drush deploy runs the following
+# drush updatedb --no-cache-clear
+# drush cache:rebuild
+# drush config:import
+# drush cache:rebuild
+# drush deploy:hook
 
-# Run updatedb to ensure that the cloned database is updated for the new code.
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y
-
-# If exported configuration is available, then import it.
-if [ -f "config/system.site.yml" ] ; then
-  terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- config-import --yes
-fi
-
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- deploy:hook --yes
+terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- deploy --yes
