@@ -19,7 +19,7 @@ else
   terminus -n build:env:push "$TERMINUS_SITE.$TERMINUS_ENV"
 fi
 
-terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cache-rebuild
+# terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" cache-rebuild
 
 # Run updatedb to ensure that the cloned database is updated for the new code.
 terminus -n drush "$TERMINUS_SITE.$TERMINUS_ENV" -- updatedb -y
