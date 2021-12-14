@@ -79,4 +79,27 @@ const score = automatedReadability({
 
 console.log('score: ' + score)
 
-console.log(sentencesData)
+// console.log(sentencesData)
+
+const rootNode = document.querySelector('main #block-sfgovpl-content')
+const treeWalker = document.createTreeWalker(rootNode, NodeFilter.SHOW_ELEMENT)
+const nodeList = []
+let currentNode = treeWalker.currentNode
+
+while(currentNode) {
+  nodeList.push(currentNode)
+  currentNode = treeWalker.nextNode()
+}
+
+console.log(nodeList)
+
+for(let i=0; i<nodeList.length; i++) {
+  let node = nodeList[i]
+  node.setAttribute('data-index', i)
+  for(let j=0; j<node.childNodes.length; j++) {
+    if(node.childNodes[j].nodeType == 3) {
+      console.log(node.childNodes[j].textContent)
+    }
+  }
+  // console.log(node.innerText)
+}
