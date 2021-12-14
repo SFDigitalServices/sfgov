@@ -9,14 +9,22 @@ const hemscore = automatedReadability({
 })
 console.log(hemscore)
 
+var e = 5066
+var t = 1063
+var n = 101
+var r = Math.round(4.71 * (e / t) + 0.5 * (t / n) - 21.43);
+console.log(r)
+
 const text = document.querySelector('main #block-sfgovpl-content').innerText
+console.log(text)
 
 // get sentences
 const sentences = text.split(/\.|\?|\!|\n/)
-let sentencesData = [];
+let sentencesData = []
 let sentenceCount = 0
 let totalWordCount = 0
 let totalCharCount = 0
+let totalLetterCount = 0
 
 for (let i=0; i<sentences.length; i++) {
   let sentence = sentences[i].trim()
@@ -35,19 +43,22 @@ for (let i=0; i<sentences.length; i++) {
   if(sentence.length > 0) {
     let wordCount = sentence.split(' ').length
     let charCount = sentence.length
+    let letterCount = sentence.replace(/\s|,|/g, '').length
     
     totalWordCount += wordCount
     totalCharCount += charCount
+    totalLetterCount += letterCount
     sentenceCount++
 
     let obj = {
       sentence: sentence,
       wordCount: wordCount,
       charCount: charCount,
+      letterCount: letterCount,
       score: automatedReadability({
         sentence: 1,
         word: wordCount,
-        character: charCount
+        character: letterCount
       })
     }
 
@@ -58,11 +69,12 @@ for (let i=0; i<sentences.length; i++) {
 console.log('sentences: ' + sentenceCount)
 console.log('words: ' + totalWordCount)
 console.log('characters: ' + totalCharCount)
+console.log('letters: ' + totalLetterCount)
 
 const score = automatedReadability({
   sentence: sentenceCount,
   word: totalWordCount,
-  character: totalCharCount
+  character: totalLetterCount
 })
 
 console.log('score: ' + score)
