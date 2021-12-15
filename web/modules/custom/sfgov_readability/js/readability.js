@@ -72,7 +72,7 @@ console.log(pageData)
 const gradeElem = document.createElement('div')
 gradeElem.setAttribute('id', '#gradeStats')
 gradeElem.style.boxShadow = '-1px 1px 5px #666'
-gradeElem.classList.add('fixed', 'top-1/3', 'right-0', 'bg-white', 'p-20', 'rounded-l')
+gradeElem.classList.add('fixed', 'top-1/4', 'right-0', 'bg-white', 'p-20', 'rounded-l')
 gradeElem.innerHTML = '' +
   // '<a class="block no-underline bg-white absolute -top-28 -left-28 text-title-xl" style="border-radius: 35px; padding: 8px 19px; box-shadow: 1px 1px 3px #666" href="#">></a>' + 
   '<p class="p-0 mt-0 mb-20 font-medium text-big-desc">Readability</p>' + 
