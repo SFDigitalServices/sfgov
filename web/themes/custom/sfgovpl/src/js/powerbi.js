@@ -1,62 +1,61 @@
+"use strict";
+
 (function ($, Drupal) {
   Drupal.behaviors.powerBi = {
-    attach: function (context, settings) {
+    attach: function attach(context, settings) {
       // Cache.
-      const $charts = $('[data-powerbi]', context);
+      var $charts = $('[data-powerbi]', context); // Handle window resize.
 
-      // Handle window resize.
       toggleChart();
       $(window).on("resize", function () {
         toggleChart();
-      })
+      });
 
       function toggleChart() {
-        const show_device = $(window).outerWidth() > 767 ? "desktop" : "mobile";
-
+        var show_device = $(window).outerWidth() > 767 ? "desktop" : "mobile";
         $charts.each(function () {
-          const $chart = $(this);
-          const $iframe = $chart.find('> iframe');
-          const device = $chart.data().device
-          const src = $chart.data().src
+          var $chart = $(this);
+          var $iframe = $chart.find('> .iframe-container');
+          var device = $chart.data().device;
+          var src = $chart.data().src;
+          var iframecode = '';
+          var title = $iframe.find('> .powerbi-title').attr('title');
 
-          // Disable iframe src changes to troubleshoot browser history duplicates
           if (device === show_device) {
             if (!$iframe.attr('src')) {
-              //$iframe.attr('src', src);
+              iframecode = '<iframe tabindex="0" loading="lazy" title="' + title + '" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" src="' + src + '"></iframe>';
+              $iframe.append(iframecode);
             }
 
             $chart.show();
-          }
-          else {
-            //$iframe.attr('src', '');
+          } else {
+            iframecode = '<iframe tabindex="0" loading="lazy" title="' + title + '" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" src=""></iframe>';
+            $iframe.append(iframecode);
             $chart.hide();
           }
-        })
-      }
-
-      // We cannot bind focus directly to the iframe.
+        });
+      } // We cannot bind focus directly to the iframe.
       // Unless we do polling (which is not efficient).
       // See https://stackoverflow.com/questions/5456239/detecting-when-an-iframe-gets-or-loses-focus
       // Instead we bind to the wrapper container and then shift focus to the iframe.
-      $charts.on('focus', function () {
-        const $this = $(this);
-        const $iframe = $this.find('> iframe')
-        const $kbd = $this.prev('.sfgov-powerbi-embed__kbd')
 
-        // Show all keyboard instructions.
+
+      $charts.on('focus', function () {
+        var $this = $(this);
+        var $iframe = $this.find('> iframe');
+        var $kbd = $this.prev('.sfgov-powerbi-embed__kbd'); // Show all keyboard instructions.
+
         if ($kbd.hasClass('hidden')) {
-          $('.sfgov-powerbi-embed__kbd').removeClass('hidden')
+          $('.sfgov-powerbi-embed__kbd').removeClass('hidden');
           $kbd.focus();
         }
 
-        $iframe.addClass('focus').focus()
-      })
+        $iframe.addClass('focus').focus();
+      }); // Handles tabbing away from iframe.
 
-      // Handles tabbing away from iframe.
       $(window).on('focus', function () {
-        $('iframe.focus').removeClass('focus')
-      })
-
+        $('iframe.focus').removeClass('focus');
+      });
     }
   };
 })(jQuery, Drupal);
