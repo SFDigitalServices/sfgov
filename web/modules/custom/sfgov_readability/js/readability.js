@@ -69,20 +69,33 @@ const pageData = {
 
 console.log(pageData)
 
+// TODO:
+// grade 6 and above, show link to hemingway.  do not show otherwise
+// click to copy text to paste when linking to hemingway
+
 const gradeElem = document.createElement('div')
+const gradeClass = 'text-green-3'
+const hemingwayDisplayClass = 'hidden'
+
+if (pageData.score > 7) {
+  gradeClass = 'text-red-4'
+  hemingwayDisplayClass = ''
+}
+
 gradeElem.setAttribute('id', '#gradeStats')
 gradeElem.style.boxShadow = '-1px 1px 5px #666'
 gradeElem.classList.add('fixed', 'top-1/4', 'right-0', 'bg-white', 'p-20', 'rounded-l')
 gradeElem.innerHTML = '' +
   // '<a class="block no-underline bg-white absolute -top-28 -left-28 text-title-xl" style="border-radius: 35px; padding: 8px 19px; box-shadow: 1px 1px 3px #666" href="#">></a>' + 
   '<p class="p-0 mt-0 mb-20 font-medium text-big-desc">Readability</p>' + 
-  '<p class="p-0 mt-0 mb-20 font-medium text-title-md">Grade ' + getARIGradeLevel(pageData.score) + '</p>' +
+  '<p class="p-0 mt-0 mb-20 font-medium text-title-md ' + gradeClass + '">Grade ' + getARIGradeLevel(pageData.score) + '</p>' +
   '<ul class="p-0 m-0 list-none">' + 
-  '  <li class="mb-8"><a href="https://en.wikipedia.org/wiki/Automated_readability_index">ARI</a>: <strong class="font-medium">' + pageData.score + '</strong></li>' +
-  '  <li class="mb-8">letters: <strong class="font-medium">' + pageData.letters + '</strong></li>' +
-  '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.chars + '</strong></li>' +
+  '  <li class="mb-8 ' + hemingwayDisplayClass +'"><a href="https://hemingwayapp.com/">Paste your text into the Hemingway app</a></li>' +
+  '  <li class="mb-8">sentences: <strong class="font-medium">' + pageData.sentences.length + '</strong></li>' +  
   '  <li class="mb-8">words: <strong class="font-medium">' + pageData.words + '</strong></li>' +
-  '  <li class="mb-8">sentences: <strong class="font-medium">' + pageData.sentences.length + '</strong></li>' +
+  '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.letters + '</strong></li>' +
+  // '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.chars + '</strong></li>' +
+  // '  <li class="mb-8"><a href="https://en.wikipedia.org/wiki/Automated_readability_index">ARI</a>: <strong class="font-medium">' + pageData.score + '</strong></li>' +
   '</ul>'
 document.body.append(gradeElem)
 
