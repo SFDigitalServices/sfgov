@@ -16,7 +16,7 @@ var r = Math.round(4.71 * (e / t) + 0.5 * (t / n) - 21.43);
 console.log(r)
 
 const text = document.querySelector('main #block-sfgovpl-content').innerText
-console.log(text)
+// console.log(text)
 
 // get sentences
 const sentences = text.split(/\.|\?|\!|\n/)
@@ -82,7 +82,26 @@ console.log('score: ' + score)
 // console.log(sentencesData)
 
 const rootNode = document.querySelector('main #block-sfgovpl-content')
-const treeWalker = document.createTreeWalker(rootNode, NodeFilter.SHOW_ELEMENT)
+const links = rootNode.querySelectorAll('a')
+for(let i = 0; i<links.length; i++) {
+  let linkText = links[i].innerText
+  links[i].after(linkText)
+  links[i].remove()
+}
+console.log(rootNode.querySelectorAll('a').length);
+const treeWalker = document.createTreeWalker(
+  rootNode,
+  NodeFilter.SHOW_ALL,
+  {
+    acceptNode: (node) => {
+      if (node.nodeType !== 8) { // no comment nodes
+        let isEmptyTextNode = node.nodeType === 3 && node.data.replace(/\n/g, '').trim().length === 0
+        if (isEmptyTextNode) return NodeFilter.FILTER_REJECT
+        return NodeFilter.FILTER_ACCEPT
+      }
+    }
+  }
+)
 const nodeList = []
 let currentNode = treeWalker.currentNode
 
@@ -91,15 +110,10 @@ while(currentNode) {
   currentNode = treeWalker.nextNode()
 }
 
-console.log(nodeList)
+// console.log(nodeList)
 
 for(let i=0; i<nodeList.length; i++) {
   let node = nodeList[i]
-  node.setAttribute('data-index', i)
-  for(let j=0; j<node.childNodes.length; j++) {
-    if(node.childNodes[j].nodeType == 3) {
-      console.log(node.childNodes[j].textContent)
-    }
-  }
-  // console.log(node.innerText)
+  // node.setAttribute('data-index', i)
+  console.log(node.data || node.innerText)
 }
