@@ -112,7 +112,7 @@ gradeElem.innerHTML = '' +
   '<ul class="p-0 m-0 list-none">' + 
   '  <li class="mb-8 ' + hemingwayDisplayClass +'">' +
   '    <a id="copyText" class="block" href="javascript:void(0)">Copy text to clipboard<sfgov-icon symbol="check" class="ml-8 text-green-3 hidden"></sfgov-icon></a>' +
-  '    <a class="block" href="https://hemingwayapp.com">Hemingway editor</a>' +
+  '    <p class="p-0 m-0">Check your text in the <a class="" href="https://hemingwayapp.com">Hemingway editor</a></p>' +
   '  </li>' +
   '  <li class="mb-8">sentences: <strong class="font-medium">' + pageData.sentences.length + '</strong></li>' +  
   '  <li class="mb-8">words: <strong class="font-medium">' + pageData.words + '</strong></li>' +
