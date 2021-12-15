@@ -79,41 +79,44 @@ const score = automatedReadability({
 
 console.log('score: ' + score)
 
-// console.log(sentencesData)
+console.log(sentencesData)
 
-const rootNode = document.querySelector('main #block-sfgovpl-content')
-const links = rootNode.querySelectorAll('a')
-for(let i = 0; i<links.length; i++) {
-  let linkText = links[i].innerText
-  links[i].after(linkText)
-  links[i].remove()
-}
-console.log(rootNode.querySelectorAll('a').length);
-const treeWalker = document.createTreeWalker(
-  rootNode,
-  NodeFilter.SHOW_ALL,
-  {
-    acceptNode: (node) => {
-      if (node.nodeType !== 8) { // no comment nodes
-        let isEmptyTextNode = node.nodeType === 3 && node.data.replace(/\n/g, '').trim().length === 0
-        if (isEmptyTextNode) return NodeFilter.FILTER_REJECT
-        return NodeFilter.FILTER_ACCEPT
-      }
-    }
-  }
-)
-const nodeList = []
-let currentNode = treeWalker.currentNode
+// const rootNode = document.querySelector('main #block-sfgovpl-content')
+// const links = rootNode.querySelectorAll('a')
+// for(let i = 0; i<links.length; i++) {
+//   let linkText = links[i].innerText
+//   links[i].after(linkText)
+//   links[i].remove()
+// }
+// // console.log(rootNode.querySelectorAll('a').length);
+// const treeWalker = document.createTreeWalker(
+//   rootNode,
+//   NodeFilter.SHOW_TEXT,
+//   {
+//     acceptNode: (node) => {
+//       if (node.nodeType !== 8) { // no comment nodes
+//         let isEmptyTextNode = node.data.replace(/\n/g, '').trim().length === 0
+//         if (isEmptyTextNode) return NodeFilter.FILTER_REJECT
+//         return NodeFilter.FILTER_ACCEPT
+//       }
+//     }
+//   }
+// )
+// const nodeList = []
+// let currentNode = treeWalker.currentNode
 
-while(currentNode) {
-  nodeList.push(currentNode)
-  currentNode = treeWalker.nextNode()
-}
+// while(currentNode) {
+//   nodeList.push(currentNode)
+//   currentNode = treeWalker.nextNode()
+// }
 
 // console.log(nodeList)
 
-for(let i=0; i<nodeList.length; i++) {
-  let node = nodeList[i]
-  // node.setAttribute('data-index', i)
-  console.log(node.data || node.innerText)
-}
+// for(let i=0; i<nodeList.length; i++) {
+//   let node = nodeList[i]
+//   let parentNode = node.parentNode;
+//   parentNode.setAttribute('data-index', i)
+//   if(node.nodeType === 3) {
+//     console.log(i + ':' + node.data)
+//   }
+// }
