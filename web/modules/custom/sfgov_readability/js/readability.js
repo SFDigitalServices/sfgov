@@ -9,6 +9,12 @@ function getARIGradeLevel(score) {
   return score - 1;
 }
 
+// open accordions
+const details = document.querySelectorAll('details')
+for(let i=0; i<details.length; i++) {
+  details[i].setAttribute('open', true)
+}
+
 // get sentences
 const sentences = text.split(/\.|\?|\!|\n/)
 let sentencesData = []
@@ -28,21 +34,24 @@ for (let i=0; i<sentences.length; i++) {
     totalWordCount += wordCount
     totalCharCount += charCount
     totalLetterCount += letterCount
-    sentenceCount++
 
-    let obj = {
-      sentence: sentence,
-      words: wordCount,
-      chars: charCount,
-      letters: letterCount,
-      score: automatedReadability({
-        sentence: 1,
-        word: wordCount,
-        character: letterCount
-      })
+    if(sentence.length > 1 && isNaN(parseInt(sentence))) { // it's not a number
+      sentenceCount++
+
+      let obj = {
+        sentence: sentence,
+        words: wordCount,
+        chars: charCount,
+        letters: letterCount,
+        score: automatedReadability({
+          sentence: 1,
+          word: wordCount,
+          character: letterCount
+        })
+      }
+  
+      sentencesData.push(obj)
     }
-
-    sentencesData.push(obj)
   }
 }
 
@@ -84,7 +93,7 @@ document.body.append(gradeElem)
 //   links[i].after(linkText)
 //   links[i].remove()
 // }
-// // console.log(rootNode.querySelectorAll('a').length);
+// // console.log(rootNode.querySelectorAll('a').length)
 // const treeWalker = document.createTreeWalker(
 //   rootNode,
 //   NodeFilter.SHOW_TEXT,
@@ -110,7 +119,7 @@ document.body.append(gradeElem)
 
 // for(let i=0; i<nodeList.length; i++) {
 //   let node = nodeList[i]
-//   let parentNode = node.parentNode;
+//   let parentNode = node.parentNode
 //   parentNode.setAttribute('data-index', i)
 //   if(node.nodeType === 3) {
 //     console.log(i + ':' + node.data)
