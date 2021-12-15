@@ -1,12 +1,32 @@
 import {automatedReadability} from 'https://unpkg.com/automated-readability@2.0.0/index.js'
 
-const text = document.querySelector('main #block-sfgovpl-content').innerText
+const contentElem = document.querySelector('main #block-sfgovpl-content')
+const text = contentElem.innerText
+
+console.log(text)
 
 // according to the table at https://en.wikipedia.org/wiki/Automated_readability_index
 function getARIGradeLevel(score) {
   if (score === 1) return "Kindergarten"
   if (score === 14) return "College student"
   return score - 1;
+}
+
+function copyToClipboard(text) {
+  if (text === undefined) text = contentElem.innerText
+  navigator.permissions.query({name: "clipboard-write"}).then(result => {
+    if (result.state == "granted" || result.state == "prompt") {
+      contentElem.focus()
+      navigator.clipboard.writeText(text).then(() => {
+        console.log('clipboard write success')
+      }, (err) => {
+        console.error('clipboard write fail')
+        console.error(err)
+      })
+    } else {
+      console.error('no permission to write to clipboard')
+    }
+  });
 }
 
 // open accordions
@@ -84,13 +104,16 @@ if (pageData.score > 7) {
 
 gradeElem.setAttribute('id', '#gradeStats')
 gradeElem.style.boxShadow = '-1px 1px 5px #666'
-gradeElem.classList.add('fixed', 'top-1/4', 'right-0', 'bg-white', 'p-20', 'rounded-l')
+gradeElem.classList.add('fixed', 'top-1/4', 'right-0', 'bg-white', 'p-28', 'rounded-l')
 gradeElem.innerHTML = '' +
   // '<a class="block no-underline bg-white absolute -top-28 -left-28 text-title-xl" style="border-radius: 35px; padding: 8px 19px; box-shadow: 1px 1px 3px #666" href="#">></a>' + 
   '<p class="p-0 mt-0 mb-20 font-medium text-big-desc">Readability</p>' + 
   '<p class="p-0 mt-0 mb-20 font-medium text-title-md ' + gradeClass + '">Grade ' + getARIGradeLevel(pageData.score) + '</p>' +
   '<ul class="p-0 m-0 list-none">' + 
-  '  <li class="mb-8 ' + hemingwayDisplayClass +'"><a href="https://hemingwayapp.com/">Paste your text into the Hemingway app</a></li>' +
+  '  <li class="mb-8 ' + hemingwayDisplayClass +'">' +
+  '    <a id="copyText" class="block" href="javascript:void(0)">Copy text to clipboard<sfgov-icon symbol="check" class="ml-8 text-green-3 hidden"></sfgov-icon></a>' +
+  '    <a class="block" href="https://hemingwayapp.com">Hemingway editor</a>' +
+  '  </li>' +
   '  <li class="mb-8">sentences: <strong class="font-medium">' + pageData.sentences.length + '</strong></li>' +  
   '  <li class="mb-8">words: <strong class="font-medium">' + pageData.words + '</strong></li>' +
   '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.letters + '</strong></li>' +
@@ -98,6 +121,15 @@ gradeElem.innerHTML = '' +
   // '  <li class="mb-8"><a href="https://en.wikipedia.org/wiki/Automated_readability_index">ARI</a>: <strong class="font-medium">' + pageData.score + '</strong></li>' +
   '</ul>'
 document.body.append(gradeElem)
+
+document.getElementById("copyText").addEventListener("click", (event) => {
+  copyToClipboard()
+  const checkIcon = document.querySelector('#copyText sfgov-icon')
+  checkIcon.classList.remove('hidden')
+  setTimeout(() => {
+    checkIcon.classList.add('hidden')
+  }, 1000)
+})
 
 // const rootNode = document.querySelector('main #block-sfgovpl-content')
 // const links = rootNode.querySelectorAll('a')
