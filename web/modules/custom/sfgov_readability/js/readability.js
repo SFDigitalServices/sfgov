@@ -1,3 +1,12 @@
+
+// TODO:
+// - show/hide the sticky nag dialog
+// - copy to clipboard includes visually hidden text - remove these
+// - copy to clipboard does not preserve formatting (headings, lists, etc)
+// - clone the main content node before acting on dom - currently is reference, manipulation directly affects dom
+// - text in accordions aren't being parsed and counted
+// - highlight problematic sentences
+
 import {automatedReadability} from 'https://unpkg.com/automated-readability@2.0.0/index.js'
 
 const contentElem = document.querySelector('main #block-sfgovpl-content')
@@ -92,10 +101,6 @@ const pageData = {
 }
 
 console.log(pageData)
-
-// TODO:
-// grade 6 and above, show link to hemingway.  do not show otherwise
-// click to copy text to paste when linking to hemingway
 
 const gradeElem = document.createElement('div')
 let gradeClass = 'text-green-3'
