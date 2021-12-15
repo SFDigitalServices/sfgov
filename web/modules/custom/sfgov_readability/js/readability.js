@@ -12,6 +12,10 @@ function getARIGradeLevel(score) {
   return score - 1;
 }
 
+function formatNumber(num) {
+  return num.toLocaleString(undefined)
+}
+
 function copyToClipboard(text) {
   if (text === undefined) text = contentElem.innerText
   navigator.permissions.query({name: "clipboard-write"}).then(result => {
@@ -109,14 +113,14 @@ gradeElem.innerHTML = '' +
   // '<a class="block no-underline bg-white absolute -top-28 -left-28 text-title-xl" style="border-radius: 35px; padding: 8px 19px; box-shadow: 1px 1px 3px #666" href="#">></a>' + 
   '<p class="p-0 mt-0 mb-20 font-medium text-big-desc">Readability</p>' + 
   '<p class="p-0 mt-0 mb-20 font-medium text-title-md ' + gradeClass + '">Grade ' + getARIGradeLevel(pageData.score) + '</p>' +
-  '<ul class="p-0 m-0 list-none">' + 
-  '  <li class="mb-8 ' + hemingwayDisplayClass +'">' +
-  '    <a id="copyText" class="block" href="javascript:void(0)">Copy text to clipboard<sfgov-icon symbol="check" class="ml-8 text-green-3 hidden"></sfgov-icon></a>' +
-  '    <p class="p-0 m-0">Check your text in the <a class="" href="https://hemingwayapp.com">Hemingway editor</a></p>' +
+  '<ul class="p-0 m-0">' + 
+  '  <li class="list-none mb-8 ' + hemingwayDisplayClass +'">' +
+  '    <a id="copyText" class="block mb-8" href="javascript:void(0)">Copy text to clipboard<sfgov-icon symbol="check" class="ml-8 text-green-3 hidden"></sfgov-icon></a>' +
+  '    <p class="p-0 m-0">Check your text in<br/>the <a class="" href="https://hemingwayapp.com">Hemingway editor</a></p>' +
   '  </li>' +
-  '  <li class="mb-8">sentences: <strong class="font-medium">' + pageData.sentences.length + '</strong></li>' +  
-  '  <li class="mb-8">words: <strong class="font-medium">' + pageData.words + '</strong></li>' +
-  '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.letters + '</strong></li>' +
+  '  <li class="ml-16 mb-8">sentences: <strong class="font-medium">' + formatNumber(pageData.sentences.length) + '</strong></li>' +  
+  '  <li class="ml-16 mb-8">words: <strong class="font-medium">' + formatNumber(pageData.words) + '</strong></li>' +
+  '  <li class="ml-16 mb-8">characters: <strong class="font-medium">' + formatNumber(pageData.letters) + '</strong></li>' +
   // '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.chars + '</strong></li>' +
   // '  <li class="mb-8"><a href="https://en.wikipedia.org/wiki/Automated_readability_index">ARI</a>: <strong class="font-medium">' + pageData.score + '</strong></li>' +
   '</ul>'
