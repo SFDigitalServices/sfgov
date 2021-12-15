@@ -74,8 +74,8 @@ console.log(pageData)
 // click to copy text to paste when linking to hemingway
 
 const gradeElem = document.createElement('div')
-const gradeClass = 'text-green-3'
-const hemingwayDisplayClass = 'hidden'
+let gradeClass = 'text-green-3'
+let hemingwayDisplayClass = 'hidden'
 
 if (pageData.score > 7) {
   gradeClass = 'text-red-4'
