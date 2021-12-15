@@ -1,22 +1,13 @@
 import {automatedReadability} from 'https://unpkg.com/automated-readability@2.0.0/index.js'
 
-// score for https://sf.gov/information/masks-and-face-coverings-added-protection-coronavirus
-// based on hemingway app sentence, word, and character count
-const hemscore = automatedReadability({
-  sentence: 101,
-  word: 1063,
-  character: 6189
-})
-console.log(hemscore)
-
-var e = 5066
-var t = 1063
-var n = 101
-var r = Math.round(4.71 * (e / t) + 0.5 * (t / n) - 21.43);
-console.log(r)
-
 const text = document.querySelector('main #block-sfgovpl-content').innerText
-// console.log(text)
+
+// according to the table at https://en.wikipedia.org/wiki/Automated_readability_index
+function getARIGradeLevel(score) {
+  if (score === 1) return "Kindergarten"
+  if (score === 14) return "College student"
+  return score - 1;
+}
 
 // get sentences
 const sentences = text.split(/\.|\?|\!|\n/)
@@ -28,22 +19,11 @@ let totalLetterCount = 0
 
 for (let i=0; i<sentences.length; i++) {
   let sentence = sentences[i].trim()
-  // if(sentence.length > 0) {
-  //   let words = sentence.split(' ')
-  //   if(words.length == 1) { // single words don't count as full sentences?
-  //     wordCount += 1
-  //     charCount += words[0].length
-  //   } else {
-  //     sentenceCount++;
-  //     wordCount += words.length
-  //     charCount += sentence.length
-  //   }
-  // }
 
   if(sentence.length > 0) {
     let wordCount = sentence.split(' ').length
     let charCount = sentence.length
-    let letterCount = sentence.replace(/\s|,|/g, '').length
+    let letterCount = sentence.replace(/[\s;:-]/g, '').length // some things don't count as letters
     
     totalWordCount += wordCount
     totalCharCount += charCount
@@ -52,9 +32,9 @@ for (let i=0; i<sentences.length; i++) {
 
     let obj = {
       sentence: sentence,
-      wordCount: wordCount,
-      charCount: charCount,
-      letterCount: letterCount,
+      words: wordCount,
+      chars: charCount,
+      letters: letterCount,
       score: automatedReadability({
         sentence: 1,
         word: wordCount,
@@ -66,20 +46,36 @@ for (let i=0; i<sentences.length; i++) {
   }
 }
 
-console.log('sentences: ' + sentenceCount)
-console.log('words: ' + totalWordCount)
-console.log('characters: ' + totalCharCount)
-console.log('letters: ' + totalLetterCount)
+const pageData = {
+  score: Math.ceil(automatedReadability({
+    sentence: sentenceCount,
+    word: totalWordCount,
+    character: totalLetterCount
+  })),
+  sentences: sentencesData,
+  words: totalWordCount,
+  chars: totalCharCount,
+  letters: totalLetterCount,
+}
 
-const score = automatedReadability({
-  sentence: sentenceCount,
-  word: totalWordCount,
-  character: totalLetterCount
-})
+console.log(pageData)
 
-console.log('score: ' + score)
-
-console.log(sentencesData)
+const gradeElem = document.createElement('div')
+gradeElem.setAttribute('id', '#gradeStats')
+gradeElem.style.boxShadow = '-1px 1px 5px #666'
+gradeElem.classList.add('fixed', 'top-1/3', 'right-0', 'bg-white', 'p-20', 'rounded-l')
+gradeElem.innerHTML = '' +
+  // '<a class="block no-underline bg-white absolute -top-28 -left-28 text-title-xl" style="border-radius: 35px; padding: 8px 19px; box-shadow: 1px 1px 3px #666" href="#">></a>' + 
+  '<p class="p-0 mt-0 mb-20 font-medium text-big-desc">Readability</p>' + 
+  '<p class="p-0 mt-0 mb-20 font-medium text-title-md">Grade ' + getARIGradeLevel(pageData.score) + '</p>' +
+  '<ul class="p-0 m-0 list-none">' + 
+  '  <li class="mb-8"><a href="https://en.wikipedia.org/wiki/Automated_readability_index">ARI</a>: <strong class="font-medium">' + pageData.score + '</strong></li>' +
+  '  <li class="mb-8">letters: <strong class="font-medium">' + pageData.letters + '</strong></li>' +
+  '  <li class="mb-8">characters: <strong class="font-medium">' + pageData.chars + '</strong></li>' +
+  '  <li class="mb-8">words: <strong class="font-medium">' + pageData.words + '</strong></li>' +
+  '  <li class="mb-8">sentences: <strong class="font-medium">' + pageData.sentences.length + '</strong></li>' +
+  '</ul>'
+document.body.append(gradeElem)
 
 // const rootNode = document.querySelector('main #block-sfgovpl-content')
 // const links = rootNode.querySelectorAll('a')
