@@ -19,15 +19,16 @@
           const device = $chart.data().device
           const src = $chart.data().src
 
+          // Disable iframe src changes to troubleshoot browser history duplicates
           if (device === show_device) {
             if (!$iframe.attr('src')) {
-              $iframe.attr('src', src);
+              //$iframe.attr('src', src);
             }
 
             $chart.show();
           }
           else {
-            $iframe.attr('src', '');
+            //$iframe.attr('src', '');
             $chart.hide();
           }
         })
