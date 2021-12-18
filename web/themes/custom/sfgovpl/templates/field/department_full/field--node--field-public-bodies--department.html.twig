@@ -5,8 +5,8 @@
 {% set widthClass = itemCount >= 4 ? 'w-1/2' : 'w-full' %}
 
 {% for item in items %}
-  {% set uri = item.content['#paragraph'].get('field_link').getValue()[0].uri %}
-  {% set title = item.content['#paragraph'].get('field_link').getValue()[0].title %}
+  {% set uri = item.content['#paragraph'].field_link.0.url %}
+  {% set title = item.content['#paragraph'].field_link.0.title %}
 
   <li class="mb-20 {{ widthClass }}"><a href="{{ uri }}">{{ title  }}</a></li>
 {% endfor %}
