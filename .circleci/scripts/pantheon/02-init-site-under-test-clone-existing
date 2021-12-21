@@ -9,12 +9,9 @@ set -eo pipefail
 # Use EITHER this script OR the re-install-new script; do not run both.
 #
 
-# suppress git "warning: CRLF will be replaced by LF" errors
-git config --local core.eol lf
-git config --local core.autocrlf true
-echo "git config:"
-cat .git/config
-echo "\n\n"
+# delete (transient) npm dependencies, as they're only used to build assets here
+# and not needed for the Pantheon runtime
+rm -rf web/modules/custom/*/node_modules web/themes/custom/*/node_modules
 
 # check if the $TERMINUS_ENV already exists.  if it does, don't clone the content
 if ! terminus -n env:info $TERMINUS_SITE.$TERMINUS_ENV ; then # env does not exist
