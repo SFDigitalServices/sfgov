@@ -1,3 +1,5 @@
 cd web/themes/custom/sfgovpl
 npm ci
-NODE_ENV=production npm run build
+export NODE_ENV=production
+npm run build
+npm i --force # remove dev dependencies
