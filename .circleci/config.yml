@@ -48,13 +48,11 @@ jobs:
             - terminus-install
 
       - run:
-          # Set TERMINUS_ENV and related environment variables.
-          # https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
-          name: environment
+          name: set up build environment (build-tools-ci)
           command: /build-tools-ci/scripts/set-environment
 
       - run:
-          name: run composer install to get the vendor directory
+          name: composer install
           command: composer install
 
       - save_cache:
@@ -91,17 +89,15 @@ jobs:
             - terminus-install
 
       - run:
-          # Set TERMINUS_ENV and related environment variables.
-          # https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
-          name: dependencies
+          name: set up build environment (build-tools-ci)
           command: /build-tools-ci/scripts/set-environment
 
       - run:
-          name: install dev dependencies, build assets, etc.
+          name: prepare pantheon env
           command: ./.circleci/scripts/pantheon/01-prepare
 
       - run:
-          name: build assets
+          name: build assets (composer)
           command: composer -n build-assets
 
       - run:
@@ -109,13 +105,12 @@ jobs:
           command: ./.circleci/scripts/saml/saml-dependencies
       
       - run:
-          name: build theme assets
+          name: build assets (theme)
           command: ./scripts/custom/build-theme-assets.sh
 
       - run:
           name: prepare database for site-under test
           command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
-          # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
 
       - run:
           name: run composer install again to get dev dependencies
@@ -130,7 +125,7 @@ jobs:
           command: ./.circleci/scripts/pantheon/04-merge-main
 
       - run:
-          name: remove transient test fixtures
+          name: clean up test fixtures
           command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
 
       - run:
@@ -138,7 +133,7 @@ jobs:
           command: ./scripts/github/update-deploy-status
 
       - run:
-          name: run e2e ghost inspector test suite (includes ada scan)
+          name: run ghost inspector test suite
           command: ./.circleci/scripts/tests/ghost-inspector/run-gi-suite
 
   create_gh_release:
