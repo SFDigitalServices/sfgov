@@ -3,7 +3,9 @@ set -eo pipefail
 
 # delete (transient) npm dependencies, as they're only used to build assets here
 # and not needed for the Pantheon runtime
-rm -rf web/modules/custom/*/node_modules
+rm -rf \
+  web/modules/custom/*/node_modules \
+  web/themes/custom/*/node_modules
 
 target_env="$TERMINUS_SITE.$TERMINUS_ENV"
 source_env="$TERMINUS_SITE.dev"
