@@ -60,8 +60,8 @@
       {% block content %}
         {% for i in 0..file_count - 1 %}
           <div class="field__item">
-            {# {{ paragraph_document.document(content.field_file[i]['#media']) }} #}
-            {{ kint(content.field_file[i]) }}
+            {{ paragraph_document.document(content.field_file[i]['#media']) }}
+            {# {{ kint(content.field_file[i]) }} #}
           </div>
         {% endfor %}
       {% endblock %}
@@ -70,7 +70,8 @@
 {% endblock paragraph %}
 
 {% macro document(entity) %}
-  {% set fileurl = file_url(entity.field_media_file.entity.uri.value) %}
+  {% set entityUriValue = entity.field_media_file.entity.uri.value ?? "" %}
+  {% set fileurl =  file_url(entityUriValue) %}
   <div class="paragraph document" data-contact="document">
     {% if fileurl|length > 3 and entity.field_published_date.value %}
       <div class="link-date"><span class="link"><a href="{{ fileurl }}">{{ entity.label }}</a></span>
