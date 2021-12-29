@@ -3,6 +3,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eck\Entity\EckEntity;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\sfgov_locations\Element\Address;
 use Drupal\sfgov_locations\Plugin\Field\FieldType\AddressItem;
@@ -301,5 +302,24 @@ function sfgov_locations_preprocess_address_plain(&$variables) {
   if (!empty($variables['address'])) {
     // Provide the parent entity to the 'address-plain--' templates.
     $variables['parent_entity'] = $variables['address']->getEntity();
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function sfgov_locations_entity_presave($entity) {
+  // The country_code is supposed to just be a two character key to reference a
+  // country. Tmgmt automatically translates it into something else, which then
+  // breaks the system. Since country_code is a subfield of address, we can't
+  // mark it untranslatable in the traditional way. So instead we're reverting the
+  // change on entity save.
+  if ($entity instanceof EckEntity) {
+    if ($entity->language()->getId() != 'en') {
+      $country_code = $entity->original->field_address->getValue()[0]['country_code'];
+      $address = $entity->field_address->getValue()[0];
+      $address['country_code'] = $country_code;
+      $entity->set('field_address', $address);
+    }
   }
 }

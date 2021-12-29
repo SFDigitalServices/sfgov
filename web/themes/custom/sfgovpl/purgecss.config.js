@@ -5,6 +5,7 @@ module.exports = {
     'src/**/*.js',
     '../../../modules/custom/**/*.{html,inc,js,php,theme,twig}'
   ],
+  defaultExtractor: (content) => content.match(/[\w-:./]+(?<!:)/g) || [],
   safelist: {
     greedy: [
       // preserve all "basic" margin and padding utilities (for forms)
