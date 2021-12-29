@@ -14,6 +14,7 @@ module.exports = {
       /bg-(black|white|slate|blue|green|red|purple|yellow|grey)/,
       // text color utilities
       /text-(black|white|slate|blue|green|red|purple|yellow|grey|secondary)/,
+      /(hocus:)?(no-)?underline/,
     ]
   }
 }
