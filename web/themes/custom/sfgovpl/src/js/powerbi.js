@@ -10,7 +10,7 @@
         const $chart = $(this);
         const $iframe = $chart.find('> .iframe-container');
         const src = $chart.data().src;
-        const iframecode = '';
+        let iframecode = '';
         const title = $iframe.find('> .powerbi-title').attr('title');
         // Insert powerbi iframes
         iframecode = '<iframe class="powerbi-iframe" tabindex="0" loading="lazy" title="' + title + '" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" src="' + src + '"></iframe>';
