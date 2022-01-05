@@ -5,11 +5,18 @@ module.exports = {
     'plugin:sfgov/recommended'
   ],
   rules: {
-    'comma-dangle': 'error',
+    'arrow-parens': ['as-needed', { requireForBlockBody: true }],
+    camelcase: 'warn',
+    'comma-dangle': 'warn',
+    eqeqeq: 'warn',
     'newline-per-chained-call': ['warn', { ignoreChainWithDepth: 3 }],
     'no-magic-numbers': ['warn', { ignore: [0, 1] }],
     'no-console': 'warn',
-    'semi': 'error',
+    'object-shorthand': ['warn', 'always', { avoidExplicitReturnArrows: true }],
+    'prefer-arrow-callback': 'warn',
+    'promise/always-return': 'warn',
+    'promise/catch-or-return': 'warn',
+    semi: 'error',
     // we don't need "use strict" directives: @babel/preset-env adds them automatically
     strict: ['error', 'never']
   }
