@@ -8,7 +8,7 @@ module.exports = {
     'arrow-parens': ['warn', 'as-needed', { requireForBlockBody: true }],
     camelcase: 'warn',
     'comma-dangle': 'warn',
-    eqeqeq: 'warn',
+    eqeqeq: ['error', 'smart'],
     'newline-per-chained-call': ['warn', { ignoreChainWithDepth: 3 }],
     'no-magic-numbers': ['warn', { ignore: [0, 1] }],
     'no-console': 'warn',
