@@ -2,8 +2,7 @@ module.exports = {
   root: true,
   plugins: ['sfgov'],
   extends: [
-    'plugin:sfgov/recommended',
-    'plugin:sfgov/babel'
+    'plugin:sfgov/recommended'
   ],
   rules: {
     'comma-dangle': 'error',
