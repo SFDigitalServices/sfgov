@@ -47,7 +47,9 @@
 {% set license = entity.field_type_of_license.value|default(license) %}
 {% set classes = [
   'media-caption',
-  'media-caption--align-' ~ align|default('left'),
+  align == 'right' ? 'text-right' : 'text-left',
+  'text-small',
+  'mt-8'
 ] %}
 
 {% if author %}

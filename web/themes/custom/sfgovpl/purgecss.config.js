@@ -3,7 +3,8 @@ module.exports = {
   content: [
     'templates/**/*.{twig,html}',
     'src/**/*.js',
-    '../../../modules/custom/**/*.{html,inc,js,php,theme,twig}'
+    '../../../modules/custom/**/*.{html,inc,js,php,theme,twig}',
+    '../../../../patches/**/*.patch'
   ],
   defaultExtractor: (content) => content.match(/[\w-:./]+(?<!:)/g) || [],
   safelist: {
