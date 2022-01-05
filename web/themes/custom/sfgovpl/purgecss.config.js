@@ -13,7 +13,7 @@ module.exports = {
       // background color utilities
       /bg-(black|white|slate|blue|green|red|purple|yellow|grey)/,
       // text color utilities
-      /text-(black|white|slate|blue|green|red|purple|yellow|grey|secondary)/,
+      /text-(black|white|slate|blue|green|red|purple|yellow|grey|secondary)/
     ]
   }
 }
