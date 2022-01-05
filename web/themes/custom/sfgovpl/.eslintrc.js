@@ -5,7 +5,7 @@ module.exports = {
     'plugin:sfgov/recommended'
   ],
   rules: {
-    'arrow-parens': ['as-needed', { requireForBlockBody: true }],
+    'arrow-parens': ['warn', 'as-needed', { requireForBlockBody: true }],
     camelcase: 'warn',
     'comma-dangle': 'warn',
     eqeqeq: 'warn',
