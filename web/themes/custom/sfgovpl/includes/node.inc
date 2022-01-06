@@ -673,16 +673,20 @@ function profile_page_fields($node) {
           $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
         }
         // Choose a title value in descending order.
-        $theFields['address']['title'] = $department->title->value ?: $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
+        $Addresstitle = $department->title->value ?: $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
+        $theFields['address']['title'] = $Addresstitle;
+        // If one of the address fields was used as the title, remove it from
+        // the render array so that it doesn't show up twice.
+        $theFields['address']['organization'] = ($addressValues['organization'] == $Addresstitle) ? NULL : $addressValues['organization'];
+        $theFields['address']['addressee'] = ($addressValues['addressee'] == $Addresstitle) ? NULL : $addressValues['addressee'];
+        $theFields['address']['location_name'] = ($addressValues['location_name'] == $Addresstitle) ? NULL : $addressValues['location_name'];
+
         $theFields['address']['line1'] = $addressValues['address_line1'];
         $theFields['address']['line2'] = $addressValues['address_line2'];
         $theFields['address']['country_code'] = $addressValues['country_code'];
         $theFields['address']['city'] = $addressValues['locality'];
         $theFields['address']['state'] = $addressValues['administrative_area'];
         $theFields['address']['zip'] = $addressValues['postal_code'];
-        $theFields['address']['organization'] = $addressValues['organization'];
-        $theFields['address']['addressee'] = $addressValues['addressee'];
-        $theFields['address']['location_name'] = $addressValues['location_name'];
         $hours = $addressEntity->get('field_operating_hours')->getValue();
         usort($hours, function($item1, $item2) {
           return $item1['day'] <=> $item2['day'];
