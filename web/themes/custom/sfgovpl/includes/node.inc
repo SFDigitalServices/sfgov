@@ -77,8 +77,6 @@ function sfgovpl_preprocess_node__meeting__full(&$variables) {
         /** @var \Drupal\sfgov_video\VideoService $video_service */
         $video_service = \Drupal::service('sfgov_video.utilities');
         $video_id = $video_service->getVideoId($video_url);
-        // Pass variable with video captions.
-        $variables['video_captions'] = $video_service->getYoutubeTranscript($video_id);
         // Video captions link
         $url = Url::fromUserInput('/video/' . $video_id);
         $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
@@ -259,11 +257,11 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
   if (\Drupal::routeMatch()->getParameter('node')) {
     $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
     $parent_node = Node::load($parent_nid);
-  
+
     // This bundle's display mode should invalidate caches when there are any
     // updates on public bodies nodes.
     $variables['#cache']['tags'][] = 'node_list:public_body';
-  
+
     // Check for public body node, find profile's position field value
     if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
       $profile_groups = $parent_node->field_board_members->getValue();
@@ -286,7 +284,7 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
           }
         }
       }
-    } 
+    }
   }
 }
 
@@ -489,7 +487,7 @@ function public_body_page_fields($node) {
  */
 function profile_page_fields($node) {
   $theFields = [];
-  
+
   if($node) {
     // Get field data related to profile
     $nid = $node->id();

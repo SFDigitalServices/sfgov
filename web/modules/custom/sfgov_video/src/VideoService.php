@@ -1,11 +1,8 @@
 <?php
 
 namespace Drupal\sfgov_video;
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use GuzzleHttp\ClientInterface;
-use Drupal\Component\Serialization\SerializationInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\key\KeyRepositoryInterface;
 use Exception;
 /**
@@ -20,13 +17,6 @@ class VideoService {
    */
 
   protected $httpClient;
-  /**
-   * Drupal\Component\Serialization\SerializationInterface definition.
-   *
-   * @var \Drupal\Component\Serialization\SerializationInterface
-   */
-
-  protected $serializationJson;
   /**
    * Constructs a new VideoService object.
    */
@@ -46,9 +36,8 @@ class VideoService {
   /**
   * Constructs a new VideoService object.
   */
-  public function __construct(ClientInterface $http_client, SerializationInterface $serialization_json, KeyRepositoryInterface $key_repository) {
+  public function __construct(ClientInterface $http_client, KeyRepositoryInterface $key_repository) {
     $this->httpClient = $http_client;
-    $this->serializationJson = $serialization_json;
     $this->keyRepository = $key_repository;
     $this->apiKey = $this->getApikey();
   }
@@ -117,98 +106,6 @@ class VideoService {
     }
 
     return $data;
-  }
-
-  /**
-   * Get transcript by language.
-   * TODO: detect site language to get the right transcript.
-   *
-   * @param $video_id
-   * @param string $languageCode
-   *
-   * @return array
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   */
-  public function getYoutubeTranscript($video_id, $languageCode = 'en') {
-    $metadata = $this->getYoutubeMetadata($video_id, $languageCode);
-    $caption = $metadata['captionTracks'];
-    if (is_null($caption)) return [];
-
-    $caption_track_url = $caption['baseUrl'];
-
-    $request = $this->httpClient->request('GET', $caption_track_url);
-    $content = $request->getBody()->getContents();
-
-    $data = simplexml_load_string($content);
-
-    $captions = [];
-    for ($i = 0; $i < $data->count(); $i++) {
-      $item = $data[0]->text[$i];
-      $captions[$i] = [
-        'text' => $item->__toString(),
-        'start' => $item['start']->__toString(),
-        'dur' => $item['dur']->__toString(),
-      ];
-    }
-
-    return $captions;
-  }
-
-  /**
-   * Get Youtube metadata: video title, caption tracks.
-   *
-   * @param $video_id
-   * @param string $languageCode
-   *
-   * @return array
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   */
-  public function getYoutubeMetadata($video_id, $languageCode = 'en') {
-    // FIXME: the endpoint below has been removed and we should use the official youtube api
-    // the request is made with http errors set to false so we can check the status code and return
-    // early if it's a bad status code (currently returns 4xx)
-    $video_info_url = "https://www.youtube.com/get_video_info?video_id=" . $video_id . "&html5=1";
-    $request = $this->httpClient->request('GET', $video_info_url, [
-      'http_errors' => false
-    ]);
-
-    if ($request->getStatusCode() !== 200) {
-      return;
-    }
-
-    $contents = $request->getBody()->getContents();
-
-    parse_str($contents, $video_info_array);
-
-    if ($video_info_array['status'] == 'fail') {
-      throw new NotFoundHttpException();
-    }
-
-    $response = $video_info_array['player_response'];
-    $json = JSON::decode($response);
-
-    $caption_tracks = isset($json['captions']) ? $json['captions']['playerCaptionsTracklistRenderer']['captionTracks'] : [];
-
-    return [
-      'captionTracks' => $this->getYoutubeCaptionTrack($caption_tracks, $languageCode),
-      'videoDetails' => $json['videoDetails']
-    ];
-  }
-
-  /**
-   * Get caption track of a specific language.
-   *
-   * @param $caption_tracks
-   * @param $languageCode
-   *
-   * @return mixed|null
-   */
-  private function getYoutubeCaptionTrack($caption_tracks, $languageCode) {
-    $caption_track = array_filter($caption_tracks, function($track) use ($languageCode) {
-      return $track['languageCode'] == $languageCode;
-    });
-
-    return !empty($caption_track) ? reset($caption_track) : NULL;
   }
 
 }
