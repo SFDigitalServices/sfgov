@@ -40,7 +40,7 @@ input[type='search'] {
   appearance: none;
 }
 
-::input-placeholder {
+::input-placeholder { // stylelint-disable-line selector-pseudo-element-no-unknown
   /* Chrome/Opera/Safari */
   color: rgba($c-slate, 0.6);
 }
@@ -50,7 +50,7 @@ input[type='search'] {
   color: rgba($c-slate, 0.6);
 }
 
-:input-placeholder {
+:input-placeholder { // stylelint-disable-line selector-pseudo-class-no-unknown
   /* IE 10+ */
   color: rgba($c-slate, 0.6);
 }
@@ -63,14 +63,12 @@ input[type='search'] {
 button,
 input[type='submit'] {
   appearance: none;
-  appearance: none;
 }
 
 input[type='date'],
 input[type='time'] {
   // Fix styling inconsistencies with
   // date and time inputs on iOS
-  appearance: textfield;
   appearance: textfield;
   min-height: 3rem;
 }
@@ -303,16 +301,13 @@ legend {
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: none;
-    user-select: none;
-    user-select: none;
-    user-select: none;
 
     &::after {
       content: attr(data-filename);
     }
 
     &::before {
-      @extend button;
+      @extend button; // stylelint-disable-line
 
       z-index: 6;
       content: 'Choose a file';
@@ -326,7 +321,6 @@ legend {
     &:active {
       &::before {
         box-shadow: inset 0 0 0 2px darken($c-bright-blue, 10%);
-        color: darken($c-bright-blue, 10%);
         background-color: rgba($c-bright-blue, 0.05);
         color: $c-bright-blue;
       }
@@ -369,7 +363,6 @@ $rc-size: 3rem;
   }
 
   input {
-    appearance: none;
     appearance: none;
     opacity: 0;
     padding: 0;
@@ -461,7 +454,6 @@ $rc-size: 3rem;
 select {
   display: block;
   background-repeat: no-repeat;
-  appearance: none;
   appearance: none;
 
   // Background gradient needed for <= IE9

@@ -5,7 +5,6 @@
   position: absolute;
   left: 8px;
   top: 50px;
-  position: absolute;
   z-index: 1000;
   background: $c-white;
   width: calc(100% - 58px);
@@ -152,9 +151,6 @@
         @include background-image('building.svg', 0 0);
       }
     }
-
-    @include media($medium-screen) {
-    }
   }
 
   .sfgov-search-misspelled {
@@ -258,14 +254,13 @@
           display: inline-block;
 
           a {
-            font-weight: normal;
-            text-decoration: none;
+            @include rubik;
+
             padding: 11px 16px;
             display: inline-block;
             font-weight: 500;
             color: $c-bright-blue;
             text-decoration: underline;
-            font-family: rubik;
           }
 
           &.current {
