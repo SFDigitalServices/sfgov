@@ -15,10 +15,14 @@ module.exports = {
     'function-url-quotes': ['always', { severity: 'warning' }],
     // FIXME: promote this to an error once fixed
     'no-descending-specificity': [true, { severity: 'warning' }],
+    // FIXME: promote this to an error once fixed
+    'no-duplicate-selectors': [true, { severity: 'warning' }],
     // FIXME: set this to a number that's significant and promote to error
     'number-max-precision': [4, { severity: 'warning' }],
     // because we have periods in some of our partial filenames (before the final .scss)...
     'scss/at-import-partial-extension': null,
+    // we don't care about the naming of our mixins
+    'scss/at-mixin-pattern': null,
     // some comment blocks include empty "//" lines
     'scss/comment-no-empty': null,
     // we don't care about variable names for now
