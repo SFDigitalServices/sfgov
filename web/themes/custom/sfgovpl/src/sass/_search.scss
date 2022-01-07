@@ -10,10 +10,10 @@
   background: $c-white;
   width: calc(100% - 58px);
   padding: 0;
-  box-shadow: rgba(0,0,0,.25) 0px 5px 5px 2px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
   text-align: left;
   border-radius: 0 0 8px 8px;
-  @include media($medium-screen) {  
+  @include media($medium-screen) {
     width: calc(100% - 129px);
   }
 }
@@ -93,7 +93,8 @@
     @include rubik;
     @include fs-body-short;
     margin-bottom: 60px;
-    h4, a {
+    h4,
+    a {
       @include rubik;
       @include link-colors($c-bright-blue, $c-slate);
     }
@@ -127,10 +128,9 @@
       }
     }
     @include media($medium-screen) {
-      
     }
   }
-  
+
   .sfgov-search-misspelled {
     @include fs-title-5;
     margin-bottom: 20px;
@@ -156,7 +156,8 @@
       .hide-page {
         display: none;
       }
-      .previous, .next {
+      .previous,
+      .next {
         a {
           text-decoration: none;
           border: 3px solid $c-bright-blue;
@@ -166,12 +167,13 @@
           position: relative;
         }
       }
-  
+
       .next {
         a {
           &::after {
             content: '';
-            background: url(/themes/custom/sfgovpl/src/img/icons/arrow-right.svg) no-repeat;
+            background: url(/themes/custom/sfgovpl/src/img/icons/arrow-right.svg)
+              no-repeat;
             width: 21px;
             height: 18px;
             display: inline-block;
@@ -181,7 +183,7 @@
           }
         }
       }
-  
+
       .previous {
         a {
           margin-left: 0;
@@ -190,7 +192,8 @@
           padding-right: 20px;
           &::before {
             content: '';
-            background: url(/themes/custom/sfgovpl/src/img/icons/arrow-left.svg) no-repeat;
+            background: url(/themes/custom/sfgovpl/src/img/icons/arrow-left.svg)
+              no-repeat;
             width: 21px;
             height: 18px;
             display: inline-block;
@@ -201,7 +204,7 @@
           }
         }
       }
-  
+
       .page-num {
         &.more-prev::before,
         &.more-next::after {
@@ -209,7 +212,7 @@
           color: $c-slate;
         }
       }
-  
+
       ul {
         list-style-type: none;
         padding: 0;
@@ -274,86 +277,88 @@
   left: 50%;
 }
 
-.loader{
-  color:#ff0000;
-  position:fixed;
-  box-sizing:border-box;
-  left:-9999px;
-  top:-9999px;
-  width:0;
-  height:0;
-  overflow:hidden;
-  z-index:999999;
+.loader {
+  color: #ff0000;
+  position: fixed;
+  box-sizing: border-box;
+  left: -9999px;
+  top: -9999px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: 999999;
 }
-.loader:after,.loader:before{
-  box-sizing:border-box;
-  display:none;
+.loader:after,
+.loader:before {
+  box-sizing: border-box;
+  display: none;
 }
-.loader.is-active{
+.loader.is-active {
   background-color: transparent;
-  width:100%;
-  height:100%;
-  left:0;
-  top:0
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
 }
-.loader.is-active:after,.loader.is-active:before{
-  display:block
+.loader.is-active:after,
+.loader.is-active:before {
+  display: block;
 }
-@keyframes rotation{
-  0%{
-      transform:rotate(0)
+@keyframes rotation {
+  0% {
+    transform: rotate(0);
   }
-  to{
-      transform:rotate(359deg)
-  }
-}
-@keyframes blink{
-  0%{
-      opacity:.5
-  }
-  to{
-      opacity:1
+  to {
+    transform: rotate(359deg);
   }
 }
-.loader[data-text]:before{
-  position:fixed;
-  left:0;
-  top:50%;
-  color:currentColor;
-  font-family:Helvetica,Arial,sans-serif;
-  text-align:center;
-  width:100%;
-  font-size:14px
+@keyframes blink {
+  0% {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.loader[data-text=""]:before{
-  content:"Loading"
+.loader[data-text]:before {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  color: currentColor;
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
 }
-.loader[data-text]:not([data-text=""]):before{
-  content:attr(data-text)
+.loader[data-text='']:before {
+  content: 'Loading';
 }
-.loader[data-text][data-blink]:before{
-  animation:blink 1s linear infinite alternate
+.loader[data-text]:not([data-text='']):before {
+  content: attr(data-text);
 }
-.loader-default[data-text]:before{
-  top:calc(50% - 63px)
+.loader[data-text][data-blink]:before {
+  animation: blink 1s linear infinite alternate;
 }
-.loader-default:after{
-  content:"";
-  position:fixed;
-  width:48px;
-  height:48px;
-  border:8px solid #0071bc;
-  border-left-color:transparent;
-  border-radius:50%;
-  top:calc(50% - 24px);
-  left:calc(50% - 24px);
-  animation:rotation 1s linear infinite
+.loader-default[data-text]:before {
+  top: calc(50% - 63px);
 }
-.loader-default[data-half]:after{
-  border-right-color:transparent
+.loader-default:after {
+  content: '';
+  position: fixed;
+  width: 48px;
+  height: 48px;
+  border: 8px solid #0071bc;
+  border-left-color: transparent;
+  border-radius: 50%;
+  top: calc(50% - 24px);
+  left: calc(50% - 24px);
+  animation: rotation 1s linear infinite;
 }
-.loader-default[data-inverse]:after{
-  animation-direction:reverse
+.loader-default[data-half]:after {
+  border-right-color: transparent;
+}
+.loader-default[data-inverse]:after {
+  animation-direction: reverse;
 }
 // end loading css
 /* purgecss end ignore */

@@ -1,5 +1,5 @@
 /* purgecss start ignore */
-@mixin ankle($field-element){
+@mixin ankle($field-element) {
   padding-bottom: 60px;
   padding-top: 41px;
 
@@ -22,52 +22,56 @@
 }
 
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
-  background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat $position $color;
+  background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat
+    $position $color;
 }
 
 @mixin columns-780($left-or-right) {
-  @include media($medium-screen){
+  @include media($medium-screen) {
     float: #{$left-or-right};
     max-width: 780px;
-    width: calc((100% - 20px)/3*2);
+    width: calc((100% - 20px) / 3 * 2);
   }
 }
 
 @mixin columns-720($left-or-right) {
-  @include media($medium-screen){
+  @include media($medium-screen) {
     float: #{$left-or-right};
     max-width: 720px;
-    width: calc((100% - 20px)/3*2);
+    width: calc((100% - 20px) / 3 * 2);
   }
 }
 
 @mixin columns-350($left-or-right) {
-  @include media($medium-screen){
+  @include media($medium-screen) {
     float: #{$left-or-right};
     max-width: 350px;
-    width: calc((100% - 40px)/3);
+    width: calc((100% - 40px) / 3);
   }
 }
 
-@mixin contain { // @todo Deprecate this mixin.
+@mixin contain {
+  // @todo Deprecate this mixin.
   margin: 0 auto;
   max-width: 1276px;
   padding-left: 20px;
   padding-right: 20px;
 
-  @include  media($medium-screen) {
+  @include media($medium-screen) {
     padding-left: 96px;
     padding-right: 96px;
   }
 }
 
-@mixin contain-1280 { // Zeplin Artboard.
+@mixin contain-1280 {
+  // Zeplin Artboard.
   margin: 0 auto;
   max-width: 1280px;
   width: 100%;
 }
 
-@mixin contain-1210 { // Para titles.
+@mixin contain-1210 {
+  // Para titles.
   margin: 0 auto;
   max-width: 1210px;
   padding-left: 20px;
@@ -79,7 +83,8 @@
   }
 }
 
-@mixin contain-1150 { // Contents with offset.
+@mixin contain-1150 {
+  // Contents with offset.
   margin: 0 auto;
   max-width: 1210px;
   padding-left: 20px;
@@ -91,7 +96,8 @@
   }
 }
 
-@mixin contain-1090-table { // Match 1090 spacing when a 3-column table is the child.
+@mixin contain-1090-table {
+  // Match 1090 spacing when a 3-column table is the child.
   // Add
   // ```@include media($medium-screen) {
   //      padding-left: 20px;
@@ -108,7 +114,8 @@
   }
 }
 
-@mixin contain-1090 { // Most contents.
+@mixin contain-1090 {
+  // Most contents.
   margin: 0 auto;
   max-width: 1090px;
   padding-left: 20px;
@@ -123,7 +130,7 @@
 
 @mixin blockquote {
   @include fs-pull-large;
-  background: $c-yellow-2;;
+  background: $c-yellow-2;
   border-radius: 10px;
   font-style: italic;
   margin: 30px 0 40px 0;
@@ -135,7 +142,8 @@
     padding: 40px;
     margin: -5px 0 40px 0;
     // Equals 349px at max width, but uses % for better responsiveness.
-    width: ((strip-unit($w-news-sidebar)) / (strip-unit($w-news-body-content))) * 100%;
+    width: ((strip-unit($w-news-sidebar)) / (strip-unit($w-news-body-content))) *
+      100%;
   }
 
   p {
@@ -204,7 +212,13 @@
 // @param {color} $hover  - hover
 // @param {color} $active - active
 // @param {color} $focus - focus
-@mixin link-colors($normal, $hover: false, $active: false, $visited: false, $focus: false) {
+@mixin link-colors(
+  $normal,
+  $hover: false,
+  $active: false,
+  $visited: false,
+  $focus: false
+) {
   &:link {
     color: $normal;
   }
@@ -214,9 +228,7 @@
     &:link:visited {
       color: $visited;
     }
-  }
-
-  @else {
+  } @else {
     &:visited,
     &:link:visited {
       color: $normal;
@@ -227,9 +239,7 @@
     &:focus {
       color: $focus;
     }
-  }
-
-  @else {
+  } @else {
     &:focus {
       color: $normal;
     }
@@ -251,9 +261,7 @@
     &.active-trail {
       color: $active;
     }
-  }
-
-  @else {
+  } @else {
     &.is-active,
     &:active,
     &.active-trail {
@@ -275,11 +283,11 @@
 }
 
 @mixin rubik {
-  font-family: "Rubik", sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 @mixin noto-sans-tc {
-  font-family: "Noto Sans TC", sans-serif;
+  font-family: 'Noto Sans TC', sans-serif;
 }
 
 @mixin sfgov-responsive-container-override {
@@ -366,7 +374,6 @@
 @mixin column-table-row-two {
   @include column-table-row-base;
   > * {
-
     @include media($medium-screen) {
       width: 50%;
     }
@@ -376,7 +383,6 @@
 @mixin column-table-row-three {
   @include column-table-row-base;
   > * {
-
     @include media($medium-screen) {
       width: 33%;
     }
