@@ -5,12 +5,12 @@ dependencies:
   config:
     - field.storage.media.field_media_file
     - media.type.file
-  enforced:
-    module:
-      - media
   module:
     - file
     - tmgmt_content
+  enforced:
+    module:
+      - media
 third_party_settings:
   tmgmt_content:
     excluded: false
@@ -27,10 +27,10 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
+  handler: 'default:file'
+  handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'txt rtf doc docx ppt pptx xls xlsx pdf odf odg odp ods odt fodt fods fodp fodg key numbers pages'
   max_filesize: ''
   description_field: false
-  handler: 'default:file'
-  handler_settings: {  }
 field_type: file

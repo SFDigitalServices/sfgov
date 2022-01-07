@@ -25,60 +25,60 @@ third_party_settings:
     group_content:
       children:
         - field_content
+      label: Content
+      region: content
       parent_name: ''
       weight: 3
       format_type: html_element
       format_settings:
+        classes: 'sf-paragraphs-group sf-paragraphs-group--content'
+        id: sf-paragraph-group-content
         element: div
         show_label: true
         label_element: h3
         label_element_classes: ''
-        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-        id: sf-paragraph-group-content
-        classes: 'sf-paragraphs-group sf-paragraphs-group--content'
-      label: Content
-      region: content
+        required_fields: true
     group_sidebar:
       children:
         - field_sidebar
+      label: Sidebar
+      region: content
       parent_name: ''
       weight: 5
       format_type: html_element
       format_settings:
+        classes: 'sf-paragraphs-group paragraphs-group--sidebar'
+        id: sf-paragraph-group-sidebar
         element: div
         show_label: true
         label_element: h3
         label_element_classes: ''
-        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-        id: sf-paragraph-group-sidebar
-        classes: 'sf-paragraphs-group paragraphs-group--sidebar'
-      label: Sidebar
-      region: content
+        required_fields: true
     group_content_bottom:
       children:
         - field_content_bottom
+      label: 'Content Bottom'
+      region: content
       parent_name: ''
       weight: 4
       format_type: html_element
       format_settings:
+        classes: 'sf-paragraphs-group sf-paragraphs-group--content-bottom'
+        id: sf-paragraph-group-content-bottom
         element: div
         show_label: true
         label_element: h3
         label_element_classes: ''
-        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-        id: sf-paragraph-group-content-bottom
-        classes: 'sf-paragraphs-group sf-paragraphs-group--content-bottom'
-      label: 'Content Bottom'
-      region: content
+        required_fields: true
 _core:
   default_config_hash: sb0qCkzU_8mNq29NehYAU8jCBXWPLeX0UN8sYFVGVcw
 id: node.page.default
@@ -93,7 +93,9 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_content:
+    type: sfgov_paragraphs
     weight: 0
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -109,11 +111,10 @@ content:
         add_above: 0
       closed_mode_threshold: 0
     third_party_settings: {  }
-    type: sfgov_paragraphs
-    region: content
   field_content_bottom:
     type: sfgov_paragraphs
     weight: 1
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -129,9 +130,10 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: 0
     third_party_settings: {  }
-    region: content
   field_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 3
       placeholder: ''
@@ -144,11 +146,10 @@ content:
         maxlength_js_label: '<strong>@remaining</strong> left'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   field_sidebar:
     type: sfgov_paragraphs
     weight: 2
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -164,7 +165,6 @@ content:
         add_above: 0
       closed_mode_threshold: 0
     third_party_settings: {  }
-    region: content
   langcode:
     type: language_select
     weight: 2
@@ -175,8 +175,8 @@ content:
   moderation_state:
     type: moderation_state_default
     weight: 11
-    settings: {  }
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -198,10 +198,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 12
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -222,9 +222,9 @@ content:
     region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default

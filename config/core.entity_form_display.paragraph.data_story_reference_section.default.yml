@@ -13,7 +13,9 @@ bundle: data_story_reference_section
 mode: default
 content:
   field_content:
+    type: sfgov_paragraphs
     weight: 2
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -29,18 +31,21 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: 0
     third_party_settings: {  }
-    type: sfgov_paragraphs
-    region: content
   field_data_story:
+    type: entity_reference_autocomplete
     weight: 1
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+  translation:
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   status: true
