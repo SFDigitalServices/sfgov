@@ -33,9 +33,6 @@ defaults: &defaults
     ADMIN_USERNAME: admin
     # BUILD_TOOLS_VERSION: ^2.0.0-alpha4
     TERM: dumb
-    
-    # where to find the custom theme
-    THEME_PATH: web/themes/custom/sfgovpl
 
 version: 2
 jobs:
@@ -75,13 +72,6 @@ jobs:
       - run:
           name: run code-sniff
           command: composer -n code-sniff
-
-      - run:
-          name: lint theme source files
-          command: |
-            cd $THEME_PATH
-            npm ci
-            npm run lint
             
       - run:
           name: run unit tests
