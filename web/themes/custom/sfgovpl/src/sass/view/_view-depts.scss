@@ -2,7 +2,9 @@
 .path-departments {
   .sfgov-departments {
     display: block !important;
+
     @include contain-1090;
+
     .views-view-grid {
       &.horizontal {
         display: table;
@@ -12,15 +14,19 @@
         width: calc(100% + 64px);
         margin-left: -64px;
         margin-bottom: 100px;
+
         .l-grid__row {
           display: table-row;
+
           .l-grid__column {
             border-bottom: 3px solid $c-border;
             display: table-cell;
             width: 50%;
             padding: 30px 36px 30px 0;
+
             .transaction-card {
               @include fs-body-short;
+
               padding: 0;
               background: none;
               color: $c-slate;
@@ -28,48 +34,59 @@
 
               .transaction-card__body {
                 @include fs-body-short;
+
                 color: $c-slate;
               }
+
               .transaction-card__title {
                 @include fs-body-bold;
+
                 margin-bottom: 10px;
                 text-decoration: underline;
               }
+
               &:hover {
                 .transaction-card__title {
                   color: $c-slate;
                 }
+
                 .transaction-card__body {
                   color: $c-slate;
                 }
               }
             }
           }
+
           &.clearfix::after {
             display: none;
           }
         }
       }
     }
+
     @include media-max($medium-screen) {
       .hero-banner.default {
         h1 {
           @include fs-display-1-mobile;
         }
       }
+
       .views-view-grid {
         &.horizontal {
           display: block;
           width: auto;
-          margin: 0 0 100px 0;
+          margin: 0 0 100px;
           border-collapse: initial;
           border-spacing: initial;
+
           .l-grid__row {
             display: block;
+
             .l-grid__column {
               display: block;
               width: auto;
               margin-bottom: 0;
+
               .transaction-card {
                 min-height: auto;
               }
@@ -79,8 +96,10 @@
       }
     }
   }
+
   .sfgov-tabbed-navigation {
     display: none;
   }
 }
+
 /* purgecss end ignore */

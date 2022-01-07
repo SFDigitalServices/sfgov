@@ -22,7 +22,8 @@
 }
 
 @mixin background-image($file-name, $position: 50% 50%, $color: transparent) {
-  background: url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat
+  background:
+    url('/themes/custom/sfgovpl/src/img/#{$file-name}') no-repeat
     $position $color;
 }
 
@@ -130,19 +131,22 @@
 
 @mixin blockquote {
   @include fs-pull-large;
+
   background: $c-yellow-2;
   border-radius: 10px;
   font-style: italic;
-  margin: 30px 0 40px 0;
+  margin: 30px 0 40px;
   padding: 20px;
 
   @include media($narrow-screen) {
     clear: right;
     float: right;
     padding: 40px;
-    margin: -5px 0 40px 0;
+    margin: -5px 0 40px;
+
     // Equals 349px at max width, but uses % for better responsiveness.
-    width: ((strip-unit($w-news-sidebar)) / (strip-unit($w-news-body-content))) *
+    width:
+      ((strip-unit($w-news-sidebar)) / (strip-unit($w-news-body-content))) *
       100%;
   }
 
@@ -167,6 +171,7 @@
   text-decoration: none;
   display: inline-block;
   line-height: 1;
+
   &:hover {
     background: $c-dark-blue;
   }
@@ -174,6 +179,7 @@
 
 @mixin button-clear {
   @include button;
+
   background: $c-white;
   color: $c-bright-blue;
 
@@ -187,8 +193,9 @@
   position: relative;
   margin-left: 42px;
 
-  &:before {
+  &::before {
     @include background-image(#{$file-name}, top);
+
     content: '';
     display: inline-block;
     height: 20px;
@@ -373,6 +380,7 @@
 
 @mixin column-table-row-two {
   @include column-table-row-base;
+
   > * {
     @include media($medium-screen) {
       width: 50%;
@@ -382,6 +390,7 @@
 
 @mixin column-table-row-three {
   @include column-table-row-base;
+
   > * {
     @include media($medium-screen) {
       width: 33%;
@@ -418,6 +427,7 @@
     content: '';
     display: table;
   }
+
   &::after {
     clear: both;
   }
@@ -437,4 +447,5 @@
     margin-bottom: 0;
   }
 }
+
 /* purgecss end ignore */

@@ -24,11 +24,13 @@
 
   .sfgov-filters-legend {
     @include fs-title-4;
+
     line-height: 1;
     margin-bottom: 40px;
 
     @include media($medium-screen) {
       @include fs-title-3;
+
       line-height: 1;
     }
   }
@@ -52,7 +54,7 @@
   .fieldset-wrapper {
     // Regular form items.
     .form-item {
-      margin: 0 0 20px 0;
+      margin: 0 0 20px;
     }
 
     // Checkboxes / Radios
@@ -76,23 +78,25 @@
     overflow-y: scroll;
 
     // Start: scroll shadows
-    background: linear-gradient(#ffffff 33%, rgba(255, 255, 255, 0)),
-      linear-gradient(rgba(255, 255, 255, 0), #ffffff 66%) 0 100%,
+    background:
+      linear-gradient(#fff 33%, rgba(255, 255, 255, 0)),
+      linear-gradient(rgba(255, 255, 255, 0), #fff 66%) 0 100%,
       radial-gradient(
         farthest-side at 50% 0,
         rgba(0, 0, 0, 0.15),
         rgba(0, 0, 0, 0)
       ),
       radial-gradient(
-          farthest-side at 50% 100%,
-          rgba(0, 0, 0, 0.15),
-          rgba(0, 0, 0, 0)
-        )
-        0 100%;
-    background-color: #ffffff;
+        farthest-side at 50% 100%,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0)
+      )
+      0 100%;
+    background-color: #fff;
     background-repeat: no-repeat;
     background-attachment: local, local, scroll, scroll;
     background-size: 100% 60px, 100% 60px, 100% 10px, 100% 10px;
+
     // End: scroll shadows
 
     @include media($narrow-screen) {
@@ -101,11 +105,12 @@
 
     // Scroll bar always visible (where supported).
     &::-webkit-scrollbar {
-      -webkit-appearance: none;
+      appearance: none;
 
       &:vertical {
         width: 10px;
       }
+
       &:horizontal {
         height: 10px;
       }
@@ -142,7 +147,7 @@
     label {
       display: inline-block;
       padding: 0 0 0 40px;
-      margin: 0 0 20px 0;
+      margin: 0 0 20px;
       font-size: 15px;
       line-height: 18px;
 
@@ -198,11 +203,13 @@
 
   .button {
     @include rubik;
+
     width: auto;
   }
 
   .filter-toggle {
     @include rubik;
+
     background: transparent;
     border: 0;
     border-radius: 0;
@@ -233,7 +240,8 @@
 
       &::before {
         content: '';
-        background: transparent
+        background:
+          transparent
           url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE3LjQ2IDE0Ljc1NWExLjI0NSAxLjI0NSAwIDAxLS44ODUtLjM2NUw5Ljk2IDcuNzc1IDMuMzQ1IDE0LjM5YTEuMjUyIDEuMjUyIDAgMDEtMS43Ny0xLjc3bDcuNS03LjVhMS4yNiAxLjI2IDAgMDExLjc3IDBsNy41IDcuNWExLjI2IDEuMjYgMCAwMTAgMS43NyAxLjI0NiAxLjI0NiAwIDAxLS44ODUuMzY1eiIgZmlsbD0iIzRGNjZFRSIvPjwvc3ZnPg==)
           no-repeat;
         display: inline-flex;

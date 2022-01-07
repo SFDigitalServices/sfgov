@@ -10,9 +10,10 @@
   background: $c-white;
   width: calc(100% - 58px);
   padding: 0;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 5px 2px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 5px 5px 2px;
   text-align: left;
   border-radius: 0 0 8px 8px;
+
   @include media($medium-screen) {
     width: calc(100% - 129px);
   }
@@ -20,10 +21,12 @@
 
 @mixin search-suggestions-link {
   @include fs-body-short;
+
   display: block;
   text-decoration: none;
   padding: 10px 25px;
   color: $c-slate;
+
   &:hover {
     background: $c-blue-3;
   }
@@ -31,9 +34,11 @@
 
 #sfgov-search-autocomplete {
   @include search-suggestions-container;
+
   strong {
     @include fs-body-bold;
   }
+
   a {
     @include search-suggestions-link;
   }
@@ -41,8 +46,10 @@
 
 #sfgov-top-search-suggestions-container {
   @include search-suggestions-container;
+
   > h4 {
     @include fs-body-bold;
+
     margin: 10px 25px;
     padding: 0;
   }
@@ -50,6 +57,7 @@
 
 .sfgov-top-search-suggestion {
   display: none;
+
   a {
     @include search-suggestions-link;
   }
@@ -57,7 +65,9 @@
 
 #sfgov-search-results-count {
   display: none;
+
   @include fs-small-text;
+
   @include media($medium-screen) {
     display: block;
   }
@@ -66,6 +76,7 @@
 #sfgov-search-results-container {
   @include rubik;
   @include contain-1090;
+
   strong {
     font-weight: 500;
   }
@@ -78,13 +89,16 @@
 
   #sfgov-search-results {
     margin-top: 40px;
+
     &.add-height {
       height: 1200px;
     }
+
     .no-search-results--container {
       h2 {
         @include fs-title-5;
       }
+
       padding-left: 16px;
     }
   }
@@ -92,54 +106,70 @@
   .sfgov-search-result {
     @include rubik;
     @include fs-body-short;
+
     margin-bottom: 60px;
+
     h4,
     a {
       @include rubik;
       @include link-colors($c-bright-blue, $c-slate);
     }
+
     h4 {
       @include fs-big-link;
+
       color: $c-bright-blue;
       margin-bottom: 8px;
     }
+
     .sfgov-search-result-body {
       p {
         margin: 0;
       }
+
       a {
         @include fs-body-short;
+
         color: $c-slate;
         opacity: 0.65;
         word-wrap: break-word;
       }
     }
+
     .content-type {
       @include fs-body-bold;
+
       padding-left: 26px;
       display: block;
       margin-bottom: 10px;
       text-decoration: none;
+
       &.topic {
         @include background-image('document.svg', 0 0);
       }
+
       &.dept {
         @include background-image('building.svg', 0 0);
       }
     }
+
     @include media($medium-screen) {
     }
   }
 
   .sfgov-search-misspelled {
     @include fs-title-5;
+
     margin-bottom: 20px;
+
     span {
       display: inline-block;
     }
+
     .sfgov-spelled-keyword {
       display: inline-block;
     }
+
     .sfgov-search-instead {
       @include fs-body-short;
     }
@@ -148,14 +178,17 @@
   // pagination styles
   .sfgov-search-pagination {
     display: none;
+
     @include media($medium-screen) {
       display: block;
       text-align: center;
       margin-bottom: 107px;
       color: $c-slate;
+
       .hide-page {
         display: none;
       }
+
       .previous,
       .next {
         a {
@@ -172,7 +205,8 @@
         a {
           &::after {
             content: '';
-            background: url(/themes/custom/sfgovpl/src/img/icons/arrow-right.svg)
+            background:
+              url(/themes/custom/sfgovpl/src/img/icons/arrow-right.svg)
               no-repeat;
             width: 21px;
             height: 18px;
@@ -190,9 +224,11 @@
           margin-right: 20px;
           padding-left: 55px;
           padding-right: 20px;
+
           &::before {
             content: '';
-            background: url(/themes/custom/sfgovpl/src/img/icons/arrow-left.svg)
+            background:
+              url(/themes/custom/sfgovpl/src/img/icons/arrow-left.svg)
               no-repeat;
             width: 21px;
             height: 18px;
@@ -217,8 +253,10 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
+
         li {
           display: inline-block;
+
           a {
             font-weight: normal;
             text-decoration: none;
@@ -229,6 +267,7 @@
             text-decoration: underline;
             font-family: rubik;
           }
+
           &.current {
             a {
               border-radius: 3px;
@@ -246,8 +285,10 @@
   text-align: center;
   margin-bottom: 40px;
   display: block;
+
   a {
     @include fs-body-bold;
+
     border: 3px solid $c-bright-blue;
     color: $c-bright-blue;
     display: block;
@@ -255,6 +296,7 @@
     padding: 15px 7px;
     border-radius: 8px;
   }
+
   @include media($medium-screen) {
     display: none;
   }
@@ -278,7 +320,7 @@
 }
 
 .loader {
-  color: #ff0000;
+  color: #f00;
   position: fixed;
   box-sizing: border-box;
   left: -9999px;
@@ -288,11 +330,13 @@
   overflow: hidden;
   z-index: 999999;
 }
-.loader:after,
-.loader:before {
+
+.loader::after,
+.loader::before {
   box-sizing: border-box;
   display: none;
 }
+
 .loader.is-active {
   background-color: transparent;
   width: 100%;
@@ -300,27 +344,33 @@
   left: 0;
   top: 0;
 }
-.loader.is-active:after,
-.loader.is-active:before {
+
+.loader.is-active::after,
+.loader.is-active::before {
   display: block;
 }
+
 @keyframes rotation {
   0% {
     transform: rotate(0);
   }
+
   to {
     transform: rotate(359deg);
   }
 }
+
 @keyframes blink {
   0% {
     opacity: 0.5;
   }
+
   to {
     opacity: 1;
   }
 }
-.loader[data-text]:before {
+
+.loader[data-text]::before {
   position: fixed;
   left: 0;
   top: 50%;
@@ -330,19 +380,24 @@
   width: 100%;
   font-size: 14px;
 }
-.loader[data-text='']:before {
+
+.loader[data-text='']::before {
   content: 'Loading';
 }
-.loader[data-text]:not([data-text='']):before {
+
+.loader[data-text]:not([data-text=''])::before {
   content: attr(data-text);
 }
-.loader[data-text][data-blink]:before {
+
+.loader[data-text][data-blink]::before {
   animation: blink 1s linear infinite alternate;
 }
-.loader-default[data-text]:before {
+
+.loader-default[data-text]::before {
   top: calc(50% - 63px);
 }
-.loader-default:after {
+
+.loader-default::after {
   content: '';
   position: fixed;
   width: 48px;
@@ -354,11 +409,15 @@
   left: calc(50% - 24px);
   animation: rotation 1s linear infinite;
 }
-.loader-default[data-half]:after {
+
+.loader-default[data-half]::after {
   border-right-color: transparent;
 }
-.loader-default[data-inverse]:after {
+
+.loader-default[data-inverse]::after {
   animation-direction: reverse;
 }
+
 // end loading css
+
 /* purgecss end ignore */

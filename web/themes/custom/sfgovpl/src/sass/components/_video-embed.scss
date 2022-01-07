@@ -8,10 +8,12 @@ $video_height_desktop: 405px;
     align-items: center;
     margin-top: 28px;
     text-decoration: none;
+
     @include media($medium-screen) {
       display: none;
     }
-    &:before {
+
+    &::before {
       content: '';
       display: inline-block;
       height: 20px;
@@ -29,25 +31,32 @@ $video_height_desktop: 405px;
   .video-wrapper {
     display: flex;
     flex-direction: column;
+
     @include media($medium-screen) {
       flex-direction: row;
     }
+
     .group-left {
       flex: 2;
+
       @include media($medium-screen) {
         height: $video_height_desktop;
       }
+
       .__video {
         height: 100%;
+
         .video-embed-field-responsive-video {
           height: 100%;
         }
       }
     }
+
     .group-right {
       flex: 1;
       max-height: 100%;
       box-sizing: border-box;
+
       @include media-max($medium-screen) {
         height: 0; // $video_height_mobile;
         opacity: 0;
@@ -58,21 +67,26 @@ $video_height_desktop: 405px;
       @include media($medium-screen) {
         height: $video_height_desktop;
       }
+
       .inner {
         height: 100%;
         overflow: scroll;
         border: 2px solid $c-grey-3;
         transition: all 0.3s ease-in-out;
         padding: 27px 22px;
+
         @include media-max($medium-screen) {
           padding: 0 22px;
         }
+
         .link-video {
           margin-bottom: 2rem;
         }
+
         ul {
           margin-top: 0;
           padding-left: 0;
+
           li {
             list-style: none;
           }
@@ -88,6 +102,7 @@ $video_height_desktop: 405px;
           height: $video_height_mobile;
           opacity: 1;
         }
+
         .inner {
           @include media-max($medium-screen) {
             padding: 27px 22px;
@@ -97,14 +112,15 @@ $video_height_desktop: 405px;
     }
 
     .toggle-transcript {
-      &:before {
+      &::before {
         transform: rotate(0);
       }
     }
   }
 
-  .video-embed-field-responsive-video:after {
+  .video-embed-field-responsive-video::after {
     padding-bottom: 50%;
   }
 }
+
 /* purgecss end ignore */
