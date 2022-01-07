@@ -19,7 +19,7 @@ bundle: cost
 mode: preview
 content:
   field_cost_flat_fee:
-    weight: 1
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ','
@@ -27,10 +27,10 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 1
     region: content
   field_cost_maximum:
-    weight: 3
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ','
@@ -38,10 +38,10 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 3
     region: content
   field_cost_minimum:
-    weight: 2
+    type: number_decimal
     label: inline
     settings:
       thousand_separator: ','
@@ -49,32 +49,33 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_decimal
+    weight: 2
     region: content
   field_cost_type:
-    weight: 0
+    type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 0
     region: content
   field_text:
     type: smart_trim
-    weight: 4
-    region: content
     label: inline
     settings:
       trim_length: 80
       trim_type: chars
       trim_suffix: ...
+      wrap_output: false
       wrap_class: trimmed
-      more_text: More
+      more_link: false
       more_class: more-link
+      more_text: More
+      summary_handler: full
       trim_options:
         text: true
         trim_zero: false
-      wrap_output: false
-      more_link: false
-      summary_handler: full
     third_party_settings: {  }
-hidden: {  }
+    weight: 4
+    region: content
+hidden:
+  search_api_excerpt: true

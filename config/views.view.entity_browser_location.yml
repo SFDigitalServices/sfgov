@@ -21,101 +21,12 @@ base_table: location_field_data
 base_field: id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'access content overview'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Filter
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: full
-        options:
-          items_per_page: 20
-          offset: 0
-          id: 0
-          total_pages: null
-          tags:
-            previous: ‹‹
-            next: ››
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: true
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '20, 50'
-            items_per_page_options_all: true
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
-      style:
-        type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          override: true
-          sticky: false
-          caption: ''
-          summary: ''
-          description: ''
-          columns:
-            entity_browser_select: entity_browser_select
-            title: title
-            field_address: field_address
-          info:
-            entity_browser_select:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            title:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_address:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: field_address
-          empty_table: false
-      row:
-        type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
+      title: 'Search Addresses'
       fields:
         entity_browser_select:
           id: entity_browser_select
@@ -124,6 +35,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          plugin_id: entity_browser_select
           label: 'Entity browser bulk select form'
           exclude: false
           alter:
@@ -165,8 +78,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          entity_type: location
-          plugin_id: entity_browser_select
         view_location:
           id: view_location
           table: location
@@ -174,6 +85,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          plugin_id: entity_link
           label: 'Link to Location'
           exclude: true
           alter:
@@ -218,8 +131,6 @@ display:
           text: view
           output_url_as_text: true
           absolute: false
-          entity_type: location
-          plugin_id: entity_link
         field_address:
           id: field_address
           table: location__field_address
@@ -227,6 +138,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Address
           exclude: false
           alter:
@@ -281,7 +193,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_department:
           id: field_department
           table: location__field_department
@@ -289,6 +200,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Department
           exclude: false
           alter:
@@ -344,7 +256,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_address_organization:
           id: field_address_organization
           table: location__field_address
@@ -352,6 +263,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: standard
           label: 'Division or organization'
           exclude: false
           alter:
@@ -393,7 +305,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: standard
         field_address_addressee:
           id: field_address_addressee
           table: location__field_address
@@ -401,6 +312,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: standard
           label: Addressee
           exclude: false
           alter:
@@ -442,7 +354,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: standard
         field_address_location_name:
           id: field_address_location_name
           table: location__field_address
@@ -450,6 +361,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: standard
           label: 'Location name'
           exclude: false
           alter:
@@ -491,7 +403,65 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 20
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: true
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '20, 50'
+            items_per_page_options_all: true
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access content overview'
+      cache:
+        type: tag
+        options: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          plugin_id: text
+      sorts:
+        field_address_address_line1:
+          id: field_address_address_line1
+          table: location__field_address
+          field: field_address_address_line1
+          relationship: none
+          group_type: group
+          admin_label: ''
           plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: field_address_address_line1
+          exposed: false
+      arguments: {  }
       filters:
         type:
           id: type
@@ -500,6 +470,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          entity_field: type
+          plugin_id: bundle
           operator: in
           value:
             physical: physical
@@ -511,6 +484,8 @@ display:
             description: ''
             use_operator: false
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: ''
             required: false
             remember: false
@@ -518,8 +493,6 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -532,9 +505,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: location
-          entity_field: type
-          plugin_id: bundle
         field_department_target_id:
           id: field_department_target_id
           table: location__field_department
@@ -542,6 +512,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: numeric
           operator: '='
           value:
             min: ''
@@ -567,9 +538,9 @@ display:
               writer: '0'
               publisher: '0'
               administrator: '0'
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -582,7 +553,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: numeric
         field_address_address_line1:
           id: field_address_address_line1
           table: location__field_address
@@ -590,6 +560,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -625,7 +596,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
         field_address_organization:
           id: field_address_organization
           table: location__field_address
@@ -633,6 +603,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -668,7 +639,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
         field_address_addressee:
           id: field_address_addressee
           table: location__field_address
@@ -676,6 +646,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -711,7 +682,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
         field_address_location_name:
           id: field_address_location_name
           table: location__field_address
@@ -719,6 +689,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -754,20 +725,63 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
-      sorts:
-        field_address_address_line1:
-          id: field_address_address_line1
-          table: location__field_address
-          field: field_address_address_line1
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          plugin_id: standard
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            entity_browser_select: entity_browser_select
+            title: title
+            field_address: field_address
+          default: field_address
+          info:
+            entity_browser_select:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            title:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_address:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships: {  }
       header:
         area:
           id: area
@@ -776,27 +790,14 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: true
-          tokenize: false
           content:
             value: "<h3>Search addresses</h3>\r\n<p>If you can't find the address, an editor can add it for you.</p>"
             format: full_html
-          plugin_id: text
+          tokenize: false
       footer: {  }
-      empty:
-        area:
-          id: area
-          table: views
-          field: area
-          plugin_id: text
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      title: 'Search Addresses'
     cache_metadata:
       max-age: -1
       contexts:
@@ -809,13 +810,11 @@ display:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_department'
   entity_browser_address:
-    display_plugin: entity_browser
     id: entity_browser_address
     display_title: Address
+    display_plugin: entity_browser
     position: 1
     display_options:
-      display_extenders: {  }
-      display_description: 'A list of Addresses for "Address" Entity Browser. Uses ECK Entity "Location" with "Address" (a.k.a. physical) bundle.'
       empty:
         area:
           id: area
@@ -824,27 +823,18 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: true
-          tokenize: false
           content:
             value: 'There are no results to display.'
             format: full_html
-          plugin_id: text
-      defaults:
-        empty: false
-        style: false
-        row: false
+          tokenize: false
       style:
         type: table
         options:
           grouping: {  }
           row_class: ''
           default_row_class: true
-          override: true
-          sticky: false
-          caption: ''
-          summary: ''
-          description: ''
           columns:
             entity_browser_select: entity_browser_select
             field_address: field_address
@@ -852,6 +842,7 @@ display:
             field_address_organization: field_address_organization
             field_address_addressee: field_address_addressee
             field_address_location_name: field_address_location_name
+          default: field_address
           info:
             entity_browser_select:
               align: ''
@@ -893,8 +884,12 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-          default: field_address
+          override: true
+          sticky: false
+          summary: ''
           empty_table: false
+          caption: ''
+          description: ''
       row:
         type: fields
         options:
@@ -902,6 +897,12 @@ display:
           inline: {  }
           separator: ''
           hide_empty: false
+      defaults:
+        empty: false
+        style: false
+        row: false
+      display_description: 'A list of Addresses for "Address" Entity Browser. Uses ECK Entity "Location" with "Address" (a.k.a. physical) bundle.'
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -914,21 +915,11 @@ display:
         - 'config:field.storage.location.field_address'
         - 'config:field.storage.location.field_department'
   entity_browser_event_address:
-    display_plugin: entity_browser
     id: entity_browser_event_address
     display_title: 'Event Address (event)'
+    display_plugin: entity_browser
     position: 2
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      defaults:
-        filters: false
-        filter_groups: false
-        empty: true
-        fields: false
-        header: false
-        style: true
-        row: true
       fields:
         entity_browser_select:
           id: entity_browser_select
@@ -937,6 +928,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          plugin_id: entity_browser_select
           label: 'Entity browser bulk select form'
           exclude: false
           alter:
@@ -978,8 +971,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          entity_type: location
-          plugin_id: entity_browser_select
         title:
           id: title
           table: location_field_data
@@ -987,6 +978,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          entity_field: title
+          plugin_id: field
           label: Title
           exclude: false
           alter:
@@ -1042,9 +1036,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: location
-          entity_field: title
-          plugin_id: field
         field_address:
           id: field_address
           table: location__field_address
@@ -1052,6 +1043,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Address
           exclude: false
           alter:
@@ -1106,7 +1098,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
       filters:
         type:
           id: type
@@ -1115,6 +1106,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          entity_field: type
+          plugin_id: bundle
           operator: in
           value:
             event_address: event_address
@@ -1147,9 +1141,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: location
-          entity_field: type
-          plugin_id: bundle
         title:
           id: title
           table: location_field_data
@@ -1157,6 +1148,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: location
+          entity_field: title
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -1192,9 +1186,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: location
-          entity_field: title
-          plugin_id: string
         field_address_address_line1:
           id: field_address_address_line1
           table: location__field_address
@@ -1202,6 +1193,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -1237,11 +1229,19 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: string
       filter_groups:
         operator: AND
         groups:
           1: AND
+      defaults:
+        empty: true
+        style: true
+        row: true
+        fields: false
+        filters: false
+        filter_groups: false
+        header: false
+      display_description: ''
       header:
         area:
           id: area
@@ -1250,12 +1250,13 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: true
-          tokenize: false
           content:
             value: "<h3>Search addresses</h3>\r\n<p>If you can't find the address, click the \"New event address\" tab above to create a new one.</p>"
             format: full_html
-          plugin_id: text
+          tokenize: false
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
