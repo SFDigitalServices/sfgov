@@ -29,7 +29,6 @@ while [ "$status" = 'null' ]; do
     break
   fi
   status=$(echo $suiteResult | jq -r '.data.passing')
-  echo " - status: $status"
   sleep 5
 done
 
@@ -55,11 +54,9 @@ suiteTestResults=$(curl -s https://api.ghostinspector.com/v1/suite-results/$giRe
 
 # parse for e2e results
 giResultsSlack=$(echo $suiteTestResults | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
-echo "giResultsSlack:$giResultsSlack"
 
 # parse for accessibility results
 adaResultsSlack=$(echo $suiteTestResults | jq -r '.data[] | {name: .name, url: .urls[-1], counts: .steps[] | select(.command | contains("assertAccessibility")) | .extra.accessibility.counts} | "*\(.name)*\n\t<\(.url)|scanned page>\n\t*total issues*:\(.counts.total)\n\tcritical:\(.counts.critical)\n\tserious:\(.counts.serious)\n\tmoderate:\(.counts.moderate)\n\tminor:\(.counts.minor)\n\n"')
-echo $adaResultsSlack
 
 quickStatus=""
 
@@ -70,8 +67,6 @@ elif [[ $giResultsSlack =~ "orangedash" ]]; then
 else
   quickStatus=":large_green_circle:"
 fi
-
-echo "quickStatus:$quickStatus"
 
 suiteStatusData=$(printf '{
   "channel": "proj-sfdotgov-eng",
@@ -86,15 +81,11 @@ suiteStatusData=$(printf '{
   }]
 }' "$prText" "$quickStatus e2e tests for <$giStartUrl|$prText> complete :thread:")
 
-echo "suiteStatusData:$suiteStatusData"
-
 threadTs=$(curl -s -X POST \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
   -H "Content-type: application/json; charset=utf-8" \
   --data "$suiteStatusData" \
   https://slack.com/api/chat.postMessage | jq -r .ts)
-
-echo "threadTs:$threadTs"
 
 if [ -n "$CIRCLE_PULL_REQUEST" ]; then
   prThreadData=$(printf '{
@@ -131,8 +122,6 @@ e2eThreadData=$(printf '{
   "thread_ts":"%s"
 }' "$giResultsSlack" "$threadTs")
 
-echo "e2eThreadData:$e2eThreadData"
-
 curl -s -X POST -H 'Content-type: application/json' --data "$e2eThreadData" $RONBOT_WEBHOOK_URL
 
 adaThreadData=$(printf '{
@@ -154,4 +143,4 @@ adaThreadData=$(printf '{
 
 curl -s -X POST -H 'Content-type: application/json' --data "$adaThreadData" $RONBOT_WEBHOOK_URL
 
-exit $giPassing
+echo "giResultsSlack:$giResultsSlack"
