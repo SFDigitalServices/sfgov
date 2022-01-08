@@ -9,12 +9,15 @@
     "develop": "run-p watch start",
     "lint": "prettier --check src",
     "lint-css": "prettier --check 'src/sass/**/*.scss'",
-    "lint-js": "prettier --check 'src/js/**/*.js'",
+    "lint-js": "eslint '*.js' src/js",
     "lint-fix": "prettier --write src",
     "start": "run-p watch browser-sync",
     "watch": "run-p watch-css watch-js",
     "watch-css": "npm run build-css -- --watch",
     "watch-js": "npm run build-js -- --watch"
+  },
+  "dependencies": {
+    "sfgov-design-system": "^2.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
@@ -24,6 +27,8 @@
     "autoprefixer": "^9.8.8",
     "browser-sync": "^2.27.7",
     "chalk": "^4.1.2",
+    "eslint": "^7.32.0",
+    "eslint-plugin-sfgov": "^1.0.0",
     "node-sass": "^6.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.5",
