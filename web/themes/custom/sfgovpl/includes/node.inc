@@ -259,11 +259,11 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
   if (\Drupal::routeMatch()->getParameter('node')) {
     $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
     $parent_node = Node::load($parent_nid);
-  
+
     // This bundle's display mode should invalidate caches when there are any
     // updates on public bodies nodes.
     $variables['#cache']['tags'][] = 'node_list:public_body';
-  
+
     // Check for public body node, find profile's position field value
     if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
       $profile_groups = $parent_node->field_board_members->getValue();
@@ -286,7 +286,7 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
           }
         }
       }
-    } 
+    }
   }
 }
 
@@ -489,7 +489,7 @@ function public_body_page_fields($node) {
  */
 function profile_page_fields($node) {
   $theFields = [];
-  
+
   if($node) {
     // Get field data related to profile
     $nid = $node->id();
@@ -668,15 +668,25 @@ function profile_page_fields($node) {
       }
       if(isset($addressEntity)) {
         $addressValues = $addressEntity->get('field_address')->getValue()[0];
+        $department = FALSE;
+        if (!$addressEntity->get('field_department')->isEmpty()) {
+          $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
+        }
+        // Choose a title value in descending order.
+        $Addresstitle = $department->title->value ?: $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
+        $theFields['address']['title'] = $Addresstitle;
+        // If one of the address fields was used as the title, remove it from
+        // the render array so that it doesn't show up twice.
+        $theFields['address']['organization'] = ($addressValues['organization'] == $Addresstitle) ? NULL : $addressValues['organization'];
+        $theFields['address']['addressee'] = ($addressValues['addressee'] == $Addresstitle) ? NULL : $addressValues['addressee'];
+        $theFields['address']['location_name'] = ($addressValues['location_name'] == $Addresstitle) ? NULL : $addressValues['location_name'];
+
         $theFields['address']['line1'] = $addressValues['address_line1'];
         $theFields['address']['line2'] = $addressValues['address_line2'];
         $theFields['address']['country_code'] = $addressValues['country_code'];
         $theFields['address']['city'] = $addressValues['locality'];
         $theFields['address']['state'] = $addressValues['administrative_area'];
         $theFields['address']['zip'] = $addressValues['postal_code'];
-        $theFields['address']['organization'] = $addressValues['organization'];
-        $theFields['address']['addressee'] = $addressValues['addressee'];
-        $theFields['address']['location_name'] = $addressValues['location_name'];
         $hours = $addressEntity->get('field_operating_hours')->getValue();
         usort($hours, function($item1, $item2) {
           return $item1['day'] <=> $item2['day'];
