@@ -5,7 +5,7 @@
     "browser-sync": "browser-sync start --proxy https://sfgov.lndo.site --files dist",
     "build": "run-p build-css build-js",
     "build-css": "postcss --verbose -d dist/css 'src/sass/*.css'",
-    "build-js": "babel -d dist/js 'src/js/*.js'",
+    "build-js": "babel -d dist/js 'node_modules/sfgov-design-system/dist/js/sfds.js' 'src/js/*.js'",
     "develop": "run-p watch start",
     "lint": "prettier --check src",
     "lint-css": "prettier --check 'src/sass/**/*.scss'",
