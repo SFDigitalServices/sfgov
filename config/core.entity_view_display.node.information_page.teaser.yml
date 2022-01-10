@@ -5,6 +5,13 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.information_page.body
+    - field.field.node.information_page.field_dept
+    - field.field.node.information_page.field_description
+    - field.field.node.information_page.field_information_section
+    - field.field.node.information_page.field_public_body
+    - field.field.node.information_page.field_related_content
+    - field.field.node.information_page.field_topics
+    - field.field.node.information_page.field_transactions
     - node.type.information_page
   module:
     - text
@@ -15,21 +22,30 @@ bundle: information_page
 mode: teaser
 content:
   body:
-    label: hidden
     type: text_summary_or_trimmed
-    weight: 101
+    label: hidden
     settings:
       trim_length: 600
     third_party_settings: {  }
+    weight: 101
     region: content
-  links:
-    weight: 100
+  content_moderation_control:
     settings: {  }
     third_party_settings: {  }
+    weight: -20
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
     region: content
 hidden:
   field_dept: true
   field_description: true
   field_information_section: true
+  field_public_body: true
+  field_related_content: true
+  field_topics: true
   field_transactions: true
   langcode: true
+  search_api_excerpt: true
