@@ -81,15 +81,8 @@
   </div>
 </div>
 
-<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
-  <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
-    <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
-    <ul></ul>
-  </div>
-</div>
-
 {% if content.field_spotlight2['#items'].getValue() %}
-  <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+  <div class="sfgov-full-bleed padding-zero bg-grey-1 sfgov-spotlight-container">
     <div class="sfgov-section-container">
       {{ content.field_spotlight2 }}
     </div>
@@ -97,6 +90,13 @@
 {% endif %}
 
 {{ content.field_featured_items }}
+
+<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container mb-40">
+  <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
+    <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
+    <ul></ul>
+  </div>
+</div>
 
 {# Alert #}
 {% include '@theme/alert.twig' with {
@@ -197,7 +197,7 @@
               {{ content.field_image }}
             </div>
           {% endif %}
-          {% if content.field_call_to_action|render|striptags %}
+          {% if content.field_call_to_action|render|striptags|trim %}
             <div class="sfgov-dept-about-cta sfgov-cta">
               {{ content.field_call_to_action }}
             </div>
