@@ -1,20 +1,20 @@
 name: Amplitude events
 on:
-  - deployment_status
-  - pull_request:
-      types:
-        - opened
-        - synchronize
-        - edited
-        - closed
-        - reopened
-        - converted_to_draft
-        - review_requested
-  - release:
-      types:
-        - created
-        - published
-        - released
+  deployment_status:
+  pull_request:
+    types:
+      - opened
+      - closed
+      - synchronize
+      - reopened
+      - converted_to_draft
+      - ready_for_review
+      - review_requested
+      - review_request_removed
+  release:
+    types:
+      - created
+      - published    
 
 jobs:
   log:
