@@ -104,7 +104,7 @@ function SFGovTranslate() {
           .attr('data-sfgov-translator', translation.status === true ? 'drupal' : 'gtranslate');
 
         if (translation.lang === currentDrupalLang) {
-          $('.gtranslate-link[data-sfgov-translate$="|'+ currentDrupalLang +'"]').addClass('is-active');
+          $('.gtranslate-link[data-sfgov-translate$="|'+ currentDrupalLang +'"]').addClass('is-active cursor-default font-medium hocus:no-underline');
         }
       }
     }

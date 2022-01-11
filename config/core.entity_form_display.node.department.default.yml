@@ -59,87 +59,87 @@ third_party_settings:
         - field_call_to_action
         - field_social_media
         - field_people
+      label: About
+      region: content
       parent_name: ''
       weight: 8
       format_type: details
       format_settings:
-        description: ''
-        open: true
-        id: sfgov-dept-contact-group
         classes: sfgov-dept-contact-group
+        id: sfgov-dept-contact-group
+        open: true
+        description: ''
         required_fields: false
-      label: About
-      region: content
     group_contact:
       children:
         - field_address
         - field_phone_numbers
         - field_email
+      label: Contact
+      region: content
       parent_name: ''
       weight: 9
       format_type: details
       format_settings:
-        description: ''
-        open: true
-        id: sfgov-dept-contact-group
         classes: sfgov-dept-contact-group
+        id: sfgov-dept-contact-group
+        open: true
+        description: ''
         required_fields: false
-      label: Contact
-      region: content
     group_request_public_records:
       children:
         - field_req_public_records
         - field_req_public_records_phone
         - field_req_public_records_link
         - field_req_public_records_email
+      label: 'Request public records'
+      region: content
       parent_name: ''
       weight: 10
       format_type: details
       format_settings:
-        description: ''
-        open: true
-        required_fields: true
-        id: sfgov-dept-request-public-records
         classes: ''
-      label: 'Request public records'
-      region: content
+        id: sfgov-dept-request-public-records
+        open: true
+        description: ''
+        required_fields: true
     group_01:
       children: {  }
+      label: '01'
+      region: hidden
       parent_name: ''
       weight: 30
       format_type: tabs
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         direction: vertical
-      label: '01'
-      region: hidden
     group_02:
       children: {  }
+      label: '02'
+      region: hidden
       parent_name: ''
       weight: 29
       format_type: details
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         open: false
         required_fields: true
-      label: '02'
-      region: hidden
     group_alert:
       children:
         - field_alert_text
         - field_alert_expiration_date
+      label: Alert
+      region: content
       parent_name: ''
       weight: 2
       format_type: details
       format_settings:
-        id: ''
         classes: alert-fieldset
+        id: ''
         open: false
         required_fields: false
-      label: Alert
-      region: content
 id: node.department.default
 targetEntityType: node
 bundle: department
@@ -165,7 +165,9 @@ content:
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
   field_about_or_description:
+    type: text_textarea
     weight: 54
+    region: content
     settings:
       rows: 5
       placeholder: ''
@@ -178,8 +180,6 @@ content:
       allowed_formats:
         hide_help: '0'
         hide_guidelines: '0'
-    type: text_textarea
-    region: content
   field_address:
     type: entity_browser_entity_reference
     weight: 35
@@ -189,10 +189,10 @@ content:
       field_widget_display: label
       field_widget_edit: true
       field_widget_remove: true
-      selection_mode: selection_append
       field_widget_replace: false
       open: false
       field_widget_display_settings: {  }
+      selection_mode: selection_append
     third_party_settings: {  }
   field_alert_expiration_date:
     type: datetime_default
@@ -342,10 +342,10 @@ content:
       field_widget_display: label
       field_widget_edit: true
       field_widget_remove: true
-      selection_mode: selection_append
       field_widget_replace: false
       open: false
       field_widget_display_settings: {  }
+      selection_mode: selection_append
     third_party_settings: {  }
   field_parent_department:
     type: entity_reference_autocomplete
@@ -425,8 +425,8 @@ content:
     weight: 14
     region: content
     settings:
-      size: 60
       placeholder: ''
+      size: 60
     third_party_settings: {  }
   field_req_public_records_link:
     type: link_default
@@ -502,6 +502,7 @@ content:
   field_spotlight2:
     type: paragraphs
     weight: 3
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -517,7 +518,6 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
   field_topics:
     type: entity_reference_autocomplete
     weight: 15

@@ -10,7 +10,7 @@ for (const path of process.argv.slice(2)) {
   if (ignorePattern.test(content)) {
     console.warn('- skipping %s: the file already has purgecss comments', path)
     continue
-  } else if (!content.includes('{')) {
+  } else if (!content.includes('{') && !content.includes('@')) {
     console.warn('- skipping %s: the file appears not to contain any CSS', path)
     continue
   }

@@ -1,0 +1,33 @@
+name: Amplitude events
+on:
+  - deployment_status
+  - pull_request:
+      types:
+        - opened
+        - synchronize
+        - edited
+        - closed
+        - reopened
+        - converted_to_draft
+        - review_requested
+  - release:
+      types:
+        - created
+        - published
+        - released
+
+jobs:
+  log:
+    if: secrets.AMPLITUDE_API_KEY
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/node@v2
+        with:
+          node-version: 14
+      - name: npm install
+        run: npm install @actions/{core,github} @amplitude/node
+      - name: log amplitude event
+        env:
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+        run: ./scripts/custom/amplitude-event.js

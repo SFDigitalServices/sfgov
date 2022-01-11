@@ -22,24 +22,26 @@ third_party_settings:
     group_settings:
       children:
         - field_is_reversed
+      label: Settings
+      region: content
       parent_name: ''
       weight: 4
       format_type: details
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         open: false
+        description: ''
         required_fields: true
-      label: Settings
 id: paragraph.campaign_spotlight.default
 targetEntityType: paragraph
 bundle: campaign_spotlight
 mode: default
 content:
   field_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 3
       placeholder: ''
@@ -48,21 +50,21 @@ content:
         hide_help: '1'
         hide_guidelines: '1'
       maxlength:
-        maxlength_js: 500
+        maxlength_js: 300
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
-        maxlength_js_enforce: false
-        maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
+        maxlength_js_enforce: true
+        maxlength_js_truncate_html: true
   field_is_reversed:
+    type: boolean_checkbox
     weight: 6
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_spotlight_button:
+    type: entity_reference_paragraphs
     weight: 3
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -71,25 +73,25 @@ content:
       form_display_mode: default
       default_paragraph_type: ''
     third_party_settings: {  }
-    type: entity_reference_paragraphs
-    region: content
   field_spotlight_img:
+    type: entity_browser_entity_reference
     weight: 2
+    region: content
     settings:
       entity_browser: image
       field_widget_display: rendered_entity
       field_widget_edit: true
       field_widget_remove: true
-      selection_mode: selection_append
-      field_widget_display_settings:
-        view_mode: default
       field_widget_replace: false
       open: false
+      field_widget_display_settings:
+        view_mode: default
+      selection_mode: selection_append
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 65
       placeholder: ''
@@ -97,8 +99,11 @@ content:
       maxlength:
         maxlength_js: 65
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
-    type: string_textfield
+  translation:
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   status: true
