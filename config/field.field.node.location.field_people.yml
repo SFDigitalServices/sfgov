@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_people
     - node.type.location
-    - paragraphs.paragraphs_type.people
+    - paragraphs.paragraphs_type.profile_group
   module:
     - entity_reference_revisions
     - tmgmt_content
@@ -25,9 +25,9 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
-      people: people
+      profile_group: profile_group
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 57
@@ -46,6 +46,9 @@ settings:
         enabled: false
       agenda_item:
         weight: 62
+        enabled: false
+      basic_html_section:
+        weight: 78
         enabled: false
       block:
         weight: 63
@@ -80,6 +83,15 @@ settings:
       custom_section:
         weight: 73
         enabled: false
+      data_story_reference_section:
+        weight: 90
+        enabled: false
+      data_story_reference_subsection:
+        weight: 91
+        enabled: false
+      data_story_section:
+        weight: 92
+        enabled: false
       department_content:
         weight: 74
         enabled: false
@@ -89,6 +101,12 @@ settings:
       document:
         weight: 76
         enabled: false
+      document_section:
+        weight: 96
+        enabled: false
+      document_subsection:
+        weight: 97
+        enabled: false
       email:
         weight: 77
         enabled: false
@@ -97,6 +115,9 @@ settings:
         enabled: false
       events:
         weight: 79
+        enabled: false
+      existing_agency:
+        weight: 101
         enabled: false
       fact:
         weight: 80
@@ -115,6 +136,9 @@ settings:
         enabled: false
       help:
         weight: 85
+        enabled: false
+      image:
+        weight: 108
         enabled: false
       image_with_text:
         weight: 86
@@ -147,16 +171,31 @@ settings:
         weight: 95
         enabled: false
       people:
-        enabled: true
         weight: 96
+        enabled: false
       phone:
         weight: 97
         enabled: false
       phone_numbers:
         weight: 98
         enabled: false
+      powerbi_embed:
+        weight: 122
+        enabled: false
       process_step:
         weight: 99
+        enabled: false
+      profile_group:
+        weight: 124
+        enabled: true
+      public_body_profiles:
+        weight: 125
+        enabled: false
+      resource_section:
+        weight: 127
+        enabled: false
+      resource_subsection:
+        weight: 128
         enabled: false
       resources:
         weight: 100
@@ -196,5 +235,11 @@ settings:
         enabled: false
       video:
         weight: 112
+        enabled: false
+      video_external:
+        weight: 142
+        enabled: false
+      videos:
+        weight: 141
         enabled: false
 field_type: entity_reference_revisions

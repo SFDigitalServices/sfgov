@@ -1,6 +1,6 @@
 <?php
 
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\pathauto\PathautoState;
@@ -236,6 +236,30 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_link_alter().
+ */
+function sfgov_utilities_link_alter(&$variables) {
+  if ($variables['text'] == 'Clone') {
+    if (isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+      if (strpos($variables['options']['attributes']['data-drupal-link-system-path'], 'quick_clone')) {
+        $variables['text'] = 'Duplicate';
+      }
+    }
+  }
+}
+
+function sfgov_utilities_cloned_node_alter(&$node) {
+  if ($node->getType() == 'meeting') {
+    if (!empty($node->field_start_date->getValue())) {
+      $node->set('field_start_date', NULL);
+    }
+    if (!empty($node->field_end_date->getValue())) {
+      $node->set('field_end_date', NULL);
+    }
+  }
+}
+
+/**
  * Implements hook_entity_update().
  */
 function sfgov_utilities_entity_update(EntityInterface $entity) {
@@ -278,7 +302,7 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
         foreach ($alias_objects as $alias_object) {
           if ($alias_object->getPath() == $entity_path) {
             $retrieved_alias = $alias_object->getAlias();
-            $news_alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $entity->id());
+            $news_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id());
             $position = strrpos($news_alias, '/');
             $existing_alias = $position === FALSE ? $news_alias : substr($news_alias, $position + 1);
             if ($retrieved_alias != $news_alias) {
@@ -417,6 +441,20 @@ function sfgov_utilities_cron() {
   }
 
   \Drupal::service('cache.render')->invalidateAll();
+
+  // Find all tmgmt jobs from the xtm provider and save them with a valid provider.
+  $ids = \Drupal::entityQuery('tmgmt_job')
+    ->condition('translator', ['xtm', 'xtm_test'], 'IN')
+    ->execute();
+  if (!empty($ids)) {
+    $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
+    $entities = $storage->loadMultiple($ids);
+    foreach ($entities as $entity) {
+      // Give the entity a valid translator.
+      $entity->translator->target_id = 'contentapi';
+      $entity->save();
+    }
+  }
 }
 
 /**

@@ -1,0 +1,35 @@
+uuid: 2b511c37-d3c0-4c80-a03a-83cc95dd79e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_city_department
+    - node.type.department
+    - node.type.person
+    - node.type.public_body
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.person.field_city_department
+field_name: field_city_department
+entity_type: node
+bundle: person
+label: 'City department or public body'
+description: 'Profile will show contact information from department or public body (unless you enter another address)'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference

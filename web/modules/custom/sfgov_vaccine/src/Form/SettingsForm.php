@@ -43,8 +43,8 @@ class SettingsForm extends ConfigFormBase {
    */
   public function __construct(ClientInterface $httpClient, ConfigFactory $configFactory, VaxValues $vaxValues) {
     $this->httpClient = $httpClient;
-      $this->configFactory = $configFactory;
-      $this->vaxValues = $vaxValues;
+    $this->configFactory = $configFactory;
+    $this->vaxValues = $vaxValues;
   }
 
   /**

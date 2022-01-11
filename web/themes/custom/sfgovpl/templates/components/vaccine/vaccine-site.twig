@@ -1,6 +1,6 @@
-<div {{ result.attributes.setAttribute('data-order', loop.index) }}>
+<div {{ result.attributes.addClass('notranslate').setAttribute('data-order', loop.index) }}>
   <div class="vaccine-site__header">
-    <h3 class="vaccine-site__title notranslate">
+    <h3 class="vaccine-site__title">
       {{ result.site_name }}
     </h3>
 
@@ -8,7 +8,7 @@
   </div>
 
   {# Eligibility chicklets. #}
-  <div class="vaccine-site__eligibilities notranslate">
+  <div class="vaccine-site__eligibilities">
     {% for eligibility in result.eligibilities %}
       <span class="vaccine-site__eligibility">{{ eligibility }}</span>
     {% endfor %}
@@ -16,7 +16,7 @@
 
   {# Open to .. #}
   {% if result.restrictions_text %}
-    <div class="vaccine-site__restrictions notranslate">
+    <div class="vaccine-site__restrictions">
       {# Raw tag is used here because this field can contain HTML. #}
       {{ result.restrictions_text|raw }}
     </div>
@@ -24,14 +24,14 @@
 
   {# Address. #}
   {% if result.location.url %}
-    <div class="vaccine-site__address notranslate icon">
+    <div class="vaccine-site__address icon">
       <a href="{{ result.location.url }}">{{ result.location.address }}</a>
     </div>
   {% endif %}
 
   {# Brands - Pfizer, Moderna, etc #}
   {% if result.brands.administered %}
-    <div class="vaccine-site__brands notranslate icon">
+    <div class="vaccine-site__brands icon">
       <label>{{ template_strings.result.brands.label|t }}</label>
       {{ result.brands.administered|join(', ') }}
     </div>
@@ -39,7 +39,7 @@
 
   {# Languages #}
   {% if result.languages %}
-    <div class="vaccine-site__languages notranslate icon">
+    <div class="vaccine-site__languages icon">
       <label>{{ template_strings.result.languages.label|t }}</label>
       <div>
         {{ result.languages|join(', ') }}
@@ -49,14 +49,14 @@
 
   {# Access - Drive thru, walk thru, wheelchair #}
   {% if result.access_modes %}
-    <div class="vaccine-site__access-mode notranslate icon">
+    <div class="vaccine-site__access-mode icon">
       <label>{{ template_strings.result.access_modes.label|t }}</label>
       {{ result.access_modes|join(', ') }}
     </div>
   {% endif %}
 
   {% if result.info_url %}
-    <div class="notranslate">
+    <div>
       <a href="{{ result.info_url }}">
         {{ template_strings.result.info_url.label|t }}
       </a>

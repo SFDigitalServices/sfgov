@@ -15,11 +15,16 @@
 {% if content %}
   <div{{ attributes.addClass('sfgov-user__login') }}>
     <h1>{{ 'SF.gov editor login' }}</h1>
-    {{ content }}
-    <p>{{ 'If you are a City employee, <a href="@sso">log in with your DSW number instead.</a>'|t({'@sso': '/user/login'}) }}</p>
 
-    <div class="sfgov-user__help">
-      {% include '@sfgovpl/misc/help-text.twig' %}
+    <div class="sfgov-user__wrapper">
+      <div class="sfgov-user__content">
+        {{ content }}
+        <p>{{ 'If you are a City employee, <a href="@sso">log in with your DSW number instead.</a>'|t({'@sso': '/user/login'}) }}</p>
+      </div>
+
+      <div class="sfgov-user__help">
+        {% include '@sfgovpl/misc/login-help-text.twig' %}
+      </div>
     </div>
   </div>
 {% endif %}

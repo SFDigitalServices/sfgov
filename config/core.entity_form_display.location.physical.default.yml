@@ -21,46 +21,48 @@ third_party_settings:
       children:
         - field_department
         - field_address
+      label: Address
+      region: content
       parent_name: ''
       weight: 2
       format_type: details
-      region: content
       format_settings:
-        description: ''
-        open: true
-        id: ''
         classes: ''
+        id: ''
+        open: true
+        description: ''
         required_fields: false
-      label: Address
 id: location.physical.default
 targetEntityType: location
 bundle: physical
 mode: default
 content:
   field_address:
+    type: address_default
     weight: 4
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: address_default
-    region: content
   field_department:
+    type: entity_reference_autocomplete
     weight: 3
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_operating_hours:
+    type: office_hours_list
     weight: 6
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: office_hours_list
-    region: content
   field_text:
+    type: text_textarea
     weight: 7
+    region: content
     settings:
       rows: 3
       placeholder: ''
@@ -73,14 +75,19 @@ content:
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   langcode:
     type: language_select
     weight: 0
     region: content
     settings:
       include_locked: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   translation:
     weight: 1
