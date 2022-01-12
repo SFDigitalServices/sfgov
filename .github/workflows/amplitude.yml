@@ -17,8 +17,20 @@ on:
       - published    
 
 jobs:
+  check:
+    outputs:
+      ready: ${{ steps.check.ready }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        env:
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+        if: env.AMPLITUDE_API_KEY
+        run: echo "::set-output name=ready::true"
+
   log:
-    if: secrets.AMPLITUDE_API_KEY
+    needs: [check]
+    if: needs.check.outputs.ready == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
