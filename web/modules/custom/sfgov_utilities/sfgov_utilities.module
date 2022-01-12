@@ -235,19 +235,6 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
   }
 }
 
-/**
- * Implements hook_link_alter().
- */
-function sfgov_utilities_link_alter(&$variables) {
-  if ($variables['text'] == 'Clone') {
-    if (isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
-      if (strpos($variables['options']['attributes']['data-drupal-link-system-path'], 'quick_clone')) {
-        $variables['text'] = 'Duplicate';
-      }
-    }
-  }
-}
-
 function sfgov_utilities_cloned_node_alter(&$node) {
   if ($node->getType() == 'meeting') {
     if (!empty($node->field_start_date->getValue())) {
