@@ -17,15 +17,20 @@ on:
       - published    
 
 jobs:
+  # This is a workaround for secrets not being accessible in workflow 'if'
+  # expressions. It runs a 'check' job with a 'ready' output set to 'true'
+  # if the secret is not empty, then conditionally runs the 'log' job if
+  # the 'ready' output of the 'check' job == 'true'. Issue and explanation
+  # here: https://github.com/actions/runner/issues/1138
   check:
     outputs:
-      ready: ${{ steps.check.ready }}
+      ready: ${{ steps.check.outputs.ready }}
     runs-on: ubuntu-latest
     steps:
       - id: check
         env:
           AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
-        if: env.AMPLITUDE_API_KEY
+        if: env.AMPLITUDE_API_KEY != ''
         run: echo "::set-output name=ready::true"
 
   log:
