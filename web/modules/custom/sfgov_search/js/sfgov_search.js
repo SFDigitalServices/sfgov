@@ -371,7 +371,7 @@ function Search311(collectionName) {
           }
 
           if(!$('#sfgov-search-results').hasClass('sfgov-search-mobile-results')) {
-            $(document).scrollTop($('#block-sfgovsearchblock-2').offset().top);
+            $(document).scrollTop($('.sfgov-search-311-block').offset().top);
           }
 
           _this.setParam('start_rank', nextStart);
