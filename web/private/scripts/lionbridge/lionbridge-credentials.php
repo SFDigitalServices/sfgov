@@ -3,7 +3,6 @@
 
   require dirname(__DIR__) . '/../shared.php';
   
-  // echo PANTHEON_ENVIRONMENT;
   $lbConfigItem = 'tmgmt.translator.contentapi';
   $lbConfigItemKey = 'settings.capi-settings';
 
@@ -18,6 +17,7 @@
   $output = [];
   
   exec("drush config-set $lbConfigItem $lbConfigItemKey --input-format=yaml --value='$lbCredsStr' -y 2>&1", $output, $status);
+  
+  // some debug output
   $output = array_map(function($item) { return "    - " . trim($item); }, array_filter($output));
-
   _test_hook_slack_notification("lionbridge credentials: \n  - exit status: $status \n  - output: \n" . implode("\n", $output));
