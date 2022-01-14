@@ -20,6 +20,7 @@ dependencies:
     - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
+    - field.field.node.meeting.field_smart_date
     - field.field.node.meeting.field_start_date
     - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
@@ -27,7 +28,6 @@ dependencies:
     - workflows.workflow.editorial
   module:
     - content_moderation
-    - datetime
     - entity_browser
     - field_group
     - link
@@ -35,14 +35,14 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - sfgov_dates
     - text
 third_party_settings:
   field_group:
     group_meeting_info:
       children:
         - field_meeting_cancel
-        - field_start_date
-        - field_end_date
+        - field_smart_date
         - field_direct_external_url
       label: 'Meeting info'
       region: content
@@ -170,17 +170,11 @@ content:
     third_party_settings: {  }
   field_direct_external_url:
     type: link_default
-    weight: 7
+    weight: 6
     region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
-    third_party_settings: {  }
-  field_end_date:
-    type: datetime_default
-    weight: 4
-    region: content
-    settings: {  }
     third_party_settings: {  }
   field_link:
     type: link_default
@@ -279,11 +273,21 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_start_date:
-    type: datetime_default
+  field_smart_date:
+    type: sfgov_dates_customsmartdate
     weight: 3
     region: content
-    settings: {  }
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
+      show_extra: true
+      hide_date: true
     third_party_settings: {  }
   field_videos:
     type: paragraphs
@@ -367,6 +371,8 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_end_date: true
+  field_start_date: true
   field_title: true
   langcode: true
   promote: true
