@@ -25,8 +25,11 @@
                 {% set start_date_time = content.field_start_date.0['#attributes']['datetime'] %}
                 {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
                 {{ start_date_time|date("l, F j, Y") }}<br/>
-                {{ start_date_time|date("g:i a") }} {{ 'to'|t }}
-                {{ end_date_time|date("g:i a") }}
+                {{ start_date_time|date("g:i a") }}
+                {% if end_date_time %}
+                  {{ 'to'|t }}
+                  {{ end_date_time|date("g:i a") }}
+                {% endif %}
               </div>
             </div>
           </div>
