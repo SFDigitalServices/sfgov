@@ -18,12 +18,10 @@ dependencies:
     - field.field.node.location.field_phone_numbers
     - field.field.node.location.field_services
     - field.field.node.location.field_title
-    - image.style.700x500
     - node.type.location
   module:
     - datetime
     - entity_reference_revisions
-    - media
     - text
     - user
 id: node.location.default
@@ -32,135 +30,140 @@ bundle: location
 mode: default
 content:
   body:
-    weight: 4
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 4
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
     region: content
   field_about_description:
-    weight: 7
+    type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 7
     region: content
   field_address:
-    weight: 13
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      link: true
       view_mode: default
+      link: true
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    weight: 13
     region: content
   field_alert_expiration_date:
-    weight: 11
+    type: datetime_default
     label: hidden
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
-    type: datetime_default
+    weight: 11
     region: content
   field_alert_text:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 2
     region: content
   field_at_this_location:
-    weight: 15
+    type: entity_reference_entity_view
     label: hidden
     settings:
       view_mode: location_page
       link: false
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    weight: 15
     region: content
   field_departments:
-    weight: 14
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 14
     region: content
   field_getting_here_items:
     type: entity_reference_revisions_entity_view
-    weight: 9
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 9
     region: content
   field_image:
-    weight: 5
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      image_style: 700x500
-      image_link: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
-    type: media_thumbnail
+    weight: 5
     region: content
   field_intro_text:
-    weight: 12
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 12
     region: content
   field_locations:
-    weight: 6
+    type: entity_reference_entity_view
     label: hidden
     settings:
       view_mode: card
       link: false
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    weight: 6
     region: content
   field_people:
-    weight: 8
+    type: entity_reference_revisions_entity_view
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
+    weight: 8
     region: content
   field_phone_numbers:
-    weight: 3
+    type: entity_reference_revisions_entity_view
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
+    weight: 3
     region: content
   field_services:
     type: entity_reference_revisions_entity_view
-    weight: 10
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 10
     region: content
   field_title:
-    weight: 1
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: content
   links:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

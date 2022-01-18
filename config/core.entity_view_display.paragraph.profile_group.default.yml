@@ -1,0 +1,43 @@
+uuid: 26158a15-edf0-46cc-8d9f-55fdadeb7f82
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.profile_group.field_description
+    - field.field.paragraph.profile_group.field_profiles
+    - field.field.paragraph.profile_group.field_title
+    - paragraphs.paragraphs_type.profile_group
+  module:
+    - entity_reference_revisions
+    - text
+id: paragraph.profile_group.default
+targetEntityType: paragraph
+bundle: profile_group
+mode: default
+content:
+  field_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_profiles:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: card_paragraph_with_image_small_
+      link: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

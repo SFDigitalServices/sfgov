@@ -43,6 +43,7 @@ class SearchForm extends FormBase {
     $keyword = \Drupal::request()->query->get('keyword');
     $config = \Drupal::config('sfgov_search.settings');
     $form['#attributes'] = array(
+      'id' => 'sfgov-search-form',
       'class' => array(
         'sfgov-search-form',
         'sfgov-search-form-311',
@@ -58,6 +59,7 @@ class SearchForm extends FormBase {
       '#title' => 'Search',
       '#type' => 'textfield',
       '#placeholder' => t('Search'),
+      '#id' => 'edit-sfgov-search-input',
       '#attributes' => array(
         'class' => array(
           'sf-gov-search-input-class',

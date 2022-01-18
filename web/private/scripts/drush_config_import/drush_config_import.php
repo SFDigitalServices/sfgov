@@ -3,20 +3,23 @@
 require dirname(__DIR__) . '/../shared.php';
 
 // Database updates
-error_log("Running database updates...\n");
+echo "Running database updates...\n";
 passthru('drush updatedb --no-cache-clear');
-error_log("Database updates complete.\n");
+echo "Database updates complete.\n";
+
 //Clear all cache
-error_log("Rebuilding cache.\n");
+echo "Rebuilding cache.\n";
 passthru('drush cr');
-error_log("Rebuilding cache complete.\n");
+echo "Rebuilding cache complete.\n";
+
 // Import all config changes.
-error_log("Importing configuration from yml files...\n");
+echo "Importing configuration from yml files...\n";
 passthru('drush config-import -y');
-error_log("Import of configuration complete.\n");
+echo "Import of configuration complete.\n";
+
 //Clear all cache
-error_log("Rebuilding cache.\n");
+echo "Rebuilding cache.\n";
 passthru('drush cr');
-error_log("Rebuilding cache complete.\n");
+echo "Rebuilding cache complete.\n";
 
 _test_hook_slack_notification("config import");

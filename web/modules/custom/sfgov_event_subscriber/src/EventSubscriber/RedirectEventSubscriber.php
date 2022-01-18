@@ -218,7 +218,7 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
         $field_doc_url = $media->get('field_document_url')->getValue();
         if (!empty($field_file)) {
           $file_id = $field_file[0]['target_id'];
-          $file_url = File::load($file_id)->url();
+          $file_url = File::load($file_id)->createFileUrl();
           $redirect_url = $file_url;
         }
         elseif (!empty($field_doc_url)) {

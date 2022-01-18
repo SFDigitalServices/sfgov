@@ -81,15 +81,8 @@
   </div>
 </div>
 
-<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
-  <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
-    <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
-    <ul></ul>
-  </div>
-</div>
-
 {% if content.field_spotlight2['#items'].getValue() %}
-  <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+  <div class="sfgov-full-bleed padding-zero bg-grey-1 sfgov-spotlight-container">
     <div class="sfgov-section-container">
       {{ content.field_spotlight2 }}
     </div>
@@ -97,6 +90,13 @@
 {% endif %}
 
 {{ content.field_featured_items }}
+
+<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container mb-40">
+  <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
+    <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
+    <ul></ul>
+  </div>
+</div>
 
 {# Alert #}
 {% include '@theme/alert.twig' with {
@@ -150,7 +150,19 @@
   </div>
 {% endif %}
 
-{% if(dept_fields.about) %}
+{% set hasAboutSection = false %}
+
+{% if content.field_about_or_description|render|striptags 
+    or about_page_link
+    or content.field_parent_department|render|striptags
+    or content.field_image|render|striptags
+    or content.field_call_to_action|render|striptags
+    or content.field_social_media|render|striptags
+%}
+  {% set hasAboutSection = true %}
+{% endif %}
+
+{% if hasAboutSection %}
   <a name="about"></a>
   <div id="sfgov-dept-about" class="sfgov-dept-section sfgov-dept-about sfds-layout-container">
     <div class="sfgov-dept-about-container sfds-responsive-container sfds-responsive-container-right-zero">
@@ -158,43 +170,41 @@
       <div class="sfgov-dept-about-content">
         <div class="sfgov-dept-about-content-left sfgov-dept-about-content-section">
           <div class="sfgov-dept-about-description">
-            {{ dept_fields.about.description|raw }}
+            {% if content.field_about_or_description|render|striptags %}
+              {{ content.field_about_or_description | raw }}
+            {% elseif content.field_about_description|render|striptags %}
+              {{ content.field_about_description | raw }}
+            {% endif %}
 
             {% if about_page_link %}
-            <p class="about-page-link">
-              {{ about_page_link }}
-            </p>
+              <p class="about-page-link">
+                {{ about_page_link }}
+              </p>
             {% endif %}
           </div>
           {% if node.field_parent_department.0 is not empty %}
-          <div class="sfgov-dept-about-public-bodies">
-            <h3>{{ 'Part of'|t }}</h3>
-            <ul>
-            <li>{{ content.field_parent_department }}</li>
-            </ul>
-          </div>
+            <div class="sfgov-dept-about-public-bodies">
+              <h3>{{ 'Part of'|t }}</h3>
+              <ul>
+              <li>{{ content.field_parent_department }}</li>
+              </ul>
+            </div>
           {% endif %}
         </div>
         <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section sfds-responsive-container-right-zero">
-          {% if dept_fields.about.logo_url %}
+          {% if content.field_image|render|striptags %}
             <div class="sfgov-dept-about-logo sfgov-logo">
-              <img src="{{ dept_fields.about.logo_url }}" />
+              {{ content.field_image }}
             </div>
           {% endif %}
-          {% if dept_fields.about.cta %}
+          {% if content.field_call_to_action|render|striptags|trim %}
             <div class="sfgov-dept-about-cta sfgov-cta">
-              <p class="title">{{ dept_fields.about.cta.title }}</p>
-              <a href="{{ dept_fields.about.cta.url }}">{{ dept_fields.about.cta.button_text }}</a>
+              {{ content.field_call_to_action }}
             </div>
           {% endif %}
-          {% if dept_fields.about.social.values %}
+          {% if content.field_social_media|render|striptags %}
             <div class="sfgov-dept-about-social sfgov-social">
-              <p class="title">{{ dept_fields.about.social.title }}</p>
-              <ul class="sfgov-social-list">
-              {% for socialMedia in dept_fields.about.social.values %}
-                <li class="{{ socialMedia.label | lower }}"><a href="{{ socialMedia.url }}">{{ socialMedia.label }}</a></li>
-              {% endfor %}
-              </ul>
+              {{ content.field_social_media }}
             </div>
           {% endif %}
         </div>
@@ -202,35 +212,18 @@
     </div>
   </div>
 
-  <div class="sfgov-dept-about-divisions-wrapper {% if dept_fields.about.divisions|length < 4 and dept_fields.about.public_bodies|length < 4 %}sfgov-container-two-column{% endif %}">
-    {% if dept_fields.about.divisions %}
-      <div class="sfgov-dept-about-divisions sfgov-container-item">
-        <div>
-          <h3>{{ 'Divisions'|t }}</h3>
-          <ul class="{% if dept_fields.about.divisions|length >= 4 %}sfgov-container-two-column{% endif %}">
-          {% for division in dept_fields.about.divisions %}
-            <li class="sfgov-container-item"><a href="{{ division.dept_url }}">{{ division.dept_name }}</a></li>
-          {% endfor %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
-    {% if dept_fields.about.public_bodies %}
-      <div class="sfgov-dept-about-public-bodies sfgov-container-item">
-        <div>
-          <h3>{{ 'Public bodies'|t }}</h3>
-          <ul class="{% if dept_fields.about.public_bodies|length >= 4 %}sfgov-container-two-column{% endif %}">
-          {% for publicBody in dept_fields.about.public_bodies %}
-            <li class="sfgov-container-item"><a href="{{ publicBody.url }}">{{ publicBody.name }}</a></li>
-          {% endfor %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
-  </div>
+  {% set numPublicBodies = content.field_public_bodies['#items']|length %}
+  {% set numDivisions = content.field_divisions['#items']|length %}
+
+  {% if numDivisions > 0 or numPublicBodies > 0 %}
+    <div class="sfgov-dept-about-divisions-wrapper">
+      {{ content.field_divisions }}
+      {{ content.field_public_bodies }}
+    </div>
+  {% endif %}
 
   {% if content.field_people|render %}
-    <div class="sfgov-dept-about-people sfgov-dept-section">
+    <div class="sfgov-dept-about-people">
       {{ content.field_people }}
     </div>
   {% endif %}
@@ -270,18 +263,23 @@
   </div>
 {% endif %}
 
-{% if dept_fields.public_records %}
+{% set publicRecordsMethod = content.field_req_public_records|render|striptags|trim|lower %}
+{% set publicRecordsLink = content.field_req_public_records_link|render|striptags|trim %}
+{% set publicRecordsEmail = content.field_req_public_records_email|render|striptags|trim %}
+{% set publicRecordsPhone = content.field_req_public_records_phone|render|striptags|trim %}
+
+{% if publicRecordsLink is not empty or publicRecordsEmail is not empty or publicRecordsPhone is not empty %}
   <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
     <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
       <div class="sfgov-dept-public-records-content">
         <p class="title">{{ 'Request public records'|t }}</p>
         <p>
-        {% if dept_fields.public_records.method == "phone" %}
-          <a href="tel:{{ dept_fields.public_records.value }}">{% trans %}Call {{ dept_fields.public_records.value }}</a> to submit a request.{% endtrans %}
-        {% elseif dept_fields.public_records.method == "email" %}
-          <a href="mailto:{{ dept_fields.public_records.value }}">{% trans %}Email {{ dept_fields.public_records.value }}</a> to submit a request.{% endtrans %}
-        {% elseif dept_fields.public_records.method == "link" %}
-          {% trans %}<a href="{{ dept_fields.public_records.value }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}
+        {% if publicRecordsMethod == "phone" %}
+          <a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}
+        {% elseif publicRecordsMethod == "email" %}
+          <a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}
+        {% elseif publicRecordsMethod == "link" %}
+          {% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}
         {% endif %}
         </p>
       </div>

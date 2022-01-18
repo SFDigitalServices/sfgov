@@ -30,31 +30,27 @@
         event.preventDefault();
         leftColumn.fadeOut(0);
         // see location_autocomplete for this promise
-        locationSubmit().then(function (result) {
-          displaySites();
-        }, function (err) {
-          console.error(err);
-        });
-        leftColumn.fadeIn(speed);
-        scrollUp(speed);
+        locationSubmit()
+          .then(displaySites)
+          .catch(error => console.error(err))
+          .finally(() => {
+            leftColumn.fadeIn(speed);
+            scrollUp(speed);
+          })
       });
 
       function filterVaccineSites() {
-        let restrictions_chkBox = { datatest: null };
         let wheelchair_chkBox = { datatest: null };
-        let locationInput = $("[name=location]");
+        let kids5to11_chkBox = { datatest: null };
+        let locationInput = $("[name=location]")
+          .removeAttr('data-place-changed')
         let radiusInput = $("[name=radius]");
         let userLocation = !!locationInput.val();
 
-        // reset the data-place-changed attribute after each filter
-        locationInput[0].removeAttribute('data-place-changed');
-
-        if ($("[name=restrictions]").is(":checked") === true) {
-          // show
-          restrictions_chkBox.datatest = "0";
+        if ($("[name=kids5to11]").is(":checked")) {
+          kids5to11_chkBox.datatest = '1'
         } else {
-          //hide
-          restrictions_chkBox.datatest = "";
+          kids5to11_chkBox.datatest = ''
         }
 
         filterByAvailability = $("[name=available]").is(":checked");
@@ -70,27 +66,25 @@
           .hide()
           .removeClass("included")
           .filter(function () {
-            let rtnData = "";
-
+            const $site = $(this)
             // "Only show sites open to the general public" checkbox.
-            const restrictions_regExTest = new RegExp(
-              restrictions_chkBox.datatest,
-              "ig"
-            );
+            const kids5to11_regExTest = new RegExp(kids5to11_chkBox.datatest, "ig");
 
             // "Only show sites with available appointments" checkbox.
             if (filterByAvailability === true) {
-              $(this).removeClass(class_match_available);
+              $site.removeClass(class_match_available);
               if (
-                $(this).attr("data-available") === "yes" ||
-                $(this).find(".js-dropin").length !== 0
+                $site.attr("data-available") === "yes" ||
+                $site.find(".js-dropin").length !== 0
               ) {
-                $(this).appendTo(".vaccine-filter__sites");
-                $(this).addClass(class_match_available);
+                $site
+                  .addClass(class_match_available)
+                  .appendTo(".vaccine-filter__sites");
               }
             } else {
-              $(this).appendTo(".vaccine-filter__sites");
-              $(this).addClass(class_match_available);
+              $site
+                .addClass(class_match_available)
+                .appendTo(".vaccine-filter__sites");
             }
 
             // "Wheelchair accessible" checkbox.
@@ -100,18 +94,18 @@
             );
 
             // Languages.
-            $(this).removeClass("language-match");
+            $site.removeClass("language-match");
             const language_selected = $("[name=language]").val().trim();
             let language_other_test = null;
 
             if (language_selected !== "en") {
               if (language_selected !== "asl") {
                 let language_other_regExtest = new RegExp("rt", "ig");
-                language_other_test = $(this)
+                language_other_test = $site
                   .attr("data-language")
                   .match(language_other_regExtest);
               } else {
-                language_other_test = $(this)[0].hasAttribute(
+                language_other_test = $site[0].hasAttribute(
                   "data-remote-asl"
                 );
               }
@@ -119,12 +113,12 @@
 
             const language_regExTest = new RegExp(language_selected, "ig");
 
-            const language_test = $(this)
+            const language_test = $site
               .attr("data-language")
               .match(language_regExTest);
 
             if (language_test || language_other_test) {
-              $(this).addClass("language-match");
+              $site.addClass("language-match");
             }
 
             // "Drive-thru or walk-thru" select (Access mode).
@@ -134,39 +128,38 @@
             );
 
             // Distance.
-            $(this).addClass(class_match_radius);
+            $site.addClass(class_match_radius);
             if (userLocation) {
               const distance = getDistance(
                 locationInput[0].getAttribute("data-lat"), //input lat
                 locationInput[0].getAttribute("data-lng"), //input long
-                $(this).data("lat"), // this lat
-                $(this).data("lng") // this lng
+                $site.data("lat"), // this lat
+                $site.data("lng") // this lng
               );
 
               if (distance > radiusInput.val()) {
-                $(this).removeClass(class_match_radius);
+                $site.removeClass(class_match_radius);
               }
-              $(this)
+              $site
+                .attr("data-distance", distance)
                 .find(".vaccine-site__distance")
                 .text(Math.round(distance * 10) / 10 + "mi");
-              $(this)[0].setAttribute("data-distance", distance);
-              $(this)
+              $site
                 .find(".vaccine-site__header")
                 .addClass("distance-visible");
             } else {
-              $(this).find(".vaccine-site__distance").text("");
+              $site.find(".vaccine-site__distance").text("");
             }
 
             // Return list of matching sites.
-            rtnData =
-              $(this).attr("data-restrictions").match(restrictions_regExTest) &&
-              $(this).attr("data-wheelchair").match(wheelchair_regExTest) &&
-              $(this).attr("data-access-mode").match(access_mode_regExTest) &&
-              $(this).hasClass("language-match") &&
-              $(this).hasClass(class_match_available) &&
-              $(this).hasClass(class_match_radius);
-
-            return rtnData;
+            return (
+              $site.attr("data-kids5to11").match(kids5to11_regExTest) &&
+              $site.attr("data-wheelchair").match(wheelchair_regExTest) &&
+              $site.attr("data-access-mode").match(access_mode_regExTest) &&
+              $site.hasClass("language-match") &&
+              $site.hasClass(class_match_available) &&
+              $site.hasClass(class_match_radius)
+            );
           })
           .sort(function (a, b) {
             const orderA = parseInt(a.getAttribute("data-order"));

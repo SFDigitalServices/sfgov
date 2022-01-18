@@ -258,7 +258,7 @@ function sfgovpl_preprocess_paragraph__resource_node(&$variables) {
     $node = $node_storage->load($paragraph->get('field_node')[0]->target_id);
     $variables['title'] = $node->getTitle();
     $variables['description'] = $node->get('field_description') ?? render($node->get('field_description')->value);
-    $variables['url'] = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
+    $variables['url'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
   }
 }
 

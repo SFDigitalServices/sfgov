@@ -3,6 +3,14 @@
 {% block title %}
 {% endblock title %}
 
+{% if node.field_profile_photo|file_url %}
+  {% set photo_url = file_url(node.field_profile_photo|file_url) %}
+{% endif %}
+
+{% if node.field_photo.entity.fileuri %}
+  {% set photo_url = file_url(node.field_photo.entity.fileuri) %}
+{% endif %}
+
 {% block node %}
   {% block body %}
     {% include '@theme/person-card.twig' with {
@@ -11,7 +19,7 @@
       "last_name": node.field_last_name.value,
       "position_title": node.field_title.value,
       "position_subtitle": node.field_sub_title.value,
-      "photo": file_url(node.field_photo.entity.fileuri)
+      "photo": photo_url
     } %}
   {% endblock body %}
 {% endblock node %}
