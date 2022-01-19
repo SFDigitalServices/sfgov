@@ -27,18 +27,26 @@ dependencies:
     - node.type.meeting
   module:
     - datetime
+    - sfgov_dates
     - user
 id: node.meeting.card
 targetEntityType: node
 bundle: meeting
 mode: card
 content:
+  field_smart_date:
+    type: sfgov_dates_tile_date
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_start_date:
-    type: datetime_custom
+    type: datetime_default
     label: hidden
     settings:
       timezone_override: ''
-      date_format: 'l, M j, Y, g:i a'
+      format_type: medium
     third_party_settings: {  }
     weight: 0
     region: content
@@ -60,7 +68,6 @@ hidden:
   field_public_body: true
   field_regulations_accordions: true
   field_regulations_title: true
-  field_smart_date: true
   field_title: true
   field_videos: true
   langcode: true

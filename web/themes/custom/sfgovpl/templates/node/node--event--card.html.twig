@@ -14,14 +14,15 @@
     </div>
   {% else %}
     <div class="event-date">
-      <div class="month">{{ start_date_timestamp|date("F") }}</div>
-      <div class="date">{{ start_date_timestamp|date("j") }}</div>
+      {# Custom field formatter #}
+      {{ content.field_smart_date[0]['#date'] }}
     </div>
   {% endif %}
   <div class="event-info">
     <p class="title">{{ label }}</p>
     <p class="description">
-      {{ start_date_timestamp|date("l, F j") }}<br/>
+      {# Custom field formatter #}
+      {{ content.field_smart_date[0]['#date'] }}
     </p>
   </div>
 </a>
