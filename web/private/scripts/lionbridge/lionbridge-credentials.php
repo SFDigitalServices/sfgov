@@ -5,8 +5,6 @@
  * and updates the appropriate lionbridge configuration item with the read credentials
  */
 
-use Symfony\Component\Yaml\Yaml;
-
 require dirname(__DIR__) . '/../shared.php';
 
 $lbConfigItem = 'tmgmt.translator.contentapi';
@@ -14,17 +12,14 @@ $lbConfigItemKey = 'settings.capi-settings';
 
 $lbEnv = PANTHEON_ENVIRONMENT === 'live' ? 'prod' : 'staging';
 $filesPath = '/code/web/sites/default/files/private';
-$lbCredsContents = file_get_contents(
-    $_SERVER['HOME'] . "$filesPath/credentials/lionbridge/lionbridge-$lbEnv.yml"
+$lbCreds = file_get_contents(
+    $_SERVER['HOME'] . "$filesPath/credentials/lionbridge/lionbridge-$lbEnv.json"
 );
-
-$lbCreds = Yaml::parse($lbCredsContents);
-$lbCredsStr = json_encode($lbCreds, JSON_UNESCAPED_SLASHES|JSON_HEX_QUOT);
 
 $status = '';
 $output = [];
 
-exec("drush config-set $lbConfigItem $lbConfigItemKey --input-format=yaml --value='$lbCredsStr' -y 2>&1", $output, $status);
+exec("drush config-set $lbConfigItem $lbConfigItemKey --input-format=yaml --value='$lbCreds' -y 2>&1", $output, $status);
 
 // some debug output
 $output = array_map(
