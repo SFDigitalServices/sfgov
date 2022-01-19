@@ -29,9 +29,10 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
       $this->isDateRange($start_time, $end_time);
       $this->isTimeRange($start_time, $end_time);
       $date_string = $this->setDateString($start_time, $end_time);
-      $time_string = $this->setTimeString($start_time, $end_time);
+      $time_string = (!$this->allDay) ? $this->setTimeString($start_time, $end_time) : FALSE;
       $element[$delta] = [
-        '#markup' => $this->createMarkup($date_string, $time_string),
+        '#date' => $date_string,
+        '#time' => $time_string,
       ];
     }
 
@@ -58,13 +59,5 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
     }
   }
 
-  protected function createMarkup($date_string, $time_string) {
-    $markup = $date_string;
-    if (!$this->allDay) {
-      $markup .= '<br>' . $time_string;
-    }
-
-    return $markup;
-  }
 }
 
