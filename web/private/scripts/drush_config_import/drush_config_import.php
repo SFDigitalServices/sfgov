@@ -23,3 +23,5 @@ passthru('drush cr');
 echo "Rebuilding cache complete.\n";
 
 _test_hook_slack_notification("config import");
+
+include dirname(__DIR__) . '/lionbridge/lionbridge-credentials.php';

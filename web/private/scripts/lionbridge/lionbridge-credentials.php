@@ -4,8 +4,9 @@
  * This script reads the lionbridge credentials from a non-vcs location
  * and updates the appropriate lionbridge configuration item with the read credentials
  */
-
-require dirname(__DIR__) . '/../shared.php';
+if (!function_exists('_get_secrets')) {
+    require dirname(__DIR__) . '/../shared.php';
+}
 
 $lbConfigItem = 'tmgmt.translator.contentapi';
 $lbConfigItemKey = 'settings.capi-settings';
@@ -27,6 +28,7 @@ $output = array_map(
         return "    - " . trim($item); 
     }, array_filter($output)
 );
+
 _test_hook_slack_notification(
     "lionbridge credentials: \n  - exit status: $status \n  - output: \n" . implode("\n", $output)
 );
