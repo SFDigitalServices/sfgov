@@ -5,7 +5,7 @@
  * and updates the appropriate lionbridge configuration item with the read credentials
  */
 if (!function_exists('_get_secrets')) {
-    require dirname(__DIR__) . '/../shared.php';
+    include dirname(__DIR__) . '/../shared.php';
 }
 
 $lbConfigItem = 'tmgmt.translator.contentapi';
