@@ -46,7 +46,7 @@ function sfgovpl_preprocess_paragraph__process_step(&$variables) {
     $variables['txUrl'] = $txNode->toUrl('canonical', [
       'language' => \Drupal::languageManager()->getCurrentLanguage(),
     ])->toString();
-  } 
+  }
 }
 
 function sfgovpl_preprocess_paragraph(&$variables) {
@@ -56,7 +56,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   if (function_exists($preprocess)) {
     $preprocess($variables);
   }
-  
+
   if($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
