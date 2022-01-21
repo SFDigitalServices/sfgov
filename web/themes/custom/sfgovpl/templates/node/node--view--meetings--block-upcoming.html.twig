@@ -3,6 +3,11 @@
 {% block node %}
   <a href="{{ url }}"{{ attributes.addClass(classes)|without('id', 'role') }}>
     <p class="title">{{ node.label }}</p>
-    {{ content }}
+      {% if content.field_smart_date[0]['#date'] %}
+        {# Custom field formatter #}
+        {{ content.field_smart_date[0]['#date'] }}
+      {% else %}
+        {{ content.field_start_date.date|date('l, M j, Y, g:i a') }}
+      {% endif %}
   </a>
 {% endblock node %}

@@ -37,11 +37,17 @@
 
 {{ content.content_moderation_control }}
 
+{% if content.field_smart_date[0]['#date'] %}
+  {% set date = content.field_smart_date[0]['#date'] %}
+{% else %}
+  {% set date = node.field_start_date.date|date('F j, Y') %}
+{% endif %}
+
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     banner: {
       title: node.label,
-      text: node.field_start_date.date|date('F j, Y'),
+      text: date,
       label: label
     }
   } %}
@@ -92,11 +98,20 @@
             <h4>Date & Time</h4>
             {% if content.field_start_date|render %}
             <div class="start-date">
-              {{ node.field_start_date.date|date('l, F j, Y') }}
-              <br>
-              {{ node.field_start_date.date|date('g:i a') }}
-              {% if content.field_end_date|render %}
-                to {{ node.field_end_date.date|date('g:i a') }}
+              {% if content.field_smart_date[0]['#date'] %}
+                {# Custom field formatter #}
+                {{ content.field_smart_date[0]['#date'] }}
+                {% if content.field_smart_date[0]['#time'] %}
+                  <br>
+                  {{ content.field_smart_date[0]['#time'] }}
+                {% endif %}
+              {% else %}
+                {{ node.field_start_date.date|date('l, F j, Y') }}
+                <br>
+                {{ node.field_start_date.date|date('g:i a') }}
+                {% if content.field_end_date|render %}
+                  to {{ node.field_end_date.date|date('g:i a') }}
+                {% endif %}
               {% endif %}
             </div>
             {% endif %}

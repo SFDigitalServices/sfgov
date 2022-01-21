@@ -28,11 +28,9 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
       $end_time = $item->end_value;
       $this->isDateRange($start_time, $end_time);
       $this->isTimeRange($start_time, $end_time);
-      $date_string = $this->setDateString($start_time, $end_time);
-      $time_string = (!$this->allDay) ? $this->setTimeString($start_time, $end_time) : FALSE;
       $element[$delta] = [
-        '#date' => $date_string,
-        '#time' => $time_string,
+        '#date' => $this->setDateString($start_time, $end_time),
+        '#time' => (!$this->allDay) ? $this->setTimeString($start_time, $end_time) : FALSE,
       ];
     }
 

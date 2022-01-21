@@ -19,11 +19,17 @@ use Drupal\sfgov_dates\Plugin\Field\FieldFormatter\SfgovDateFormatterBase;
 class SfgovTileDateFormatter extends SfgovDateFormatterBase {
 
   public function setDateString($start_time, $end_time) {
-    return 'date' . $start_time;
+    if ($this->dateRange) {
+      $date_string = date('D, M j', $start_time) . ' to ' . date('D, M j', $end_time);
+    }
+    else {
+      $date_string = date('l, F j', $start_time);
+    }
+    return $date_string;
   }
 
   public function setTimeString($start_time, $end_time) {
-    return 'time' . $start_time;
+    return FALSE;
   }
 
 }
