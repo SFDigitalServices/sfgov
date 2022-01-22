@@ -18,10 +18,16 @@ use Drupal\sfgov_dates\Plugin\Field\FieldFormatter\SfgovDateFormatterBase;
  */
 class SfgovBlockDateFormatter extends SfgovDateFormatterBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function setDateString($start_time, $end_time) {
     return date('l, M j, Y, g:i a', $start_time);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setTimeString($start_time, $end_time) {
     return FALSE;
   }
