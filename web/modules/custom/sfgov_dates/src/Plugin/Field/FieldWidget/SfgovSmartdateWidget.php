@@ -27,7 +27,7 @@ class SfgovSmartdateWidget extends SmartDateDefaultWidget {
     unset($element["duration"]["#title"]);
     $element["duration"]["#title"] = t('End Time');
     return $element;
-    // Note, could do this with a widget alter if we don't have any other
+    // Note, could do this with a widget alter hook if we don't have any other
     // reason for a custom widget.
   }
 

@@ -18,6 +18,9 @@ use Drupal\sfgov_dates\Plugin\Field\FieldFormatter\SfgovDateFormatterBase;
  */
 class SfgovNodeDateFormatter extends SfgovDateFormatterBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function setDateString($start_time, $end_time) {
     if ($this->dateRange) {
       $date_string = date('D, F j', $start_time) . ' to ' . date('D, F j, Y', $end_time);
@@ -28,6 +31,9 @@ class SfgovNodeDateFormatter extends SfgovDateFormatterBase {
     return $date_string;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setTimeString($start_time, $end_time) {
     if ($this->timeRange) {
       $time_string = date('g:i a', $start_time) . ' to ' . date('g:i a', $end_time);
