@@ -5,6 +5,30 @@ require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Entity;
+use Drupal\eck\Entity\EckEntity;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+function createResourceEntity($title, $description, $url) {
+  $link = Link::fromTextAndUrl('some url', Url::fromUri('https://some-uri'));
+  $eckData = [
+    'entity_type' => 'resource',
+    'type' => 'resource',
+    'title' => $title . ' (entity title from code ' . time() . ')',
+    'field_description' => $description,
+    'field_url' => $url
+  ];
+
+  $entity = EckEntity::create($eckData);
+  $entity->save();
+
+  // $entity = EckEntity::create($entityType, ['type' => $entityBundle]);
+  // $wrapper = entity_metadata_wrapper($entityType, $entity);
+  // $wrapper->field_description->set('entity description from code ' . time());
+  // $wrapper->field_url->set('field_url', $link);
+}
+
+// createEntity('resource', 'resource');
 
 $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
 $user = reset($users);
@@ -21,7 +45,7 @@ $nodesWithResources = [];
 
 // campaign nodes
 foreach($nodes as $node) {
-  if($node->id() == 999) {
+  if($node->id() == 3129) {
     $title = $node->getTitle();
     // echo "\e[96m" . $node->gettype() . ": " . $title . " (". $node->id() . ")\n";
     // check for field
@@ -69,15 +93,31 @@ foreach($nodes as $node) {
                       // echo "      field_title: " . $resourcesParagraph->field_title->value . "\n";
                       // echo "      field_description: " . $resourcesParagraph->field_description->value . "\n";
                       // echo "      field_link: " . $resourcesParagraph->field_link->uri . "\n\n";
-  
+                      
+                      $title = $resourcesParagraph->field_title->value;
+                      $description = $resourcesParagraph->field_description->value;
+                      $uri = $resourcesParagraph->field_link->uri;
+                      $isEntityRef = strpos($uri, 'entity:') >= 0 ? true : false;
+
                       $resource = [
                         'id' => $resourceId,
                         'resource_type' => $resourcesParagraph->gettype(),
-                        'field_title' => $resourcesParagraph->field_title->value,
-                        'field_description' => $resourcesParagraph->field_description->value,
-                        'field_link' => $resourcesParagraph->field_link->uri,
+                        'field_title' => $title,
+                        'field_description' => $description,
+                        'field_link' => $uri
                       ];
                       $campaignResourceSection['resources'][] = $resource;
+
+                      // if link uri contains "entity:", it's an internal reference
+                      // else it's external
+                      // create new resource entity accordingly
+                      if($isEntityRef) {
+
+                      } else {
+                        createResourceEntity($title, $description, $uri);
+                      }
+
+
                     } else { // this is the new thing
                       // echo "\e[95m";
                       // echo "      resource id: " . $resourceId . "\n";
@@ -116,7 +156,7 @@ foreach($nodesWithResources as $nodeWithResource) {
       if(!empty($campaignResourceSection)) {
         foreach($campaignResourceSections as $campaignResourceSection) {
           echo "\e[93m";
-          echo "      campaign_resource_section title: " . $campaignResourceSection['title'] . "\n";
+          echo "      ($campaignResourceSectionId) campaign_resource_section title: " . $campaignResourceSection['title'] . "\n";
           $resources = $campaignResourceSection['resources'];
           if(!empty($resources)) {
             foreach($resources as $resource) {
