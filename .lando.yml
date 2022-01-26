@@ -53,3 +53,12 @@ tooling:
     description: 'Disable xdebug for nginx.'
     cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm
     user: root
+  migrate-import:
+    service: appserver
+    cmd: /app/scripts/migrate/import
+  migrate-reroll:
+    service: appserver
+    cmd: /app/scripts/migrate/reroll
+  migrate-reset:
+    service: appserver
+    cmd: /app/scripts/migrate/reroll
