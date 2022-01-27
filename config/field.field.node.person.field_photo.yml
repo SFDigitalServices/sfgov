@@ -12,9 +12,9 @@ dependencies:
 third_party_settings:
   content_translation:
     translation_sync:
-      alt: alt
-      title: title
-      file: '0'
+      file: file
+      alt: '0'
+      title: '0'
   tmgmt_content:
     excluded: false
 id: node.person.field_photo
@@ -22,12 +22,14 @@ field_name: field_photo
 entity_type: node
 bundle: person
 label: Photo
-description: 'Minimum 300 x 300 px and should be square.'
-required: true
+description: 'Old photo field, do not use for new content.'
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
+  handler: 'default:file'
+  handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'png gif jpg jpeg'
   max_filesize: '5 MB'
@@ -43,6 +45,4 @@ settings:
     title: ''
     width: null
     height: null
-  handler: 'default:file'
-  handler_settings: {  }
 field_type: image

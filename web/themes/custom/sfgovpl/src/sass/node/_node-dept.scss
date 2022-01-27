@@ -1,3 +1,4 @@
+/* purgecss start ignore */
 .page-node-type-department {
   .hero-banner.default {
     padding-top: 60px;
@@ -42,6 +43,7 @@
       margin-bottom: 60px;
     }
   }
+
   .sfgov-dept-news,
   .sfgov-dept-events {
     .dept-heading--section {
@@ -81,7 +83,6 @@
     display: none;
     @include rubik;
     @include contain-1090;
-    margin-bottom: 60px;
     .sfgov-dept-in-this-page-container > * {
       display: inline-block;
     }
@@ -131,6 +132,8 @@
     }
   }
 
+  // this is for the legacy spotlight that still exists on dept pages and appears as the "second" spotlight on a dept page
+  // the "first" spotlight on the page is using the design-system utilities
   .sfgov-dept-spotlight {
     background: #8266BC;
     color: #fff;
@@ -211,6 +214,15 @@
     }
   }
 
+  // the p elements for this field are coming from wysiwyg
+  .__spotlight2,
+  .sfgov-quick-links {
+    p {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
   .sfgov-dept-resources {
     background: #EDF4F7;
 
@@ -276,7 +288,7 @@
         margin-bottom: 40px;
         ul {
           list-style-type: none;
-          padding-left: 30px;
+          padding: 0;
           li {
             margin-bottom: 20px;
             a {
@@ -303,7 +315,7 @@
         border-radius: 8px;
         padding: 40px;
         margin-bottom: 20px;
-        a {
+        a:not(.btn) {
           color: $c-bright-blue;
           @include fs-body-short;
           margin-bottom: 20px;
@@ -412,48 +424,37 @@
     }
   }
 
+  .sfgov-dept-about-divisions-wrapper {
+    @include contain-1090;
+    margin-top: 60px; 
+    margin-bottom: 60px; 
+  }
+
   .sfgov-dept-about-people {
-    &.sfgov-dept-section {
-      @include contain-1090;
-      padding: 40px 20px 0 20px;
+    @include contain-1090;
 
-      @include media($medium-screen) {
-        padding: 60px 20px 0 20px;
-      }
-    }
-
-    .inner {
+    .__people {
       background: $c-blue-1;
       border-radius: 8px;
-      padding: 20px;
-      padding-bottom: 40px;
-
+      padding: 40px 20px;
       @include media($medium-screen) {
         padding: 40px;
-        padding-bottom: 20px;
       }
     }
 
+    .sfgov-paragraph-people {
+      .title {
+        @include fs-title-3-mobile;
+        margin-top: 0;
+        margin-bottom: 10px;
+        @include media($medium-screen) {
+          @include fs-title-3;
+          margin-bottom: 28px;
+        }
+      }
+    }
     .sfgov-people--content {
       padding: 0;
-    }
-
-    .paragraph--type--people {
-      .title {
-        margin-bottom: 40px;
-        @include media($medium-screen) {
-          margin-bottom: 40px;
-        }
-      }
-      .title + .description {
-        margin-top: -30px;
-        margin-bottom: 20px;
-
-        @include media($medium-screen) {
-          margin-top: -30px;
-          margin-bottom: 20px;
-        }
-      }
     }
   }
 
@@ -602,3 +603,4 @@
     color: $c-slate;
   }
 }
+/* purgecss end ignore */

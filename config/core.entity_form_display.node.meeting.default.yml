@@ -21,6 +21,7 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
     - workflows.workflow.editorial
@@ -34,7 +35,6 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
-    - sfgov_admin
     - text
 third_party_settings:
   field_group:
@@ -44,63 +44,63 @@ third_party_settings:
         - field_start_date
         - field_end_date
         - field_direct_external_url
+      label: 'Meeting info'
+      region: content
       parent_name: ''
       weight: 2
       format_type: fieldset
-      region: content
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         description: ''
         required_fields: true
-      label: 'Meeting info'
     group_regulations:
       children:
         - field_regulations_title
         - field_regulations_accordions
-      parent_name: ''
-      weight: 8
-      format_type: fieldset
+      label: 'Regulations and accessibility'
       region: content
+      parent_name: ''
+      weight: 7
+      format_type: fieldset
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         description: ''
         required_fields: true
         open: false
-      label: 'Regulations and accessibility'
     group_meeting_location:
       children:
         - field_location_in_person
         - field_address
         - field_location_online
         - group_meeting_online
+      label: 'Meeting location'
+      region: content
       parent_name: ''
       weight: 3
       format_type: fieldset
-      region: content
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         description: ''
         required_fields: true
-      label: 'Meeting location'
     group_meeting_online:
       children:
         - field_abstract
         - field_link
         - field_phone_numbers
+      label: Online
+      region: content
       parent_name: group_meeting_location
       weight: 5
       format_type: details
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         open: false
+        description: ''
         required_fields: true
-      label: Online
 id: node.meeting.default
 targetEntityType: node
 bundle: meeting
@@ -109,39 +109,40 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 4
+    region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-    region: content
   field_abstract:
+    type: string_textarea
     weight: 5
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_address:
+    type: entity_browser_entity_reference
     weight: 3
+    region: content
     settings:
       entity_browser: location_physical
       field_widget_display: rendered_entity
-      field_widget_display_settings:
-        view_mode: default
       field_widget_edit: true
       field_widget_remove: true
-      selection_mode: selection_append
       field_widget_replace: false
       open: false
+      field_widget_display_settings:
+        view_mode: default
+      selection_mode: selection_append
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_agenda:
     type: paragraphs
     weight: 5
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -157,56 +158,56 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
   field_dept:
-    weight: 10
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_direct_external_url:
+    type: link_default
     weight: 7
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_end_date:
+    type: datetime_default
     weight: 4
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_link:
+    type: link_default
     weight: 6
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_location_in_person:
+    type: boolean_checkbox
     weight: 2
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_location_online:
+    type: boolean_checkbox
     weight: 4
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_meeting_artifacts:
     type: paragraphs
-    weight: 9
+    weight: 8
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -222,16 +223,17 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
   field_meeting_cancel:
+    type: boolean_checkbox
     weight: 2
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_phone_numbers:
+    type: paragraphs
     weight: 7
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -247,21 +249,20 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    type: paragraphs
-    region: content
   field_public_body:
+    type: entity_reference_autocomplete
     weight: 1
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_regulations_accordions:
     type: entity_reference_paragraphs
     weight: 20
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -270,24 +271,24 @@ content:
       form_display_mode: default
       default_paragraph_type: _none
     third_party_settings: {  }
-    region: content
   field_regulations_title:
+    type: string_textfield
     weight: 18
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_start_date:
+    type: datetime_default
     weight: 3
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_videos:
     type: paragraphs
     weight: 6
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -303,12 +304,11 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
   moderation_state:
     type: moderation_state_default
     weight: 13
-    settings: {  }
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -330,10 +330,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 12
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -360,6 +360,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   field_title: true
@@ -367,4 +372,3 @@ hidden:
   promote: true
   sticky: true
   uid: true
-  url_redirects: true

@@ -115,7 +115,7 @@
 {% if content.field_public_body_meetings|render %}
 <div class="sfgov-public-body-section sfgov-public-body-meetings sfds-layout-container">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h2 id="meetings" class="sfgov-public-body-section--heading" role="heading">Meetings</h2>
+    <h2 id="meetings" class="sfgov-public-body-section--heading" role="heading">{{ 'Meetings' | t }}</h2>
     <div class="sfgov-public-body-section--content">
       {{ content.field_public_body_meetings }}
     </div>
@@ -127,7 +127,7 @@
 <div class="sfgov-public-body-section sfgov-public-body-meetings-list sfds-layout-container">
   {% if meetings_block.upcoming.result is not empty %}
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h3>Upcoming meetings</h3>
+    <h3>{{ 'Upcoming meetings' | t }}</h3>
     <div class="sfgov-section--content">
       {{ meetings_block.upcoming.render }}
     </div>
@@ -136,7 +136,7 @@
 
   {% if meetings_block.past.result is not empty %}
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h3>Past meetings</h3>
+    <h3>{{ 'Past meetings' | t }}</h3>
     <div class="sfgov-section--content">
       {{ meetings_block.past.render }}
     </div>
@@ -148,13 +148,16 @@
 {% if public_body_fields.about or content.field_subcommittees|render %}
 <div class="sfgov-public-body-section sfgov-public-body-about sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h2 id="about" class="sfgov-public-body-section--heading" role="heading">About</h2>
+    <h2 id="about" class="sfgov-public-body-section--heading" role="heading">{{ 'About' | t }}</h2>
     <div class="sfgov-public-body-section--content">
       {{ public_body_fields.about }}
 
       {% if about_page_link %}
       <p class="about-page-link">
-        {{ about_page_link }}
+        {% include "@sfgov-design-system/button/link.twig" with {
+            "href": about_page_link['#url'],
+            "text": about_page_link['#title'],
+        } %}
       </p>
       {% endif %}
 
@@ -167,7 +170,7 @@
 {% if content.field_board_members|render %}
 <div class="sfgov-public-body-section sfgov-public-body-board-members sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h2 id="board-members" class="sfgov-public-body-section--heading" role="heading">People</h2>
+    <h2 id="board-members" class="sfgov-public-body-section--heading" role="heading">{{ 'People' | t }}</h2>
     <div class="sfgov-public-body-section--content">
       {{ content.field_board_members }}
     </div>
@@ -178,7 +181,7 @@
 {% if public_body_fields.other_info %}
 <div class="sfgov-public-body-section sfgov-public-body-other-info sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h2 id="other-info" class="sfgov-public-body-section--heading" role="heading">Resources</h2>
+    <h2 id="other-info" class="sfgov-public-body-section--heading" role="heading">{{ 'Resources' | t }}</h2>
 
     {% for info in public_body_fields.other_info %}
       <div class="sfgov-public-body-section--content">
@@ -231,7 +234,7 @@
 {% if public_body_fields.address or public_body_fields.phone_numbers or public_body_fields.email %}
 <div class="sfgov-public-body-section sfgov-public-body-contact sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h2 class="sfgov-public-body-section--heading" role="heading" id="contact">Contact</h2>
+    <h2 class="sfgov-public-body-section--heading" role="heading" id="contact">{{ 'Contact' | t }}</h2>
     <div class="sfgov-public-body-section--content">
       {% if public_body_fields.address %}
         <div class="sfgov-contact-section address">
@@ -250,12 +253,12 @@
           <div class="map">
             {% if public_body_fields.map.map_img_url %}
               <div class="simple-gmap-static-map">
-                <a href="{{ public_body_fields.map.map_site_url }}"><img src="{{ public_body_fields.map.map_img_url }}" /></a>
+                <a href="{{ public_body_fields.map.map_site_url }}"><img src="{{ public_body_fields.map.map_img_url }}" alt="{{ 'View location on google maps'|t }}" /></a>
               </div>
             {% endif %}
             {% if public_body_fields.map.map_directions_url %}
               <p class="simple-gmap-link">
-                <a href="{{ public_body_fields.map.map_directions_url }}">Get directions</a>
+                <a href="{{ public_body_fields.map.map_directions_url }}">{{ 'Get directions' | t }}</a>
               </p>
             {% endif %}
           </div>
@@ -264,7 +267,7 @@
       {% endif %}
       {% if public_body_fields.phone_numbers %}
         <div class="sfgov-contact-section phone-numbers">
-          <p class="title">Phone</p>
+          <p class="title">{{ 'Phone' | t }}</p>
           {% for phone in public_body_fields.phone_numbers %}
             <div class="phone">
               <h6>{{ phone.owner }}</h6>
@@ -279,7 +282,7 @@
       {% if public_body_fields.email %}
         {% if public_body_fields.email.email_address %}
           <div class="sfgov-contact-section email">
-            <p class="title">Email</p>
+            <p class="title">{{ 'Email' | t }}</p>
             {% if public_body_fields.email.email_title %}
               <h6>{{ public_body_fields.email.email_title }}</h6>
             {% endif %}
@@ -295,7 +298,7 @@
 {% if public_body_fields.departments %}
 <div class="sfgov-public-body-section sfgov-public-body-departments sfds-layout-container sfgov-in-this-page-target">
   <div class="sfgov-public-body-section-content-container sfds-responsive-container sfds-responsive-container-right-zero">
-    <h2 class="sfgov-public-body-section--heading" role="heading" id="departments">Related departments</h2>
+    <h2 class="sfgov-public-body-section--heading" role="heading" id="departments">{{ 'Related departments' | t }}</h2>
     <div class="sfgov-public-body-section--content sfgov-container-two-column">
       {% for dept in public_body_fields.departments %}
       <div class="sfgov-container-item">

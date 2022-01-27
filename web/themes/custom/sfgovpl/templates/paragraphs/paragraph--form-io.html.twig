@@ -51,7 +51,7 @@
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     <div id="formio-{{ form_id }}"
-      data-source="{{- endpoint -}}" data-options="{{ options|escape }}">
+      data-source="{{- endpoint -}}" data-options="{{ options|escape }}" data-translations="{{ content.formio_json_data }}">
     </div>
 
 {% block content %}
@@ -104,6 +104,7 @@
     var el = document.getElementById('formio-{{ form_id }}')
     var options = safeJSONParse(el.getAttribute('data-options'))
     var lastFormErrors
+    options.i18n = safeJSONParse(el.getAttribute('data-translations'))
 
     /*
      * Every key in this object is a form event name, and the value is a
@@ -164,10 +165,16 @@
         return false
       },
       prevPage: function (data) {
-        return { page_index: data.page }
+        return {
+          page_index: data.page,
+          page_title: getPageTitle(data, this)
+        }
       },
       nextPage: function (data) {
-        return { page_index: data.page }
+        return {
+          page_index: data.page,
+          page_title: getPageTitle(data, this)
+        }
       },
       wizardNavigationClicked: function (page) {
         return {
@@ -262,12 +269,22 @@
           }
         })
       })
-      .catch(error => {
+      .catch(function(error) {
         amp('form.loadError', {
           url: dataSource,
           error: error
         })
       })
+
+    function getPageTitle(data, form) {
+      if (!form || !form.pages || form.pages.length === 0) {
+        return undefined
+      }
+      var page = form.pages[data.page]
+      return page && page.component
+        ? page.component.title
+        : undefined
+    }
 
     function customAddCssClassById(classes) {
       for (var key in classes) {

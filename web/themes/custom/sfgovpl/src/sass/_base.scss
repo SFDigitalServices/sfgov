@@ -1,3 +1,4 @@
+/* purgecss start ignore */
 html {
   font-size: $base-font-size * 1px;
 }
@@ -50,8 +51,9 @@ h5 {
   @include h5;
 }
 
-a {
+a:not(.btn) {
   @include link-colors($c-bright-blue, $c-dark-blue);
+  overflow-wrap: break-word;
 }
 
 li {
@@ -113,7 +115,14 @@ img {
   display: none;
 }
 
+.visually-hidden-medium-below {
+  @include media-max($medium-screen) {
+    @include visually-hidden;
+  }
+}
+
 *:focus {
   outline: 2px dotted #aeb0b5;
   outline-offset: 3px;
 }
+/* purgecss end ignore */

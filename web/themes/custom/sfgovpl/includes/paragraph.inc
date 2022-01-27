@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
@@ -28,6 +29,25 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 
     }
 }
+/**
+ * Implements template_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__process_step(&$variables) {
+  $paragraph = $variables['paragraph'];
+  $variables['sbsId'] = $paragraph->getParentEntity()->id();
+  $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
+  if (count($referencedEntities) > 0) {
+    $txNode = $referencedEntities[0];
+    $txId = $txNode->id();
+    // transaction id and url will be used
+    // as query parameters to conditionally display the step by step reference
+    // in the linked transaction
+    $variables['txId'] = $txId;
+    $variables['txUrl'] = $txNode->toUrl('canonical', [
+      'language' => \Drupal::languageManager()->getCurrentLanguage(),
+    ])->toString();
+  }
+}
 
 function sfgovpl_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
@@ -37,15 +57,6 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     $preprocess($variables);
   }
 
-  if($paragraph_type == 'process_step') {
-      $variables['sbsId'] = $paragraph->getParentEntity()->id();
-      $referencedEntities = $paragraph->get('field_transaction')->referencedEntities();
-      if(count($referencedEntities) > 0) {
-          $txId = $referencedEntities[0]->id();
-          $variables['txId'] = $txId;
-      } 
-  }
-  
   if($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
@@ -155,4 +166,95 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
 function sfgovpl_preprocess_paragraph__document(&$variables) {
   // Don't translate document paragraphs by gtranslate.
   $variables['attributes']['class'][] = 'notranslate';
+}
+
+/**
+ * Preprocess paragraph section.
+ *
+ * @param $variables
+ */
+function sfgovpl_preprocess_paragraph__section(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  // Check if we are within a resource_collection node.
+  $parent = $paragraph->getParentEntity();
+  if (!($parent instanceof NodeInterface) || $parent->bundle() !== "resource_collection") {
+    return;
+  }
+
+  if ($variables['view_mode'] !== "resource_collection") {
+    return;
+  }
+
+  // Swap the view_mode for all document paragraphs.
+  foreach (Element::getVisibleChildren($variables['content']['field_content']) as $key) {
+    /** @var \Drupal\paragraphs\ParagraphInterface $child */
+    $child = $variables['content']['field_content'][$key]['#paragraph'];
+    if ($child->bundle() !== "document") {
+      continue;
+    }
+
+    // We use a different view mode here so that old content still works.
+    $variables['content']['field_content'][$key]['#view_mode'] = 'resource_collection_multiple';
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  // Format data source link.
+  if ($data_source = $paragraph->get('field_source_data')->value) {
+    $variables['content']['field_source_data'] = [
+      '#type' => 'inline_template',
+      '#weight' => -10,
+      '#template' => '<p><a href="{{ url }}" target="_blank">{{ "View source data"}}</a></p>',
+      "#context" => [
+        'url' => $data_source,
+      ],
+    ];
+  }
+
+  if ($paragraph->get('field_data_notes')->value && !isset($variables['content']['field_data_notes']['#link_embedded'])) {
+    $variables['content']['field_data_notes'][0] = [
+      $variables['content']['field_source_data'],
+      $variables['content']['field_data_notes'][0],
+    ];
+    $variables['content']['field_data_notes']['#link_embedded'] = TRUE;
+  }
+
+  // Calculate aspect ratios.
+  $variables['charts'] = [];
+  foreach (['desktop', 'mobile'] as $device) {
+    $variables['charts'][$device]['embed_url'] = $paragraph->get("field_{$device}_embed_url")->value;
+    $variables['charts'][$device]['padding_top'] = '100%';
+    if (($device_width = $paragraph->get("field_{$device}_width")->value) && ($device_height = $paragraph->get("field_{$device}_height")->value)) {
+      $variables['charts'][$device]['padding_top'] = ((int) $device_height / (int) $device_width) * 100;
+    }
+  }
+
+  // Add kbd instructions.
+  $variables['kbd_instructions'] = NULL;
+
+  if ($kbd_instructions = \Drupal::config('sfgov_media.settings')->get('powerbi_kbd_instructions')) {
+    $variables['kbd_instructions'] = \Drupal\Core\Render\Markup::create($kbd_instructions);
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__form_io(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $parent_node = $paragraph->getParentEntity();
+  if ($parent_node instanceof NodeInterface) {
+    $json_data = $parent_node->get('field_formio_json_content')->value;
+    $variables['content']['formio_json_data'] = $json_data;
+  }
 }

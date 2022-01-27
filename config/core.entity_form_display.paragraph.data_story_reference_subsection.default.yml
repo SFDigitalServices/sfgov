@@ -1,0 +1,39 @@
+uuid: d735b7b5-544b-48fc-8382-c907405a584c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.data_story_reference_subsection.field_data_story
+    - field.field.paragraph.data_story_reference_subsection.field_title
+    - paragraphs.paragraphs_type.data_story_reference_subsection
+id: paragraph.data_story_reference_subsection.default
+targetEntityType: paragraph
+bundle: data_story_reference_subsection
+mode: default
+content:
+  field_data_story:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

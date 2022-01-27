@@ -1,0 +1,157 @@
+#!/bin/bash
+
+set -eo pipefail
+
+# use the terminus env vars created by previous steps
+giStartUrl="$MULTIDEV_SITE_URL"
+
+echo "Using start url: $giStartUrl"
+
+# set up a couple variables to monitor result state
+status='null'
+suiteResult=
+giPassing=
+
+giResultId=$(curl -s -X POST \
+    -H "Content-Type: application/json" \
+    -H "X-GitHub-Event: push" \
+    -d '{"payload": "{\"repository\": {\"statuses_url\": \"https://api.github.com/repos/'$GITHUB_ORG'/'$CIRCLE_PROJECT_REPONAME'/statuses/'$CIRCLE_SHA1'\"},\"sha\": \"'$CIRCLE_SHA1'\"}"}' \
+    "https://api.ghostinspector.com/v1/suites/$GI_SUITE_ADA/execute/?apiKey=$GI_API_KEY&startUrl=$giStartUrl&immediate=1" | jq -r '.data._id')
+
+# Poll for the suite result, sleep for a few seconds if it hasn't changed
+# Ghost Inspector currently does not support webhook for when an entire suite has finished executing, only for individual tests within a suite
+echo "Polling for suite results (ID: $giResultId)"
+while [ "$status" = 'null' ]; do
+  suiteResult=$(curl -s "https://api.ghostinspector.com/v1/suite-results/$giResultId/?apiKey=$GI_API_KEY")
+  responseStatus=$(echo $suiteResult | jq -r '.code')
+  if [ $? -ne 0 ] || [ "$responseStatus" == 'ERROR' ]; then # invalid json or api error, break
+    echo "API ERROR"
+    break
+  fi
+  status=$(echo $suiteResult | jq -r '.data.passing')
+  echo " - status: $status"
+  sleep 5
+done
+
+# status has been updated, check results for "passing"
+if [ "$(echo $suiteResult | jq -r '.data.passing')" != 'true' ]; then
+  echo "Suite failed! ¯\_(ツ)_/¯"
+  giPassing=1
+else 
+  echo "Suite passed! \o/"
+  giPassing=0
+fi
+
+shortSha=$(echo $CIRCLE_SHA1 | cut -c -7)
+prNumber=$(echo $CIRCLE_PULL_REQUEST | awk -F "/" '{print $NF}')
+prText="pr-$prNumber"
+
+if [ -z "$prNumber" ]; then
+  prText=$CIRCLE_BRANCH
+fi
+
+# get suite results
+suiteTestResults=$(curl -s https://api.ghostinspector.com/v1/suite-results/$giResultId/results?apiKey=$GI_API_KEY)
+
+# parse for e2e results
+giResultsSlack=$(echo $suiteTestResults | jq -r '.data[] | if(.passing!=true) then ":redx: " elif (.screenshotComparePassing!=true) then ":orangedash: " elif(.passing) then ":greencheck: " else ":redx: " end + " \(.name)"')
+echo "giResultsSlack:$giResultsSlack"
+
+# parse for accessibility results
+adaResultsSlack=$(echo $suiteTestResults | jq -r '.data[] | {name: .name, url: .urls[-1], counts: .steps[] | select(.command | contains("assertAccessibility")) | .extra.accessibility.counts} | "*\(.name)*\n\t<\(.url)|scanned page>\n\t*total issues*:\(.counts.total)\n\tcritical:\(.counts.critical)\n\tserious:\(.counts.serious)\n\tmoderate:\(.counts.moderate)\n\tminor:\(.counts.minor)\n\n"')
+echo $adaResultsSlack
+
+quickStatus=""
+
+if [[ $giResultsSlack =~ "redx" ]]; then
+  quickStatus=":red_circle:"
+elif [[ $giResultsSlack =~ "orangedash" ]]; then
+  quickStatus=":large_orange_circle:"
+else
+  quickStatus=":large_green_circle:"
+fi
+
+echo "quickStatus:$quickStatus"
+
+suiteStatusData=$(printf '{
+  "channel": "proj-sfdotgov-eng",
+  "unfurl_links": "false",
+  "text": "sfgov tests for %s complete",
+  "blocks": [{
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "%s"
+    }
+  }]
+}' "$prText" "$quickStatus e2e tests for <$giStartUrl|$prText> complete :thread:")
+
+echo "suiteStatusData:$suiteStatusData"
+
+threadTs=$(curl -s -X POST \
+  -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+  -H "Content-type: application/json; charset=utf-8" \
+  --data "$suiteStatusData" \
+  https://slack.com/api/chat.postMessage | jq -r .ts)
+
+echo "threadTs:$threadTs"
+
+if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+  prThreadData=$(printf '{
+    "unfurl_links": "false",
+    "text":"%s",
+    "thread_ts":"%s"
+  }' "<$CIRCLE_PULL_REQUEST|$CIRCLE_PULL_REQUEST>" "$threadTs")
+
+  curl -s -X POST -H 'Content-type: application/json' --data "$prThreadData" $RONBOT_WEBHOOK_URL
+fi
+
+suiteThreadData=$(printf '{
+  "unfurl_links": "false",
+  "text":"%s",
+  "thread_ts":"%s"
+}' "<https://app.ghostinspector.com/suite-results/$giResultId|suite results dashboard>" "$threadTs")
+
+curl -s -X POST -H 'Content-type: application/json' --data "$suiteThreadData" $RONBOT_WEBHOOK_URL
+
+e2eThreadData=$(printf '{
+  "unfurl_links": "false",
+  "attachments": [{
+    "fallback": "sfgov e2e tests complete",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":ghost: *e2e test results*\n%s"
+        }
+      }
+    ]
+  }],
+  "thread_ts":"%s"
+}' "$giResultsSlack" "$threadTs")
+
+echo "e2eThreadData:$e2eThreadData"
+
+curl -s -X POST -H 'Content-type: application/json' --data "$e2eThreadData" $RONBOT_WEBHOOK_URL
+
+adaThreadData=$(printf '{
+  "unfurl_links": "false",
+  "attachments": [{
+    "fallback": "sfgov ada scan results",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": ":accessibility: *ada scan results*\n%s"
+        }
+      }
+    ]
+  }],
+  "thread_ts":"%s"
+}' "$adaResultsSlack" "$threadTs")
+
+curl -s -X POST -H 'Content-type: application/json' --data "$adaThreadData" $RONBOT_WEBHOOK_URL
+
+exit $giPassing

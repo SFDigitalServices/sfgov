@@ -4,7 +4,7 @@
     {{ title_prefix }}
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
-        'label': node.type.entity.label,
+        'label': node.type.entity.label | t,
         'title': node.label,
         'text': content.field_description|render
       }
@@ -21,6 +21,6 @@
       ) }}
     </div>
     {% include '@theme/last-updated.twig' with {
-      'date': node.changedtime|date('F d, Y')
+      'date': node.changedtime|date('F j, Y')
     } %}
   {% endblock content %}

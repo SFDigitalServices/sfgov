@@ -1,4 +1,6 @@
-.paragraph--type--people {
+/* purgecss start ignore */
+.paragraph--type--people,
+.paragraph--type--profile-group {
   .title {
     @include fs-title-3-mobile;
     margin-top: 20px;
@@ -6,6 +8,7 @@
     @include media($medium-screen) {
       @include fs-title-4;
       margin-top: 0;
+      margin-bottom: 28px;
     }
   }
 
@@ -14,12 +17,15 @@
   }
 
   .description {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     &.bottom { 
       display: none;
     }
     p {
       margin: 0;
+    }
+    @include media($medium-screen) {
+      margin-bottom: 28px;
     }
   }
 
@@ -87,13 +93,53 @@
     text-align: left;
     width: calc(100% - 122px);
   }
+}
 
-  .person-title {
-    @include fs-body-bold;
-    opacity: 0.65;
+// Profile group specific overrides
+.paragraph--type--profile-group {
+  .inner {
+    padding: 0;
+  }
+  
+  .person-card.person-container {
+    .person-position {
+      @include fs-body-bold;
+      opacity: 0.65;
+    }
+    .person-subtitle,
+    .person-title {
+      @include fs-small-text;
+      opacity: 1;
+      line-height: 24px;
+    }
   }
 
-  .person-subtitle {
-    @include fs-body-short;
+  .sfgov-people--content .field--type-entity-reference-revisions.__profiles.field__items {
+    display: block;
+    padding-top: 10px;
+    @include media($medium-screen) {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    
+    > .field__item {
+      display: block;
+      margin-bottom: 20px;
+      @include media($medium-screen) {
+        display: flex;
+        align-items: stretch;
+        width: 33%;
+        margin-bottom: 40px;
+      }
+    }
+  }
+  
+  .sfgov-people--content {
+    display: block;
+    @include media($medium-screen) {
+      display: flex;
+    }
   }
 }
+/* purgecss end ignore */

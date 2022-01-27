@@ -1,13 +1,11 @@
 <?php
 
-use Drupal\node\Entity\Node;
+/**
+ * @file
+ * Extends functionality for the department content type.
+ */
+
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\sfgov_departments\SFgovDepartment;
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Ajax\InvokeCommand;
-use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * Implements hook_form_alter().
@@ -17,6 +15,7 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
     case 'node_department_edit_form':
       $form['field_about_description']['#disabled'] = 'disabled';
       break;
+
     case 'node_transaction_form':
     case 'node_transaction_edit_form':
       // Set form wrapper.
@@ -75,9 +74,15 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
 }
 
 /**
- * @param $form
+ * Custom ajax callback to load parent/child departments on transactions.
+ *
+ * @param array $form
+ *   The render array.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
- * @return \Drupal\Core\Ajax\AjaxResponse
+ *   The form state object.
+ *
+ * @return array
+ *   Department field.
  */
 function _fetch_departments_submit(array &$form, FormStateInterface $form_state) {
   $storage = $form_state->getStorage();
@@ -101,14 +106,15 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
   // Do nothing if there is no value.
   if (!empty($clean_values)) {
     foreach ($clean_values as $value) {
+      /** @var \Drupal\node\NodeInterface $node */
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($value);
 
       // Get parent values.
-      if ($parent_node = $node->field_parent_department->entity) {
+      if ($node && $node->hasField('field_parent_department') && ($parent_node = $node->field_parent_department->entity)) {
         if (!in_array($parent_node->id(), array_values($clean_values))) {
           $clean_values[] = $parent_node->id();
 
-          drupal_set_message(t('"@parent_department" is a parent department of "@department" and has been added by default. You can remove this selection if it does not apply for this content.', [
+          \Drupal::messenger()->addMessage(t('"@parent_department" is a parent department of "@department" and has been added by default. You can remove this selection if it does not apply for this content.', [
             '@parent_department' => $parent_node->label(),
             '@department' => $node->label(),
           ]));
@@ -136,139 +142,17 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
   return $form['field_departments'];
 }
 
-/**
- * Implements hook_ENTITY_TYPE_insert().
- *
- * Create the related department group entity when the department node
- * is created.
- */
-function sfgov_departments_node_insert(\Drupal\node\NodeInterface $entity) {
-  sfgov_departments_node_update($entity);
-}
+/**  
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().  
+ */  
+function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
+  $parentEntity = $form_state->getFormObject()->getEntity();
 
-/**
- * Implements hook_ENTITY_TYPE_update().
- *
- * Update the related department group entity when the department node
- * is updated.
- */
-function sfgov_departments_node_update(\Drupal\node\NodeInterface $entity) {
-  if ($entity->bundle() == 'department') {
-    SFgovDepartment::createOrUpdate($entity);
-  }
-  elseif ($entity->hasField('field_departments')) {
-    SFgovDepartment::updateGroupContent($entity);
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete().
- *
- * Delete the related department group entity when the department node is
- * deleted.
- */
-function sfgov_departments_node_delete(\Drupal\node\NodeInterface $entity) {
-  if ($entity->bundle() == 'department') {
-    SFgovDepartment::delete($entity);
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert().
- *
- * Relate the media entity to a group when created.
- */
-function sfgov_departments_media_insert(\Drupal\media\MediaInterface $entity) {
-  sfgov_departments_media_update($entity);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update().
- *
- * Relate the media entity to a group when updated.
- */
-function sfgov_departments_media_update(\Drupal\media\MediaInterface $entity) {
-  if ($entity->hasField('field_department')) {
-    SFgovDepartment::updateGroupMediaContent($entity);
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_access().
- *
- * Access control for media entities.
- * When trying to view, update or delete an entity it suffices to have the right to
- * do so in only one group the node belongs to.
- */
-function sfgov_departments_media_access(\Drupal\media\MediaInterface $entity, $op, \Drupal\Core\Session\AccountInterface $account) {
-  // We do not care about create access as we have our own wizard for that. Any
-  // operation aside from 'view', 'update' and 'delete' is also unsupported.
-  if (!in_array($op, ['view', 'update', 'delete'])) {
-    return AccessResult::neutral();
-  }
-
-  if ($entity->isNew()) {
-    return AccessResult::neutral();
-  }
-
-  $plugin_id = 'group_media:' . $entity->bundle();
-
-  // Only act if there are group content types for this entity type.
-  $group_content_types = \Drupal\group\Entity\GroupContentType::loadByContentPluginId($plugin_id);
-  if (empty($group_content_types)) {
-    return AccessResult::neutral();
-  }
-
-  // Load all the group content for this entity.
-  $group_contents = \Drupal::entityTypeManager()
-    ->getStorage('group_content')
-    ->loadByProperties([
-      'type' => array_keys($group_content_types),
-      'entity_id' => $entity->id(),
-    ]);
-
-  // If the entity does not belong to any group, we have nothing to say.
-  if (empty($group_contents)) {
-    return AccessResult::neutral();
-  }
-
-  /** @var \Drupal\group\Entity\GroupInterface[] $groups */
-  $groups = [];
-  foreach ($group_contents as $group_content) {
-    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-    $group = $group_content->getGroup();
-    $groups[$group->id()] = $group;
-  }
-
-  // From this point on you need group to allow you to perform the operation.
-  switch ($op) {
-    case 'view':
-      foreach ($groups as $group) {
-        if ($entity->isPublished()) {
-          if ($group->hasPermission("view $plugin_id entity", $account)) {
-            return AccessResult::allowed();
-          }
-        }
-        elseif ($group->hasPermission("view unpublished $plugin_id entity", $account)) {
-          return AccessResult::allowed();
-        }
+  if ($parentEntity->getType() === 'department') {
+    if ($element['#paragraph_type'] == 'spotlight') {
+      if( $element['subform']['#parents'][0] == 'field_spotlight2') {
+        $element['subform']['field_spotlight_img']['widget']['#description'] = t("Minimum 550 px wide. Square or horizontal is recommended.");
       }
-      break;
-
-    case 'update':
-    case 'delete':
-      foreach ($groups as $group) {
-        if ($group->hasPermission("$op any $plugin_id entity", $account)) {
-          return AccessResult::allowed();
-        }
-        elseif ($account->id() == $entity->getOwnerId() && $group->hasPermission("$op own $plugin_id entity", $account)) {
-          return AccessResult::allowed();
-        }
-      }
-      break;
+    }
   }
-
-  // Instead of outright forbidding access when no group granted it, we return
-  // a neutral access result to play nice with other modules.
-  return AccessResult::neutral();
 }

@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Url;
+use Druapl\views\Views;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -29,9 +29,11 @@ function sfgov_admin_page_attachments(array &$page) {
   $route = \Drupal::routeMatch()->getRouteObject();
   /** @var \Drupal\Core\Routing\AdminContext $is_admin */
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $is_user_page = $route_name == 'entity.user.canonical';
 
   $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
-  if ($is_admin && $active_theme == 'seven') {
+  if (($is_admin || $is_user_page) && $active_theme == 'seven') {
     $page['#attached']['library'][] = 'sfgov_admin/admin';
   }
 
@@ -41,6 +43,10 @@ function sfgov_admin_page_attachments(array &$page) {
   $logged_in = \Drupal::currentUser()->isAuthenticated();
   if ($logged_in && $active_theme == 'sfgovpl') {
     $page['#attached']['library'][] = 'sfgovpl/sfgov-editorial';
+  }
+  $current_uri = \Drupal::request()->getRequestUri();
+  if (strstr($current_uri, 'admin/tmgmt/items/')) {
+    $page['#attached']['library'][] = 'sfgov_admin/sg1498';
   }
 }
 
@@ -129,6 +135,23 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
             $selector => ['value' => 'range']
           ]
         ];
+      }
+    }
+  }
+
+  // Update the default values for resource collection.
+  // See https://sfgovdt.jira.com/browse/SG-1433.
+  if ($field_definition->getName() == 'field_data_dashboard' && $field_definition->getTargetBundle() == 'resource_collection') {
+    $default_values = [
+      'field_desktop_width' => 1000,
+      'field_desktop_height' => 220,
+      'field_mobile_width' => 360,
+      'field_mobile_height' => 660,
+    ];
+
+    foreach ($default_values as $field => $value) {
+      if (isset($element['subform'][$field])) {
+        $element['subform'][$field]['widget'][0]['value']['#default_value'] = $value;
       }
     }
   }
@@ -300,9 +323,95 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
 
     // Alter form elements.
     $form['current']['#title'] = t('Current state');
-    $form['current']['#markup'] = '<div class="' . implode($classes, ' ') . '">' . $current_state . '</div>';
+    $form['current']['#markup'] = '<div class="' . implode(' ', $classes) . '">' . $current_state . '</div>';
     $form['revision_log']['#title'] = t('Add a revision note');
     $form['revision_log']['#placeholder'] = t('Log message');
     $form['revision_log']['#size'] = NULL;
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+*/
+function sfgov_admin_views_pre_view(ViewExecutable $view) {
+  if ($view->id() == 'content') {
+    // Set english as default langcode for admin content list.
+    $filters = $view->getDisplay()->getOption('filters');
+    $filters["langcode"]["value"] = ["en"];
+    $view->display_handler->overrideOption('filters', $filters);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_admin_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Disable Available menus setting.
+  $form['menu']['menu_options']['#default_value'] = [];
+  $form['menu']['menu_options']['#description'] = t('<i>This option is disabled in code.</i>');
+  $form['menu']['#disabled'] = TRUE;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_admin_form_entity_form_display_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Prevent sticky and promote fields from being modified.
+  $fields = ['sticky', 'promote'];
+  $notice = t('<i class="field-plugin-summary">This option is disabled in code.</i>');
+  foreach ($fields as $field) {
+    $form['fields'][$field]['#attributes']['class'] = [];
+    $form['fields'][$field]['weight']['#access'] = FALSE;
+    $form['fields'][$field]['parent_wrapper']['#access'] = FALSE;
+    $form['fields'][$field]['region']['#access'] = FALSE;
+    $form['fields'][$field]['plugin']['type']['#disabled'] = TRUE;
+    $form['fields'][$field]['plugin']['type']['#suffix'] = $notice;
+  }
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function sfgov_admin_toolbar_alter(&$items) {
+
+  // Add the Node ID and link to edit page to the toolbar for those that have access.
+  $nid = \Drupal::routeMatch()->getRawParameter('node');
+
+  if (is_numeric($nid)) {
+
+    $node_edit_url = Url::fromRoute('entity.node.edit_form', ['node' => $nid]);
+
+    if ($node_edit_url->access() == TRUE) {
+      $items['node'] = [
+        '#type' => 'toolbar_item',
+        'tab' => [
+          '#type' => 'link',
+          '#url' => $node_edit_url,
+          '#title' => t('NID: %nid', ['%nid' => $nid]),
+        ],
+        '#wrapper_attributes' => ['class' => 'user-toolbar-tab'],
+
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function sfgov_admin_cron() {
+  $purge_frequency = \Drupal::config('tmgmt.sfgov_admin_logs')->get('purge_frequency');
+  if ($purge_frequency != '_never') {
+    if ($purge_frequency == '1') {
+      \Drupal::database()->delete('tmgmt_message')->execute();
+    }
+    else {
+      $request_time = \Drupal::time()->getCurrentTime();
+      \Drupal::database()->delete('tmgmt_message')
+        ->condition('created', $request_time - (int) $purge_frequency, '<=')
+        ->execute();
+    }
   }
 }

@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.form_confirmation_page.field_banner_color
     - field.field.node.form_confirmation_page.field_banner_image
     - field.field.node.form_confirmation_page.field_confirmation_sidebar
+    - field.field.node.form_confirmation_page.field_dept
     - field.field.node.form_confirmation_page.field_form_confirm_page_slug
     - field.field.node.form_confirmation_page.field_step
     - node.type.form_confirmation_page
@@ -22,60 +23,61 @@ bundle: form_confirmation_page
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 1
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 1
     region: content
   content_moderation_control:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   field_bann:
-    weight: 6
+    type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 5
     region: content
   field_banner_color:
-    weight: 7
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 6
     region: content
   field_banner_image:
-    weight: 5
+    type: image
     label: above
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 4
     region: content
   field_confirmation_sidebar:
     type: entity_reference_revisions_entity_view
-    weight: 4
     label: above
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 3
     region: content
   field_step:
     type: entity_reference_revisions_entity_view
-    weight: 3
     label: above
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 2
     region: content
 hidden:
+  field_dept: true
   field_form_confirm_page_slug: true
   langcode: true
   links: true

@@ -10,7 +10,7 @@
         'London Breed',
         'Breed',
       ];
-
+      
       $.each(do_not_translate, function (index, value) {
         $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-subtitle', context)
           .filter("*:contains(" + value + ")")

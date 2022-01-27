@@ -28,62 +28,11 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: none
-        options: {  }
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: true
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: mini
-        options:
-          items_per_page: 10
-          offset: 0
-          id: 0
-          total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          tags:
-            previous: ‹‹
-            next: ››
-      style:
-        type: serializer
-      row:
-        type: fields
-        options:
-          inline: {  }
-          separator: ''
-          hide_empty: false
-          default_field_elements: true
       fields:
         nid:
           id: nid
@@ -92,6 +41,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -148,9 +100,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: nid
-          plugin_id: field
         view_node:
           id: view_node
           table: node
@@ -158,6 +107,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
           label: ''
           exclude: false
           alter:
@@ -202,33 +153,27 @@ display:
           text: view
           output_url_as_text: true
           absolute: true
-          entity_type: node
-          plugin_id: entity_link
         title:
           id: title
           table: node_field_data
           field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
           entity_type: node
           entity_field: title
+          plugin_id: field
           label: ''
+          exclude: false
           alter:
             alter_text: false
             make_link: false
             absolute: false
-            trim: false
             word_boundary: false
             ellipsis: false
             strip_tags: false
+            trim: false
             html: false
-          hide_empty: false
-          empty_zero: false
-          settings:
-            link_to_entity: true
-          plugin_id: field
-          relationship: none
-          group_type: group
-          admin_label: ''
-          exclude: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -238,9 +183,13 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
           type: string
+          settings:
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -258,6 +207,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -311,7 +261,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_formio_data_source_export:
           id: field_formio_data_source_export
           table: paragraph__field_formio_data_source
@@ -319,6 +268,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -372,7 +322,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_formio_render_options_export:
           id: field_formio_render_options_export
           table: paragraph__field_formio_render_options
@@ -380,6 +329,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -432,7 +382,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_form_id_export_1:
           id: field_form_id_export_1
           table: paragraph__field_form_id
@@ -440,6 +389,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -492,7 +442,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_form_type_export:
           id: field_form_type_export
           table: paragraph__field_form_type
@@ -500,6 +449,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -553,7 +503,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_token_field_name_export:
           id: field_token_field_name_export
           table: paragraph__field_token_field_name
@@ -561,6 +510,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -614,7 +564,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_unauthorized_url_export:
           id: field_unauthorized_url_export
           table: paragraph__field_unauthorized_url
@@ -622,6 +571,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -675,7 +625,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         field_verification_url_export:
           id: field_verification_url_export
           table: paragraph__field_verification_url
@@ -683,6 +632,7 @@ display:
           relationship: field_form_id
           group_type: group
           admin_label: ''
+          plugin_id: field_export
           label: ''
           exclude: false
           alter:
@@ -736,7 +686,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
-          plugin_id: field_export
         langcode:
           id: langcode
           table: node_field_data
@@ -744,6 +693,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: langcode
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -800,9 +752,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: langcode
-          plugin_id: field
         status:
           id: status
           table: node_field_data
@@ -810,6 +759,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: status
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -855,8 +807,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_true: 'true'
             format_custom_false: 'false'
+            format_custom_true: 'true'
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -867,78 +819,58 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: status
-          plugin_id: field
-      filters:
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            form_page: form_page
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
+      pager:
+        type: mini
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
           expose:
-            operator_limit_selection: false
-            operator_list: {  }
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
       sorts:
         created:
           id: created
           table: node_field_data
           field: created
-          order: DESC
-          entity_type: node
-          entity_field: created
-          plugin_id: date
           relationship: none
           group_type: group
           admin_label: ''
-          exposed: false
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
           expose:
             label: ''
+            field_identifier: created
+          exposed: false
           granularity: second
-      header: {  }
-      footer: {  }
-      empty: {  }
-      relationships:
-        field_form_id:
-          id: field_form_id
-          table: node__field_form_id
-          field: field_form_id
-          relationship: none
-          group_type: group
-          admin_label: 'field_form_id: Paragraph'
-          required: true
-          plugin_id: standard
-        field_form_id_export:
-          id: field_form_id_export
-          table: node__field_form_id
-          field: field_form_id_export
-          relationship: none
-          group_type: group
-          admin_label: 'field_form_id: Paragraph'
-          required: true
-          plugin_id: standard
-        field_form_id_1:
-          id: field_form_id_1
-          table: node__field_form_id
-          field: field_form_id
-          relationship: none
-          group_type: group
-          admin_label: 'field_form_id: Paragraph'
-          required: true
-          plugin_id: standard
-        field_form_id_export_1:
-          id: field_form_id_export_1
-          table: node__field_form_id
-          field: field_form_id_export
-          relationship: none
-          group_type: group
-          admin_label: 'field_form_id: Paragraph'
-          required: true
-          plugin_id: standard
       arguments:
         nid:
           id: nid
@@ -947,6 +879,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: node_nid
           default_action: ignore
           exception:
             value: all
@@ -960,8 +895,8 @@ display:
           summary_options:
             base_path: ''
             count: true
-            items_per_page: 25
             override: false
+            items_per_page: 25
           summary:
             sort_order: asc
             number_of_records: 0
@@ -973,11 +908,77 @@ display:
           validate_options: {  }
           break_phrase: false
           not: false
+      filters:
+        type:
+          id: type
+          table: node_field_data
+          field: type
           entity_type: node
-          entity_field: nid
-          plugin_id: node_nid
-      display_extenders: {  }
+          entity_field: type
+          plugin_id: bundle
+          value:
+            form_page: form_page
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+      style:
+        type: serializer
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: true
+          replica: false
+          query_tags: {  }
+      relationships:
+        field_form_id:
+          id: field_form_id
+          table: node__field_form_id
+          field: field_form_id
+          relationship: none
+          group_type: group
+          admin_label: 'field_form_id: Paragraph'
+          plugin_id: standard
+          required: true
+        field_form_id_export:
+          id: field_form_id_export
+          table: node__field_form_id
+          field: field_form_id_export
+          relationship: none
+          group_type: group
+          admin_label: 'field_form_id: Paragraph'
+          plugin_id: standard
+          required: true
+        field_form_id_1:
+          id: field_form_id_1
+          table: node__field_form_id
+          field: field_form_id
+          relationship: none
+          group_type: group
+          admin_label: 'field_form_id: Paragraph'
+          plugin_id: standard
+          required: true
+        field_form_id_export_1:
+          id: field_form_id_export_1
+          table: node__field_form_id
+          field: field_form_id_export
+          relationship: none
+          group_type: group
+          admin_label: 'field_form_id: Paragraph'
+          plugin_id: standard
+          required: true
       group_by: false
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -997,13 +998,11 @@ display:
         - 'config:field.storage.paragraph.field_unauthorized_url'
         - 'config:field.storage.paragraph.field_verification_url'
   rest_export_1:
-    display_plugin: rest_export
     id: rest_export_1
     display_title: 'REST export'
+    display_plugin: rest_export
     position: 1
     display_options:
-      display_extenders: {  }
-      path: rest/form/%
       pager:
         type: none
         options:
@@ -1056,6 +1055,8 @@ display:
             status:
               alias: published
               raw_output: false
+      display_extenders: {  }
+      path: rest/form/%
       auth:
         - basic_auth
     cache_metadata:

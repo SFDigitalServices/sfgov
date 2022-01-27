@@ -57,6 +57,10 @@
                 // Focus the next field.
                 $(messageComponent.element).find('textarea').focus();
 
+                // Gtranslate tries to translate this even if it's already translated.
+                // Block gtranslate from doing so.
+                $(messageComponent.element).addClass('notranslate');
+
                 // Capture which button was clicked and log to Amplitude.
                 if (typeof amplitude != 'undefined') {
                   var eventDescription = '';

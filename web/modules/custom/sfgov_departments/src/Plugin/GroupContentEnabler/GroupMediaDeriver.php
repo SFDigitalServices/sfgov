@@ -5,10 +5,13 @@ namespace Drupal\sfgov_departments\Plugin\GroupContentEnabler;
 use Drupal\media\Entity\MediaType;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 
+/**
+ * Create derivatives of group media..
+ */
 class GroupMediaDeriver extends DeriverBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach (MediaType::loadMultiple() as $name => $type) {

@@ -1,32 +1,78 @@
+/* purgecss start ignore */
 .page-node-type-form-page {
   // some overrides for formbuilder/sf-design-system-integration
-  // TODO: clean this up as part of deprecating old pattern lab library
+  // TODO: clean this up as part of building out new design system
   $form-type: normal;
   input, textarea, select {
     height: auto;
   }
-  .form-page {
-    @include contain-1090;
-    button:hover {
-      border-bottom: 3px solid;
+
+  header[role="banner"] {
+    @include media-max($medium-screen) {
+      padding-bottom: 0;
     }
-  }
-  .formio-sfds .flex-auto{
-    flex: 0 1 auto;
-  }
-  .hero-banner--border{
-    margin-bottom: 20px;
-    .hero-banner--border-contain {
-      margin-left:0px;
-      margin-right:0px;
+    .sfgov-nav-container__content {
+      display: block;
+      @include media($medium-screen) {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 auto;
+        justify: space-between;
+        align-items: center;
+      }
+  
+      .sfgov-logo__container {
+        width: 100%;
+        @include media($medium-screen) {
+          width: 33.33%;
+        }
+        @include media-max($medium-screen) {
+          margin-bottom: 20px;
+        }
+      }
+  
+      .head-right--container {
+        @include fs-body-bold;
+        float: none;
+        text-align: left;
+        width: 100%;
+        border-top: 3px solid $c-grey-3;
+        padding: 15px 0;
+        @include media($medium-screen) {
+          @include fs-title-4;
+          border-top: none;
+          margin: 12px 0 0 0;
+          padding: 0;
+          width: 66.66%;
+        }
+      }
     }
   }
 
-  [data-source*="checkyourhealthforcitystaff"] .col-md-2 {
-    display: none;
+  .form-page {
+    @include contain-1090;
   }
-  [data-source*="checkyourhealthforcitystaff"] .col-md-3{
-    width: 100% !important;
+
+  // FIXME: this should not be here
+  .formio-sfds {
+    .flex-auto {
+      flex: 0 1 auto;
+    }
+  }
+  
+  .hero-banner--border{
+    margin-bottom: 20px;
+    .hero-banner--border-contain {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    @include media($medium-screen) {
+      margin-bottom: 80px;
+    }
+  }
+
+  .back-to-top {
+    display: none;
   }
 }
 .sf-custom-block-gtranslate {
@@ -36,3 +82,4 @@
       margin-right: 0px;
     }
 }
+/* purgecss end ignore */

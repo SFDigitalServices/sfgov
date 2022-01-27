@@ -1,0 +1,51 @@
+{% extends 'node--full.html.twig' %}
+
+{% block header %}
+  {{ title_prefix }}
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': node.label,
+      'text': (node.field_date_only.value) ? node.field_date_only.value|date("F j, Y") : '',
+    }
+  } %}
+  {{ title_suffix }}
+{% endblock %}
+
+{% block content %}
+  {% if content.field_spotlight %}
+    <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+      <div class="sfgov-section-container">
+        {{ content.field_spotlight }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if print_version_url %}
+    <div class="sfgov-full-bleed py-0 mt-20 mb-60">
+      <div class="sfgov-section-container flex">
+        <i class="sfgov-icon-filefilled"></i>
+        <span class="document inline-block ml-16">
+          <a href="{{ print_version_url }}">{{ print_version_label }}</a>
+        </span>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="sfgov-section sfgov-section-container sfgov-group-wrapper">
+    <div class="group--right">
+      {{ content.docsearch }}
+      {{ content.body[0].toc }}
+    </div>
+    <div class="group--left">
+      <div class="sfgov-section-overview sfgov-in-this-page-target">
+        <div class="sfgov-section--content">
+          {% if content.body[0].content %}
+            {{ content.body[0].content }}
+          {% else %}
+            {{ content.body }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

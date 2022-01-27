@@ -1,0 +1,87 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_schema().
+ */
+function sfgov_doc_html_schema() {
+  $schema['sfgov_doc_html_files'] = [
+    'description' => 'Converted files.',
+    'fields' => [
+      'fid' => [
+        'description' => 'File Entity ID',
+        'type'        => 'int',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'default'     => 0,
+      ],
+      'title' => [
+        'description' => 'Document title',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ],
+      'html' => [
+        'description' => 'Converted HTML',
+        'type'        => 'text',
+        'size'        => 'big',
+        'not null'    => TRUE,
+      ],
+    ],
+    'primary key' => ['fid'],
+    'indexes' => [
+      'fid'  => ['fid'],
+    ],
+    'foreign keys' => [
+      'files' => [
+        'table' => 'file_managed',
+        'columns' => [
+          'fid' => 'fid',
+        ],
+      ],
+    ],
+  ];
+  $schema['sfgov_doc_html_images'] = [
+    'description' => 'Converted images.',
+    'fields' => [
+      'fid' => [
+        'description' => 'File Entity ID',
+        'type'        => 'int',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'default'     => 0,
+      ],
+      'hash' => [
+        'description' => 'File hash',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ],
+    ],
+    'primary key' => ['fid'],
+    'indexes' => [
+      'fid'  => ['fid'],
+    ],
+    'foreign keys' => [
+      'files' => [
+        'table' => 'file_managed',
+        'columns' => [
+          'fid' => 'fid',
+        ],
+      ],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Add schema to track base64 converted images.
+ */
+function sfgov_doc_html_update_8801(&$sandbox) {
+  $specs = sfgov_doc_html_schema();
+  $schema = Database::getConnection()->schema();
+  $schema->createTable('sfgov_doc_html_images', $specs['sfgov_doc_html_images']);
+}

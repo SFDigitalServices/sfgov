@@ -1,0 +1,181 @@
+uuid: 4676ccb6-dd27-430c-ac57-6ca847b30049
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.powerbi_embed.field_data_notes
+    - field.field.paragraph.powerbi_embed.field_desktop_embed_url
+    - field.field.paragraph.powerbi_embed.field_desktop_height
+    - field.field.paragraph.powerbi_embed.field_desktop_width
+    - field.field.paragraph.powerbi_embed.field_mobile_embed_url
+    - field.field.paragraph.powerbi_embed.field_mobile_height
+    - field.field.paragraph.powerbi_embed.field_mobile_width
+    - field.field.paragraph.powerbi_embed.field_source_data
+    - field.field.paragraph.powerbi_embed.field_title
+    - paragraphs.paragraphs_type.powerbi_embed
+  module:
+    - allowed_formats
+    - field_group
+    - maxlength
+    - text
+third_party_settings:
+  field_group:
+    group_desktop_aspect_ratio:
+      children:
+        - field_desktop_width
+        - field_desktop_height
+      label: 'Desktop aspect ratio'
+      region: content
+      parent_name: group_aspect_ratios
+      weight: 3
+      format_type: html_element
+      format_settings:
+        classes: container-inline
+        id: ''
+        element: div
+        show_label: true
+        label_element: h5
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+        required_fields: true
+    group_mobile_aspect_ratio:
+      children:
+        - field_mobile_width
+        - field_mobile_height
+      label: 'Mobile aspect ratio'
+      region: content
+      parent_name: group_aspect_ratios
+      weight: 4
+      format_type: html_element
+      format_settings:
+        classes: container-inline
+        id: ''
+        element: div
+        show_label: true
+        label_element: h5
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+        required_fields: true
+    group_aspect_ratios:
+      children:
+        - group_desktop_aspect_ratio
+        - group_mobile_aspect_ratio
+      label: 'Aspect Ratios'
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: details
+      format_settings:
+        classes: paragraph-type--powerbi-embed__aspect-ratios
+        id: ''
+        open: true
+        description: '<p>In Power BI Desktop > Click outside dashboard > Paint Brush > Page Size.</p>'
+        required_fields: true
+    group_details:
+      children:
+        - field_desktop_embed_url
+        - field_mobile_embed_url
+      label: URLs
+      region: content
+      parent_name: ''
+      weight: 0
+      format_type: details
+      format_settings:
+        classes: paragraph-type--powerbi-embed__urls
+        id: ''
+        open: true
+        description: ''
+        required_fields: false
+id: paragraph.powerbi_embed.default
+targetEntityType: paragraph
+bundle: powerbi_embed
+mode: default
+content:
+  field_data_notes:
+    type: text_textarea
+    weight: 4
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
+  field_desktop_embed_url:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_desktop_height:
+    type: number
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_desktop_width:
+    type: number
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_mobile_embed_url:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_mobile_height:
+    type: number
+    weight: 5
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_mobile_width:
+    type: number
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_source_data:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -44,21 +44,19 @@ jobs:
 
       - restore_cache:
           keys:
-            - composer-cache
+            - composer-{{ checksum "composer.lock" }}
             - terminus-install
 
       - run:
-          # Set TERMINUS_ENV and related environment variables.
-          # https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
-          name: environment
+          name: set up build environment (build-tools-ci)
           command: /build-tools-ci/scripts/set-environment
 
       - run:
-          name: run composer install to get the vendor directory
+          name: composer install
           command: composer install
 
       - save_cache:
-          key: composer-cache
+          key: composer-{{ checksum "composer.lock" }}
           paths:
               - $HOME/.composer/cache
 
@@ -72,7 +70,7 @@ jobs:
           command: composer -n lint
 
       - run:
-          name: check coding standards
+          name: run code-sniff
           command: composer -n code-sniff
 
       - run:
@@ -81,6 +79,7 @@ jobs:
 
   build_deploy_and_test:
     <<: *defaults
+    resource_class: xlarge
     steps:
       - checkout
 
@@ -90,42 +89,28 @@ jobs:
             - terminus-install
 
       - run:
-          # Set TERMINUS_ENV and related environment variables.
-          # https://github.com/pantheon-systems/docker-build-tools-ci/blob/6.x/scripts/set-environment
-          name: dependencies
+          name: set up build environment (build-tools-ci)
           command: /build-tools-ci/scripts/set-environment
 
       - run:
-          name: install dev dependencies, build assets, etc.
+          name: prepare pantheon env
           command: ./.circleci/scripts/pantheon/01-prepare
 
       - run:
-          name: build assets
+          name: build assets (composer)
           command: composer -n build-assets
 
       - run:
-          name: create simplesamlphp symlink
-          command: |
-            mkdir -p ./vendor/simplesamlphp
-            cd ./vendor/simplesamlphp
-            rm -r simplesamlphp
-            ln -Fs ../../web/private/simplesamlphp-1.17.0-rc3 simplesamlphp
-      
+          name: sync saml dependencies
+          command: ./.circleci/scripts/saml/saml-dependencies
+
       - run:
-          name: add secrets
-          command: |
-            echo $FILE_IDCSCERTIFICATEPEM | base64 --decode >> ./web/private/IDCSCertificate.pem
-            echo $FILE_SAMLCRT | base64 --decode >> ./web/private/saml.crt
-            echo $FILE_SAMLPEM | base64 --decode >> ./web/private/saml.pem
-            echo $FILE_SIMPLESAMLCONFIG | base64 --decode >> ./web/private/simplesaml_config.php
-            mkdir -p ./web/private/metadata
-            echo $FILE_SAML20IDPREMOTE | base64 --decode >> ./web/private/metadata/saml20-idp-remote.php
-            echo $FILE_SAML20SPREMOTE | base64 --decode >> ./web/private/metadata/saml20-sp-remote.php
+          name: build assets (theme)
+          command: ./scripts/custom/build-theme-assets.sh
 
       - run:
           name: prepare database for site-under test
           command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
-          # command: ./.circleci/scripts/pantheon/02-init-site-under-test-reinstall-new
 
       - run:
           name: run composer install again to get dev dependencies
@@ -140,7 +125,7 @@ jobs:
           command: ./.circleci/scripts/pantheon/04-merge-main
 
       - run:
-          name: remove transient test fixtures
+          name: clean up test fixtures
           command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
 
       - run:
@@ -148,18 +133,33 @@ jobs:
           command: ./scripts/github/update-deploy-status
 
       - run:
-          name: run e2e test suite and accessibility scan
-          command: ./.circleci/scripts/tests/run-tests
+          name: run ghost inspector test suite
+          command: ./.circleci/scripts/tests/ghost-inspector/run-gi-suite
 
   create_gh_release:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2021.12
     steps:
       - run:
           name: create gh release
           command: |
             echo "create gh release for $CIRCLE_TAG"
-            curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"target_commitish\":\"$CIRCLE_BRANCH\",\"name\":\"$CIRCLE_TAG\",\"body\":\"created via api, add release notes\",\"draft\":false,\"prerelease\":false}" https://api.github.com/repos/sfdigitalservices/sfgov/releases 
+            curl -H "Authorization: token $GITHUB_TOKEN" -X POST -d "{\"tag_name\":\"$CIRCLE_TAG\",\"target_commitish\":\"$CIRCLE_BRANCH\",\"name\":\"$CIRCLE_TAG\",\"body\":\"created via api, add release notes\",\"draft\":false,\"prerelease\":false}" https://api.github.com/repos/sfdigitalservices/sfgov/releases
+
+  create_amplitude_release:
+    docker:
+      - image: cimg/base:2021.12
+    steps:
+      - checkout
+      - run:
+          name: create amplitude release
+          command: |
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              export AMPLITUDE_AUTH="$AMPLITUDE_PROD_API_KEY:$AMPLITUDE_PROD_SECRET_KEY"
+            else
+              export AMPLITUDE_AUTH="$AMPLITUDE_TEST_API_KEY:$AMPLITUDE_TEST_SECRET_KEY"
+            fi
+            ./scripts/custom/create-amplitude-release.sh
 
 workflows:
   version: 2
@@ -169,6 +169,12 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
+      - create_amplitude_release:
+          requires:
+            - build_deploy_and_test
+          filters:
+            branches:
+              only: /^(main|develop|amplitude-release.*)$/
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:

@@ -28,6 +28,7 @@ dependencies:
     - field.field.node.department.field_resources
     - field.field.node.department.field_social_media
     - field.field.node.department.field_spotlight
+    - field.field.node.department.field_spotlight2
     - field.field.node.department.field_topics
     - field.field.node.department.field_url
     - node.type.department
@@ -39,17 +40,18 @@ bundle: department
 mode: location_page
 content:
   field_address:
-    weight: 0
+    type: entity_reference_entity_view
     label: hidden
     settings:
       view_mode: location_page
       link: false
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    weight: 0
     region: content
 hidden:
   content_moderation_control: true
   field_about_description: true
+  field_about_or_description: true
   field_alert_expiration_date: true
   field_alert_text: true
   field_call_to_action: true
@@ -72,6 +74,7 @@ hidden:
   field_resources: true
   field_social_media: true
   field_spotlight: true
+  field_spotlight2: true
   field_topics: true
   field_url: true
   langcode: true

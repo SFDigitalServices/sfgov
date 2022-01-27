@@ -1,0 +1,51 @@
+uuid: b50bde47-0a87-4a36-8014-ed6888a35a8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.data_story_reference_section.field_content
+    - paragraphs.paragraphs_type.data_story_reference_section
+  module:
+    - sfgov_admin
+id: paragraph.data_story_reference_section.default
+targetEntityType: paragraph
+bundle: data_story_reference_section
+mode: default
+content:
+  field_content:
+    type: sfgov_paragraphs
+    weight: 2
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: '0'
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: data_story_reference_subsection
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: 0
+    third_party_settings: {  }
+  field_data_story:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

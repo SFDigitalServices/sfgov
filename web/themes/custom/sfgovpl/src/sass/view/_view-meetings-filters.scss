@@ -1,4 +1,14 @@
+// These filters are also in use at /vaccine-sites.
+
+/* purgecss start ignore */
 .sfgov-filters {
+  &.is-collapsed {
+    margin-bottom: -10px;
+
+    .sfgov-filters-legend {
+      margin-bottom: 30px;
+    }
+  }
 
   .views--meetings .group--right &.inner {
     padding-top: 32px;
@@ -12,25 +22,14 @@
     }
   }
 
-  // "Filters" legend only.
-  [data-filter-toggle-container] {
-    > legend {
-      @include fs-title-4;
+  .sfgov-filters-legend {
+    @include fs-title-4;
+    line-height: 1;
+    margin-bottom: 40px;
+
+    @include media($medium-screen) {
+      @include fs-title-3;
       line-height: 1;
-      margin-bottom: 40px;
-
-      @include media($medium-screen) {
-        @include fs-title-3;
-        line-height: 1;
-      }
-    }
-
-    &.is-collapsed {
-      margin-bottom: -10px;
-
-      > legend {
-        margin-bottom: 30px;
-      }
     }
   }
 
@@ -41,6 +40,13 @@
   select {
     padding: 10px 56px 10px 16px;
     line-height: 20px;
+
+    &,
+    option[selected] {
+      overflow: hidden !important;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   .fieldset-wrapper {
@@ -70,11 +76,19 @@
     overflow-y: scroll;
 
     // Start: scroll shadows
-    background:
-      linear-gradient(#ffffff 33%, rgba(255,255,255, 0)),
-      linear-gradient(rgba(255,255,255, 0), #ffffff 66%) 0 100%,
-      radial-gradient(farthest-side at 50% 0, rgba(0,0,0, 0.15), rgba(0,0,0,0)),
-      radial-gradient(farthest-side at 50% 100%, rgba(0,0,0, 0.15), rgba(0,0,0,0)) 0 100%;
+    background: linear-gradient(#ffffff 33%, rgba(255, 255, 255, 0)),
+      linear-gradient(rgba(255, 255, 255, 0), #ffffff 66%) 0 100%,
+      radial-gradient(
+        farthest-side at 50% 0,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0)
+      ),
+      radial-gradient(
+          farthest-side at 50% 100%,
+          rgba(0, 0, 0, 0.15),
+          rgba(0, 0, 0, 0)
+        )
+        0 100%;
     background-color: #ffffff;
     background-repeat: no-repeat;
     background-attachment: local, local, scroll, scroll;
@@ -107,6 +121,24 @@
       @include visually-hidden;
     }
 
+    // Individual checkbox items.
+    .form-item {
+      display: block;
+      font-size: inherit;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      line-height: 1;
+
+      &:last-child label {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .js-form-type-checkbox {
+    position: relative;
+
     label {
       display: inline-block;
       padding: 0 0 0 40px;
@@ -127,20 +159,6 @@
         position: absolute;
         top: 0;
         width: 18px;
-      }
-    }
-
-    // Individual checkbox items.
-    .form-item {
-      display: block;
-      font-size: inherit;
-      margin: 0;
-      padding: 0;
-      position: relative;
-      line-height: 1;
-
-      &:last-child label {
-        margin-bottom: 0;
       }
     }
   }
@@ -180,24 +198,7 @@
 
   .button {
     @include rubik;
-    border: 0;
-    box-shadow: none;
-    font-size: 1rem;
-    line-height: 24px;
-    margin: 0;
-    padding: 10px 20px;
     width: auto;
-
-    &:focus {
-      @include focus-outline;
-      background-color: $c-bright-blue;
-      border-color: $c-bright-blue;
-    }
-
-    &:hover {
-      background-color: $c-dark-blue;
-      border-color: $c-dark-blue;
-    }
   }
 
   .filter-toggle {
@@ -232,7 +233,9 @@
 
       &::before {
         content: '';
-        background: transparent url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE3LjQ2IDE0Ljc1NWExLjI0NSAxLjI0NSAwIDAxLS44ODUtLjM2NUw5Ljk2IDcuNzc1IDMuMzQ1IDE0LjM5YTEuMjUyIDEuMjUyIDAgMDEtMS43Ny0xLjc3bDcuNS03LjVhMS4yNiAxLjI2IDAgMDExLjc3IDBsNy41IDcuNWExLjI2IDEuMjYgMCAwMTAgMS43NyAxLjI0NiAxLjI0NiAwIDAxLS44ODUuMzY1eiIgZmlsbD0iIzRGNjZFRSIvPjwvc3ZnPg==) no-repeat;
+        background: transparent
+          url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE3LjQ2IDE0Ljc1NWExLjI0NSAxLjI0NSAwIDAxLS44ODUtLjM2NUw5Ljk2IDcuNzc1IDMuMzQ1IDE0LjM5YTEuMjUyIDEuMjUyIDAgMDEtMS43Ny0xLjc3bDcuNS03LjVhMS4yNiAxLjI2IDAgMDExLjc3IDBsNy41IDcuNWExLjI2IDEuMjYgMCAwMTAgMS43NyAxLjI0NiAxLjI0NiAwIDAxLS44ODUuMzY1eiIgZmlsbD0iIzRGNjZFRSIvPjwvc3ZnPg==)
+          no-repeat;
         display: inline-flex;
         height: 20px;
         margin-right: 12px;
@@ -249,3 +252,5 @@
     }
   }
 }
+
+/* purgecss end ignore */

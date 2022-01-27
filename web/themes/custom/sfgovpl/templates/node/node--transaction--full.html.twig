@@ -1,10 +1,19 @@
 {% embed 'node--full.html.twig' %}
 
   {% block header %}
+    {% set partOfLabel = '' %}
+
+    {% if part_of and part_of_url %}
+      {% set partOfLabel %}
+        {{ 'Part of' | t }} <a href="{{ part_of_url }}">{{ part_of }}</a>
+      {% endset %}
+    {% endif %}
+
     {{ title_prefix }}
+
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
-        'label': '',
+        'label': partOfLabel,
         'title': node.label,
         'text': node.field_description.value
       }
@@ -71,8 +80,8 @@
         {{ content.group_grey_boxes.field_transaction_purpose }}
       </div>
 
-      {% if content.field_help|render|striptags or 
-        content.field_transactions|render|striptags or 
+      {% if content.field_help|render|striptags or
+        content.field_transactions|render|striptags or
         content.field_related_content|render|striptags %}
         <div class="transaction--right">
           {{ content.field_help }}
@@ -81,7 +90,7 @@
       {% endif %}
 
     </div>
-    <p class="updated">{{ 'Last updated'|t }} {{ node.changedtime|date('F d, Y') }}</p>
+    <p class="updated">{{ 'Last updated'|t }} {{ node.changedtime|date('F j, Y') }}</p>
     {% if content.group_grey_boxes.field_departments.0 %}
       <div class="{{ bundle }}--ankle">
         {{ content.group_grey_boxes.field_departments }}
@@ -91,5 +100,3 @@
   {% endblock content %}
 
 {% endembed %}
-
-{{ attach_library('sfgovpl/sfgov-transaction') }}

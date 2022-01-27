@@ -1,11 +1,13 @@
 <?php
 
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\pathauto\PathautoState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Cache\Cache;
 use Drupal\node\NodeInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_template_preprocess_default_variables_alter().
@@ -42,7 +44,7 @@ function sfgovGetTransactionSearchVariables($variables) {
     $relatedDept = $node->get('field_departments')->get($i)->getValue();
     if(!empty($relatedDept)) {
       $relatedDeptId = $relatedDept['target_id'];
-      $relatedDeptNode = \Drupal\node\Entity\Node::load($relatedDeptId);
+      $relatedDeptNode = Node::load($relatedDeptId);
       $relatedDept = $relatedDeptNode ? $relatedDeptNode->getTitle() : '';
       break;
     }
@@ -228,6 +230,20 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
       \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
     }
   }
+  if ($entity->bundle() === 'department' || $entity->bundle() === 'topic') {
+    sfgov_utilities_entity_update($entity);
+  }
+}
+
+function sfgov_utilities_cloned_node_alter(&$node) {
+  if ($node->getType() == 'meeting') {
+    if (!empty($node->field_start_date->getValue())) {
+      $node->set('field_start_date', NULL);
+    }
+    if (!empty($node->field_end_date->getValue())) {
+      $node->set('field_end_date', NULL);
+    }
+  }
 }
 
 /**
@@ -242,16 +258,91 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
       \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
     }
   }
+  // Add or edit redirects for news view pages.
+  if ($entity->bundle() === 'department' || $entity->bundle() === 'topic') {
+    if ($entity->bundle() === 'department') {
+      $entity_path_root = '/news/';
+    }
+    if ($entity->bundle() === 'topic') {
+      $entity_path_root = '/news/topics/';
+    }
+    $entity_path = $entity_path_root . $entity->id();
+    $path_alias_manager = \Drupal::entityTypeManager()->getStorage('path_alias');
+    /* @var $alias_objects PathAliasInterface */
+    $alias_objects = $path_alias_manager->loadByProperties([
+      'path' => $entity_path,
+      'langcode' => 'en',
+    ]);
+    if (empty($alias_objects)) {
+      // This is a new node so the alias must be created.
+      $path_title = substr(str_replace(" ", "-", trim(strtolower($entity->getTitle()))), 0, 255);
+      $new_news_alias = \Drupal\path_alias\Entity\PathAlias::create([
+        'path' => $entity_path,
+        'alias' => $entity_path_root . $path_title,
+        'langcode' => 'en',
+      ]);
+      $new_news_alias->save();
+    }
+    else {
+      if (is_array($alias_objects)) {
+        // Check to see if the node title has changed.
+        foreach ($alias_objects as $alias_object) {
+          if ($alias_object->getPath() == $entity_path) {
+            $retrieved_alias = $alias_object->getAlias();
+            $news_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id());
+            $position = strrpos($news_alias, '/');
+            $existing_alias = $position === FALSE ? $news_alias : substr($news_alias, $position + 1);
+            if ($retrieved_alias != $news_alias) {
+              // Note that redirect module will create a new redirect for us, from the
+              // old alias to the subpage path, in the process of this save.
+              $updated_alias = $entity_path_root . $existing_alias;
+              $alias_object->setAlias($updated_alias);
+              $alias_object->save();
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Perform necessary tasks for when entity is deleted.
+ */
+function sfgov_utilities_node_delete(\Drupal\node\NodeInterface $node) {
+  // Delete redirect that was needed for news view pages.
+  if ($node->getType() === 'department' || $node->getType() === 'topic') {
+    if ($node->getType() === 'department') {
+      $entity_path_root = '/news/';
+    }
+    if ($node->getType() === 'topic') {
+      $entity_path_root = '/news/topics/';
+    }
+    $path_alias_manager = \Drupal::entityTypeManager()->getStorage('path_alias');
+    $alias_objects = $path_alias_manager->loadByProperties([
+      'path' => $entity_path_root . $node->id(),
+      'langcode' => 'en',
+    ]);
+    foreach ($alias_objects as $alias_object) {
+      if (strpos($alias_object->getPath(), '/news') !== FALSE) {
+        $alias_object->delete();
+      }
+    }
+  }
 }
 
 /**
  * Custom function to build the attributes needed for rendering a Map.
  */
 function _sfgov_utilities_build_map($address) {
+  $gmap_config = \Drupal::config('sfgov_utilities.settings');
+
   $addressLine2 = !empty($address['address_line2']) ? $address['address_line2'] . ', ' : '';
   $singleLineAddress = urlencode($address['address_line1'] . ',' . $addressLine2 . $address['locality'] . ',' . $address['administrative_area'] . ' ' . $address['postal_code']);
 
-  $apiKey = \Drupal\Core\Site\Settings::get('gmaps_api_key');
+  $apiKey = $gmap_config->get('gmaps_api_key');
   // options for the map image
   $options = [
     'zoom' => 15,
@@ -309,4 +400,78 @@ function sfgov_utilities_attach_form_id(&$form, $form_id) {
 function sfgov_utilities_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Attach #form_id to all form elements.
   sfgov_utilities_attach_form_id($form, $form_id);
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * TODO: find a way to write the updated array to an accessible var
+ * accessing settings via \Drupal\Core\Site\Settings is readonly
+ * so at the moment, we're really only swapping between two keys vs the entire array of keys
+ */
+function sfgov_utilities_cron() {
+  $api_keys = \Drupal\Core\Site\Settings::get('gmaps_api_keys');
+  if(!empty($api_keys)) {
+    $current_key = \Drupal::config('sfgov_utilities.settings')->get('gmaps_api_key');
+    $new_key = $api_keys[0];
+
+    if($new_key === $current_key) {
+      $found_key = array_search($current_key, $api_keys);
+      if($found_key >= 0) {
+        array_splice($api_keys, $found_key, 1);
+        $api_keys[] = $current_key;
+        $new_key = $api_keys[0];
+      }
+    }
+
+    \Drupal::service('config.factory')->getEditable('sfgov_utilities.settings')->set('gmaps_api_key', $new_key)->save();
+  }
+
+  \Drupal::service('cache.render')->invalidateAll();
+
+  // Find all tmgmt jobs from the xtm provider and save them with a valid provider.
+  $ids = \Drupal::entityQuery('tmgmt_job')
+    ->condition('translator', ['xtm', 'xtm_test'], 'IN')
+    ->execute();
+  if (!empty($ids)) {
+    $storage = \Drupal::entityTypeManager()->getStorage('tmgmt_job');
+    $entities = $storage->loadMultiple($ids);
+    foreach ($entities as $entity) {
+      // Give the entity a valid translator.
+      $entity->translator->target_id = 'contentapi';
+      $entity->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function sfgov_utilities_preprocess_views_view_field(&$variables) {
+  if (isset($variables['view']) && ($variables['view']->id() == 'watchdog')) {
+
+    /** @var Drupal\views\Plugin\views\field\Custom $field */
+    $field = $variables['field'];
+
+    // Render 'watchdog_uid' field as user link.
+    if ($field->field_alias == 'watchdog_uid') {
+
+      /** @var Drupal\views\Render\ViewsRenderPipelineMarkup $val */
+      $uid = $field->original_value->__toString();
+
+      if ($uid > 0) {
+        /** @var |Drupal\user\Entity\User $account */
+        // Pass your uid.
+        $account = User::load($uid);
+        $name = $account->toLink();
+      }
+      else {
+        $name = [ '#markup' =>t('Anonymous')];
+      }
+
+      $variables['output'] = $name;
+    }
+
+  }
+
 }

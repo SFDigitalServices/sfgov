@@ -1,0 +1,27 @@
+{% embed 'paragraph.html.twig' with { classes: ['sfgov-powerbi-embed'] } %}
+  {% block content %}
+    {{ attach_library("sfgovpl/sfgov-powerbi") }}
+
+    {% if kbd_instructions %}
+      <div tabindex="-1" class="sfgov-powerbi-embed__kbd hidden p-16 lg:p-40 rounded bg-blue-1 mb-40">
+        {{ kbd_instructions }}
+      </div>
+    {% endif %}
+
+    {% for device, chart in charts %}
+      <div tabindex="0" class="sfgov-powerbi-embed__wrapper" data-powerbi data-device="{{ device }}" data-src="{{ chart.embed_url }}"
+           style="display: none; position: relative; padding-top: calc({{ chart.padding_top }}% + 37px)">
+        <div class="iframe-container"><span class="powerbi-title" title="{{ paragraph.field_title.value }}" style="display: none;"></span></div>
+      </div>
+    {% endfor %}
+
+    {% if content.field_data_notes[0] %}
+      {% include '@theme/form-details.twig' with {
+        'summary': "Data notes and sources"|t,
+        'content': content.field_data_notes
+      } %}
+    {% else %}
+      {{ content.field_source_data }}
+    {% endif %}
+  {% endblock %}
+{% endembed %}

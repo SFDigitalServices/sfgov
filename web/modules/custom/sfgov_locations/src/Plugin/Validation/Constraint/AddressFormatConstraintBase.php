@@ -53,8 +53,8 @@ class AddressFormatConstraintBase extends Constraint
         parent::__construct($options);
 
         // Convert used fields into field overrides.
-        if (!empty($this->fields)) {
-            $unusedFields = array_diff(AddressField::getAll(), $this->fields);
+        if (!empty($this->fieldsOverrides)) {
+            $unusedFields = array_diff(AddressField::getAll(), $this->fieldsOverrides);
             $definition = [];
             foreach ($unusedFields as $field) {
                 $definition[$field] = FieldOverride::HIDDEN;

@@ -12,26 +12,30 @@ _core:
 id: sfgovpl_page_title
 theme: sfgovpl
 region: content
-weight: -10
+weight: -12
 provider: null
 plugin: page_title_block
 settings:
   id: page_title_block
   label: 'Page title'
-  provider: core
   label_display: '0'
+  provider: core
 visibility:
   request_path:
     id: request_path
-    pages: '<front>'
     negate: true
     context_mapping: {  }
+    pages: '<front>'
   'entity_bundle:node':
     id: 'entity_bundle:node'
+    negate: true
+    context_mapping:
+      node: '@node.node_route_context:node'
     bundles:
       about: about
       article: article
       campaign: campaign
+      data_story: data_story
       department: department
       department_table: department_table
       event: event
@@ -45,10 +49,8 @@ visibility:
       page: page
       person: person
       public_body: public_body
+      report: report
       resource_collection: resource_collection
       step_by_step: step_by_step
       topic: topic
       transaction: transaction
-    negate: true
-    context_mapping:
-      node: '@node.node_route_context:node'

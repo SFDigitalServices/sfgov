@@ -15,34 +15,40 @@ targetEntityType: node
 bundle: landing
 mode: default
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_content:
     type: entity_reference_revisions_entity_view
-    weight: 1
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 1
     region: content
   field_description:
     type: smart_trim
-    weight: 0
-    region: content
     label: hidden
     settings:
       trim_length: 600
       trim_type: chars
       trim_suffix: ''
+      wrap_output: false
       wrap_class: trimmed
-      more_text: More
+      more_link: false
       more_class: more-link
+      more_text: More
+      summary_handler: full
       trim_options:
         text: true
         trim_zero: false
-      wrap_output: false
-      more_link: false
-      summary_handler: full
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   langcode: true
   links: true
+  search_api_excerpt: true

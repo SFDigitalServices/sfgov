@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.user.compact
+    - field.field.user.user.field_departments
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -18,13 +19,19 @@ mode: compact
 content:
   user_picture:
     type: image
+    label: hidden
+    settings:
+      image_link: content
+      image_style: thumbnail
+    third_party_settings: {  }
     weight: 0
     region: content
-    settings:
-      image_style: thumbnail
-      image_link: content
-    third_party_settings: {  }
-    label: hidden
 hidden:
+  field_departments: true
+  field_log_out: true
+  field_quick_links: true
+  field_user_info: true
   langcode: true
   member_for: true
+  quick_links: true
+  search_api_excerpt: true

@@ -1,0 +1,95 @@
+/* purgecss start ignore */
+// @see qless-table.html.twig
+.sfgov-table {
+  border-spacing: 0;
+  margin-bottom: 50px;
+  width: 100%;
+
+  caption {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  thead {
+    background: $c-slate;
+    color: $c-white;
+    text-align: left;
+  }
+
+  th {
+    @include fs-body-bold;
+    padding: 15px 20px;
+
+    @include media($medium-screen) {
+      padding: 10px 20px;
+    }
+  }
+
+  th,
+  td {
+    display: block;
+    width: 100%;
+
+    @include media($medium-screen) {
+      display: table-cell;
+      width: auto;
+    }
+  }
+
+  tr.even {
+    background: $c-grey-2;
+  }
+
+  tbody {
+    td {
+      border-color: $c-slate;
+      border-style: solid;
+
+      @include media($medium-screen) {
+        padding: 16px 20px;
+      }
+
+      &:first-child {
+        border-width: 0 1px;
+        padding: 20px 20px 2px;
+
+        @include media($medium-screen) {
+          border-width: 0 0 0 1px;
+          padding: 16px 20px;
+        }
+      }
+
+      &:last-child {
+        border-width: 0 1px;
+        padding: 2px 20px 20px;
+
+        @include media($medium-screen) {
+          border-width: 0 1px 0 0;
+          padding: 16px 20px;
+        }
+      }
+    }
+
+    tr:last-child td {
+      @include media($medium-screen) {
+        border-bottom: 1px solid $c-slate;
+      }
+
+      &:last-child {
+        border-bottom: 1px solid $c-slate;
+      }
+    }
+  }
+
+  tfoot td {
+    @include fs-small-text;
+    color: $c-light-slate;
+    padding-top: 5px;
+    text-align: right;
+
+    @include media($medium-screen) {
+      padding-top: 10px;
+    }
+  }
+}
+/* purgecss end ignore */

@@ -5,8 +5,11 @@ dependencies:
   config:
     - field.field.node.resource_collection.field_content
     - field.field.node.resource_collection.field_content_bottom
+    - field.field.node.resource_collection.field_data_dashboard
+    - field.field.node.resource_collection.field_dept
     - field.field.node.resource_collection.field_description
     - field.field.node.resource_collection.field_introductory_text
+    - field.field.node.resource_collection.field_paragraphs
     - field.field.node.resource_collection.field_sidebar
     - field.field.node.resource_collection.field_topics
     - node.type.resource_collection
@@ -14,12 +17,68 @@ dependencies:
   module:
     - allowed_formats
     - content_moderation
+    - field_group
     - maxlength
     - paragraphs
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - sfgov_admin
     - text
+third_party_settings:
+  field_group:
+    group_custom_section:
+      children:
+        - field_content_bottom
+      label: 'Custom Section'
+      region: content
+      parent_name: ''
+      weight: 12
+      format_type: html_element
+      format_settings:
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        id: ''
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+        required_fields: true
+    group_body:
+      children:
+        - field_paragraphs
+      label: Body
+      region: content
+      parent_name: ''
+      weight: 10
+      format_type: html_element
+      format_settings:
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        id: ''
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+        required_fields: true
+    group_documents:
+      children:
+        - field_content
+      label: 'Documents (Legacy)'
+      region: content
+      parent_name: ''
+      weight: 11
+      format_type: details
+      format_settings:
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        id: ''
+        open: false
+        description: ''
+        required_fields: true
 id: node.resource_collection.default
 targetEntityType: node
 bundle: resource_collection
@@ -32,31 +91,128 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_content:
-    weight: 13
+    type: sfgov_customizable_paragraphs
+    weight: 10
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: _none
+      paragraph_settings:
+        section:
+          disabled_new: false
+          field_settings:
+            field_content:
+              label: ''
+              target_bundles:
+                block: '0'
+                button: '0'
+                campaign: '0'
+                content_link: '0'
+                data_story_reference_section: '0'
+                document: document
+                document_section: '0'
+                events: '0'
+                list: '0'
+                news: '0'
+                people: '0'
+                phone: '0'
+                resource_section: '0'
+                resources: '0'
+                spotlight: '0'
+                text: text
+                timeline: '0'
+                top_search_suggestion: '0'
+            field_title:
+              label: 'Title (Optional)'
+        document:
+          disabled_new: true
+          field_settings:
+            field_file:
+              label: ''
     third_party_settings: {  }
-    type: entity_reference_paragraphs
-    region: content
   field_content_bottom:
-    weight: 14
+    type: sfgov_customizable_paragraphs
+    weight: 12
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: _none
+      paragraph_settings:
+        custom_section:
+          disabled_new: false
+          field_settings:
+            field_text:
+              label: ''
+            field_title:
+              label: ''
+        section:
+          disabled_new: true
+          field_settings:
+            field_content:
+              label: ''
+              target_bundles:
+                block: '0'
+                button: '0'
+                campaign: '0'
+                content_link: '0'
+                data_story_reference_section: '0'
+                document: '0'
+                document_section: '0'
+                events: '0'
+                list: '0'
+                news: '0'
+                people: '0'
+                phone: '0'
+                resource_section: '0'
+                resources: '0'
+                spotlight: '0'
+                text: '0'
+                timeline: '0'
+                top_search_suggestion: '0'
+            field_title:
+              label: ''
     third_party_settings: {  }
-    type: entity_reference_paragraphs
+  field_data_dashboard:
+    type: paragraphs
+    weight: 2
     region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_dept:
+    type: entity_reference_autocomplete
+    weight: 19
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 3
       placeholder: ''
@@ -69,99 +225,84 @@ content:
         maxlength_js_label: '<strong>@remaining</strong> left'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   field_introductory_text:
     type: paragraphs
-    weight: 2
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-    region: content
-  field_sidebar:
-    weight: 15
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-    third_party_settings: {  }
-    type: entity_reference_paragraphs
-    region: content
-  field_topics:
-    weight: 16
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  langcode:
-    type: language_select
     weight: 3
     region: content
     settings:
-      include_locked: true
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_paragraphs:
+    type: sfgov_paragraphs
+    weight: 20
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: '0'
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: 0
+    third_party_settings: {  }
+  field_topics:
+    type: entity_reference_autocomplete
+    weight: 13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 11
-    settings: {  }
+    weight: 18
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 9
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 7
-    region: content
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 18
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
+    weight: 9
+    region: content
     settings:
       display_label: true
-    weight: 12
-    region: content
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 8
-    region: content
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -179,28 +320,32 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 4
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 20
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 19
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 10
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_sidebar: true
+  langcode: true
+  promote: true
+  sticky: true

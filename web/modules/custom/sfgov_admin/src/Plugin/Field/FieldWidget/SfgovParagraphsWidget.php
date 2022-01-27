@@ -2,8 +2,13 @@
 
 namespace Drupal\sfgov_admin\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'entity_reference_revisions paragraphs' widget.
@@ -18,6 +23,48 @@ use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
  * )
  */
 class SfgovParagraphsWidget extends ParagraphsWidget {
+
+  /**
+   * The bundle info manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $bundleInfo;
+
+  /**
+   * SfgovParagraphsWidget constructor.
+   *
+   * @param $plugin_id
+   *   The plugin_id for the widget.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the widget is associated.
+   * @param array $settings
+   *   The widget settings.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
+   *   The bundle info manager.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeBundleInfoInterface $bundle_info) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+    $this->bundleInfo = $bundle_info;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('entity_type.bundle.info')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -96,6 +143,61 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
     }
 
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
+    $field_name = $this->fieldDefinition->getName();
+    $parents = $element['#field_parents'];
+    $item_bundles = $this->bundleInfo->getBundleInfo('paragraph');
+
+    $widget_state = static::getWidgetState($parents, $field_name, $form_state);
+    $paragraphs_entity = NULL;
+    if ($element['#paragraph_type'] === "data_story_section") {
+      $child_bundles = [];
+      if (isset($widget_state['paragraphs'][$delta]['entity'])) {
+        $paragraphs_entity = $widget_state['paragraphs'][$delta]['entity'];
+      }
+      elseif (isset($items[$delta]->entity)) {
+        $paragraphs_entity = $items[$delta]->entity;
+      }
+      if ($paragraphs_entity) {
+        /** @var \Drupal\paragraphs\ParagraphInterface[] $child_paragraphs */
+        $child_paragraphs = $paragraphs_entity->get('field_content')->referencedEntities();
+        $content = [];
+
+        if ($heading = $paragraphs_entity->get('field_title')->value) {
+          $content[] = $heading;
+        }
+
+
+        foreach ($child_paragraphs as $child_paragraph) {
+          $language = $form_state->get('langcode');
+          $localized_paragraph = ($child_paragraph->hasTranslation($language)) ? $child_paragraph->getTranslation($form_state->get('langcode')) : $child_paragraph;
+          $child_bundles[] = $item_bundles[$child_paragraph->bundle()]['label'];
+          $row_content = $child_paragraph->bundle() === "powerbi_embed" ? $item_bundles[$child_paragraph->bundle()]['label'] : '';
+          if (!$heading && $child_paragraph->hasField('field_text')) {
+            if ($text = $localized_paragraph->get('field_text')->value) {
+              $text = strip_tags($text);
+              $row_content = $text;
+            }
+          }
+
+          $content[] = $row_content;
+        }
+
+        $element['top']['summary']['fields_info']['#summary']['content'] = array_filter($content);
+      }
+
+      if (count($child_bundles)) {
+        $element['top']['type']['label']['#markup'] .= ' (' . implode(', ', $child_bundles) . ')';
+      }
+    }
+
+    return $element;
   }
 
 }
