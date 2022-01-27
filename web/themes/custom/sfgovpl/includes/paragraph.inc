@@ -245,3 +245,16 @@ function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
   }
 
 }
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__form_io(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $parent_node = $paragraph->getParentEntity();
+  if ($parent_node instanceof NodeInterface) {
+    $json_data = $parent_node->get('field_formio_json_content')->value;
+    $variables['content']['formio_json_data'] = $json_data;
+  }
+}
