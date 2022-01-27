@@ -6,29 +6,54 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Entity;
 use Drupal\eck\Entity\EckEntity;
+use Drupal\eck\Entity\EckEntityType;
+use Drupal\eck\Entity\EckEntityBundle;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
-function createResourceEntity($title, $description, $url) {
-  $link = Link::fromTextAndUrl('some url', Url::fromUri('https://some-uri'));
-  $eckData = [
-    'entity_type' => 'resource',
-    'type' => 'resource',
-    'title' => $title . ' (entity title from code ' . time() . ')',
-    'field_description' => $description,
-    'field_url' => $url
+$eckResourcesData = [];
+$eckIds = \Drupal::entityQuery('resource')->execute();
+$eckResources = \Drupal::entityTypeManager()->getStorage('resource')->loadMultiple($eckIds);
+foreach($eckResources as $eckResource) {
+  $eckResourcesData[$eckResource->field_url->uri] = [
+    'id' => $eckResource->id(),
+    'field_title' => $eckResource->field_title->value,
+    'field_description' => $eckResource->field_description->value,
+    'field_url' => $eckResource->field_url->uri,
   ];
-
-  $entity = EckEntity::create($eckData);
-  $entity->save();
-
-  // $entity = EckEntity::create($entityType, ['type' => $entityBundle]);
-  // $wrapper = entity_metadata_wrapper($entityType, $entity);
-  // $wrapper->field_description->set('entity description from code ' . time());
-  // $wrapper->field_url->set('field_url', $link);
 }
 
-// createEntity('resource', 'resource');
+print_r($eckResourcesData);
+// createResourceEntity('some title', 'some description', 'https://sf.gov2', $eckResourcesData);
+
+function createResourceEntity($title, $description, $url, &$eckResourcesData) {
+  // what determines uniqueness of resource entity? currently assuming url
+  // if eck entity resource with url already exists, just return that entity
+  // else create a new entity, add it to the list
+  $entity = null;
+  if(!empty($eckResourcesData[$url])) {
+    $entity = \Drupal::entityTypeManager()->getStorage('resource')->load($eckResourcesData[$url]['id']);
+  } else {
+    $eckData = [
+      'entity_type' => 'resource',
+      'type' => 'resource',
+      'title' => $title . ' (entity title from code ' . time() . ')',
+      'field_description' => $description,
+      'field_url' => $url
+    ];
+    $entity = EckEntity::create($eckData);
+    $entity->save();
+
+    $eckResourcesData[$url] = [
+      'id' => $entity->id(),
+      'field_title' => $entity->field_title->value,
+      'field_description' => $entity->field_description->value,
+      'field_url' => $entity->field_url->uri,
+    ];
+  }
+
+  return $entity;
+}
 
 $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
 $user = reset($users);
@@ -45,7 +70,7 @@ $nodesWithResources = [];
 
 // campaign nodes
 foreach($nodes as $node) {
-  if($node->id() == 3129) {
+  if($node->id() == 3135) {
     $title = $node->getTitle();
     // echo "\e[96m" . $node->gettype() . ": " . $title . " (". $node->id() . ")\n";
     // check for field
@@ -97,7 +122,8 @@ foreach($nodes as $node) {
                       $title = $resourcesParagraph->field_title->value;
                       $description = $resourcesParagraph->field_description->value;
                       $uri = $resourcesParagraph->field_link->uri;
-                      $isEntityRef = strpos($uri, 'entity:') >= 0 ? true : false;
+                      echo "$uri:";
+                      $isEntityRef = strpos($uri, 'entity:');
 
                       $resource = [
                         'id' => $resourceId,
@@ -108,40 +134,59 @@ foreach($nodes as $node) {
                       ];
                       $campaignResourceSection['resources'][] = $resource;
 
-                      // if link uri contains "entity:", it's an internal reference
+                      // if link uri contains "entity:"
+                      //  it's an internal reference, create sf.gov link paragraph
                       // else it's external
-                      // create new resource entity accordingly
-                      if($isEntityRef) {
-
+                      //  create eck resource entity 
+                      //  create new external link paragraph entity (machine name: resource_entity)
+                      //  attach eck entity to paragraph entity
+                      //  attach paragraph to campaign resource section
+                      if($isEntityRef !== false) {
+                        echo "create sf.gov link paragraph\n";
                       } else {
-                        createResourceEntity($title, $description, $uri);
+                        echo "create resource entity\n";
+                        echo "add resource entity to " . $campaignResourceSectionParagraph->field_title->value . "\n";
+
+                        // create eck entity external link, or get an existing one
+                        $externalLinkEntity = createResourceEntity($title, $description, $uri);
+
+                        // create paragraph type resource_entity
+                        $externalLinkParagraph = Paragraph::create([
+                          "type" => "resource_entity"
+                        ]);
+
+                        // attach eck entity to paragraph resource_entity
+                        $externalLinkParagraph->field_resource = $externalLinkEntity;
+
+                        // attach paragraph resource_entity to campaign resource section
+                        $campaignResourceSectionParagraph->field_content[] = $externalLinkParagraph;
+                        $campaignResourceSectionParagraph->save();
                       }
-
-
                     } else { // this is the new thing
-                      // echo "\e[95m";
-                      // echo "      resource id: " . $resourceId . "\n";
-                      // echo "      resource_type: " . $resourcesParagraph->gettype() . "\n";
-                      // echo "\n";
+                      $resource = [
+                        'id' => $resourceId,
+                        'resource_type' => $resourcesParagraph->gettype(),
+                        'entity_id' => $resourcesParagraph->get('field_resource')->getValue()[0]['target_id'],
+                      ];
+                      $campaignResourceSection['resources'][] = $resource;
                     }
                   }
                   $campaignResource['campaign_resource_section'][] = $campaignResourceSection;
-                } 
+                }
               }
             }
             $nodeWithResource['campaign_resources'][] = $campaignResource;
           }
+          $campaignResourcesParagraph->save();
         }
       }
     }
     $nodesWithResources[] = $nodeWithResource;
+    $node->save();
   }
 }
 
 $json = json_encode($nodesWithResources);
-
-// echo "\e[97m";
-// echo "\n";
 
 $campaignsWithResources = 0;
 foreach($nodesWithResources as $nodeWithResource) {
@@ -162,7 +207,10 @@ foreach($nodesWithResources as $nodeWithResource) {
             foreach($resources as $resource) {
               echo "\e[95m";
               echo "        resource:\n";
-              echo "          field_title:\e[37m" . $resource['field_title'] . "\n";
+              echo "          \e[95mid:\e[37m" . $resource['id'] . "\n";
+              echo "          \e[95mtype:\e[37m" . $resource['resource_type'] . "\n";
+              echo "          \e[95mentity_id:\e[37m" . $resource['entity_id'] . "\n";
+              echo "          \e[95mfield_title:\e[37m" . $resource['field_title'] . "\n";
               echo "          \e[95mfield_description:\e[37m" . $resource['field_description'] . "\n";
               echo "          \e[95mfield_link:\e[37m" . $resource['field_link'] . "\n";
             }
