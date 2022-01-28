@@ -148,7 +148,7 @@ foreach($nodes as $node) {
                         echo "add resource entity to " . $campaignResourceSectionParagraph->field_title->value . "\n";
 
                         // create eck entity external link, or get an existing one
-                        $externalLinkEntity = createResourceEntity($title, $description, $uri);
+                        $externalLinkEntity = createResourceEntity($title, $description, $uri, $eckResourcesData);
 
                         // create paragraph type resource_entity
                         $externalLinkParagraph = Paragraph::create([
