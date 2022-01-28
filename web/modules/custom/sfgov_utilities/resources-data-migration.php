@@ -23,6 +23,7 @@ foreach($eckResources as $eckResource) {
   ];
 }
 
+echo "current list of eck resource entities:\n";
 print_r($eckResourcesData);
 // createResourceEntity('some title', 'some description', 'https://sf.gov2', $eckResourcesData);
 
@@ -37,7 +38,7 @@ function createResourceEntity($title, $description, $url, &$eckResourcesData) {
     $eckData = [
       'entity_type' => 'resource',
       'type' => 'resource',
-      'title' => $title . ' (entity title from code ' . time() . ')',
+      'title' => $title,
       'field_description' => $description,
       'field_url' => $url
     ];
@@ -68,9 +69,11 @@ $campaignsWithOldResources = 0;
 
 $nodesWithResources = [];
 
+$resourcesToRemove = [];
+
 // campaign nodes
 foreach($nodes as $node) {
-  if($node->id() == 3135) {
+  if($node->id() == 3148) {
     $title = $node->getTitle();
     // echo "\e[96m" . $node->gettype() . ": " . $title . " (". $node->id() . ")\n";
     // check for field
@@ -102,31 +105,24 @@ foreach($nodes as $node) {
                 $campaignResourceSectionParagraph = Paragraph::load($campaignResourceSectionId);
                 // echo "\e[93m    target_id:" . $campaignResourceSectionId . ", paragraph type:" . $campaignResourceSectionParagraph->getType() . ", title: " . $campaignResourceSectionParagraph->field_title->value . "\n";
                 $campaignResourceSection = [
-                  'id' => $campaignResourceSectionId,
+                  'crs_id' => $campaignResourceSectionId,
                   'title' => $campaignResourceSectionParagraph->field_title->value,
                   'resources' => [],
                 ];
                 $resourcesValues = $campaignResourceSectionParagraph->get('field_content')->getValue();
                 if (!empty($resourcesValues)) {
+                  $resourcesToRemove[$campaignResourceSectionId] = [];
                   foreach ($resourcesValues as $resourcesValue) {
                     $resourceId = $resourcesValue['target_id'];
                     $resourcesParagraph = Paragraph::load($resourceId);
-                    if ($resourcesParagraph->gettype() == 'resources') { // this is the old thing
-                      // echo "\e[95m";
-                      // echo "      resource id: " . $resourceId . "\n";
-                      // echo "      resource_type: " . $resourcesParagraph->gettype() . "\n";
-                      // echo "      field_title: " . $resourcesParagraph->field_title->value . "\n";
-                      // echo "      field_description: " . $resourcesParagraph->field_description->value . "\n";
-                      // echo "      field_link: " . $resourcesParagraph->field_link->uri . "\n\n";
-                      
+                    if ($resourcesParagraph->gettype() == 'resources') { // this is the old thing                      
                       $title = $resourcesParagraph->field_title->value;
                       $description = $resourcesParagraph->field_description->value;
                       $uri = $resourcesParagraph->field_link->uri;
-                      echo "$uri:";
                       $isEntityRef = strpos($uri, 'entity:');
 
                       $resource = [
-                        'id' => $resourceId,
+                        'r_id' => $resourceId,
                         'resource_type' => $resourcesParagraph->gettype(),
                         'field_title' => $title,
                         'field_description' => $description,
@@ -162,9 +158,17 @@ foreach($nodes as $node) {
                         $campaignResourceSectionParagraph->field_content[] = $externalLinkParagraph;
                         $campaignResourceSectionParagraph->save();
                       }
+
+                      $resourcesParagraph->field_title->value = $title . " (delete)";
+                      $resourcesParagraph->save();
+
+                      $resourcesToRemove[$campaignResourceSectionId][] = $resourcesParagraph->id();
+
+                      
+
                     } else { // this is the new thing
                       $resource = [
-                        'id' => $resourceId,
+                        'r_id' => $resourceId,
                         'resource_type' => $resourcesParagraph->gettype(),
                         'entity_id' => $resourcesParagraph->get('field_resource')->getValue()[0]['target_id'],
                       ];
@@ -182,6 +186,9 @@ foreach($nodes as $node) {
       }
     }
     $nodesWithResources[] = $nodeWithResource;
+    // loop through resourcesToRemove here
+    echo "resources to remove (key=parent paragraph id):\n";
+    print_r($resourcesToRemove);
     $node->save();
   }
 }
@@ -201,13 +208,13 @@ foreach($nodesWithResources as $nodeWithResource) {
       if(!empty($campaignResourceSection)) {
         foreach($campaignResourceSections as $campaignResourceSection) {
           echo "\e[93m";
-          echo "      ($campaignResourceSectionId) campaign_resource_section title: " . $campaignResourceSection['title'] . "\n";
+          echo "      (crs_id:". $campaignResourceSection['crs_id']. ") campaign_resource_section title: " . $campaignResourceSection['title'] . "\n";
           $resources = $campaignResourceSection['resources'];
           if(!empty($resources)) {
             foreach($resources as $resource) {
               echo "\e[95m";
               echo "        resource:\n";
-              echo "          \e[95mid:\e[37m" . $resource['id'] . "\n";
+              echo "          \e[95mr_id:\e[37m" . $resource['r_id'] . "\n";
               echo "          \e[95mtype:\e[37m" . $resource['resource_type'] . "\n";
               echo "          \e[95mentity_id:\e[37m" . $resource['entity_id'] . "\n";
               echo "          \e[95mfield_title:\e[37m" . $resource['field_title'] . "\n";
