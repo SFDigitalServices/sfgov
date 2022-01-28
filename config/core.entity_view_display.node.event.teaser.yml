@@ -22,6 +22,7 @@ dependencies:
     - node.type.event
   module:
     - datetime
+    - sfgov_dates
     - text
     - user
 id: node.event.teaser
@@ -36,14 +37,14 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_description:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   field_end_date:
     type: datetime_default
@@ -52,7 +53,14 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 2
+    weight: 4
+    region: content
+  field_smart_date:
+    type: sfgov_dates_teaser_date
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
     region: content
   field_start_date:
     type: datetime_default
@@ -61,7 +69,7 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 1
+    weight: 3
     region: content
 hidden:
   body: true
@@ -74,7 +82,6 @@ hidden:
   field_location_in_person: true
   field_location_online: true
   field_phone_numbers: true
-  field_smart_date: true
   field_topics: true
   langcode: true
   links: true

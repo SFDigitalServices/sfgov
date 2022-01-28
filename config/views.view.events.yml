@@ -28,32 +28,49 @@ display:
     display_options:
       title: Events
       fields:
-        title:
-          id: title
-          table: node_field_data
-          field: title
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: title
-          plugin_id: field
+          plugin_id: rendered_entity
           label: ''
           exclude: false
           alter:
             alter_text: false
+            text: ''
             make_link: false
+            path: ''
             absolute: false
-            word_boundary: false
-            ellipsis: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
             trim: false
+            preserve_tags: ''
             html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -61,20 +78,59 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
+          view_mode: teaser
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
       pager:
         type: mini
         options:
@@ -182,12 +238,80 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
   block_1:
     id: block_1
     display_title: 'Events block - depts'
@@ -398,7 +522,76 @@ display:
         - url
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
   events_block_topics:
     id: events_block_topics
     display_title: 'Events block - topics'
@@ -631,7 +824,76 @@ display:
         - url
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
   events_block_upcoming:
     id: events_block_upcoming
     display_title: 'Events block - upcoming with images'
@@ -851,7 +1113,76 @@ display:
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
   page_1:
     id: page_1
     display_title: 'Upcoming Events'
@@ -892,18 +1223,18 @@ display:
           content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events for this department.  <a href=\"/past-events/{{ arguments.field_dept_target_id }}\">See past events</a>\r\n</div>"
           tokenize: true
       sorts:
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: datetime
-          order: ASC
+          plugin_id: date
+          order: DESC
           expose:
             label: ''
-            field_identifier: field_start_date_value
+            field_identifier: ''
           exposed: false
           granularity: second
       filters:
@@ -929,17 +1260,18 @@ display:
           plugin_id: bundle
           value:
             event: event
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: datetime
+          plugin_id: date
           operator: '>='
           value:
             min: ''
@@ -1023,12 +1355,25 @@ display:
           1: AND
       style:
         type: default
-        options: {  }
-      row:
-        type: 'entity:node'
         options:
-          relationship: none
-          view_mode: teaser
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       defaults:
         empty: false
         pager: false
@@ -1065,7 +1410,76 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
   page_2:
     id: page_2
     display_title: 'Past Events'
@@ -1106,18 +1520,18 @@ display:
           content: "<div class=\"sfgov-no-events\">\r\n  There are no past events for this department.  <a href=\"/events/{{ arguments.field_dept_target_id }}\">See upcoming events</a>\r\n</div>"
           tokenize: true
       sorts:
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: datetime
+          plugin_id: date
           order: DESC
           expose:
             label: ''
-            field_identifier: field_start_date_value
+            field_identifier: ''
           exposed: false
           granularity: second
       filters:
@@ -1143,17 +1557,18 @@ display:
           plugin_id: bundle
           value:
             event: event
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: datetime
+          plugin_id: date
           operator: '<'
           value:
             min: ''
@@ -1237,12 +1652,25 @@ display:
           1: AND
       style:
         type: default
-        options: {  }
-      row:
-        type: 'entity:node'
         options:
-          relationship: none
-          view_mode: teaser
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       defaults:
         empty: false
         pager: false
@@ -1280,4 +1708,73 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'

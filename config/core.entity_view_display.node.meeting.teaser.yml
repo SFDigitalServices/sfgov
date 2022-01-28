@@ -26,6 +26,7 @@ dependencies:
     - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
+    - smart_date
     - text
     - user
 id: node.meeting.teaser
@@ -38,6 +39,24 @@ content:
     label: hidden
     settings:
       trim_length: 600
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_smart_date:
+    type: smartdate_custom
+    label: hidden
+    settings:
+      separator: ''
+      date_format: 'l, F j'
+      custom_date_format: ''
+      timezone: ''
+      join: ''
+      time_format: ''
+      time_hour_format: ''
+      allday_label: 'All day'
+      date_first: '1'
+      site_time_toggle: '1'
+      ampm_reduce: 0
     third_party_settings: {  }
     weight: 0
     region: content
@@ -58,7 +77,6 @@ hidden:
   field_public_body: true
   field_regulations_accordions: true
   field_regulations_title: true
-  field_smart_date: true
   field_start_date: true
   field_title: true
   field_topics: true
