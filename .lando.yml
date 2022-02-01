@@ -19,8 +19,7 @@ services:
       - mkdir -p /var/www/logs
     build:
       - "composer global require drupal/coder"
-      - "/app/vendor/bin/phpcs --config-set installed_paths '/app/web/tests/phpcs.xml'"
-      # - "/app/vendor/bin/phpcs --config-set installed_paths /app/vendor/drupal/coder/coder_sniffer"
+      - "/app/vendor/bin/phpcs --config-set installed_paths /app/vendor/drupal/coder/coder_sniffer"
     overrides:
       environment:
         BEHAT_PARAMS: >-
