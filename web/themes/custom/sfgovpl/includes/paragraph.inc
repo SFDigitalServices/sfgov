@@ -277,3 +277,16 @@ function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
     $variables['url'] = Url::fromUri($resource->get('field_url')->uri);
   }
 }
+
+/*
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__form_io(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $parent_node = $paragraph->getParentEntity();
+  if ($parent_node instanceof NodeInterface) {
+    $json_data = $parent_node->get('field_formio_json_content')->value;
+    $variables['content']['formio_json_data'] = $json_data;
+  }
+}
