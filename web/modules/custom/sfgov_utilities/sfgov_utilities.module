@@ -259,17 +259,6 @@ function sfgov_utilities_link_alter(&$variables) {
   }
 }
 
-function sfgov_utilities_cloned_node_alter(&$node) {
-  if ($node->getType() == 'meeting') {
-    if (!empty($node->field_start_date->getValue())) {
-      $node->set('field_start_date', NULL);
-    }
-    if (!empty($node->field_end_date->getValue())) {
-      $node->set('field_end_date', NULL);
-    }
-  }
-}
-
 /**
  * Implements hook_entity_update().
  */
