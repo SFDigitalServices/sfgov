@@ -5,6 +5,7 @@ namespace Drupal\sfgov_utilities\ResourceMigration;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use Drupal\eck\Entity\EckEntity;
+use Drupal\user\Entity\User;
 
 class ResourceMigration {
   private $eckResourcesData; // a list of existing and newly created eck resources
@@ -39,130 +40,118 @@ class ResourceMigration {
     return $entity;
   }
 
-  private function getNodesOfType(string $contentType) {
-    $nids = \Drupal::entityQuery('node')
-      ->condition('type', $contentType)
-      ->execute();
-    return !empty($nids) ? Node::loadMultiple($nids) : null;
-  }
+  // about
+  // --> field_about_resources
+  // ----> paragraph: tile_section (other_info_card)
+  // ------> field_resources
+  // 
+  // campaign:
+  // --> Additional content (field_contents)
+  // ----> Campaign resources (paragraph: campaign_resources)
+  // ------> Resources (field_resources)
+  // --------> Campaign resource section (paragraph: campaign_resource_section)
+  // ----------> Resources (field_content)
+  //
+  // departments
+  // --> field_resources
+  //
+  // topics
+  // --> field_resources
+  //
+  // resource collections
+  // --> field_content_bottom
+  // ----> paragraph: Section
+  // ------> section content (field_content)
+  // --------> resource_section
+  // ----------> resource_subsection
+  // ------------> field_resources
+  public function migrateResources() {
+    $pids = \Drupal::entityQuery('paragraph')
+    ->condition('type', 'resources')
+    ->execute();
 
-  public function migrateCampaignResources() {
-    // campaign resources are structured like this:
-    // Additional content (field_contents)
-    // --> Campaign resources (paragraph: campaign_resources)
-    // ----> Resources (field_resources)
-    // ------> Campaign resource section (paragraph: campaign_resource_section)
-    // --------> Resources (field_content)
-    // ----------> paragraph: resources
-    $resourcesToRemove = []; // track resources to remove
-    $nodes = $this->getNodesOfType('campaign');
-    foreach($nodes as $node) {
-      if ($node->hasField('field_contents')) {
-        $fieldValues = $node->get('field_contents')->getValue();
-        if (!empty($fieldValues)) {
-          foreach ($fieldValues as $fieldValue) {
-            $targetId = $fieldValue['target_id'];
-            $campaignResourcesParagraph = Paragraph::load($targetId);
-            $campaignResourcesParagraphType = $campaignResourcesParagraph->getType();
-            if ($campaignResourcesParagraphType == 'campaign_resources') {
-              // now check if campaign resources paragraph has campaign resource section
-              $campaignResourceSectionValues = $campaignResourcesParagraph->get('field_resources')->getValue();
-              if (!empty($campaignResourceSectionValues)) {
-                foreach ($campaignResourceSectionValues as $campaignResourceSectionValue) {
-                  $campaignResourceSectionId = $campaignResourceSectionValue['target_id'];
-                  $campaignResourceSectionParagraph = Paragraph::load($campaignResourceSectionId);
-                  $resourcesValues = $campaignResourceSectionParagraph->get('field_content')->getValue();
-                  if (!empty($resourcesValues)) {
-                    $resourcesToRemove[$campaignResourceSectionId] = [];
-                    foreach ($resourcesValues as $resourcesValue) {
-                      $resourceId = $resourcesValue['target_id'];
-                      $resourcesParagraph = Paragraph::load($resourceId);
-                      if ($resourcesParagraph->gettype() == 'resources') { // this is the old thing                      
-                        $title = $resourcesParagraph->field_title->value;
-                        $description = $resourcesParagraph->field_description->value;
-                        $uri = $resourcesParagraph->field_link->uri;
-                        $isEntityRef = strpos($uri, 'entity:');
-  
-                        $resource = [
-                          'resource_field_link' => $uri,
-                          'resource_id' => $resourceId,
-                          'resource_type' => $resourcesParagraph->gettype(),
-                          'resource_field_title' => $title,
-                          'resource_field_description' => $description,
-                          'node_id' => $node->id(),
-                          'node_content_type' => $node->getType(),
-                          'node_content_title' => $node->getTitle(),
-                        ];
+    foreach ($pids as $pid) {
+      $resourceParagraph = Paragraph::load($pid);
+      $parentEntity = $resourceParagraph->getParentEntity();
+      $immediateParent = $parentEntity;
 
-                        $this->duplicateReport->addItem($resource, $uri);
+      // find the containing node parent
+      while($parentEntity->type->entity->bundle() != 'node_type') {
+        $parentEntity = $parentEntity->getParentEntity();
+      }
 
-                        $this->report->addItem($resource);
+      $containingNode = Node::load($parentEntity->id());
+      if($containingNode->isPublished() && $containingNode->id() == 3148) {
+        $contentType = $containingNode->getType();
+        $title = $resourceParagraph->field_title->value;
+        $description = $resourceParagraph->field_description->value;
+        $uri = $resourceParagraph->field_link->uri;
+        $isEntityRef = strpos($uri, 'entity:');
 
-                        // $campaignResourceSection['resources'][] = $resource;
-  
-                        // // if link uri contains "entity:"
-                        // //  it's an internal reference, create sf.gov link paragraph
-                        // // else it's external
-                        // //  create eck resource entity 
-                        // //  create new external link paragraph entity (machine name: resource_entity)
-                        // //  attach eck entity to paragraph entity
-                        // //  attach paragraph to campaign resource section
-                        // if($isEntityRef !== false) {
-                        //   echo "create sf.gov link paragraph\n";
-                        // } else {
-                        //   echo "create resource entity\n";
-                        //   echo "add resource entity to " . $campaignResourceSectionParagraph->field_title->value . "\n";
-  
-                        //   // create eck entity external link, or get an existing one
-                        //   $externalLinkEntity = createResourceEntity($title, $description, $uri, $eckResourcesData);
-  
-                        //   // create paragraph type resource_entity
-                        //   $externalLinkParagraph = Paragraph::create([
-                        //     "type" => "resource_entity"
-                        //   ]);
-  
-                        //   // attach eck entity to paragraph resource_entity
-                        //   $externalLinkParagraph->field_resource = $externalLinkEntity;
-  
-                        //   // attach paragraph resource_entity to campaign resource section
-                        //   $campaignResourceSectionParagraph->field_content[] = $externalLinkParagraph;
-                        //   $campaignResourceSectionParagraph->save();
-                        // }
-  
-                        // $resourcesParagraph->field_title->value = $title . " (delete)";
-                        // $resourcesParagraph->save();
-  
-                        $resourcesToRemove[$campaignResourceSectionId][] = $resourcesParagraph->id();
-                      }
-                      // else { // this is the new thing
-                      //   $resource = [
-                      //     'r_id' => $resourceId,
-                      //     'resource_type' => $resourcesParagraph->gettype(),
-                      //     'entity_id' => $resourcesParagraph->get('field_resource')->getValue()[0]['target_id'],
-                      //   ];
-                      //   $campaignResourceSection['resources'][] = $resource;
-                      // }
-                    }
-                    // $campaignResource['campaign_resource_section'][] = $campaignResourceSection;
-                  }
-                }
-              }
-              // $nodeWithResource['campaign_resources'][] = $campaignResource;
-            }
-            $campaignResourcesParagraph->save();
+        if($isEntityRef !== false) {
+          echo "create sf.gov link paragraph\n";
+        } else {
+          echo "create resource entity\n";
+          echo "immediate parent: " . $immediateParent->type->entity->bundle() . "\n";
+          echo "immediate parent id: " . $immediateParent->id() . "\n";
+          echo "containing content type: " . $contentType . " (" . $containingNode->type->entity->bundle() . ")\n\n";
+
+          $immediateParentFieldName = '';
+          switch($contentType) {
+            case 'about':
+            case 'department':
+            case 'resource_collection':
+            case 'topic':
+              $immediateParentFieldName = 'field_resources';
+              break;
+            case 'campaign':
+              $immediateParentFieldName = 'field_content';
+              break;
+            default:
+              $immediateParentFieldName = '';
+          }
+
+          if(!empty($immediateParentFieldName)) {
+            // create eck entity external link, or get an existing one
+            $externalLinkEntity = $this->createResourceEntity($title, $description, $uri);
+
+            // create paragraph type resource_entity
+            $externalLinkParagraph = Paragraph::create([
+              "type" => "resource_entity"
+            ]);
+
+            // attach eck entity to paragraph resource_entity
+            $externalLinkParagraph->field_resource = $externalLinkEntity;
+
+            // attach paragraph resource_entity to campaign resource section
+            $immediateParent->get($immediateParentFieldName)[] = $externalLinkParagraph;
           }
         }
+
+        $resourceParagraph->field_title->value = $title . " (delete)";
+        $resourceParagraph->save();
+
+        $immediateParent->save();
+        $containingNode->save();
+
+        // for reporting
+        $resource = [
+          'resource_field_link' => $uri,
+          'resource_id' => $pid,
+          'resource_type' => $resourceParagraph->getType(),
+          'resource_field_title' => $title,
+          'resource_field_description' => $description,
+          'node_id' => $containingNode->id(),
+          'node_content_type' => $contentType,
+          'node_title' => $containingNode->getTitle(),
+          'node_author' => User::load($containingNode->getOwner()->id())->getDisplayName()
+        ];
+        $this->report->addItem($resource);
       }
-      // $nodesWithResources[] = $nodeWithResource;
     }
   }
 
   public function getReport($json = FALSE) {
     return $this->report->getReport($json);
   }
-
-  public function getDuplicateReport() {
-    return $this->duplicateReport->getReport();
-  }
-
 }

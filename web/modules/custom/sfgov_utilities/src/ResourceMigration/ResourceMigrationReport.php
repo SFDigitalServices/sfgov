@@ -4,9 +4,6 @@ namespace Drupal\sfgov_utilities\ResourceMigration;
 
 class ResourceMigrationReport {
 
-  // report structure
-  // nid, content_type, title
-
   private $report;
 
   public function __construct() {
@@ -14,7 +11,6 @@ class ResourceMigrationReport {
   }
 
   public function addItem($item, $key = NULL) {
-    // echo "$key\n";
     if($key) {
       $this->report[$key][] = $item;
     } else {
@@ -23,12 +19,9 @@ class ResourceMigrationReport {
   }
 
   public function getReport(bool $json = FALSE) {
-    echo "json: $json\n";
     if($json) {
-      echo "print json\n";
-      echo json_encode($this->report);
+      echo json_encode($this->report, JSON_UNESCAPED_SLASHES);
     } else {
-      echo "print array\n";
       print_r($this->report);
     }
   }
