@@ -178,4 +178,4 @@ _* I'm not 100% sure, but I don't think global composer is necessary. One can us
 To run PHPCS use `lando php-sniff path/to/directory`
 To run PHPCBF use `lando php-fix path/to/directory`
 
-Standards and rules for codesniffing can be edited in `web/tests/phpcs.xml`
+Standards and rules for codesniffing can be edited in `phpcs.xml` at the project root.
