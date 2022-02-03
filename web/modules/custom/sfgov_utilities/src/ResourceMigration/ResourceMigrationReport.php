@@ -18,11 +18,7 @@ class ResourceMigrationReport {
     }
   }
 
-  public function getReport(bool $json = FALSE) {
-    if($json) {
-      echo json_encode($this->report, JSON_UNESCAPED_SLASHES);
-    } else {
-      print_r($this->report);
-    }
+  public function getReport() {
+    return $this->report;
   }
 }
