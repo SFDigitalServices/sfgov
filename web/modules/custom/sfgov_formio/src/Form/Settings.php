@@ -51,6 +51,12 @@ class Settings extends ConfigFormBase {
       '#description' => $this->t('Specify a version number, e.g. <code>7.0.0</code>, or leave blank to use default (latest release).'),
       '#default_value' => $config->get('formio_sfds_version'),
     ];
+    $form['formio']['formio_translations_api_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Formio Translations API URL'),
+      '#description' => $this->t('The URL used to get translatable form strings. Use [form_url] as a token.'),
+      '#default_value' => $config->get('formio_translations_api_url'),
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -63,6 +69,7 @@ class Settings extends ConfigFormBase {
     $this->configFactory->getEditable('sfgov_formio.settings')
       ->set('formio_version', trim($form_state->getValue('formio_version')))
       ->set('formio_sfds_version', trim($form_state->getValue('formio_sfds_version')))
+      ->set('formio_translations_api_url', trim($form_state->getValue('formio_translations_api_url')))
       ->save();
 
     // Invalidate library definitions, so they get rebuilt based on settings.

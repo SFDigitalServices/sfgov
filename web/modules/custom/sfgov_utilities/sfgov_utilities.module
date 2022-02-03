@@ -235,6 +235,17 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
   }
 }
 
+function sfgov_utilities_cloned_node_alter(&$node) {
+  if ($node->getType() == 'meeting') {
+    if (!empty($node->field_start_date->getValue())) {
+      $node->set('field_start_date', NULL);
+    }
+    if (!empty($node->field_end_date->getValue())) {
+      $node->set('field_end_date', NULL);
+    }
+  }
+}
+
 /**
  * Implements hook_link_alter().
  */
@@ -244,17 +255,6 @@ function sfgov_utilities_link_alter(&$variables) {
       if (strpos($variables['options']['attributes']['data-drupal-link-system-path'], 'quick_clone')) {
         $variables['text'] = 'Duplicate';
       }
-    }
-  }
-}
-
-function sfgov_utilities_cloned_node_alter(&$node) {
-  if ($node->getType() == 'meeting') {
-    if (!empty($node->field_start_date->getValue())) {
-      $node->set('field_start_date', NULL);
-    }
-    if (!empty($node->field_end_date->getValue())) {
-      $node->set('field_end_date', NULL);
     }
   }
 }
