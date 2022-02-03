@@ -65,10 +65,12 @@ class ResourceMigration {
   // --------> resource_section
   // ----------> resource_subsection
   // ------------> field_resources
-  public function migrateResources() {
+  public function migrateResources(bool $reportOnly = false) {
+    echo "migrateResources\n";
     $pids = \Drupal::entityQuery('paragraph')
     ->condition('type', 'resources')
     ->execute();
+    print_r($pids);
 
     foreach ($pids as $pid) {
       $resourceParagraph = Paragraph::load($pid);
@@ -81,7 +83,7 @@ class ResourceMigration {
       }
 
       $containingNode = Node::load($parentEntity->id());
-      if($containingNode->isPublished() && $containingNode->id() == 3148) {
+      if($containingNode->isPublished()) {
         $contentType = $containingNode->getType();
         $title = $resourceParagraph->field_title->value;
         $description = $resourceParagraph->field_description->value;
@@ -110,26 +112,27 @@ class ResourceMigration {
             default:
               $immediateParentFieldName = '';
           }
-
-          if(!empty($immediateParentFieldName)) {
-            // create eck entity external link, or get an existing one
-            $externalLinkEntity = $this->createResourceEntity($title, $description, $uri);
-
-            // create paragraph type resource_entity
-            $externalLinkParagraph = Paragraph::create([
-              "type" => "resource_entity"
-            ]);
-
-            // attach eck entity to paragraph resource_entity
-            $externalLinkParagraph->field_resource = $externalLinkEntity;
-
-            // attach paragraph resource_entity to campaign resource section
-            $immediateParent->get($immediateParentFieldName)[] = $externalLinkParagraph;
+          if(!$reportOnly) {
+            if(!empty($immediateParentFieldName)) {
+              // create eck entity external link, or get an existing one
+              $externalLinkEntity = $this->createResourceEntity($title, $description, $uri);
+  
+              // create paragraph type resource_entity
+              $externalLinkParagraph = Paragraph::create([
+                "type" => "resource_entity"
+              ]);
+  
+              // attach eck entity to paragraph resource_entity
+              $externalLinkParagraph->field_resource = $externalLinkEntity;
+  
+              // attach paragraph resource_entity to campaign resource section
+              $immediateParent->get($immediateParentFieldName)[] = $externalLinkParagraph;
+            }
           }
         }
 
-        $resourceParagraph->field_title->value = $title . " (delete)";
-        $resourceParagraph->save();
+        // $resourceParagraph->field_title->value = $title . " (delete)";
+        // $resourceParagraph->save();
 
         $immediateParent->save();
         $containingNode->save();
@@ -147,11 +150,16 @@ class ResourceMigration {
           'node_author' => User::load($containingNode->getOwner()->id())->getDisplayName()
         ];
         $this->report->addItem($resource);
+        $this->duplicateReport->addItem($resource, $uri);
       }
     }
   }
 
   public function getReport($json = FALSE) {
     return $this->report->getReport($json);
+  }
+
+  public function getDuplicateReport($json = FALSE) {
+    return $this->duplicateReport->getReport();
   }
 }

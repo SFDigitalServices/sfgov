@@ -8,5 +8,6 @@ $rm = new ResourceMigration();
 
 // $rm->migrateResourceCollectionResources();
 
-$rm->migrateResources();
-// $rm->getDuplicateReport(TRUE);
+$rm->migrateResources(TRUE);
+$rm->getDuplicateReport();
+// $rm->getReport();
