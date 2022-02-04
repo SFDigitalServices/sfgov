@@ -29,13 +29,26 @@
       submitButton.on("click", function (event) {
         event.preventDefault();
         leftColumn.fadeOut(0);
-        // see location_autocomplete for this promise
+        
+        // Clear GPS data, check for autocomplete entry
+        if(!$("#edit-location")[0].getAttribute("data-place-changed")) {
+		  // Remove previous GPS, ***BUG*** not working for invalid address handling
+          document.getElementById("edit-location").removeAttribute("data-lat");
+          document.getElementById("edit-location").removeAttribute("data-lng");
+        }
+        
         locationSubmit()
           .then(displaySites)
-          .catch(error => console.error(err))
+          .catch(error => console.error(error))
           .finally(() => {
-            leftColumn.fadeIn(speed);
-            scrollUp(speed);
+            if($("[name=location]")[0].getAttribute("data-lat") && $("[name=location]")[0].getAttribute("data-lng")) {
+              leftColumn.fadeIn(speed);
+              scrollUp(speed);
+            } else if($(".vaccine-filter__sites .included").length > 0) {
+              leftColumn.fadeIn(speed);
+              scrollUp(speed);
+            }
+            
           })
       });
 
@@ -130,23 +143,27 @@
             // Distance.
             $site.addClass(class_match_radius);
             if (userLocation) {
-              const distance = getDistance(
-                locationInput[0].getAttribute("data-lat"), //input lat
-                locationInput[0].getAttribute("data-lng"), //input long
-                $site.data("lat"), // this lat
-                $site.data("lng") // this lng
-              );
-
-              if (distance > radiusInput.val()) {
-                $site.removeClass(class_match_radius);
+              if(locationInput[0].getAttribute("data-lat") && locationInput[0].getAttribute("data-lng")) {
+                const distance = getDistance(
+                  locationInput[0].getAttribute("data-lat"), //input lat
+                  locationInput[0].getAttribute("data-lng"), //input long
+                  $site.data("lat"), // this lat
+                  $site.data("lng") // this lng
+                );
+  
+                if (distance > radiusInput.val()) {
+                  $site.removeClass(class_match_radius);
+                }
+                $site
+                  .attr("data-distance", distance)
+                  .find(".vaccine-site__distance")
+                  .text(Math.round(distance * 10) / 10 + "mi");
+                $site
+                  .find(".vaccine-site__header")
+                  .addClass("distance-visible");
+              } else {
+                $site.addClass('included');
               }
-              $site
-                .attr("data-distance", distance)
-                .find(".vaccine-site__distance")
-                .text(Math.round(distance * 10) / 10 + "mi");
-              $site
-                .find(".vaccine-site__header")
-                .addClass("distance-visible");
             } else {
               $site.find(".vaccine-site__distance").text("");
             }
@@ -236,21 +253,57 @@
 
       // This is the main function.
       function displaySites() {
+        // Check for long/lat coords from user location
         filterVaccineSites();
-
-        if (
-          // If there are no results.
-          $(".vaccine-filter__sites .included").length === 0
-        ) {
-          hideCount();
+        
+        if($("[name=location]")[0].getAttribute("data-lat") && $("[name=location]")[0].getAttribute("data-lat")) {
+          // Location found, check results and show if valid
+          if (
+            // If there are no results.
+            $(".vaccine-filter__sites .included").length === 0
+          ) {
+            hideCount();
+            hideSites();
+            showNoResultsMessage();   
+          } else if(
+            ($("[name=location]")[0].getAttribute("data-lng") < -122.93 ||
+            $("[name=location]")[0].getAttribute("data-lng") > -121.54) && 
+            ($("[name=location]")[0].getAttribute("data-lat") < 37.0000 ||
+            $("[name=location]")[0].getAttribute("data-lat") > 38.0200)
+          ) {
+            // GPS coords out of bounds
+            hideCount();
+            hideSites();
+            $('.vaccine-filter__count').html('<span>Invalid address or zip code entered</span>');
+          } else {
+            // If "Only show sites with available appointments" is not checked and
+            // there are sites that meet the selected criteria.
+            hideNoResultsMessage();
+            showSites();
+            showCount();
+          }
+        } else if($("#edit-location").val()) {
+          // Invalid location entered, alert user
           hideSites();
-          showNoResultsMessage();
-        } else {
-          // If "Only show sites with available appointments" is not checked and
-          // there are sites that meet the selected criteria.
-          hideNoResultsMessage();
-          showSites();
           showCount();
+          $(".vaccine-filter__sites").hide();
+          $('.vaccine-filter__count').html('<span>Invalid address or zip code entered</span>');
+        } else {
+          // No location entered, show results
+          if (
+            // If there are no results.
+            $(".vaccine-filter__sites .included").length === 0
+          ) {
+            hideCount();
+            hideSites();
+            showNoResultsMessage();
+          } else {
+            // If "Only show sites with available appointments" is not checked and
+            // there are sites that meet the selected criteria.
+            hideNoResultsMessage();
+            showSites();
+            showCount();
+          }
         }
       }
 
