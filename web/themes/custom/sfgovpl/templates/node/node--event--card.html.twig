@@ -14,6 +14,7 @@
     </div>
   {% else %}
     <div class="event-date">
+      {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
       {% if content.field_smart_date[0]['#date'] %}
         <div class="month">{{ content.field_smart_date[0]['#date']|date("F") }}</div>
         <div class="date">{{ content.field_smart_date[0]['#date']|date("j") }}</div>
