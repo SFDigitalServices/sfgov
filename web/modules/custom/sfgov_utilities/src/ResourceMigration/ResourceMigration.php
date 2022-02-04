@@ -104,7 +104,8 @@ class ResourceMigration {
             'node_id' => $containingNode->id(),
             'node_content_type' => $contentType,
             'node_title' => $containingNode->getTitle(),
-            'node_author' => User::load($containingNode->getOwner()->id())->getDisplayName()
+            'node_author' => User::load($containingNode->getOwner()->id())->getDisplayName(),
+            'last_updated' => date("m/d/Y", $containingNode->changed->value)
           ];
           $this->report->addItem($resource);
 
