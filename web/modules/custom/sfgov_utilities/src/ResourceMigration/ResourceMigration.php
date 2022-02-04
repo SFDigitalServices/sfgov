@@ -6,17 +6,20 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use Drupal\eck\Entity\EckEntity;
 use Drupal\user\Entity\User;
+use Drupal\Core\Url;
 
 class ResourceMigration {
   private $eckResourcesData; // a list of existing and newly created eck resources
   
   private $report;
-  private $duplicateReport;
+  private $duplicateReport; // a report of duplicate resources (based on urls)
+  private $nodeReport; // a report of which nodes contain how many resources
 
   public function __construct() {
     $this->eckResourcesData = [];
     $this->report = new ResourceMigrationReport();
     $this->duplicateReport = new ResourceMigrationReport();
+    $this->nodeReport = new ResourceMigrationReport();
   }
 
   private function createResourceEntity(string $title, string $description, string $url) {
@@ -66,7 +69,6 @@ class ResourceMigration {
   // ----------> resource_subsection
   // ------------> field_resources
   public function migrateResources(bool $reportOnly = false) {
-    echo "migrateResources\n";
     $pids = \Drupal::entityQuery('paragraph')
     ->condition('type', 'resources')
     ->execute();
@@ -108,6 +110,7 @@ class ResourceMigration {
 
           if(!empty($uri)) {
             $this->duplicateReport->addItem($resource, $uri);
+            $this->nodeReport->addItem($resource, $containingNode->id());
           }
           // end reporting
 
@@ -130,9 +133,16 @@ class ResourceMigration {
               $immediateParentFieldName = '';
           }
           if(!$reportOnly) {
-            if(!empty($immediateParentFieldName) && $containingNode->id() == 3148) {
+            if(!empty($immediateParentFieldName) && $containingNode->id() == 3195) {
               if($isEntityRef !== false) {
-                echo "create sf.gov link paragraph\n";
+                echo "create sf.gov link paragraph for $uri\n";
+                $params = Url::fromUri($uri)->getRouteParameters();
+                $sfgovLinkParagraph = Paragraph::create([
+                  "type" => "resource_node"
+                ]);
+                $sfgovLinkParagraph->field_node->target_id = $params['node'];
+                $sfgovLinkParagraph->save();
+                $immediateParent->get($immediateParentFieldName)[] = $sfgovLinkParagraph;
               } else {
                 echo "create resource entity\n";
 
@@ -179,6 +189,26 @@ class ResourceMigration {
         }
       }
     }
-    echo json_encode($dupes, JSON_UNESCAPED_SLASHES);
+    // echo json_encode($dupes, JSON_UNESCAPED_SLASHES);
+  }
+
+  public function getNodeReport() {
+    $records = $this->nodeReport->getReport();
+    $nodesWithHellaResources = [];
+    foreach($records as $key => $value) {
+      $items = $value;
+      $numItems = count($items);
+      if($numItems > 15) {
+        $node = Node::load($key);
+        $nodesWithHellaResources[] = [
+          "nid" => $key,
+          "content_type" => $items[0]['node_content_type'],
+          "node_title" => $items[0]['node_title'],
+          "node_author" => $items[0]['node_author'],
+          "resource_count" => $numItems
+        ];
+      }
+    }
+    print_r($nodesWithHellaResources);
   }
 }
