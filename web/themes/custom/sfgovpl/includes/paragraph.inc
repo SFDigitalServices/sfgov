@@ -256,8 +256,12 @@ function sfgovpl_preprocess_paragraph__resource_node(&$variables) {
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     /** @var \Drupal\node\Entity\Node $node */
     $node = $node_storage->load($paragraph->get('field_node')[0]->target_id);
+    $description = '';
+    if($node->hasField('field_description')) {
+      $description = $node->get('field_description') ?? render($node->get('field_description')->value);
+    }
     $variables['title'] = $node->getTitle();
-    $variables['description'] = $node->get('field_description') ?? render($node->get('field_description')->value);
+    $variables['description'] = $description;
     $variables['url'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
   }
 }
@@ -272,9 +276,10 @@ function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
     $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
     /** @var \Drupal\eck\Entity\EckEntity $resource */
     $resource = $resource_storage->load($paragraph->get('field_resource')[0]->target_id);
+    $uri = $resource->get('field_url')->uri ?? '';
     $variables['title'] = $resource->get('title')->value;
     $variables['description'] = $resource->get('field_description') ?? render($resource->get('field_description')->value);
-    $variables['url'] = Url::fromUri($resource->get('field_url')->uri);
+    $variables['url'] = $uri;
   }
 }
 
