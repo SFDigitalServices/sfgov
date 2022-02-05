@@ -8,8 +8,17 @@ $rm = new ResourceMigration();
 
 // $rm->migrateResourceCollectionResources();
 
-$rm->migrateResources(TRUE); // report only
-// $rm->migrateResources();
+// $rm->migrateResources(TRUE); // report only
+
 // $rm->getDuplicateReport();
+
+
+
+$rm->migrateAboutResources();
+$rm->migrateTopicsAndDepartments();
+
+echo "\/***** node report *****\/";
 $rm->getNodeReport();
 
+echo "\/***** duplicates report *****\/";
+$rm->getDuplicateReport();
