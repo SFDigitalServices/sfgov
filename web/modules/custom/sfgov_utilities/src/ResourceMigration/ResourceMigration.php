@@ -13,13 +13,19 @@ class ResourceMigration {
   
   private $report;
   private $duplicateReport; // a report of duplicate resources (based on urls)
-  private $nodeReport; // a report of which nodes contain how many resources
+  private $nodeReport; // a report of which nodes contain how many 
+  private $dryRun;
 
   public function __construct() {
     $this->eckResourcesData = [];
     $this->report = new ResourceMigrationReport();
     $this->duplicateReport = new ResourceMigrationReport();
     $this->nodeReport = new ResourceMigrationReport();
+    $dryRun = false;
+  }
+
+  public function setDryRun($dryRun) {
+    $this->dryRun = $dryRun;
   }
 
   private function createResourceEntity(string $title, string $description, string $url) {
@@ -53,17 +59,19 @@ class ResourceMigration {
   }
 
   private function removeOldResources($removes, $parent, $field_name) {
-    for($i=0; $i<count($removes); $i++) {
-      $removeId = $removes[$i];
-      $resources = $parent->get($field_name)->getValue();
-      for($j=0; $j<count($resources); $j++) {
-        $targetId = $resources[$j]['target_id'];
-        if($removeId == $targetId) {
-          $parent->get($field_name)->removeItem($j);
+    if($this->dryRun == false) {
+      for($i=0; $i<count($removes); $i++) {
+        $removeId = $removes[$i];
+        $resources = $parent->get($field_name)->getValue();
+        for($j=0; $j<count($resources); $j++) {
+          $targetId = $resources[$j]['target_id'];
+          if($removeId == $targetId) {
+            $parent->get($field_name)->removeItem($j);
+          }
         }
       }
+      $parent->save();
     }
-    $parent->save();
   }
 
   // about
@@ -111,7 +119,6 @@ class ResourceMigration {
       $node = Node::load($nid);
       $removes = [];
       $fieldContents = $node->get('field_contents')->getValue();
-      echo "(nid: " . $node->id() . ") " . $node->getTitle() . "\n";
       if(!empty($fieldContents)) {
         foreach($fieldContents as $fieldContent) {
           $campaignResourcesParagraph = Paragraph::load($fieldContent['target_id']);
@@ -165,6 +172,41 @@ class ResourceMigration {
     }
   }
 
+  //
+  // resource collections
+  // --> field_paragraphs
+  // ----> resource_section
+  // ------> field_content
+  // --------> resource_subsection
+  // ----------> field_resources
+  public function migrateResourceCollections() {
+    $nids = $this->getNodes('resource_collection');
+    foreach($nids as $nid) {
+      $node = Node::load($nid);
+      $removes = [];
+      $fieldParagraphs = $node->get('field_paragraphs')->getValue();
+      if(!empty($fieldParagraphs)) {
+        foreach($fieldParagraphs as $fieldParagraph) {
+          $someParagraph = Paragraph::load($fieldParagraph['target_id']);
+          if($someParagraph->getType() == 'resource_section') {
+            $resourceSubsections = $someParagraph->get('field_content')->getValue();
+            foreach($resourceSubsections as $resourceSubsection) {
+              $resourceSubsectionParagraph = Paragraph::load($resourceSubsection['target_id']);
+              $resources = $resourceSubsectionParagraph->get('field_resources')->getValue();
+              foreach($resources as $resource) {
+                $resourceParagraph = Paragraph::load($resource['target_id']);
+                $this->migrateResource($node, $resourceParagraph, $resourceSubsectionParagraph, 'field_resources');
+                $removes[] = $resourceParagraph->id();
+              }
+              $this->removeOldResources($removes, $resourceSubsectionParagraph, 'field_resources');
+              $node->save();
+            }
+          }
+        }
+      }
+    }
+  }
+
   public function migrateResource($node, $resourceParagraph, $containingParent, $containingParentFieldName) {
     $containingNode = $node;
     $immediateParent = $containingParent;
@@ -196,7 +238,7 @@ class ResourceMigration {
       $this->duplicateReport->addItem($resource, $uri);
     }
 
-    if(!$reportOnly) {
+    if(!$this->dryRun) {
       if(!empty($immediateParentFieldName)) {
         $newResourceParagraph = null;
         if($isEntityRef !== false) {
@@ -230,15 +272,6 @@ class ResourceMigration {
       }
     }
   }
-
-  //
-  // resource collections
-  // --> field_content_bottom
-  // ----> paragraph: Section
-  // ------> section content (field_content)
-  // --------> resource_section
-  // ----------> resource_subsection
-  // ------------> field_resources
 
   public function getReport() {
     return $this->report->getReport();
@@ -274,6 +307,6 @@ class ResourceMigration {
         "resource_count" => $numItems
       ];
     }
-    print_r($nodesWithResourceCount);
+    echo json_encode($nodesWithResourceCount, JSON_UNESCAPED_SLASHES);
   }
 }
