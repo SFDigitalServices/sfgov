@@ -52,16 +52,29 @@ class ResourceMigration {
     return $nids;
   }
 
+  private function removeOldResources($removes, $parent, $field_name) {
+    for($i=0; $i<count($removes); $i++) {
+      $removeId = $removes[$i];
+      $resources = $parent->get($field_name)->getValue();
+      for($j=0; $j<count($resources); $j++) {
+        $targetId = $resources[$j]['target_id'];
+        if($removeId == $targetId) {
+          $parent->get($field_name)->removeItem($j);
+        }
+      }
+    }
+    $parent->save();
+  }
+
   // about
   // --> field_about_resources
   // ----> paragraph: tile section (other_info_card)
   // ------> field_resources
   public function migrateAboutResources() {
     $nids = $this->getNodes('about');
-
     foreach($nids as $nid) {
       $node = Node::load($nid);
-      $removes = [];
+      $removes = []; // simultaneously adding and removing from the same array gets weird, so track removes and trash 'em after
       $aboutResources = $node->get('field_about_resources')->getValue();
       if(!empty($aboutResources)) {
         foreach($aboutResources as $aboutResource) {
@@ -77,19 +90,51 @@ class ResourceMigration {
                 }
               }
             }
+            $this->removeOldResources($removes, $aboutResourcesParagraph, 'field_resources');
+            $node->save();
           }
-          for($i=0; $i<count($removes); $i++) {
-            $removeId = $removes[$i];
-            $resources = $aboutResourcesParagraph->get('field_resources')->getValue();
-            for($j=0; $j<count($resources); $j++) {
-              $targetId = $resources[$j]['target_id'];
-              if($removeId == $targetId) {
-                $aboutResourcesParagraph->get('field_resources')->removeItem($j);
-                $aboutResourcesParagraph->save();
+        }
+      }
+    }
+  }
+
+  // 
+  // campaign:
+  // --> Additional content (field_contents)
+  // ----> Campaign resources (paragraph: campaign_resources)
+  // ------> Resources (field_resources)
+  // --------> Campaign resource section (paragraph: campaign_resource_section)
+  // ----------> Resources (field_content)
+  public function migrateCampaignResources() {
+    $nids = $this->getNodes('campaign');
+    foreach($nids as $nid) {
+      $node = Node::load($nid);
+      $removes = [];
+      $fieldContents = $node->get('field_contents')->getValue();
+      echo "(nid: " . $node->id() . ") " . $node->getTitle() . "\n";
+      if(!empty($fieldContents)) {
+        foreach($fieldContents as $fieldContent) {
+          $campaignResourcesParagraph = Paragraph::load($fieldContent['target_id']);
+          if ($campaignResourcesParagraph->getType() == 'campaign_resources') {
+            $campaignResourceSections = $campaignResourcesParagraph->get('field_resources')->getValue();
+            if(!empty($campaignResourceSections)) {
+              foreach($campaignResourceSections as $campaignResourceSection) {
+                $campaignResourceSectionParagraph = Paragraph::load($campaignResourceSection['target_id']);
+                $resources = $campaignResourceSectionParagraph->get('field_content')->getValue();
+                if(!empty($resources)) {
+                  foreach($resources as $resource) {
+                    $resourceParagraph = Paragraph::load($resource['target_id']);
+                    if ($resourceParagraph->getType() == 'resources') {
+                      $this->migrateResource($node, $resourceParagraph, $campaignResourceSectionParagraph, 'field_content');
+                      $removes[] = $resourceParagraph->id();
+                    }
+                  }
+                  $this->removeOldResources($removes, $campaignResourceSectionParagraph, 'field_content');
+                  $node->save();
+                }
               }
             }
           }
-          $node->save();
         }
       }
     }
@@ -114,19 +159,9 @@ class ResourceMigration {
             $removes[] = $resourceParagraph->id();
           }
         }
-        echo "\n";
+        $this->removeOldResources($removes, $node, 'field_resources');
+        $node->save();
       }
-      for($i=0; $i<count($removes); $i++) {
-        $removeId = $removes[$i];
-        $resources = $node->get('field_resources')->getValue();
-        for($j=0; $j<count($resources); $j++) {
-          $targetId = $resources[$j]['target_id'];
-          if($removeId == $targetId) {
-            $node->get('field_resources')->removeItem($j);
-          }
-        }
-      }
-      $node->save();
     }
   }
 
@@ -196,14 +231,6 @@ class ResourceMigration {
     }
   }
 
-
-  // 
-  // campaign:
-  // --> Additional content (field_contents)
-  // ----> Campaign resources (paragraph: campaign_resources)
-  // ------> Resources (field_resources)
-  // --------> Campaign resource section (paragraph: campaign_resource_section)
-  // ----------> Resources (field_content)
   //
   // resource collections
   // --> field_content_bottom
