@@ -13,7 +13,8 @@ class ResourceMigration {
   
   private $report;
   private $duplicateReport; // a report of duplicate resources (based on urls)
-  private $nodeReport; // a report of which nodes contain how many 
+  private $nodeReport; // a report of which nodes contain how many
+  private $validationReport;
   private $dryRun;
 
   public function __construct() {
@@ -21,6 +22,7 @@ class ResourceMigration {
     $this->report = new ResourceMigrationReport();
     $this->duplicateReport = new ResourceMigrationReport();
     $this->nodeReport = new ResourceMigrationReport();
+    $this->validationReport = new ResourceMigrationReport();
     $dryRun = false;
   }
 
@@ -241,6 +243,7 @@ class ResourceMigration {
     if(!$this->dryRun) {
       if(!empty($immediateParentFieldName)) {
         $newResourceParagraph = null;
+        $newResource = [];
         if($isEntityRef !== false) {
           $params = Url::fromUri($uri)->getRouteParameters();
           $sfgovLinkParagraph = Paragraph::create([
@@ -250,6 +253,10 @@ class ResourceMigration {
           $sfgovLinkParagraph->save();
 
           $newResourceParagraph = $sfgovLinkParagraph;
+          $newResource = [
+            'type' => 'resource_node',
+            $sfgovLinkParagraph->field_node->value,
+          ];
         } else {
           // create eck entity external link, or get an existing one
           $externalLinkEntity = $this->createResourceEntity($title, $description, $uri);
@@ -263,12 +270,20 @@ class ResourceMigration {
           $externalLinkParagraph->field_resource = $externalLinkEntity;
 
           $newResourceParagraph = $externalLinkParagraph;
+          $newResource = [
+            'type' => 'eck resource entity external link',
+            'title' => $externalLinkEntity->getTitle(),
+            'description' => $externalLinkEntity->field_description->value,
+            'url' => $externalLinkEntity->field_url->uri,
+          ];
         }
 
         // attach new resource paragraph to immediate parent
         $immediateParent->get($immediateParentFieldName)[] = $newResourceParagraph;
         $immediateParent->save();
         $containingNode->save();
+
+        $this->validationReport->addItem($newResource, $containingNode->id());
       }
     }
   }
@@ -308,5 +323,9 @@ class ResourceMigration {
       ];
     }
     echo json_encode($nodesWithResourceCount, JSON_UNESCAPED_SLASHES);
+  }
+
+  public function getValidationReport() {
+    print_r($this->validationReport->getReport());
   }
 }
