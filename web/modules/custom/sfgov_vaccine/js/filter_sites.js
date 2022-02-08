@@ -212,6 +212,7 @@
       }
 
       function showCount(speed) {
+        $(".vaccine-address-alert").hide();
         let count = $(".vaccine-site.included").length;
         sectionCount.find("span").text(count);
         sectionCount.show();
@@ -274,7 +275,7 @@
             // GPS coords out of bounds
             hideCount();
             hideSites();
-            $('.vaccine-filter__count').html('<span>Invalid address or zip code entered</span>');
+            $('.vaccine-address-alert').show();
           } else {
             // If "Only show sites with available appointments" is not checked and
             // there are sites that meet the selected criteria.
@@ -285,9 +286,9 @@
         } else if($("#edit-location").val()) {
           // Invalid location entered, alert user
           hideSites();
-          showCount();
+          hideCount();
           $(".vaccine-filter__sites").hide();
-          $('.vaccine-filter__count').html('<span>Invalid address or zip code entered</span>');
+          $('.vaccine-address-alert').show();
         } else {
           // No location entered, show results
           if (
