@@ -10,7 +10,7 @@
       mediaQuery.addListener(layoutChange);
 
       // Elements.
-      const sectionCount = $(".vaccine-filter__count");
+      const sectionCount = $(".vaccine-count-container");
       const leftColumn = $(".group--left");
       const sitesWrapper = $(".vaccine-filter__sites");
       const submitButton = $(".vaccine-filter-form #edit-submit", context);
