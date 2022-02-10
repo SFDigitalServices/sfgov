@@ -10,7 +10,7 @@ $rm->migrateCampaignResources();
 $rm->migrateTopicsAndDepartments();
 $rm->migrateResourceCollections();
 
-$rm->verifyMigration();
+// $rm->verifyMigration();
 
 // echo "\/***** node report *****\/\n\n";
 // $rm->getNodeReport();
