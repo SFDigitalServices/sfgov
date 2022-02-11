@@ -259,10 +259,8 @@ function migratePeopleSection($node, $field_name, $peoples) {
 function sfgov_utilities_deploy_03_resources() {
   $rm = new ResourceMigration();
   
-  $rm->migrateAboutResources();
+  $rm->migrateAboutAndPublicBodyResources();
   $rm->migrateCampaignResources();
   $rm->migrateTopicsAndDepartments();
   $rm->migrateResourceCollections();
-  
-  $rm->verifyMigration();
 }

@@ -80,28 +80,31 @@ class ResourceMigration {
   // --> field_about_resources
   // ----> paragraph: tile section (other_info_card)
   // ------> field_resources
-  public function migrateAboutResources() {
-    $nids = $this->getNodes('about');
+  public function migrateAboutAndPublicBodyResources() {
+    $nids = array_merge($this->getNodes('about'), $this->getNodes('public_body'));
     foreach($nids as $nid) {
       $node = Node::load($nid);
       $removes = []; // simultaneously adding and removing from the same array gets weird, so track removes and trash 'em after
-      $aboutResources = $node->get('field_about_resources')->getValue();
+      $fieldName = $node->getType() == 'about' ? 'field_about_resources' : 'field_other_info';
+      $aboutResources = $node->get($fieldName)->getValue();
       if(!empty($aboutResources)) {
         foreach($aboutResources as $aboutResource) {
           $aboutResourcesParagraph = Paragraph::load($aboutResource['target_id']);
-          $resources = $aboutResourcesParagraph->get('field_resources')->getValue();
-          if(!empty($resources)) {
-            foreach($resources as $resource) {
-              $resourceParagraph = Paragraph::load($resource['target_id']);
-              if(!empty($resourceParagraph)) {
-                if ($resourceParagraph->getType() == 'resources') {
-                  $this->migrateResource($node, $resourceParagraph, $aboutResourcesParagraph, 'field_resources');
-                  $removes[] = $resourceParagraph->id();
+          if($aboutResourcesParagraph->getType() == 'other_info_card') {
+            $resources = $aboutResourcesParagraph->get('field_resources')->getValue();
+            if(!empty($resources)) {
+              foreach($resources as $resource) {
+                $resourceParagraph = Paragraph::load($resource['target_id']);
+                if(!empty($resourceParagraph)) {
+                  if ($resourceParagraph->getType() == 'resources') {
+                    $this->migrateResource($node, $resourceParagraph, $aboutResourcesParagraph, 'field_resources');
+                    $removes[] = $resourceParagraph->id();
+                  }
                 }
               }
+              $this->removeOldResources($removes, $aboutResourcesParagraph, 'field_resources');
+              $node->save();
             }
-            $this->removeOldResources($removes, $aboutResourcesParagraph, 'field_resources');
-            $node->save();
           }
         }
       }
@@ -327,25 +330,6 @@ class ResourceMigration {
 
   public function getNodeReport() {
     $records = $this->nodeReport->getReport();
-    $nodesWithResourceCount = [];
-    foreach($records as $key => $value) {
-      $items = $value;
-      $numItems = count($items);
-      $nodesWithResourceCount[] = [
-        "nid" => $key,
-        "content_type" => $items[0]['node_content_type'],
-        "node_title" => $items[0]['node_title'],
-        "node_author" => $items[0]['node_author'],
-        "last_updated" => $items[0]['last_updated'],
-        "resource_count" => $numItems,
-        "resources" => $items,
-      ];
-    }
-    echo json_encode($nodesWithResourceCount, JSON_UNESCAPED_SLASHES);
-  }
-
-  public function getValidationReport() {
-    $records = $this->validationReport->getReport();
     $nodesWithResourceCount = [];
     foreach($records as $key => $value) {
       $items = $value;
