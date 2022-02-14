@@ -68,7 +68,9 @@ function locationSubmit() {
 
     acService.getPlacePredictions(acRequest, (predictions, status) => {
       if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
-        reject({status: "error", msg: 'no predictions from AutocompleteService'})
+        // Modify reject directive so we can handle bad addresses
+        //reject(new Error('no predictions from AutocompleteService'))
+        resolve({status: 'done', msg: 'no predictions from AutocompleteService'});
         return;
       }
 
