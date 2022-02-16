@@ -103,18 +103,18 @@
     ```sh
     # 1. After updating the codebase, install any pending composer dependencies.
     lando composer install
-    
+
     # 2. If any dependencies were updated, run database updates.
     lando drush updb -y
-    
+
     # 3. Update active config to include and changes pending in `develop`.
     lando drush cim -y
-    
+
     # 4. Build the theme assets. (@see theme readme for prerequisites.)
     cd web/themes/custom/sfgovpl
     npm ci
     npm run build
-    
+
     # 5. Clear the cache.
     lando drush cr
     ```
@@ -172,3 +172,10 @@ lando drush cr
 ```
 
 _* I'm not 100% sure, but I don't think global composer is necessary. One can use `lando composer install` instead. -ZK_
+
+## PHP Codesniffing
+
+To run PHPCS use `lando php-sniff path/to/directory`
+To run PHPCBF use `lando php-fix path/to/directory`
+
+Standards and rules for codesniffing can be edited in `phpcs.xml` at the project root.

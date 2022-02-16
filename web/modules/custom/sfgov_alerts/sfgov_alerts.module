@@ -31,6 +31,9 @@ function sfgov_alerts_form_alter(&$form, FormState $form_state, $form_id) {
       $date_today = date('Y-m-d');
 
       if ($date_today <= $date_exp) {
+        if(empty($form['#fieldgroups']['group_alert'])) {
+          $form['#fieldgroups']['group_alert'] = new stdClass();
+        }
         $form['#fieldgroups']['group_alert']->format_settings['open'] = TRUE;
       }
     }
