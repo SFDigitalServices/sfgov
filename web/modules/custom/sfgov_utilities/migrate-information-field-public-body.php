@@ -22,6 +22,7 @@ foreach($nodes as $node) {
         $report[] = [
           'nid' => $nid,
           'node_title' => $node->getTitle(),
+          'url' => 'https://sf.gov/node/' . $nid,
           'field_dept_ref' => $oldRefNode->getTitle(),
           'field_dept_ref_id' => $oldRefNode->id(),
         ];
@@ -39,4 +40,4 @@ foreach($nodes as $node) {
   $node->save();
 }
 
-echo json_encode($report) . "\n";
+// echo json_encode($report, JSON_UNESCAPED_SLASHES) . "\n";
