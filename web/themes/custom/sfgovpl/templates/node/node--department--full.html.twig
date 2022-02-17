@@ -71,12 +71,22 @@
 
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
-    {% include '@theme/hero-banner-default.twig' with {
+    {% embed '@theme/hero-banner-default.twig' with {
       'banner': {
         'title': node.label,
         'text': node.field_description.value
       }
     } %}
+  
+      {% block logo %}
+        {% if content.field_image %}
+          <div class="hero-banner--logo">
+            {{ content.field_image }}
+          </div>
+        {% endif %}
+      {% endblock logo %}
+
+    {% endembed %}
 
   </div>
 </div>
@@ -192,11 +202,6 @@
           {% endif %}
         </div>
         <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section sfds-responsive-container-right-zero">
-          {% if content.field_image|render|striptags %}
-            <div class="sfgov-dept-about-logo sfgov-logo">
-              {{ content.field_image }}
-            </div>
-          {% endif %}
           {% if content.field_call_to_action|render|striptags|trim %}
             <div class="sfgov-dept-about-cta sfgov-cta">
               {{ content.field_call_to_action }}
