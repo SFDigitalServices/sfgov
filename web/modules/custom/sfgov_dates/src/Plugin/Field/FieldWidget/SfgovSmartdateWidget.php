@@ -27,9 +27,6 @@ class SfgovSmartdateWidget extends SmartDateDefaultWidget {
     unset($element['duration']['#title']);
     // Use our own custom value for title that it is less confusing./
     $element['duration']['#title'] = $this->t('Include end date/time?');
-    // We don't want users to change this field value, but it still has to be
-    // there for the 'all day' button to appear.
-    $element['duration']['#disabled'] = TRUE;
     // We're using the duration function as an end time toggle, the module
     // settings don't allow 'custom' to be the default value, so we're setting
     // it here.
