@@ -14,14 +14,24 @@
     </div>
   {% else %}
     <div class="event-date">
-      <div class="month">{{ start_date_timestamp|date("F") }}</div>
-      <div class="date">{{ start_date_timestamp|date("j") }}</div>
+      {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
+      {% if content.field_smart_date[0]['#date'] %}
+        <div class="month">{{ content.field_smart_date[0]['#start_timestamp']|date("F") }}</div>
+        <div class="date">{{ content.field_smart_date[0]['#start_timestamp']|date("j") }}</div>
+      {% else %}
+        <div class="month">{{ start_date_timestamp|date("F") }}</div>
+        <div class="date">{{ start_date_timestamp|date("j") }}</div>
+      {% endif %}
     </div>
   {% endif %}
   <div class="event-info">
     <p class="title">{{ label }}</p>
     <p class="description">
-      {{ start_date_timestamp|date("l, F j") }}<br/>
+      {% if content.field_smart_date[0]['#date'] %}
+        {{ content.field_smart_date[0]['#date'] }}
+      {% else %}
+        {{ start_date_timestamp|date("l, F j") }}<br/>
+      {% endif %}
     </p>
   </div>
 </a>
