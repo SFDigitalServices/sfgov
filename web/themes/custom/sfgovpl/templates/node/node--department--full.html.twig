@@ -81,16 +81,6 @@
   </div>
 </div>
 
-{% if content.field_spotlight2['#items'].getValue() %}
-  <div class="sfgov-full-bleed padding-zero bg-grey-1 sfgov-spotlight-container">
-    <div class="sfgov-section-container">
-      {{ content.field_spotlight2 }}
-    </div>
-  </div>
-{% endif %}
-
-{{ content.field_featured_items }}
-
 <div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container mb-40">
   <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
     <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
@@ -103,6 +93,16 @@
   date_exp: node.field_alert_expiration_date.0.value,
   style: 'department',
 } %}
+
+{% if content.field_spotlight2['#items'].getValue() %}
+  <div class="sfgov-full-bleed padding-zero bg-grey-1 sfgov-spotlight-container">
+    <div class="sfgov-section-container">
+      {{ content.field_spotlight2 }}
+    </div>
+  </div>
+{% endif %}
+
+{{ content.field_featured_items }}
 
 {% if content.field_department_services['#items'].getValue() %}
   <a name="services"></a>
