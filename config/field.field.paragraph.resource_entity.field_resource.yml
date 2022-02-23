@@ -1,0 +1,34 @@
+uuid: a9c3527e-b926-42d3-ad14-5ad66388bada
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.resource.resource
+    - field.storage.paragraph.field_resource
+    - paragraphs.paragraphs_type.resource_entity
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.resource_entity.field_resource
+field_name: field_resource
+entity_type: paragraph
+bundle: resource_entity
+label: Resource
+description: 'You can select up to 1 resource.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:resource'
+  handler_settings:
+    target_bundles:
+      resource: resource
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,74 @@
+uuid: 7723ed18-0d4a-4a2d-9c96-1f92c9844610
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_node
+    - node.type.about
+    - node.type.campaign
+    - node.type.data_story
+    - node.type.department
+    - node.type.department_table
+    - node.type.event
+    - node.type.form_confirmation_page
+    - node.type.form_page
+    - node.type.information_page
+    - node.type.landing
+    - node.type.location
+    - node.type.meeting
+    - node.type.news
+    - node.type.page
+    - node.type.person
+    - node.type.public_body
+    - node.type.report
+    - node.type.resource_collection
+    - node.type.step_by_step
+    - node.type.topic
+    - node.type.transaction
+    - paragraphs.paragraphs_type.resource_node
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: paragraph.resource_node.field_node
+field_name: field_node
+entity_type: paragraph
+bundle: resource_node
+label: 'SF.gov page'
+description: 'Start typing the title of a piece of content to select it.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: unpublished
+  handler_settings:
+    target_bundles:
+      about: about
+      page: page
+      campaign: campaign
+      data_story: data_story
+      department: department
+      department_table: department_table
+      event: event
+      form_confirmation_page: form_confirmation_page
+      form_page: form_page
+      information_page: information_page
+      landing: landing
+      location: location
+      meeting: meeting
+      news: news
+      person: person
+      public_body: public_body
+      report: report
+      resource_collection: resource_collection
+      step_by_step: step_by_step
+      topic: topic
+      transaction: transaction
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: 0
+    auto_create_bundle: page
+field_type: entity_reference

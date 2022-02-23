@@ -20,23 +20,33 @@ dependencies:
     - field.field.node.meeting.field_public_body
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
+    - field.field.node.meeting.field_smart_date
     - field.field.node.meeting.field_start_date
+    - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
     - datetime
+    - sfgov_dates
     - user
 id: node.meeting.card
 targetEntityType: node
 bundle: meeting
 mode: card
 content:
+  field_smart_date:
+    type: sfgov_dates_block_date
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_start_date:
-    type: datetime_custom
+    type: datetime_default
     label: hidden
     settings:
       timezone_override: ''
-      date_format: 'l, M j, Y, g:i a'
+      format_type: medium
     third_party_settings: {  }
     weight: 0
     region: content

@@ -16,13 +16,14 @@ dependencies:
     - field.field.node.event.field_location_in_person
     - field.field.node.event.field_location_online
     - field.field.node.event.field_phone_numbers
+    - field.field.node.event.field_smart_date
     - field.field.node.event.field_start_date
     - field.field.node.event.field_topics
     - image.style.160x160
     - node.type.event
   module:
-    - datetime
     - media
+    - sfgov_dates
     - user
 id: node.event.card
 targetEntityType: node
@@ -39,11 +40,18 @@ content:
     weight: 1
     region: content
   field_start_date:
-    type: datetime_custom
+    type: datetime_default
     label: hidden
     settings:
       timezone_override: ''
-      date_format: 'l, F j'
+      format_type: medium
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_smart_date:
+    type: sfgov_dates_card_date
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
@@ -60,7 +68,9 @@ hidden:
   field_location_in_person: true
   field_location_online: true
   field_phone_numbers: true
+  field_start_date: true
   field_topics: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true
