@@ -1,66 +1,66 @@
 label: Multimedia
 display:
   default:
-    display_title: Máster
+    display_title: Default
     display_options:
-      exposed_form:
-        options:
-          submit_button: Filtro
-          reset_button_label: Restablecer
-          exposed_sorts_label: 'Ordenar por'
-      pager:
-        options:
-          expose:
-            items_per_page_label: 'Elementos por página'
-            items_per_page_options_all_label: '- Todo -'
-            offset_label: Desplazamiento
-          tags:
-            previous: '‹ Anterior'
-            next: 'Siguiente >'
-            first: '« Primero'
-            last: 'Último »'
+      title: Multimedia
       fields:
         thumbnail__target_id:
           label: Miniatura
         name:
           label: 'Nombre del elemento multimedia'
         bundle:
-          label: Tipo
+          label: Type
         uid:
-          label: Autor
+          label: Author
         status:
-          label: Estado
+          label: Status
           settings:
-            format_custom_true: Publicado
-            format_custom_false: 'No publicado'
+            format_custom_false: Unpublished
+            format_custom_true: Published
         changed:
-          label: Actualizado
+          label: Updated
         operations:
-          label: Operaciones
+          label: Operations
+      pager:
+        options:
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page_label: 'Items per page'
+            items_per_page_options_all_label: '- All -'
+            offset_label: Offset
+      exposed_form:
+        options:
+          submit_button: Filter
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+      empty:
+        area_text_custom:
+          content: 'No content available.'
       filters:
         name:
           expose:
             label: 'Nombre del elemento multimedia'
         bundle:
           expose:
-            label: Tipo
+            label: Type
         status:
           expose:
             label: Verdadero
           group_info:
-            label: 'Estado de publicación'
+            label: 'Published status'
             group_items:
               1:
-                title: Publicado
+                title: Published
               2:
-                title: 'No publicado'
+                title: Unpublished
         langcode:
           expose:
-            label: Idioma
-      title: Multimedia
-      empty:
-        area_text_custom:
-          content: 'No content available.'
+            label: Language
   media_page_list:
     display_title: Multimedia
     display_options:

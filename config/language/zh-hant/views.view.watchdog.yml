@@ -2,7 +2,28 @@ label: 監控
 description: 最近日誌訊息
 display:
   default:
+    display_title: Default
     display_options:
+      title: 最近日誌訊息
+      fields:
+        nothing:
+          admin_label: 圖示
+        severity:
+          label: 嚴重性
+        type:
+          label: Type
+        timestamp:
+          label: 日期
+        message:
+          label: 訊息
+        link:
+          label: Operations
+      pager:
+        options:
+          expose:
+            items_per_page_label: 每頁的項目數
+            items_per_page_options_all_label: '- 全部 -'
+            offset_label: 位移
       exposed_form:
         options:
           submit_button: 篩選
@@ -10,36 +31,16 @@ display:
           exposed_sorts_label: 排序依據
           sort_asc_label: 遞增
           sort_desc_label: 遞減
-      pager:
-        options:
-          expose:
-            items_per_page_label: 每頁的項目數
-            items_per_page_options_all_label: '- 全部 -'
-            offset_label: 位移
-      fields:
-        nothing:
-          admin_label: 圖示
-        severity:
-          label: 嚴重性
-        type:
-          label: 類型
-        timestamp:
-          label: 日期
-        message:
-          label: 訊息
-        link:
-          label: 操作
-      filters:
-        type:
-          expose:
-            label: 類型
-        severity:
-          expose:
-            label: 嚴重性
-      title: 最近日誌訊息
       empty:
         area:
           admin_label: 目前沒有日誌訊息。
           content: 目前沒有日誌訊息。
+      filters:
+        type:
+          expose:
+            label: Type
+        severity:
+          expose:
+            label: 嚴重性
   page:
     display_title: 頁面
