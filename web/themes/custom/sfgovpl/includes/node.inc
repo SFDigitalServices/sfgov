@@ -369,12 +369,41 @@ function public_body_page_fields($node) {
           case 'other_info_card':
             foreach ($otherInfoParagraph->get('field_resources')->getValue() as $value) {
               $otherInfoContent = Paragraph::load($value['target_id']);
-
+              $id = '';
+              $title = '';
+              $description = '';
+              $url = '';
+              if($otherInfoContent->getType() == 'resource_entity') {
+                $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
+                /** @var \Drupal\eck\Entity\EckEntity $resource */
+                $resource = $resource_storage->load($otherInfoContent->get('field_resource')[0]->target_id);
+                $url = $resource->get('field_url')->uri ?? '';
+                $title = $resource->get('title')->value;
+                $description = $resource->get('field_description')
+                  ? $resource->field_description->value
+                  : render($resource->get('field_description')->value);
+              } else if($otherInfoContent->getType() == 'resource_node') {
+                $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+                /** @var \Drupal\node\Entity\Node $node */
+                $node = $node_storage->load($otherInfoContent->get('field_node')[0]->target_id);
+                $id = $node->id();
+                $description = '';
+                if($node->hasField('field_description')) {
+                  $description = $node->get('field_description') ? $node->field_description->value : render($node->get('field_description')->value);
+                }
+                $title = $node->getTitle();
+                $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+              } else {
+                $id = $otherInfoContent->id();
+                $title = $otherInfoContent->field_title->value;
+                $description = $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL;
+                $url = $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL;
+              }
               $theFields['other_info'][$otherInfoKey]['content'][] = [
-                'id' => $otherInfoContent->id(),
-                'title' => $otherInfoContent->field_title->value,
-                'description' => $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL,
-                'url' => $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL,
+                'id' => $id,
+                'title' => $title,
+                'description' => $description,
+                'url' => $url,
               ];
             }
             break;

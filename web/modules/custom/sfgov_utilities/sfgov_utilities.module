@@ -246,6 +246,22 @@ function sfgov_utilities_cloned_node_alter(&$node) {
   }
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * Implements hook_link_alter().
+ */
+function sfgov_utilities_link_alter(&$variables) {
+  if ($variables['text'] == 'Clone') {
+    if (isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+      if (strpos($variables['options']['attributes']['data-drupal-link-system-path'], 'quick_clone')) {
+        $variables['text'] = 'Duplicate';
+      }
+    }
+  }
+}
+
+>>>>>>> develop
 /**
  * Implements hook_entity_update().
  */

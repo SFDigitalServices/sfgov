@@ -3,6 +3,7 @@
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
+use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
 
 /**
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
@@ -253,4 +254,13 @@ function migratePeopleSection($node, $field_name, $peoples) {
   $node->setRevisionCreationTime(Drupal::time()->getRequestTime());
   $node->setRevisionUserId($user_id);
   $node->save();
+}
+
+function sfgov_utilities_deploy_03_resources() {
+  $rm = new ResourceMigration();
+  
+  $rm->migrateAboutAndPublicBodyResources();
+  $rm->migrateCampaignResources();
+  $rm->migrateTopicsAndDepartments();
+  $rm->migrateResourceCollections();
 }

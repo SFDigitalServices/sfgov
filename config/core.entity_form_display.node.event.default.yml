@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.event.field_location_in_person
     - field.field.node.event.field_location_online
     - field.field.node.event.field_phone_numbers
+    - field.field.node.event.field_smart_date
     - field.field.node.event.field_start_date
     - field.field.node.event.field_topics
     - node.type.event
@@ -23,7 +24,6 @@ dependencies:
   module:
     - allowed_formats
     - content_moderation
-    - datetime
     - entity_browser
     - field_group
     - maxlength
@@ -31,6 +31,7 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - sfgov_dates
     - text
 third_party_settings:
   field_group:
@@ -41,7 +42,7 @@ third_party_settings:
       label: Contact
       region: content
       parent_name: ''
-      weight: 11
+      weight: 8
       format_type: details
       format_settings:
         classes: ''
@@ -57,7 +58,7 @@ third_party_settings:
       label: Location
       region: content
       parent_name: ''
-      weight: 5
+      weight: 4
       format_type: details
       format_settings:
         classes: ''
@@ -72,7 +73,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 7
+    weight: 6
     region: content
     settings:
       rows: 9
@@ -97,7 +98,11 @@ content:
     third_party_settings: {  }
   field_call_to_action:
     type: paragraphs
+<<<<<<< HEAD
     weight: 10
+=======
+    weight: 7
+>>>>>>> develop
     region: content
     settings:
       title: Paragraph
@@ -116,7 +121,7 @@ content:
     third_party_settings: {  }
   field_cost:
     type: paragraphs
-    weight: 4
+    weight: 3
     region: content
     settings:
       title: Paragraph
@@ -135,7 +140,7 @@ content:
     third_party_settings: {  }
   field_dept:
     type: entity_reference_autocomplete
-    weight: 12
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -178,15 +183,9 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-  field_end_date:
-    type: datetime_default
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_image:
     type: entity_browser_entity_reference
-    weight: 6
+    weight: 5
     region: content
     settings:
       entity_browser: image
@@ -232,15 +231,25 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-  field_start_date:
-    type: datetime_default
+  field_smart_date:
+    type: sfgov_dates_customsmartdate
     weight: 2
     region: content
-    settings: {  }
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
+      show_extra: true
+      hide_date: false
     third_party_settings: {  }
   field_topics:
     type: entity_reference_autocomplete
-    weight: 13
+    weight: 10
     region: content
     settings:
       match_operator: CONTAINS
@@ -250,31 +259,31 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 15
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 21
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 19
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 16
+    weight: 13
     region: content
     settings:
       display_label: true
@@ -288,24 +297,26 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 14
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 20
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 18
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   created: true
+  field_end_date: true
+  field_start_date: true
   langcode: true
   promote: true
   sticky: true
