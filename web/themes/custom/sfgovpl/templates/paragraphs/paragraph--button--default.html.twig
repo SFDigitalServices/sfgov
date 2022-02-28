@@ -50,7 +50,24 @@
 {% set field_link = content.field_link.0 %}
 {% set text = field_link['#title'] %}
 {% set href = field_link['#url'].toString() %}
-{% set parent = paragraph._referringItem.parent.parent.entity %}
+{% set parent = paragraph.parentEntity %}
+{% set parentFieldName = parent.parent_field_name.value %}
+{% set isDeptContentType = parent.parentEntity.bundle == 'department' ? true : false %}
+{% set btnClasses = parent.bundle == 'spotlight' ? ['btn-inverse'] : [] %}
+
+{# if this paragraph is part of a department content type and it's the first spotlight on the page, remove the inverse class #}
+{% if isDeptContentType == true and parentFieldName == 'field_spotlight2' %}
+  {% set btnClasses = [] %}
+{% endif %}
+
+{# if this paragraph is on a campaign content type, check to see if it should be inversed. #}
+{% set node = parent.parentEntity %}
+{% if node.field_campaign_theme %}
+  {% set campaign_theme_label = node.field_campaign_theme.entity.label|lower %}
+  {% if campaign_theme_label in ['black', 'green', 'purple', 'red',] %}
+    {% set btnClasses = 'btn-inverse' %}
+  {% endif %}
+{% endif %}
 
 {% block paragraph %}
   {% if field_link %}
@@ -59,7 +76,7 @@
         {% include "@sfgov-design-system/button/link.twig" with {
             "href": href,
             "text": text,
-            "classes": parent.getType() == 'spotlight' ? ['btn-inverse'] : []
+            "classes": btnClasses
         } %}
       {% endblock content %}
     </div>

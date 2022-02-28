@@ -64,7 +64,7 @@ npm run lint
 There are additional npm scripts for different linting tasks:
 
 - `npm run lint-css` lints only (S)CSS source files
-- `npm run lint-js` lints only JavaScript source files
+- `npm run lint-js` lints only JavaScript source files using a custom [eslint-plugin-sfgov] configuration
 - `npm run lint-fix` runs Prettier with the [`--write` option](https://prettier.io/docs/en/cli.html#--write) to fix any automatically fixable errors
 
 ## PurgeCSS
@@ -97,6 +97,7 @@ If it looks like PurgeCSS is over-aggressively purging selectors that _are_ used
 
 [browsersync]: https://browsersync.io/
 [design system]: https://github.com/SFDigitalServices/design-system
+[eslint-plugin-sfgov]: https://github.com/SFDigitalServices/eslint-plugin-sfgov
 [node.js]: https://nodejs.org
 [npm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 [npm scripts]: https://docs.npmjs.com/cli/v6/using-npm/scripts

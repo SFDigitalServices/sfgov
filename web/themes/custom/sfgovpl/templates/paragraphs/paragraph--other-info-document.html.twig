@@ -41,7 +41,8 @@
 
 {% set parent = paragraph.getParentEntity() %}
 {% set field_file = paragraph.field_file  %}
-{% set fileurl = file_url(paragraph.field_file.entity.field_media_file.entity.uri.value) %}
+{% set entityUriValue = paragraph.field_file.entity.field_media_file.entity.uri.value ?? "" %}
+{% set fileurl = file_url(entityUriValue) %}
 
 {%
   set classes = [

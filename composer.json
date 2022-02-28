@@ -41,6 +41,7 @@
         "drupal/bulk_update_fields": "^2.0@alpha",
         "drupal/cache_control_override": "^1.0@alpha",
         "drupal/cer": "^4.0@alpha",
+        "drupal/coder": "^8.3",
         "drupal/color_field": "^2.2",
         "drupal/components": "^2.4",
         "drupal/config_direct_save": "^2.1",
@@ -51,6 +52,7 @@
         "drupal/core-composer-scaffold": "^9",
         "drupal/core-project-message": "^9",
         "drupal/core-recommended": "^9.2",
+        "drupal/csp": "^1.16",
         "drupal/ctools": "^3.0",
         "drupal/date_popup": "^1.1",
         "drupal/diff": "^1.0",
@@ -74,7 +76,7 @@
         "drupal/job_scheduler": "^3.1",
         "drupal/key": "^1.15",
         "drupal/linkit": "^5.0",
-        "drupal/lionbridge_translation_provider": "^2.11",
+        "drupal/lionbridge_translation_provider": "^2.13",
         "drupal/maxlength": "1.x-dev",
         "drupal/media_entity_file_replace": "^1.0@beta",
         "drupal/media_revisions_ui": "^2.0",
@@ -109,6 +111,7 @@
         "drupal/telephone_formatter": "~1.0",
         "drupal/telephone_validation": "^2.1",
         "drupal/tmgmt": "^1.12",
+        "drupal/tmgmt_google": "^1.0",
         "drupal/toc_api": "^1.0",
         "drupal/toc_filter": "^2.0",
         "drupal/twig_tweak": "^2.0",
@@ -132,7 +135,6 @@
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-        "drupal/coder": "^8.3",
         "drupal/core-dev": "^9",
         "drupal/devel": "^4",
         "drupal/drupal-extension": "^4",
@@ -242,7 +244,8 @@
                 "Use hook_theme_suggestions in views": "https://www.drupal.org/files/issues/2018-04-07/2923634-35.patch",
                 "Allow for deletion of a single value of a multiple value field": "https://www.drupal.org/files/issues/2021-03-30/1038316-235.patch",
                 "Node local tasks tabs do not appear on node revisions": "https://www.drupal.org/files/issues/2019-11-12/drupal-node_revision_local_tasks_canonical-2885278-15.patch",
-                "UID base field override configs can still have old default value callbacks": "https://www.drupal.org/files/issues/2021-11-01/3153455-104.patch"
+                "UID base field override configs can still have old default value callbacks": "https://www.drupal.org/files/issues/2021-11-01/3153455-104.patch",
+                "Invalid config structures can result in exceptions when saving a config entity": "https://www.drupal.org/files/issues/2021-11-29/2925890-29.patch"
             },
             "drupal/amplitude": {
                 "Page scroll depth": "patches/amplitude-scroll-depth.patch",
@@ -283,6 +286,19 @@
         "sort-packages": true,
         "platform": {
             "php": "7.4"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "simplesamlphp/composer-module-installer": true,
+            "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "drupal/console-extend-plugin": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "joachim-n/composer-manifest": true,
+            "oomphinc/composer-installers-extender": true,
+            "rvtraveller/qs-composer-installer": true,
+            "zaporylie/composer-drupal-optimizations": true
         }
     }
 }

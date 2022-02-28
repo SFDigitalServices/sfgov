@@ -18,22 +18,21 @@ bundle: physical
 mode: default
 content:
   field_address:
-    weight: 0
+    type: address_plain
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: address_plain
+    weight: 0
     region: content
   field_operating_hours:
-    weight: 1
+    type: office_hours
     label: hidden
     settings:
-      show_closed: open
-      office_hours_first_day: '0'
       day_format: short
       time_format: g
       compress: true
       grouped: true
+      show_closed: open
       closed_format: Closed
       separator:
         days: '<br />'
@@ -45,18 +44,19 @@ content:
         position: ''
         open_text: 'Currently open'
         closed_text: 'Currently closed'
+      timezone_field: ''
+      office_hours_first_day: '0'
       schema:
         enabled: true
-      timezone_field: ''
     third_party_settings: {  }
-    type: office_hours
+    weight: 1
     region: content
   field_text:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 2
     region: content
 hidden:
   changed: true

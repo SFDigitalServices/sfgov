@@ -18,7 +18,9 @@ bundle: profile_group
 mode: default
 content:
   field_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 2
       placeholder: ''
@@ -31,11 +33,10 @@ content:
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   field_profiles:
     type: entity_reference_paragraphs
     weight: 2
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -44,15 +45,14 @@ content:
       form_display_mode: default
       default_paragraph_type: ''
     third_party_settings: {  }
-    region: content
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
 hidden:
   created: true
   status: true

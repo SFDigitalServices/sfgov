@@ -46,7 +46,7 @@ function sfgovpl_preprocess_paragraph__process_step(&$variables) {
     $variables['txUrl'] = $txNode->toUrl('canonical', [
       'language' => \Drupal::languageManager()->getCurrentLanguage(),
     ])->toString();
-  } 
+  }
 }
 
 function sfgovpl_preprocess_paragraph(&$variables) {
@@ -56,7 +56,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   if (function_exists($preprocess)) {
     $preprocess($variables);
   }
-  
+
   if($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
@@ -244,4 +244,17 @@ function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
     $variables['kbd_instructions'] = \Drupal\Core\Render\Markup::create($kbd_instructions);
   }
 
+}
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__form_io(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $parent_node = $paragraph->getParentEntity();
+  if ($parent_node instanceof NodeInterface) {
+    $json_data = $parent_node->get('field_formio_json_content')->value;
+    $variables['content']['formio_json_data'] = $json_data;
+  }
 }

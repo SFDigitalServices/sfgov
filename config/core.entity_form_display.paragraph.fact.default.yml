@@ -19,7 +19,9 @@ bundle: fact
 mode: default
 content:
   field_description:
+    type: text_textarea
     weight: 2
+    region: content
     settings:
       rows: 5
       placeholder: ''
@@ -32,25 +34,25 @@ content:
         maxlength_js_label: '<strong>@remaining</strong> left'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   field_image:
+    type: entity_browser_entity_reference
     weight: 0
+    region: content
     settings:
       entity_browser: image
       field_widget_display: rendered_entity
       field_widget_edit: true
       field_widget_remove: true
+      field_widget_replace: false
       open: true
-      selection_mode: selection_append
       field_widget_display_settings:
         view_mode: preview
-      field_widget_replace: false
+      selection_mode: selection_append
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_title:
+    type: string_textfield
     weight: 1
+    region: content
     settings:
       size: 60
       placeholder: ''
@@ -58,8 +60,11 @@ content:
       maxlength:
         maxlength_js: 65
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
-    type: string_textfield
+  translation:
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   status: true
