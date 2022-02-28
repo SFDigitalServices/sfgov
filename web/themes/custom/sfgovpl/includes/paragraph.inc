@@ -247,6 +247,43 @@ function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
 }
 
 /**
+ * Implements template_preprocess_paragraph() for `resource node` paragraphs.
+ */
+function sfgovpl_preprocess_paragraph__resource_node(&$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $outer */
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->hasField('field_node') && NULL !== $paragraph->get('field_node')[0]) {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    /** @var \Drupal\node\Entity\Node $node */
+    $node = $node_storage->load($paragraph->get('field_node')[0]->target_id);
+    $description = '';
+    if($node->hasField('field_description')) {
+      $description = $node->get('field_description') ?? render($node->get('field_description')->value);
+    }
+    $variables['title'] = $node->getTitle();
+    $variables['description'] = $description;
+    $variables['url'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+  }
+}
+
+/**
+ * Implements template_preprocess_paragraph() for `resource entity` paragraphs.
+ */
+function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->hasField('field_resource') && NULL !== $paragraph->get('field_resource')[0]) {
+    $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
+    /** @var \Drupal\eck\Entity\EckEntity $resource */
+    $resource = $resource_storage->load($paragraph->get('field_resource')[0]->target_id);
+    $uri = $resource->get('field_url')->uri ?? '';
+    $variables['title'] = $resource->get('title')->value;
+    $variables['description'] = $resource->get('field_description') ?? render($resource->get('field_description')->value);
+    $variables['url'] = $uri;
+  }
+}
+
+/*
  * Implements hook_preprocess_paragraph().
  */
 function sfgovpl_preprocess_paragraph__form_io(&$variables) {

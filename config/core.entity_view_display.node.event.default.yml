@@ -15,12 +15,14 @@ dependencies:
     - field.field.node.event.field_location_in_person
     - field.field.node.event.field_location_online
     - field.field.node.event.field_phone_numbers
+    - field.field.node.event.field_smart_date
     - field.field.node.event.field_start_date
     - field.field.node.event.field_topics
     - node.type.event
   module:
     - datetime
     - entity_reference_revisions
+    - sfgov_dates
     - text
     - user
 id: node.event.default
@@ -47,7 +49,7 @@ content:
       view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 7
+    weight: 6
     region: content
   field_call_to_action:
     type: entity_reference_revisions_entity_view
@@ -56,7 +58,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 7
     region: content
   field_cost:
     type: entity_reference_revisions_entity_view
@@ -65,7 +67,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   field_dept:
     type: entity_reference_label
@@ -73,14 +75,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 11
+    weight: 10
     region: content
   field_description:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   field_email:
     type: entity_reference_revisions_entity_view
@@ -89,16 +91,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 9
-    region: content
-  field_end_date:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 5
+    weight: 8
     region: content
   field_image:
     type: entity_reference_entity_view
@@ -117,7 +110,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 12
+    weight: 11
     region: content
   field_location_online:
     type: boolean
@@ -127,7 +120,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 13
+    weight: 12
     region: content
   field_phone_numbers:
     type: entity_reference_revisions_entity_view
@@ -136,7 +129,14 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 10
+    weight: 9
+    region: content
+  field_smart_date:
+    type: sfgov_dates_node_date
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_start_date:
     type: datetime_default
@@ -145,10 +145,12 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 4
+    weight: 13
     region: content
 hidden:
+  field_end_date: true
   field_topics: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

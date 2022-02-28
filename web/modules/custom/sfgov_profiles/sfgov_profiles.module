@@ -46,12 +46,15 @@ function sfgov_profiles_entity_presave($entity) {
   // corresponding profile node so that it can reload template data for
   // display purposes.
   if ($entity->bundle() === 'public_body_profiles') {
-    $profile_node = \Drupal::entityTypeManager()->getStorage('node')->load($entity->get('field_profile')->target_id);
-    if ($entity->isNew()) {
-      Cache::invalidateTags($profile_node->getCacheTags());
-    }
-    elseif ($entity->get('field_profile')->target_id != $entity->get('field_profile')->target_id) {
-      Cache::invalidateTags($profile_node->getCacheTags());
+    $targetId = $entity->get('field_profile')->target_id;
+    if (!empty($targetId)) {
+      $profile_node = \Drupal::entityTypeManager()->getStorage('node')->load($entity->get('field_profile')->target_id);
+      if ($entity->isNew()) {
+        Cache::invalidateTags($profile_node->getCacheTags());
+      }
+      elseif ($entity->get('field_profile')->target_id != $entity->get('field_profile')->target_id) {
+        Cache::invalidateTags($profile_node->getCacheTags());
+      }
     }
   }
 }
