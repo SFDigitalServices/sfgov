@@ -5,7 +5,7 @@
   {% set classes = ['info--has-tags'] %}
 {% endif %}
 
-{% if node.field_dept.value %}
+{% if node.field_dept.value or node.field_public_body.value %}
   {% set hasDept = true %}
 {% endif %}
 
@@ -34,9 +34,10 @@
   </div>
 
   {% if hasDept %}
-    <div class="info--departments-container">
-      <div class="info--departments">
+    <div class="info--pbody-depts-container">
+      <div class="info--pbody-depts">
         {{ content.field_dept }}
+        {{ content.field_public_body }}
       </div>
     </div>
   {% endif %}
