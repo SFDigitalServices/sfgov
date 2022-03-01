@@ -153,7 +153,8 @@ class MeetingListFiltersForm extends FormBase {
         $years[$year] = $year;
       }
     }
-
+    arsort($years);
+    
     return $years;
   }
 
