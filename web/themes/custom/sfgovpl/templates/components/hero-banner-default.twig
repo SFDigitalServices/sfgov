@@ -2,7 +2,12 @@
 <div class="hero-banner default{% if banner.notranslate %} {{ banner.notranslate }}{% endif %}">
   <div class="">
     {{ banner.label }}
-    <h1>{{ banner.title }}</h1>
+    <div class="hero-banner--logo-wrapper">
+      {% block logo %}
+        <img class="hero-banner--logo" src="{{ banner.logo }}"/>
+      {% endblock logo %}
+      <h1 class="hero-banner--title">{{ banner.title }}</h1>
+    </div>
     {% if banner.text %}
       <p class="lead-paragraph">{{ banner.text }}</p>
     {% endif %}
