@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+## Rapidly re-run a migration.
+
+set -e
+MIGRATE_PATH="modules/custom/sfgov_migrate"
+
+if [ -z "$*" ]; then
+  echo -e "${green} Importing config for $MIGRATE_PATH module ${NC}";
+  SOURCE="$MIGRATE_PATH/config/install"
+else
+  echo -e "${green} Importing config $1 module"
+  SOURCE="$MIGRATE_PATH/$1/config/install"
+fi
+
+drush cim -y --partial --source=${SOURCE}
