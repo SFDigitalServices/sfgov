@@ -139,22 +139,25 @@ class MeetingListFiltersForm extends FormBase {
   public function getYearOptions() {
     $years = ['' => $this->t('Select a year')];
     $database = \Drupal::database();
-
-    $values = $database->select('node__field_start_date', 'd')
+    $route = \Drupal::routeMatch();
+    $public_body_id = $route->getParameter('arg_0');
+    
+    $values_query = $database->select('node__field_start_date', 'd')
       ->fields('d', ['field_start_date_value'])
-      ->condition('d.bundle', 'meeting')
-      ->execute()
-      ->fetchAll();
-
+      ->condition('d.bundle', 'meeting');
+    $values_query->join('node__field_public_body', 'pb', 'pb.entity_id = d.entity_id AND pb.field_public_body_target_id = :pbid', array(':pbid' => $public_body_id));
+    $values = $values_query->execute()
+           ->fetchAll();
+    
     foreach ($values as $value) {
       $year = substr($value->field_start_date_value, 0, 4);
 
-      if (!in_array($year, $years)) {
+      if (!in_array($year, $years)) {         
         $years[$year] = $year;
       }
     }
     arsort($years);
-    
+
     return $years;
   }
 
