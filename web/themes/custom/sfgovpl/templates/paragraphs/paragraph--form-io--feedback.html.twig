@@ -18,7 +18,7 @@
       if (typeof amplitude != 'undefined' && drupalSettings.amplitude.events.length > 0) {
         drupalSettings.amplitude.events.find(function(obj) {
           if (obj.name === 'Feedback form') {
-            amplitudeData = JSON.parse(obj.properties);
+            amplitudeData = safeJSONParse(obj.properties);
           }
         });
       }

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+## Rapidly re-run a migration.
+
+set -e
+
+if [ -z "$*" ]; then
+  echo "No argument: Please pass migration-id that you want to run";
+  exit
+fi
+
+echo -e "${green} Stopping migration: ${1} ${NC}"
+drush migrate:stop $1
+echo -e "${green} Resetting migration: ${1} ${NC}"
+drush migrate:reset $1
+echo -e "${green} Rolling back migration: ${1} ${NC}"
+drush migrate:rollback $1
+echo -e "${green} Starting migration: ${1} ${NC}"
+drush migrate:import $1

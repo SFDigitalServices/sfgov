@@ -1,0 +1,18 @@
+id: update_fields
+label: Update Fields
+description: Update field values on existing nodes
+source_type: This site
+shared_configuration:
+  migration_tags:
+    - Field
+  source:
+    key: default
+  destination:
+    plugin: entity:node
+  process:
+    nid: nid
+    # Flag for skipping hooks.
+    _migration_notice:
+      plugin: default_value
+      default_value: migrating
+
