@@ -7,22 +7,26 @@ Welcome, and thank you for contributing! This repo contains the source code that
 ## Code quality
 Our goal is to ensure a base level of code quality through code "linters": language-specific software that reads code files, checks them against agreed-upon formatting and structural rules, and reports any issues back to the author.
 
-### Enforcement
-We are in the process of setting up several mechanisms for code quality enforcement:
+### Checks
+We are in the process of setting up several checkpoints for code quality:
 
-- We **will** have a [`CODEOWNERS` file][codeowners] to automate pull request reviews of specific files from the Digital Services team.
-- We **will** run linters in as part of our [CI](#continuous-integration) workflow.
-- We **will** suggest development tools that lint code in editors whenever possible.
-- We **will** use [git precommit hooks]() to run linters on our code before they're committed.
+- [ ] We **will** have a [`CODEOWNERS` file][codeowners] to automate pull request reviews of specific files from the Digital Services team.
+- [ ] We **will** run linters in as part of our [CI](#continuous-integration) workflow.
+- [ ] We **will** suggest development tools that lint code in editors whenever possible.
+- [ ] We **will** use [git precommit hooks]() to run linters on our code before they're committed.
 
 ### PHP
-PHP files are linted with [PHP CodeSniffer] and the [Drupal coding standards].
+PHP files are linted with [PHP CodeSniffer][] ("phpcs") and the [Drupal coding standards].
 
 ### CSS
 CSS source files (including Sass and SCSS formats) **will be** linted with [stylelint].
 
 ### JavaScript
-JavaScript source files linted with [eslint] and the [sfgov preset][eslint-plugin-sfgov].
+JavaScript source files **will be** linted with [eslint] and the [sfgov preset][eslint-plugin-sfgov].
+
+## Continuous integration
+We run our continuous integration workflows on [CircleCI](). Our
+[workflows](../.circleci) are based on [a template](https://github.com/pantheon-systems/example-drops-8-composer) provided by our hosting provider, [Pantheon].
 
 ## Best practices
 We encourage, but do not yet enforce, the practices described in this section.
@@ -46,3 +50,5 @@ A brief description of the best practice.
 [sf.gov]: https://sf.gov
 [stylelint]: https://stylelint.io
 [ui strings]: https://www.drupal.org/project/string_translation_ui
+[pantheon]: https://pantheon.io/
+[design system]: https://design-system.sf.gov
