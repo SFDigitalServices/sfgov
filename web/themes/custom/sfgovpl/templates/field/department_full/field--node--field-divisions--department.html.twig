@@ -1,11 +1,13 @@
-<h3>{{ label }}</h3>
+<h3 class="text-white text-title-xs m-0 mb-24">{{ label }}</h3>
 <ul class="flex flex-wrap p-0 list-none">
 
 {% set itemCount = items|length %}
-{% set widthClass = itemCount >= 4 ? 'w-1/2' : 'w-full' %}
+{% set widthClass = itemCount >= 2 ? 'w-1/2' : 'w-full' %}
 
 {% for item in items %}
-  <li class="mb-20 {{ widthClass }}">{{ item.content }}</li>
+  {% set title = item.content['#title'] %}
+  {% set uri = item.content['#url'] %}
+  <li class="mb-20 {{ widthClass }}"><a class="text-white text-body" href="{{ uri }}">{{ title  }}</a></li>
 {% endfor %}
 
 </ul>
