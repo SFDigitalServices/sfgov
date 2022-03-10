@@ -77,7 +77,14 @@
         {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) %}
           <div class="role-agency-title">
           <a href="{{ path('entity.node.canonical', {'node': node.field_city_department.entity.nid.value}) }}">
-            {{ node.field_city_department.entity.title.value }}
+            {# translate entity reference title if it exists #}
+            {# variable language is exposed via hook_preprocess_node #}
+            {# @see web/themes/custom/sfgovpl/includes/node.inc #}
+            {% if node.field_city_department.entity.hasTranslation(language) %}
+              {{ node.field_city_department.entity.translation(language).title.value }}
+            {% else %}
+              {{ node.field_city_department.entity.title.value }}
+            {% endif %}
           </a>
           </div>
         {% endif %}

@@ -1,5 +1,4 @@
-{% set start_date_time = content.field_start_date.0['#markup'] %}
-{% set start_date_timestamp = node.field_start_date.0.value %}
+{% set start_date_timestamp = content.field_start_date.0['#attributes']['datetime'] %}
 
 {% set hasImage = false %}
 {% set eventClass = "date" %}
@@ -15,9 +14,10 @@
     </div>
   {% else %}
     <div class="event-date">
+      {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
       {% if content.field_smart_date[0]['#date'] %}
-        <div class="month">{{ content.field_smart_date[0]['#date']|date("F") }}</div>
-        <div class="date">{{ content.field_smart_date[0]['#date']|date("j") }}</div>
+        <div class="month">{{ content.field_smart_date[0]['#start_timestamp']|date("F") }}</div>
+        <div class="date">{{ content.field_smart_date[0]['#start_timestamp']|date("j") }}</div>
       {% else %}
         <div class="month">{{ start_date_timestamp|date("F") }}</div>
         <div class="date">{{ start_date_timestamp|date("j") }}</div>

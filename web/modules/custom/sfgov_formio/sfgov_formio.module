@@ -4,6 +4,10 @@
  * @file Contains sfgov_formio.module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\sfgov_formio\Plugin\Field\FieldType\Formiourl;
+
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
@@ -133,4 +137,33 @@ function _sfgov_formio_sfds_source() {
   }
 
   return $source;
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function sfgov_formio_entity_base_field_info(EntityTypeInterface $entity_type) {
+  // Add a computed field to get the formio url.
+  if ($entity_type->id() === 'node') {
+    $fields['formio_url'] = BaseFieldDefinition::create('string')
+      ->setName('formio_url')
+      ->setLabel(t('Formio URL'))
+      ->setComputed(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'region' => 'hidden',
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setClass(Formiourl::class);
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function sfgov_formio_field_info_alter(&$info) {
+  // New processors can only be added at the field level. But this class has
+  // logic in it to only operate on the Formio Json Content field.
+  $info['string_long']['tmgmt_field_processor'] = 'Drupal\sfgov_formio\Plugin\Field\FormioFieldProcessor';
 }

@@ -36,6 +36,8 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
       $element[$delta] = [
         '#date' => $this->setDateString($start_time, $end_time),
         '#time' => (!$this->allDay) ? $this->setTimeString($start_time, $end_time) : FALSE,
+        '#start_timestamp' => $start_time,
+        '#end_timestamp' => $end_time,
       ];
     }
 

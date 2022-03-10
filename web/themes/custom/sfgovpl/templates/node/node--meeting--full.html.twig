@@ -37,11 +37,8 @@
 
 {{ content.content_moderation_control }}
 
-{% if content.field_smart_date[0]['#date'] %}
-  {% set date = content.field_smart_date[0]['#date'] %}
-{% else %}
-  {% set date = node.field_start_date.date|date('F j, Y') %}
-{% endif %}
+{# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
+{% set date = content.field_smart_date[0]['#date'] ?: node.field_start_date.date|date('F j, Y') %}
 
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
@@ -99,7 +96,7 @@
             {% if content.field_start_date|render %}
             <div class="start-date">
               {% if content.field_smart_date[0]['#date'] %}
-                {# Custom field formatter #}
+                {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
                 {{ content.field_smart_date[0]['#date'] }}
                 {% if content.field_smart_date[0]['#time'] %}
                   <br>

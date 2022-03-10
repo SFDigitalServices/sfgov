@@ -72,24 +72,28 @@
   {% set entityUriValue = entity.field_media_file.entity.uri.value ?? "" %}
   {% set fileurl =  file_url(entityUriValue) %}
   <div class="paragraph document" data-contact="document">
-    {% if fileurl|length > 3 and entity.field_published_date.value %}
+    {% if fileurl|length > 3 %}
       <div class="link-date"><span class="link"><a href="{{ fileurl }}">{{ entity.label }}</a></span>
-    {% elseif entity.field_document_url and entity.field_published_date.value %}
+    {% elseif entity.field_document_url is not empty %}
       <div class="link-date">
         <span class="link"><a href="{{ entity.field_document_url.value.0.uri }}">{{ entity.label }}</a></span>
     {% else %}
       <div class="link-date">
         <span class="no-link">{{ entity.label }}</span>
     {% endif %}
-        <span class="publish-date">
-          {% if entity.field_published_date.value and fileurl|length > 3 %}
+      <span class="publish-date">
+        {% if (fileurl|length > 3) or (entity.field_document_url is not empty) %}
+          {% if entity.field_published_date is not empty %}
             {{ entity.field_published_date.value|date("F j, Y") }}
-          {% elseif entity.field_published_date.value and entity.field_document_url %}
+          {% endif %}
+        {% else %}
+          {% if entity.field_published_date is not empty %}
             {{ entity.field_published_date.value|date("F j, Y") }}
           {% else %}
             {{ 'Upcoming'|t }}
           {% endif %}
-        </span>
+        {% endif %}
+      </span>
       </div>
       <span class="description">{{ entity.field_description.value|raw }}</span>
     </div>
