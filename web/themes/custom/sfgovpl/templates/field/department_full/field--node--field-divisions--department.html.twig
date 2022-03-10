@@ -5,8 +5,9 @@
 {% set widthClass = itemCount >= 2 ? 'w-1/2' : 'w-full' %}
 
 {% for item in items %}
-  {% set title = item.content['#title'] %}
   {% set uri = item.content['#url'] %}
+  {% set title = item.content['#title'] %}
+
   <li class="mb-20 {{ widthClass }}"><a class="text-white text-body" href="{{ uri }}">{{ title  }}</a></li>
 {% endfor %}
 
