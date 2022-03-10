@@ -50,7 +50,7 @@ function sfgovpl_preprocess_node(&$variables) {
           break;
       }
     }
-
+    $variables['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 }
 
