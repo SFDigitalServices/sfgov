@@ -1,13 +1,28 @@
 {% if items is not empty %}
-  <p class="title">{{ label }}</p>
-  <ul class="sfgov-social-list">
+  <p class="text-white text-title-xs font-medium m-0 mb-24">{{ label }}</p>
+  <ul class="list-none p-0 m-0 lg:mb-60">
     {% for item in items %}
       {% set facebook = item.content['#paragraph'].get('field_facebook').getValue()[0].uri %}
       {% set instagram = item.content['#paragraph'].get('field_instagram').getValue()[0].uri %}
       {% set twitter = item.content['#paragraph'].get('field_twitter').getValue()[0].uri %}
-      {% if facebook %}<li class="facebook"><a href="{{ facebook }}">{{ 'Facebook' | t }}</a></li> {% endif %}
-      {% if instagram %}<li class="instagram"><a href="{{ instagram }}">{{ 'Instagram' | t }}</a></li>{% endif %}
-      {% if twitter %}<li class="twitter"><a href="{{ twitter }}">{{ 'Twitter' | t }}</a></li>{% endif %}
+      {% if facebook %}
+        <li class="flex mb-20">
+          <sfgov-icon symbol="arrow-right" class="text-white mr-20"></sfgov-icon>
+          <a class="text-white text-body" href="{{ facebook }}">{{ 'Facebook' | t }}</a>
+        </li>
+      {% endif %}
+      {% if instagram %}
+        <li class="flex mb-20">
+          <sfgov-icon symbol="arrow-right" class="text-white mr-20"></sfgov-icon>
+          <a class="text-white text-body" href="{{ instagram }}">{{ 'Instagram' | t }}</a>
+        </li>
+      {% endif %}
+      {% if twitter %}
+        <li class="flex mb-20">
+          <sfgov-icon symbol="arrow-right" class="text-white mr-20"></sfgov-icon>
+          <a class="text-white text-body" href="{{ twitter }}">{{ 'Twitter' | t }}</a>
+        </li>
+      {% endif %}
     {% endfor %}
   </ul>
 {% endif %}
