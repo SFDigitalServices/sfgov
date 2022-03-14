@@ -22,6 +22,14 @@ jQuery(function () {
           $(this).wrapInner('<details></details>');
         }
       });
+      // Department/Topic resource mobile accordions
+      $('.sfgov-resources .paragraph--type--other-info-card').each(function(){
+        if (!$(this).find('summary').length) {
+          $(this).find('.__title').wrap('<summary class="details__summary"></summary>');
+          $(this).find('.__resources').wrap('<div class="details__content"></div>');
+          $(this).wrapInner('<details></details>');
+        }
+      });
     }
     
     // Check accordion status on window resize, add/remove markup
@@ -44,6 +52,21 @@ jQuery(function () {
           }
           if ($(this).find('.sfgov-dept-services-section-content').parent().hasClass('details__content')) {
             $(this).find('.sfgov-dept-services-section-content').unwrap();
+          }
+        });
+        // Remove resources accordion
+        $('.sfgov-resources .paragraph--type--other-info-card .__title').each(function(){
+          if ($(this).parent().is('summary')) {
+            $(this).unwrap();
+          }
+          if ($(this).parent().is('details')) {
+            $(this).unwrap();
+          }
+        });
+        $('.sfgov-resources .paragraph--type--other-info-card').each(function(){
+          console.log($(this));
+          if ($(this).find('.__resources').parent().hasClass('details__content')) {
+            $(this).find('.__resources').unwrap();
           }
         });
         // Remove More Services accordion
@@ -79,6 +102,14 @@ jQuery(function () {
           if (!$(this).find('summary').length) {
             $(this).find('h5').wrap('<summary class="details__summary"></summary>');
             $(this).find('.sfgov-container-three-column').wrap('<div class="details__content"></div>');
+            $(this).wrapInner('<details></details>');
+          }
+        });
+        // Add resources accordion
+        $('.sfgov-resources .paragraph--type--other-info-card').each(function(){
+          if (!$(this).find('summary').length) {
+            $(this).find('.__title').wrap('<summary class="details__summary"></summary>');
+            $(this).find('.__resources').wrap('<div class="details__content"></div>');
             $(this).wrapInner('<details></details>');
           }
         });
