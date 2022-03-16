@@ -180,12 +180,12 @@
   <a name="about"></a>
   <div class="bg-blue-dark py-40 lg:py-60">
     <div class="sfgov-dept-about">
-      <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ content.field_about_or_description['#title'] }}</h2>
+      <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ content.field_about_or_description['#title'] | t }}</h2>
       {# parent department / part of #}
       {% if node.field_parent_department.0 is not empty %}
         <div class="sfgov-dept-about-public-bodies">
           <h3 class="text-white text-body font-medium m-0 mb-28">
-            {{ node.field_parent_department.fieldDefinition.label }}:
+            {{ node.field_parent_department.fieldDefinition.label | t }}:
             <a class="text-white font-regular" href="{{ path('entity.node.canonical', {'node': node.field_parent_department.entity.nid.value}) }}">
               {{ node.field_parent_department.entity.title.value }}
             </a>
