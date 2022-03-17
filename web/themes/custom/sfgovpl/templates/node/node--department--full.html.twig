@@ -193,7 +193,7 @@
         </div>
       {% endif %}
       <div class="lg:flex">
-        <div class="text-white text-big-desc-desktop lg:w-2/3"> {# left hand side #}
+        <div class="text-white text-big-desc-mobile lg:text-big-desc-desktop lg:w-2/3"> {# left hand side #}
           <div class="mb-24 lg:mb-60">
             {# about description #}
             {% if content.field_about_or_description|render|striptags %}
@@ -215,11 +215,15 @@
             </div>
           {% endif %}
           
-          {# divisions #}
-          {{ content.field_divisions }}
+          {% if content.field_divisions|render|striptags|trim and content.field_public_bodies|render|striptags|trim %}
+            <div class="mb-60">
+              {# divisions #}
+              {{ content.field_divisions }}
 
-          {# public bodies #}
-          {{ content.field_public_bodies }}
+              {# public bodies #}
+              {{ content.field_public_bodies }}
+            </div>
+          {% endif %}
         </div>
 
         <div class="text-white flex flex-col-reverse lg:block lg:flex-none lg:w-1/3 lg:pl-60"> {# right hand side #}
