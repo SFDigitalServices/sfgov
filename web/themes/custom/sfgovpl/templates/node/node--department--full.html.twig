@@ -180,7 +180,7 @@
   <a name="about"></a>
   <div class="bg-blue-dark py-40 lg:py-60">
     <div class="sfgov-dept-about">
-      <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ content.field_about_or_description['#title'] | t }}</h2>
+      <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
       {# parent department / part of #}
       {% if node.field_parent_department.0 is not empty %}
         <div class="sfgov-dept-about-public-bodies">
@@ -194,14 +194,13 @@
       {% endif %}
       <div class="lg:flex">
         <div class="text-white text-big-desc-mobile lg:text-big-desc-desktop lg:w-2/3"> {# left hand side #}
-          <div class="mb-24 lg:mb-60">
-            {# about description #}
-            {% if content.field_about_or_description|render|striptags %}
+          {# about description #}
+          {% if content.field_about_or_description|render|striptags %}
+            <div class="mb-24 lg:mb-60">
               {{ content.field_about_or_description | raw }}
-            {% elseif content.field_about_description|render|striptags %}
-              {{ content.field_about_description | raw }}
-            {% endif %}
-          </div>
+            </div>
+          {% endif %}
+
           {# this element and text is hard coded in a custom module #}
           {# it's presence is determined by the existence of an about page for the node referenced in field_parent_department #}
           {# @see web/modules/custom/sfgov_about/sfgov_about.module #}
@@ -215,6 +214,7 @@
             </div>
           {% endif %}
           
+          {# divisions and public bodies #}
           {% if content.field_divisions|render|striptags|trim and content.field_public_bodies|render|striptags|trim %}
             <div class="mb-60">
               {# divisions #}
@@ -233,6 +233,7 @@
               {{ content.field_social_media }}
             </div>
           {% endif %}
+
           {# call to action #}        
           {% if content.field_call_to_action|render|striptags|trim %}
             <div class="mb-60 lg:mb-0">
