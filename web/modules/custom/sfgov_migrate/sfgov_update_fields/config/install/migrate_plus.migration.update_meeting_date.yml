@@ -1,0 +1,16 @@
+id: update_meeting_date
+migration_group: update_fields
+label: start_date and end_date to smart_date (meeting)
+source:
+  bundle: meeting
+  plugin: content_entity:node
+destination:
+  default_bundle: meeting
+  overwrite_properties:
+   - field_smart_date
+process:
+  field_smart_date:
+    plugin: date_to_smart_date
+    source:
+      - field_start_date/0/value
+      - field_end_date/0/value
