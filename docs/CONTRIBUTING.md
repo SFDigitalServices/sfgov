@@ -18,6 +18,8 @@ We are in the process of setting up several mechanisms for code quality enforcem
 ### PHP
 PHP files are linted with [PHP CodeSniffer] and the [Drupal coding standards].
 
+### Twig
+[Twig] is Drupal's native templating language. We **will** lint Twig templates with [twig-lint](https://github.com/asm89/twig-lint).
 ### CSS
 CSS source files (including Sass and SCSS formats) **will be** linted with [stylelint].
 
