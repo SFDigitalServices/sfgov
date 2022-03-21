@@ -7,7 +7,7 @@ Welcome, and thank you for contributing! This repo contains the source code that
 ## Code quality
 Our goal is to ensure a base level of code quality through code "linters": language-specific software that reads code files, checks them against agreed-upon formatting and structural rules, and reports any issues back to the author.
 
-### Enforcement
+### Standards
 We are in the process of setting up several mechanisms for code quality enforcement:
 
 - We **will** have a [`CODEOWNERS` file][codeowners] to automate pull request reviews of specific files from the Digital Services team.
