@@ -1,0 +1,25 @@
+uuid: 0c6d77a7-3452-42bf-896f-fe86b629f9c3
+langcode: en
+status: true
+dependencies: {  }
+id: update_meeting_date
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: update_fields
+label: 'start_date and end_date to smart_date (meeting)'
+source:
+  bundle: meeting
+  plugin: 'content_entity:node'
+process:
+  field_smart_date:
+    plugin: date_to_smart_date
+    source:
+      - field_start_date/0/value
+      - field_end_date/0/value
+destination:
+  default_bundle: meeting
+  overwrite_properties:
+    - field_smart_date
+migration_dependencies: null
