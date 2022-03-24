@@ -30,7 +30,7 @@
  */
 #}
 {% if items %}
-  <nav class="sfgov-pagination" role="navigation" aria-labelledby="sfgov-pagination__heading">
+  <nav class="sfgov-pagination hidden lg:block" role="navigation" aria-labelledby="sfgov-pagination__heading">
     <h4 id="sfgov-pagination__heading" class="visually-hidden">{{ 'Pagination'|t }}</h4>
     <ul class="sfgov-pagination__items">
       {# Print previous item if we are not on the first page. #}
@@ -78,53 +78,65 @@
     </ul>
   </nav>
 
+  {# small screen navigation #}
 
-  <nav lg:hidden>
-    <ul class="list-none p-0 m-0 flex">
-      <li>
-        <a><sfgov-icon symbol="arrow-left"></sfgov-icon></a>
-      </li>
+  {% if items.next %} {# we are nearing the last pages #}
+    {% set lastPage = items.pages | keys | last %}
+  {% endif %}
+
+  <nav class="mb-96 lg:hidden">
+    <ul class="list-none p-0 m-0 flex w-full justify-center items-center">
+      {% if items.previous %}
+        <li class="pr-8">
+          <a class="text-blue-bright p-8 rounded border-solid border-3 flex" href="{{ items.previous.href }}"><sfgov-icon symbol="arrow-left"></sfgov-icon></a>
+        </li>
+      {% endif %}
       
-      <li>
-
       {% if current <= 3 %}
         {% for key, item in items.pages %}
           {% if loop.index <= 3 %}
             {% set currentClass = "" %}
             {% if current == key %}
-              {% set currentClass = "text-title-lg" %}            
-            {% endif %} 
-            <span class="{{ currentClass }}">{{ key }}</span>
+              {% set currentClass = "text-blue-dark no-underline" %}            
+            {% endif %}
+            <li class="px-8"><a class="text-title-xs font-medium {{ currentClass }}" href="{{ item.href }}">{{ key }}</a></li>
+          {% endif %}
+        {% endfor %}
+        <li class="px-8 font-medium">...</li>
+      {% elseif current > lastPage - 3 %} 
+        <li class="px-8 font-medium">...</li>
+        {% for key, item in items.pages %}
+          {% if loop.index > loop.length - 3 %}
+            {% set currentClass = "" %}
+            {% if current == key %}
+              {% set currentClass = "text-blue-dark no-underline" %}            
+            {% endif %}
+            <li class="px-8"><a class="text-title-xs font-medium {{ currentClass }}" href="{{ item.href }}">{{ key }}</a></li>
           {% endif %}
         {% endfor %}
       {% else %}
-        <li>...</li>
+        <li class="px-8 font-medium">...</li>
         {% for key, item in items.pages %}
           {% if key == current %}
             {% if key >= 3 %}
-              {{ key - 1 }} 
-              <span class="text-title-lg">{{ key }}</span> 
-              {{ key + 1 }}
+              {% set prevKey = key - 1 %}
+              {% set prevHref = items.pages[prevKey].href %}
+              {% set nextKey = key + 1 %}
+              {% set nextHref = items.pages[nextKey].href %}
+              <li class="px-8"><a class="text-title-xs font-medium" href="{{ prevHref }}">{{ prevKey }}</a></li>
+              <li class="px-8"><a class="text-title-xs font-medium text-blue-dark no-underline" href="{{ item.href }}">{{ key }}</a></li>
+              <li class="px-8"><a class="text-title-xs font-medium" href="{{ nextHref }}">{{ nextKey }}</a></li>
             {% endif %}
           {% endif %}
         {% endfor %}
+        <li class="px-8 font-medium">...</li>
       {% endif %}
 
-
-      {# {% if current >= 3 %}
-      ...
+      {% if items.next %}
+        <li class="pl-8">
+          <a class="text-blue-bright p-8 rounded border-solid border-3 flex" href="{{ items.next.href }}"><sfgov-icon symbol="arrow-right"></sfgov-icon></a>
+        </li>
       {% endif %}
-
-#}
-      
-      {% if ellipses.next %}
-      ...
-      {% endif %} 
-      </li>
-
-      <li>
-        <a><sfgov-icon symbol="arrow-right"></sfgov-icon></a>
-      </li>
     </ul>
   </nav>
 
