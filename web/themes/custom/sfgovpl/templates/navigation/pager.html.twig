@@ -85,39 +85,43 @@
         <a><sfgov-icon symbol="arrow-left"></sfgov-icon></a>
       </li>
       
-      {% for key, item in items.pages %}
-        {# {% set showHideClass = "hidden" %}
-        {% if key <= 3 %}
-          <li>
-            <a href="{{ item.href }}">{{ current }}</a>
-          </li>
-        {% else %}
-          
-        {% endif %}
-        <div class="px-8 {{ showHideClass }}">{{ key }}</div> #}
-        {% if current <= 3 and key <= 3%}
-          <li>
-            <a href="{{ item.href }}">{{ key }}</a>
-          </li>
-        {% else %}        
-          {% if current == key %}
-            {% if items.previous %}
-              <li>...</li>
-              <li>
-                {{ current - 1 }}
-              </li>
-            {% endif %}
-            <li>
-              <a href="{{ item.href }}">{{ current }}</a>
-            </li>
-            {% if items.next %}
-              <li>
-                {{ current + 1 }}
-              </li>
+      <li>
+
+      {% if current <= 3 %}
+        {% for key, item in items.pages %}
+          {% if loop.index <= 3 %}
+            {% set currentClass = "" %}
+            {% if current == key %}
+              {% set currentClass = "text-title-lg" %}            
+            {% endif %} 
+            <span class="{{ currentClass }}">{{ key }}</span>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <li>...</li>
+        {% for key, item in items.pages %}
+          {% if key == current %}
+            {% if key >= 3 %}
+              {{ key - 1 }} 
+              <span class="text-title-lg">{{ key }}</span> 
+              {{ key + 1 }}
             {% endif %}
           {% endif %}
-        {% endif %}
-      {% endfor %}
+        {% endfor %}
+      {% endif %}
+
+
+      {# {% if current >= 3 %}
+      ...
+      {% endif %}
+
+#}
+      
+      {% if ellipses.next %}
+      ...
+      {% endif %} 
+      </li>
+
       <li>
         <a><sfgov-icon symbol="arrow-right"></sfgov-icon></a>
       </li>
