@@ -92,14 +92,24 @@
 
       <div {{ content_attributes.addClass(bundle ~ '__content') }}>
         {% block body %}
-          {{
+          {# {{
             content|without(
               'links',
               'field_start_date',
               'field_end_date',
               'field_address'
             )
-          }}
+          }} #}
+
+          {{ content }}
+
+
+
+          <div class="ant-test">
+            {{ content.body }}
+            {{ content.field_smart_date[0]['#date'] }}
+            {{ content.field_smart_date[0]['#time'] }}
+          </div>
 
           <div class="__footer">
             <div class="field __time field__item">
