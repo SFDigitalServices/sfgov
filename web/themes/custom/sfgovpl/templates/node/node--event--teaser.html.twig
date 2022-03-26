@@ -1,34 +1,34 @@
-{% block body %}
-  {% set start_date_time = content.field_start_date.0['#attributes']['datetime'] %}
-  {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
-  <div class="event--teaser">
-    <div class="event-details">
-      <a class="inline-block font-medium mb-8 text-title-xs" href="{{ url }}" rel="bookmark">{{ label }}</a>
-      <div class=" mb-8 font-medium text-body">
-        {% if content.field_smart_date[0]['#date'] %}
-          {{ content.field_smart_date[0]['#date'] }}
-        {% else %}
-          {{ start_date_time|date("l, F j") }}
+{# teaser display setting renders checkbox value as a string stuffed in array keyed by #markup #}
+{% set online = content.field_location_online.0['#markup'] == "On" ? true : false %}
+{% set inPerson = content.field_location_in_person.0['#markup'] == "On" ? true : false %}
+
+<div class="event--teaser">
+  <div class="event-details">
+    <a class="inline-block font-medium mb-8 text-title-xs" href="{{ url }}" rel="bookmark">{{ label }}</a>
+    <div class=" mb-8 font-medium text-body">
+      {{ content.field_smart_date[0]['#date'] }}
+    </div>
+    <div class="text-body mb-8">
+      {{ content.field_description }}
+    </div>
+    <div class="event-meta mb-8 text-body lg:flex">
+      <div class="event-time flex mb-16 lg:mb-0 lg:w-1/2">
+        <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>{{ content.field_smart_date[0]['#time'] }}
+      </div>
+      <div class="event-location flex lg:w-1/2">
+        {% if online or inPerson %}
+          <sfgov-icon symbol="location" class="mr-20"></sfgov-icon>
         {% endif %}
-      </div>
-      <div class="text-body">
-        {{ content.field_description }}
-      </div>
-      <div class="event-meta pt-16 text-body lg:flex">
-        <div class="event-time flex mb-16 lg:mb-0 lg:w-1/2">
-          <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>
-          {% if content.field_smart_date[0]['#time'] %}
-            {{ content.field_smart_date[0]['#time'] }}
-          {% else %}
-            {{ start_date_time|date("g:i a") }} {{ 'to'|t }} {{ end_date_time|date("g:i a") }}
+        {% if online and inPerson %}
+          {{ "Online and in person" | t }}
+        {% elseif inPerson %}
+          {% if content.field_address|render %}
+            {{ content.field_address[0]['#location'].title.value }}
           {% endif %}
-        </div>
-        {% if content.field_address|render %}
-          <div class="event-location flex lg:w-1/2">
-            <sfgov-icon symbol="location" class="mr-20"></sfgov-icon>{{ content.field_address[0]['#location'].title.value }}
-          </div>
+        {% elseif online %}
+          {{ "Online" | t }}
         {% endif %}
       </div>
     </div>
   </div>
-{% endblock body %}
+</div>

@@ -49,86 +49,10 @@
     }
   }
 
-  .view-grouping:nth-child(n+2) {
-    @media (min-width: $mobile-screen) {
-      h2 {
-        margin-top: 100px;
-      }
-    }
-  }
-
-  h2.group {
-    @include fs-title-2;
-    margin-bottom: 60px;
-  }
-
-  h3.group {
-    @include fs-title-4;
-    margin-bottom: 20px;
-  }
-
-  .views-row {
-    margin-bottom: 40px;
-
-    @media (max-width: $mobile-screen) {
-      &:last-child {
-        margin: 0;
-      }
-    }
-
-    article {
-      .article--teaser__title {
-        @include fs-title-5;
-      }
-      .meeting__content {
-
-        .field--type-smartdate {
-          font-weight: 600;
-        }
-        .__footer {
-          display: flex;
-          margin-top: 1rem;
-          @media (max-width: $mobile-screen) {
-            flex-direction: column;
-          }
-
-          .__time,
-          .__address {
-            @media (min-width: $mobile-screen) {
-              width: 50%;
-            }
-            @media (max-width: $mobile-screen) {
-              margin-bottom: 10px;
-            }
-            position: relative;
-            padding-left: 35px;
-
-            &:before {
-              content: ' ';
-              width: 20px;
-              height: 20px;
-              position: absolute;
-              top: 3px;
-              left: 0;
-            }
-
-            p {
-              margin: 0;
-            }
-
-            .country {
-              display: none;
-            }
-          }
-
-          .__time:before {
-            @include background-image('icons/clock_2-outlined.svg');
-          }
-          .__address:before {
-            @include background-image('icons/location-2.svg');
-          }
-        }
-      }
+  .meeting--teaser {
+    p {
+      margin: 0;
+      padding: 0;
     }
   }
 
@@ -159,12 +83,6 @@
       }
     }
   }
-
-  // &--page_past {
-  //   .meeting__content .__footer {
-  //     display: none !important;
-  //   }
-  // }
 }
 
 /* purgecss end ignore */
