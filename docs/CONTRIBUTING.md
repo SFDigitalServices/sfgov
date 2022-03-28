@@ -7,16 +7,19 @@ Welcome, and thank you for contributing! This repo contains the source code that
 ## Code quality
 Our goal is to ensure a base level of code quality through code "linters": language-specific software that reads code files, checks them against agreed-upon formatting and structural rules, and reports any issues back to the author.
 
-### Checks
-We are in the process of setting up several checkpoints for code quality:
+### Standards
+We are in the process of setting up several mechanisms for code quality validation:
 
 - [ ] We **will** have a [`CODEOWNERS` file][codeowners] to automate pull request reviews of specific files from the Digital Services team.
 - [ ] We **will** run linters in as part of our [CI](#continuous-integration) workflow.
-- [ ] We **will** suggest development tools that lint code in editors whenever possible.
+- [ ] We **will** suggest development tools that lint code in our [editors](#editor-support) whenever possible.
 - [ ] We **will** use [git precommit hooks]() to run linters on our code before they're committed.
 
 ### PHP
 PHP files are linted with [PHP CodeSniffer][] ("phpcs") and the [Drupal coding standards].
+
+### Twig
+[Twig] is Drupal's native templating language. We **will** lint Twig templates with [twig-lint](https://github.com/asm89/twig-lint).
 
 ### CSS
 CSS source files (including Sass and SCSS formats) **will be** linted with [stylelint].
@@ -27,6 +30,11 @@ JavaScript source files **will be** linted with [eslint] and the [sfgov preset][
 ## Continuous integration
 We run our continuous integration workflows on [CircleCI](). Our
 [workflows](../.circleci) are based on [a template](https://github.com/pantheon-systems/example-drops-8-composer) provided by our hosting provider, [Pantheon].
+
+## Editor support
+Whenever possible, we will add and maintain editor configuration files that support local development, code quality and testing tools, and generally improve the developer experience. Our initial focus is on [VS Code], but we recognize that some PHP developers may prefer to use [PhpStorm].
+
+Pending the resolution of billing issues, we will also investigate the use of [GitHub Codespaces][codespaces] to speed up development without the need for a local environment.
 
 ## Best practices
 We encourage, but do not yet enforce, the practices described in this section.
@@ -52,3 +60,7 @@ A brief description of the best practice.
 [ui strings]: https://www.drupal.org/project/string_translation_ui
 [pantheon]: https://pantheon.io/
 [design system]: https://design-system.sf.gov
+[twig]: https://twig.symfony.com/
+[vs code]: https://code.visualstudio.com/
+[phpstorm]: https://www.jetbrains.com/phpstorm/
+[codespaces]: https://github.com/features/codespaces
