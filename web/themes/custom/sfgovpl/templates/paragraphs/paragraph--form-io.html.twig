@@ -79,7 +79,7 @@
     if (drupalSettings.amplitude.events.length) {
       drupalSettings.amplitude.events.find(function(obj) {
         if (obj.name === 'Page view') {
-          amplitudeData = JSON.parse(obj.properties)
+          amplitudeData = safeJSONParse(obj.properties)
         }
       })
     }
