@@ -32,9 +32,9 @@ We run our continuous integration workflows on [CircleCI](). Our
 [workflows](../.circleci) are based on [a template](https://github.com/pantheon-systems/example-drops-8-composer) provided by our hosting provider, [Pantheon].
 
 ## Editor support
-Whenever possible, we will add and maintain editor configuration files that support local development, code quality and testing tools, and generally improve the developer experience. Our initial focus is on [VS Code], but we recognize that some PHP developers may prefer to use [PhpStorm].
+Whenever possible, we will add and maintain editor configuration files that support local development, code quality and testing tools, and generally improve the developer experience. Our initial focus is on [VS Code], but we recognize that some PHP developers may prefer to use [PhpStorm] and hope to configure it similarly.
 
-Pending the resolution of billing issues, we will also investigate the use of [GitHub Codespaces][codespaces] to speed up development without the need for a local environment.
+Pending the resolution of some billing issues, we will also investigate the use of [GitHub Codespaces][codespaces] to enable development without having to run the entire app environment locally.
 
 ## Best practices
 We encourage, but do not yet enforce, the practices described in this section.
