@@ -1,0 +1,15 @@
+diff --git a/web/modules/contrib/media_entity_file_replace/media_entity_file_replace.module b/web/modules/contrib/media_entity_file_replace/media_entity_file_replace.module
+index 0f09f5dea..caa7e5c49 100644
+--- a/web/modules/contrib/media_entity_file_replace/media_entity_file_replace.module
++++ b/web/modules/contrib/media_entity_file_replace/media_entity_file_replace.module
+@@ -140,8 +140,8 @@ function media_entity_file_replace_form_media_form_alter(&$form, FormStateInterf
+     $form['replace_file']['replacement_file']['#description'] = \Drupal::service('renderer')->renderPlain($helpText);
+ 
+     $form['replace_file']['keep_original_filename'] = [
+-      '#title' => t('Overwrite original file'),
+-      '#description' => t('When checked, the original filename is kept and its contents are replaced with the new file. If unchecked, the filename of the replacement file will be used, and the original file may be deleted if no previous revision references it (depending on your specific site configuration).'),
++      '#title' => t('Keep the original file name'),
++      '#description' => t('Check this box if you want to keep the original file name when you replace the file.'),
+       '#type' => 'checkbox',
+       '#default_value' => TRUE,
+     ];
