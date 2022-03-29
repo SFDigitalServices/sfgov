@@ -50,7 +50,7 @@ function sfgovpl_preprocess_node(&$variables) {
           break;
       }
     }
-
+    $variables['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 }
 
@@ -741,7 +741,7 @@ function profile_page_fields($node) {
     // Biography
     if($node->hasField('field_biography')) {
       // Get trimmed profile bio
-      $source = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      $source = \Drupal::service('entity.repository')->getTranslationFromContext($node);
       $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
       if ($source && $source->hasField('field_biography') && $source->access('view')) {
         $value = $source->get('field_biography');
