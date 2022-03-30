@@ -13,7 +13,12 @@
     </div>
     <div class="event-meta mb-8 text-body lg:flex">
       <div class="event-time flex mb-16 lg:mb-0 lg:w-1/2">
-        <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>{{ content.field_smart_date[0]['#time'] }}
+        <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>
+        {% if content.field_smart_date[0]['#time'] %}
+          {{ content.field_smart_date[0]['#time'] }}
+        {% else %}
+          {{ 'All day' | t }}
+        {% endif %}
       </div>
       <div class="event-location flex lg:w-1/2">
         {% if online or inPerson %}
