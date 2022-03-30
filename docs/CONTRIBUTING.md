@@ -55,12 +55,13 @@ We have a [design system], and we should use it. Replacing the existing rat's ne
 - Simpler developer experience: one file (the template) to edit, rather than two (the template and the Sass)
 - Fewer ad-hoc class naming conventions to manage
 
-TL;DR: **Don't add custom CSS** if you can use the system's utility classes.
+TL;DR: **Don't add custom CSS** if you can use the system's utility classes. There is no explicit documentation of the available utilities, but cross-referencing the [tailwind documentation][tailwind] with [our configuration](https://github.com/SFDigitalServices/design-system/blob/main/tailwind.config.js) should help. If you have any questions, visit the [#proj-design-system][design system slack] or message `@shawn` directly.
 
 
 [codeowners]: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 [codespaces]: https://github.com/features/codespaces
 [design system]: https://design-system.sf.gov
+[design system slack]: https://sfdigitalservices.slack.com/archives/CEERV5DCG
 [drupal]: https://www.drupal.org/
 [drupal coding standards]: https://www.drupal.org/docs/develop/standards/coding-standards
 [eslint]: https://eslint.org/
@@ -70,6 +71,7 @@ TL;DR: **Don't add custom CSS** if you can use the system's utility classes.
 [phpstorm]: https://www.jetbrains.com/phpstorm/
 [sf.gov]: https://sf.gov
 [stylelint]: https://stylelint.io
+[tailwind]: https://v2.tailwindcss.com/docs
 [tailwind utilities]: https://v2.tailwindcss.com/docs/utility-first
 [twig]: https://twig.symfony.com/
 [ui strings]: https://www.drupal.org/project/string_translation_ui
