@@ -3,6 +3,7 @@
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
+use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
 
 /**
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
@@ -253,4 +254,87 @@ function migratePeopleSection($node, $field_name, $peoples) {
   $node->setRevisionCreationTime(Drupal::time()->getRequestTime());
   $node->setRevisionUserId($user_id);
   $node->save();
+}
+
+function sfgov_utilities_deploy_03_resources() {
+  $rm = new ResourceMigration();
+  
+  $rm->migrateAboutAndPublicBodyResources();
+  $rm->migrateCampaignResources();
+  $rm->migrateTopicsAndDepartments();
+  $rm->migrateResourceCollections();
+}
+
+function sfgov_utilities_deploy_04_info_page() {
+  $nids = \Drupal::entityQuery('node')->condition('type','information_page')->execute();
+  $nodes = Node::loadMultiple($nids);
+  
+  $report = [];
+  
+  foreach($nodes as $node) {
+    $nid = $node->id();
+    $fieldDept = $node->get('field_dept');
+    $fieldDeptValues = $fieldDept->getValue();
+    $fieldDeptCount = count($fieldDeptValues);
+    if($fieldDeptCount > 0) {
+      $fieldDeptOrPublicBody = $node->get('field_public_body');
+      for($i=0; $i<$fieldDeptCount; $i++) {
+        $refId = $fieldDeptValues[$i]['target_id'];
+        $oldRefNode = Node::load($refId);
+  
+        if(!empty($oldRefNode)) { // some older nodes may have empty references, ignore them
+          $report[] = [
+            'nid' => $nid,
+            'node_title' => $node->getTitle(),
+            'url' => 'https://sf.gov/node/' . $nid,
+            'field_dept_ref' => $oldRefNode->getTitle(),
+            'field_dept_ref_id' => $oldRefNode->id(),
+          ];
+    
+          // assign to new field
+          $fieldDeptOrPublicBody[] = [
+            'target_id' => $refId
+          ];
+        }
+  
+        // remove old ref
+        $fieldDept->removeItem(0);
+      }
+    }
+    $node->save();
+  }
+}
+
+// migrate department content type field_about_description value to field_about_or_description
+function sfgov_utilities_deploy_05_dept_page_about() {
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
+  $user = reset($users);
+  $user_id = $user->id();
+  
+  $nids = \Drupal::entityQuery('node')->condition('type','department')->execute();
+  $nodes = Node::loadMultiple($nids);
+  
+  foreach($nodes as $node) {
+    $nid = $node->id();
+    $nodeTitle = $node->getTitle();
+    $fieldAboutDescription = $node->field_about_description->value;
+    $fieldAboutOrDescription = $node->field_about_or_description->value;
+  
+    // field_about_or_description is preferred over field_about_description
+    // process only if a dept's field_about_or_description is empty and field_about_description is not empty
+  
+    if(empty($fieldAboutOrDescription) && !empty($fieldAboutDescription)) {
+      // print_r($fieldAboutDescription);
+      echo "($nid) $nodeTitle\n";
+      echo "\t" . $fieldAboutDescription;
+      echo "\n";
+      $node->field_about_or_description->value = $fieldAboutDescription;
+  
+      $node->setNewRevision(TRUE);
+      $node->revision_log = 'Moved value of field_about_description to field_about_or_description';
+      $node->setRevisionCreationTime(Drupal::time()->getRequestTime());
+      $node->setRevisionUserId($user_id);
+      $node->save();
+    }
+  }
 }

@@ -50,7 +50,7 @@ function sfgovpl_preprocess_node(&$variables) {
           break;
       }
     }
-
+    $variables['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 }
 
@@ -77,8 +77,6 @@ function sfgovpl_preprocess_node__meeting__full(&$variables) {
         /** @var \Drupal\sfgov_video\VideoService $video_service */
         $video_service = \Drupal::service('sfgov_video.utilities');
         $video_id = $video_service->getVideoId($video_url);
-        // Pass variable with video captions.
-        $variables['video_captions'] = $video_service->getYoutubeTranscript($video_id);
         // Video captions link
         $url = Url::fromUserInput('/video/' . $video_id);
         $link = Link::fromTextAndUrl(t('Open in another tab'), $url);
@@ -327,6 +325,7 @@ function public_body_page_fields($node) {
     'featured_items' => array(),
     'services' => array(),
   );
+
   if($node) {
     if($node->hasField('field_people')) {
       $aboutPeople = $node->get('field_people');
@@ -358,40 +357,7 @@ function public_body_page_fields($node) {
         }
       }
     }
-    if ($otherInfo = $node->get('field_other_info')->getValue()) {
-      foreach ($otherInfo as $otherInfoKey => $value) {
-        $otherInfoParagraph = Paragraph::load($value['target_id']);
-        $theFields['other_info'][$otherInfoKey] = [
-          'bundle' => $otherInfoParagraph->bundle(),
-          'title' => $otherInfoParagraph->hasTranslation($currentLanguageId) ? $otherInfoParagraph->getTranslation($currentLanguageId)->get('field_title')->value : $otherInfoParagraph->field_title->value,
-          'content' => [],
-        ];
 
-        switch ($otherInfoParagraph->bundle()) {
-          case 'other_info_card':
-            foreach ($otherInfoParagraph->get('field_resources')->getValue() as $value) {
-              $otherInfoContent = Paragraph::load($value['target_id']);
-
-              $theFields['other_info'][$otherInfoKey]['content'][] = [
-                'id' => $otherInfoContent->id(),
-                'title' => $otherInfoContent->field_title->value,
-                'description' => $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL,
-                'url' => $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL,
-              ];
-            }
-            break;
-          case 'other_info_document':
-            foreach ($otherInfoParagraph->field_file as $value) {
-              $theFields['other_info'][$otherInfoKey]['content'][] = [
-                'label' => !empty($value->entity) ? $value->entity->label() : '',
-                'url' => !empty($value->entity->field_media_file->entity) ? file_create_url($value->entity->field_media_file->entity->getFileUri()) : NULL,
-                'link' => !empty($value->entity->field_document_url->uri) ? Url::fromUri($value->entity->field_document_url->uri)->toString() : NULL,
-              ];
-            }
-            break;
-        }
-      }
-    }
     if($node->hasField('field_address')) {
       $addressId = $node->get('field_address')->getValue() ? $node->get('field_address')->getValue()[0]['target_id'] : null;
       if($addressId) {
@@ -421,6 +387,7 @@ function public_body_page_fields($node) {
         }
       }
     }
+
     if($node->hasField('field_phone_numbers')) {
       $phoneNumbers = $node->get('field_phone_numbers');
       if($phoneNumbers->getValue()) {
@@ -443,6 +410,7 @@ function public_body_page_fields($node) {
         }
       }
     }
+
     if($node->hasField('field_email')) {
       $emailField = $node->get('field_email');
       if($emailField->getValue()) {
@@ -458,6 +426,7 @@ function public_body_page_fields($node) {
         }
       }
     }
+
     if($node->hasField('field_about_description')) {
       $aboutField = $node->get('field_about_description');
       if($aboutField->getValue()) {
@@ -465,6 +434,7 @@ function public_body_page_fields($node) {
         $theFields['about'] = $aboutValue ? $aboutValue : null;
       }
     }
+
     if($node->hasField('field_departments')) {
       $departmentsField = $node->get('field_departments');
       if($departmentsFieldValue = $departmentsField->getValue()) {
@@ -481,6 +451,71 @@ function public_body_page_fields($node) {
       }
     }
   }
+
+  if ($otherInfo = $node->get('field_other_info')->getValue()) {
+    foreach ($otherInfo as $otherInfoKey => $value) {
+      $otherInfoParagraph = Paragraph::load($value['target_id']);
+      $theFields['other_info'][$otherInfoKey] = [
+        'bundle' => $otherInfoParagraph->bundle(),
+        'title' => $otherInfoParagraph->hasTranslation($currentLanguageId) ? $otherInfoParagraph->getTranslation($currentLanguageId)->get('field_title')->value : $otherInfoParagraph->field_title->value,
+        'content' => [],
+      ];
+
+      switch ($otherInfoParagraph->bundle()) {
+        case 'other_info_card':
+          foreach ($otherInfoParagraph->get('field_resources')->getValue() as $value) {
+            $otherInfoContent = Paragraph::load($value['target_id']);
+            $id = '';
+            $title = '';
+            $description = '';
+            $url = '';
+            if($otherInfoContent->getType() == 'resource_entity') {
+              $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
+              /** @var \Drupal\eck\Entity\EckEntity $resource */
+              $resource = $resource_storage->load($otherInfoContent->get('field_resource')[0]->target_id);
+              $url = $resource->get('field_url')->uri ?? '';
+              $title = $resource->get('title')->value;
+              $description = $resource->get('field_description')
+                ? $resource->field_description->value
+                : render($resource->get('field_description')->value);
+            } else if($otherInfoContent->getType() == 'resource_node') {
+              $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+              /** @var \Drupal\node\Entity\Node $node */
+              $node = $node_storage->load($otherInfoContent->get('field_node')[0]->target_id);
+              $id = $node->id();
+              $description = '';
+              if($node->hasField('field_description')) {
+                $description = $node->get('field_description') ? $node->field_description->value : render($node->get('field_description')->value);
+              }
+              $title = $node->getTitle();
+              $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+            } else {
+              $id = $otherInfoContent->id();
+              $title = $otherInfoContent->field_title->value;
+              $description = $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL;
+              $url = $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL;
+            }
+            $theFields['other_info'][$otherInfoKey]['content'][] = [
+              'id' => $id,
+              'title' => $title,
+              'description' => $description,
+              'url' => $url,
+            ];
+          }
+          break;
+        case 'other_info_document':
+          foreach ($otherInfoParagraph->field_file as $value) {
+            $theFields['other_info'][$otherInfoKey]['content'][] = [
+              'label' => !empty($value->entity) ? $value->entity->label() : '',
+              'url' => !empty($value->entity->field_media_file->entity) ? file_create_url($value->entity->field_media_file->entity->getFileUri()) : NULL,
+              'link' => !empty($value->entity->field_document_url->uri) ? Url::fromUri($value->entity->field_document_url->uri)->toString() : NULL,
+            ];
+          }
+          break;
+      }
+    }
+  }
+
   return $theFields;
 }
 
@@ -706,7 +741,7 @@ function profile_page_fields($node) {
     // Biography
     if($node->hasField('field_biography')) {
       // Get trimmed profile bio
-      $source = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      $source = \Drupal::service('entity.repository')->getTranslationFromContext($node);
       $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
       if ($source && $source->hasField('field_biography') && $source->access('view')) {
         $value = $source->get('field_biography');

@@ -59,6 +59,42 @@
     padding-top: 80px;
   }
 
+  .hero-banner--logo-wrapper {
+    @include media($medium-screen) {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .hero-banner--logo {
+    & img {
+      max-height: 98px;
+      max-width: 200px;
+      object-fit: contain;
+      object-position: left;
+      @include media($medium-screen) {
+        max-height: 144px;
+        max-width: 250px;
+        margin-top: 1.75rem;
+        margin-bottom: 20px;
+      }
+    }
+    @include media($medium-screen) {
+      order: 2;
+      flex: 0 0 auto;
+      width: 25%;
+      text-align: center
+    }
+
+    + .hero-banner--title {
+      @include media($medium-screen) {
+        margin-left: -5px;
+        flex: 0 0 auto;
+        width: 66.66667%;
+      }
+    }
+  }
+
   h1 {
     @include fs-h1-default;
     color: $c-black;
@@ -68,6 +104,8 @@
       margin-left: -5px;
     }
   }
+
+
 
   .lead-paragraph {
     color: $c-black;
