@@ -12,8 +12,8 @@ We are in the process of setting up several mechanisms for code quality validati
 
 - [ ] We **will** have a [`CODEOWNERS` file][codeowners] to automate pull request reviews of specific files from the Digital Services team.
 - [ ] We **will** run linters in as part of our [CI](#continuous-integration) workflow.
-- [ ] We **will** suggest development tools that lint code in our [editors](#editor-support) whenever possible.
 - [ ] We **will** use [git precommit hooks]() to run linters on our code before they're committed.
+- [ ] We **will** suggest development tools that lint code in our [editors](#editor-support) whenever possible.
 
 ### PHP
 PHP files are linted with [PHP CodeSniffer][] ("phpcs") and the [Drupal coding standards].
@@ -37,7 +37,7 @@ Whenever possible, we will add and maintain editor configuration files that supp
 Pending the resolution of some billing issues, we will also investigate the use of [GitHub Codespaces][codespaces] to enable development without having to run the entire app environment locally.
 
 ## Best practices
-We encourage, but do not yet enforce, the practices described in this section.
+We **encourage**, but do not yet enforce, the practices described in this section.
 
 <!-- 
 ### Best practice title
@@ -48,19 +48,29 @@ A brief description of the best practice.
 **How**: If necessary, explain implementation details, refactoring process, etc.
 -->
 
+### Use the design system
+We have a [design system], and we should use it. Replacing the existing rat's nest of ad-hoc Sass files with the system's [Tailwind utilities] will have a ton of benefits, namely:
+
+- Less CSS for users to download
+- Simpler developer experience: one file (the template) to edit, rather than two (the template and the Sass)
+- Fewer ad-hoc class naming conventions to manage
+
+TL;DR: **Don't add custom CSS** if you can use the system's utility classes.
+
 
 [codeowners]: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+[codespaces]: https://github.com/features/codespaces
+[design system]: https://design-system.sf.gov
 [drupal]: https://www.drupal.org/
 [drupal coding standards]: https://www.drupal.org/docs/develop/standards/coding-standards
 [eslint]: https://eslint.org/
 [eslint-plugin-sfgov]: https://github.com/SFDigitalServices/eslint-plugin-sfgov
+[pantheon]: https://pantheon.io/
 [php codesniffer]: https://github.com/squizlabs/PHP_CodeSniffer
+[phpstorm]: https://www.jetbrains.com/phpstorm/
 [sf.gov]: https://sf.gov
 [stylelint]: https://stylelint.io
-[ui strings]: https://www.drupal.org/project/string_translation_ui
-[pantheon]: https://pantheon.io/
-[design system]: https://design-system.sf.gov
+[tailwind utilities]: https://v2.tailwindcss.com/docs/utility-first
 [twig]: https://twig.symfony.com/
+[ui strings]: https://www.drupal.org/project/string_translation_ui
 [vs code]: https://code.visualstudio.com/
-[phpstorm]: https://www.jetbrains.com/phpstorm/
-[codespaces]: https://github.com/features/codespaces
