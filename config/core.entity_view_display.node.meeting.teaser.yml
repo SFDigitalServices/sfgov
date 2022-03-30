@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
-    - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -21,12 +20,11 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_smart_date
-    - field.field.node.meeting.field_start_date
     - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
-    - smart_date
+    - sfgov_dates
     - text
     - user
 id: node.meeting.teaser
@@ -40,47 +38,61 @@ content:
     settings:
       trim_length: 600
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
-  field_smart_date:
-    type: smartdate_custom
+  field_address:
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      separator: ''
-      date_format: 'l, F j'
-      custom_date_format: ''
-      timezone: ''
-      join: ''
-      time_format: ''
-      time_hour_format: ''
-      allday_label: 'All day'
-      date_first: '1'
-      site_time_toggle: '1'
-      ampm_reduce: 0
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_location_in_person:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_location_online:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_smart_date:
+    type: sfgov_dates_teaser_date
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
 hidden:
   content_moderation_control: true
   field_abstract: true
-  field_address: true
   field_agenda: true
   field_dept: true
   field_direct_external_url: true
-  field_end_date: true
   field_link: true
-  field_location_in_person: true
-  field_location_online: true
   field_meeting_artifacts: true
   field_meeting_cancel: true
   field_phone_numbers: true
   field_public_body: true
   field_regulations_accordions: true
   field_regulations_title: true
-  field_start_date: true
   field_title: true
   field_topics: true
   field_videos: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

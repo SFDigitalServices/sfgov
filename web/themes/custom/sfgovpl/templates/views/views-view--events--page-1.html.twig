@@ -54,11 +54,11 @@
 {% block events_nav %}
   {% set deptId = view.args[0] ? view.args[0] : 'all' %}
 
-  <div class="sfgov-events-pill-container">
+  <div class="sfgov-events-pill-container bg-green-1 mb-0 py-40 lg:mb-80">
     <div class="sfgov-events-pill-list-container">
-      <ul class="sfgov-events-pill">
-        <li class="sfgov-upcoming-events {{ current_display == 'page_1' ? 'current' : '' }}"><a href="/events">Upcoming ({{ upcoming_event_count }})</a></li>
-        <li class="sfgov-past-events {{ current_display == 'page_2' ? 'current' : '' }}"><a href="/past-events">Past Events</a></li>
+      <ul class="sfgov-events-pill m-0 p-0 list-none flex text-center">
+        <li class="sfgov-upcoming-events w-1/2 lg:w-auto"><a class="block no-underline text-body font-medium bg-white border-3 border-solid border-slate-3 rounded-l {{ current_display == 'page_1' ? 'current bg-slate-3 text-white' : '' }} px-20 py-16" href="/events">{{ "Upcoming"|t }} ({{ upcoming_event_count }})</a></li>
+        <li class="sfgov-past-events w-1/2 lg:w-auto"><a class="block no-underline text-body font-medium bg-white border-3 border-solid border-slate-3 rounded-r {{ current_display == 'page_2' ? 'current bg-slate-3 text-white' : '' }} px-20 py-16" href="/past-events">{{ "Past events" | t }}</a></li>
       </ul>
     </div>
   </div>
@@ -72,20 +72,22 @@
 
     {{ exposed }}
     {{ attachment_before }}
-  <div class="content">
-    <div class="sfgov-section-container">
+  {# <div class="content">
+    <div class="sfgov-section-container"> #}
       {% block rows %}
         {{ rows }}
       {% endblock rows %}
-    </div>
-  </div>
+    {# </div>
+  </div> #}
     {{ empty }}
 
     {% if pager and pager['#views_plugin'] %}
       {% set itemsPerPage = pager['#views_plugin'].options.items_per_page %}
       {% set totalItems = pager['#views_plugin'].total_items %}
       {% if totalItems > itemsPerPage %}
-        {{ pager }}
+        <div class="mt-96">
+          {{ pager }}
+        </div>
       {% endif %}
     {% endif %}
     {{ attachment_after }}

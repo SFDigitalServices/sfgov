@@ -51,7 +51,7 @@
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     <div id="formio-{{ form_id }}"
-      data-source="{{- endpoint -}}" data-options="{{ options|escape }}">
+      data-source="{{- endpoint -}}" data-options="{{ options|escape }}" data-translations="{{ content.formio_json_data }}">
     </div>
 
 {% block content %}
@@ -79,7 +79,7 @@
     if (drupalSettings.amplitude.events.length) {
       drupalSettings.amplitude.events.find(function(obj) {
         if (obj.name === 'Page view') {
-          amplitudeData = JSON.parse(obj.properties)
+          amplitudeData = safeJSONParse(obj.properties)
         }
       })
     }
@@ -103,6 +103,7 @@
     // keeping this as a DOM for patch.js
     var el = document.getElementById('formio-{{ form_id }}')
     var options = safeJSONParse(el.getAttribute('data-options'))
+    options.i18n = safeJSONParse(el.getAttribute('data-translations'))
 
     /*
      * Every key in this object is a form event name, and the value is a

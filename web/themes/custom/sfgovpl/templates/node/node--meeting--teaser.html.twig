@@ -65,67 +65,40 @@
  *
  * @see template_preprocess_node()
 #}
-{% set bundle = node.bundle|clean_class %}
-{% set classes =
-  [
-    bundle,
-    view_mode ? bundle ~ '--' ~ (view_mode|clean_class),
-    node.isPromoted() ? bundle ~ '--promoted',
-    node.isSticky() ? bundle ~ '--sticky',
-    not node.isPublished() ? bundle ~ '--unpublished'
-  ]|merge(classes|default([]))
-%}
-{% set title_classes = [
-  'article__title',
-  'article--' ~ (view_mode|clean_class) ~ '__title'
-] %}
-{% block node %}
-  <article {{ attributes.addClass(classes)|without('id') }}>
-    {% block content %}
-      {{ title_prefix }}
-      {% block title %}
-        <h4 {{ title_attributes.addClass(title_classes) }}>
-          <a href="{{ url }}" rel="bookmark">{{ node.label }}</a>
-        </h4>
-      {% endblock title %}
-      {{ title_suffix }}
 
-      <div {{ content_attributes.addClass(bundle ~ '__content') }}>
-        {% block body %}
-          {{
-            content|without(
-              'links',
-              'field_start_date',
-              'field_end_date',
-              'field_address'
-            )
-          }}
+{# teaser display setting renders checkbox value as a string stuffed in array keyed by #markup #}
+{% set online = content.field_location_online.0['#markup'] == "On" ? true : false %}
+{% set inPerson = content.field_location_in_person.0['#markup'] == "On" ? true : false %}
 
-          <div class="__footer">
-            <div class="field __time field__item">
-              {{ meeting_time }}
-            </div>
-
-            {% if meeting_address %}
-              <div class="field field--type-address __address field__item">
-                <p class="address">
-                  <span class="organization">{{ meeting_address }}</span><br />
-                </p>
-              </div>
-            {% endif %}
-
-            {% if online %}
-              <div class="field field--type-address __address field__item">
-                <p class="address">
-                  <span class="organization">{{ 'Online'|t }}</span><br />
-                </p>
-              </div>
-            {% endif %}
-          </div>
-        {% endblock body %}
+<div class="meeting--teaser">
+  <div class="meeting-details">
+    <a class="inline-block font-medium mb-8 text-title-xs" href="{{ url }}" rel="bookmark">{{ label }}</a>
+    <div class="mb-8 font-medium text-body">
+      {{ content.field_smart_date[0]['#date'] }}
+    </div>
+    {% if content.body | render %}
+      <div class="text-body mb-8">
+        {{ content.body }}
       </div>
-
-      {{ content.links }}
-    {% endblock content %}
-  </article>
-{% endblock node %}
+    {% endif %}
+    <div class="meeting-meta text-body lg:flex">
+      <div class="meeting-time flex mb-16 lg:mb-0 lg:w-1/2">
+        <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>{{ content.field_smart_date[0]['#time'] }}
+      </div>
+      <div class="meeting-location flex lg:w-1/2">
+        {% if online or inPerson %}
+          <sfgov-icon symbol="location" class="mr-20"></sfgov-icon>
+        {% endif %}
+        {% if online and inPerson %}
+          {{ "Online and in person" | t }}
+        {% elseif inPerson %}
+          {% if content.field_address|render %}
+            {{ node.field_address.entity.field_address.value.0.address_line1 }}
+          {% endif %}
+        {% elseif online %}
+          {{ "Online" | t }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

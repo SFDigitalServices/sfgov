@@ -60,6 +60,15 @@
   {% set btnClasses = [] %}
 {% endif %}
 
+{# if this paragraph is on a campaign content type, check to see if it should be inversed. #}
+{% set node = parent.parentEntity %}
+{% if node.field_campaign_theme %}
+  {% set campaign_theme_label = node.field_campaign_theme.entity.label|lower %}
+  {% if campaign_theme_label in ['black', 'green', 'purple', 'red',] %}
+    {% set btnClasses = 'btn-inverse' %}
+  {% endif %}
+{% endif %}
+
 {% block paragraph %}
   {% if field_link %}
     <div{{ attributes.addClass(classes) }}>

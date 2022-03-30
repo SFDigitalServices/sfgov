@@ -3,7 +3,7 @@
   invisible ? 'invisible'
 ]%}
 
-<a href="{{ invisible ? '' : url }}" {{ attributes.addClass(classes) }}>
+<a href="{{ invisible ? '' : url }}" class="{{ classes|join(' ') }}">
   {% if invisible == 'invisible' %}
   {% else %}
     <{{ heading ? heading : 'h3' }} class="service-card--title title">{{ title }}</{{ heading ? heading : 'h3' }}>

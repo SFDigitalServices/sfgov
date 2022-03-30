@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
-    - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -21,14 +20,12 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_smart_date
-    - field.field.node.meeting.field_start_date
     - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
     - workflows.workflow.editorial
   module:
     - content_moderation
-    - datetime
     - entity_browser
     - field_group
     - link
@@ -44,8 +41,6 @@ third_party_settings:
       children:
         - field_meeting_cancel
         - field_smart_date
-        - field_start_date
-        - field_end_date
         - field_direct_external_url
       label: 'Meeting info'
       region: content
@@ -179,12 +174,6 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_end_date:
-    type: datetime_default
-    weight: 5
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_link:
     type: link_default
     weight: 6
@@ -297,12 +286,6 @@ content:
         custom
       show_extra: true
       hide_date: true
-    third_party_settings: {  }
-  field_start_date:
-    type: datetime_default
-    weight: 4
-    region: content
-    settings: {  }
     third_party_settings: {  }
   field_videos:
     type: paragraphs

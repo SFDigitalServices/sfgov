@@ -23,7 +23,7 @@ class SfgovTeaserDateFormatter extends SfgovDateFormatterBase {
    */
   public function setDateString($start_time, $end_time) {
     if ($this->dateRange) {
-      $date_string = date('D, M j', $start_time) . ' to ' . date('D, M j', $end_time);
+      $date_string = date('l, F j', $start_time) . ' to ' . date('l, F j', $end_time);
     }
     else {
       $date_string = date('l, F j', $start_time);

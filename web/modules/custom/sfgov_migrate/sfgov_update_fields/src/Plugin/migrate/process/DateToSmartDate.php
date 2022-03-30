@@ -50,7 +50,7 @@ class DateToSmartDate extends ProcessPluginBase {
       // If the end date is bogus, use default duration.
       // $default_duration = 60;
       $end_date = $start_date;
-      $duration = 60;
+      $duration = 0;
     }
 
     $smart_date = [

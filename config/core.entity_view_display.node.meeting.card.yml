@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.meeting.field_agenda
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
-    - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -21,12 +20,10 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_smart_date
-    - field.field.node.meeting.field_start_date
     - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
-    - datetime
     - sfgov_dates
     - user
 id: node.meeting.card
@@ -39,15 +36,6 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
-    region: content
-  field_start_date:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
     weight: 0
     region: content
 hidden:
@@ -58,7 +46,6 @@ hidden:
   field_agenda: true
   field_dept: true
   field_direct_external_url: true
-  field_end_date: true
   field_link: true
   field_location_in_person: true
   field_location_online: true
@@ -70,6 +57,7 @@ hidden:
   field_regulations_title: true
   field_title: true
   field_videos: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true
