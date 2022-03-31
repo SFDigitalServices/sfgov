@@ -12,15 +12,13 @@
       {{ content.field_description }}
     </div>
     <div class="event-meta mb-8 text-body lg:flex">
-      <div class="event-time flex mb-16 lg:mb-0 lg:w-1/2">
-        <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>
-        {% if content.field_smart_date[0]['#time'] %}
-          {{ content.field_smart_date[0]['#time'] }}
-        {% else %}
-          {{ 'All day' | t }}
-        {% endif %}
-      </div>
-      <div class="event-location flex lg:w-1/2">
+      {% if content.field_smart_date[0]['#time'] %}
+        {% set widthClass = "lg:w-1/2" %}
+        <div class="event-time flex mb-16 lg:mb-0 lg:w-1/2">
+          <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>{{ content.field_smart_date[0]['#time'] }}
+        </div>
+      {% endif %}
+      <div class="event-location flex {{ widthClass }}">
         {% if online or inPerson %}
           <sfgov-icon symbol="location" class="mr-20"></sfgov-icon>
         {% endif %}

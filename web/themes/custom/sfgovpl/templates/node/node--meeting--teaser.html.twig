@@ -82,15 +82,13 @@
       </div>
     {% endif %}
     <div class="meeting-meta items-center text-body lg:flex">
+      {% if content.field_smart_date[0]['#time'] %}
+        {% set widthClass = "lg:w-1/2" %}
         <div class="meeting-time flex mb-16 lg:mb-0 lg:w-1/2">
-          <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>
-          {% if content.field_smart_date[0]['#time'] %}
-            {{ content.field_smart_date[0]['#time'] }}
-          {% else %}
-            {{ 'All day' | t }}
-          {% endif %}
+          <sfgov-icon symbol="clock" class="mr-20"></sfgov-icon>{{ content.field_smart_date[0]['#time'] }}
         </div>
-      <div class="meeting-location flex lg:w-1/2">
+      {% endif %}
+      <div class="meeting-location flex {{ widthClass }}">
         {% if online or inPerson %}
           <sfgov-icon symbol="location" class="mr-20"></sfgov-icon>
         {% endif %}
