@@ -142,15 +142,15 @@ class MeetingListFiltersForm extends FormBase {
     $route = \Drupal::routeMatch();
     $public_body_id = $route->getParameter('arg_0');
     
-    $values_query = $database->select('node__field_start_date', 'd')
-      ->fields('d', ['field_start_date_value'])
+    $values_query = $database->select('node__field_smart_date', 'd')
+      ->fields('d', ['field_smart_date_value'])
       ->condition('d.bundle', 'meeting');
     $values_query->join('node__field_public_body', 'pb', 'pb.entity_id = d.entity_id AND pb.field_public_body_target_id = :pbid', array(':pbid' => $public_body_id));
     $values = $values_query->execute()
            ->fetchAll();
     
     foreach ($values as $value) {
-      $year = substr($value->field_start_date_value, 0, 4);
+      $year = date('Y', $value->field_smart_date_value);
 
       if (!in_array($year, $years)) {         
         $years[$year] = $year;
