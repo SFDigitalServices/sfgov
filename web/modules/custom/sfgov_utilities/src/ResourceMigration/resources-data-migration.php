@@ -3,7 +3,7 @@
 use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
 
 $rm = new ResourceMigration();
-$rm->setDryRun(false);
+$rm->setDryRun(true);
 
 $rm->migrateAboutAndPublicBodyResources();
 $rm->migrateCampaignResources();
