@@ -36,16 +36,23 @@ foreach($providers as $provider) {
     $creds = file_get_contents(
         $_SERVER["HOME"] . $provider["creds_file"]
     );
-
-    exec("drush config-set " . $provider["config_item"] . " " . $provider["config_item_key"] . " --input-format=yaml --value='" . $creds . "' -y 2>&1", $output, $status);
     
-    $output = array_map(
-        function ($item) {
-            return "    - " . trim($item); 
-        }, array_filter($output)
-    );
+    if($creds != false) {
+        exec("drush config-set " . $provider["config_item"] . " " . $provider["config_item_key"] . " --input-format=yaml --value='" . $creds . "' -y 2>&1", $output, $status);
+    
+        $output = array_map(
+            function ($item) {
+                return "    - " . trim($item); 
+            }, array_filter($output)
+        );
+    
+        _test_hook_slack_notification(
+            $provider["provider"] . " credentials: \n  - exit status: $status \n  - output: \n" . implode("\n", $output)
+        );        
+    } else {
+        _test_hook_slack_notification(
+            "could not read credentials for " . $provider["provider"]
+        );
+    }
 
-    _test_hook_slack_notification(
-        $provider["provider"] . " credentials: \n  - exit status: $status \n  - output: \n" . implode("\n", $output)
-    );
 }
