@@ -216,6 +216,10 @@ function sfgov_utilities_page_attachments(array &$page) {
       }
     }
   }
+  // Sandbox alert
+  if (isset($_ENV['PANTHEON_ENVIRONMENT']) && $_ENV['PANTHEON_ENVIRONMENT'] !== 'live') {
+    $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
+  }
 }
 
 /**
