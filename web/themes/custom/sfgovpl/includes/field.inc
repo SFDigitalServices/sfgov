@@ -18,7 +18,7 @@ function sfgovpl_preprocess_field__paragraph__field_file__agenda_item(&$variable
  */
 function sfgovpl_preprocess_field__paragraph__field_resources__other_info_card(&$variables) {
   $node = \Drupal::request()->attributes->get('node');
-  $variables['nodetype'] = $node->getType();
+  $variables['nodetype'] = $node ? $node->getType() : '';
 }
 
 
