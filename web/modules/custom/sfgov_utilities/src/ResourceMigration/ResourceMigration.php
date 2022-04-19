@@ -202,7 +202,6 @@ class ResourceMigration {
                 $eckId = $eckResource[0]['target_id'];
                 $storage = \Drupal::entityTypeManager()->getStorage("resource");
                 $eckEntity = $storage->load($eckId);
-                // print_r($eck);
                 $resourceTitle = $eckEntity->get('title')->getValue()[0]['value'];
               }
 
