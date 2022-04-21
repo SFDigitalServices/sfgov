@@ -675,9 +675,11 @@ function profile_page_fields($node) {
         $department = FALSE;
         if (!$addressEntity->get('field_department')->isEmpty()) {
           $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
+          $Addresstitle = $department->title->value;
+        } else {
+          $Addresstitle = $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
         }
-        // Choose a title value in descending order.
-        $Addresstitle = $department->title->value ?: $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
+        // Choose a title value in descending order. 
         $theFields['address']['title'] = $Addresstitle;
         // If one of the address fields was used as the title, remove it from
         // the render array so that it doesn't show up twice.
