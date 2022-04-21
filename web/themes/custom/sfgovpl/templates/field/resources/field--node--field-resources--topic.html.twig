@@ -36,51 +36,9 @@
  * @see template_preprocess_field()
  */
 #}
-
-{% if nodetype == 'department' or nodetype == 'topic' %}
-  {% set columns = 'field__items sfgov-container-two-column' %}
-{% else %}
-  {% set columns = 'field__items sfgov-container-three-column' %}
-{% endif %}
-
-{%
-  set classes = [
-    'field',
-    'field--type-' ~ field_type|clean_class,
-    label_display == 'inline' ? 'field--inline',
-    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
-  ]
-%}
-{%
-  set title_classes = [
-    'field__label',
-    label_display == 'visually_hidden' ? 'visually-hidden',
-  ]
-%}
-
-{% if label_hidden %}
-  {% if multiple %}
-    <div{{ attributes.addClass(classes, columns) }}>
-      {% for item in items %}
-        <div{{ item.attributes.addClass('field__item', 'sfgov-container-item') }}>{{ item.content }}</div>
-      {% endfor %}
-    </div>
-  {% else %}
-    {% for item in items %}
-      <div{{ attributes.addClass(classes, 'field__item', 'sfgov-container-item') }}>{{ item.content }}</div>
-    {% endfor %}
-  {% endif %}
-{% else %}
-  <div{{ attributes.addClass(classes) }}>
-    <h4{{ title_attributes.addClass(title_classes) }}>{{ label }}</h4>
-    {% if multiple %}
-      <div class="{{ columns }}">
-    {% endif %}
-    {% for item in items %}
-      <div{{ item.attributes.addClass('field__item', 'sfgov-container-item') }}>{{ item.content }}</div>
-    {% endfor %}
-    {% if multiple %}
-      </div>
-    {% endif %}
-  </div>
-{% endif %}
+<div class="sfgov-resources">
+  <h2 class="title">{{ label }}</h2>
+  {% for item in items %}
+    {{ item.content }}
+  {% endfor %}
+</div>

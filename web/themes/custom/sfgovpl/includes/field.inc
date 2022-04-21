@@ -21,8 +21,6 @@ function sfgovpl_preprocess_field__paragraph__field_resources__other_info_card(&
   $variables['nodetype'] = $node ? $node->getType() : '';
 }
 
-
-
 /**
  * Implements template_preprocess_field().
  */
