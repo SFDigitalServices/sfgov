@@ -257,12 +257,16 @@ function sfgovpl_preprocess_paragraph__resource_node(&$variables) {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $node_storage->load($paragraph->get('field_node')[0]->target_id);
     $description = '';
-    if($node->hasField('field_description')) {
+    if(!empty($node) && $node->hasField('field_description')) {
       $description = $node->get('field_description') ?? render($node->get('field_description')->value);
     }
-    $variables['title'] = $node->getTitle();
+    if(!empty($node) && $node->getTitle()) {
+      $variables['title'] = $node->getTitle();
+    }
     $variables['description'] = $description;
-    $variables['url'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+    if(!empty($node) && $node->id()) {
+      $variables['url'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+    }
   }
 }
 

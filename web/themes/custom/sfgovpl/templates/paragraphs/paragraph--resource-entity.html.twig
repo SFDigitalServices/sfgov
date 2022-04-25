@@ -13,11 +13,13 @@
 
 {% block paragraph %}
   {% block content %}
+  {% if title is not empty and text is not empty %}
     <div class="sfgov-container-item">
       <a class="sfgov-resource-card" href="{{ url }}">
         <div class="title">{{ title }}</div>
         <div class="description">{{ text }}</div>
       </a>
     </div>
+  {% endif %}
   {% endblock %}
 {% endblock paragraph %}
