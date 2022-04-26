@@ -16,6 +16,14 @@ function sfgovpl_preprocess_field__paragraph__field_file__agenda_item(&$variable
 /**
  * Implements template_preprocess_field().
  */
+function sfgovpl_preprocess_field__paragraph__field_resources__other_info_card(&$variables) {
+  $node = \Drupal::request()->attributes->get('node');
+  $variables['nodetype'] = $node ? $node->getType() : '';
+}
+
+/**
+ * Implements template_preprocess_field().
+ */
 function sfgovpl_preprocess_field__node__field_related_content(&$variables) {
   foreach ($variables['items'] as $key => $value) {
     $urlObject = !empty($value['content']['#url']) ? $value['content']['#url']->getOptions() : NULL;
