@@ -270,46 +270,6 @@ function sfgov_utilities_deploy_04_resources_subheading() {
   $rm->migrateTopicsAndDepartmentsResourceSubheading();
 }
 
-function sfgov_utilities_deploy_04_info_page() {
-  $nids = \Drupal::entityQuery('node')->condition('type','information_page')->execute();
-  $nodes = Node::loadMultiple($nids);
-  
-  $report = [];
-  
-  foreach($nodes as $node) {
-    $nid = $node->id();
-    $fieldDept = $node->get('field_dept');
-    $fieldDeptValues = $fieldDept->getValue();
-    $fieldDeptCount = count($fieldDeptValues);
-    if($fieldDeptCount > 0) {
-      $fieldDeptOrPublicBody = $node->get('field_public_body');
-      for($i=0; $i<$fieldDeptCount; $i++) {
-        $refId = $fieldDeptValues[$i]['target_id'];
-        $oldRefNode = Node::load($refId);
-  
-        if(!empty($oldRefNode)) { // some older nodes may have empty references, ignore them
-          $report[] = [
-            'nid' => $nid,
-            'node_title' => $node->getTitle(),
-            'url' => 'https://sf.gov/node/' . $nid,
-            'field_dept_ref' => $oldRefNode->getTitle(),
-            'field_dept_ref_id' => $oldRefNode->id(),
-          ];
-    
-          // assign to new field
-          $fieldDeptOrPublicBody[] = [
-            'target_id' => $refId
-          ];
-        }
-  
-        // remove old ref
-        $fieldDept->removeItem(0);
-      }
-    }
-    $node->save();
-  }
-}
-
 // migrate department content type field_about_description value to field_about_or_description
 function sfgov_utilities_deploy_05_dept_page_about() {
   $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
@@ -341,5 +301,46 @@ function sfgov_utilities_deploy_05_dept_page_about() {
       $node->setRevisionUserId($user_id);
       $node->save();
     }
+  }
+}
+
+// migrate field_public_body references to field_dept
+function sfgov_utilities_deploy_06_info_page() {
+  $nids = \Drupal::entityQuery('node')->condition('type','information_page')->execute();
+  $nodes = Node::loadMultiple($nids);
+  
+  $report = [];
+  
+  foreach($nodes as $node) {
+    $nid = $node->id();
+    $fieldPublicBody = $node->get('field_public_body');
+    $fieldPublicBodyValues = $fieldPublicBody->getValue();
+    $fieldPublicBodyCount = count($fieldPublicBodyValues);
+    if($fieldPublicBodyCount > 0) {
+      $fieldDept = $node->get('field_dept');
+      for($i=0; $i<$fieldPublicBodyCount; $i++) {
+        $refId = $fieldPublicBodyValues[$i]['target_id'];
+        $oldRefNode = Node::load($refId);
+  
+        if(!empty($oldRefNode)) { // some older nodes may have empty references, ignore them
+          $report[] = [
+            'nid' => $nid,
+            'node_title' => $node->getTitle(),
+            'url' => 'https://sf.gov/node/' . $nid,
+            'field_public_body_ref' => $oldRefNode->getTitle(),
+            'field_public_body_ref_id' => $oldRefNode->id(),
+          ];
+    
+          // assign to new field
+          $fieldDept[] = [
+            'target_id' => $refId
+          ];
+        }
+  
+        // remove old ref
+        $fieldPublicBody->removeItem(0);
+      }
+    }
+    $node->save();
   }
 }
