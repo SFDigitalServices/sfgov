@@ -24,7 +24,11 @@ class FieldDeptMigration {
   }
 
   public function migrateToFieldDept() {
-    $nids = array_merge($this->getNodes('information_page'), $this->getNodes('data_story'));
+    $nids = array_merge(
+      $this->getNodes('information_page'), 
+      $this->getNodes('data_story'),
+      $this->getNodes('location'),
+    );
     $nodes = Node::loadMultiple($nids);
 
     foreach($nodes as $node) {
