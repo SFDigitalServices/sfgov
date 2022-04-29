@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sfgov_utilities\FieldDeptMigration;
+namespace Drupal\sfgov_utilities\Migration\FieldDeptMigration;
 
 use Drupal\node\Entity\Node;
 
@@ -38,6 +38,7 @@ class FieldDeptMigration {
           break;
         
         case 'data_story':
+        case 'location':
           $currentFieldName = 'field_departments';
           break;
         

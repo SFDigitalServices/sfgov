@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\sfgov_utilities\FieldDeptMigration\FieldDeptMigration;
+use Drupal\sfgov_utilities\Migration\FieldDeptMigration\FieldDeptMigration;
 
 $deptMigration = new FieldDeptMigration();
 $deptMigration->migrateToFieldDept();
