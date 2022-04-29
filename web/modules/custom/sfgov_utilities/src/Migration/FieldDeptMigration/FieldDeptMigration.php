@@ -28,6 +28,7 @@ class FieldDeptMigration {
       $this->getNodes('information_page'), 
       $this->getNodes('data_story'),
       $this->getNodes('location'),
+      $this->getNodes('topic'),
     );
     $nodes = Node::loadMultiple($nids);
 
@@ -43,6 +44,7 @@ class FieldDeptMigration {
         
         case 'data_story':
         case 'location':
+        case 'topic':
           $currentFieldName = 'field_departments';
           break;
         
