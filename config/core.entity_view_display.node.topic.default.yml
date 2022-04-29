@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.topic.field_content_top
     - field.field.node.topic.field_department_services
     - field.field.node.topic.field_departments
+    - field.field.node.topic.field_dept
     - field.field.node.topic.field_description
     - field.field.node.topic.field_page_design
     - field.field.node.topic.field_resources
@@ -36,7 +37,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
   field_content_top:
     type: entity_reference_revisions_entity_view
@@ -45,7 +46,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 10
+    weight: 11
     region: content
   field_department_services:
     type: entity_reference_revisions_entity_view
@@ -54,7 +55,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_departments:
     type: entity_reference_entity_view
@@ -64,6 +65,15 @@ content:
       link: false
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_dept:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: card
+      link: false
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_description:
     type: smart_trim
@@ -89,7 +99,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 9
+    weight: 10
     region: content
   field_resources:
     type: entity_reference_revisions_entity_view
@@ -98,7 +108,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 7
     region: content
   field_spotlight:
     type: entity_reference_revisions_entity_view
@@ -107,7 +117,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   field_top_level_topic:
     type: boolean
@@ -117,7 +127,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 7
+    weight: 8
     region: content
   field_topics:
     type: entity_reference_entity_view
@@ -126,9 +136,10 @@ content:
       view_mode: card
       link: false
     third_party_settings: {  }
-    weight: 8
+    weight: 9
     region: content
 hidden:
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true
