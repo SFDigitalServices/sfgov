@@ -1,0 +1,36 @@
+uuid: 79071223-b485-4d36-b136-fda5807627b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_dept
+    - node.type.department
+    - node.type.location
+    - node.type.public_body
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.location.field_dept
+field_name: field_dept
+entity_type: node
+bundle: location
+label: 'Related departments'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference
