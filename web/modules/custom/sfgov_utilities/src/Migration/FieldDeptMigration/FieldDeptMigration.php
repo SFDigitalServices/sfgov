@@ -59,6 +59,8 @@ class FieldDeptMigration {
           $refNode = Node::load($refId);
   
           if(!empty($refNode)) {
+
+            // report
             $this->report[] = [
               'nid' => $nid,
               'content_type' => $node->getType(),

@@ -4,7 +4,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
 use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
-use Drupal\sfgov_utilities\FieldDeptMigration\FieldDeptMigration;
+use Drupal\sfgov_utilities\Migration\FieldDeptMigration\FieldDeptMigration;
 
 /**
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
