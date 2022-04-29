@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.data_story.field_content
     - field.field.node.data_story.field_departments
+    - field.field.node.data_story.field_dept
     - field.field.node.data_story.field_description
     - node.type.data_story
   module:
@@ -38,6 +39,14 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_dept:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_description:
     type: text_default
     label: hidden
@@ -46,6 +55,7 @@ content:
     weight: 0
     region: content
 hidden:
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true
