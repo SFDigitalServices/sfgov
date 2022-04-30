@@ -25,7 +25,8 @@ class FieldDepartmentMigration {
 
   public function migrateToFieldDepartments() {
     $nids = array_merge(
-      $this->getNodes('information_page')
+      $this->getNodes('information_page'),
+      $this->getNodes('campaign')
     );
     
     $nodes = Node::loadMultiple($nids);
@@ -38,6 +39,9 @@ class FieldDepartmentMigration {
       switch($contentType) {
         case 'information_page':
           $currentFieldName = 'field_public_body';
+          break;
+        case 'campaign':
+          $currentFieldName = 'field_dept';
           break;
         default:
       }
