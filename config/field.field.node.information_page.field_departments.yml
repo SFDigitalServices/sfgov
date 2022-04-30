@@ -1,18 +1,19 @@
-uuid: 0107b49f-8a56-4f91-8135-d1b579dd76ec
+uuid: 203d3663-d37e-42af-9ed4-794b9f8f0592
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_dept
+    - field.storage.node.field_departments
     - node.type.department
     - node.type.information_page
+    - node.type.public_body
   module:
     - tmgmt_content
 third_party_settings:
   tmgmt_content:
     excluded: false
-id: node.information_page.field_dept
-field_name: field_dept
+id: node.information_page.field_departments
+field_name: field_departments
 entity_type: node
 bundle: information_page
 label: Departments
@@ -22,12 +23,14 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: unpublished
+  handler: 'default:node'
   handler_settings:
     target_bundles:
       department: department
+      public_body: public_body
     sort:
       field: _none
-    auto_create: 0
-    auto_create_bundle: ''
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: department
 field_type: entity_reference
