@@ -1,0 +1,36 @@
+uuid: 96eb8af0-ac2d-4081-a119-7142a10afdf5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departments
+    - node.type.department
+    - node.type.public_body
+    - node.type.resource_collection
+  module:
+    - tmgmt_content
+third_party_settings:
+  tmgmt_content:
+    excluded: false
+id: node.resource_collection.field_departments
+field_name: field_departments
+entity_type: node
+bundle: resource_collection
+label: Departments
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference
