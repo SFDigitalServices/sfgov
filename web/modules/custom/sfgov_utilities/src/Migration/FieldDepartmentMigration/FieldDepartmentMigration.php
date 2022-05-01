@@ -29,7 +29,8 @@ class FieldDepartmentMigration {
       $this->getNodes('campaign'),
       $this->getNodes('department_table'),
       $this->getNodes('event'),
-      $this->getNodes('form_confirmation_page')
+      $this->getNodes('form_confirmation_page'),
+      $this->getNodes('news'),
     );
     
     $nodes = Node::loadMultiple($nids);
@@ -47,6 +48,7 @@ class FieldDepartmentMigration {
         case 'department_table':
         case 'event':
         case 'form_confirmation_page':
+        case 'news':
           $currentFieldName = 'field_dept';
           break;
         default:
