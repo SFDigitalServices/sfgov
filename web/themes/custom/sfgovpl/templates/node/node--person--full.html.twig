@@ -156,11 +156,11 @@
 
     {% for key, item in profile_fields.dept_pbody_ref_data %}
       <div class="profile--additional-role">
-        <div class="additional-role-title">
-        {% if item.profile.job.position %}
-          {{ item.profile.job.position }},
+        {% if item.profile.job.position|trim %}
+          <div class="additional-role-title">
+            {{ item.profile.job.position }},
+          </div>
         {% endif %}
-        </div>
         <div class="additional-role-agency-title">
           <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
         </div>
