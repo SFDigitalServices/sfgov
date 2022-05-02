@@ -46,7 +46,8 @@ class FieldDepartmentMigration {
       $this->getNodes('form_confirmation_page'),
       $this->getNodes('meeting'),
       $this->getNodes('news'),
-      $this->getNodes('resource_collection')
+      $this->getNodes('resource_collection'),
+      $this->getNodes('step_by_step')
     );
 
     foreach($nodes as $node) {
@@ -62,8 +63,10 @@ class FieldDepartmentMigration {
         case 'department_table':
         case 'event':
         case 'form_confirmation_page':
+        case 'meeting':
         case 'news':
         case 'resource_collection':
+        case 'step_by_step':
           $currentFieldName = 'field_dept';
           break;
         default:
