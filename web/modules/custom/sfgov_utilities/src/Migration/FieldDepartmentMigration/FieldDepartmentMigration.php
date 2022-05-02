@@ -16,7 +16,21 @@ class FieldDepartmentMigration {
     $nids = \Drupal::entityQuery('node')
     ->condition('type', $type)
     ->execute();
-    return $nids;
+
+    $languages = ['es','fil','zh-hant'];
+    
+    $nodes = Node::loadMultiple($nids);
+    $nodeTranslations = [];
+
+    foreach($nodes as $node) {
+      foreach($languages as $language) {
+        if($node->hasTranslation($language)) {
+          $nodeTranslations[] = $node->getTranslation($language);
+        }
+      }
+    }
+
+    return array_merge($nodes, $nodeTranslations);
   }
 
   public function getReport() {
@@ -24,17 +38,15 @@ class FieldDepartmentMigration {
   }
 
   public function migrateToFieldDepartments() {
-    $nids = array_merge(
+    $nodes = array_merge(
       $this->getNodes('information_page'),
       $this->getNodes('campaign'),
       $this->getNodes('department_table'),
       $this->getNodes('event'),
       $this->getNodes('form_confirmation_page'),
       $this->getNodes('news'),
-      $this->getNodes('resource_collection'),
+      $this->getNodes('resource_collection')
     );
-    
-    $nodes = Node::loadMultiple($nids);
 
     foreach($nodes as $node) {
       $nid = $node->id();
@@ -69,6 +81,7 @@ class FieldDepartmentMigration {
             $this->report[] = [
               'nid' => $nid,
               'content_type' => $node->getType(),
+              'language' => $node->language(),
               'node_title' => $node->getTitle(),
               'url' => 'https://sf.gov/node/' . $nid,
               'ref_node_title' => $refNode->getTitle(),
