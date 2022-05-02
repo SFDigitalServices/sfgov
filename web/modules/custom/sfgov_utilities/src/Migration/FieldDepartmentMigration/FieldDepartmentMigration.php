@@ -44,6 +44,7 @@ class FieldDepartmentMigration {
       $this->getNodes('department_table'),
       $this->getNodes('event'),
       $this->getNodes('form_confirmation_page'),
+      $this->getNodes('meeting'),
       $this->getNodes('news'),
       $this->getNodes('resource_collection')
     );
@@ -81,7 +82,7 @@ class FieldDepartmentMigration {
             $this->report[] = [
               'nid' => $nid,
               'content_type' => $node->getType(),
-              'language' => $node->language(),
+              'language' => $node->get('langcode')->value,
               'node_title' => $node->getTitle(),
               'url' => 'https://sf.gov/node/' . $nid,
               'ref_node_title' => $refNode->getTitle(),
