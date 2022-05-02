@@ -44,32 +44,22 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished'
-  ]
+  ]|merge(classes|default([]))
 %}
-
-{% set counter = 0 %}
-{% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
-  {% set counter = counter + 1 %}
-{% endfor %}
-
-{% spaceless %}
 {% block paragraph %}
-<div class="paragraph-timeline">
-    
-  {% if content.field_timeline_title[0] %}
-    {{ content.field_timeline_title }}
-  {% endif %}
-  <div class="timeline-container items-{{ counter }}">
-  {% if content.field_timeline_item %}
-    {{ content.field_timeline_item }}
-  {% endif %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {% if content.field_headings %}
+        <div class="heading">{{ content.field_headings }}</div>
+      {% else %}
+        <div class="heading">&nbsp;</div>
+      {% endif %}
+      <div class="separator"><span class="circle-dot"></span><span class="hline">&nbsp;</span></div>
+      {% if content.field_descriptions %}
+        <div class="description">{{ content.field_descriptions }}</div>
+      {% else %}
+        <div class="description">&nbsp;</div>
+      {% endif %}
+    {% endblock %}
   </div>
-  <br>
-  <div class="timeline-link">
-    {% if content.field_link[0] %}
-      {{ content.field_link }}
-    {% endif %}
-  </div>
-</div>
 {% endblock paragraph %}
-{% endspaceless %}
