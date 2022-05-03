@@ -4,6 +4,7 @@ use Drupal\sfgov_utilities\Utility;
 use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
 
 try {
+  // migrate to field_departments from field_dept or field_public_body
   $informationPageNodes = Utility::getNodes('information_page');
   $campaignNodes = Utility::getNodes('campaign');
   $deptTableNodes = Utility::getNodes('department_table');

@@ -47,6 +47,8 @@ class TopLevelFieldMigration {
               'node_title' => $node->getTitle(),
               'url' => 'https://sf.gov/'. $reportLang . 'node/' . $nid,
               'status' => $node->isPublished(),
+              'field_from' => $fromFieldName,
+              'field_to' => $toFieldName,
               'ref_node_title' => $refNode->getTitle(),
               'ref_id' => $refNode->id(),
             ];
