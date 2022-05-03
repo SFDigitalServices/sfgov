@@ -241,13 +241,14 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
           $profiles = $pgroup->field_profiles->getValue();
           foreach ($profiles as $gprofile) {
             $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
+            $pprofile = \Drupal::service('entity.repository')->getTranslationFromContext($pprofile);
             $pid = $pprofile->field_profile->getValue();
             $pid = $pid[0]['target_id'];
             // Find paragraph containing profile reference
             if ($pid == $nid) {
               $position = $pprofile->field_commission_position->getValue();
               if (!empty($position[0]['value'])) {
-                $variables['profileposition'] = $position[0]['value'];
+                $variables['profile_position'] = $position[0]['value'];
               }
             }
           }
