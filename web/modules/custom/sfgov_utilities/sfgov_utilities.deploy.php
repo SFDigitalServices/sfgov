@@ -5,7 +5,7 @@ use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
 use Drupal\sfgov_utilities\Utility;
 use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
-use Drupal\sfgov_utilities\Migration\FieldDepartmentMigration\FieldDepartmentMigration;
+use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
 
 /**
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
@@ -308,23 +308,28 @@ function sfgov_utilities_deploy_05_dept_page_about() {
 
 // migrate field_public_body references to field_dept
 function sfgov_utilities_deploy_06_field_dept_migration() {
-  $informationPageNodes = Utility::getNodes('information_page');
-  $campaignNodes = Utility::getNodes('campaign');
-  $deptTableNodes = Utility::getNodes('department_table');
-  $eventNodes = Utility::getNodes('event');
-  $formConfirmPageNodes = Utility::getNodes('form_confirmation_page');
-  $meetingNodes = Utility::getNodes('meeting');
-  $newsNodes = Utility::getNodes('news');
-  $resourceCollectionNodes = Utility::getNodes('resource_collection');
-  $stepByStepNodes = Utility::getNodes('step_by_step');
+  try {
+    $informationPageNodes = Utility::getNodes('information_page');
+    $campaignNodes = Utility::getNodes('campaign');
+    $deptTableNodes = Utility::getNodes('department_table');
+    $eventNodes = Utility::getNodes('event');
+    $formConfirmPageNodes = Utility::getNodes('form_confirmation_page');
+    $meetingNodes = Utility::getNodes('meeting');
+    $newsNodes = Utility::getNodes('news');
+    $resourceCollectionNodes = Utility::getNodes('resource_collection');
+    $stepByStepNodes = Utility::getNodes('step_by_step');
   
-  $deptsMigration = new FieldDepartmentMigration();
-  $deptsMigration->migrateToFieldDepartments($informationPageNodes, 'field_public_body');
-  $deptsMigration->migrateToFieldDepartments($campaignNodes, 'field_dept');
-  $deptsMigration->migrateToFieldDepartments($deptTableNodes, 'field_dept');
-  $deptsMigration->migrateToFieldDepartments($eventNodes, 'field_dept');
-  $deptsMigration->migrateToFieldDepartments($formConfirmPageNodes, 'field_dept');
-  $deptsMigration->migrateToFieldDepartments($meetingNodes, 'field_dept');
-  $deptsMigration->migrateToFieldDepartments($resourceCollectionNodes, 'field_dept');
-  $deptsMigration->migrateToFieldDepartments($stepByStepNodes, 'field_dept');
+    $fieldMigration = new TopLevelFieldMigration();
+    $fieldMigration->migrate($informationPageNodes, 'field_public_body', 'field_departments');
+    $fieldMigration->migrate($campaignNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($deptTableNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($eventNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($formConfirmPageNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($meetingNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($newsNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($resourceCollectionNodes, 'field_dept', 'field_departments');
+    $fieldMigration->migrate($stepByStepNodes, 'field_dept', 'field_departments');
+  } catch(\Exception $e) {
+    echo $e->getMessage(), "\n";
+  }  
 }
