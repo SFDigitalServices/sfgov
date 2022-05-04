@@ -130,6 +130,9 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
 
     $validTransitions = parent::getValidTransitions($entity, $user);
 
+    /*
+     * Disable reviewer checks, always return $validTransitions
+     * 
     // For admins, new content or other entity types, inherit behavior.
     if ($entity->getEntityTypeId() != 'node' ||
       $entity->isNew() ||
@@ -153,6 +156,9 @@ class StateTransitionValidation extends CoreStateTransitionValidation {
         return in_array($transition->id(), static::AUTHOR_ALLOWED_TRANSITIONS);
       });
     }
+    * 
+    *
+    */
 
     // If user is not the author or reviewer, allow access.
     return $validTransitions;
