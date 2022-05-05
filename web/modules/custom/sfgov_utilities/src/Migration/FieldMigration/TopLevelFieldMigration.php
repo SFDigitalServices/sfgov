@@ -37,30 +37,29 @@ class TopLevelFieldMigration {
         foreach($fromFieldValues as $fromFieldValue) {
           $refId = $fromFieldValue['target_id'];
           $refNode = Node::load($refId);
-  
-          if(!empty($refNode)) {
-            $reportLang = $node->get('langcode')->value != 'en' ? ($node->get('langcode')->value . '/') : '';
-            $this->report[] = [
-              'nid' => $nid,
-              'content_type' => $node->getType(),
-              'language' => $node->get('langcode')->value,
-              'node_title' => $node->getTitle(),
-              'url' => 'https://sf.gov/'. $reportLang . 'node/' . $nid,
-              'status' => $node->isPublished(),
-              'field_from' => $fromFieldName,
-              'field_to' => $toFieldName,
-              'ref_node_title' => $refNode->getTitle(),
-              'ref_id' => $refNode->id(),
-            ];
-  
-            // assign to new field
-            $toField[] = [
-              'target_id' => $refId
-            ];
-  
-            // remove old ref
-            $fromField->removeItem(0);
-          }
+          $refNodeTitle = $refNode ? $refNode->getTitle() : 'empty reference, no title';
+          
+          $reportLang = $node->get('langcode')->value != 'en' ? ($node->get('langcode')->value . '/') : '';
+          $this->report[] = [
+            'nid' => $nid,
+            'content_type' => $node->getType(),
+            'language' => $node->get('langcode')->value,
+            'node_title' => $node->getTitle(),
+            'url' => 'https://sf.gov/'. $reportLang . 'node/' . $nid,
+            'status' => $node->isPublished(),
+            'field_from' => $fromFieldName,
+            'field_to' => $toFieldName,
+            'ref_node_title' => $refNodeTitle,
+            'ref_id' => $refId,
+          ];
+
+          // assign to new field
+          $toField[] = [
+            'target_id' => $refId
+          ];
+
+          // remove old ref
+          $fromField->removeItem(0);
         }
         $node->save();
       }
