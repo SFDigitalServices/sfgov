@@ -159,7 +159,8 @@ function sfgov_utilities_page_attachments(array &$page) {
   // Sandbox alert
   if (isset($_ENV['PANTHEON_ENVIRONMENT']) && $_ENV['PANTHEON_ENVIRONMENT'] !== 'live') {
     $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
-
+    
+    /* sandbox user login */
     $sandboxUserCredsPath = DRUPAL_ROOT . '/sites/default/files/private/secrets.json';
     $sandboxUserCreds = null;
     $routeName = \Drupal::routeMatch()->getRouteName();
@@ -176,7 +177,7 @@ function sfgov_utilities_page_attachments(array &$page) {
             $sandboxUsers[] = $sandboxUser;
           }
         }
-        
+
         $page['#attached']['drupalSettings']['sfgov_sandbox_user']['users'] = $sandboxUsers;
         $page['#attached']['drupalSettings']['sfgov_sandbox_user']['pw'] = $sandboxUserPw['drush_pw'];
         $page['#attached']['library'][] = 'sfgov_utilities/sandbox_user';
