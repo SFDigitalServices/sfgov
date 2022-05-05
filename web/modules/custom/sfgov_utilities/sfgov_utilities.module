@@ -8,6 +8,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Cache\Cache;
 use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
+use Drush\Drush;
 
 /**
  * Implements hook_template_preprocess_default_variables_alter().
@@ -158,6 +159,31 @@ function sfgov_utilities_page_attachments(array &$page) {
   // Sandbox alert
   if (isset($_ENV['PANTHEON_ENVIRONMENT']) && $_ENV['PANTHEON_ENVIRONMENT'] !== 'live') {
     $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
+
+    $sandboxUserCredsPath = DRUPAL_ROOT . '/sites/default/files/private/secrets.json';
+    $sandboxUserCreds = null;
+    $routeName = \Drupal::routeMatch()->getRouteName();
+    if(file_exists($sandboxUserCredsPath) && $routeName == 'user.login') {
+      try {
+        $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+        $sandboxUsers = [];
+        $sandboxUserPw = json_decode(file_get_contents($sandboxUserCredsPath), true);
+
+        foreach($roles as $role) {
+          $roleId = $role->id();
+          if($roleId != 'authenticated' && $roleId != 'anonymous') {
+            $sandboxUser = 'test.' . str_replace('_', '', $roleId);
+            $sandboxUsers[] = $sandboxUser;
+          }
+        }
+        
+        $page['#attached']['drupalSettings']['sfgov_sandbox_user']['users'] = $sandboxUsers;
+        $page['#attached']['drupalSettings']['sfgov_sandbox_user']['pw'] = $sandboxUserPw['drush_pw'];
+        $page['#attached']['library'][] = 'sfgov_utilities/sandbox_user';
+      } catch(\Exception $e) {
+        error_log($e->getMessage);
+      }
+    }
   }
 }
 
