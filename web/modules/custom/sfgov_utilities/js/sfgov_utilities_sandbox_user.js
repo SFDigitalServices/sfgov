@@ -70,8 +70,8 @@
     item.addEventListener('click', (e) => {
       e.preventDefault()
       document.querySelector('#edit-name').value = item.getAttribute('data-user')
-      document.querySelector('#edit-pass').value = sandboxPw;
-      document.querySelector('#user-login-form').submit();
+      document.querySelector('#edit-pass').value = sandboxPw
+      setTimeout(() => { document.querySelector('#user-login-form').submit() }, 500)
     })
   })
 })()
