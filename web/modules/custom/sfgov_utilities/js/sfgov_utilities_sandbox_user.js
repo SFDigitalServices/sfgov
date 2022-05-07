@@ -1,70 +1,22 @@
 (() => {
-  const style = document.createElement('style')
-  style.innerHTML = `
-    .sfgov-user__login {
-      position: relative;
-    }
-
-    details.sfgov-sandbox-user {
-      position: absolute;
-      top: 85px;
-      background: #fff;
-      margin: 0 0 20px 0;
-      border: 3px solid red;
-      border-radius: 0;
-      padding: 10px;
-    }
-
-    details.sfgov-sandbox-user ul {
-      padding: 20px;
-      margin: 0;
-      list-style-type: none;
-    }
-
-    details.sfgov-sandbox-user ul li {
-      margin-bottom: 10px;
-    }
-
-    details.sfgov-sandbox-user summary {
-      display: revert;
-      font-size: initial;
-      font-weight:normal;
-      line-height:initial;
-      border:0;
-      border-radius: 0;
-      color:initial;
-      padding:0;
-    }
-
-    details.sfgov-sandbox-user summary:after {
-      display: none;
-    }
-
-    details.sfgov-sandbox-user[open] summary {
-      background: none;
-      border-radius: 0;
-    }
-  `
-  document.head.appendChild(style)
-
   const sandboxUsers = drupalSettings.sfgov_sandbox_user.users
   const sandboxPw = drupalSettings.sfgov_sandbox_user.pw
-  const selector = '.sfgov-user__login h1'
+  const selector = '.sfgov-user__content'
   const loginContainer = document.createElement('details')
 
-  loginContainer.className = 'sfgov-sandbox-user'
-  loginContainer.innerHTML = '<summary>Login as a test user</summary>'
-  let html = '<ul>'
+  loginContainer.style.width = '80%'
+  loginContainer.innerHTML = '<summary class="details__summary">Log in as a test user</summary>'
+  let html = '<ul class="details__content" style="margin: 0">'
   
   for (let user of sandboxUsers) {
-    html += '<li><a data-user="' + user + '" href="">' + user + '</a></li>'
+    html += '<li style="margin:0 0 10px 25px"><a data-user="' + user + '" href="">' + user + '</a></li>'
   }
 
   html += '</ul>'
 
   loginContainer.innerHTML += html
 
-  document.querySelector(selector).after(loginContainer)
+  document.querySelector(selector).prepend(loginContainer)
 
   loginContainer.querySelectorAll('a').forEach((item) => {
     item.addEventListener('click', (e) => {

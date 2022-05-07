@@ -161,28 +161,30 @@ function sfgov_utilities_page_attachments(array &$page) {
     $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
     
     /* sandbox user login */
-    $sandboxUserCredsPath = DRUPAL_ROOT . '/sites/default/files/private/secrets.json';
-    $sandboxUserCreds = null;
-    $routeName = \Drupal::routeMatch()->getRouteName();
-    if(file_exists($sandboxUserCredsPath) && $routeName == 'user.login') {
-      try {
-        $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
-        $sandboxUsers = [];
-        $sandboxUserPw = json_decode(file_get_contents($sandboxUserCredsPath), true);
+    if ($_ENV['PANTHEON_ENVIRONMENT'] !== 'content') { // don't do this for the content environment
+      $sandboxUserCredsPath = DRUPAL_ROOT . '/sites/default/files/private/secrets.json';
+      $sandboxUserCreds = null;
+      $routeName = \Drupal::routeMatch()->getRouteName();
+      if(file_exists($sandboxUserCredsPath) && $routeName == 'user.login') {
+        try {
+          $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+          $sandboxUsers = [];
+          $sandboxUserPw = json_decode(file_get_contents($sandboxUserCredsPath), true);
 
-        foreach($roles as $role) {
-          $roleId = $role->id();
-          if($roleId != 'authenticated' && $roleId != 'anonymous') {
-            $sandboxUser = 'test.' . str_replace('_', '', $roleId);
-            $sandboxUsers[] = $sandboxUser;
+          foreach($roles as $role) {
+            $roleId = $role->id();
+            if($roleId != 'authenticated' && $roleId != 'anonymous') {
+              $sandboxUser = 'test.' . str_replace('_', '', $roleId);
+              $sandboxUsers[] = $sandboxUser;
+            }
           }
-        }
 
-        $page['#attached']['drupalSettings']['sfgov_sandbox_user']['users'] = $sandboxUsers;
-        $page['#attached']['drupalSettings']['sfgov_sandbox_user']['pw'] = $sandboxUserPw['drush_pw'];
-        $page['#attached']['library'][] = 'sfgov_utilities/sandbox_user';
-      } catch(\Exception $e) {
-        error_log($e->getMessage);
+          $page['#attached']['drupalSettings']['sfgov_sandbox_user']['users'] = $sandboxUsers;
+          $page['#attached']['drupalSettings']['sfgov_sandbox_user']['pw'] = $sandboxUserPw['drush_pw'];
+          $page['#attached']['library'][] = 'sfgov_utilities/sandbox_user';
+        } catch(\Exception $e) {
+          error_log($e->getMessage);
+        }
       }
     }
   }
