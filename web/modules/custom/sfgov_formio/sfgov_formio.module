@@ -319,7 +319,7 @@ function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) 
 function sfgov_formio_node_presave($entity) {
   if ($entity->bundle() === 'form_page') {
     $langcode = $entity->language()->getId();
-    // Get the base form translation on only english versions of the page
+    // Get the base form translation on only english versions of the page.
     if ($formio_url = _get_formio_url($entity)) {
       if ($langcode === 'en') {
         // This is a checkbox field, if checked update the formio fields.
@@ -344,9 +344,9 @@ function sfgov_formio_node_presave($entity) {
         }
       }
       // Regardless of language, get the data in the formio fields, convert to
-      // json, and store it in field_formio_json_content for front-end rendering.
+      // json, and store in field_formio_json_content for front-end rendering.
       $formio_data = [];
-      foreach($entity->field_formio_fields->getValue() as $field) {
+      foreach ($entity->field_formio_fields->getValue() as $field) {
         $label = str_replace('_', '.', $field['key']);
         $formio_data[$langcode][$label] = $field['value'];
       }
@@ -358,7 +358,7 @@ function sfgov_formio_node_presave($entity) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function sfgov_formio_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function sfgov_formio_form_node_form_alter(&$form, $form_state, $form_id) {
   $entity = $form_state->getformObject()->getEntity();
   if ($entity->bundle() === 'form_page') {
     if (\Drupal::languageManager()->getCurrentLanguage()->getId() != 'en') {
@@ -374,7 +374,7 @@ function sfgov_formio_form_node_form_alter(&$form, FormStateInterface $form_stat
       '#weight' => $button_weight,
       '#open' => TRUE,
     ];
-      $form['formio_buttons_container']['clear_formio'] = [
+    $form['formio_buttons_container']['clear_formio'] = [
       '#type' => 'submit',
       '#value' => t('Clear Form Strings'),
       '#submit' => ['clear_formio_fields_submit'],
@@ -389,8 +389,8 @@ function sfgov_formio_form_node_form_alter(&$form, FormStateInterface $form_stat
 /**
  * Returns a valid formio url for data parsing.
  *
- * @param array $entity
- *  The Form Page node
+ * @param object $entity
+ *   The Form Page node.
  *
  * @return string
  *   A valid formio url.
@@ -420,15 +420,15 @@ function _get_formio_url($entity) {
 /**
  * After build callback for field_text_content.
  *
- * @param array $element
+ * @param object $element
  *   Array element.
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Form state.
  *
  * @return array
  *   New element.
  */
-function _field_text_content_after_build(array $element, FormStateInterface $form_state) {
+function _field_text_content_after_build($element, FormStateInterface $form_state) {
   if (isset($element['format'])) {
     // Remove Guidelines and Help text.
     unset($element['format']);
@@ -439,8 +439,12 @@ function _field_text_content_after_build(array $element, FormStateInterface $for
 /**
  * Submit function for removing formio fields.
  *
+ * @param object $form
+ *   Array element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
  */
-function clear_formio_fields_submit (&$form, FormStateInterface $form_state) {
+function clear_formio_fields_submit(&$form, FormStateInterface $form_state) {
   $element = $form['field_formio_fields']['widget'];
   $field_name = $element['#field_name'];
   $parents = $element['#field_parents'];
@@ -460,8 +464,12 @@ function clear_formio_fields_submit (&$form, FormStateInterface $form_state) {
 /**
  * Ajax function for removing formio fields.
  *
+ * @param object $form
+ *   Array element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
  */
-function clear_formio_fields_ajax (&$form, FormStateInterface $form_state) {
+function clear_formio_fields_ajax(&$form, FormStateInterface $form_state) {
   $element = $form['field_formio_fields']['widget'];
   foreach ($element as $key => $value) {
     if (is_int($key)) {
@@ -474,8 +482,16 @@ function clear_formio_fields_ajax (&$form, FormStateInterface $form_state) {
 /**
  * Helper function for adding formio data.
  *
+ * @param string $key
+ *   Key of the key/value pair.
+ * @param string $value
+ *   Value of the Key/value pair.
+ * @param string $format
+ *   Text format.
+ * @param array $actions
+ *   Actions.
  */
-function _add_formio_field($key, $value, $format = 'plain_text', $actions = []) {
+function _add_formio_field($key, $value, $format = 'plain_text', array $actions = []) {
   return [
     'key' => $key,
     'value' => $value,
@@ -483,4 +499,3 @@ function _add_formio_field($key, $value, $format = 'plain_text', $actions = []) 
     'actions' => $actions,
   ];
 }
-
