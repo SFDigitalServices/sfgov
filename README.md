@@ -26,7 +26,7 @@
     ```
 4. Install Composer dependencies and execute post-install scripts (including copying saml related things above to the right vendor directory): `composer install`
 5. **Start the Lando VM**: `lando start`
-6. **Obtain a [machine token](https://pantheon.io/docs/machine-tokens/)** from your Pantheon dashboard, and run the provided command, making sure to prefix it with `lando`, e.g. `lando terminus auth:login --machine-token=TOKEN`.
+6. **Obtain a [machine token](https://pantheon.io/docs/machine-tokens/)** from your Pantheon dashboard, and run the provided command, making sure to prefix it with `lando`, e.g. `lando terminus auth:login --machine-token=TOKEN`
 7. **Get latest DB and files from Pantheon** dev environment: `lando pull`. Most of the time, code will not need to be pulled from Pantheon: `lando pull --code=none --database=dev --files=dev`.
 8. Create a **local services** file:
 
