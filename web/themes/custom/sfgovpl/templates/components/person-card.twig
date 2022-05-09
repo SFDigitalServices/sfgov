@@ -13,20 +13,28 @@
     <img src="" alt="{{ first_name }} {{ last_name }}"/>
   </div>
   <div class="person-bio">
-  {% if profileposition %}
+  {% if profile_position %}
     <div class="person-position">
-      {{ profileposition }}
+    {% trans %}
+      {{ profile_position }}
+    {% endtrans %}
     </div>
   {% endif %}
     <div class="person-name notranslate">
       <a href="{{ url }}">{{ first_name }} {{ last_name }}</a>
     </div>
-    <div class="person-title">{{ position_title }}</div>
-    {% if is_mayor %}
-  </div>
-  <div class="person-subtitle">{{ position_subtitle }}</div>
+    <div class="person-title">
+      {{ '@position_title'|t({'@position_title': position_title}) }}
+    </div>
+  {% if is_mayor %}
+    </div>
+    <div class="person-subtitle">
+      {{ '@position_subtitle'|t({'@position_subtitle': position_subtitle}) }}
+    </div>
   {% else %}
-    <div class="person-subtitle">{{ position_subtitle }}</div>
+    <div class="person-subtitle">
+      {{ '@position_subtitle'|t({'@position_subtitle': position_subtitle}) }}
+    </div>
   </div>
 {% endif %}
 </div>
