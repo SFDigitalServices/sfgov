@@ -241,13 +241,14 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
           $profiles = $pgroup->field_profiles->getValue();
           foreach ($profiles as $gprofile) {
             $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
+            $pprofile = \Drupal::service('entity.repository')->getTranslationFromContext($pprofile);
             $pid = $pprofile->field_profile->getValue();
             $pid = $pid[0]['target_id'];
             // Find paragraph containing profile reference
             if ($pid == $nid) {
               $position = $pprofile->field_commission_position->getValue();
               if (!empty($position[0]['value'])) {
-                $variables['profileposition'] = $position[0]['value'];
+                $variables['profile_position'] = $position[0]['value'];
               }
             }
           }
@@ -675,9 +676,11 @@ function profile_page_fields($node) {
         $department = FALSE;
         if (!$addressEntity->get('field_department')->isEmpty()) {
           $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
+          $Addresstitle = $department->title->value;
+        } else {
+          $Addresstitle = $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
         }
-        // Choose a title value in descending order.
-        $Addresstitle = $department->title->value ?: $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
+        // Choose a title value in descending order. 
         $theFields['address']['title'] = $Addresstitle;
         // If one of the address fields was used as the title, remove it from
         // the render array so that it doesn't show up twice.

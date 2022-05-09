@@ -265,6 +265,11 @@ function sfgov_utilities_deploy_03_resources() {
   $rm->migrateResourceCollections();
 }
 
+function sfgov_utilities_deploy_04_resources_subheading() {
+  $rm = new ResourceMigration();
+  $rm->migrateTopicsAndDepartmentsResourceSubheading();
+}
+
 function sfgov_utilities_deploy_04_info_page() {
   $nids = \Drupal::entityQuery('node')->condition('type','information_page')->execute();
   $nodes = Node::loadMultiple($nids);

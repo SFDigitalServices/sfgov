@@ -38,38 +38,27 @@
  * @ingroup themeable
  */
 #}
+
+{{ attach_library('sfgov_utilities/services') }}
+
+{% if paragraph.field_title.0.value|striptags is not empty %}
+{% set title = '' %}
+{% else %}
+{% set title = 'no-title' %}
+{% endif %}
 {%
   set classes = [
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
-  ]
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    title|clean_class,
+  ]|merge(classes|default([]))
 %}
-
-{% set counter = 0 %}
-{% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
-  {% set counter = counter + 1 %}
-{% endfor %}
-
-{% spaceless %}
 {% block paragraph %}
-<div class="paragraph-timeline">
-    
-  {% if content.field_timeline_title[0] %}
-    {{ content.field_timeline_title }}
-  {% endif %}
-  <div class="timeline-container items-{{ counter }}">
-  {% if content.field_timeline_item %}
-    {{ content.field_timeline_item }}
-  {% endif %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {{ content }}
+    {% endblock %}
   </div>
-  <br>
-  <div class="timeline-link">
-    {% if content.field_link[0] %}
-      {{ content.field_link }}
-    {% endif %}
-  </div>
-</div>
 {% endblock paragraph %}
-{% endspaceless %}
