@@ -4,9 +4,6 @@ namespace Drupal\sfgov_formio\Plugin\Field;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\tmgmt_content\DefaultFieldProcessor;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Render\Element;
 
 /**
  * Field processor for the Formio Json Content text field.
@@ -23,16 +20,17 @@ class FormioFieldProcessor extends DefaultFieldProcessor {
     if ($field->getName() === 'field_formio_fields') {
       $field_definition = $field->getFieldDefinition();
       $data['#label'] = $field_definition->getLabel();
-      foreach($field->getValue() as $key => $value) {
+      foreach ($field->getValue() as $key => $value) {
         $entry = [
           '#translate' => TRUE,
           '#text' => $value['value'],
           '#label' => $value['key'],
         ];
-       $data[$key]['value'] = $entry;
+        $data[$key]['value'] = $entry;
       }
     }
     // If there is no formio data, fallback to the default behavior.
     return $data ?: DefaultFieldProcessor::extractTranslatableData($field);
   }
+
 }
