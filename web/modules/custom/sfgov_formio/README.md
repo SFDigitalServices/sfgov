@@ -41,7 +41,7 @@ Form.io forms are implemented via Paragraphs. There is a `form_io` Paragraph ent
 | `form` | Custom block type | `/block/add/form` | Useful for displaying a form on one or more pages. | Feedback form (bottom of all pages) |
 
 ## Translating Form Content
-Form content can be translated through TMGMT. Form nodes have a computed field called formiourl that builds and validates a url that can be used to pull the raw field and label data into Drupal. That field is then used by a custom TMGMT field processor to build out the standard TMGMT UI which can be interacted with as normal. The data is then saved in json format into the formio_json_content field on Form nodes (hidden from display) and that field data is sent into the paragraph to render the translated content.
+Form content can be translated through TMGMT. Form nodes have a checkbox which, when marked, will tell the node to fetch the respective formio fields on save. These can then be translated like any other field.
 
 ### Adding Form Content
 

@@ -4,11 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.node.form_page.field_form_id
+    - field.field.node.form_page.field_formio_fields
     - field.field.node.form_page.field_formio_json_content
     - field.field.node.form_page.field_intro_text
+    - field.field.node.form_page.field_update_formio_fields
     - node.type.form_page
   module:
     - entity_reference_revisions
+    - key_value_field
     - text
     - user
 id: node.form_page.default
@@ -30,6 +33,14 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_formio_fields:
+    type: key_value
+    label: above
+    settings:
+      value_only: false
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_formio_json_content:
     type: basic_string
     label: hidden
@@ -43,6 +54,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_update_formio_fields:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 7
     region: content
   formio_url:
     type: string

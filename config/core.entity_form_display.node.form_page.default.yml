@@ -4,12 +4,16 @@ status: true
 dependencies:
   config:
     - field.field.node.form_page.field_form_id
+    - field.field.node.form_page.field_formio_fields
     - field.field.node.form_page.field_formio_json_content
     - field.field.node.form_page.field_intro_text
+    - field.field.node.form_page.field_update_formio_fields
     - node.type.form_page
     - workflows.workflow.editorial
   module:
     - content_moderation
+    - key_value_field
+    - maxlength
     - paragraphs
     - path
     - scheduler
@@ -38,6 +42,29 @@ content:
       form_display_mode: default
       default_paragraph_type: ''
     third_party_settings: {  }
+  field_formio_fields:
+    type: key_value_textarea
+    weight: 13
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+      key_size: 60
+      key_placeholder: ''
+      description_enabled: false
+      description_placeholder: ''
+      key_label: Key
+      value_label: Value
+      description_label: Description
+      description_rows: '5'
+    third_party_settings:
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_summary: null
+        maxlength_js_label_summary: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
   field_intro_text:
     type: text_textarea
     weight: 9
@@ -45,6 +72,13 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_update_formio_fields:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -67,13 +101,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 11
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 13
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -109,13 +143,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 12
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 14
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  update_formio_fields_test:
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
