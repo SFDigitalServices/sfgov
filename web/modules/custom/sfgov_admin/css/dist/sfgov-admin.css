@@ -130,7 +130,8 @@
 }
 
 .sidebar-toggle .sidebar-toggle__icon::before, .sidebar-toggle .sidebar-toggle__icon::after {
-  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
   background: #585858;
   content: '';
   right: 0;
@@ -573,15 +574,15 @@ details.paragraph-type--powerbi-embed__aspect-ratios div.form-wrapper.paragraphs
   background-image: url("../../images/dist/Spotlight.png");
 }
 
-table.field-multiple-table td {
+table:not([id^=field-formio-fields-values]).field-multiple-table td {
   position: relative;
 }
 
-table.field-multiple-table td input.form-autocomplete {
+table:not([id^=field-formio-fields-values]).field-multiple-table td input.form-autocomplete {
   width: 82%;
 }
 
-table.field-multiple-table td input[class^=remove-field-delta] {
+table:not([id^=field-formio-fields-values]).field-multiple-table td input[class^=remove-field-delta] {
   right: 0;
   position: absolute;
   top: 0;

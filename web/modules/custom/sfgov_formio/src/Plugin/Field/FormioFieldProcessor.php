@@ -33,5 +33,4 @@ class FormioFieldProcessor extends DefaultFieldProcessor {
     // If there is no formio data, fallback to the default behavior.
     return $data ?: DefaultFieldProcessor::extractTranslatableData($field);
   }
-
 }
