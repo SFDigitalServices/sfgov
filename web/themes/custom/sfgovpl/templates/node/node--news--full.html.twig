@@ -14,7 +14,7 @@
 
   {% block footer %}
     <div class="news--meta">
-      <div class="news--meta-inner">
+      <div class="news--meta-inner responsive-container">
         <div class="news--meta-text">
           {{ content.field_abstract }}
           {{ content.field_date }}
@@ -26,7 +26,7 @@
   {% block content %}
     {% if content.field_image|render %}
       <div class="news--image">
-        <div class="news--image-inner">
+        <div class="news--image-inner responsive-container">
           {% include '@theme/media-with-caption.twig' with {
             entity: node.field_image.entity,
             media: content.field_image,
@@ -36,7 +36,7 @@
     {% endif %}
 
     <div{{ content_attributes.addClass(bundle ~ '--body') }}>
-      <div class="news--body-inner">
+      <div class="news--body-inner responsive-container">
         {{ content|without(
           'content_moderation_control',
           'field_abstract',
@@ -50,7 +50,9 @@
 
     {% if content.field_dept.0 %}
       <div class="{{ bundle }}--ankle">
-        {{ content.field_dept }}
+        <div class="responsive-container">
+          {{ content.field_dept }}
+        </div>
       </div>
     {% endif %}
   {% endblock content %}
