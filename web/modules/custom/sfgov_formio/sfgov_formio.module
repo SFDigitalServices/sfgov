@@ -166,6 +166,7 @@ function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) 
  */
 function sfgov_formio_node_presave($entity) {
   if ($entity->bundle() === 'form_page') {
+
     $langcode = $entity->language()->getId();
     // Get the base form translation on only english versions of the page.
     if ($formio_url = _get_formio_url($entity)) {
@@ -248,7 +249,7 @@ function _get_formio_url($entity) {
   if ($paragraph_nid = $entity->get('field_form_id')->target_id) {
     $form_paragraph = \Drupal::entityTypeManager()->getStorage('paragraph')->load($paragraph_nid);
     $formio_data_source = $form_paragraph->hasfield('field_formio_data_source') ? $form_paragraph->get('field_formio_data_source')->value : NULL;
-    if (UrlHelper::isExternal($formio_data_source)) {
+    if ($formio_data_source && UrlHelper::isExternal($formio_data_source)) {
       // If its an external url, pull the existing config and use it to
       // generate a url.
       $formio_config = \Drupal::config('sfgov_formio.settings');
