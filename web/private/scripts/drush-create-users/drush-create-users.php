@@ -58,4 +58,3 @@
     _test_hook_slack_notification("create users: \n" . (strlen($debug) > 0 ? $debug : '  no users created'));
   
   }
-  
