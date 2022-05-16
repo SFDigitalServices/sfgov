@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\path_alias\Entity\PathAlias;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -150,6 +151,20 @@ function sfgovpl_preprocess_html(&$variables) {
         Url::fromRoute($currentRoute->getRouteName(), [
           'node' => $theNode->id(),
         ], ['language' => $language])->toString();
+      // Generate url alias for machine translated nodes
+      if (strpos($nodeUrl, '/node/') !== false) {
+        PathAlias::create([
+          'path' => '/node/' . $node->id(),
+          'alias' => '/' . $pageInfo['translations'][0]['turl'],
+          'langcode' => $langCode,
+        ])->save();
+        $nodeUrl = isset($langs[$langCode]) ?
+        $theNode->getTranslation($langCode)->toUrl()->toString() :
+        Url::fromRoute($currentRoute->getRouteName(), [
+          'node' => $theNode->id(),
+        ], ['language' => $language])->toString();
+      }
+      // Get $nodeUrl again after generating translation alias
       $pageInfo['translations'][] = [
         'lang' => isset($gTranslatePrefixMap[$langCode]) ? $gTranslatePrefixMap[$langCode] : $langCode,
         'turl' => $isFront ?
@@ -173,6 +188,7 @@ function sfgovpl_preprocess_html(&$variables) {
         ])->toString(),
         'status' => isset($langs[$langCode]) ?  $theNode->getTranslation($langCode)->isPublished() : false,
       ];
+      $test = 'test';
     }
     $variables['page']['#attached']['drupalSettings']['sfgov_translations']['page'] = $pageInfo;
   }
