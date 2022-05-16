@@ -156,6 +156,7 @@ function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) 
   // Remove all of the text format stuff from the formio fields field.
   $field_definition = $context['items']->getFieldDefinition();
   if ($field_definition->getName() === 'field_formio_fields') {
+    $element['key']['#disabled'] = TRUE;
     $element['#allowed_formats'] = ['plain_text'];
     $element['#after_build'][] = '_field_text_content_after_build';
   }
@@ -216,22 +217,20 @@ function sfgov_formio_form_node_form_alter(&$form, $form_state, $form_id) {
       $form['field_update_formio_fields']['#access'] = FALSE;
     }
 
-    $button_weight = $form['field_formio_fields']['#weight'] - 1;
-    $form['formio_buttons_container'] = [
-      '#type' => 'container',
-      '#title' => t('Formio Buttons'),
-      '#weight' => $button_weight,
-      '#open' => TRUE,
-    ];
-    $form['formio_buttons_container']['clear_formio'] = [
-      '#type' => 'submit',
-      '#value' => t('Clear Form Strings'),
-      '#submit' => ['clear_formio_fields_submit'],
-      '#ajax' => [
-        'callback' => 'clear_formio_fields_ajax',
-        'wrapper' => 'field-formio-fields-add-more-wrapper',
-      ],
-    ];
+    // Only display the clear button if there are values in the field.
+    if ($entity->field_formio_fields->getValue()) {
+      $button_weight = $form['field_formio_fields']['#weight'] + 1;
+      $form['clear_formio'] = [
+        '#type' => 'submit',
+        '#weight' => $button_weight,
+        '#value' => t('Clear All Strings'),
+        '#submit' => ['clear_formio_fields_submit'],
+        '#ajax' => [
+          'callback' => 'clear_formio_fields_ajax',
+          'wrapper' => 'field-formio-fields-add-more-wrapper',
+        ],
+      ];
+    }
   }
 }
 
