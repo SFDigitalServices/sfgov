@@ -11,7 +11,7 @@ function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id
   switch ($form_id) {
     case 'node_about_form':
       // Set placeholder value for Title.
-      $form['title']['widget'][0]['value']['#value'] = 'About';
+      $form['title']['widget'][0]['value']['#value'] = t('About');
 
       // Hide title field.
       $form['title']['#access'] = FALSE;
@@ -43,7 +43,7 @@ function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id
 function sfgov_about_node_insert(EntityInterface $entity) {
   if ($entity->bundle() == 'about') {
     // Update entity title based on `field_parent_department`.
-    $entity->setTitle('About the ' . $entity->field_parent_department->entity->label());
+    $entity->setTitle(t('About the') . ' ' . $entity->field_parent_department->entity->label());
     $entity->save();
   }
 }
@@ -64,7 +64,7 @@ function sfgov_about_node_prepare_form(EntityInterface $entity, $operation, Form
       $paragraphs_entity = $storage->create([
         'type' => 'custom_section',
         'langcode' => $langcode,
-        'field_title' => $title,
+        'field_title' => t($title),
       ]);
       $entity->get('field_custom_sections')->appendItem($paragraphs_entity);
     }
@@ -81,7 +81,7 @@ function sfgov_about_node_prepare_form(EntityInterface $entity, $operation, Form
       $paragraphs_entity = $storage->create([
         'type' => 'other_info_card',
         'langcode' => $langcode,
-        'field_title' => $title,
+        'field_title' => t($title),
       ]);
       $entity->get('field_about_resources')->appendItem($paragraphs_entity);
     }
@@ -113,7 +113,7 @@ function sfgov_about_preprocess_node(&$variables) {
         $variables['about_page_link'] = [
           '#type' => 'link',
           '#url' => $about_node->toUrl(),
-          '#title' => "Learn more about us"
+          '#title' => t('Learn more about us')
         ];
 
         // Add cachable dependency.
