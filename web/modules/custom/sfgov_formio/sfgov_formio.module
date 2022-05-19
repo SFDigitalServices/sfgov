@@ -175,17 +175,17 @@ function sfgov_formio_node_presave($entity) {
         // This is a checkbox field, if checked update the formio fields.
         if ($entity->field_update_formio_fields->value) {
           $field_data = (array) json_decode(file_get_contents($formio_url));
-          foreach ($field_data as $label => $value) {
+          foreach ($field_data['strings'] as $machine_name => $value) {
             $skip = FALSE;
             // If the key already exists, override the value.
             foreach ($entity->field_formio_fields->getValue() as $key => $entry) {
-              if ($entry['key'] === $label) {
+              if ($entry['description'] === $machine_name) {
                 $skip = TRUE;
-                $entity->field_formio_fields[$key] = _add_formio_field($label, $value);
+                $entity->field_formio_fields[$key] = _add_formio_field($machine_name, $value);
               }
             }
             if (!$skip) {
-              $entity->field_formio_fields[] = _add_formio_field($label, $value);
+              $entity->field_formio_fields[] = _add_formio_field($machine_name, $value);
             }
           }
           // Set the checkbox back to empty to prevent accidental field
@@ -339,11 +339,12 @@ function clear_formio_fields_ajax(&$form, FormStateInterface $form_state) {
  * @param array $actions
  *   Actions.
  */
-function _add_formio_field($key, $value, $format = 'plain_text', array $actions = []) {
+function _add_formio_field($key, $values, $format = 'plain_text', array $actions = []) {
   return [
     'key' => $key,
-    'value' => $value,
+    'value' => $values->value,
     'format' => $format,
     'actions' => $actions,
+    'description' => $values->label,
   ];
 }

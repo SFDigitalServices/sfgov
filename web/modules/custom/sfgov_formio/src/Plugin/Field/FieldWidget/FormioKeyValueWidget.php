@@ -20,21 +20,23 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
   /**
    * {@inheritdoc}
    */
-  protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
+  public function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
     foreach ($elements as $key => $element) {
       if (is_int($key)) {
-        // Add an easy way for editors to know each entry number
-        $elements[$key]['number'] = [
-          '#type' => 'label',
-          '#title' => 'Entry: ' . ($key + 1),
-          '#title_display' => 'above',
-        ];
+        // Disable the weight value so that elements can't be moved.
+        $elements[$key]['_weight']['#disabled'] = TRUE;
+
+        // Alter the element's title and description field.
+        $label = $element['description']['#default_value'];
+        $elements[$key]['key']['#title'] = $this->t('@label (#@number)', ['@label' => $label, '@number' => $key + 1]);
+
+        // Description field just holds the label, hide it.
+        $elements[$key]['description']['#access'] = FALSE;
+
         // Remove the remove button from each element.
         unset($elements[$key]['actions']['remove_button']);
-        // Remove the confusing "weight" value from each element.
-        unset($elements[$key]['_weight']);
       }
     }
 

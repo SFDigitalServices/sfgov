@@ -7,6 +7,25 @@ dependencies:
     - field.field.paragraph.form_io.field_formio_data_source
     - field.field.paragraph.form_io.field_formio_render_options
     - paragraphs.paragraphs_type.form_io
+  module:
+    - field_group
+third_party_settings:
+  field_group:
+    group_render_options:
+      children:
+        - field_formio_render_options
+      label: 'Render Options'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: ''
+        required_fields: true
 id: paragraph.form_io.default
 targetEntityType: paragraph
 bundle: form_io
@@ -14,9 +33,10 @@ mode: default
 content:
   field_formio_confirmation_url:
     type: string_textfield
-    weight: 4
+    weight: 1
     region: content
     settings:
+      orderable: true
       size: 60
       placeholder: ''
     third_party_settings: {  }
@@ -25,14 +45,16 @@ content:
     weight: 0
     region: content
     settings:
+      orderable: true
       size: 60
       placeholder: ''
     third_party_settings: {  }
   field_formio_render_options:
     type: string_textarea
-    weight: 3
+    weight: 2
     region: content
     settings:
+      orderable: true
       rows: 5
       placeholder: ''
     third_party_settings: {  }
