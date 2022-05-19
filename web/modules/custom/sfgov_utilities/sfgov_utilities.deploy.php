@@ -309,6 +309,7 @@ function sfgov_utilities_deploy_05_dept_page_about() {
 // migrate field_public_body references to field_dept
 function sfgov_utilities_deploy_06_field_dept_migration() {
   try {
+    // migrate to field_departments from field_dept or field_public_body
     $informationPageNodes = Utility::getNodes('information_page');
     $campaignNodes = Utility::getNodes('campaign');
     $deptTableNodes = Utility::getNodes('department_table');
@@ -318,17 +319,35 @@ function sfgov_utilities_deploy_06_field_dept_migration() {
     $newsNodes = Utility::getNodes('news');
     $resourceCollectionNodes = Utility::getNodes('resource_collection');
     $stepByStepNodes = Utility::getNodes('step_by_step');
-  
+
     $fieldMigration = new TopLevelFieldMigration();
+
     $fieldMigration->migrate($informationPageNodes, 'field_public_body', 'field_departments');
+    unset($informationPageNodes);
+
     $fieldMigration->migrate($campaignNodes, 'field_dept', 'field_departments');
+    unset($campaignNodes);
+
     $fieldMigration->migrate($deptTableNodes, 'field_dept', 'field_departments');
+    unset($deptTableNodes);
+
     $fieldMigration->migrate($eventNodes, 'field_dept', 'field_departments');
+    unset($eventNodes);
+
     $fieldMigration->migrate($formConfirmPageNodes, 'field_dept', 'field_departments');
+    unset($formConfirmPageNodes);
+
     $fieldMigration->migrate($meetingNodes, 'field_dept', 'field_departments');
+    unset($meetingNodes);
+
     $fieldMigration->migrate($newsNodes, 'field_dept', 'field_departments');
+    unset($newsNodes);
+
     $fieldMigration->migrate($resourceCollectionNodes, 'field_dept', 'field_departments');
+    unset($resourceCollectionNodes);
+
     $fieldMigration->migrate($stepByStepNodes, 'field_dept', 'field_departments');
+    unset($stepByStepNodes);
   } catch(\Exception $e) {
     echo $e->getMessage(), "\n";
   }  

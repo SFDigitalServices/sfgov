@@ -53,6 +53,8 @@ class TopLevelFieldMigration {
             'ref_id' => $refId,
           ];
 
+          echo "updating (" . $node->getType() . ") [$nid] " . $node->getTitle() . "\n";
+
           // assign to new field
           $toField[] = [
             'target_id' => $refId
@@ -60,6 +62,8 @@ class TopLevelFieldMigration {
 
           // remove old ref
           $fromField->removeItem(0);
+
+          unset($refNode);
         }
         $node->save();
       }

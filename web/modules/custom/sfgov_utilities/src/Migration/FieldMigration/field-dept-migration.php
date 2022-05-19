@@ -16,15 +16,33 @@ try {
   $stepByStepNodes = Utility::getNodes('step_by_step');
 
   $fieldMigration = new TopLevelFieldMigration();
+
   $fieldMigration->migrate($informationPageNodes, 'field_public_body', 'field_departments');
+  unset($informationPageNodes);
+
   $fieldMigration->migrate($campaignNodes, 'field_dept', 'field_departments');
+  unset($campaignNodes);
+
   $fieldMigration->migrate($deptTableNodes, 'field_dept', 'field_departments');
+  unset($deptTableNodes);
+
   $fieldMigration->migrate($eventNodes, 'field_dept', 'field_departments');
+  unset($eventNodes);
+
   $fieldMigration->migrate($formConfirmPageNodes, 'field_dept', 'field_departments');
+  unset($formConfirmPageNodes);
+
   $fieldMigration->migrate($meetingNodes, 'field_dept', 'field_departments');
+  unset($meetingNodes);
+
   $fieldMigration->migrate($newsNodes, 'field_dept', 'field_departments');
+  unset($newsNodes);
+
   $fieldMigration->migrate($resourceCollectionNodes, 'field_dept', 'field_departments');
+  unset($resourceCollectionNodes);
+
   $fieldMigration->migrate($stepByStepNodes, 'field_dept', 'field_departments');
+  unset($stepByStepNodes);
 
   echo json_encode($fieldMigration->getReport(), JSON_UNESCAPED_SLASHES) . "\n";
 } catch(\Exception $e) {
