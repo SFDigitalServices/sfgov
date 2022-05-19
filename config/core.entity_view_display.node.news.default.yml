@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.news.body
     - field.field.node.news.field_abstract
     - field.field.node.news.field_date
+    - field.field.node.news.field_departments
     - field.field.node.news.field_dept
     - field.field.node.news.field_direct_external_url
     - field.field.node.news.field_image
@@ -50,6 +51,14 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
+  field_departments:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_dept:
     type: entity_reference_label
     label: above
@@ -72,11 +81,12 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 7
     region: content
 hidden:
   field_direct_external_url: true
   field_topics: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

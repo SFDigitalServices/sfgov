@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.campaign.field_campaign_about
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_contents
+    - field.field.node.campaign.field_departments
     - field.field.node.campaign.field_dept
     - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_links
@@ -29,7 +30,7 @@ third_party_settings:
       label: 'Locations and Access'
       parent_name: ''
       region: hidden
-      weight: 14
+      weight: 16
       format_type: html_element
       format_settings:
         classes: __campaign-locations-access-wrapper
@@ -68,6 +69,14 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
+  field_departments:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
+    region: content
   field_dept:
     type: entity_reference_label
     label: above
@@ -95,7 +104,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 9
+    weight: 10
     region: content
   field_logo:
     type: image
@@ -135,6 +144,7 @@ content:
     region: content
 hidden:
   field_campaign_theme: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

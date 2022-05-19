@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.resource_collection.field_content
     - field.field.node.resource_collection.field_content_bottom
     - field.field.node.resource_collection.field_data_dashboard
+    - field.field.node.resource_collection.field_departments
     - field.field.node.resource_collection.field_dept
     - field.field.node.resource_collection.field_description
     - field.field.node.resource_collection.field_introductory_text
@@ -34,7 +35,7 @@ content:
       view_mode: resource_collection
       link: ''
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   field_content_bottom:
     type: entity_reference_revisions_entity_view
@@ -43,7 +44,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_data_dashboard:
     type: entity_reference_revisions_entity_view
@@ -52,7 +53,15 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 7
+    region: content
+  field_departments:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
     region: content
   field_dept:
     type: entity_reference_label
@@ -60,14 +69,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 12
+    weight: 8
     region: content
   field_description:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   field_introductory_text:
     type: entity_reference_revisions_entity_view
@@ -76,7 +85,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 7
+    weight: 6
     region: content
   field_paragraphs:
     type: entity_reference_revisions_entity_view
@@ -85,7 +94,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 13
+    weight: 10
     region: content
   field_sidebar:
     type: entity_reference_revisions_entity_view
@@ -94,7 +103,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   field_topics:
     type: entity_reference_label
@@ -102,9 +111,10 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 5
+    weight: 4
     region: content
 hidden:
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true
