@@ -331,7 +331,7 @@ function sfgov_formio_node_presave($entity) {
             $skip = FALSE;
             // If the key already exists, override the value.
             foreach ($entity->field_formio_fields->getValue() as $key => $entry) {
-              if ($entry['description'] === $machine_name) {
+              if ($entry['key'] === $machine_name) {
                 $skip = TRUE;
                 $entity->field_formio_fields[$key] = _add_formio_field($machine_name, $value);
               }
