@@ -20,6 +20,21 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
   /**
    * {@inheritdoc}
    */
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
+
+    $element['key']['#disabled'] = TRUE;
+
+    if ($form_state->getformObject()->getEntity()->language()->getId() === 'en') {
+      $element['#disabled'] = TRUE;
+    }
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
@@ -30,7 +45,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
 
         // Alter the element's title and description field.
         $label = $element['description']['#default_value'];
-        $elements[$key]['key']['#title'] = $this->t('@label (#@number)', ['@label' => $label, '@number' => $key + 1]);
+        $elements[$key]['key']['#title'] = $this->t('(#@number) @label', ['@number' => $key + 1, '@label' => $label]);
 
         // Description field just holds the label, hide it.
         $elements[$key]['description']['#access'] = FALSE;
