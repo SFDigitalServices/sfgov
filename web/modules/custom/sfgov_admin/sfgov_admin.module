@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
@@ -425,4 +426,22 @@ function sfgov_admin_cron() {
         ->execute();
     }
   }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function sfgov_admin_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface $cacheability) {
+
+  // Remove the Files tab from the Content administration page.
+  unset($data['tabs'][0]['views_view:view.files.page_1']);
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function sfgov_admin_menu_links_discovered_alter(&$links) {
+
+  // Remove the Files tab from the Content administration page.
+  unset($links['admin_toolbar_tools.extra_links:view.files']);
 }
