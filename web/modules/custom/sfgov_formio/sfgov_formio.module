@@ -308,7 +308,6 @@ function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) 
   // Remove all of the text format stuff from the formio fields field.
   $field_definition = $context['items']->getFieldDefinition();
   if ($field_definition->getName() === 'field_formio_fields') {
-    $element['key']['#disabled'] = TRUE;
     $element['#allowed_formats'] = ['plain_text'];
     $element['#after_build'][] = '_field_text_content_after_build';
   }
@@ -352,7 +351,8 @@ function sfgov_formio_node_presave($entity) {
         $label = str_replace('_', '.', $field['key']);
         $formio_data[$langcode][$label] = $field['value'];
       }
-      $entity->set('field_formio_json_content', json_encode($formio_data));
+      $translated_entity = $entity->getTranslation($langcode);
+      $translated_entity->set('field_formio_json_content', json_encode($formio_data));
     }
   }
 }
@@ -493,10 +493,12 @@ function clear_formio_fields_ajax(&$form, FormStateInterface $form_state) {
  */
 function _add_formio_field($key, $values, $format = 'plain_text', array $actions = []) {
   return [
-    'key' => $key,
+    // Limit the character count to what can be stored in the db.
+    'key' => substr($key, 0, 255),
     'value' => $values->value,
     'format' => $format,
     'actions' => $actions,
-    'description' => $values->label,
+    // Limit the character count to what can be stored in the db.
+    'description' => substr($values->label, 0, 255),
   ];
 }
