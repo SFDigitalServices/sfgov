@@ -4,7 +4,9 @@
     {{ banner.label }}
     <div class="hero-banner--logo-wrapper">
       {% block logo %}
-        <img class="hero-banner--logo" src="{{ banner.logo }}"/>
+        {% if banner.logo %}
+          <img class="hero-banner--logo" src="{{ banner.logo }}"/>
+        {% endif %}
       {% endblock logo %}
       <h1 class="hero-banner--title">{{ banner.title }}</h1>
     </div>

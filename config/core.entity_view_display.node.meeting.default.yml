@@ -7,9 +7,9 @@ dependencies:
     - field.field.node.meeting.field_abstract
     - field.field.node.meeting.field_address
     - field.field.node.meeting.field_agenda
+    - field.field.node.meeting.field_departments
     - field.field.node.meeting.field_dept
     - field.field.node.meeting.field_direct_external_url
-    - field.field.node.meeting.field_end_date
     - field.field.node.meeting.field_link
     - field.field.node.meeting.field_location_in_person
     - field.field.node.meeting.field_location_online
@@ -20,12 +20,10 @@ dependencies:
     - field.field.node.meeting.field_regulations_accordions
     - field.field.node.meeting.field_regulations_title
     - field.field.node.meeting.field_smart_date
-    - field.field.node.meeting.field_start_date
     - field.field.node.meeting.field_title
     - field.field.node.meeting.field_videos
     - node.type.meeting
   module:
-    - datetime
     - entity_reference_revisions
     - link
     - sfgov_dates
@@ -73,9 +71,9 @@ content:
     third_party_settings: {  }
     weight: 8
     region: content
-  field_dept:
+  field_departments:
     type: entity_reference_label
-    label: hidden
+    label: above
     settings:
       link: true
     third_party_settings: {  }
@@ -92,15 +90,6 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 5
-    region: content
-  field_end_date:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 18
     region: content
   field_link:
     type: link
@@ -195,15 +184,6 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
-  field_start_date:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 19
-    region: content
   field_videos:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -214,6 +194,7 @@ content:
     weight: 10
     region: content
 hidden:
+  field_dept: true
   field_title: true
   formio_url: true
   langcode: true

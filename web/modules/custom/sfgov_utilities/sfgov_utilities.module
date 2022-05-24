@@ -8,6 +8,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Cache\Cache;
 use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
+use Drush\Drush;
 
 /**
  * Implements hook_template_preprocess_default_variables_alter().
@@ -151,67 +152,38 @@ function sfgov_utilities_entity_type_alter(array &$entity_types) {
   }
 }
 
+/**
+ * Implements hook_page_attachments
+ */
 function sfgov_utilities_page_attachments(array &$page) {
-  // Don't run on admin pages
-  if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
-    $node = \Drupal::routeMatch()->getParameter('node');
-    if (!empty($node) && $node instanceOf NodeInterface) {
-      $bundle = $node->bundle();
-      // Only check department and topic nodes
-      if ($bundle == 'department' || $bundle == 'topic') {
-        // Count the number of service sections and services
-        $num_sections = 0;
-        $num_services = 0;
-        $ids = $node->get('field_department_services')->getValue();
-        $num_sections = count($ids);
-        foreach ($ids as $paragraph) {
-          $sps = \Drupal::entityTypeManager()
-            ->getStorage('paragraph')
-            ->load($paragraph['target_id']);
-          $sids = $sps ? $sps->get('field_dept_service_sect_services')->getValue() : [];
-          foreach ($sids as $snode) {
-            // Check if service nodes are published
-            $fsnode = \Drupal::entityTypeManager()
-              ->getStorage('node')
-              ->load($snode['target_id']);
-            if ($fsnode && $fsnode->isPublished()) {
-              $num_services += 1;
+  // Sandbox alert
+  if (isset($_ENV['PANTHEON_ENVIRONMENT']) && $_ENV['PANTHEON_ENVIRONMENT'] !== 'live') {
+    $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
+    
+    /* sandbox user login */
+    if ($_ENV['PANTHEON_ENVIRONMENT'] !== 'content') { // don't do this for the content environment
+      $sandboxUserCredsPath = DRUPAL_ROOT . '/sites/default/files/private/secrets.json';
+      $sandboxUserCreds = null;
+      $routeName = \Drupal::routeMatch()->getRouteName();
+      if(file_exists($sandboxUserCredsPath) && $routeName == 'user.login') {
+        try {
+          $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+          $sandboxUsers = [];
+          $sandboxUserPw = json_decode(file_get_contents($sandboxUserCredsPath), true);
+
+          foreach($roles as $role) {
+            $roleId = $role->id();
+            if($roleId != 'authenticated' && $roleId != 'anonymous') {
+              $sandboxUser = 'test.' . str_replace('_', '', $roleId);
+              $sandboxUsers[] = $sandboxUser;
             }
           }
-        }
 
-        //Count number of more services
-        $view = \Drupal\views\Views::getView('services');
-        $nid = $node->id();
-        $view->setArguments(array($nid));
-        $view->setDisplay('topics_more_services');
-        $view->execute();
-        $view_result = $view->result;
-        $excluded_services = topic_page_services($node);
-
-        // Check More Services for unpublished items
-        foreach ($view_result as $key => $value) {
-          $node = \Drupal::entityTypeManager()
-            ->getStorage('node')
-            ->load($value->nid);
-          if (is_array($excluded_services)) {
-            if (in_array($value->nid, $excluded_services) || empty($node) || !$node->isPublished()) {
-              unset($view_result[$key]);
-            }
-          }
-        }
-
-        $num_more_services = count($view_result);
-
-        if ($num_more_services >= 1) {
-          $num_sections += 1;
-        }
-
-        $total_services = $num_services + $num_more_services;
-
-        // If enough items load accordion js
-        if ($total_services >= 12 && $num_sections >= 2) {
-          $page['#attached']['library'][] = 'sfgov_utilities/services';
+          $page['#attached']['drupalSettings']['sfgov_sandbox_user']['users'] = $sandboxUsers;
+          $page['#attached']['drupalSettings']['sfgov_sandbox_user']['pw'] = $sandboxUserPw['drush_pw'];
+          $page['#attached']['library'][] = 'sfgov_utilities/sandbox_user';
+        } catch(\Exception $e) {
+          error_log($e->getMessage);
         }
       }
     }
@@ -237,11 +209,8 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
 
 function sfgov_utilities_cloned_node_alter(&$node) {
   if ($node->getType() == 'meeting') {
-    if (!empty($node->field_start_date->getValue())) {
-      $node->set('field_start_date', NULL);
-    }
-    if (!empty($node->field_end_date->getValue())) {
-      $node->set('field_end_date', NULL);
+    if (!empty($node->field_smart_date->getValue())) {
+      $node->set('field_smart_date', NULL);
     }
   }
 }

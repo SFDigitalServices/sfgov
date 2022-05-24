@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.information_page.body
-    - field.field.node.information_page.field_dept
+    - field.field.node.information_page.field_departments
     - field.field.node.information_page.field_description
     - field.field.node.information_page.field_information_section
     - field.field.node.information_page.field_public_body
@@ -26,6 +26,14 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_departments:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
   field_description:
     type: text_default
     label: hidden
@@ -41,14 +49,6 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 3
-    region: content
-  field_public_body:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 4
     region: content
   field_related_content:
     type: entity_reference_label
@@ -69,7 +69,7 @@ content:
     region: content
 hidden:
   body: true
-  field_dept: true
+  field_public_body: true
   field_topics: true
   formio_url: true
   langcode: true

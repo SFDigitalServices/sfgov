@@ -24,4 +24,4 @@ echo "Rebuilding cache complete.\n";
 
 _test_hook_slack_notification("config import");
 
-require dirname(__DIR__) . '/lionbridge/lionbridge-credentials.php';
+require dirname(__DIR__) . '/translation-providers/credentials.php';

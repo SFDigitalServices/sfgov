@@ -177,6 +177,71 @@ class ResourceMigration {
     }
   }
 
+  // SG-1644 - resource section subheadings
+  public function migrateTopicsAndDepartmentsResourceSubheading() {
+    $nids = array_merge($this->getNodes('department'), $this->getNodes('topic'));
+
+    foreach($nids as $nid) {
+      // if($nid == 4010) {
+        $node = Node::load($nid);
+        $removes = [];
+        $resources = $node->get('field_resources')->getValue();
+        if(!empty($resources)) {
+          $resourcesToMove = [];
+
+          // only move non tile section paragraphs
+          foreach($resources as $resource) {
+            $resourceP = Paragraph::load($resource["target_id"]);
+            if($resourceP->getType() != "other_info_card") {
+              $resourcesToMove[] = $resource;
+
+              if($resourceP->getType() == 'resource_node') {
+                $resourceTitle = Node::load($resourceP->get('field_node')->getValue()[0]['target_id'])->getTitle();
+              } else {
+                $eckResource = $resourceP->get('field_resource')->getValue();
+                $eckId = $eckResource[0]['target_id'];
+                $storage = \Drupal::entityTypeManager()->getStorage("resource");
+                $eckEntity = $storage->load($eckId);
+                $resourceTitle = $eckEntity->get('title')->getValue()[0]['value'];
+              }
+
+              $reportResource = [
+                'resource_field_link' => $uri,
+                'resource_id' => $resourceP->id(),
+                'resource_type' => $resourceP->getType(),
+                'resource_field_title' => $resourceTitle,
+                'node_id' => $node->id(),
+                'node_content_type' => $node->getType(),
+                'node_title' => $node->getTitle(),
+                'node_author' => User::load($node->getOwner()->id())->getDisplayName(),
+                'last_updated' => date("m/d/Y", $node->changed->value)
+              ];
+
+              $this->nodeReport->addItem($reportResource, $node->id());
+              $this->report->addItem($reportResource);
+            }
+          }
+          
+          // create new resource section with subheading
+          // add existing resources
+          $tileSectionParagraph = Paragraph::create([
+            "type" => "other_info_card",
+            "field_resources" => $resourcesToMove
+          ]);
+          $tileSectionParagraph->save();
+  
+          $resources = [
+            "target_id" => $tileSectionParagraph->id(),
+            "target_revision_id" => $tileSectionParagraph->getRevisionId()
+          ];
+  
+          $node->set('field_resources', $resources);
+          $node->save();
+        }
+      // }
+    }
+  }
+
   //
   // resource collections
   // --> field_paragraphs

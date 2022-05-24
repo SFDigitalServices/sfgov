@@ -44,6 +44,7 @@ function sfgov_public_bodies_preprocess_views_view__meetings__page(&$variables) 
  * Implements hook_views_query_alter().
  */
 function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
+  // error_log(print_r($query->where));
   if ($view->id() == 'meetings' && ($view->getDisplay()->display['id'] == 'page_upcoming' || $view->getDisplay()->display['id'] == 'page_past')) {
     $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($view->args[0]);
     $query_month = \Drupal::request()->query->get('month');
@@ -85,13 +86,13 @@ function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $vie
       }
       else {
         if (!empty($query_month)) {
-          $field = "DATE_FORMAT((node__field_start_date.field_start_date_value + INTERVAL -25200 SECOND), '%m') = :month";
+          $field = "DATE_FORMAT((DATE_FORMAT(FROM_UNIXTIME(node__field_smart_date.field_smart_date_end_value),'%Y-%m-%dT%T') + INTERVAL -25200 SECOND), '%m') = :month";
           $value = [':month' => $query_month];
           $query->addWhere($group, $field, $value, 'formula');
         }
 
         if (!empty($query_year)) {
-          $field = "DATE_FORMAT((node__field_start_date.field_start_date_value + INTERVAL -25200 SECOND), '%Y') = :year";
+          $field = "DATE_FORMAT((DATE_FORMAT(FROM_UNIXTIME(node__field_smart_date.field_smart_date_end_value),'%Y-%m-%dT%T') + INTERVAL -25200 SECOND), '%Y') = :year";
           $value = [':year' => $query_year];
           $query->addWhere($group, $field, $value, 'formula');
         }

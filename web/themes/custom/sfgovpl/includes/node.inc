@@ -61,9 +61,8 @@ function sfgovpl_preprocess_node__meeting__full(&$variables) {
   $node = $variables['node'];
 
   // Determine if the meeting is past.
-  if ($date_start = $node->field_start_date->date) {
-    $date_start = $date_start->getPhpDateTime();
-    $date_now = new DateTime();
+  if ($date_start = $node->field_smart_date->value) {
+    $date_now = (new DateTime())->getTimestamp();
     $variables['meeting_is_past'] = $date_now > $date_start;
   }
 
@@ -89,36 +88,6 @@ function sfgovpl_preprocess_node__meeting__full(&$variables) {
     } catch (Exception $ex) {
       // do nothing
     }
-  }
-}
-
-/**
- * Implements hook_preprocess_node().
- */
-function sfgovpl_preprocess_node__meeting__teaser(&$variables) {
-  $node = $variables['node'];
-
-  // Date time.
-  $date_settings = ['timezone' => date_default_timezone_get()];
-  $meeting_time = [$node->field_start_date->date->format('g:ia', $date_settings)];
-  if ($node->field_end_date->value) {
-    $meeting_time[] = $node->field_end_date->date->format('g:ia', $date_settings);
-  }
-  $variables['meeting_time'] = [
-    '#markup' => implode(' to ', $meeting_time)
-  ];
-
-  // Address field.
-  $online = $node->field_location_online->value;
-  if ($node->field_address->entity) {
-    $address = $node->field_address->entity->field_address->getValue();
-    if ($address[0]['address_line1']) {
-      $variables['meeting_address'] = $address[0]['address_line1'];
-    } else {
-      $variables['meeting_address'] = '';
-    }
-  } elseif ($online == '1') {
-    $variables['online'] = TRUE;
   }
 }
 
@@ -272,13 +241,14 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
           $profiles = $pgroup->field_profiles->getValue();
           foreach ($profiles as $gprofile) {
             $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
+            $pprofile = \Drupal::service('entity.repository')->getTranslationFromContext($pprofile);
             $pid = $pprofile->field_profile->getValue();
             $pid = $pid[0]['target_id'];
             // Find paragraph containing profile reference
             if ($pid == $nid) {
               $position = $pprofile->field_commission_position->getValue();
               if (!empty($position[0]['value'])) {
-                $variables['profileposition'] = $position[0]['value'];
+                $variables['profile_position'] = $position[0]['value'];
               }
             }
           }
@@ -706,9 +676,11 @@ function profile_page_fields($node) {
         $department = FALSE;
         if (!$addressEntity->get('field_department')->isEmpty()) {
           $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
+          $Addresstitle = $department->title->value;
+        } else {
+          $Addresstitle = $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
         }
-        // Choose a title value in descending order.
-        $Addresstitle = $department->title->value ?: $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
+        // Choose a title value in descending order. 
         $theFields['address']['title'] = $Addresstitle;
         // If one of the address fields was used as the title, remove it from
         // the render array so that it doesn't show up twice.
