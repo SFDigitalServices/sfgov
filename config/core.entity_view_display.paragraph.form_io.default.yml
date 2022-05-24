@@ -3,9 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.form_io.field_form_strings
     - field.field.paragraph.form_io.field_formio_confirmation_url
     - field.field.paragraph.form_io.field_formio_data_source
+    - field.field.paragraph.form_io.field_formio_json_content
     - field.field.paragraph.form_io.field_formio_render_options
+    - field.field.paragraph.form_io.field_get_formio_strings
     - paragraphs.paragraphs_type.form_io
 id: paragraph.form_io.default
 targetEntityType: paragraph
@@ -18,7 +21,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 4
+    weight: 2
     region: content
   field_formio_data_source:
     type: string
@@ -33,7 +36,19 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
+  field_get_formio_strings:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
     weight: 3
     region: content
 hidden:
+  field_form_strings: true
+  field_formio_json_content: true
   search_api_excerpt: true

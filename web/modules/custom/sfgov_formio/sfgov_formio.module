@@ -146,7 +146,7 @@ function _sfgov_formio_sfds_source() {
 function sfgov_formio_field_info_alter(&$info) {
   // New processors can only be added at the field level. But this class has
   // logic in it to only operate on the Formio Json Content field.
-  $info['key_value_long']['tmgmt_field_processor'] = 'Drupal\sfgov_formio\Plugin\Field\FormioFieldProcessor';
+  $info['formio_key_value_item']['tmgmt_field_processor'] = 'Drupal\sfgov_formio\Plugin\Field\FormioFieldProcessor';
 }
 
 /**
@@ -155,8 +155,7 @@ function sfgov_formio_field_info_alter(&$info) {
 function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) {
   // Remove all of the text format stuff from the formio fields field.
   $field_definition = $context['items']->getFieldDefinition();
-  if ($field_definition->getName() === 'field_formio_fields') {
-    $element['#allowed_formats'] = ['plain_text'];
+  if ($field_definition->getName() === 'field_form_strings') {
     $element['#after_build'][] = '_field_text_content_after_build';
   }
 }
@@ -164,40 +163,40 @@ function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) 
 /**
  * Implements hook_ENTITY_TYPE_presave().
  */
-function sfgov_formio_node_presave($entity) {
-  if ($entity->bundle() === 'form_page') {
+function sfgov_formio_paragraph_presave($entity) {
+  if ($entity->bundle() === 'form_io') {
 
     $langcode = $entity->language()->getId();
     // Get the base form translation on only english versions of the page.
     if ($formio_url = _get_formio_url($entity)) {
       if ($langcode === 'en') {
         // This is a checkbox field, if checked update the formio fields.
-        if ($entity->field_update_formio_fields->value) {
+        if ($entity->field_get_formio_strings->value) {
           $field_data = (array) json_decode(file_get_contents($formio_url));
           foreach ($field_data['strings'] as $machine_name => $value) {
             $skip = FALSE;
+
             // If the key already exists, override the value.
-            foreach ($entity->field_formio_fields->getValue() as $key => $entry) {
+            foreach ($entity->field_form_strings->getValue() as $key => $entry) {
               if ($entry['key'] === $machine_name) {
                 $skip = TRUE;
-                $entity->field_formio_fields[$key] = _add_formio_field($machine_name, $value);
+                $entity->field_form_strings[$key] = _add_formio_field($machine_name, $value);
               }
             }
             if (!$skip) {
-              $entity->field_formio_fields[] = _add_formio_field($machine_name, $value);
+              $entity->field_form_strings[] = _add_formio_field($machine_name, $value);
             }
           }
           // Set the checkbox back to empty to prevent accidental field
           // overrides.
-          $entity->set('field_update_formio_fields', 0);
+          $entity->set('field_get_formio_strings', 0);
         }
       }
       // Regardless of language, get the data in the formio fields, convert to
       // json, and store in field_formio_json_content for front-end rendering.
       $formio_data = [];
-      foreach ($entity->field_formio_fields->getValue() as $field) {
-        $label = str_replace('_', '.', $field['key']);
-        $formio_data[$langcode][$label] = $field['value'];
+      foreach ($entity->field_form_strings->getValue() as $field) {
+        $formio_data[$langcode][$field['key']] = $field['value'];
       }
       $translated_entity = $entity->getTranslation($langcode);
       $translated_entity->set('field_formio_json_content', json_encode($formio_data));
@@ -206,33 +205,18 @@ function sfgov_formio_node_presave($entity) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  */
-function sfgov_formio_form_node_form_alter(&$form, $form_state, $form_id) {
-  $entity = $form_state->getformObject()->getEntity();
-  if ($entity->bundle() === 'form_page') {
+function sfgov_formio_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+  if ($element['#paragraph_type'] === 'form_io') {
     if (\Drupal::languageManager()->getCurrentLanguage()->getId() != 'en') {
       // Hide this field to prevent editors from accidentally overriding the
       // non-english versions with english from formio.
-      $form['field_update_formio_fields']['#access'] = FALSE;
-    }
-
-    // Only display the clear button if there are values in the field.
-    if ($entity->field_formio_fields->getValue()) {
-      $button_weight = $form['field_formio_fields']['#weight'] + 1;
-      $form['clear_formio'] = [
-        '#type' => 'submit',
-        '#weight' => $button_weight,
-        '#value' => t('Clear All Strings'),
-        '#submit' => ['clear_formio_fields_submit'],
-        '#ajax' => [
-          'callback' => 'clear_formio_fields_ajax',
-          'wrapper' => 'field-formio-fields-add-more-wrapper',
-        ],
-      ];
+      $element['subform']['field_get_formio_strings']['#access'] = FALSE;
     }
   }
 }
+
 
 /**
  * Returns a valid formio url for data parsing.
@@ -245,19 +229,16 @@ function sfgov_formio_form_node_form_alter(&$form, $form_state, $form_id) {
  */
 function _get_formio_url($entity) {
   $formio_url = FALSE;
-  if ($paragraph_nid = $entity->get('field_form_id')->target_id) {
-    $form_paragraph = \Drupal::entityTypeManager()->getStorage('paragraph')->load($paragraph_nid);
-    $formio_data_source = $form_paragraph->hasfield('field_formio_data_source') ? $form_paragraph->get('field_formio_data_source')->value : NULL;
-    if ($formio_data_source && UrlHelper::isExternal($formio_data_source)) {
-      // If its an external url, pull the existing config and use it to
-      // generate a url.
-      $formio_config = \Drupal::config('sfgov_formio.settings');
-      $constructed_url = str_replace(
-      '[form_url]',
-      urlencode(trim($formio_data_source)),
-      $formio_config->get('formio_translations_api_url'));
-      $formio_url = UrlHelper::isValid($constructed_url) ? $constructed_url : FALSE;
-    }
+  $formio_data_source = $entity->hasfield('field_formio_data_source') ? $entity->get('field_formio_data_source')->value : NULL;
+  if ($formio_data_source && UrlHelper::isExternal($formio_data_source)) {
+    // If its an external url, pull the existing config and use it to
+    // generate a url.
+    $formio_config = \Drupal::config('sfgov_formio.settings');
+    $constructed_url = str_replace(
+    '[form_url]',
+    urlencode(trim($formio_data_source)),
+    $formio_config->get('formio_translations_api_url'));
+    $formio_url = UrlHelper::isValid($constructed_url) ? $constructed_url : FALSE;
   }
   if (!$formio_url) {
     \Drupal::logger('sfgov_formio')->notice('The url provided in field_formio_data_source on node %nid is not providing valid formio data for translations', ['%nid' => $entity->id()]);
@@ -285,49 +266,6 @@ function _field_text_content_after_build($element, FormStateInterface $form_stat
 }
 
 /**
- * Submit function for removing formio fields.
- *
- * @param object $form
- *   Array element.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   Form state.
- */
-function clear_formio_fields_submit(&$form, FormStateInterface $form_state) {
-  $element = $form['field_formio_fields']['widget'];
-  $field_name = $element['#field_name'];
-  $parents = $element['#field_parents'];
-  $field_state = WidgetBase::getWidgetState($parents, $field_name, $form_state);
-  $field_state['items_count'] = 0;
-
-  foreach ($element as $key => $value) {
-    if (is_int($key)) {
-      unset($element[$key]);
-    }
-  }
-
-  WidgetBase::setWidgetState($parents, $field_name, $form_state, $field_state);
-  $form_state->setRebuild();
-}
-
-/**
- * Ajax function for removing formio fields.
- *
- * @param object $form
- *   Array element.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   Form state.
- */
-function clear_formio_fields_ajax(&$form, FormStateInterface $form_state) {
-  $element = $form['field_formio_fields']['widget'];
-  foreach ($element as $key => $value) {
-    if (is_int($key)) {
-      unset($element[$key]);
-    }
-  }
-  return $element;
-}
-
-/**
  * Helper function for adding formio data.
  *
  * @param string $key
@@ -347,6 +285,7 @@ function _add_formio_field($key, $values, $format = 'plain_text', array $actions
     'format' => $format,
     'actions' => $actions,
     // Limit the character count to what can be stored in the db.
-    'description' => substr($values->label, 0, 255),
+    'label' => substr($values->label, 0, 255),
+    'nested_location' => $values->page,
   ];
 }

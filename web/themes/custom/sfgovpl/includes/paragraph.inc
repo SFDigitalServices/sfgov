@@ -293,9 +293,17 @@ function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
 function sfgovpl_preprocess_paragraph__form_io(&$variables) {
   /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
   $paragraph = $variables['paragraph'];
-  $parent_node = $paragraph->getParentEntity();
-  if ($parent_node instanceof NodeInterface) {
-    $json_data = $parent_node->get('field_formio_json_content')->value;
-    $variables['content']['formio_json_data'] = $json_data;
+  $json_data = [];
+  if ($paragraph->get('field_formio_json_content')->value) {
+    $json_data = $paragraph->get('field_formio_json_content')->value;
   }
+  // @todo remove this once this field is deprecated from form nodes.
+  else {
+    $parent_node = $paragraph->getParentEntity();
+    if ($parent_node instanceof NodeInterface) {
+      $json_data = $parent_node->get('field_formio_json_content')->value;
+    }
+  }
+  $variables['content']['formio_json_data'] = $json_data;
+
 }

@@ -3,12 +3,16 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.form_io.field_form_strings
     - field.field.paragraph.form_io.field_formio_confirmation_url
     - field.field.paragraph.form_io.field_formio_data_source
+    - field.field.paragraph.form_io.field_formio_json_content
     - field.field.paragraph.form_io.field_formio_render_options
+    - field.field.paragraph.form_io.field_get_formio_strings
     - paragraphs.paragraphs_type.form_io
   module:
     - field_group
+    - sfgov_formio
 third_party_settings:
   field_group:
     group_render_options:
@@ -31,6 +35,23 @@ targetEntityType: paragraph
 bundle: form_io
 mode: default
 content:
+  field_form_strings:
+    type: formio_key_value_widget
+    weight: 4
+    region: content
+    settings:
+      orderable: false
+      key_label: Key
+      key_size: '60'
+      key_placeholder: ''
+      value_label: Value
+      rows: '5'
+      placeholder: ''
+      description_label: Description
+      description_placeholder: ''
+      description_rows: '5'
+      description_enabled: 0
+    third_party_settings: {  }
   field_formio_confirmation_url:
     type: string_textfield
     weight: 1
@@ -58,6 +79,16 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_get_formio_strings:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
 hidden:
   created: true
+  field_formio_json_content: true
   status: true
+  translation: true
