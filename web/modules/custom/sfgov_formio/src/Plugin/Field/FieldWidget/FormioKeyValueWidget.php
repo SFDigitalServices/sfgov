@@ -29,6 +29,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element['key']['#disabled'] = TRUE;
+    $element['#allowed_formats'] = ['plain_text'];
 
     // Prevent Editors from changing English values.
     if ($form_state->getformObject()->getEntity()->language()->getId() === 'en') {
