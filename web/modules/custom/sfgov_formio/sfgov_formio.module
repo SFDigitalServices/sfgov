@@ -155,7 +155,8 @@ function sfgov_formio_field_info_alter(&$info) {
 function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) {
   // Remove all of the text format stuff from the formio fields field.
   $field_definition = $context['items']->getFieldDefinition();
-  if ($field_definition->getName() === 'field_form_strings') {
+  $field_name = $field_definition->getName();
+  if ($field_name === 'field_form_strings' || $field_name === 'field_custom_form_strings') {
     $element['#after_build'][] = '_field_text_content_after_build';
   }
 }
@@ -198,6 +199,10 @@ function sfgov_formio_paragraph_presave($entity) {
       foreach ($entity->field_form_strings->getValue() as $field) {
         $formio_data[$langcode][$field['key']] = $field['value'];
       }
+      // Add in any data from custom strings as well.
+      foreach ($entity->field_custom_form_strings->getValue() as $field) {
+        $formio_data[$langcode][$field['key']] = $field['value'];
+      }
       $translated_entity = $entity->getTranslation($langcode);
       $translated_entity->set('field_formio_json_content', json_encode($formio_data));
     }
@@ -217,6 +222,16 @@ function sfgov_formio_field_widget_paragraphs_form_alter(&$element, &$form_state
   }
 }
 
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function sfgov_formio_entity_bundle_field_info_alter(&$fields, $entity_type, $bundle) {
+  if ($bundle === 'form_io') {
+    if (!empty($fields['field_custom_form_strings'])) {
+      $fields['field_custom_form_strings']->addConstraint('FormioCustomFormStrings');
+    }
+  }
+}
 
 /**
  * Returns a valid formio url for data parsing.
