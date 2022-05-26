@@ -343,6 +343,8 @@ function sfgov_formio_paragraph_presave($entity) {
           // Set the checkbox back to empty to prevent accidental field
           // overrides.
           $entity->set('field_get_formio_strings', 0);
+          // Save the page layout data for the form.
+          $entity->set('field_formio_page_layout', json_encode($field_data['pages']));
         }
       }
       // Regardless of language, get the data in the formio fields, convert to
@@ -434,23 +436,14 @@ function _field_text_content_after_build($element, FormStateInterface $form_stat
 
 /**
  * Helper function for adding formio data.
- *
- * @param string $key
- *   Key of the key/value pair.
- * @param string $value
- *   Value of the Key/value pair.
- * @param string $format
- *   Text format.
- * @param array $actions
- *   Actions.
  */
-function _add_formio_field($key, $values, $format = 'plain_text', array $actions = []) {
+function _add_formio_field($key, $values, $format = 'plain_text') {
   return [
     // Limit the character count to what can be stored in the db.
     'key' => substr($key, 0, 255),
     'value' => $values->value,
     'format' => $format,
-    'actions' => $actions,
+    'actions' => [],
     // Limit the character count to what can be stored in the db.
     'label' => substr($values->label, 0, 255),
     'nested_location' => $values->page,
