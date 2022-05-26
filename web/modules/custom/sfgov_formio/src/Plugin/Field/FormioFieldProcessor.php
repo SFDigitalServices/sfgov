@@ -17,7 +17,8 @@ class FormioFieldProcessor extends DefaultFieldProcessor {
     // This logic just removes the key from tmgmt so that it doesn't get
     // translated and mess up the front-end.
     $data = [];
-    if ($field->getName() === 'field_form_strings') {
+    $field_name = $field->getName();
+    if ($field_name === 'field_form_strings' || $field_name === 'field_custom_form_strings') {
       $field_definition = $field->getFieldDefinition();
       $data['#label'] = $field_definition->getLabel();
       foreach ($field->getValue() as $key => $value) {
