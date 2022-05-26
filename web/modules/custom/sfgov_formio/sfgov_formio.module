@@ -205,8 +205,10 @@ function sfgov_formio_paragraph_presave($entity) {
       foreach ($entity->field_custom_form_strings->getValue() as $field) {
         $formio_data[$langcode][$field['key']] = $field['value'];
       }
-      $translated_entity = $entity->getTranslation($langcode);
-      $translated_entity->set('field_formio_json_content', json_encode($formio_data));
+      if ($formio_data) {
+        $translated_entity = $entity->getTranslation($langcode);
+        $translated_entity->set('field_formio_json_content', json_encode($formio_data));
+      }
     }
   }
 }

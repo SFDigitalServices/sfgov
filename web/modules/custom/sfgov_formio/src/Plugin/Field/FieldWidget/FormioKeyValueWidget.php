@@ -37,7 +37,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
 
     $label = [
       'label' => [
-        '#title' => 'Label',
+        '#title' => $this->t('Label'),
         '#type' => 'textfield',
         '#access' => FALSE,
         '#default_value' => $items[$delta]->label ?? NULL,
@@ -46,7 +46,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     ];
     $nested_location = [
       'nested_location' => [
-        '#title' => 'Nested Location',
+        '#title' => $this->t('Nested Location'),
         '#type' => 'textfield',
         '#access' => FALSE,
         '#default_value' => $items[$delta]->nested_location ?? NULL,
@@ -58,7 +58,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     $element += $nested_location;
 
     // Alter the element's title and description field.
-    $element['key']['#title'] = $this->t('(#@number) @label', [
+    $element['key']['#title'] = $this->t('#@number - @label', [
       '@number' => $delta + 1,
       '@label' => $items[$delta]->label,
     ]);
@@ -91,7 +91,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
       // a custom button doesn't play nicely with WidgetBase.php.
       $elements['add_more'] = [
         '#type' => 'submit',
-        '#weight' => 100,
+        '#weight' => count($elements) + 1,
         '#value' => $this->t('Clear All Strings'),
         '#submit' => [[static::class, 'clearFormioFieldsSubmit']],
         '#ajax' => [
