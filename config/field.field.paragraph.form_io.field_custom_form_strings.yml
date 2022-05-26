@@ -1,13 +1,13 @@
-uuid: f29421eb-a245-4076-9ad4-b8be321cad85
+uuid: 9569b428-cd1f-4ae6-9bf6-258e4f9c1df5
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_form_strings
+    - field.storage.paragraph.field_custom_form_strings
     - paragraphs.paragraphs_type.form_io
   module:
     - content_translation
-    - sfgov_formio
+    - key_value_field
     - tmgmt_content
 third_party_settings:
   content_translation:
@@ -15,20 +15,18 @@ third_party_settings:
       value: value
       key: '0'
       description: '0'
-      label: '0'
-      nested_location: '0'
   tmgmt_content:
     excluded: false
-id: paragraph.form_io.field_form_strings
-field_name: field_form_strings
+id: paragraph.form_io.field_custom_form_strings
+field_name: field_custom_form_strings
 entity_type: paragraph
 bundle: form_io
-label: 'Form Strings'
-description: ''
+label: 'Custom Form Strings'
+description: 'Add custom edits here. Keys that match existing keys will not be accepted'
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  default_format: plain_text
-field_type: formio_key_value_item
+  default_format: sf_restricted_html
+field_type: key_value_long

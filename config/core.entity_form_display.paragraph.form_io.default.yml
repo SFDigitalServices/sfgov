@@ -3,21 +3,26 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.form_io.field_custom_form_strings
     - field.field.paragraph.form_io.field_form_strings
     - field.field.paragraph.form_io.field_formio_confirmation_url
     - field.field.paragraph.form_io.field_formio_data_source
     - field.field.paragraph.form_io.field_formio_json_content
+    - field.field.paragraph.form_io.field_formio_page_layout
     - field.field.paragraph.form_io.field_formio_render_options
     - field.field.paragraph.form_io.field_get_formio_strings
     - paragraphs.paragraphs_type.form_io
   module:
     - field_group
+    - key_value_field
+    - maxlength
     - sfgov_formio
 third_party_settings:
   field_group:
     group_render_options:
       children:
         - field_formio_render_options
+        - field_custom_form_strings
       label: 'Render Options'
       region: content
       parent_name: ''
@@ -35,6 +40,30 @@ targetEntityType: paragraph
 bundle: form_io
 mode: default
 content:
+  field_custom_form_strings:
+    type: key_value_textarea
+    weight: 3
+    region: content
+    settings:
+      orderable: true
+      rows: 2
+      placeholder: ''
+      key_size: 60
+      key_placeholder: ''
+      description_enabled: false
+      description_placeholder: ''
+      key_label: Key
+      value_label: Value
+      description_label: Description
+      description_rows: '5'
+    third_party_settings:
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_summary: null
+        maxlength_js_label_summary: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
   field_form_strings:
     type: formio_key_value_widget
     weight: 4
@@ -90,5 +119,6 @@ content:
 hidden:
   created: true
   field_formio_json_content: true
+  field_formio_page_layout: true
   status: true
   translation: true

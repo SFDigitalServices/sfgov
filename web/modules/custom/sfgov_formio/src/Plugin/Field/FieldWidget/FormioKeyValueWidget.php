@@ -29,31 +29,28 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element['key']['#disabled'] = TRUE;
-    $element['#allowed_formats'] = ['plain_text'];
 
     // Prevent Editors from changing English values.
     if ($form_state->getformObject()->getEntity()->language()->getId() === 'en') {
       $element['#disabled'] = TRUE;
     }
 
-    // These elements need to exist to prevent a "This value should not be null"
-    // validation error.
     $label = [
       'label' => [
-      '#title' => 'Label',
-      '#type' => 'textfield',
-      '#access' => FALSE,
-      '#default_value' => isset($items[$delta]->label) ? $items[$delta]->label : NULL,
-      '#maxlength' => 255,
+        '#title' => 'Label',
+        '#type' => 'textfield',
+        '#access' => FALSE,
+        '#default_value' => $items[$delta]->label ?? NULL,
+        '#maxlength' => 255,
       ],
     ];
     $nested_location = [
       'nested_location' => [
-      '#title' => 'Nested Location',
-      '#type' => 'textfield',
-      '#access' => FALSE,
-      '#default_value' => isset($items[$delta]->nested_location) ? $items[$delta]->nested_location : NULL,
-      '#maxlength' => 255,
+        '#title' => 'Nested Location',
+        '#type' => 'textfield',
+        '#access' => FALSE,
+        '#default_value' => $items[$delta]->nested_location ?? NULL,
+        '#maxlength' => 255,
       ],
     ];
 
@@ -61,8 +58,11 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     $element += $nested_location;
 
     // Alter the element's title and description field.
-    $element["key"]["#title"] = $this->t('(#@number) @label', ['@number' => $delta + 1, '@label' => $items[$delta]->label]);
-     return $element;
+    $element['key']['#title'] = $this->t('(#@number) @label', [
+      '@number' => $delta + 1,
+      '@label' => $items[$delta]->label,
+    ]);
+    return $element;
   }
 
   /**
@@ -73,8 +73,8 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
 
     foreach ($elements as $key => $element) {
       if (is_int($key)) {
-        // Remove the remove button from each element.
         unset($elements[$key]['actions']['remove_button']);
+        unset($elements[$key]['_weight']);
       }
     }
 
@@ -82,21 +82,21 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     $display_clear = FALSE;
     foreach ($elements as $key => $val) {
       if (is_int($key)) {
-       $display_clear = TRUE;
-       break;
+        $display_clear = TRUE;
+        break;
       }
     }
     if ($display_clear) {
       // Stealing and altering the functionality of the add more button because
       // a custom button doesn't play nicely with WidgetBase.php.
       $elements['add_more'] = [
-      '#type' => 'submit',
-      '#weight' => 100,
-      '#value' => t('Clear All Strings'),
-      '#submit' => [[static::class, 'clear_formio_fields_submit']],
-      '#ajax' => [
-        'callback' => [static::class, 'clear_formio_fields_ajax'],
-        'wrapper' => 'field-form-id-0-subform-field-form-strings-add-more-wrapper',
+        '#type' => 'submit',
+        '#weight' => 100,
+        '#value' => $this->t('Clear All Strings'),
+        '#submit' => [[static::class, 'clearFormioFieldsSubmit']],
+        '#ajax' => [
+          'callback' => [static::class, 'clearFormioFieldsAjax'],
+          'wrapper' => 'field-form-id-0-subform-field-form-strings-add-more-wrapper',
         ],
       ];
     }
@@ -104,6 +104,9 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
       // Hide the add more button regardless.
       $elements['add_more']['#access'] = FALSE;
     }
+
+    // Removes the table and "order" section that take up unnecessary space.
+    $elements['#cardinality_multiple'] = FALSE;
 
     return $elements;
   }
@@ -116,7 +119,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
    */
-  function clear_formio_fields_submit(&$form, FormStateInterface $form_state) {
+  public function clearFormioFieldsSubmit(&$form, FormStateInterface $form_state) {
     // Find the correct widget value to alter (Logic adapted from submitRemove
     // in widgetbase).
     $button = $form_state->getTriggeringElement();
@@ -138,7 +141,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
    */
-  function clear_formio_fields_ajax(&$form, FormStateInterface $form_state) {
+  public function clearFormioFieldsAjax(&$form, FormStateInterface $form_state) {
     // Find the correct widget value to alter (Logic adapted from
     // removeAjaxContentRefresh in widgetbase).
     $button = $form_state->getTriggeringElement();
@@ -150,6 +153,5 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     }
     return $element;
   }
-
 
 }

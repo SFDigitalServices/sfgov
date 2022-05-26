@@ -17,16 +17,15 @@ class FormioCustomFormStringsConstraintValidator extends ConstraintValidator {
     $parent = $entity->getParent()->getEntity();
 
     $custom_keys = [];
-    foreach($parent->field_custom_form_strings->getValue() as $entry) {
+    foreach ($parent->field_custom_form_strings->getValue() as $entry) {
       $custom_keys[] = $entry['key'];
     }
-
-    $existing_keys = [];
-    foreach($parent->field_form_strings->getValue() as $entry) {
+    // Check that no custom keys match existing keys.
+    foreach ($parent->field_form_strings->getValue() as $entry) {
       if (in_array($entry['key'], $custom_keys)) {
         $this->context->addViolation($constraint->uniqueKey, [
           '%custom_key' => $entry['key'],
-          '%entry' => $entry['label']
+          '%entry' => $entry['label'],
         ]);
       }
     }

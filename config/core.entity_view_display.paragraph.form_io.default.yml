@@ -3,18 +3,38 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.form_io.field_custom_form_strings
     - field.field.paragraph.form_io.field_form_strings
     - field.field.paragraph.form_io.field_formio_confirmation_url
     - field.field.paragraph.form_io.field_formio_data_source
     - field.field.paragraph.form_io.field_formio_json_content
+    - field.field.paragraph.form_io.field_formio_page_layout
     - field.field.paragraph.form_io.field_formio_render_options
     - field.field.paragraph.form_io.field_get_formio_strings
     - paragraphs.paragraphs_type.form_io
+  module:
+    - key_value_field
 id: paragraph.form_io.default
 targetEntityType: paragraph
 bundle: form_io
 mode: default
 content:
+  field_custom_form_strings:
+    type: key_value
+    label: above
+    settings:
+      value_only: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_form_strings:
+    type: key_value
+    label: above
+    settings:
+      value_only: false
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_formio_confirmation_url:
     type: string
     label: above
@@ -30,6 +50,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 0
+    region: content
+  field_formio_page_layout:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
     region: content
   field_formio_render_options:
     type: basic_string
@@ -49,6 +76,5 @@ content:
     weight: 3
     region: content
 hidden:
-  field_form_strings: true
   field_formio_json_content: true
   search_api_excerpt: true

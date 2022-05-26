@@ -2,14 +2,8 @@
 
 namespace Drupal\sfgov_formio\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\Random;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\key_value_field\Plugin\Field\FieldType\KeyValueFieldTypeTrait;
-use Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\key_value_field\Plugin\Field\FieldType\KeyValueLongItem;
 
@@ -45,7 +39,6 @@ use Drupal\key_value_field\Plugin\Field\FieldType\KeyValueLongItem;
  *     },
  *   },
  * )
- *
  */
 class FormioKeyValueItem extends KeyValueLongItem {
 
@@ -77,11 +70,12 @@ class FormioKeyValueItem extends KeyValueLongItem {
       // Add the property definition for the label field.
       'label' => DataDefinition::create('string')
         ->setLabel(new TranslatableMarkup('Label'))
-        ->setRequired(TRUE),
+        ->setRequired(FALSE),
       // Add the property definition for the nested_location field.
       'nested_location' => DataDefinition::create('string')
         ->setLabel(new TranslatableMarkup('Description'))
-        ->setRequired(FALSE)
+        ->setRequired(FALSE),
     ] + parent::propertyDefinitions($field_definition);
   }
+
 }
