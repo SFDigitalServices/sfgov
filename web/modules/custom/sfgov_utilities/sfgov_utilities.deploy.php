@@ -4,7 +4,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
 use Drupal\sfgov_utilities\Utility;
-use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
+use Drupal\sfgov_utilities\Migration\ResourceMigration\ResourceMigration;
 use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
 
 /**

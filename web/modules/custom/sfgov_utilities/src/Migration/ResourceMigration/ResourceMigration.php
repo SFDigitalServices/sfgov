@@ -83,29 +83,27 @@ class ResourceMigration {
   public function migrateAboutAndPublicBodyResources() {
     $nids = array_merge($this->getNodes('about'), $this->getNodes('public_body'));
     foreach($nids as $nid) {
-      if($nid == 4533) {
-        $node = Node::load($nid);
-        $removes = []; // simultaneously adding and removing from the same array gets weird, so track removes and trash 'em after
-        $fieldName = $node->getType() == 'about' ? 'field_about_resources' : 'field_other_info';
-        $aboutResources = $node->get($fieldName)->getValue();
-        if(!empty($aboutResources)) {
-          foreach($aboutResources as $aboutResource) {
-            $aboutResourcesParagraph = Paragraph::load($aboutResource['target_id']);
-            if($aboutResourcesParagraph->getType() == 'other_info_card') {
-              $resources = $aboutResourcesParagraph->get('field_resources')->getValue();
-              if(!empty($resources)) {
-                foreach($resources as $resource) {
-                  $resourceParagraph = Paragraph::load($resource['target_id']);
-                  if(!empty($resourceParagraph)) {
-                    if ($resourceParagraph->getType() == 'resources') {
-                      $this->migrateResource($node, $resourceParagraph, $aboutResourcesParagraph, 'field_resources');
-                      $removes[] = $resourceParagraph->id();
-                    }
+      $node = Node::load($nid);
+      $removes = []; // simultaneously adding and removing from the same array gets weird, so track removes and trash 'em after
+      $fieldName = $node->getType() == 'about' ? 'field_about_resources' : 'field_other_info';
+      $aboutResources = $node->get($fieldName)->getValue();
+      if(!empty($aboutResources)) {
+        foreach($aboutResources as $aboutResource) {
+          $aboutResourcesParagraph = Paragraph::load($aboutResource['target_id']);
+          if($aboutResourcesParagraph->getType() == 'other_info_card') {
+            $resources = $aboutResourcesParagraph->get('field_resources')->getValue();
+            if(!empty($resources)) {
+              foreach($resources as $resource) {
+                $resourceParagraph = Paragraph::load($resource['target_id']);
+                if(!empty($resourceParagraph)) {
+                  if ($resourceParagraph->getType() == 'resources') {
+                    $this->migrateResource($node, $resourceParagraph, $aboutResourcesParagraph, 'field_resources');
+                    $removes[] = $resourceParagraph->id();
                   }
                 }
-                $this->removeOldResources($removes, $aboutResourcesParagraph, 'field_resources');
-                $node->save();
               }
+              $this->removeOldResources($removes, $aboutResourcesParagraph, 'field_resources');
+              $node->save();
             }
           }
         }
