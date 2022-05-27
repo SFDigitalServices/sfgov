@@ -350,6 +350,7 @@ function sfgov_formio_paragraph_presave($entity) {
       // Regardless of language, get the data in the formio fields, convert to
       // json, and store in field_formio_json_content for front-end rendering.
       $formio_data = [];
+      // GETVALUE is returning it in a different order each time.
       foreach ($entity->field_form_strings->getValue() as $field) {
         $formio_data[$langcode][$field['key']] = $field['value'];
       }
@@ -442,12 +443,12 @@ function _field_text_content_after_build($element, FormStateInterface $form_stat
 function _add_formio_field($key, $values, $format = 'plain_text') {
   return [
     // Limit the character count to what can be stored in the db.
-    'key' => substr($key, 0, 255),
-    'value' => $values->value,
+    'key' => $key,
+    'value' => $values['value'],
     'format' => $format,
     'actions' => [],
     // Limit the character count to what can be stored in the db.
-    'label' => substr($values->label, 0, 255),
-    'nested_location' => $values->page,
+    'label' => substr($values['label'], 0, 255),
+    'nested_location' => $values['page'],
   ];
 }
