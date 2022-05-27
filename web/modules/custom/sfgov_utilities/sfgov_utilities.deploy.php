@@ -352,3 +352,10 @@ function sfgov_utilities_deploy_06_field_dept_migration() {
     echo $e->getMessage(), "\n";
   }  
 }
+
+/* migrate draft content with old resources to new resources */
+function sfgov_utilities_deploy_07_field_dept_migration() {
+  $rm = new ResourceMigration();
+  
+  $rm->migrateAboutAndPublicBodyResources();
+}
