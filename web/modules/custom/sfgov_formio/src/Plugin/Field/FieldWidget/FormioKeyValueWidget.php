@@ -74,7 +74,7 @@ class FormioKeyValueWidget extends KeyValueTextareaWidget {
     foreach ($elements as $key => $element) {
       if (is_int($key)) {
         unset($elements[$key]['actions']['remove_button']);
-        unset($elements[$key]['_weight']);
+        $elements[$key]['_weight']['#access'] = FALSE;
       }
     }
 
