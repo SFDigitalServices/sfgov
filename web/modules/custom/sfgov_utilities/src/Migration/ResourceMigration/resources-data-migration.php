@@ -6,9 +6,10 @@ $rm = new ResourceMigration();
 $rm->setDryRun(false);
 
 $rm->migrateAboutAndPublicBodyResources();
-// $rm->migrateCampaignResources();
+$rm->migrateCampaignResources();
+$rm->migrateResourceCollections();
+
 // $rm->migrateTopicsAndDepartments();
-// $rm->migrateResourceCollections();
 
 // $rm->migrateTopicsAndDepartmentsResourceSubheading();
 

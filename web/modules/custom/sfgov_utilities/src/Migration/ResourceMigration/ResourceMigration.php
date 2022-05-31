@@ -329,7 +329,7 @@ class ResourceMigration {
             'resource_field_link' => $sfgovLinkParagraph->field_node->target_id,
             'resource_id' => $sfgovLinkParagraph->id(),
             'resource_type' => 'sfgov_link',
-            'resource_field_title' => $referencedNode->getTitle(),
+            'resource_field_title' => $referencedNode ? $referencedNode->getTitle() : 'empty resource reference',
             'resource_field_description' => $referencedNode->field_description->value,
             'node_id' => $containingNode->id(),
             'node_content_type' => $contentType,
