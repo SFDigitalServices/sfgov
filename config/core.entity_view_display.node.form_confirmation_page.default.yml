@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.form_confirmation_page.field_banner_color
     - field.field.node.form_confirmation_page.field_banner_image
     - field.field.node.form_confirmation_page.field_confirmation_sidebar
+    - field.field.node.form_confirmation_page.field_departments
     - field.field.node.form_confirmation_page.field_dept
     - field.field.node.form_confirmation_page.field_form_confirm_page_slug
     - field.field.node.form_confirmation_page.field_step
@@ -67,6 +68,15 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_dept:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 10
+    region: content
   field_step:
     type: entity_reference_revisions_entity_view
     label: above
@@ -77,8 +87,9 @@ content:
     weight: 2
     region: content
 hidden:
-  field_dept: true
+  field_departments: true
   field_form_confirm_page_slug: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true
