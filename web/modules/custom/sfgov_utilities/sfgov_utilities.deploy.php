@@ -358,4 +358,6 @@ function sfgov_utilities_deploy_07_field_dept_migration() {
   $rm = new ResourceMigration();
   
   $rm->migrateAboutAndPublicBodyResources();
+  $rm->migrateCampaignResources();
+  $rm->migrateResourceCollections();
 }
