@@ -360,4 +360,6 @@ function sfgov_utilities_deploy_07_field_dept_migration() {
   $rm->migrateAboutAndPublicBodyResources();
   $rm->migrateCampaignResources();
   $rm->migrateResourceCollections();
+  $rm->migrateTopicsAndDepartments();
+  $rm->migrateTopicsAndDepartmentsResourceSubheading();
 }

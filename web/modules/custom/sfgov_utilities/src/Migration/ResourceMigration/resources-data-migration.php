@@ -8,10 +8,8 @@ $rm->setDryRun(false);
 $rm->migrateAboutAndPublicBodyResources();
 $rm->migrateCampaignResources();
 $rm->migrateResourceCollections();
-
-// $rm->migrateTopicsAndDepartments();
-
-// $rm->migrateTopicsAndDepartmentsResourceSubheading();
+$rm->migrateTopicsAndDepartments();
+$rm->migrateTopicsAndDepartmentsResourceSubheading();
 
 // echo "\/***** verify migration report *****\/\n\n";
 // $rm->verifyMigration();
