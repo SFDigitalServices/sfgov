@@ -182,15 +182,16 @@ function sfgovpl_preprocess_paragraph__document(&$variables) {
       if ($media_item = $media_manager->load($item['target_id'])) {
 
         // Get the file uri of the file attached to the media entity.
-        $file = $media_item->get('field_media_file')->getValue();
-        $file_uri = $file_manager->load($file[0]['target_id'])->getFileUri();
-
-        // The variable "document_list" is used in paragraph--document.html.twig.
-        // We generate a relative url to the file.
-        $variables['document_list'][$delta] = [
-          'label' => $media_item->label(),
-          'url' => $generator_service->generateString($file_uri),
-        ];
+        $file_item = $media_item->get('field_media_file')->getValue();
+        $file = $file_manager->load($file_item[0]['target_id']);
+        if ($file && $file_uri = $file->getFileUri()) {
+          // The variable "document_list" is used in paragraph--document.html.twig.
+          // We generate a relative url to the file.
+          $variables['document_list'][$delta] = [
+            'label' => $media_item->label(),
+            'url' => $generator_service->generateString($file_uri),
+          ];
+        }
       };
     }
   }
