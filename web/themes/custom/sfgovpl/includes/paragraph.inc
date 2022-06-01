@@ -166,6 +166,35 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
 function sfgovpl_preprocess_paragraph__document(&$variables) {
   // Don't translate document paragraphs by gtranslate.
   $variables['attributes']['class'][] = 'notranslate';
+
+  // Our variables to start our document information list variable.
+  $paragraph = $variables['paragraph'];
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $media_manager = $entity_type_manager->getStorage('media');
+  $file_manager = $entity_type_manager->getStorage('file');
+  $generator_service = \Drupal::service('file_url_generator');
+
+  // Create a listing of all the URLS and labels of all the attached documents.
+  $variables['document_list'] = [];
+  if ($paragraph->hasField('field_file')) {
+    foreach ($paragraph->get('field_file')->getValue() as $delta => $item) {
+      // If the field returns any media entities (aka not empty)...
+      if ($media_item = $media_manager->load($item['target_id'])) {
+
+        // Get the file uri of the file attached to the media entity.
+        $file = $media_item->get('field_media_file')->getValue();
+        $file_uri = $file_manager->load($file[0]['target_id'])->getFileUri();
+
+        // The variable "document_list" is used in paragraph--document.html.twig.
+        // We generate a relative url to the file.
+        $variables['document_list'][$delta] = [
+          'label' => $media_item->label(),
+          'url' => $generator_service->generateString($file_uri),
+        ];
+      };
+    }
+  }
+
 }
 
 /**
