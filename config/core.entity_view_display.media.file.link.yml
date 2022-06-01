@@ -14,6 +14,7 @@ dependencies:
     - media.type.file
   module:
     - file
+    - link
 _core:
   default_config_hash: 9s0lWIanCnW5Xrrkmedxohs9F0yk4LO8ZcmVQ9xyuu4
 id: media.file.link
@@ -21,6 +22,18 @@ targetEntityType: media
 bundle: file
 mode: link
 content:
+  field_document_url:
+    type: link
+    label: hidden
+    settings:
+      trim_length: null
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_media_file:
     type: file_url_plain
     label: hidden
@@ -40,7 +53,6 @@ hidden:
   created: true
   field_department: true
   field_description: true
-  field_document_url: true
   field_keywords: true
   field_published_date: true
   field_topic: true
