@@ -186,16 +186,16 @@ function sfgovpl_preprocess_paragraph__document(&$variables) {
         $docUrl = $media_item->get('field_document_url')->getValue();
         $fileUri = '';
 
-        if (!empty($docUrl)) {
-          $fileUri = $docUrl[0]['uri'];
-        }
-
-        // prefer the attached file
         if (!empty($attachedFile)) {
           // We generate a relative url to the file.
           $fileUri = $generator_service->generateString($file_manager->load($attachedFile[0]['target_id'])->getFileUri());
         }
 
+        // prefer the document url
+        if (!empty($docUrl)) {
+          $fileUri = $docUrl[0]['uri'];
+        }
+        
         // The variable "document_list" is used in paragraph--document.html.twig.
         $variables['document_list'][$delta] = [
           'label' => $media_item->label(),
