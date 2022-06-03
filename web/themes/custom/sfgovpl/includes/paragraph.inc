@@ -181,17 +181,28 @@ function sfgovpl_preprocess_paragraph__document(&$variables) {
       // If the field returns any media entities (aka not empty)...
       if ($media_item = $media_manager->load($item['target_id'])) {
 
-        // Get the file uri of the file attached to the media entity.
-        $file = $media_item->get('field_media_file')->getValue();
-        $file_uri = $file_manager->load($file[0]['target_id'])->getFileUri();
+        // field_file can have both an attached file and a document url, consider both
+        $attachedFile = $media_item->get('field_media_file')->getValue();
+        $docUrl = $media_item->get('field_document_url')->getValue();
+        $fileUri = '';
+
+        if (!empty($attachedFile)) {
+          // We generate a relative url to the file.
+          $fileUri = $generator_service->generateString($file_manager->load($attachedFile[0]['target_id'])->getFileUri());
+        }
+
+        // prefer the document url
+        if (!empty($docUrl)) {
+          $urlObj = Url::fromUri($docUrl[0]['uri']);
+          $fileUri = $urlObj->toString();
+        }
 
         // The variable "document_list" is used in paragraph--document.html.twig.
-        // We generate a relative url to the file.
         $variables['document_list'][$delta] = [
           'label' => $media_item->label(),
-          'url' => $generator_service->generateString($file_uri),
+          'url' => $fileUri,
         ];
-      };
+      }
     }
   }
 
