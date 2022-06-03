@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
@@ -162,6 +161,30 @@ function sfgov_formio_field_widget_form_alter(&$element, $form_state, $context) 
 }
 
 /**
+ * hook_field_widget_complete_form_alter().
+ */
+function sfgov_formio_field_widget_complete_form_alter(&$field_widget_complete_form, $form_state, $context) {
+  $field_definition = $context['items']->getFieldDefinition();
+  $field_name = $field_definition->getName();
+  if ($field_name === 'field_custom_form_strings') {
+    // If we're in the non-english version of this form, disable a bunch of the
+    // UI.
+    if ($context['items']->getLangcode() != 'en') {
+      unset($field_widget_complete_form['widget']['add_more']);
+
+      $field_widget_complete_form['widget']['#description'] = t('Form strings in this field must be added/removed in the english version of the node');
+      foreach($field_widget_complete_form['widget'] as $key => $entry) {
+        if (is_int($key)) {
+          unset($field_widget_complete_form['widget'][0]['actions']['remove_button']);
+          $field_widget_complete_form['widget'][$key]['key']['#disabled'] = TRUE;
+          $entry['key']['#disabled'] = TRUE;
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_presave().
  */
 function sfgov_formio_paragraph_presave($entity) {
@@ -169,23 +192,33 @@ function sfgov_formio_paragraph_presave($entity) {
 
     $langcode = $entity->language()->getId();
     // Get the base form translation on only english versions of the page.
-    if ($formio_url = _get_formio_url($entity)) {
+    if ($entity->field_formio_data_source->value) {
+      $formio_helpers = \Drupal::service('sfgov_formio.helpers');
+      $formio_helpers->setHelperData($entity);
       if ($langcode === 'en') {
         // This is a checkbox field, if checked update the formio fields.
         if ($entity->field_get_formio_strings->value) {
-          $field_data = json_decode(file_get_contents($formio_url), TRUE);
+          $field_data = $formio_helpers->formioData;
           foreach ($field_data['strings'] as $machine_name => $value) {
             $skip = FALSE;
-
-            // If the key already exists, override the value.
             foreach ($entity->field_form_strings->getValue() as $key => $entry) {
+              // If the key is too big for the DB, skip,.
+              if (strlen($entry['key']) > 300) {
+                $skip = TRUE;
+                $error = t('The following key name is too long and needs to be shortened in Formio to be accepted on node %title : %key', [
+                  '%title' => $entity->getParentEntity()->getTitle(),
+                  '%key' => $entry['key'],
+                ]);
+                Drupal::logger('sfgov_formio')->notice($error);
+              }
+              // If the key already exists, override the value.
               if ($entry['key'] === $machine_name) {
                 $skip = TRUE;
-                $entity->field_form_strings[$key] = _add_formio_field($machine_name, $value);
+                $entity->field_form_strings[$key] = $formio_helpers->addFormioField($machine_name, $value);
               }
             }
             if (!$skip) {
-              $entity->field_form_strings[] = _add_formio_field($machine_name, $value);
+              $entity->field_form_strings[] = $formio_helpers->addFormioField($machine_name, $value);
             }
           }
           // Set the checkbox back to empty to prevent accidental field
@@ -198,7 +231,6 @@ function sfgov_formio_paragraph_presave($entity) {
       // Regardless of language, get the data in the formio fields, convert to
       // json, and store in field_formio_json_content for front-end rendering.
       $formio_data = [];
-      // GETVALUE is returning it in a different order each time.
       foreach ($entity->field_form_strings->getValue() as $field) {
         $formio_data[$langcode][$field['key']] = $field['value'];
       }
@@ -235,35 +267,13 @@ function sfgov_formio_entity_bundle_field_info_alter(&$fields, $entity_type, $bu
     if (!empty($fields['field_custom_form_strings'])) {
       $fields['field_custom_form_strings']->addConstraint('FormioCustomFormStrings');
     }
+    if (!empty($fields['field_formio_render_options'])) {
+      $fields['field_formio_render_options']->addConstraint('FormioRenderOptions');
+    }
+    if (!empty($fields['field_formio_data_source'])) {
+      $fields['field_formio_data_source']->addConstraint('FormioDataSource');
+    }
   }
-}
-
-/**
- * Returns a valid formio url for data parsing.
- *
- * @param object $entity
- *   The Form Page node.
- *
- * @return string
- *   A valid formio url.
- */
-function _get_formio_url($entity) {
-  $formio_url = FALSE;
-  $formio_data_source = $entity->hasfield('field_formio_data_source') ? $entity->get('field_formio_data_source')->value : NULL;
-  if ($formio_data_source && UrlHelper::isExternal($formio_data_source)) {
-    // If its an external url, pull the existing config and use it to
-    // generate a url.
-    $formio_config = \Drupal::config('sfgov_formio.settings');
-    $constructed_url = str_replace(
-    '[form_url]',
-    urlencode(trim($formio_data_source)),
-    $formio_config->get('formio_translations_api_url'));
-    $formio_url = UrlHelper::isValid($constructed_url) ? $constructed_url : FALSE;
-  }
-  if (!$formio_url) {
-    \Drupal::logger('sfgov_formio')->notice('The url provided in field_formio_data_source on node %nid is not providing valid formio data for translations', ['%nid' => $entity->id()]);
-  }
-  return $formio_url;
 }
 
 /**
