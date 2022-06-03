@@ -193,9 +193,10 @@ function sfgovpl_preprocess_paragraph__document(&$variables) {
 
         // prefer the document url
         if (!empty($docUrl)) {
-          $fileUri = $docUrl[0]['uri'];
+          $urlObj = Url::fromUri($docUrl[0]['uri']);
+          $fileUri = $urlObj->toString();
         }
-        
+
         // The variable "document_list" is used in paragraph--document.html.twig.
         $variables['document_list'][$delta] = [
           'label' => $media_item->label(),
