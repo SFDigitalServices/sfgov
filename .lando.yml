@@ -12,19 +12,23 @@ config:
   # as needed.
   # xdebug: develop,debug
   config:
-    database: lando-config/db.cnf
-    php: lando-config/php.ini
+    database: lando-config/db/custom.cnf
 services:
   appserver:
-    xdebug: true
-    config:
-      php:
-        .vscode/php.ini
     run:
       - mkdir -p /var/www/logs
     build:
       - "composer global require drupal/coder"
       - "/app/vendor/bin/phpcs --config-set installed_paths /app/vendor/drupal/coder/coder_sniffer"
+    overrides:
+      environment:
+        BEHAT_PARAMS: >-
+          { "extensions": { "Behat\\MinkExtension": { "base_url":
+          "http://sfgov.lndo.site", "goutte": { "guzzle_parameters": { "verify":
+          false } } }, "Drupal\\DrupalExtension": { "drush": { "root":
+          "/app/web" } } } }
+        XDEBUG_MODE: develop,debug
+        XDEBUG_SESSION_START: LANDO
 tooling:
   behat:
     service: appserver
