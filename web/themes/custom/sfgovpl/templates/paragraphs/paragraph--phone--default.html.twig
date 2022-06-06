@@ -38,45 +38,27 @@
  * @ingroup themeable
  */
 #}
-{% set classes = [
-  'paragraph',
-  'paragraph--type--' ~ paragraph.bundle|clean_class,
-  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-  not paragraph.isPublished() ? 'paragraph--unpublished'
-] %}
-{% set cost_type = paragraph.field_cost_type.value %}
+
+{% set parent = paragraph.getParentEntity() %}
+{%
+set classes = [
+'paragraph',
+'paragraph--type--' ~ paragraph.bundle|clean_class,
+view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+not paragraph.isPublished() ? 'paragraph--unpublished',
+"parent--bundle--" ~ parent.bundle
+]
+%}
+
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
+  <div {{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
     {% block content %}
-      {% block title %}
-        <h2 class="title">{{ 'Cost'|t }}</h2>
-      {% endblock title %}
-      {% if cost_type == 'free' %}
-        {% block costfree %}
-          <div>{{ content.field_cost_type }}</div>
-        {% endblock costfree %}
-      {% endif %}
-      {% if cost_type == 'flat' %}
-        {% block costflat %}
-          {{ content.field_cost_flat_fee }}
-        {% endblock costflat %}
-      {% endif %}
-      {% if cost_type == 'minimum' and content.field_cost_minimum|render %}
-        {% block costmin %}
-          {{ content.field_cost_minimum }} {{ ' and up'|t }}
-        {% endblock costmin %}
-      {% endif %}
-      {% if cost_type == 'range' and content.field_cost_minimum|render and content.field_cost_maximum|render %}
-        <div class="inline-flex">
-          {{ content.field_cost_minimum }} - {{ content.field_cost_maximum }}
-        </div>
-      {% endif %}
-    {{ content|without(
-      'field_cost_type',
-      'field_cost_flat_fee',
-      'field_cost_minimum',
-      'field_cost_maximum'
-    ) }}
+      {% include "@theme/phone-alt.twig" with {
+        "phone_owner": content.field_owner,
+        "phone_number": content.field_tel,
+        "phone_details": content.field_text
+      } %}
     {% endblock %}
   </div>
 {% endblock paragraph %}
+
