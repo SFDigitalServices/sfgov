@@ -352,3 +352,14 @@ function sfgov_utilities_deploy_06_field_dept_migration() {
     echo $e->getMessage(), "\n";
   }  
 }
+
+// migrate old field_transactions to better field_related_content on transaction content type
+function sfgov_utilities_deploy_07_field_transactions_migration() {
+  try {
+    $transactionNodes = Utility::getNodes('transaction');
+    $relatedServicesFieldMigration = new TopLevelFieldMigration();
+    $relatedServicesFieldMigration->migrate($transactionNodes, 'field_transactions', 'field_related_content');
+  } catch(\Exception $e) {
+    error_log($e->getMessage(), "\n");
+  }
+}
