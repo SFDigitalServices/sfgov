@@ -180,19 +180,28 @@ function sfgovpl_preprocess_paragraph__document(&$variables) {
     foreach ($paragraph->get('field_file')->getValue() as $delta => $item) {
       // If the field returns any media entities (aka not empty)...
       if ($media_item = $media_manager->load($item['target_id'])) {
+        // field_file can have both an attached file and a document url, consider both
+        $attachedFile = $media_item->get('field_media_file')->getValue();
+        $docUrl = $media_item->get('field_document_url')->getValue();
+        $fileUri = '';
 
-        // Get the file uri of the file attached to the media entity.
-        $file_item = $media_item->get('field_media_file')->getValue();
-        $file = $file_manager->load($file_item[0]['target_id']);
-        if ($file && $file_uri = $file->getFileUri()) {
-          // The variable "document_list" is used in paragraph--document.html.twig.
+        if (!empty($attachedFile)) {
           // We generate a relative url to the file.
-          $variables['document_list'][$delta] = [
-            'label' => $media_item->label(),
-            'url' => $generator_service->generateString($file_uri),
-          ];
+          $fileUri = $generator_service->generateString($file_manager->load($attachedFile[0]['target_id'])->getFileUri());
         }
-      };
+
+        // prefer the document url
+        if (!empty($docUrl)) {
+          $urlObj = Url::fromUri($docUrl[0]['uri']);
+          $fileUri = $urlObj->toString();
+        }
+
+        // The variable "document_list" is used in paragraph--document.html.twig.
+        $variables['document_list'][$delta] = [
+          'label' => $media_item->label(),
+          'url' => $fileUri,
+        ];
+      }
     }
   }
 
@@ -323,9 +332,17 @@ function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
 function sfgovpl_preprocess_paragraph__form_io(&$variables) {
   /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
   $paragraph = $variables['paragraph'];
-  $parent_node = $paragraph->getParentEntity();
-  if ($parent_node instanceof NodeInterface) {
-    $json_data = $parent_node->get('field_formio_json_content')->value;
-    $variables['content']['formio_json_data'] = $json_data;
+  $json_data = [];
+  if ($paragraph->get('field_formio_json_content')->value) {
+    $json_data = $paragraph->get('field_formio_json_content')->value;
   }
+  // @todo remove this once this field is deprecated from form nodes.
+  else {
+    $parent_node = $paragraph->getParentEntity();
+    if ($parent_node instanceof NodeInterface) {
+      $json_data = $parent_node->get('field_formio_json_content')->value;
+    }
+  }
+  $variables['content']['formio_json_data'] = $json_data;
+
 }
