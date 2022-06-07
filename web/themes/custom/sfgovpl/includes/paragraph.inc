@@ -180,7 +180,6 @@ function sfgovpl_preprocess_paragraph__document(&$variables) {
     foreach ($paragraph->get('field_file')->getValue() as $delta => $item) {
       // If the field returns any media entities (aka not empty)...
       if ($media_item = $media_manager->load($item['target_id'])) {
-
         // field_file can have both an attached file and a document url, consider both
         $attachedFile = $media_item->get('field_media_file')->getValue();
         $docUrl = $media_item->get('field_document_url')->getValue();
