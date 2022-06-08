@@ -227,7 +227,8 @@ class ResourceMigration {
                     'node_content_type' => $node->getType(),
                     'node_title' => $node->getTitle(),
                     'node_author' => User::load($node->getOwner()->id())->getDisplayName(),
-                    'last_updated' => date("m/d/Y", $node->changed->value)
+                    'last_updated' => date("m/d/Y", $node->changed->value),
+                    'status' => $node->isPublished(),
                   ];
     
                   $this->nodeReport->addItem($reportResource, $node->id());
