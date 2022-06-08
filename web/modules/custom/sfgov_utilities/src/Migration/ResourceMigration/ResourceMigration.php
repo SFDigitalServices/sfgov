@@ -54,7 +54,7 @@ class ResourceMigration {
   private function getNodes(string $type) {
     $nids = \Drupal::entityQuery('node')
     ->currentRevision()
-    ->condition('status', FALSE) // drafts only
+    // ->condition('status', FALSE) // drafts only
     ->condition('type', $type)
     ->execute();
     return $nids;
@@ -182,61 +182,77 @@ class ResourceMigration {
     $nids = array_merge($this->getNodes('department'), $this->getNodes('topic'));
 
     foreach($nids as $nid) {
-      // if($nid == 4010) {
+      // if($nid == 284) {
         $node = Node::load($nid);
         $removes = [];
         $resources = $node->get('field_resources')->getValue();
+        
+        // echo $node->getTitle() . "\n";
+        // print_r($node->get('moderation_state')->getValue());
+        
+        // // print_r($resources);
+
         if(!empty($resources)) {
-          $resourcesToMove = [];
-
-          // only move non tile section paragraphs
-          foreach($resources as $resource) {
-            $resourceP = Paragraph::load($resource["target_id"]);
-            if($resourceP->getType() != "other_info_card") {
-              $resourcesToMove[] = $resource;
-
-              if($resourceP->getType() == 'resource_node') {
-                $resourceTitle = Node::load($resourceP->get('field_node')->getValue()[0]['target_id'])->getTitle();
-              } else {
-                $eckResource = $resourceP->get('field_resource')->getValue();
-                $eckId = $eckResource[0]['target_id'];
-                $storage = \Drupal::entityTypeManager()->getStorage("resource");
-                $eckEntity = $storage->load($eckId);
-                $resourceTitle = $eckEntity->get('title')->getValue()[0]['value'];
-              }
-
-              $reportResource = [
-                'resource_field_link' => $uri,
-                'resource_id' => $resourceP->id(),
-                'resource_type' => $resourceP->getType(),
-                'resource_field_title' => $resourceTitle,
-                'node_id' => $node->id(),
-                'node_content_type' => $node->getType(),
-                'node_title' => $node->getTitle(),
-                'node_author' => User::load($node->getOwner()->id())->getDisplayName(),
-                'last_updated' => date("m/d/Y", $node->changed->value)
-              ];
-
-              $this->nodeReport->addItem($reportResource, $node->id());
-              $this->report->addItem($reportResource);
-            }
-          }
+          $targetId = $resources[0]['target_id'];
+          $p = Paragraph::load($resources[0]['target_id']);
+          echo "[" . $node->id() . "] " . $node->getTitle() . ", resource type:" . $p->getType() . "\n";
+          // if($p->getType() != 'other_info_card') {
+            $resources = $p->get('field_resources')->getValue();
           
-          // create new resource section with subheading
-          // add existing resources
-          $tileSectionParagraph = Paragraph::create([
-            "type" => "other_info_card",
-            "field_resources" => $resourcesToMove
-          ]);
-          $tileSectionParagraph->save();
-  
-          $resources = [
-            "target_id" => $tileSectionParagraph->id(),
-            "target_revision_id" => $tileSectionParagraph->getRevisionId()
-          ];
-  
-          $node->set('field_resources', $resources);
-          $node->save();
+            if(!empty($resources)) {
+              $resourcesToMove = [];
+    
+              // only move non tile section paragraphs
+              foreach($resources as $resource) {
+                $resourceP = Paragraph::load($resource["target_id"]);
+                if($resourceP->getType() != "other_info_card") {
+                  $resourcesToMove[] = $resource;
+    
+                  if($resourceP->getType() == 'resource_node') {
+                    $resourceTitle = Node::load($resourceP->get('field_node')->getValue()[0]['target_id'])->getTitle();
+                  } else {
+                    $eckResource = $resourceP->get('field_resource')->getValue();
+                    $eckId = $eckResource[0]['target_id'];
+                    $storage = \Drupal::entityTypeManager()->getStorage("resource");
+                    $eckEntity = $storage->load($eckId);
+                    $resourceTitle = $eckEntity->get('title')->getValue()[0]['value'];
+                  }
+    
+                  $reportResource = [
+                    'resource_field_link' => $uri,
+                    'resource_id' => $resourceP->id(),
+                    'resource_type' => $resourceP->getType(),
+                    'resource_field_title' => $resourceTitle,
+                    'node_id' => $node->id(),
+                    'node_content_type' => $node->getType(),
+                    'node_title' => $node->getTitle(),
+                    'node_author' => User::load($node->getOwner()->id())->getDisplayName(),
+                    'last_updated' => date("m/d/Y", $node->changed->value),
+                    'published_status' => $containingNode->isPublished() ? 'true' : 'false'
+                  ];
+    
+                  $this->nodeReport->addItem($reportResource, $node->id());
+                  $this->report->addItem($reportResource);
+                }
+              }
+              
+              // create new resource section with subheading
+              // add existing resources
+              $tileSectionParagraph = Paragraph::create([
+                "type" => "other_info_card",
+                "field_resources" => $resourcesToMove
+              ]);
+              $tileSectionParagraph->save();
+      
+              $resources = [
+                "target_id" => $tileSectionParagraph->id(),
+                "target_revision_id" => $tileSectionParagraph->getRevisionId()
+              ];
+      
+              $node->set('field_resources', $resources);
+              $node->save();
+            }
+          // }
         }
       // }
     }
