@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sfgov_utilities\ResourceMigration;
+namespace Drupal\sfgov_utilities\Migration\ResourceMigration;
 
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
@@ -54,7 +54,7 @@ class ResourceMigration {
   private function getNodes(string $type) {
     $nids = \Drupal::entityQuery('node')
     ->currentRevision()
-    ->condition('status', TRUE)
+    ->condition('status', FALSE) // drafts only
     ->condition('type', $type)
     ->execute();
     return $nids;
@@ -302,7 +302,8 @@ class ResourceMigration {
       'node_content_type' => $contentType,
       'node_title' => $containingNode->getTitle(),
       'node_author' => User::load($containingNode->getOwner()->id())->getDisplayName(),
-      'last_updated' => date("m/d/Y", $containingNode->changed->value)
+      'last_updated' => date("m/d/Y", $containingNode->changed->value),
+      'published_status' => $containingNode->isPublished() ? 'true' : 'false'
     ];
     $this->report->addItem($resource);
     $this->nodeReport->addItem($resource, $containingNode->id());
@@ -328,7 +329,7 @@ class ResourceMigration {
             'resource_field_link' => $sfgovLinkParagraph->field_node->target_id,
             'resource_id' => $sfgovLinkParagraph->id(),
             'resource_type' => 'sfgov_link',
-            'resource_field_title' => $referencedNode->getTitle(),
+            'resource_field_title' => $referencedNode ? $referencedNode->getTitle() : 'empty resource reference',
             'resource_field_description' => $referencedNode->field_description->value,
             'node_id' => $containingNode->id(),
             'node_content_type' => $contentType,

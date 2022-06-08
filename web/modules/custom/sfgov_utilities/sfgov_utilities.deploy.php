@@ -4,7 +4,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
 use Drupal\sfgov_utilities\Utility;
-use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
+use Drupal\sfgov_utilities\Migration\ResourceMigration\ResourceMigration;
 use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
 
 /**
@@ -351,4 +351,15 @@ function sfgov_utilities_deploy_06_field_dept_migration() {
   } catch(\Exception $e) {
     echo $e->getMessage(), "\n";
   }  
+}
+
+/* migrate draft content with old resources to new resources */
+function sfgov_utilities_deploy_07_field_dept_migration() {
+  $rm = new ResourceMigration();
+  
+  $rm->migrateAboutAndPublicBodyResources();
+  $rm->migrateCampaignResources();
+  $rm->migrateResourceCollections();
+  $rm->migrateTopicsAndDepartments();
+  $rm->migrateTopicsAndDepartmentsResourceSubheading();
 }
