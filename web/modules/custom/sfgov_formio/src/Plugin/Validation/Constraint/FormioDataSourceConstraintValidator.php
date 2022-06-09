@@ -16,7 +16,7 @@ class FormioDataSourceConstraintValidator extends ConstraintValidator implements
   /**
    * The FormioHelpers service.
    *
-   * @var Drupal\sfgov_formio\FormioHelpers
+   * @var \Drupal\sfgov_formio\FormioHelpers
    */
   protected $formioHelpers;
 
@@ -44,22 +44,23 @@ class FormioDataSourceConstraintValidator extends ConstraintValidator implements
    */
   public function validate($entity, Constraint $constraint) {
     $parent = $entity->getParent()->getEntity();
-    if ($parent->field_formio_data_source->value) {
+    if ($parent->hasField('field_formio_data_source')) {
+      if ($parent->field_formio_data_source->value) {
 
-      $formio_helpers = $this->formioHelpers;
-      $formio_helpers->setHelperData($parent);
+        $formio_helpers = $this->formioHelpers;
+        $formio_helpers->setHelperData($parent);
 
-      if (!$formio_helpers->isValidUrl) {
-        $this->context->addViolation($constraint->invalidUrl);
-      }
+        if (!$formio_helpers->isValidUrl()) {
+          $this->context->addViolation($constraint->invalidUrl);
+        }
 
-      if (!$formio_helpers->isValidData) {
-        $this->context->addViolation($constraint->invalidJson, [
-          '%error' => $formio_helpers->dataError,
-        ]);
+        if (!$formio_helpers->isValidData()) {
+          $this->context->addViolation($constraint->invalidJson, [
+            '%error' => $formio_helpers->getDataError(),
+          ]);
+        }
       }
     }
-
   }
 
 }

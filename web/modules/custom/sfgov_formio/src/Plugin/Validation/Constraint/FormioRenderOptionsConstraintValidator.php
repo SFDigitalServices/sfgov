@@ -15,7 +15,7 @@ class FormioRenderOptionsConstraintValidator extends ConstraintValidator {
    */
   public function validate($value, Constraint $constraint) {
 
-    if ($data = $value->value) {
+    if ($data = $value->value ?? NULL) {
       if (is_string($data)) {
         if (!json_decode($data)) {
           $this->context->addViolation($constraint->invalidJson);

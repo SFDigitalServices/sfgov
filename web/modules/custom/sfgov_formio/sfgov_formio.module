@@ -172,7 +172,7 @@ function sfgov_formio_field_widget_complete_form_alter(&$field_widget_complete_f
     if (\Drupal::languageManager()->getCurrentLanguage()->getId() != 'en') {
       unset($field_widget_complete_form['widget']['add_more']);
 
-      $field_widget_complete_form['widget']['#description'] = t('Form strings in this field must be added/removed in the english version of the node');
+      $field_widget_complete_form['widget']['#description'] = t('Form strings in this field must be added/removed in the English version of the node');
       foreach ($field_widget_complete_form['widget'] as $key => $entry) {
         if (is_int($key)) {
           unset($field_widget_complete_form['widget'][$key]['actions']['remove_button']);
@@ -198,7 +198,7 @@ function sfgov_formio_paragraph_presave($entity) {
       if ($langcode === 'en') {
         // This is a checkbox field, if checked update the formio fields.
         if ($entity->field_get_formio_strings->value) {
-          $field_data = $formio_helpers->formioData;
+          $field_data = $formio_helpers->getFormioData();
           foreach ($field_data['strings'] as $machine_name => $value) {
             $skip = FALSE;
             foreach ($entity->field_form_strings->getValue() as $key => $entry) {
@@ -209,7 +209,7 @@ function sfgov_formio_paragraph_presave($entity) {
                   '%title' => $entity->getParentEntity()->getTitle(),
                   '%key' => $entry['key'],
                 ]);
-                Drupal::logger('sfgov_formio')->notice($error);
+                \Drupal::logger('sfgov_formio')->notice($error);
               }
               // If the key already exists, override the value.
               if ($entry['key'] === $machine_name) {
