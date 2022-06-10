@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.information_page.body
-    - field.field.node.information_page.field_dept
+    - field.field.node.information_page.field_departments
     - field.field.node.information_page.field_description
     - field.field.node.information_page.field_information_section
     - field.field.node.information_page.field_public_body
@@ -26,6 +26,16 @@ targetEntityType: node
 bundle: information_page
 mode: default
 content:
+  field_departments:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_description:
     type: text_textarea
     weight: 1
@@ -60,16 +70,6 @@ content:
         add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
-    third_party_settings: {  }
-  field_public_body:
-    type: entity_reference_autocomplete
-    weight: 4
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   field_related_content:
     type: entity_reference_autocomplete
@@ -152,7 +152,7 @@ content:
 hidden:
   body: true
   created: true
-  field_dept: true
+  field_public_body: true
   langcode: true
   path: true
   promote: true

@@ -3,7 +3,9 @@
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
-use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
+use Drupal\sfgov_utilities\Utility;
+use Drupal\sfgov_utilities\Migration\ResourceMigration\ResourceMigration;
+use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
 
 /**
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
@@ -270,46 +272,6 @@ function sfgov_utilities_deploy_04_resources_subheading() {
   $rm->migrateTopicsAndDepartmentsResourceSubheading();
 }
 
-function sfgov_utilities_deploy_04_info_page() {
-  $nids = \Drupal::entityQuery('node')->condition('type','information_page')->execute();
-  $nodes = Node::loadMultiple($nids);
-  
-  $report = [];
-  
-  foreach($nodes as $node) {
-    $nid = $node->id();
-    $fieldDept = $node->get('field_dept');
-    $fieldDeptValues = $fieldDept->getValue();
-    $fieldDeptCount = count($fieldDeptValues);
-    if($fieldDeptCount > 0) {
-      $fieldDeptOrPublicBody = $node->get('field_public_body');
-      for($i=0; $i<$fieldDeptCount; $i++) {
-        $refId = $fieldDeptValues[$i]['target_id'];
-        $oldRefNode = Node::load($refId);
-  
-        if(!empty($oldRefNode)) { // some older nodes may have empty references, ignore them
-          $report[] = [
-            'nid' => $nid,
-            'node_title' => $node->getTitle(),
-            'url' => 'https://sf.gov/node/' . $nid,
-            'field_dept_ref' => $oldRefNode->getTitle(),
-            'field_dept_ref_id' => $oldRefNode->id(),
-          ];
-    
-          // assign to new field
-          $fieldDeptOrPublicBody[] = [
-            'target_id' => $refId
-          ];
-        }
-  
-        // remove old ref
-        $fieldDept->removeItem(0);
-      }
-    }
-    $node->save();
-  }
-}
-
 // migrate department content type field_about_description value to field_about_or_description
 function sfgov_utilities_deploy_05_dept_page_about() {
   $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail'=>'webmaster@sfgov.org']);
@@ -342,4 +304,62 @@ function sfgov_utilities_deploy_05_dept_page_about() {
       $node->save();
     }
   }
+}
+
+// migrate field_public_body references to field_dept
+function sfgov_utilities_deploy_06_field_dept_migration() {
+  try {
+    // migrate to field_departments from field_dept or field_public_body
+    $informationPageNodes = Utility::getNodes('information_page');
+    $campaignNodes = Utility::getNodes('campaign');
+    $deptTableNodes = Utility::getNodes('department_table');
+    $eventNodes = Utility::getNodes('event');
+    $formConfirmPageNodes = Utility::getNodes('form_confirmation_page');
+    $meetingNodes = Utility::getNodes('meeting');
+    $newsNodes = Utility::getNodes('news');
+    $resourceCollectionNodes = Utility::getNodes('resource_collection');
+    $stepByStepNodes = Utility::getNodes('step_by_step');
+
+    $fieldMigration = new TopLevelFieldMigration();
+
+    $fieldMigration->migrate($informationPageNodes, 'field_public_body', 'field_departments');
+    unset($informationPageNodes);
+
+    $fieldMigration->migrate($campaignNodes, 'field_dept', 'field_departments');
+    unset($campaignNodes);
+
+    $fieldMigration->migrate($deptTableNodes, 'field_dept', 'field_departments');
+    unset($deptTableNodes);
+
+    $fieldMigration->migrate($eventNodes, 'field_dept', 'field_departments');
+    unset($eventNodes);
+
+    $fieldMigration->migrate($formConfirmPageNodes, 'field_dept', 'field_departments');
+    unset($formConfirmPageNodes);
+
+    $fieldMigration->migrate($meetingNodes, 'field_dept', 'field_departments');
+    unset($meetingNodes);
+
+    $fieldMigration->migrate($newsNodes, 'field_dept', 'field_departments');
+    unset($newsNodes);
+
+    $fieldMigration->migrate($resourceCollectionNodes, 'field_dept', 'field_departments');
+    unset($resourceCollectionNodes);
+
+    $fieldMigration->migrate($stepByStepNodes, 'field_dept', 'field_departments');
+    unset($stepByStepNodes);
+  } catch(\Exception $e) {
+    echo $e->getMessage(), "\n";
+  }  
+}
+
+/* migrate draft content with old resources to new resources */
+function sfgov_utilities_deploy_07_field_dept_migration() {
+  $rm = new ResourceMigration();
+  
+  $rm->migrateAboutAndPublicBodyResources();
+  $rm->migrateCampaignResources();
+  $rm->migrateResourceCollections();
+  $rm->migrateTopicsAndDepartments();
+  $rm->migrateTopicsAndDepartmentsResourceSubheading();
 }

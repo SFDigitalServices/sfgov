@@ -1,7 +1,45 @@
 label: 媒體
 display:
   default:
+    display_title: Default
     display_options:
+      title: 媒體
+      fields:
+        media_bulk_form:
+          action_title: 動作
+        thumbnail__target_id:
+          label: 縮圖
+          separator: ', '
+        name:
+          separator: ', '
+        bundle:
+          label: Type
+          separator: ', '
+        uid:
+          label: Author
+          separator: ', '
+        status:
+          label: Status
+          settings:
+            format_custom_false: Unpublished
+            format_custom_true: Published
+          separator: ', '
+        changed:
+          label: Updated
+          separator: ', '
+        operations:
+          label: Operations
+      pager:
+        options:
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page_label: 每頁的項目數
+            items_per_page_options_all_label: '- 全部 -'
+            offset_label: 位移
       exposed_form:
         options:
           submit_button: 篩選
@@ -9,52 +47,24 @@ display:
           exposed_sorts_label: 排序依據
           sort_asc_label: 遞增
           sort_desc_label: 遞減
-      pager:
-        options:
-          expose:
-            items_per_page_label: 每頁的項目數
-            items_per_page_options_all_label: '- 全部 -'
-            offset_label: 位移
-          tags:
-            previous: '‹ 上一頁'
-            next: '下一頁 ›'
-            first: '« 最前'
-            last: '最後 »'
-      fields:
-        thumbnail__target_id:
-          label: 縮圖
-        bundle:
-          label: 類型
-        uid:
-          label: 作者
-        status:
-          label: 狀態
-          settings:
-            format_custom_true: 已發表
-            format_custom_false: 尚未發佈
-        changed:
-          label: 已更新
-        operations:
-          label: 操作
-      filters:
-        bundle:
-          expose:
-            label: 類型
-        status:
-          group_info:
-            label: 發佈狀態
-            group_items:
-              1:
-                title: 已發表
-              2:
-                title: 尚未發佈
-        langcode:
-          expose:
-            label: 語言
-      title: 媒體
       empty:
         area_text_custom:
           content: 'No content available.'
+      filters:
+        bundle:
+          expose:
+            label: Type
+        status:
+          group_info:
+            label: 'Published status'
+            group_items:
+              1:
+                title: Published
+              2:
+                title: Unpublished
+        langcode:
+          expose:
+            label: Language
   media_page_list:
     display_title: 媒體
     display_options:

@@ -131,7 +131,7 @@
   </div>
 {% endif %}
 
-{% set news_view = drupal_view('news', 'news_block_depts')|render  %}
+{% set news_view = drupal_view('news', 'news_block_depts', node.id)|render  %}
 {%  if news_view|striptags|trim %}
   <a name="news"></a>
   <div id="sfgov-dept-news" class="sfgov-full-bleed light-yellow">
@@ -141,7 +141,7 @@
   </div>
 {% endif %}
 
-{% set events_view = drupal_view('events', 'block_1')|render %}
+{% set events_view = drupal_view('events', 'block_1', node.id)|render %}
 {% if events_view|striptags|trim %}
   <a name="events"></a>
   <div id="sfgov-dept-events" class="sfgov-full-bleed white">

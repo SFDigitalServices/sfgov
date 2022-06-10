@@ -58,6 +58,9 @@ workflows:
         description: 'Notify in slack when deployed'
         script: private/scripts/slack-notify/slack_notify_drush_site_audit.php
       - type: webphp
+        description: 'Create test users'
+        script: private/scripts/drush-create-users/drush-create-users.php
+      - type: webphp
         description: 'Log to New Relic'
         script: private/scripts/new_relic/new_relic_deploy.php
       - type: webphp
