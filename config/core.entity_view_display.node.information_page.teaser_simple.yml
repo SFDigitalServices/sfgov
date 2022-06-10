@@ -5,9 +5,10 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser_simple
     - field.field.node.information_page.body
-    - field.field.node.information_page.field_dept
+    - field.field.node.information_page.field_departments
     - field.field.node.information_page.field_description
     - field.field.node.information_page.field_information_section
+    - field.field.node.information_page.field_public_body
     - field.field.node.information_page.field_related_content
     - field.field.node.information_page.field_topics
     - field.field.node.information_page.field_transactions
@@ -22,28 +23,30 @@ mode: teaser_simple
 content:
   body:
     type: text_summary_or_trimmed
-    weight: 2
-    region: content
     label: above
     settings:
       trim_length: 600
     third_party_settings: {  }
+    weight: 2
+    region: content
   content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
-  links:
     weight: 1
     region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
-  field_dept: true
+  field_departments: true
   field_description: true
   field_information_section: true
+  field_public_body: true
   field_related_content: true
   field_topics: true
   field_transactions: true
+  formio_url: true
   langcode: true
   search_api_excerpt: true

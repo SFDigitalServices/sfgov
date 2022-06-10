@@ -1,0 +1,37 @@
+uuid: 203d3663-d37e-42af-9ed4-794b9f8f0592
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_departments
+    - node.type.department
+    - node.type.information_page
+    - node.type.public_body
+  module:
+    - datalayer
+third_party_settings:
+  datalayer:
+    expose: 1
+    label: field_departments
+id: node.information_page.field_departments
+field_name: field_departments
+entity_type: node
+bundle: information_page
+label: 'Departments or Public Bodies'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference

@@ -4,14 +4,11 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_resources
+    - paragraphs.paragraphs_type.resource_entity
+    - paragraphs.paragraphs_type.resource_node
     - paragraphs.paragraphs_type.resource_subsection
-    - paragraphs.paragraphs_type.resources
   module:
     - entity_reference_revisions
-    - tmgmt_content
-third_party_settings:
-  tmgmt_content:
-    excluded: false
 id: paragraph.resource_subsection.field_resources
 field_name: field_resources
 entity_type: paragraph
@@ -25,9 +22,10 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
-      resources: resources
+      resource_entity: resource_entity
+      resource_node: resource_node
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 68
@@ -86,6 +84,9 @@ settings:
       data_story_reference_section:
         weight: 86
         enabled: false
+      data_story_reference_subsection:
+        weight: 91
+        enabled: false
       data_story_section:
         weight: 87
         enabled: false
@@ -99,135 +100,150 @@ settings:
         weight: 90
         enabled: false
       document_section:
-        weight: 91
-        enabled: false
-      document_subsection:
         weight: 92
         enabled: false
-      email:
+      document_subsection:
         weight: 93
         enabled: false
-      email_addresses:
+      email:
         weight: 94
         enabled: false
-      events:
+      email_addresses:
         weight: 95
         enabled: false
-      fact:
+      events:
         weight: 96
         enabled: false
-      facts:
-        weight: 97
-        enabled: false
-      featured_item:
-        weight: 98
-        enabled: false
-      form:
-        weight: 99
-        enabled: false
-      form_io:
-        weight: 100
-        enabled: false
-      help:
-        weight: 101
-        enabled: false
-      image:
-        weight: 102
-        enabled: false
-      image_with_text:
+      existing_agency:
         weight: 103
         enabled: false
-      in_person_location:
-        weight: 105
+      fact:
+        weight: 97
         enabled: false
-      instagram_embed:
+      facts:
+        weight: 98
+        enabled: false
+      featured_item:
+        weight: 99
+        enabled: false
+      form:
+        weight: 100
+        enabled: false
+      form_io:
+        weight: 101
+        enabled: false
+      help:
+        weight: 102
+        enabled: false
+      image:
+        weight: 103
+        enabled: false
+      image_with_text:
         weight: 104
         enabled: false
-      link:
+      in_person_location:
         weight: 106
         enabled: false
-      list:
+      instagram_embed:
+        weight: 105
+        enabled: false
+      link:
         weight: 107
         enabled: false
-      list_item:
+      list:
         weight: 108
         enabled: false
-      mailing_address:
+      list_item:
         weight: 109
         enabled: false
-      news:
+      mailing_address:
         weight: 110
         enabled: false
-      other_info_card:
+      news:
         weight: 111
         enabled: false
-      other_info_document:
+      other_info_card:
         weight: 112
         enabled: false
-      people:
+      other_info_document:
         weight: 113
         enabled: false
-      phone:
+      people:
         weight: 114
         enabled: false
-      phone_numbers:
+      phone:
         weight: 115
         enabled: false
-      powerbi_embed:
+      phone_numbers:
         weight: 116
         enabled: false
-      process_step:
+      powerbi_embed:
         weight: 117
         enabled: false
-      resource_section:
-        weight: 119
-        enabled: false
-      resource_subsection:
-        weight: 120
-        enabled: false
-      resources:
-        enabled: true
+      process_step:
         weight: 118
-      section:
-        weight: 121
         enabled: false
-      social_media:
-        weight: 122
-        enabled: false
-      special_case:
-        weight: 123
-        enabled: false
-      spotlight:
-        weight: 124
-        enabled: false
-      step:
-        weight: 125
-        enabled: false
-      text:
+      profile_group:
         weight: 126
         enabled: false
-      thing_to_know:
+      public_body_profiles:
         weight: 127
         enabled: false
-      timeline:
+      resource_entity:
+        weight: 120
+        enabled: true
+      resource_node:
+        weight: 121
+        enabled: true
+      resource_section:
+        weight: 123
+        enabled: false
+      resource_subsection:
+        weight: 124
+        enabled: false
+      resources:
+        weight: 122
+        enabled: false
+      section:
+        weight: 125
+        enabled: false
+      social_media:
+        weight: 126
+        enabled: false
+      special_case:
+        weight: 127
+        enabled: false
+      spotlight:
         weight: 128
         enabled: false
-      timeline_item:
+      step:
         weight: 129
         enabled: false
-      top_search_suggestion:
+      text:
         weight: 130
         enabled: false
-      twitter_embed:
+      thing_to_know:
         weight: 131
         enabled: false
-      video:
+      timeline:
         weight: 132
         enabled: false
-      video_external:
+      timeline_item:
+        weight: 133
+        enabled: false
+      top_search_suggestion:
         weight: 134
         enabled: false
+      twitter_embed:
+        weight: 135
+        enabled: false
+      video:
+        weight: 136
+        enabled: false
+      video_external:
+        weight: 138
+        enabled: false
       videos:
-        weight: 133
+        weight: 137
         enabled: false
 field_type: entity_reference_revisions

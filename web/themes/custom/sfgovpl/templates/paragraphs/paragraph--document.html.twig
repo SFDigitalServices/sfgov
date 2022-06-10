@@ -39,42 +39,40 @@
  */
 #}
 
-{% set parent = paragraph.getParentEntity() %}
-{% set field_file = paragraph.field_file  %}
-{% set fileurl = file_url(paragraph.field_file.entity.field_media_file.entity.uri.value) %}
-
 {%
-set classes = [
-'paragraph',
-'paragraph--type--' ~ paragraph.bundle|clean_class,
-view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-not paragraph.isPublished() ? 'paragraph--unpublished',
-"parent--bundle--" ~ parent.bundle
+  set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished',
+  "parent--bundle--" ~ parent.bundle
 ]
 %}
 
+
 {% block paragraph %}
-  <div {{ attributes.addClass(classes).setAttribute('data-contact', paragraph.bundle|clean_class) }}>
-    {% block content %}
-      {% if not field_file.isEmpty %}
-        {% if fileurl|length > 3 %}
-          <div class="document">
-            <span class="document">
-              <a href="{{ fileurl }}">{{ field_file.entity.label }}</a>
-            </span>
-          </div>
-        {% elseif field_file.entity.field_document_url %}
-          <div class="document">
-            <span class="document">
-              <a href="{{ field_file.entity.field_document_url.value.0.uri }}">{{ field_file.entity.label }}</a>
-            </span>
-          </div>
-        {% else %}
-          <div class="document">
-            <span class="document">{{ field_file.entity.label }}</span>
-          </div>
-        {% endif %}
-      {% endif %}
-    {% endblock %}
+  <div {{ attributes.addClass(classes) }}>
+
+    <ul class="document__list">
+      {% for document in document_list %}
+
+        {% set item_attributes = create_attribute({
+          'data-contact': paragraph.bundle|clean_class ~ '__item',
+        }) %}
+
+        <li {{ item_attributes.addClass(['document__item', 'list-none']) }}>
+
+          {% block content %}
+            {% if document.url|length > 3 %}
+                <a href="{{ document.url }}" class="document__label">{{ document.label }}</a>
+            {% else %}
+                <span class="document__label">{{ document.label }}</span>
+            {% endif %}
+          {% endblock %}
+
+        </li>
+      {% endfor %}
+    </ul>
+
   </div>
 {% endblock paragraph %}

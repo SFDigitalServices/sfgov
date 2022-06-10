@@ -8,21 +8,21 @@ dependencies:
     - field.field.node.event.field_address
     - field.field.node.event.field_call_to_action
     - field.field.node.event.field_cost
+    - field.field.node.event.field_departments
     - field.field.node.event.field_dept
     - field.field.node.event.field_description
     - field.field.node.event.field_email
-    - field.field.node.event.field_end_date
     - field.field.node.event.field_image
     - field.field.node.event.field_location_in_person
     - field.field.node.event.field_location_online
     - field.field.node.event.field_phone_numbers
-    - field.field.node.event.field_start_date
+    - field.field.node.event.field_smart_date
     - field.field.node.event.field_topics
     - image.style.160x160
     - node.type.event
   module:
-    - datetime
     - media
+    - sfgov_dates
     - user
 id: node.event.card
 targetEntityType: node
@@ -31,21 +31,19 @@ mode: card
 content:
   field_image:
     type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: 160x160
+    third_party_settings: {  }
     weight: 1
     region: content
+  field_smart_date:
+    type: sfgov_dates_card_date
     label: hidden
-    settings:
-      image_style: 160x160
-      image_link: ''
+    settings: {  }
     third_party_settings: {  }
-  field_start_date:
     weight: 0
-    label: hidden
-    settings:
-      timezone_override: ''
-      date_format: 'l, F j'
-    third_party_settings: {  }
-    type: datetime_custom
     region: content
 hidden:
   body: true
@@ -53,14 +51,16 @@ hidden:
   field_address: true
   field_call_to_action: true
   field_cost: true
+  field_departments: true
   field_dept: true
   field_description: true
   field_email: true
-  field_end_date: true
   field_location_in_person: true
   field_location_online: true
   field_phone_numbers: true
+  field_start_date: true
   field_topics: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

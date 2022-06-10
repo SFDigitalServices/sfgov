@@ -40,6 +40,9 @@ Form.io forms are implemented via Paragraphs. There is a `form_io` Paragraph ent
 | `form_page` | Content type | `/node/add/form_page` | Useful when the sole purpose of the page is to display the form. |  [/workers-families-first-preapproval-form](https://sf.gov/workers-families-first-preapproval-form), [/apply-for-mini-grant](https://sf.gov/apply-for-mini-grant) |
 | `form` | Custom block type | `/block/add/form` | Useful for displaying a form on one or more pages. | Feedback form (bottom of all pages) |
 
+## Translating Form Content
+Form content can be translated through TMGMT. Form nodes have a checkbox which, when marked, will tell the node to fetch the respective formio fields on save. These can then be translated like any other field.
+
 ### Adding Form Content
 
 1. Decide which type you need and go to `/node/add/form_page` or `/block/add/form`.

@@ -6,10 +6,8 @@ dependencies:
     - core.entity_view_mode.node.card
     - core.entity_view_mode.node.teaser
     - field.storage.node.field_public_body
-    - field.storage.node.field_start_date
     - node.type.meeting
   module:
-    - datetime
     - node
     - user
 id: meetings
@@ -21,78 +19,12 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'access content'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: full
-        options:
-          items_per_page: 10
-          offset: 0
-          id: 0
-          total_pages: null
-          tags:
-            previous: Previous
-            next: Next
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
-      style:
-        type: default
-        options:
-          grouping:
-            -
-              field: field_start_date
-              rendered: true
-              rendered_strip: false
-            -
-              field: field_start_date_1
-              rendered: true
-              rendered_strip: false
-          row_class: ''
-          default_row_class: true
-      row:
-        type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
+      title: Meetings
       fields:
         field_public_body:
           id: field_public_body
@@ -101,6 +33,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -156,135 +89,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
-        field_start_date:
-          id: field_start_date
-          table: node__field_start_date
-          field: field_start_date
-          relationship: none
-          group_type: group
-          admin_label: 'Grouping: Month'
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: h3
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: datetime_custom
-          settings:
-            timezone_override: ''
-            date_format: 'F Y'
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        field_start_date_1:
-          id: field_start_date_1
-          table: node__field_start_date
-          field: field_start_date
-          relationship: none
-          group_type: group
-          admin_label: 'Grouping: Date'
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: datetime_custom
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j'
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         rendered_entity:
           id: rendered_entity
           table: node
@@ -292,6 +96,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: rendered_entity
           label: ''
           exclude: false
           alter:
@@ -334,136 +140,44 @@ display:
           empty_zero: false
           hide_alter_empty: true
           view_mode: teaser
-          entity_type: node
-          plugin_id: rendered_entity
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: Next
+            previous: Previous
+            first: '« First'
+            last: 'Last »'
           expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            meeting: meeting
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        field_public_body_target_id:
-          id: field_public_body_target_id
-          table: node__field_public_body
-          field: field_public_body_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: 'not empty'
-          value:
-            min: ''
-            max: ''
-            value: ''
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: numeric
-        status_1:
-          id: status_1
-          table: node_field_data
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: status
-          plugin_id: boolean
-      sorts:
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
-          plugin_id: datetime
-      title: Meetings
-      header: {  }
-      footer: {  }
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
       empty:
         area:
           id: area
@@ -472,13 +186,27 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: true
-          tokenize: false
           content:
             value: 'We didn''t find any meetings that match your filters.'
             format: sf_restricted_html
-          plugin_id: text
-      relationships: {  }
+          tokenize: false
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
       arguments:
         field_public_body_target_id:
           id: field_public_body_target_id
@@ -487,6 +215,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: numeric
           default_action: default
           exception:
             value: all
@@ -500,8 +229,8 @@ display:
           summary_options:
             base_path: ''
             count: true
-            items_per_page: 25
             override: false
+            items_per_page: 25
           summary:
             sort_order: asc
             number_of_records: 0
@@ -513,12 +242,194 @@ display:
           validate_options: {  }
           break_phrase: false
           not: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            meeting: meeting
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_public_body_target_id:
+          id: field_public_body_target_id
+          table: node__field_public_body
+          field: field_public_body_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
           plugin_id: numeric
-      display_extenders: {  }
+          operator: 'not empty'
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        status_1:
+          id: status_1
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
           1: AND
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships: {  }
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -531,12 +442,11 @@ display:
       tags:
         - 'config:core.entity_view_display.node.about.default'
         - 'config:core.entity_view_display.node.about.teaser'
-        - 'config:core.entity_view_display.node.article.default'
-        - 'config:core.entity_view_display.node.article.rss'
-        - 'config:core.entity_view_display.node.article.search_index'
-        - 'config:core.entity_view_display.node.article.teaser'
         - 'config:core.entity_view_display.node.campaign.default'
         - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
         - 'config:core.entity_view_display.node.department.default'
         - 'config:core.entity_view_display.node.department.location_page'
         - 'config:core.entity_view_display.node.department.search_index'
@@ -580,6 +490,7 @@ display:
         - 'config:core.entity_view_display.node.public_body.card'
         - 'config:core.entity_view_display.node.public_body.default'
         - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
         - 'config:core.entity_view_display.node.resource_collection.default'
         - 'config:core.entity_view_display.node.resource_collection.teaser'
         - 'config:core.entity_view_display.node.step_by_step.default'
@@ -599,39 +510,33 @@ display:
         - 'config:core.entity_view_display.node.transaction.teaser_simple'
         - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
         - 'config:field.storage.node.field_public_body'
-        - 'config:field.storage.node.field_start_date'
   block_past:
-    display_plugin: block
     id: block_past
     display_title: 'Block: Past meetings'
+    display_plugin: block
     position: 3
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      style:
-        type: default
+      title: 'Past meetings'
+      pager:
+        type: some
         options:
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
-      defaults:
-        style: false
-        row: false
-        filters: false
-        filter_groups: false
-        pager: false
-        title: false
-        use_more: false
-        use_more_always: false
-        use_more_text: false
-        link_display: false
-        link_url: false
-        sorts: false
-      row:
-        type: 'entity:node'
-        options:
+          offset: 0
+          items_per_page: 3
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
-          view_mode: card
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
       filters:
         status_extra:
           id: status_extra
@@ -640,6 +545,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: node_status
           operator: '='
           value: false
           group: 1
@@ -670,21 +577,19 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: node
-          plugin_id: node_status
         type:
           id: type
           table: node_field_data
           field: type
-          value:
-            meeting: meeting
           entity_type: node
           entity_field: type
           plugin_id: bundle
+          value:
+            meeting: meeting
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         field_public_body_target_id:
           id: field_public_body_target_id
           table: node__field_public_body
@@ -692,6 +597,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: numeric
           operator: 'not empty'
           value:
             min: ''
@@ -713,9 +619,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -728,15 +634,15 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: numeric
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_end_value:
+          id: field_smart_date_end_value
+          table: node__field_smart_date
+          field: field_smart_date_end_value
           relationship: none
           group_type: group
           admin_label: ''
-          operator: '<'
+          plugin_id: date
+          operator: '<='
           value:
             min: ''
             max: ''
@@ -758,9 +664,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -773,17 +679,18 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: datetime
-        langcode:
-          id: langcode
+        default_langcode:
+          id: default_langcode
           table: node_field_data
-          field: langcode
+          field: default_langcode
           relationship: none
           group_type: group
           admin_label: ''
-          operator: in
-          value:
-            '***LANGUAGE_language_interface***': '***LANGUAGE_language_interface***'
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -800,7 +707,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -813,42 +719,45 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: node
-          entity_field: langcode
-          plugin_id: language
       filter_groups:
         operator: AND
         groups:
           1: AND
-      pager:
-        type: some
+      style:
+        type: default
         options:
-          items_per_page: 3
-          offset: 0
-      title: 'Past meetings'
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: card
+      defaults:
+        title: false
+        pager: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
+        link_display: false
+        link_url: false
+        style: false
+        row: false
+        sorts: false
+        filters: false
+        filter_groups: false
+      display_description: ''
       use_more: true
       use_more_always: true
       use_more_text: 'See archive'
       link_display: page_past
       link_url: ''
-      sorts:
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
-          plugin_id: datetime
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - user
@@ -857,12 +766,11 @@ display:
       tags:
         - 'config:core.entity_view_display.node.about.default'
         - 'config:core.entity_view_display.node.about.teaser'
-        - 'config:core.entity_view_display.node.article.default'
-        - 'config:core.entity_view_display.node.article.rss'
-        - 'config:core.entity_view_display.node.article.search_index'
-        - 'config:core.entity_view_display.node.article.teaser'
         - 'config:core.entity_view_display.node.campaign.default'
         - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
         - 'config:core.entity_view_display.node.department.default'
         - 'config:core.entity_view_display.node.department.location_page'
         - 'config:core.entity_view_display.node.department.search_index'
@@ -906,6 +814,7 @@ display:
         - 'config:core.entity_view_display.node.public_body.card'
         - 'config:core.entity_view_display.node.public_body.default'
         - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
         - 'config:core.entity_view_display.node.resource_collection.default'
         - 'config:core.entity_view_display.node.resource_collection.teaser'
         - 'config:core.entity_view_display.node.step_by_step.default'
@@ -925,232 +834,12 @@ display:
         - 'config:core.entity_view_display.node.transaction.teaser_simple'
         - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
         - 'config:field.storage.node.field_public_body'
-        - 'config:field.storage.node.field_start_date'
   block_upcoming:
-    display_plugin: block
     id: block_upcoming
     display_title: 'Block: Upcoming meetings'
+    display_plugin: block
     position: 3
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      style:
-        type: default
-        options:
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
-      defaults:
-        style: false
-        row: false
-        filters: false
-        filter_groups: false
-        pager: false
-        title: false
-        fields: false
-        use_more: false
-        use_more_always: false
-        use_more_text: false
-        link_display: false
-        link_url: false
-      row:
-        type: 'entity:node'
-        options:
-          relationship: none
-          view_mode: card
-      filters:
-        status_extra:
-          id: status_extra
-          table: node_field_data
-          field: status_extra
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: false
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          plugin_id: node_status
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            meeting: meeting
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        field_public_body_target_id:
-          id: field_public_body_target_id
-          table: node__field_public_body
-          field: field_public_body_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: 'not empty'
-          value:
-            min: ''
-            max: ''
-            value: ''
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: numeric
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '>='
-          value:
-            min: ''
-            max: ''
-            value: now
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: datetime
-        langcode:
-          id: langcode
-          table: node_field_data
-          field: langcode
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: in
-          value:
-            '***LANGUAGE_language_interface***': '***LANGUAGE_language_interface***'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: langcode
-          plugin_id: language
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      pager:
-        type: some
-        options:
-          items_per_page: 3
-          offset: 0
       title: 'Upcoming meetings'
       fields:
         title:
@@ -1160,6 +849,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1215,393 +907,26 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
-      use_more: true
-      use_more_always: true
-      use_more_text: 'See more meetings'
-      link_display: page_upcoming
-      link_url: ''
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - user
-        - 'user.node_grants:view'
-        - user.permissions
-      tags: {  }
-  page_past:
-    display_plugin: page
-    id: page_past
-    display_title: 'Page: Past meetings'
-    position: 1
-    display_options:
-      display_extenders: {  }
-      path: node/%/past-meetings
-      defaults:
-        style: true
-        row: true
-        sorts: false
-        filters: false
-        filter_groups: false
-        title: false
-        header: false
-        fields: true
-        relationships: true
-        footer: false
-      display_description: ''
-      title: 'Past meetings'
-      header:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: true
-          content:
-            value: 'Upcoming meetings for the {{ field_public_body }}'
-            format: sf_restricted_html
-          plugin_id: text
-      filters:
-        status_extra:
-          id: status_extra
-          table: node_field_data
-          field: status_extra
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: false
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          plugin_id: node_status
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            meeting: meeting
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        field_public_body_target_id:
-          id: field_public_body_target_id
-          table: node__field_public_body
-          field: field_public_body_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: 'not empty'
-          value:
-            min: ''
-            max: ''
-            value: ''
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: numeric
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '<'
-          value:
-            min: ''
-            max: ''
-            value: now
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: datetime
-        langcode:
-          id: langcode
-          table: node
-          field: langcode
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: in
-          value:
-            '***LANGUAGE_language_interface***': '***LANGUAGE_language_interface***'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: langcode
-          plugin_id: language
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      footer:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          tokenize: true
-          content:
-            value: "<h5>Upcoming meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See more meetings</a>"
-            format: full_html
-          plugin_id: text
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 3
       sorts:
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
           group_type: group
           admin_label: ''
-          order: DESC
-          exposed: false
+          plugin_id: date
+          order: ASC
           expose:
             label: ''
+            field_identifier: ''
+          exposed: false
           granularity: second
-          plugin_id: datetime
-      rendering_language: '***LANGUAGE_entity_translation***'
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-        - user
-        - 'user.node_grants:view'
-        - user.permissions
-      tags:
-        - 'config:core.entity_view_display.node.about.default'
-        - 'config:core.entity_view_display.node.about.teaser'
-        - 'config:core.entity_view_display.node.article.default'
-        - 'config:core.entity_view_display.node.article.rss'
-        - 'config:core.entity_view_display.node.article.search_index'
-        - 'config:core.entity_view_display.node.article.teaser'
-        - 'config:core.entity_view_display.node.campaign.default'
-        - 'config:core.entity_view_display.node.campaign.teaser'
-        - 'config:core.entity_view_display.node.department.default'
-        - 'config:core.entity_view_display.node.department.location_page'
-        - 'config:core.entity_view_display.node.department.search_index'
-        - 'config:core.entity_view_display.node.department.teaser'
-        - 'config:core.entity_view_display.node.department.title'
-        - 'config:core.entity_view_display.node.department_table.default'
-        - 'config:core.entity_view_display.node.department_table.teaser'
-        - 'config:core.entity_view_display.node.event.card'
-        - 'config:core.entity_view_display.node.event.default'
-        - 'config:core.entity_view_display.node.event.teaser'
-        - 'config:core.entity_view_display.node.form_confirmation_page.default'
-        - 'config:core.entity_view_display.node.form_confirmation_page.full'
-        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
-        - 'config:core.entity_view_display.node.form_page.default'
-        - 'config:core.entity_view_display.node.form_page.teaser'
-        - 'config:core.entity_view_display.node.information_page.default'
-        - 'config:core.entity_view_display.node.information_page.teaser'
-        - 'config:core.entity_view_display.node.information_page.teaser_simple'
-        - 'config:core.entity_view_display.node.landing.default'
-        - 'config:core.entity_view_display.node.landing.search_index'
-        - 'config:core.entity_view_display.node.landing.teaser'
-        - 'config:core.entity_view_display.node.location.card'
-        - 'config:core.entity_view_display.node.location.default'
-        - 'config:core.entity_view_display.node.location.location_page'
-        - 'config:core.entity_view_display.node.location.teaser'
-        - 'config:core.entity_view_display.node.meeting.card'
-        - 'config:core.entity_view_display.node.meeting.default'
-        - 'config:core.entity_view_display.node.meeting.teaser'
-        - 'config:core.entity_view_display.node.news.card'
-        - 'config:core.entity_view_display.node.news.card_compact'
-        - 'config:core.entity_view_display.node.news.default'
-        - 'config:core.entity_view_display.node.news.teaser'
-        - 'config:core.entity_view_display.node.page.default'
-        - 'config:core.entity_view_display.node.page.search_index'
-        - 'config:core.entity_view_display.node.page.teaser'
-        - 'config:core.entity_view_display.node.person.card'
-        - 'config:core.entity_view_display.node.person.card_with_image_small'
-        - 'config:core.entity_view_display.node.person.default'
-        - 'config:core.entity_view_display.node.person.person_section_display'
-        - 'config:core.entity_view_display.node.person.teaser'
-        - 'config:core.entity_view_display.node.public_body.card'
-        - 'config:core.entity_view_display.node.public_body.default'
-        - 'config:core.entity_view_display.node.public_body.teaser'
-        - 'config:core.entity_view_display.node.resource_collection.default'
-        - 'config:core.entity_view_display.node.resource_collection.teaser'
-        - 'config:core.entity_view_display.node.step_by_step.default'
-        - 'config:core.entity_view_display.node.step_by_step.teaser'
-        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
-        - 'config:core.entity_view_display.node.topic.card'
-        - 'config:core.entity_view_display.node.topic.default'
-        - 'config:core.entity_view_display.node.topic.search_index'
-        - 'config:core.entity_view_display.node.topic.teaser'
-        - 'config:core.entity_view_display.node.topic.teaser_simple'
-        - 'config:core.entity_view_display.node.transaction.card'
-        - 'config:core.entity_view_display.node.transaction.default'
-        - 'config:core.entity_view_display.node.transaction.part_of_label'
-        - 'config:core.entity_view_display.node.transaction.search_index'
-        - 'config:core.entity_view_display.node.transaction.side_bar'
-        - 'config:core.entity_view_display.node.transaction.teaser'
-        - 'config:core.entity_view_display.node.transaction.teaser_simple'
-        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
-        - 'config:field.storage.node.field_public_body'
-        - 'config:field.storage.node.field_start_date'
-  page_upcoming:
-    display_plugin: page
-    id: page_upcoming
-    display_title: 'Page: Upcoming meetings'
-    position: 1
-    display_options:
-      display_extenders: {  }
-      path: node/%/upcoming-meetings
-      defaults:
-        style: true
-        row: true
-        sorts: true
-        filters: false
-        filter_groups: false
-        title: false
-        header: false
-        fields: true
-        relationships: true
-        footer: false
-      display_description: ''
-      title: 'Upcoming meetings'
-      header:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: true
-          content:
-            value: 'Upcoming meetings for {{ field_public_body }}'
-            format: sf_restricted_html
-          plugin_id: text
       filters:
         status_extra:
           id: status_extra
@@ -1610,6 +935,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: node_status
           operator: '='
           value: false
           group: 1
@@ -1640,21 +967,19 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: node
-          plugin_id: node_status
         type:
           id: type
           table: node_field_data
           field: type
-          value:
-            meeting: meeting
           entity_type: node
           entity_field: type
           plugin_id: bundle
+          value:
+            meeting: meeting
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         field_public_body_target_id:
           id: field_public_body_target_id
           table: node__field_public_body
@@ -1662,6 +987,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: numeric
           operator: 'not empty'
           value:
             min: ''
@@ -1683,9 +1009,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -1698,14 +1024,14 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: numeric
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_end_value:
+          id: field_smart_date_end_value
+          table: node__field_smart_date
+          field: field_smart_date_end_value
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: date
           operator: '>='
           value:
             min: ''
@@ -1728,9 +1054,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -1743,17 +1069,18 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: datetime
-        langcode:
-          id: langcode
+        default_langcode:
+          id: default_langcode
           table: node_field_data
-          field: langcode
+          field: default_langcode
           relationship: none
           group_type: group
           admin_label: ''
-          operator: in
-          value:
-            '***LANGUAGE_language_interface***': '***LANGUAGE_language_interface***'
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -1770,7 +1097,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -1783,13 +1109,267 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: node
-          entity_field: langcode
-          plugin_id: language
       filter_groups:
         operator: AND
         groups:
           1: AND
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: card
+      defaults:
+        title: false
+        pager: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
+        link_display: false
+        link_url: false
+        style: false
+        row: false
+        fields: false
+        sorts: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      use_more: true
+      use_more_always: true
+      use_more_text: 'See more meetings'
+      link_display: page_upcoming
+      link_url: ''
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  page_past:
+    id: page_past
+    display_title: 'Page: Past meetings'
+    display_plugin: page
+    position: 1
+    display_options:
+      title: 'Past meetings'
+      fields:
+        field_public_body:
+          id: field_public_body
+          table: node__field_public_body
+          field: field_public_body
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: rendered_entity
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: teaser
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'F Y'
+          timezone: ''
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      defaults:
+        title: false
+        style: true
+        row: true
+        relationships: true
+        fields: false
+        sorts: false
+        filters: true
+        filter_groups: true
+        header: false
+        footer: false
+      display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: 'Upcoming meetings for the {{ field_public_body }}'
+            format: sf_restricted_html
+          tokenize: true
       footer:
         area:
           id: area
@@ -1798,31 +1378,31 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          empty: true
-          tokenize: true
-          content:
-            value: "<h5>Past meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See all past meetings</a>"
-            format: full_html
           plugin_id: text
+          empty: true
+          content:
+            value: "<h5>Upcoming meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_upcoming', {arg_0: arguments.field_public_body_target_id}) }}\">See more meetings</a>"
+            format: full_html
+          tokenize: true
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+      path: node/%/past-meetings
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:core.entity_view_display.node.about.default'
         - 'config:core.entity_view_display.node.about.teaser'
-        - 'config:core.entity_view_display.node.article.default'
-        - 'config:core.entity_view_display.node.article.rss'
-        - 'config:core.entity_view_display.node.article.search_index'
-        - 'config:core.entity_view_display.node.article.teaser'
         - 'config:core.entity_view_display.node.campaign.default'
         - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
         - 'config:core.entity_view_display.node.department.default'
         - 'config:core.entity_view_display.node.department.location_page'
         - 'config:core.entity_view_display.node.department.search_index'
@@ -1866,6 +1446,7 @@ display:
         - 'config:core.entity_view_display.node.public_body.card'
         - 'config:core.entity_view_display.node.public_body.default'
         - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
         - 'config:core.entity_view_display.node.resource_collection.default'
         - 'config:core.entity_view_display.node.resource_collection.teaser'
         - 'config:core.entity_view_display.node.step_by_step.default'
@@ -1885,4 +1466,501 @@ display:
         - 'config:core.entity_view_display.node.transaction.teaser_simple'
         - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
         - 'config:field.storage.node.field_public_body'
-        - 'config:field.storage.node.field_start_date'
+  page_upcoming:
+    id: page_upcoming
+    display_title: 'Page: Upcoming meetings'
+    display_plugin: page
+    position: 1
+    display_options:
+      title: 'Upcoming meetings'
+      fields:
+        field_public_body:
+          id: field_public_body
+          table: node__field_public_body
+          field: field_public_body
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: rendered_entity
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: teaser
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      filters:
+        status_extra:
+          id: status_extra
+          table: node_field_data
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: node_status
+          operator: '='
+          value: false
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            meeting: meeting
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_public_body_target_id:
+          id: field_public_body_target_id
+          table: node__field_public_body
+          field: field_public_body_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric
+          operator: 'not empty'
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_smart_date_end_value:
+          id: field_smart_date_end_value
+          table: node__field_smart_date
+          field: field_smart_date_end_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: now
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      defaults:
+        title: false
+        style: true
+        row: true
+        relationships: true
+        fields: false
+        sorts: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
+      display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: 'Upcoming meetings for {{ field_public_body }}'
+            format: sf_restricted_html
+          tokenize: true
+      footer:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: "<h5>Past meetings</h5>\r\n\r\n<a href=\"{{ url('view.meetings.page_past', {arg_0: arguments.field_public_body_target_id}) }}\">See all past meetings</a>"
+            format: full_html
+          tokenize: true
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+      path: node/%/upcoming-meetings
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
+        - 'config:field.storage.node.field_public_body'

@@ -5,13 +5,9 @@ dependencies:
   config:
     - field.storage.node.field_resources
     - node.type.topic
-    - paragraphs.paragraphs_type.resources
+    - paragraphs.paragraphs_type.other_info_card
   module:
     - entity_reference_revisions
-    - tmgmt_content
-third_party_settings:
-  tmgmt_content:
-    excluded: false
 id: node.topic.field_resources
 field_name: field_resources
 entity_type: node
@@ -25,12 +21,30 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
-      resources: resources
+      other_info_card: other_info_card
+    negate: 0
     target_bundles_drag_drop:
+      accordion:
+        weight: 74
+        enabled: false
+      accordion_item:
+        weight: 75
+        enabled: false
+      accordion_item_simple:
+        weight: 76
+        enabled: false
+      acuity_embed:
+        weight: 77
+        enabled: false
       additional_info:
         weight: 36
+        enabled: false
+      agenda_item:
+        weight: 78
+        enabled: false
+      basic_html_section:
+        weight: 79
         enabled: false
       block:
         weight: 37
@@ -47,17 +61,47 @@ settings:
       campaign:
         weight: 41
         enabled: false
+      campaign_resource_section:
+        weight: 81
+        enabled: false
+      campaign_resources:
+        weight: 80
+        enabled: false
+      campaign_spotlight:
+        weight: 82
+        enabled: false
+      content_link:
+        weight: 83
+        enabled: false
       cost:
         weight: 42
         enabled: false
       custom_section:
         weight: 43
         enabled: false
+      data_story_reference_section:
+        weight: 84
+        enabled: false
+      data_story_reference_subsection:
+        weight: 85
+        enabled: false
+      data_story_section:
+        weight: 86
+        enabled: false
+      department_content:
+        weight: 87
+        enabled: false
       department_service_section:
         weight: 44
         enabled: false
       document:
         weight: 45
+        enabled: false
+      document_section:
+        weight: 88
+        enabled: false
+      document_subsection:
+        weight: 89
         enabled: false
       email:
         weight: 46
@@ -68,17 +112,38 @@ settings:
       events:
         weight: 48
         enabled: false
+      existing_agency:
+        weight: 103
+        enabled: false
+      fact:
+        weight: 90
+        enabled: false
+      facts:
+        weight: 91
+        enabled: false
       featured_item:
         weight: 49
         enabled: false
       form:
         weight: 50
         enabled: false
+      form_io:
+        weight: 92
+        enabled: false
       help:
         weight: 51
         enabled: false
+      image:
+        weight: 93
+        enabled: false
+      image_with_text:
+        weight: 94
+        enabled: false
       in_person_location:
         weight: 52
+        enabled: false
+      instagram_embed:
+        weight: 95
         enabled: false
       link:
         weight: 53
@@ -95,6 +160,12 @@ settings:
       news:
         weight: 57
         enabled: false
+      other_info_card:
+        weight: 96
+        enabled: true
+      other_info_document:
+        weight: 97
+        enabled: false
       people:
         weight: 58
         enabled: false
@@ -104,34 +175,73 @@ settings:
       phone_numbers:
         weight: 60
         enabled: false
+      powerbi_embed:
+        weight: 98
+        enabled: false
       process_step:
         weight: 61
         enabled: false
-      resources:
-        enabled: true
-        weight: 62
-      section:
+      profile_group:
+        weight: 126
+        enabled: false
+      public_body_profiles:
+        weight: 127
+        enabled: false
+      resource_entity:
         weight: 63
         enabled: false
-      social_media:
+      resource_node:
         weight: 64
         enabled: false
-      special_case:
+      resource_section:
+        weight: 99
+        enabled: false
+      resource_subsection:
+        weight: 100
+        enabled: false
+      resources:
         weight: 65
         enabled: false
-      spotlight:
+      section:
         weight: 66
         enabled: false
-      step:
+      social_media:
         weight: 67
         enabled: false
-      text:
+      special_case:
         weight: 68
         enabled: false
-      thing_to_know:
+      spotlight:
         weight: 69
         enabled: false
-      top_search_suggestion:
+      step:
         weight: 70
+        enabled: false
+      text:
+        weight: 71
+        enabled: false
+      thing_to_know:
+        weight: 72
+        enabled: false
+      timeline:
+        weight: 101
+        enabled: false
+      timeline_item:
+        weight: 102
+        enabled: false
+      top_search_suggestion:
+        weight: 73
+        enabled: false
+      twitter_embed:
+        weight: 103
+        enabled: false
+      video:
+        weight: 104
+        enabled: false
+      video_external:
+        weight: 106
+        enabled: false
+      videos:
+        weight: 105
         enabled: false
 field_type: entity_reference_revisions

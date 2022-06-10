@@ -8,10 +8,6 @@ dependencies:
     - paragraphs.paragraphs_type.profile_group
   module:
     - entity_reference_revisions
-    - tmgmt_content
-third_party_settings:
-  tmgmt_content:
-    excluded: false
 id: node.location.field_people
 field_name: field_people
 entity_type: node
@@ -19,15 +15,15 @@ bundle: location
 label: People
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       profile_group: profile_group
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 57
@@ -186,8 +182,8 @@ settings:
         weight: 99
         enabled: false
       profile_group:
-        enabled: true
         weight: 124
+        enabled: true
       public_body_profiles:
         weight: 125
         enabled: false

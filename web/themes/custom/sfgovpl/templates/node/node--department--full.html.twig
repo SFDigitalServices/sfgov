@@ -71,25 +71,41 @@
 
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
-    {% include '@theme/hero-banner-default.twig' with {
+    {% embed '@theme/hero-banner-default.twig' with {
       'banner': {
         'title': node.label,
         'text': node.field_description.value
       }
     } %}
+  
+      {% block logo %}
+        {% if content.field_image|render|striptags %}
+          <div class="hero-banner--logo">
+            {{ content.field_image }}
+          </div>
+        {% endif %}
+      {% endblock logo %}
+
+    {% endembed %}
 
   </div>
 </div>
 
-<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container">
+<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container mb-40">
   <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
     <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
     <ul></ul>
   </div>
 </div>
 
+{# Alert #}
+{% include '@theme/alert.twig' with {
+  date_exp: node.field_alert_expiration_date.0.value,
+  style: 'department',
+} %}
+
 {% if content.field_spotlight2['#items'].getValue() %}
-  <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+  <div class="sfgov-full-bleed padding-zero bg-grey-1 sfgov-spotlight-container">
     <div class="sfgov-section-container">
       {{ content.field_spotlight2 }}
     </div>
@@ -97,12 +113,6 @@
 {% endif %}
 
 {{ content.field_featured_items }}
-
-{# Alert #}
-{% include '@theme/alert.twig' with {
-  date_exp: node.field_alert_expiration_date.0.value,
-  style: 'department',
-} %}
 
 {% if content.field_department_services['#items'].getValue() %}
   <a name="services"></a>
@@ -121,7 +131,7 @@
   </div>
 {% endif %}
 
-{% set news_view = drupal_view('news', 'news_block_depts')|render  %}
+{% set news_view = drupal_view('news', 'news_block_depts', node.id)|render  %}
 {%  if news_view|striptags|trim %}
   <a name="news"></a>
   <div id="sfgov-dept-news" class="sfgov-full-bleed light-yellow">
@@ -131,7 +141,7 @@
   </div>
 {% endif %}
 
-{% set events_view = drupal_view('events', 'block_1')|render %}
+{% set events_view = drupal_view('events', 'block_1', node.id)|render %}
 {% if events_view|striptags|trim %}
   <a name="events"></a>
   <div id="sfgov-dept-events" class="sfgov-full-bleed white">
@@ -151,6 +161,8 @@
 {% endif %}
 
 {% set hasAboutSection = false %}
+{% set numPublicBodies = content.field_public_bodies['#items']|length %}
+{% set numDivisions = content.field_divisions['#items']|length %}
 
 {% if content.field_about_or_description|render|striptags 
     or about_page_link
@@ -158,75 +170,84 @@
     or content.field_image|render|striptags
     or content.field_call_to_action|render|striptags
     or content.field_social_media|render|striptags
+    or numPublicBodies > 0
+    or numDivisions > 0
 %}
   {% set hasAboutSection = true %}
 {% endif %}
 
 {% if hasAboutSection %}
   <a name="about"></a>
-  <div id="sfgov-dept-about" class="sfgov-dept-section sfgov-dept-about sfds-layout-container">
-    <div class="sfgov-dept-about-container sfds-responsive-container sfds-responsive-container-right-zero">
-      <h2 class="dept-heading--section">{{ 'About'|t }}</h2>
-      <div class="sfgov-dept-about-content">
-        <div class="sfgov-dept-about-content-left sfgov-dept-about-content-section">
-          <div class="sfgov-dept-about-description">
-            {% if content.field_about_or_description|render|striptags %}
+  <div class="bg-blue-dark py-40 lg:py-60">
+    <div class="sfgov-dept-about">
+      <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
+      {# parent department / part of #}
+      {% if node.field_parent_department.0 is not empty %}        
+        <h3 class="text-white text-body font-medium m-0 mb-28">
+          {{ node.field_parent_department.fieldDefinition.label | t }}:
+          <a class="text-white font-regular" href="{{ path('entity.node.canonical', {'node': node.field_parent_department.entity.nid.value}) }}">
+            {{ node.field_parent_department.entity.title.value }}
+          </a>
+        </h3>
+      {% endif %}
+      <div class="lg:flex">
+        <div class="text-white text-big-desc-mobile lg:text-big-desc-desktop lg:w-2/3"> {# left hand side #}
+          {# about description #}
+          {% if content.field_about_or_description|render|striptags %}
+            <div class="mb-24 lg:mb-60">
               {{ content.field_about_or_description | raw }}
-            {% elseif content.field_about_description|render|striptags %}
-              {{ content.field_about_description | raw }}
-            {% endif %}
+            </div>
+          {% endif %}
 
-            {% if about_page_link %}
-              <p class="about-page-link">
-                {{ about_page_link }}
-              </p>
-            {% endif %}
-          </div>
-          {% if node.field_parent_department.0 is not empty %}
-            <div class="sfgov-dept-about-public-bodies">
-              <h3>{{ 'Part of'|t }}</h3>
-              <ul>
-              <li>{{ content.field_parent_department }}</li>
-              </ul>
+          {# this element and text is hard coded in a custom module #}
+          {# it's presence is determined by the existence of an about page for the node referenced in field_parent_department #}
+          {# @see web/modules/custom/sfgov_about/sfgov_about.module #}
+          {% if about_page_link %}
+            <div class="mb-60">
+              {% include "@sfgov-design-system/button/link.twig" with {
+                  "href": about_page_link['#url'],
+                  "text": about_page_link['#title'],
+                  "classes": ['btn-inverse']
+              } %}
+            </div>
+          {% endif %}
+          
+          {# divisions and public bodies #}
+          {% if content.field_divisions|render|striptags|trim or content.field_public_bodies|render|striptags|trim %}
+            <div class="mb-60">
+              {# divisions #}
+              {{ content.field_divisions }}
+
+              {# public bodies #}
+              {{ content.field_public_bodies }}
             </div>
           {% endif %}
         </div>
-        <div class="sfgov-dept-about-content-right sfgov-dept-about-content-section sfds-responsive-container-right-zero">
-          {% if content.field_image|render|striptags %}
-            <div class="sfgov-dept-about-logo sfgov-logo">
-              {{ content.field_image }}
-            </div>
-          {% endif %}
-          {% if content.field_call_to_action|render|striptags %}
-            <div class="sfgov-dept-about-cta sfgov-cta">
-              {{ content.field_call_to_action }}
-            </div>
-          {% endif %}
+
+        <div class="text-white flex flex-col-reverse lg:block lg:flex-none lg:w-1/3 lg:pl-60"> {# right hand side #}
+          {# social media #}
           {% if content.field_social_media|render|striptags %}
-            <div class="sfgov-dept-about-social sfgov-social">
+            <div class="social-media">
               {{ content.field_social_media }}
+            </div>
+          {% endif %}
+
+          {# call to action #}        
+          {% if content.field_call_to_action|render|striptags|trim %}
+            <div class="mb-60 lg:mb-0">
+              {{ content.field_call_to_action }}
             </div>
           {% endif %}
         </div>
       </div>
     </div>
   </div>
+{% endif %}
 
-  {% set numPublicBodies = content.field_public_bodies['#items']|length %}
-  {% set numDivisions = content.field_divisions['#items']|length %}
-
-  {% if numDivisions > 0 or numPublicBodies > 0 %}
-    <div class="sfgov-dept-about-divisions-wrapper">
-      {{ content.field_divisions }}
-      {{ content.field_public_bodies }}
-    </div>
-  {% endif %}
-
-  {% if content.field_people|render %}
-    <div class="sfgov-dept-about-people">
-      {{ content.field_people }}
-    </div>
-  {% endif %}
+{% if content.field_people|render %}
+  <div class="sfgov-dept-about-people my-80">
+    {{ content.field_people }}
+  </div>
 {% endif %}
 
 {% set hasAddress = content.field_address['#items'] is not empty %}
@@ -234,8 +255,8 @@
 {% set hasEmail = content.field_email['#items'] is not empty %}
 
 {% if hasAddress or hasPhone or hasEmail %}
+  <div id="sfgov-dept-contact" class="sfgov-dept-contact sfds-layout-container my-80">
   <a name="contact"></a>
-  <div id="sfgov-dept-contact" class="sfgov-dept-section sfgov-dept-contact sfds-layout-container">
     <div class="sfgov-dept-contact-content sfds-responsive-container">
       <div class="sfgov-contact-container">
         <h2 class="dept-heading--section">{{ 'Contact'|t }}</h2>

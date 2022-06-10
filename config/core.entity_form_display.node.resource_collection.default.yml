@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.resource_collection.field_content
     - field.field.node.resource_collection.field_content_bottom
     - field.field.node.resource_collection.field_data_dashboard
+    - field.field.node.resource_collection.field_departments
     - field.field.node.resource_collection.field_dept
     - field.field.node.resource_collection.field_description
     - field.field.node.resource_collection.field_introductory_text
@@ -30,55 +31,55 @@ third_party_settings:
     group_custom_section:
       children:
         - field_content_bottom
+      label: 'Custom Section'
+      region: content
       parent_name: ''
       weight: 12
       format_type: html_element
-      region: content
       format_settings:
-        id: ''
         classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        id: ''
         element: div
         show_label: true
         label_element: h3
         label_element_classes: ''
-        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-      label: 'Custom Section'
+        required_fields: true
     group_body:
       children:
         - field_paragraphs
+      label: Body
+      region: content
       parent_name: ''
       weight: 10
       format_type: html_element
-      region: content
       format_settings:
-        id: ''
         classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        id: ''
         element: div
         show_label: true
         label_element: h3
         label_element_classes: ''
-        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-      label: Body
+        required_fields: true
     group_documents:
       children:
         - field_content
+      label: 'Documents (Legacy)'
+      region: content
       parent_name: ''
       weight: 11
       format_type: details
-      region: content
       format_settings:
+        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
+        id: ''
+        open: false
         description: ''
         required_fields: true
-        id: ''
-        classes: 'sf-paragraphs-group sf-paragraphs-group--custom-section'
-        open: false
-      label: 'Documents (Legacy)'
 id: node.resource_collection.default
 targetEntityType: node
 bundle: resource_collection
@@ -91,7 +92,9 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_content:
+    type: sfgov_customizable_paragraphs
     weight: 10
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -101,6 +104,7 @@ content:
       default_paragraph_type: _none
       paragraph_settings:
         section:
+          disabled_new: false
           field_settings:
             field_content:
               label: ''
@@ -125,17 +129,16 @@ content:
                 top_search_suggestion: '0'
             field_title:
               label: 'Title (Optional)'
-          disabled_new: false
         document:
           disabled_new: true
           field_settings:
             field_file:
               label: ''
     third_party_settings: {  }
-    type: sfgov_customizable_paragraphs
-    region: content
   field_content_bottom:
+    type: sfgov_customizable_paragraphs
     weight: 12
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -145,12 +148,12 @@ content:
       default_paragraph_type: _none
       paragraph_settings:
         custom_section:
+          disabled_new: false
           field_settings:
             field_text:
               label: ''
             field_title:
               label: ''
-          disabled_new: false
         section:
           disabled_new: true
           field_settings:
@@ -178,11 +181,10 @@ content:
             field_title:
               label: ''
     third_party_settings: {  }
-    type: sfgov_customizable_paragraphs
-    region: content
   field_data_dashboard:
     type: paragraphs
     weight: 2
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -198,19 +200,20 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
-  field_dept:
+  field_departments:
+    type: entity_reference_autocomplete
     weight: 19
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 3
       placeholder: ''
@@ -223,11 +226,10 @@ content:
         maxlength_js_label: '<strong>@remaining</strong> left'
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   field_introductory_text:
     type: paragraphs
     weight: 3
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -243,10 +245,10 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    region: content
   field_paragraphs:
     type: sfgov_paragraphs
     weight: 20
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -262,22 +264,21 @@ content:
         collapse_edit_all: collapse_edit_all
         add_above: 0
     third_party_settings: {  }
-    region: content
   field_topics:
+    type: entity_reference_autocomplete
     weight: 13
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   moderation_state:
     type: moderation_state_default
     weight: 18
-    settings: {  }
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -299,10 +300,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 9
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -320,12 +321,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 4
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
@@ -345,6 +346,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_dept: true
   field_sidebar: true
   langcode: true
   promote: true

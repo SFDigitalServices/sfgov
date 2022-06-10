@@ -7,16 +7,16 @@ dependencies:
 id: meeting
 label: Meeting
 type: 'canonical_entities:node'
-pattern: 'meeting/[node:source:title]'
+pattern: 'meeting/[node:field_smart_date:value-custom:F-j-Y]/[node:source:title]'
 selection_criteria:
-  6fe2d615-cdee-4d8a-87cd-60c3c7b92c6a:
-    id: node_type
-    bundles:
-      meeting: meeting
+  63dd80db-0328-448c-b779-e456e57fa7d0:
+    id: 'entity_bundle:node'
     negate: false
+    uuid: 63dd80db-0328-448c-b779-e456e57fa7d0
     context_mapping:
       node: node
-    uuid: 6fe2d615-cdee-4d8a-87cd-60c3c7b92c6a
+    bundles:
+      meeting: meeting
 selection_logic: and
 weight: -5
 relationships: {  }

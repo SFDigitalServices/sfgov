@@ -8,19 +8,19 @@ dependencies:
     - field.field.node.event.field_address
     - field.field.node.event.field_call_to_action
     - field.field.node.event.field_cost
+    - field.field.node.event.field_departments
     - field.field.node.event.field_dept
     - field.field.node.event.field_description
     - field.field.node.event.field_email
-    - field.field.node.event.field_end_date
     - field.field.node.event.field_image
     - field.field.node.event.field_location_in_person
     - field.field.node.event.field_location_online
     - field.field.node.event.field_phone_numbers
-    - field.field.node.event.field_start_date
+    - field.field.node.event.field_smart_date
     - field.field.node.event.field_topics
     - node.type.event
   module:
-    - datetime
+    - sfgov_dates
     - text
     - user
 id: node.event.teaser
@@ -30,50 +30,60 @@ mode: teaser
 content:
   field_address:
     type: entity_reference_entity_view
-    weight: 3
-    region: content
     label: hidden
     settings:
-      link: false
       view_mode: default
+      link: false
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_description:
     type: text_default
-    weight: 0
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_end_date:
-    type: datetime_default
-    weight: 2
-    region: content
-    label: hidden
-    settings:
-      format_type: medium
-      timezone_override: ''
-    third_party_settings: {  }
-  field_start_date:
-    type: datetime_default
     weight: 1
     region: content
+  field_location_in_person:
+    type: boolean
     label: hidden
     settings:
-      timezone_override: ''
-      format_type: medium
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
+    weight: 3
+    region: content
+  field_location_online:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_smart_date:
+    type: sfgov_dates_teaser_date
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   body: true
   content_moderation_control: true
   field_call_to_action: true
   field_cost: true
+  field_departments: true
   field_dept: true
   field_email: true
   field_image: true
-  field_location_in_person: true
-  field_location_online: true
   field_phone_numbers: true
+  field_smart_date: true
   field_topics: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

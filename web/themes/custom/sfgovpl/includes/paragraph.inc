@@ -46,7 +46,7 @@ function sfgovpl_preprocess_paragraph__process_step(&$variables) {
     $variables['txUrl'] = $txNode->toUrl('canonical', [
       'language' => \Drupal::languageManager()->getCurrentLanguage(),
     ])->toString();
-  } 
+  }
 }
 
 function sfgovpl_preprocess_paragraph(&$variables) {
@@ -56,7 +56,7 @@ function sfgovpl_preprocess_paragraph(&$variables) {
   if (function_exists($preprocess)) {
     $preprocess($variables);
   }
-  
+
   if($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
@@ -166,6 +166,45 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
 function sfgovpl_preprocess_paragraph__document(&$variables) {
   // Don't translate document paragraphs by gtranslate.
   $variables['attributes']['class'][] = 'notranslate';
+
+  // Our variables to start our document information list variable.
+  $paragraph = $variables['paragraph'];
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $media_manager = $entity_type_manager->getStorage('media');
+  $file_manager = $entity_type_manager->getStorage('file');
+  $generator_service = \Drupal::service('file_url_generator');
+
+  // Create a listing of all the URLS and labels of all the attached documents.
+  $variables['document_list'] = [];
+  if ($paragraph->hasField('field_file')) {
+    foreach ($paragraph->get('field_file')->getValue() as $delta => $item) {
+      // If the field returns any media entities (aka not empty)...
+      if ($media_item = $media_manager->load($item['target_id'])) {
+        // field_file can have both an attached file and a document url, consider both
+        $attachedFile = $media_item->get('field_media_file')->getValue();
+        $docUrl = $media_item->get('field_document_url')->getValue();
+        $fileUri = '';
+
+        if (!empty($attachedFile)) {
+          // We generate a relative url to the file.
+          $fileUri = $generator_service->generateString($file_manager->load($attachedFile[0]['target_id'])->getFileUri());
+        }
+
+        // prefer the document url
+        if (!empty($docUrl)) {
+          $urlObj = Url::fromUri($docUrl[0]['uri']);
+          $fileUri = $urlObj->toString();
+        }
+
+        // The variable "document_list" is used in paragraph--document.html.twig.
+        $variables['document_list'][$delta] = [
+          'label' => $media_item->label(),
+          'url' => $fileUri,
+        ];
+      }
+    }
+  }
+
 }
 
 /**
@@ -243,5 +282,67 @@ function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
   if ($kbd_instructions = \Drupal::config('sfgov_media.settings')->get('powerbi_kbd_instructions')) {
     $variables['kbd_instructions'] = \Drupal\Core\Render\Markup::create($kbd_instructions);
   }
+
+}
+
+/**
+ * Implements template_preprocess_paragraph() for `resource node` paragraphs.
+ */
+function sfgovpl_preprocess_paragraph__resource_node(&$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $outer */
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->hasField('field_node') && NULL !== $paragraph->get('field_node')[0]) {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    /** @var \Drupal\node\Entity\Node $node */
+    $node = $node_storage->load($paragraph->get('field_node')[0]->target_id);
+    $description = '';
+    if(!empty($node) && $node->hasField('field_description')) {
+      $description = $node->get('field_description') ?? render($node->get('field_description')->value);
+    }
+    if(!empty($node) && $node->getTitle()) {
+      $variables['title'] = $node->getTitle();
+    }
+    $variables['description'] = $description;
+    if(!empty($node) && $node->id()) {
+      $variables['url'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+    }
+  }
+}
+
+/**
+ * Implements template_preprocess_paragraph() for `resource entity` paragraphs.
+ */
+function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->hasField('field_resource') && NULL !== $paragraph->get('field_resource')[0]) {
+    $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
+    /** @var \Drupal\eck\Entity\EckEntity $resource */
+    $resource = $resource_storage->load($paragraph->get('field_resource')[0]->target_id);
+    $uri = $resource->get('field_url')->uri ?? '';
+    $variables['title'] = $resource->get('title')->value;
+    $variables['description'] = $resource->get('field_description') ?? render($resource->get('field_description')->value);
+    $variables['url'] = $uri;
+  }
+}
+
+/*
+ * Implements hook_preprocess_paragraph().
+ */
+function sfgovpl_preprocess_paragraph__form_io(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $json_data = [];
+  if ($paragraph->get('field_formio_json_content')->value) {
+    $json_data = $paragraph->get('field_formio_json_content')->value;
+  }
+  // @todo remove this once this field is deprecated from form nodes.
+  else {
+    $parent_node = $paragraph->getParentEntity();
+    if ($parent_node instanceof NodeInterface) {
+      $json_data = $parent_node->get('field_formio_json_content')->value;
+    }
+  }
+  $variables['content']['formio_json_data'] = $json_data;
 
 }

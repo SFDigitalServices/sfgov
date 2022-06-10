@@ -1,0 +1,25 @@
+{% set classes = [
+  'paragraph',
+  'paragraph--type--' ~ paragraph.bundle|clean_class,
+  view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'paragraph--unpublished'
+] %}
+
+{% set text = {
+  '#type':   'processed_text',
+  '#text':    description.0.value,
+  '#format':  description.0.format,
+} %}
+
+{% block paragraph %}
+  {% block content %}
+  {% if title is not empty and text is not empty %}
+    <div class="sfgov-container-item">
+      <a class="sfgov-resource-card" href="{{ url }}">
+        <div class="title">{{ title }}</div>
+        <div class="description">{{ text }}</div>
+      </a>
+    </div>
+  {% endif %}
+  {% endblock %}
+{% endblock paragraph %}

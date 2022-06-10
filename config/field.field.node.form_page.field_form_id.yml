@@ -5,21 +5,15 @@ dependencies:
   config:
     - field.storage.node.field_form_id
     - node.type.form_page
-    - paragraphs.paragraphs_type.acuity_embed
-    - paragraphs.paragraphs_type.form
     - paragraphs.paragraphs_type.form_io
   module:
     - entity_reference_revisions
-    - tmgmt_content
-third_party_settings:
-  tmgmt_content:
-    excluded: false
 id: node.form_page.field_form_id
 field_name: field_form_id
 entity_type: node
 bundle: form_page
-label: 'Form ID'
-description: 'Id of the form to display.  This value comes from the SFDS Service Builder'
+label: 'Form Type'
+description: ''
 required: true
 translatable: false
 default_value: {  }
@@ -27,17 +21,30 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
-      acuity_embed: acuity_embed
-      form: form
       form_io: form_io
+    negate: 0
     target_bundles_drag_drop:
+      accordion:
+        weight: 74
+        enabled: false
+      accordion_item:
+        weight: 75
+        enabled: false
+      accordion_item_simple:
+        weight: 76
+        enabled: false
       acuity_embed:
-        enabled: true
         weight: 42
+        enabled: false
       additional_info:
         weight: 33
+        enabled: false
+      agenda_item:
+        weight: 79
+        enabled: false
+      basic_html_section:
+        weight: 80
         enabled: false
       block:
         weight: 34
@@ -54,6 +61,15 @@ settings:
       campaign:
         weight: 38
         enabled: false
+      campaign_resource_section:
+        weight: 87
+        enabled: false
+      campaign_resources:
+        weight: 86
+        enabled: false
+      campaign_spotlight:
+        weight: 88
+        enabled: false
       content_link:
         weight: 47
         enabled: false
@@ -62,6 +78,15 @@ settings:
         enabled: false
       custom_section:
         weight: 40
+        enabled: false
+      data_story_reference_section:
+        weight: 92
+        enabled: false
+      data_story_reference_subsection:
+        weight: 93
+        enabled: false
+      data_story_section:
+        weight: 94
         enabled: false
       department_content:
         weight: 50
@@ -72,6 +97,12 @@ settings:
       document:
         weight: 42
         enabled: false
+      document_section:
+        weight: 98
+        enabled: false
+      document_subsection:
+        weight: 99
+        enabled: false
       email:
         weight: 43
         enabled: false
@@ -81,20 +112,38 @@ settings:
       events:
         weight: 44
         enabled: false
+      existing_agency:
+        weight: 103
+        enabled: false
+      fact:
+        weight: 104
+        enabled: false
+      facts:
+        weight: 105
+        enabled: false
       featured_item:
         weight: 45
         enabled: false
       form:
-        enabled: true
         weight: 46
+        enabled: false
       form_io:
-        enabled: true
         weight: 58
+        enabled: true
       help:
         weight: 47
         enabled: false
+      image:
+        weight: 110
+        enabled: false
+      image_with_text:
+        weight: 111
+        enabled: false
       in_person_location:
         weight: 48
+        enabled: false
+      instagram_embed:
+        weight: 112
         enabled: false
       link:
         weight: 49
@@ -111,6 +160,12 @@ settings:
       news:
         weight: 53
         enabled: false
+      other_info_card:
+        weight: 119
+        enabled: false
+      other_info_document:
+        weight: 120
+        enabled: false
       people:
         weight: 54
         enabled: false
@@ -120,8 +175,29 @@ settings:
       phone_numbers:
         weight: 68
         enabled: false
+      powerbi_embed:
+        weight: 124
+        enabled: false
       process_step:
         weight: 69
+        enabled: false
+      profile_group:
+        weight: 126
+        enabled: false
+      public_body_profiles:
+        weight: 127
+        enabled: false
+      resource_entity:
+        weight: 129
+        enabled: false
+      resource_node:
+        weight: 130
+        enabled: false
+      resource_section:
+        weight: 131
+        enabled: false
+      resource_subsection:
+        weight: 132
         enabled: false
       resources:
         weight: 56
@@ -155,5 +231,17 @@ settings:
         enabled: false
       top_search_suggestion:
         weight: 64
+        enabled: false
+      twitter_embed:
+        weight: 143
+        enabled: false
+      video:
+        weight: 144
+        enabled: false
+      video_external:
+        weight: 146
+        enabled: false
+      videos:
+        weight: 145
         enabled: false
 field_type: entity_reference_revisions

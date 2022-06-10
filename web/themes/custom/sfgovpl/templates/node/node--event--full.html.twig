@@ -21,13 +21,14 @@
           <div class="event--meta-date">
             <div class="event--meta-inner-content">
               <h3 class="title">{{ 'Date'|t }}</h3>
-              <div>
-                {% set start_date_time = content.field_start_date.0['#attributes']['datetime'] %}
-                {% set end_date_time = content.field_end_date.0['#attributes']['datetime'] %}
-                {{ start_date_time|date("l, F j, Y") }}<br/>
-                {{ start_date_time|date("g:i a") }} {{ 'to'|t }}
-                {{ end_date_time|date("g:i a") }}
-              </div>
+              {% if content.field_smart_date[0]['#date'] %}
+                {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
+                {{ content.field_smart_date[0]['#date'] }}
+                {% if content.field_smart_date[0]['#time'] %}
+                  <br>
+                  {{ content.field_smart_date[0]['#time'] }}
+                {% endif %}
+              {% endif %}
             </div>
           </div>
           <div class="event--meta-cost">
@@ -67,14 +68,12 @@
           {% endif %}
 
           {{ content | without(
-            'field_start_date',
-            'field_end_date',
             'field_cost',
             'field_address',
             'field_call_to_action',
             'field_email',
             'field_phone_numbers',
-            'field_dept',
+            'field_departments',
             'field_description',
             'field_image',
             'field_location_in_person',
@@ -113,9 +112,9 @@
         </div>
       </div>
     </div>
-    {% if content.field_dept['#items'] is not empty %}
+    {% if content.field_departments['#items'] is not empty %}
       <div class="{{ bundle }}--footer">
-        {{ content.field_dept }}
+        {{ content.field_departments }}
       </div>
     {% endif %}
   {% endblock content %}

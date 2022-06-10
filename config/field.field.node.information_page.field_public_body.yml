@@ -1,0 +1,31 @@
+uuid: 4f06c4da-4f0f-4e24-9072-dafa6374b617
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_public_body
+    - node.type.department
+    - node.type.information_page
+    - node.type.public_body
+id: node.information_page.field_public_body
+field_name: field_public_body
+entity_type: node
+bundle: information_page
+label: 'Departments or Public Bodies'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference

@@ -1,7 +1,10 @@
-# note: changes to pantheon.yml will not be processed when first creating the branch for multidevs
-# more: https://pantheon.io/docs/pantheon-yml#deploying-configuration-changes-to-multidev
+# changes to pantheon.yml will not be processed when first creating the branch for multidevs
+# as a workaround, modify this file, then push to trigger configuration changes
+# more: https://pantheon.io/docs/pantheon-yml#deploying-configuration-changes-to-multidev 
 api_version: 1
 web_docroot: true
+# see: https://pantheon.io/docs/pantheon-yml#enforce-https--hsts
+enforce_https: full
 php_version: 7.4
 database:
   version: 10.4
@@ -54,6 +57,9 @@ workflows:
       - type: webphp
         description: 'Notify in slack when deployed'
         script: private/scripts/slack-notify/slack_notify_drush_site_audit.php
+      - type: webphp
+        description: 'Create test users'
+        script: private/scripts/drush-create-users/drush-create-users.php
       - type: webphp
         description: 'Log to New Relic'
         script: private/scripts/new_relic/new_relic_deploy.php

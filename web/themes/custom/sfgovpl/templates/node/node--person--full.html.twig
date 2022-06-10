@@ -18,9 +18,9 @@
 <div class="profile--container-narrow">
 
 <div class="profile--info">
-  <div class="profile--name">
+  <h1 class="profile--name">
     {{ node.field_first_name.0.value|striptags }} {{ node.field_last_name.0.value|striptags }}
-  </div>
+  </h1>
 
   {% if content.field_profile_photo|render %}
     <div class="profile--photo">
@@ -77,7 +77,14 @@
         {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) %}
           <div class="role-agency-title">
           <a href="{{ path('entity.node.canonical', {'node': node.field_city_department.entity.nid.value}) }}">
-            {{ node.field_city_department.entity.title.value }}
+            {# translate entity reference title if it exists #}
+            {# variable language is exposed via hook_preprocess_node #}
+            {# @see web/themes/custom/sfgovpl/includes/node.inc #}
+            {% if node.field_city_department.entity.hasTranslation(language) %}
+              {{ node.field_city_department.entity.translation(language).title.value }}
+            {% else %}
+              {{ node.field_city_department.entity.title.value }}
+            {% endif %}
           </a>
           </div>
         {% endif %}
@@ -149,11 +156,11 @@
 
     {% for key, item in profile_fields.dept_pbody_ref_data %}
       <div class="profile--additional-role">
-        <div class="additional-role-title">
-        {% if item.profile.job.position %}
-          {{ item.profile.job.position }},
+        {% if item.profile.job.position|trim %}
+          <div class="additional-role-title">
+            {{ item.profile.job.position }},
+          </div>
         {% endif %}
-        </div>
         <div class="additional-role-agency-title">
           <a href="{{ item.profile.node_url }}"> {{ item.profile.node_title }} </a>
         </div>
@@ -174,10 +181,17 @@
             {% if hasAddress %}
               <div class="contact-address sfgov-container-item">
                 <div class="sfgov-contact-section address">
-                  {% if profile_fields.address.location_name %}
-                    <label>{{ profile_fields.address.location_name }}</label>
-                  {% endif %}
+                    <label>{{ profile_fields.address.title }}</label>
                     <p>
+                    {% if profile_fields.address.organization %}
+                      {{ profile_fields.address.organization }} <br/>
+                    {% endif %}
+                    {% if profile_fields.address.addressee %}
+                      {{ profile_fields.address.addressee }} <br/>
+                    {% endif %}
+                    {% if profile_fields.address.location_name %}
+                      {{ profile_fields.address.location_name }} <br/>
+                    {% endif %}
                     {% if profile_fields.address.line1 %}
                       {{ profile_fields.address.line1 }} <br/>
                     {% endif %}

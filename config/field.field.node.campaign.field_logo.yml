@@ -8,15 +8,12 @@ dependencies:
   module:
     - content_translation
     - image
-    - tmgmt_content
 third_party_settings:
   content_translation:
     translation_sync:
       alt: alt
       title: title
       file: '0'
-  tmgmt_content:
-    excluded: false
 id: node.campaign.field_logo
 field_name: field_logo
 entity_type: node
@@ -28,6 +25,8 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
+  handler: 'default:file'
+  handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'png gif jpg jpeg svg'
   max_filesize: ''
@@ -43,6 +42,4 @@ settings:
     title: ''
     width: null
     height: null
-  handler: 'default:file'
-  handler_settings: {  }
 field_type: image

@@ -1,14 +1,13 @@
-<h3>{{ label }}</h3>
-<ul class="flex flex-wrap p-0 list-none">
+<h3 class="text-white text-title-xs font-medium m-0 mb-24">{{ label | t }}</h3>
+<ul class="flex flex-wrap p-0 m-0 mb-60 list-none lg:mb-40">
 
 {% set itemCount = items|length %}
-{% set widthClass = itemCount >= 4 ? 'w-1/2' : 'w-full' %}
 
 {% for item in items %}
   {% set uri = item.content['#paragraph'].field_link.0.url %}
   {% set title = item.content['#paragraph'].field_link.0.title %}
 
-  <li class="mb-20 {{ widthClass }}"><a href="{{ uri }}">{{ title  }}</a></li>
+  <li class="mb-20 w-full {{ itemCount >= 2 ? 'lg:w-1/2' : 'lg:w-full' }} lg:pr-8"><a class="text-white text-body" href="{{ uri }}">{{ title  }}</a></li>
 {% endfor %}
 
 </ul>

@@ -6,11 +6,6 @@ dependencies:
     - field.storage.paragraph.field_profile
     - node.type.person
     - paragraphs.paragraphs_type.public_body_profiles
-  module:
-    - tmgmt_content
-third_party_settings:
-  tmgmt_content:
-    excluded: false
 id: paragraph.public_body_profiles.field_profile
 field_name: field_profile
 entity_type: paragraph
@@ -18,16 +13,17 @@ bundle: public_body_profiles
 label: Profile
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: unpublished
   handler_settings:
     target_bundles:
       person: person
     sort:
       field: _none
-    auto_create: false
+      direction: ASC
+    auto_create: 0
     auto_create_bundle: ''
 field_type: entity_reference

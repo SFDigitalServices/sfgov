@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for sf.gov Dates module.
+ */
+
+use Drupal\Core\Datetime\DrupalDateTime;
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function sfgov_dates_node_presave($entity) {
+  if (isset($entity->_migration_notice) && $entity->_migration_notice === 'migrating') {
+    return;
+  }
+  // @todo, remove this once the migration to smart_date is done.
+  if ($entity->hasfield('field_smart_date') && $entity->hasfield('field_start_date')) {
+    if ($smart_date = $entity->get('field_smart_date')->value) {
+      $date_value = DrupalDateTime::createFromTimestamp($smart_date, 'UTC');
+      $entity->set('field_start_date', $date_value->format('Y-m-d\TH:i:s'));
+    }
+  }
+}

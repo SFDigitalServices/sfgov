@@ -60,22 +60,8 @@
     {{ content.field_timeline_title }}
   {% endif %}
   <div class="timeline-container items-{{ counter }}">
-  {% if content.field_timeline_item['#items'] %}
-    {% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
-      <div class="timeline-item">
-      {% if item.entity.field_headings.0.value %}
-        <div class="heading">{{ item.entity.field_headings.0.value }}</div>
-      {% else %}
-        <div class="heading">&nbsp;</div>
-      {% endif %}
-      <div class="separator"><span class="circle-dot"></span><span class="hline">&nbsp;</span></div>
-      {% if item.entity.field_descriptions.0.value %}
-        <div class="description">{{ item.entity.field_descriptions.0.value }}</div>
-      {% else %}
-        <div class="description">&nbsp;</div>
-      {% endif %}
-      </div>
-    {% endfor %}
+  {% if content.field_timeline_item %}
+    {{ content.field_timeline_item }}
   {% endif %}
   </div>
   <br>

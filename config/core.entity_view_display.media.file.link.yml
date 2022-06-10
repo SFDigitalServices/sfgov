@@ -1,0 +1,62 @@
+uuid: 843ad742-fc7f-4851-a662-1d88edc4be9f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.link
+    - field.field.media.file.field_department
+    - field.field.media.file.field_description
+    - field.field.media.file.field_document_url
+    - field.field.media.file.field_keywords
+    - field.field.media.file.field_media_file
+    - field.field.media.file.field_published_date
+    - field.field.media.file.field_topic
+    - media.type.file
+  module:
+    - file
+    - link
+_core:
+  default_config_hash: 9s0lWIanCnW5Xrrkmedxohs9F0yk4LO8ZcmVQ9xyuu4
+id: media.file.link
+targetEntityType: media
+bundle: file
+mode: link
+content:
+  field_document_url:
+    type: link
+    label: hidden
+    settings:
+      trim_length: null
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_media_file:
+    type: file_url_plain
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  field_department: true
+  field_description: true
+  field_keywords: true
+  field_published_date: true
+  field_topic: true
+  langcode: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

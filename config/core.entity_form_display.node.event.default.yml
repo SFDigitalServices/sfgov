@@ -8,22 +8,21 @@ dependencies:
     - field.field.node.event.field_address
     - field.field.node.event.field_call_to_action
     - field.field.node.event.field_cost
+    - field.field.node.event.field_departments
     - field.field.node.event.field_dept
     - field.field.node.event.field_description
     - field.field.node.event.field_email
-    - field.field.node.event.field_end_date
     - field.field.node.event.field_image
     - field.field.node.event.field_location_in_person
     - field.field.node.event.field_location_online
     - field.field.node.event.field_phone_numbers
-    - field.field.node.event.field_start_date
+    - field.field.node.event.field_smart_date
     - field.field.node.event.field_topics
     - node.type.event
     - workflows.workflow.editorial
   module:
     - allowed_formats
     - content_moderation
-    - datetime
     - entity_browser
     - field_group
     - maxlength
@@ -31,6 +30,7 @@ dependencies:
     - path
     - scheduler
     - scheduler_content_moderation_integration
+    - sfgov_dates
     - text
 third_party_settings:
   field_group:
@@ -38,33 +38,33 @@ third_party_settings:
       children:
         - field_email
         - field_phone_numbers
-      parent_name: ''
-      weight: 11
-      format_type: details
-      format_settings:
-        description: ''
-        required_fields: true
-        id: sfgov-event-contact
-        classes: ''
-        open: false
       label: Contact
       region: content
+      parent_name: ''
+      weight: 8
+      format_type: details
+      format_settings:
+        classes: ''
+        id: sfgov-event-contact
+        open: false
+        description: ''
+        required_fields: true
     group_location:
       children:
         - field_location_in_person
         - field_address
         - field_location_online
-      parent_name: ''
-      weight: 5
-      format_type: details
-      region: content
-      format_settings:
-        id: event-location
-        classes: ''
-        description: ''
-        open: true
-        required_fields: true
       label: Location
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: details
+      format_settings:
+        classes: ''
+        id: event-location
+        open: true
+        description: ''
+        required_fields: true
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -72,7 +72,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 7
+    weight: 6
     region: content
     settings:
       rows: 9
@@ -81,22 +81,24 @@ content:
       show_summary: false
     third_party_settings: {  }
   field_address:
+    type: entity_browser_entity_reference
     weight: 9
+    region: content
     settings:
       entity_browser: location_event_address
       field_widget_display: rendered_entity
-      field_widget_display_settings:
-        view_mode: default
       field_widget_edit: true
       field_widget_remove: true
-      open: true
-      selection_mode: selection_append
       field_widget_replace: false
+      open: true
+      field_widget_display_settings:
+        view_mode: default
+      selection_mode: selection_append
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_call_to_action:
-    weight: 10
+    type: paragraphs
+    weight: 7
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -112,10 +114,10 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    type: paragraphs
-    region: content
   field_cost:
-    weight: 4
+    type: paragraphs
+    weight: 3
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -131,20 +133,20 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    type: paragraphs
+  field_departments:
+    type: entity_reference_autocomplete
+    weight: 9
     region: content
-  field_dept:
-    weight: 12
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 3
       placeholder: ''
@@ -157,10 +159,10 @@ content:
         maxlength_js_label: '<strong>@remaining</strong>'
         maxlength_js_enforce: true
         maxlength_js_truncate_html: false
-    type: text_textarea
-    region: content
   field_email:
+    type: paragraphs
     weight: 2
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -176,45 +178,39 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    type: paragraphs
-    region: content
-  field_end_date:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_image:
     type: entity_browser_entity_reference
-    weight: 6
+    weight: 5
     region: content
     settings:
       entity_browser: image
       field_widget_display: rendered_entity
       field_widget_edit: true
       field_widget_remove: true
+      field_widget_replace: false
       open: true
-      selection_mode: selection_append
       field_widget_display_settings:
         view_mode: preview
-      field_widget_replace: false
+      selection_mode: selection_append
     third_party_settings: {  }
   field_location_in_person:
+    type: boolean_checkbox
     weight: 8
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_location_online:
+    type: boolean_checkbox
     weight: 10
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_phone_numbers:
+    type: paragraphs
     weight: 3
+    region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -230,54 +226,62 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-    type: paragraphs
-    region: content
-  field_start_date:
+  field_smart_date:
+    type: sfgov_dates_customsmartdate
     weight: 2
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
     region: content
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
+      show_extra: true
+      hide_date: false
+    third_party_settings: {  }
   field_topics:
-    weight: 13
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   moderation_state:
     type: moderation_state_default
-    weight: 15
-    settings: {  }
+    weight: 12
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 21
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 19
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
+    weight: 13
+    region: content
     settings:
       display_label: true
-    weight: 16
-    region: content
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -288,24 +292,27 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 14
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 20
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 18
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   created: true
+  field_dept: true
+  field_end_date: true
+  field_start_date: true
   langcode: true
   promote: true
   sticky: true

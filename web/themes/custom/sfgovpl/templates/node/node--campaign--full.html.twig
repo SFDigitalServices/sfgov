@@ -83,7 +83,7 @@
 <article{{ attributes.addClass(classes) }}>
   {% block content %}
     <div{{ content_attributes.addClass(bundle ~ '__content') }}>
-      {{ content | without('links', 'field_logo', 'field_social_media_embed', 'field_campaign_about', 'field_campaign_about', 'field_links', 'field_dept', 'content_moderation_control') }}
+      {{ content | without('links', 'field_logo', 'field_social_media_embed', 'field_campaign_about', 'field_campaign_about', 'field_links', 'field_departments', 'content_moderation_control') }}
       {% if content.field_social_media_embed|render is not empty %}
         <div class="__campaign-social-media-wrapper sfgov-full-bleed">
           <div class="sfgov-section-container">
@@ -99,10 +99,12 @@
             {{ content.field_campaign_about }}
           </div>
         </div>
+      {% endif %}
 
-        <div class="__campaign-about-dept-wrapper {% if node.field_dept.value|length < 4 and node.field_links.value|length < 4 %}sfgov-container-two-column{% endif %}">
-          <div class="sfgov-container-item {% if node.field_dept.value|length >= 4 %}full-width{% endif %}">
-            {{ content.field_dept }}
+      {% if content.field_departments is not empty or content.field_links is not empty %}
+        <div class="__campaign-about-dept-wrapper {% if node.field_departments.value|length < 4 and node.field_links.value|length < 4 %}sfgov-container-two-column{% endif %}">
+          <div class="sfgov-container-item {% if node.field_departments.value|length >= 4 %}full-width{% endif %}">
+            {{ content.field_departments }}
           </div>
           <div class="sfgov-container-item {% if node.field_links.value|length >= 4 %}full-width{% endif %}">
             {{ content.field_links }}

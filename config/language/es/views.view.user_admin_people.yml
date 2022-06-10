@@ -2,47 +2,52 @@ label: Usuarios
 description: 'Encontrar y gestionar qué personas interactúan con su sitio.'
 display:
   default:
-    display_title: Máster
+    display_title: Default
     display_options:
-      exposed_form:
-        options:
-          submit_button: Filtro
-          reset_button_label: Restablecer
-          exposed_sorts_label: 'Ordenar por'
-      pager:
-        options:
-          tags:
-            previous: '‹ Anterior'
-            next: 'Siguiente >'
-            first: '« Primero'
-            last: 'Último »'
-          expose:
-            items_per_page_label: 'Elementos por página'
-            items_per_page_options_all_label: '- Todo -'
-            offset_label: Desplazamiento
+      title: Usuarios
       fields:
         user_bulk_form:
           label: 'Actualización masiva'
         name:
           label: 'Nombre de usuario'
         status:
-          label: Estado
+          label: Status
           settings:
-            format_custom_true: Activo
             format_custom_false: Bloqueado
+            format_custom_true: Activo
         created:
           label: 'Miembro desde hace'
         access:
           label: 'Último acceso'
         operations:
-          label: Operaciones
+          label: Operations
+        mail:
+          separator: ', '
+      pager:
+        options:
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page_label: 'Items per page'
+            items_per_page_options_all_label: '- All -'
+            offset_label: Offset
+      exposed_form:
+        options:
+          submit_button: Filter
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       filters:
         combine:
           expose:
             label: 'El nombre o correo electrónico contiene'
         status:
           group_info:
-            label: Estado
+            label: Status
             group_items:
               1:
                 title: Activo
@@ -54,13 +59,12 @@ display:
         permission:
           expose:
             label: Permiso
-      title: Usuarios
       use_more_text: más
   page_1:
-    display_title: Página
+    display_title: Page
     display_options:
       menu:
-        title: Lista
+        title: List
         description: 'Encontrar y gestionar qué personas interactúan con su sitio.'
       tab_options:
         title: Usuarios

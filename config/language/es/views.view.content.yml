@@ -1,66 +1,69 @@
-label: Contenido
+label: Content
 description: 'Encontrar y administrar contenido.'
 display:
   default:
+    display_title: Default
     display_options:
-      exposed_form:
-        options:
-          submit_button: Filtro
-          reset_button_label: Restablecer
-          exposed_sorts_label: 'Ordenar por'
+      title: Content
+      fields:
+        title:
+          label: Title
+        type:
+          label: 'Content type'
+          separator: ', '
+        name:
+          label: Author
+        status:
+          label: Status
+          settings:
+            format_custom_false: Unpublished
+            format_custom_true: Published
+        changed:
+          label: Updated
+        operations:
+          label: Operations
       pager:
         options:
           tags:
-            previous: '‹ Anterior'
-            next: 'Siguiente >'
-            first: '« Primero'
-            last: 'Último »'
-      fields:
-        title:
-          label: Título
-        type:
-          label: 'Tipo de contenido'
-        name:
-          label: Autor
-        status:
-          label: Estado
-          settings:
-            format_custom_true: Publicado
-            format_custom_false: 'No publicado'
-        changed:
-          label: Actualizado
-        operations:
-          label: Operaciones
-      filters:
-        title:
-          expose:
-            label: Título
-        type:
-          expose:
-            label: 'Tipo de contenido'
-        status:
-          expose:
-            label: Estado
-          group_info:
-            label: 'Estado de publicación'
-            group_items:
-              1:
-                title: Publicado
-              2:
-                title: 'No publicado'
-        langcode:
-          expose:
-            label: Idioma
-      title: Contenido
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+      exposed_form:
+        options:
+          submit_button: Filter
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
       empty:
         area_text_custom:
           content: 'No hay contenido disponible.'
-    display_title: Máster
+      filters:
+        title:
+          expose:
+            label: Title
+        type:
+          expose:
+            label: 'Content type'
+        status:
+          expose:
+            label: Status
+          group_info:
+            label: 'Published status'
+            group_items:
+              1:
+                title: Published
+              2:
+                title: Unpublished
+        langcode:
+          expose:
+            label: Language
   page_1:
+    display_title: Page
     display_options:
       menu:
-        title: Contenido
+        title: Content
       tab_options:
-        title: Contenido
+        title: Content
         description: 'Encontrar y administrar contenido'
-    display_title: Página

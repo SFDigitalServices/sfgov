@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.news.body
     - field.field.node.news.field_abstract
     - field.field.node.news.field_date
+    - field.field.node.news.field_departments
     - field.field.node.news.field_dept
     - field.field.node.news.field_direct_external_url
     - field.field.node.news.field_image
@@ -24,41 +25,43 @@ bundle: news
 mode: teaser
 content:
   content_moderation_control:
-    weight: -20
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: -20
+    region: content
   field_abstract:
     type: basic_string
-    weight: 1
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
   field_date:
     type: datetime_default
-    weight: 2
-    region: content
     label: hidden
     settings:
       timezone_override: ''
       format_type: default
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_image:
     type: media_thumbnail
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: 700x500
       image_link: ''
+      image_style: 700x500
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   body: true
+  field_departments: true
   field_dept: true
   field_direct_external_url: true
   field_news_type: true
   field_topics: true
+  formio_url: true
   langcode: true
   links: true
   search_api_excerpt: true

@@ -49,11 +49,11 @@
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
       {% block title %}
-        <h3 class="title">{{ 'Cost'|t }}</h3>
+        <h2 class="title">{{ 'Cost'|t }}</h2>
       {% endblock title %}
       {% if cost_type == 'free' %}
         {% block costfree %}
-          <div>{{ 'Free'|t }}</div>
+          <div>{{ content.field_cost_type }}</div>
         {% endblock costfree %}
       {% endif %}
       {% if cost_type == 'flat' %}
@@ -67,7 +67,9 @@
         {% endblock costmin %}
       {% endif %}
       {% if cost_type == 'range' and content.field_cost_minimum|render and content.field_cost_maximum|render %}
-        {{ content.field_cost_minimum }} - {{ content.field_cost_maximum }}
+        <div class="inline-flex">
+          {{ content.field_cost_minimum }} - {{ content.field_cost_maximum }}
+        </div>
       {% endif %}
     {{ content|without(
       'field_cost_type',

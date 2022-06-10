@@ -7,39 +7,57 @@ dependencies:
     - field.field.paragraph.campaign_resource_section.field_title
     - paragraphs.paragraphs_type.campaign_resource_section
   module:
-    - paragraphs
+    - sfgov_admin
 id: paragraph.campaign_resource_section.default
 targetEntityType: paragraph
 bundle: campaign_resource_section
 mode: default
 content:
   field_content:
+    type: sfgov_customizable_paragraphs
     weight: 1
+    region: content
     settings:
       title: Resource
       title_plural: Resources
       edit_mode: closed
-      closed_mode: summary
-      autocollapse: all
-      closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: resources
-      features:
-        duplicate: duplicate
-        collapse_edit_all: collapse_edit_all
-        add_above: '0'
+      default_paragraph_type: _none
+      paragraph_settings:
+        resource_entity:
+          disabled_new: false
+          field_settings:
+            field_resource:
+              label: ''
+        resource_node:
+          disabled_new: false
+          field_settings:
+            field_node:
+              label: ''
+        resources:
+          disabled_new: true
+          field_settings:
+            field_description:
+              label: ''
+            field_link:
+              label: ''
+            field_title:
+              label: ''
     third_party_settings: {  }
-    type: paragraphs
-    region: content
   field_title:
+    type: string_textfield
     weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
+  translation:
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   status: true

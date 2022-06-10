@@ -38,19 +38,29 @@
  * @ingroup themeable
  */
 #}
+
+{% if paragraph.field_dept_service_section_title is not empty %}
+{% set title = '' %}
+{% else %}
+{% set title = 'no-title' %}
+{% endif %}
+
 {%
   set classes = [
-    'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    title|clean_class,
+    'sfgov-services',
   ]
 %}
 
 {% block paragraph %}
-  <div class="sfgov-services">
+  <div{{ attributes.addClass(classes) }}>
     {% block content %}
+    {% if content.field_dept_service_section_title %}
       <h3 class="sfgov-dept-services-section-title">{{ content.field_dept_service_section_title }}</h3>
+    {% endif %}
       <div class="sfgov-dept-services-section-content service-cards sfgov-container-three-column">
         {{ content.field_dept_service_sect_services }}
       </div>

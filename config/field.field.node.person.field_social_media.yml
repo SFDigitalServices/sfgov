@@ -8,10 +8,6 @@ dependencies:
     - paragraphs.paragraphs_type.social_media
   module:
     - entity_reference_revisions
-    - tmgmt_content
-third_party_settings:
-  tmgmt_content:
-    excluded: false
 id: node.person.field_social_media
 field_name: field_social_media
 entity_type: node
@@ -19,15 +15,15 @@ bundle: person
 label: 'Social Media'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       social_media: social_media
+    negate: 0
     target_bundles_drag_drop:
       accordion:
         weight: 61
@@ -171,8 +167,8 @@ settings:
         weight: 107
         enabled: false
       social_media:
-        enabled: true
         weight: 108
+        enabled: true
       special_case:
         weight: 109
         enabled: false

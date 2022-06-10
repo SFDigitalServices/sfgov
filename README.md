@@ -26,7 +26,7 @@
     ```
 4. Install Composer dependencies and execute post-install scripts (including copying saml related things above to the right vendor directory): `composer install`
 5. **Start the Lando VM**: `lando start`
-6. **Obtain a [machine token](https://pantheon.io/docs/machine-tokens/)** from your Pantheon dashboard, and run the provided command, making sure to prefix it with `lando`, e.g. `lando terminus auth:login --machine-token=TOKEN`.
+6. **Obtain a [machine token](https://pantheon.io/docs/machine-tokens/)** from your Pantheon dashboard, and run the provided command, making sure to prefix it with `lando`, e.g. `lando terminus auth:login --machine-token=TOKEN`
 7. **Get latest DB and files from Pantheon** dev environment: `lando pull`. Most of the time, code will not need to be pulled from Pantheon: `lando pull --code=none --database=dev --files=dev`.
 8. Create a **local services** file:
 
@@ -103,18 +103,18 @@
     ```sh
     # 1. After updating the codebase, install any pending composer dependencies.
     lando composer install
-    
+
     # 2. If any dependencies were updated, run database updates.
     lando drush updb -y
-    
+
     # 3. Update active config to include and changes pending in `develop`.
     lando drush cim -y
-    
+
     # 4. Build the theme assets. (@see theme readme for prerequisites.)
     cd web/themes/custom/sfgovpl
     npm ci
     npm run build
-    
+
     # 5. Clear the cache.
     lando drush cr
     ```
@@ -172,3 +172,10 @@ lando drush cr
 ```
 
 _* I'm not 100% sure, but I don't think global composer is necessary. One can use `lando composer install` instead. -ZK_
+
+## PHP Codesniffing
+
+To run PHPCS use `lando php-sniff path/to/directory`
+To run PHPCBF use `lando php-fix path/to/directory`
+
+Standards and rules for codesniffing can be edited in `phpcs.xml` at the project root.
