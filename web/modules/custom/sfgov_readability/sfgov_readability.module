@@ -12,3 +12,26 @@ function sfgov_readability_page_attachments(array &$attachments) {
     $attachments['#attached']['library'][] = 'sfgov_readability/main';
   }
 }
+
+// attempting to grab the rendered html for grading on server side
+function sfgov_readability_node_load(array $entities) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    // $nid = $node->id();
+    // $entityType = 'node';
+    // $viewMode = 'default';
+
+    // $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder($entityType);
+
+    // $full_output = $viewBuilder->view($node);
+    // error_log("full output");
+    // error_log(print_r(array_keys($full_output),1));
+
+    // $storage = \Drupal::entityTypeManager()->getStorage($entityType);
+    // $node = $storage->load($nid);
+    // $build = $viewBuilder->view($node, $viewMode);
+    // $output = \Drupal::service('renderer')->renderPlain($build);
+    // $nodeHtml = $output->__toString();
+    // error_log($nodeHtml);
+  }
+}
