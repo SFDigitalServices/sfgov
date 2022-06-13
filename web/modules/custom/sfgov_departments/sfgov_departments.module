@@ -5,6 +5,7 @@
  * Extends functionality for the department content type.
  */
 
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -70,6 +71,60 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
       $form['#attached']['library'][] = 'sfgov_departments/parent_departments';
 
       break;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_departments_form_node_department_form_alter(&$form, FormStateInterface $form_state) {
+  // We need to make sure the same stuff that is applied to both add and edit
+  // forms. Se we will run out code in the edit hook, and just reference it
+  // here.
+  sfgov_departments_form_node_department_edit_form_alter($form,  $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_departments_form_node_department_edit_form_alter(&$form, FormStateInterface $form_state) {
+
+  // https://sfgovdt.jira.com/browse/SG-1738
+  // We need to make sure that whatever value for "Request public records" is
+  // applied to all languages. However we can't just disable translation because
+  // the other information fields that depend on this fields value, also need to
+  // be translatable. We can't just completely disable translation on the
+  // the "Request public records" radios, because then it won't show on the
+  // translation form, and therefore the phone/email/link conditional fields
+  // won't display or be processed/added to the translation.
+  //
+  // So our work around is to make sure that translation is only turned off for
+  // TMGMT which fixes the issue of broken translations on that end, and then
+  // we make sure that all translations receive the same value from the default
+  // language, and then disabled so that it can't be changed in other languages.
+  // This ensures that the phone, link, and email related fields can still
+  // display conditionally, be editable for the language, and be translatable by
+  // all sources, but the parent "request" radio field stays locked down.
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityForm) {
+    $node = $form_object->getEntity();
+    $default_language = $node->getUntranslated()->language()->getId();
+    $language = $node->language()->getId();
+    // If the current language is different from the default, it means we are
+    // on a translation, and we need to work our magic.
+    if ($default_language != $language && $node->getUntranslated()->hasField('field_req_public_records')) {
+
+      // Get the "Request public records" value from the default translation...
+      $default_language_public_record_value = $node->getUntranslated()->get('field_req_public_records')->getValue();
+
+      // Apply that default value to the translation, so they stay in sync.
+      $form['field_req_public_records']['widget']['#default_value'] = $default_language_public_record_value[0]['value'];
+
+      // Disable the checkbox so that can't be changed per language, but the
+      // conditional display setup for the phone/link/email fields remains
+      // unbroken.
+      $form['field_req_public_records']['widget']['#attributes']['disabled'] = 'disabled';
+    }
   }
 }
 
