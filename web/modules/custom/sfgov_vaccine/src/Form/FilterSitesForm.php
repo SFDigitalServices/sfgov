@@ -78,21 +78,12 @@ class FilterSitesForm extends FormBase {
       '#type' => 'container',
     ];
 
-    // Single checkboxes - kids 5 to 11
+    // Single checkboxes - kids 5 to 11.
     $form['container']['toggle']['items']['single_checkboxes']['kids5to11'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('form_strings.kids5to11')),
       '#default_value' => FALSE,
     ];
-
-    /*
-    // Single checkboxes - restrictions.
-    $form['container']['toggle']['items']['single_checkboxes']['restrictions'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t($this->settings('form_strings.restrictions')),
-      '#default_value' => TRUE,
-    ];
-     */
 
     // Single checkboxes - available.
     $form['container']['toggle']['items']['single_checkboxes']['available'] = [
@@ -122,26 +113,6 @@ class FilterSitesForm extends FormBase {
       '#multiple' => FALSE,
     ];
 
-    // Access mode.
-    $settings_access_mode = $this->settings('access_mode');
-    $options_access_mode = [];
-    foreach ($settings_access_mode as $key => $value) {
-      if ($key != 'wheelchair') {
-        $short_key = $value['short_key'];
-        $text = $value['text'];
-        $options_access_mode[$short_key] = $this->t($text);
-      }
-    }
-
-    $form['container']['toggle']['items']['access_mode'] = [
-      '#type' => 'select',
-      '#title' => $this->t($this->settings('form_strings.access_mode_label')),
-      '#title_display' => 'invisible',
-      '#options' => $options_access_mode,
-      '#default_value' => 'all',
-      '#multiple' => FALSE,
-    ];
-
     // Distance.
     $form['container']['toggle']['items']['distance_from'] = [
       '#type' => 'container',
@@ -161,7 +132,7 @@ class FilterSitesForm extends FormBase {
       '#options' => $options_radius,
       '#default_value' => 'all',
       '#multiple' => FALSE,
-      '#suffix' => '<span>from</span>'
+      '#suffix' => '<span>from</span>',
     ];
 
     $form['container']['toggle']['items']['location'] = [
@@ -176,9 +147,7 @@ class FilterSitesForm extends FormBase {
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
       '#attributes' => [
-        'class' => [
-          'btn'
-        ]
+        'class' => ['btn'],
       ],
       '#value' => $this->t($this->settings('form_strings.submit_label')),
     ];

@@ -134,12 +134,6 @@
               $site.addClass("language-match");
             }
 
-            // "Drive-thru or walk-thru" select (Access mode).
-            const access_mode_regExTest = new RegExp(
-              $("[name=access_mode]").val().trim(),
-              "ig"
-            );
-
             // Distance.
             $site.addClass(class_match_radius);
             if (userLocation) {
@@ -172,7 +166,6 @@
             return (
               $site.attr("data-kids5to11").match(kids5to11_regExTest) &&
               $site.attr("data-wheelchair").match(wheelchair_regExTest) &&
-              $site.attr("data-access-mode").match(access_mode_regExTest) &&
               $site.hasClass("language-match") &&
               $site.hasClass(class_match_available) &&
               $site.hasClass(class_match_radius)

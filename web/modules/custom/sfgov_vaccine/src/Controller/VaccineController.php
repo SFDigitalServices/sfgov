@@ -149,28 +149,6 @@ class VaccineController extends ControllerBase {
   }
 
   /**
-   * Prepare each site's data-access-mode value.
-   */
-  private function getSiteAccessModeKeys($site_data) {
-
-    $access_mode_options = [
-      'walk' => $site_data['access_mode']["walk"],
-      'drive' => $site_data['access_mode']["drive"],
-    ];
-
-    $keys = [];
-    foreach ($access_mode_options as $key => $value) {
-      if ($value === TRUE) {
-        $key = $this->vaxValues->settings('access_mode.' . $key . '.short_key');
-        array_push($keys, $key);
-      }
-    }
-    array_push($keys, 'all');
-
-    return $keys;
-  }
-
-  /**
    * Prepare each site's data-language value.
    */
   private function getSiteLanguageKeys($access_data) {
@@ -194,15 +172,13 @@ class VaccineController extends ControllerBase {
    */
   private function getSiteAccessModeText($site_data) {
     $access_mode_options = [
-      'walk' => $site_data['access_mode']["walk"],
-      'drive' => $site_data['access_mode']["drive"],
       'wheelchair' => $site_data['access']['wheelchair'],
     ];
 
     $printed = [];
     foreach ($access_mode_options as $key => $value) {
       if ($value === TRUE) {
-        $text = $this->vaxValues->settings('access_mode.' . $key . '.text');
+        $text = $this->vaxValues->settings("access_mode.${key}.text");
         array_push($printed, $this->t($text));
       }
     }
@@ -287,7 +263,6 @@ class VaccineController extends ControllerBase {
       $eligibilities = $this->getSiteEligibilities($site_data);
       $language_keys = $this->getSiteLanguageKeys($site_data['access']);
       $language_text = $this->getSiteLanguageText($site_data['access']);
-      $access_mode_keys = $this->getSiteAccessModeKeys($site_data);
       $access_mode_text = $this->getSiteAccessModeText($site_data);
 
       // Usable variables.
@@ -334,7 +309,6 @@ class VaccineController extends ControllerBase {
           // Multi-selects.
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->vaxValues->settings('languages')),
           'data-remote-asl' => $language_text['remote_asl'],
-          'data-access-mode' => implode('-', $access_mode_keys),
           'data-lat' => $location['lat'],
           'data-lng' => $location['lng'],
         ]),
