@@ -8,6 +8,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Vaccination site data.
+ */
 class VaxValues {
   use StringTranslationTrait;
 
@@ -26,8 +29,8 @@ class VaxValues {
   protected $configFactory;
 
   /**
-   * The string translation service
-   * 
+   * The string translation service.
+   *
    * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
   protected $stringTranslation;
@@ -41,6 +44,9 @@ class VaxValues {
     $this->stringTranslation = $stringTranslation;
   }
 
+  /**
+   * Create the class.
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('state'),
@@ -73,6 +79,9 @@ class VaxValues {
     $this->state->set('vaccine_alert', $value);
   }
 
+  /**
+   * Get the header description.
+   */
   public function getHeaderDescription() {
     $header_db = $this->state->get('header_description');
     $header_db_val = $header_db['value'];
@@ -81,8 +90,11 @@ class VaxValues {
     return $this->t($headerDescription);
   }
 
+  /**
+   * Set the header description.
+   */
   public function setHeaderDescription($value) {
     $this->state->set('header_description', $value);
   }
-}
 
+}

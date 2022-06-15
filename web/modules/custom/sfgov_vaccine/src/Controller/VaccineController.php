@@ -70,7 +70,6 @@ class VaccineController extends ControllerBase {
    */
   protected $vaxValues;
 
-
   /**
    * {@inheritdoc}
    */
@@ -101,7 +100,7 @@ class VaccineController extends ControllerBase {
   /**
    * Get the microservice url from config.
    */
-  private function getAPIUrl() {
+  private function getApiUrl() {
     return $this->vaxValues->settings('api_url');
   }
 
@@ -112,7 +111,7 @@ class VaccineController extends ControllerBase {
 
     try {
       $language = $this->languageManager()->getCurrentLanguage()->getId();
-      $url = $this->getAPIUrl() . '?lang=' . $language;
+      $url = $this->getApiUrl() . '?lang=' . $language;
       $request = $this->httpClient->get($url, [
         'http_errors' => FALSE,
       ]);
@@ -121,7 +120,7 @@ class VaccineController extends ControllerBase {
     catch (ConnectException | RequestException $e) {
       $response = NULL;
       $this->loggerFactory->get('sfgov_vaccine')->error('Could not fetch data from %url. %message', [
-        '%url' => isset($url) ? $url : 'url',
+        '%url' => $url ?? 'url',
         '%message' => $e->getMessage(),
       ]);
     }
@@ -131,13 +130,13 @@ class VaccineController extends ControllerBase {
   /**
    * Prepare API data for rendering.
    */
-  private function makeAPIData($allData) {
+  private function makeApiData($allData) {
 
     $error_message = $this->vaxValues->settings('error_message');
 
     return [
       'timestamp' => $allData['data']['generated'],
-      'api_url' => $this->getAPIUrl(),
+      'api_url' => $this->getApiUrl(),
       'error' => $allData == NULL ? $this->t($error_message) : NULL,
     ];
   }
@@ -249,8 +248,8 @@ class VaccineController extends ControllerBase {
     $printed = [];
     foreach (['kids5to11', 'minors'] as $group) {
       if (isset($site_data[$group]['allowed'])) {
-        $allowed = $site_data[$group]['allowed'] ? 'true': 'false';
-        $text = $this->vaxValues->settings($group . '.' . $allowed . '_text');
+        $allowed = $site_data[$group]['allowed'] ? 'true' : 'false';
+        $text = $this->vaxValues->settings("${group}.${allowed}_text");
         if ($text) {
           $printed_value = $this->t($text);
           array_push($printed, $printed_value);
@@ -309,12 +308,12 @@ class VaccineController extends ControllerBase {
         $info_url = $site_data['info']['url'];
       }
 
-      $booking = isset($site_data['booking']) ? $site_data['booking'] : NULL;
+      $booking = $site_data['booking'] ?? NULL;
       $booking['safe_info'] = isset($booking['info']) ? Xss::filter($booking['info'], $allowed_html_tags) : NULL;
 
       $last_updated = $site_data['appointments']['last_updated'];
       $site_name = $site_data['name'];
-      $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
+      $site_id = $site_data['site_id'] ?? NULL;
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
       $location = $site_data['location'];
@@ -366,7 +365,7 @@ class VaccineController extends ControllerBase {
       '#alert' => $this->vaxValues->getAlert(),
       '#header_description' => $this->vaxValues->getHeaderDescription(),
       '#template_strings' => $this->vaxValues->settings('template_strings'),
-      '#api_data' => $this->makeAPIData($this->allData),
+      '#api_data' => $this->makeApiData($this->allData),
       '#filters' => $this->makeFilters($this->allData),
       '#results' => $this->makeResults($this->allData),
     ];
