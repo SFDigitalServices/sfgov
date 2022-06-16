@@ -237,12 +237,12 @@ class VaccineController extends ControllerBase {
       foreach ($site_data['dosages'] as $dosage) {
         if ($dosage['ages'][1] <= 5) {
           $brand = $this->t($dosage['brand']);
-          // format < 0 decimal numbers (really just 0.5) with underscores
+          // Format < 0 decimal numbers (really just 0.5) with underscores
           // instead of periods because Drupal or PHP's YAML parser doesn't
-          // like keys with periods in them
+          // like keys with periods in them.
           $formatted_ages = array_map($dosage['ages'], function ($age) {
             return $age < 1 ? number_format($age, 1, '_') : $age;
-          })
+          });
           $age_range = implode('-', $formatted_ages);
           $age_range_string = $this->vaxValues->settings("pediatric_age_range_strings.$age_range") || $age_range;
           array_push($printed, "$brand $age_range_string");
@@ -328,6 +328,7 @@ class VaccineController extends ControllerBase {
           'data-remote-asl' => $language_text['remote_asl'],
           'data-lat' => $location['lat'],
           'data-lng' => $location['lng'],
+          // 'data-site' => json_encode($site_data),
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions_text' => $restrictions_text,
@@ -360,21 +361,6 @@ class VaccineController extends ControllerBase {
       '#filters' => $this->makeFilters($this->allData),
       '#results' => $this->makeResults($this->allData),
     ];
-  }
-
-  /**
-   * Serialize an array of dosage objects into a string.
-   */
-  private function serializeDosages($dosages) {
-    if (is_array($dosages)) {
-      return implode(';', array_map($dosages, function ($dosage) {
-        $ages = implode('-', $dosage['ages']);
-        return "{$dosage['brand']}:{$ages}";
-      }));
-    }
-    else {
-      return '';
-    }
   }
 
 }
