@@ -78,10 +78,11 @@ class FilterSitesForm extends FormBase {
       '#type' => 'container',
     ];
 
-    $pediatric_options = []
+    $pediatric_options = [];
     foreach ($this->settings('form_strings.pediatric.options') as $value => $label) {
       $pediatric_options[$value] = $this->t($label);
     }
+
     $form['container']['toggle']['items']['pediatric'] = [
       '#type' => 'select',
       '#title' => $this->t($this->settings('form_strings.pediatric.label')),
