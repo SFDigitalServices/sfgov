@@ -300,7 +300,7 @@ class VaccineController extends ControllerBase {
         'site_name' => $site_name,
         'attributes' => new Attribute([
           'class' => ['vaccine-site', 'no-hover'],
-          'data-site-id' => $site_id,
+          'id' => "site-$site_id",
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
           'data-kids5to11' => $site_data['kids5to11']['allowed'] ? 1 : 0,
