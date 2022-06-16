@@ -328,7 +328,7 @@ class VaccineController extends ControllerBase {
           'data-remote-asl' => $language_text['remote_asl'],
           'data-lat' => $location['lat'],
           'data-lng' => $location['lng'],
-          // 'data-site' => json_encode($site_data),
+          'data-site' => json_encode($site_data),
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions_text' => $restrictions_text,
