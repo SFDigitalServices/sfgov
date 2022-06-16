@@ -223,19 +223,21 @@ class VaccineController extends ControllerBase {
 
     $printed = [];
 
-    foreach ($site_data['dosages'] as $dosage) {
-      if ($dosage['ages'][1] <= 5) {
-        $brand = $this->t($dosage['brand']);
-        // Format < 0 decimal numbers (really just 0.5) with underscores
-        // instead of periods because Drupal or PHP's YAML parser doesn't
-        // like keys with periods in them.
-        $formatted_ages = array_map(function (float $age) {
-          $formatted = number_format($age, 1, '_', '');
-          return $age < 1 ? $formatted : strval($age);
-        }, $dosage['ages']);
-        $age_range = implode('-', $formatted_ages);
-        $age_range_string = $this->vaxValues->settings("pediatric_age_range_strings.$age_range") ?? $age_range;
-        array_push($printed, "$brand $age_range_string");
+    if (isset($site_data['dosages']) && is_array($site_data['dosages'])) {
+      foreach ($site_data['dosages'] as $dosage) {
+        if ($dosage['ages'][1] <= 5) {
+          $brand = $this->t($dosage['brand']);
+          // Format < 0 decimal numbers (really just 0.5) with underscores
+          // instead of periods because Drupal or PHP's YAML parser doesn't
+          // like keys with periods in them.
+          $formatted_ages = array_map(function (float $age) {
+            $formatted = number_format($age, 1, '_', '');
+            return $age < 1 ? $formatted : strval($age);
+          }, $dosage['ages']);
+          $age_range = implode('-', $formatted_ages);
+          $age_range_string = $this->vaxValues->settings("pediatric_age_range_strings.$age_range") ?? $age_range;
+          array_push($printed, "$brand $age_range_string");
+        }
       }
     }
 
