@@ -222,16 +222,6 @@ class VaccineController extends ControllerBase {
   private function getSiteEligibilities($site_data) {
 
     $printed = [];
-    foreach (['kids5to11', 'minors'] as $group) {
-      if (isset($site_data[$group]['allowed'])) {
-        $allowed = $site_data[$group]['allowed'] ? 'true' : 'false';
-        $text = $this->vaxValues->settings("${group}.${allowed}_text");
-        if ($text) {
-          $printed_value = $this->t($text);
-          array_push($printed, $printed_value);
-        }
-      }
-    }
 
     foreach ($site_data['dosages'] as $dosage) {
       if ($dosage['ages'][1] <= 5) {
@@ -246,6 +236,17 @@ class VaccineController extends ControllerBase {
         $age_range = implode('-', $formatted_ages);
         $age_range_string = $this->vaxValues->settings("pediatric_age_range_strings.$age_range") ?? $age_range;
         array_push($printed, "$brand $age_range_string");
+      }
+    }
+
+    foreach (['kids5to11', 'minors'] as $group) {
+      if (isset($site_data[$group]['allowed'])) {
+        $allowed = $site_data[$group]['allowed'] ? 'true' : 'false';
+        $text = $this->vaxValues->settings("${group}.${allowed}_text");
+        if ($text) {
+          $printed_value = $this->t($text);
+          array_push($printed, $printed_value);
+        }
       }
     }
 
