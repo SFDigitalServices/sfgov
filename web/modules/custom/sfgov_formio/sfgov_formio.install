@@ -1,17 +1,22 @@
 <?php
 
-use \Drupal\node\Entity\Node;
+/**
+ * @file
+ * Update formio functionality.
+ */
+
+use Drupal\node\Entity\Node;
 
 /**
  * Migrate old formio translations and phrase translations into the new system.
  */
 function sfgov_formio_update_9001(&$sandbox) {
-  $nids = \Drupal::entityQuery('node')->condition('type','form_page')->execute();
+  $nids = \Drupal::entityQuery('node')->condition('type', 'form_page')->execute();
   $form_nodes = Node::loadMultiple($nids);
 
   $needs_drupal_update = [];
   $needs_phrase_update = [];
-  foreach($form_nodes as $node) {
+  foreach ($form_nodes as $node) {
     // If its translated into other languages besides english.
     if ($languages = $node->getTranslationLanguages(FALSE)) {
       foreach ($languages as $key => $language) {
@@ -45,8 +50,8 @@ function sfgov_formio_update_9001(&$sandbox) {
     $phrase_data = (array) json_decode(file_get_contents($phrase_url), TRUE);
     $formio_paragraph = $formio_paragraph_data['paragraph'];
 
-    // Run the process for each language
-    foreach($phrase_data['data'] as $language => $data) {
+    // Run the process for each language.
+    foreach ($phrase_data['data'] as $language => $data) {
       // zh-hant is stored as just zh in phrase.
       $lang_code = ($language === 'zh') ? 'zh-hant' : $language;
 
@@ -102,7 +107,7 @@ function sfgov_formio_update_9001(&$sandbox) {
     }
   }
 
-  foreach($needs_drupal_update as $en_node_id => $translated_nodes) {
+  foreach ($needs_drupal_update as $en_node_id => $translated_nodes) {
     // Update the english node.
     $en_node = Node::load($en_node_id);
     $formio_paragraph = $en_node->field_form_id->referencedEntities()[0];
@@ -117,7 +122,7 @@ function sfgov_formio_update_9001(&$sandbox) {
     $formio_paragraph->save();
     $en_node->save();
 
-    // Update the translated nodes
+    // Update the translated nodes.
     foreach ($translated_nodes as $translated_node) {
       $translated_json = $translated_node->get('field_formio_json_content')->value;
       $paragraph_language_id = $translated_node->language()->getId();
@@ -128,7 +133,7 @@ function sfgov_formio_update_9001(&$sandbox) {
         if (array_key_exists($key, $translated_json_decoded)) {
           $json_key = $key;
         }
-        // In the old json, all '_' were replaced with '.'
+        // In the old json, all '_' were replaced with '.'.
         else {
           $json_key = str_replace('_', '.', $key);
         }
