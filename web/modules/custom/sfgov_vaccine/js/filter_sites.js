@@ -1,322 +1,320 @@
 (function ($, Drupal) {
-  "use strict";
-
   Drupal.behaviors.filterSites = {
-    attach: function (context, settings) {
+    attach (context, settings) {
       // @todo Banish the jquery!
 
       // Set media query and register event listener.
-      const mediaQuery = window.matchMedia("(min-width: 768px)");
-      mediaQuery.addListener(layoutChange);
+      const mediaQuery = window.matchMedia('(min-width: 768px)')
+      mediaQuery.addListener(layoutChange)
 
       // Elements.
-      const sectionCount = $(".vaccine-count-container");
-      const leftColumn = $(".group--left");
-      const sitesWrapper = $(".vaccine-filter__sites");
-      const submitButton = $(".vaccine-filter-form #edit-submit", context);
+      const sectionCount = $('.vaccine-count-container')
+      const leftColumn = $('.group--left')
+      const sitesWrapper = $('.vaccine-filter__sites')
+      const submitButton = $('.vaccine-filter-form #edit-submit', context)
 
       // Other variables.
-      let filterByAvailability = false;
-      const speed = "slow";
-      const class_match_available = "match-available";
-      const class_match_radius = "match-radius";
+      let filterByAvailability = false
+      const speed = 'slow'
+      const class_match_available = 'match-available'
+      const class_match_radius = 'match-radius'
 
       // On load.
-      displaySites();
-      layoutChange(mediaQuery);
+      displaySites()
+      layoutChange(mediaQuery)
 
       // On Click.
-      submitButton.on("click", function (event) {
-        event.preventDefault();
-        leftColumn.fadeOut(0);
-        
+      submitButton.on('click', event => {
+        event.preventDefault()
+        leftColumn.fadeOut(0)
+
         // Clear GPS data, check for autocomplete entry
-        if(!$("#edit-location")[0].getAttribute("data-place-changed")) {
-		  // Remove previous GPS, ***BUG*** not working for invalid address handling
-          document.getElementById("edit-location").removeAttribute("data-lat");
-          document.getElementById("edit-location").removeAttribute("data-lng");
+        if (!$('#edit-location')[0].getAttribute('data-place-changed')) {
+          // Remove previous GPS, ***BUG*** not working for invalid address handling
+          document.getElementById('edit-location').removeAttribute('data-lat')
+          document.getElementById('edit-location').removeAttribute('data-lng')
         }
-        
+
+        // eslint-disable-next-line no-undef
         locationSubmit()
           .then(displaySites)
           .catch(error => console.error(error))
           .finally(() => {
-            if($("[name=location]")[0].getAttribute("data-lat") && $("[name=location]")[0].getAttribute("data-lng")) {
-              leftColumn.fadeIn(speed);
-              scrollUp(speed);
-            } else if($(".vaccine-filter__sites .included").length > 0) {
-              leftColumn.fadeIn(speed);
-              scrollUp(speed);
+            if ($('[name=location]')[0].getAttribute('data-lat') && $('[name=location]')[0].getAttribute('data-lng')) {
+              leftColumn.fadeIn(speed)
+              scrollUp(speed)
+            } else if ($('.vaccine-filter__sites .included').length > 0) {
+              leftColumn.fadeIn(speed)
+              scrollUp(speed)
             }
-            
           })
-      });
+      })
 
-      function filterVaccineSites() {
-        let wheelchair_chkBox = { datatest: null };
-        let kids5to11_chkBox = { datatest: null };
-        let locationInput = $("[name=location]")
+      function filterVaccineSites () {
+        const wheelchair_chkBox = { datatest: null }
+        const kids5to11_chkBox = { datatest: null }
+        const locationInput = $('[name=location]')
           .removeAttr('data-place-changed')
-        let radiusInput = $("[name=radius]");
-        let userLocation = !!locationInput.val();
+        const radiusInput = $('[name=radius]')
+        const userLocation = !!locationInput.val()
 
-        if ($("[name=kids5to11]").is(":checked")) {
+        if ($('[name=kids5to11]').is(':checked')) {
           kids5to11_chkBox.datatest = '1'
         } else {
           kids5to11_chkBox.datatest = ''
         }
 
-        filterByAvailability = $("[name=available]").is(":checked");
+        filterByAvailability = $('[name=available]').is(':checked')
 
-        if ($("[name=wheelchair]").is(":checked") === true) {
-          wheelchair_chkBox.datatest = "1";
+        if ($('[name=wheelchair]').is(':checked') === true) {
+          wheelchair_chkBox.datatest = '1'
         } else {
-          wheelchair_chkBox.datatest = "";
+          wheelchair_chkBox.datatest = ''
         }
 
         // Test and filter.
-        $(".vaccine-site")
+        $('.vaccine-site')
           .hide()
-          .removeClass("included")
+          .removeClass('included')
           .filter(function () {
             const $site = $(this)
             // "Only show sites open to the general public" checkbox.
-            const kids5to11_regExTest = new RegExp(kids5to11_chkBox.datatest, "ig");
+            const kids5to11_regExTest = new RegExp(kids5to11_chkBox.datatest, 'ig')
 
             // "Only show sites with available appointments" checkbox.
             if (filterByAvailability === true) {
-              $site.removeClass(class_match_available);
+              $site.removeClass(class_match_available)
               if (
-                $site.attr("data-available") === "yes" ||
-                $site.find(".js-dropin").length !== 0
+                $site.attr('data-available') === 'yes' ||
+                $site.find('.js-dropin').length !== 0
               ) {
                 $site
                   .addClass(class_match_available)
-                  .appendTo(".vaccine-filter__sites");
+                  .appendTo('.vaccine-filter__sites')
               }
             } else {
               $site
                 .addClass(class_match_available)
-                .appendTo(".vaccine-filter__sites");
+                .appendTo('.vaccine-filter__sites')
             }
 
             // "Wheelchair accessible" checkbox.
             const wheelchair_regExTest = new RegExp(
               wheelchair_chkBox.datatest,
-              "ig"
-            );
+              'ig'
+            )
 
             // Languages.
-            $site.removeClass("language-match");
-            const language_selected = $("[name=language]").val().trim();
-            let language_other_test = null;
+            $site.removeClass('language-match')
+            const language_selected = $('[name=language]').val().trim()
+            const language_other_regExtest = /rt/ig
+            let language_other_test = null
 
-            if (language_selected !== "en") {
-              if (language_selected !== "asl") {
-                let language_other_regExtest = new RegExp("rt", "ig");
+            if (language_selected !== 'en') {
+              if (language_selected !== 'asl') {
                 language_other_test = $site
-                  .attr("data-language")
-                  .match(language_other_regExtest);
+                  .attr('data-language')
+                  .match(language_other_regExtest)
               } else {
                 language_other_test = $site[0].hasAttribute(
-                  "data-remote-asl"
-                );
+                  'data-remote-asl'
+                )
               }
             }
 
-            const language_regExTest = new RegExp(language_selected, "ig");
+            const language_regExTest = new RegExp(language_selected, 'ig')
 
             const language_test = $site
-              .attr("data-language")
-              .match(language_regExTest);
+              .attr('data-language')
+              .match(language_regExTest)
 
             if (language_test || language_other_test) {
-              $site.addClass("language-match");
+              $site.addClass('language-match')
             }
 
             // Distance.
-            $site.addClass(class_match_radius);
+            $site.addClass(class_match_radius)
             if (userLocation) {
-              if(locationInput[0].getAttribute("data-lat") && locationInput[0].getAttribute("data-lng")) {
+              if (locationInput[0].getAttribute('data-lat') && locationInput[0].getAttribute('data-lng')) {
                 const distance = getDistance(
-                  locationInput[0].getAttribute("data-lat"), //input lat
-                  locationInput[0].getAttribute("data-lng"), //input long
-                  $site.data("lat"), // this lat
-                  $site.data("lng") // this lng
-                );
-  
+                  locationInput[0].getAttribute('data-lat'), // input lat
+                  locationInput[0].getAttribute('data-lng'), // input long
+                  $site.data('lat'), // this lat
+                  $site.data('lng') // this lng
+                )
+
                 if (distance > radiusInput.val()) {
-                  $site.removeClass(class_match_radius);
+                  $site.removeClass(class_match_radius)
                 }
                 $site
-                  .attr("data-distance", distance)
-                  .find(".vaccine-site__distance")
-                  .text(Math.round(distance * 10) / 10 + "mi");
+                  .attr('data-distance', distance)
+                  .find('.vaccine-site__distance')
+                  .text(Math.round(distance * 10) / 10 + 'mi')
                 $site
-                  .find(".vaccine-site__header")
-                  .addClass("distance-visible");
+                  .find('.vaccine-site__header')
+                  .addClass('distance-visible')
               } else {
-                $site.addClass('included');
+                $site.addClass('included')
               }
             } else {
-              $site.find(".vaccine-site__distance").text("");
+              $site.find('.vaccine-site__distance').text('')
             }
 
             // Return list of matching sites.
             return (
-              $site.attr("data-kids5to11").match(kids5to11_regExTest) &&
-              $site.attr("data-wheelchair").match(wheelchair_regExTest) &&
-              $site.hasClass("language-match") &&
+              $site.attr('data-kids5to11').match(kids5to11_regExTest) &&
+              $site.attr('data-wheelchair').match(wheelchair_regExTest) &&
+              $site.hasClass('language-match') &&
               $site.hasClass(class_match_available) &&
               $site.hasClass(class_match_radius)
-            );
+            )
           })
-          .sort(function (a, b) {
-            const orderA = parseInt(a.getAttribute("data-order"));
-            const orderB = parseInt(b.getAttribute("data-order"));
+          .sort((a, b) => {
+            const orderA = parseInt(a.getAttribute('data-order'))
+            const orderB = parseInt(b.getAttribute('data-order'))
 
-            let dataA = orderA;
-            let dataB = orderB;
+            let dataA = orderA
+            let dataB = orderB
 
             // Sort by distance and then order if location is entered.
             if (userLocation) {
-              dataA = a.getAttribute("data-distance");
-              dataB = b.getAttribute("data-distance");
+              dataA = a.getAttribute('data-distance')
+              dataB = b.getAttribute('data-distance')
 
               if (dataA === dataB) {
-                dataA = orderA;
-                dataB = orderB;
+                dataA = orderA
+                dataB = orderB
               }
             }
 
-            return dataA < dataB ? -1 : 1;
+            return dataA < dataB ? -1 : 1
           })
           .show()
-          .addClass("included")
-          .appendTo(sitesWrapper);
+          .addClass('included')
+          .appendTo(sitesWrapper)
       }
 
-      function showNoResultsMessage() {
-        $(".vaccine-filter__empty").show();
+      function showNoResultsMessage () {
+        $('.vaccine-filter__empty').show()
       }
 
-      function hideNoResultsMessage() {
-        $(".vaccine-filter__empty").hide();
+      function hideNoResultsMessage () {
+        $('.vaccine-filter__empty').hide()
       }
 
-      function showCount(speed) {
-        $(".vaccine-address-alert").hide();
-        let count = $(".vaccine-site.included").length;
-        sectionCount.find("span").text(count);
-        sectionCount.show();
+      function showCount (speed) {
+        $('.vaccine-address-alert').hide()
+        const count = $('.vaccine-site.included').length
+        sectionCount.find('span').text(count)
+        sectionCount.show()
       }
 
-      function hideCount() {
-        sectionCount.hide();
+      function hideCount () {
+        sectionCount.hide()
       }
 
-      function showSites() {
-        $(".vaccine-filter__sites").show();
+      function showSites () {
+        $('.vaccine-filter__sites').show()
       }
 
-      function hideSites() {
-        $(".vaccine-filter__sites").hide();
+      function hideSites () {
+        $('.vaccine-filter__sites').hide()
       }
 
       // @see https://en.wikipedia.org/wiki/Haversine_formula
       // @see https://simplemaps.com/resources/location-distance
-      function getDistance(lat1, lng1, lat2, lng2) {
-        function deg2rad(deg) {
-          return deg * (Math.PI / 180);
+      function getDistance (lat1, lng1, lat2, lng2) {
+        function deg2rad (deg) {
+          return deg * (Math.PI / 180)
         }
-        function square(x) {
-          return Math.pow(x, 2);
+        function square (x) {
+          return Math.pow(x, 2)
         }
-        const r = 6371; // radius of the earth in km
-        lat1 = deg2rad(lat1);
-        lat2 = deg2rad(lat2);
-        const lat_dif = lat2 - lat1;
-        const lng_dif = deg2rad(lng2 - lng1);
+        const r = 6371 // radius of the earth in km
+        lat1 = deg2rad(lat1)
+        lat2 = deg2rad(lat2)
+        const lat_dif = lat2 - lat1
+        const lng_dif = deg2rad(lng2 - lng1)
         const a =
           square(Math.sin(lat_dif / 2)) +
-          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2));
-        let d = 2 * r * Math.asin(Math.sqrt(a));
+          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2))
+        const d = 2 * r * Math.asin(Math.sqrt(a))
 
-        return Math.round(d * 0.621371 * 10) / 10; // Return miles.
+        return Math.round(d * 0.621371 * 10) / 10 // Return miles.
       }
 
       // This is the main function.
-      function displaySites() {
+      function displaySites () {
         // Check for long/lat coords from user location
-        filterVaccineSites();
-        
-        if($("[name=location]")[0].getAttribute("data-lat") && $("[name=location]")[0].getAttribute("data-lat")) {
+        filterVaccineSites()
+
+        if ($('[name=location]')[0].getAttribute('data-lat') && $('[name=location]')[0].getAttribute('data-lat')) {
           // Location found, check results and show if valid
           if (
             // If there are no results.
-            $(".vaccine-filter__sites .included").length === 0
+            $('.vaccine-filter__sites .included').length === 0
           ) {
-            hideCount();
-            hideSites();
-            showNoResultsMessage();   
-          } else if(
-            ($("[name=location]")[0].getAttribute("data-lng") < -122.93 ||
-            $("[name=location]")[0].getAttribute("data-lng") > -121.54) && 
-            ($("[name=location]")[0].getAttribute("data-lat") < 37.0000 ||
-            $("[name=location]")[0].getAttribute("data-lat") > 38.0200)
+            hideCount()
+            hideSites()
+            showNoResultsMessage()
+          } else if (
+            ($('[name=location]')[0].getAttribute('data-lng') < -122.93 ||
+            $('[name=location]')[0].getAttribute('data-lng') > -121.54) &&
+            ($('[name=location]')[0].getAttribute('data-lat') < 37.0000 ||
+            $('[name=location]')[0].getAttribute('data-lat') > 38.0200)
           ) {
             // GPS coords out of bounds
-            hideCount();
-            hideSites();
-            $('.vaccine-address-alert').show();
+            hideCount()
+            hideSites()
+            $('.vaccine-address-alert').show()
           } else {
             // If "Only show sites with available appointments" is not checked and
             // there are sites that meet the selected criteria.
-            hideNoResultsMessage();
-            showSites();
-            showCount();
+            hideNoResultsMessage()
+            showSites()
+            showCount()
           }
-        } else if($("#edit-location").val()) {
+        } else if ($('#edit-location').val()) {
           // Invalid location entered, alert user
-          hideSites();
-          hideCount();
-          $(".vaccine-filter__sites").hide();
-          $('.vaccine-address-alert').show();
+          hideSites()
+          hideCount()
+          $('.vaccine-filter__sites').hide()
+          $('.vaccine-address-alert').show()
         } else {
           // No location entered, show results
           if (
             // If there are no results.
-            $(".vaccine-filter__sites .included").length === 0
+            $('.vaccine-filter__sites .included').length === 0
           ) {
-            hideCount();
-            hideSites();
-            showNoResultsMessage();
+            hideCount()
+            hideSites()
+            showNoResultsMessage()
           } else {
             // If "Only show sites with available appointments" is not checked and
             // there are sites that meet the selected criteria.
-            hideNoResultsMessage();
-            showSites();
-            showCount();
+            hideNoResultsMessage()
+            showSites()
+            showCount()
           }
         }
       }
 
       // Responsive layout.
-      function layoutChange(e) {
+      function layoutChange (e) {
         if (e.matches) {
-          $(".vaccine-filter__filters").appendTo(".group--right");
+          $('.vaccine-filter__filters').appendTo('.group--right')
         } else {
-          $(".vaccine-filter__filters").appendTo(
-            ".vaccine-filter__filter-top > div"
-          );
+          $('.vaccine-filter__filters').appendTo(
+            '.vaccine-filter__filter-top > div'
+          )
         }
       }
 
       // Scroll to Top.
-      function scrollUp(speed) {
-        let newPosition = sectionCount.offset().top - 150;
-        $("html, body").animate({ scrollTop: newPosition }, speed);
+      function scrollUp (speed) {
+        const newPosition = sectionCount.offset().top - 150
+        $('html, body').animate({ scrollTop: newPosition }, speed)
       }
-    },
-  };
-})(jQuery, Drupal);
+    }
+  }
+})(jQuery, Drupal)
