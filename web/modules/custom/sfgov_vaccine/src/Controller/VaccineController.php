@@ -287,7 +287,6 @@ class VaccineController extends ControllerBase {
       $booking['safe_info'] = isset($booking['info']) ? Xss::filter($booking['info'], $allowed_html_tags) : NULL;
 
       $last_updated = $site_data['appointments']['last_updated'];
-      $site_name = $site_data['name'];
       $site_id = $site_data['site_id'] ?? NULL;
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
@@ -297,10 +296,10 @@ class VaccineController extends ControllerBase {
 
       // Map results.
       $result = [
-        'site_name' => $site_name,
+        'site' => $site_data,
         'attributes' => new Attribute([
           'class' => ['vaccine-site', 'no-hover'],
-          'id' => "site-$site_id",
+          'id' => $site_id ? "site-$site_id" : NULL,
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
           'data-kids5to11' => $site_data['kids5to11']['allowed'] ? 1 : 0,
