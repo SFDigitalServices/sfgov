@@ -1,6 +1,7 @@
 #!/bin/bash
 
 composer install
+npm install
 
 # what dir does this script exist
 SOURCE="${BASH_SOURCE[0]}"
