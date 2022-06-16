@@ -28,8 +28,14 @@ function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id
       // Hide title field.
       $form['title']['#access'] = FALSE;
 
-      // Disable field_parent_department.
-      $form['field_parent_department']['#disabled'] = TRUE;
+      // Disable field_parent_department if value exists.
+      /** @var \Drupal\Core\Entity\EntityForm $formObject */
+      $formObject = $form_state->getFormObject();
+      $entityRef = $formObject->getEntity()->get('field_parent_department')->entity;
+      
+      if(!empty($entityRef)) {
+        $form['field_parent_department']['#disabled'] = TRUE;
+      }
 
       // Attach library.
       $form['#attached']['library'][] = 'sfgov_about/about_form';
