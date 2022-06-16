@@ -67,7 +67,7 @@ function locationSubmit () {
     }
 
     acService.getPlacePredictions(acRequest, (predictions, status) => {
-      if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
+      if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) {
         // Modify reject directive so we can handle bad addresses
         // reject(new Error('no predictions from AutocompleteService'))
         resolve({ status: 'done', msg: 'no predictions from AutocompleteService' })
@@ -77,7 +77,7 @@ function locationSubmit () {
       const firstPlaceId = predictions[0].place_id // use the first place from predictions (too assuming?)
       const pdService = new google.maps.places.PlacesService(document.createElement('div')) // PlacesService requires an html element
       pdService.getDetails({ placeId: firstPlaceId }, (placeResult, status) => {
-        if (status != google.maps.places.PlacesServiceStatus.OK || !placeResult) {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !placeResult) {
           reject(new Error('no place details from PlacesService'))
         } else {
           input.setAttribute('data-lat', placeResult.geometry.location.lat())

@@ -9,7 +9,6 @@ module.exports = {
     google: 'readonly'
   },
   rules: {
-    eqeqeq: 'warn',
     'no-magic-numbers': 0,
     'no-unused-vars': 'warn'
   }

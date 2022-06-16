@@ -16,8 +16,8 @@
       // Other variables.
       let filterByAvailability = false
       const speed = 'slow'
-      const class_match_available = 'match-available'
-      const class_match_radius = 'match-radius'
+      const classMatchAvailable = 'match-available'
+      const classMatchRadius = 'match-radius'
 
       // On load.
       displaySites()
@@ -51,25 +51,25 @@
       })
 
       function filterVaccineSites () {
-        const wheelchair_chkBox = { datatest: null }
-        const kids5to11_chkBox = { datatest: null }
+        const wheelchairData = { datatest: null }
+        const kids5to11Data = { datatest: null }
         const locationInput = $('[name=location]')
           .removeAttr('data-place-changed')
         const radiusInput = $('[name=radius]')
         const userLocation = !!locationInput.val()
 
         if ($('[name=kids5to11]').is(':checked')) {
-          kids5to11_chkBox.datatest = '1'
+          kids5to11Data.datatest = '1'
         } else {
-          kids5to11_chkBox.datatest = ''
+          kids5to11Data.datatest = ''
         }
 
         filterByAvailability = $('[name=available]').is(':checked')
 
         if ($('[name=wheelchair]').is(':checked') === true) {
-          wheelchair_chkBox.datatest = '1'
+          wheelchairData.datatest = '1'
         } else {
-          wheelchair_chkBox.datatest = ''
+          wheelchairData.datatest = ''
         }
 
         // Test and filter.
@@ -79,61 +79,60 @@
           .filter(function () {
             const $site = $(this)
             // "Only show sites open to the general public" checkbox.
-            const kids5to11_regExTest = new RegExp(kids5to11_chkBox.datatest, 'ig')
+            const kids5to11Pattern = new RegExp(kids5to11Data.datatest, 'ig')
 
             // "Only show sites with available appointments" checkbox.
             if (filterByAvailability === true) {
-              $site.removeClass(class_match_available)
+              $site.removeClass(classMatchAvailable)
               if (
                 $site.attr('data-available') === 'yes' ||
                 $site.find('.js-dropin').length !== 0
               ) {
                 $site
-                  .addClass(class_match_available)
+                  .addClass(classMatchAvailable)
                   .appendTo('.vaccine-filter__sites')
               }
             } else {
               $site
-                .addClass(class_match_available)
+                .addClass(classMatchAvailable)
                 .appendTo('.vaccine-filter__sites')
             }
 
             // "Wheelchair accessible" checkbox.
-            const wheelchair_regExTest = new RegExp(
-              wheelchair_chkBox.datatest,
+            const wheelchairPattern = new RegExp(
+              wheelchairData.datatest,
               'ig'
             )
 
             // Languages.
             $site.removeClass('language-match')
-            const language_selected = $('[name=language]').val().trim()
-            const language_other_regExtest = /rt/ig
-            let language_other_test = null
+            const langSelected = $('[name=language]').val().trim()
+            const langOtherPattern = /rt/ig
+            let langOtherTest = null
 
-            if (language_selected !== 'en') {
-              if (language_selected !== 'asl') {
-                language_other_test = $site
+            if (langSelected !== 'en') {
+              if (langSelected !== 'asl') {
+                langOtherTest = $site
                   .attr('data-language')
-                  .match(language_other_regExtest)
+                  .match(langOtherPattern)
               } else {
-                language_other_test = $site[0].hasAttribute(
+                langOtherTest = $site[0].hasAttribute(
                   'data-remote-asl'
                 )
               }
             }
 
-            const language_regExTest = new RegExp(language_selected, 'ig')
-
-            const language_test = $site
+            const langPattern = new RegExp(langSelected, 'ig')
+            const langTest = $site
               .attr('data-language')
-              .match(language_regExTest)
+              .match(langPattern)
 
-            if (language_test || language_other_test) {
+            if (langTest || langOtherTest) {
               $site.addClass('language-match')
             }
 
             // Distance.
-            $site.addClass(class_match_radius)
+            $site.addClass(classMatchRadius)
             if (userLocation) {
               if (locationInput[0].getAttribute('data-lat') && locationInput[0].getAttribute('data-lng')) {
                 const distance = getDistance(
@@ -144,7 +143,7 @@
                 )
 
                 if (distance > radiusInput.val()) {
-                  $site.removeClass(class_match_radius)
+                  $site.removeClass(classMatchRadius)
                 }
                 $site
                   .attr('data-distance', distance)
@@ -162,11 +161,11 @@
 
             // Return list of matching sites.
             return (
-              $site.attr('data-kids5to11').match(kids5to11_regExTest) &&
-              $site.attr('data-wheelchair').match(wheelchair_regExTest) &&
+              $site.attr('data-kids5to11').match(kids5to11Pattern) &&
+              $site.attr('data-wheelchair').match(wheelchairPattern) &&
               $site.hasClass('language-match') &&
-              $site.hasClass(class_match_available) &&
-              $site.hasClass(class_match_radius)
+              $site.hasClass(classMatchAvailable) &&
+              $site.hasClass(classMatchRadius)
             )
           })
           .sort((a, b) => {
@@ -233,11 +232,11 @@
         const r = 6371 // radius of the earth in km
         lat1 = deg2rad(lat1)
         lat2 = deg2rad(lat2)
-        const lat_dif = lat2 - lat1
-        const lng_dif = deg2rad(lng2 - lng1)
+        const latOff = lat2 - lat1
+        const lngOff = deg2rad(lng2 - lng1)
         const a =
-          square(Math.sin(lat_dif / 2)) +
-          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lng_dif / 2))
+          square(Math.sin(latOff / 2)) +
+          Math.cos(lat1) * Math.cos(lat2) * square(Math.sin(lngOff / 2))
         const d = 2 * r * Math.asin(Math.sqrt(a))
 
         return Math.round(d * 0.621371 * 10) / 10 // Return miles.
