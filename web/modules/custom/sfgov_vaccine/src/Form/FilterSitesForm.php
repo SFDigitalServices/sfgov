@@ -71,15 +71,25 @@ class FilterSitesForm extends FormBase {
 
     $form['container']['toggle']['items'] = [
       '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+        ]
+      ]
     ];
 
     // Single checkboxes.
-    $form['container']['toggle']['items']['single_checkboxes'] = [
+    $form['container']['toggle']['items']['access'] = [
       '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'mb-40'
+        ],
+      ],
     ];
 
     $pediatric_options = [];
-    foreach ($this->settings('form_strings.pediatric.options') as $value => $label) {
+    $option_values = $this->settings('form_strings.pediatric.options');
+    foreach ($option_values as $value => $label) {
       $pediatric_options[$value] = $this->t($label);
     }
 
@@ -89,18 +99,22 @@ class FilterSitesForm extends FormBase {
       '#default_value' => FALSE,
       '#options' => $pediatric_options,
       '#multiple' => FALSE,
+      '#attributes' => [
+        'class' => [
+        ],
+      ],
     ];
 
     // Single checkboxes - available.
-    $form['container']['toggle']['items']['single_checkboxes']['available'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t($this->settings('form_strings.available')),
-      '#default_value' => FALSE,
-    ];
-    $form['container']['toggle']['items']['single_checkboxes']['wheelchair'] = [
+    $form['container']['toggle']['items']['access']['wheelchair'] = [
       '#type' => 'checkbox',
       '#title' => $this->t($this->settings('access_mode.wheelchair.text')),
       '#default_value' => FALSE,
+      '#attributes' => [
+        'class' => [
+          'mb-0'
+        ],
+      ],
     ];
 
     // Languages.
@@ -110,18 +124,28 @@ class FilterSitesForm extends FormBase {
       $options_languages[$key] = $this->t($value['filter_label']);
     }
 
-    $form['container']['toggle']['items']['language'] = [
+    $form['container']['toggle']['items']['access']['language'] = [
       '#type' => 'select',
       '#title' => $this->t($this->settings('form_strings.language_label')),
       '#title_display' => 'invisible',
       '#options' => $options_languages,
       '#default_value' => 'any',
       '#multiple' => FALSE,
+      '#attributes' => [
+        'class' => [
+          'mb-40'
+        ],
+      ],
     ];
 
     // Distance.
     $form['container']['toggle']['items']['distance_from'] = [
       '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'mt-40'
+        ],
+      ],
     ];
 
     $settings_radius = $this->settings('radius');
@@ -139,23 +163,33 @@ class FilterSitesForm extends FormBase {
       '#default_value' => 'all',
       '#multiple' => FALSE,
       '#suffix' => '<span>from</span>',
+      '#attributes' => [
+        'class' => ['mb-0'],
+      ],
     ];
 
     $form['container']['toggle']['items']['location'] = [
       '#type' => 'textfield',
       '#title' => $this->t($this->settings('form_strings.location_label')),
       '#title_display' => 'invisible',
-    ];
+      '#attributes' => [
+        'placeholder' => $this->t($this->settings('form_strings.location_label')),
+        'class' => [
 
-    $form['container']['toggle']['items']['location']['#attributes']['placeholder'] = $this->t($this->settings('form_strings.location_label'));
+        ],
+      ]
+    ];
 
     // Submit.
     $form['container']['toggle']['items']['submit'] = [
       '#type' => 'submit',
-      '#attributes' => [
-        'class' => ['btn'],
-      ],
       '#value' => $this->t($this->settings('form_strings.submit_label')),
+      '#attributes' => [
+        'class' => [
+          'btn',
+          'my-0'
+        ],
+      ],
     ];
 
     return $form;
