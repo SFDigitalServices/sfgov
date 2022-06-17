@@ -227,7 +227,7 @@ class VaccineController extends ControllerBase {
       foreach ($site_data['dosages'] as $dosage) {
         if ($dosage['ages'][1] <= 5) {
           $brand = $this->t($dosage['brand']);
-          // Format < 0 decimal numbers (really just 0.5) with underscores
+          // Format < 1 decimal numbers (really just 0.5) with underscores
           // instead of periods because Drupal or PHP's YAML parser doesn't
           // like keys with periods in them.
           $formatted_ages = array_map(function (float $age) {
