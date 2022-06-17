@@ -235,7 +235,7 @@ class VaccineController extends ControllerBase {
             return $age < 1 ? $formatted : strval($age);
           }, $dosage['ages']);
           $age_range = implode('-', $formatted_ages);
-          $age_range_string = $this->vaxValues->settings("pediatric_age_range_strings.$age_range") ?? $age_range;
+          $age_range_string = $this->t($this->vaxValues->settings("pediatric_age_range_strings.$age_range") ?? $age_range);
           array_push($printed, "$brand $age_range_string");
         }
       }
