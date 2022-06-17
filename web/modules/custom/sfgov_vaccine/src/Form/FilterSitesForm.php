@@ -175,7 +175,6 @@ class FilterSitesForm extends FormBase {
       '#attributes' => [
         'placeholder' => $this->t($this->settings('form_strings.location_label')),
         'class' => [
-
         ],
       ]
     ];
@@ -187,7 +186,7 @@ class FilterSitesForm extends FormBase {
       '#attributes' => [
         'class' => [
           'btn',
-          'my-0'
+          'mt-20'
         ],
       ],
     ];
