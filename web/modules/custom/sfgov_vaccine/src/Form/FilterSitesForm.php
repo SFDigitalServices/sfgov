@@ -143,7 +143,8 @@ class FilterSitesForm extends FormBase {
       '#type' => 'container',
       '#attributes' => [
         'class' => [
-          'mt-40'
+          'mt-40',
+          'flex-nowrap'
         ],
       ],
     ];
@@ -162,7 +163,7 @@ class FilterSitesForm extends FormBase {
       '#options' => $options_radius,
       '#default_value' => 'all',
       '#multiple' => FALSE,
-      '#suffix' => '<span>from</span>',
+      '#suffix' => $this->t('<span>from</span>'),
       '#attributes' => [
         'class' => ['mb-0'],
       ],
