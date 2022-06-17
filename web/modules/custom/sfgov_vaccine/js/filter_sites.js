@@ -139,10 +139,10 @@
             if (showDistance) {
               const distA = parseFloat(a.getAttribute('data-distance'))
               const distB = parseFloat(b.getAttribute('data-distance'))
-              return sortAscending(distA, distB) || sortDescending(orderA, orderB)
+              return sortAscending(distA, distB) || sortAscending(orderA, orderB)
             }
 
-            return sortDescending(orderA, orderB)
+            return sortAscending(orderA, orderB)
           })
           .show()
           .addClass('included')
@@ -286,10 +286,6 @@
 
       function deg2rad (deg) {
         return deg * Math.PI / 180
-      }
-
-      function sortDescending (a, b) {
-        return a > b ? -1 : a === b ? 0 : 1
       }
 
       function sortAscending (a, b) {
