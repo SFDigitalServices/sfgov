@@ -58,11 +58,10 @@
           // eslint-disable-next-line no-console
           .catch(error => console.error(error))
           .finally(() => {
+            leftColumn.fadeIn(speed)
             if (locationField.attr('data-lat') && locationField.attr('data-lng')) {
-              leftColumn.fadeIn(speed)
               scrollUp(speed)
             } else if ($('.vaccine-filter__sites .included').length > 0) {
-              leftColumn.fadeIn(speed)
               scrollUp(speed)
             }
           })
@@ -109,7 +108,7 @@
         }
         const showDistance = userLocation && [maxDistance, origin.lat, origin.lng].every(n => !isNaN(n))
         if (showDistance) {
-          filters.push(site => site.distance.value <= maxDistance)
+          filters.push(site => site.distance <= maxDistance)
         }
 
         // Test and filter.
@@ -121,18 +120,13 @@
             const site = $site.data('site')
 
             if (showDistance) {
-              if (!compareLocations(origin, site.distance.origin)) {
-                const distance = getDistance(origin, site.location)
-                site.distance.value = distance
-                site.distance.origin = origin
-                $site
-                  .attr('data-distance', distance)
-                  .find('[data-role=distance]')
-                  .text(formatDistance(distance))
-              }
+              const distance = getDistance(origin, site.location)
+              site.distance = distance
+              $site
+                .attr('data-distance', distance)
+                .find('[data-role=distance]')
+                .text(formatDistance(distance))
             } else {
-              site.distance.value = undefined
-              site.distance.origin = NO_ORIGIN
               $site
                 .removeAttr('data-distance')
                 .find('[data-role=distance]').text('')
@@ -278,10 +272,6 @@
         return isNaN(distance)
           ? ''
           : Math.round(distance * 10) / 10 + 'mi'
-      }
-
-      function compareLocations (a, b) {
-        return a && b && a.lat === b.lat && a.lng === b.lng
       }
 
       // @see https://en.wikipedia.org/wiki/Haversine_formula
