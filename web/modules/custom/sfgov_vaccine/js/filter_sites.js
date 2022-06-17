@@ -181,7 +181,9 @@
         // Check for long/lat coords from user location
         filterVaccineSites()
 
-        if (locationField.attr('data-lat') && locationField.attr('data-lat')) {
+        const lat = parseFloat(locationField.attr('data-lat'))
+        const lng = parseFloat(locationField.attr('data-lng'))
+        if (!isNaN(lat) && !isNaN(lng)) {
           // Location found, check results and show if valid
           if (
             // If there are no results.
@@ -190,12 +192,7 @@
             hideCount()
             hideSites()
             showNoResultsMessage()
-          } else if (
-            (locationField.attr('data-lng') < -122.93 ||
-            locationField.attr('data-lng') > -121.54) &&
-            (locationField.attr('data-lat') < 37.0000 ||
-            locationField.attr('data-lat') > 38.0200)
-          ) {
+          } else if (!inCityBounds({ lat, lng })) {
             // GPS coords out of bounds
             hideCount()
             hideSites()
@@ -294,6 +291,13 @@
 
       function rangesOverlap ([x1, x2], [y1, y2]) {
         return x1 <= y2 && y1 <= x2
+      }
+
+      function inCityBounds ({ lat, lng }) {
+        return (
+          lng < -122.93 || lng > -121.54 ||
+          lat < 37.0000 || lat > 38.0200
+        )
       }
     }
   }
