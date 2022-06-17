@@ -5,7 +5,7 @@
 
       // Set media query and register event listener.
       const mediaQuery = window.matchMedia('(min-width: 768px)')
-      mediaQuery.addListener(layoutChange)
+      mediaQuery.addEventListener('change', layoutChange)
 
       // Elements.
       const sectionCount = $('.vaccine-count-container')
