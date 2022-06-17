@@ -3,7 +3,6 @@
     attach (context, settings) {
       // @todo Banish the jquery!
       const R = 3958.754641 // radius of the earth in miles
-      const NO_ORIGIN = { lat: undefined, lng: undefined }
 
       // Set media query and register event listener.
       const mediaQuery = window.matchMedia('(min-width: 768px)')
