@@ -25,11 +25,7 @@
       const allSites = $('.vaccine-site')
         .each(function () {
           const site = getSiteData(this)
-          site.distance = {
-            origin: NO_ORIGIN,
-            value: undefined
-          }
-          jQuery.data(this, 'site', site)
+          $(this).data('site', site)
         })
 
       // Other variables.
