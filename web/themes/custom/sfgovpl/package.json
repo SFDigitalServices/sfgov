@@ -6,7 +6,7 @@
     "build": "run-p build-css build-js copy-deps",
     "build-css": "postcss --verbose -d dist/css 'src/sass/*.css'",
     "build-js": "babel -d dist/js 'src/js/*.js'",
-    "copy-deps": "cp node_modules/sfgov-design-system/dist/js/sfds.js dist/js",
+    "copy-deps": "mkdir -p dist/js && cp node_modules/sfgov-design-system/dist/js/sfds.js dist/js",
     "develop": "run-p watch start",
     "lint": "prettier --check src",
     "lint-css": "prettier --check 'src/sass/**/*.scss'",
