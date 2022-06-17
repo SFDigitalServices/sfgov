@@ -12,6 +12,7 @@
       const leftColumn = $('.group--left')
       const sitesWrapper = $('.vaccine-filter__sites')
       const submitButton = $('.vaccine-filter-form #edit-submit', context)
+      const invalidAddressAlert = $('[data-role=invalid-address]')
 
       // Other variables.
       let filterByAvailability = false
@@ -202,7 +203,7 @@
       }
 
       function showCount (speed) {
-        $('.vaccine-address-alert').hide()
+        invalidAddressAlert.hide()
         const count = $('.vaccine-site.included').length
         sectionCount.find('span').text(count)
         sectionCount.show()
@@ -265,7 +266,7 @@
             // GPS coords out of bounds
             hideCount()
             hideSites()
-            $('.vaccine-address-alert').show()
+            invalidAddressAlert.show()
           } else {
             // If "Only show sites with available appointments" is not checked and
             // there are sites that meet the selected criteria.
@@ -278,7 +279,7 @@
           hideSites()
           hideCount()
           $('.vaccine-filter__sites').hide()
-          $('.vaccine-address-alert').show()
+          invalidAddressAlert.show()
         } else {
           // No location entered, show results
           if (
