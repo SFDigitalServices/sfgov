@@ -46,6 +46,7 @@ details {
 // Node specific styling overrides
 .page-node-type-topic,
 .page-node-type-department {
+  .sfgov-resources details,
   .sfgov-services details {
     background: $c-white;
 
@@ -77,7 +78,14 @@ details {
     }
     .sfgov-container-item {
       margin-bottom: 40px;
+      @include media-max($mobile-screen) {
+        >.sfgov-container-item {
+          margin-bottom: 0;
+        }
+      }
+
     }
+    .sfgov-resource-card,
     .sfgov-service-card {
       padding: 0;
       border: none;
