@@ -1237,7 +1237,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events for this department.  <a href=\"/past-events/{{ arguments.field_dept_target_id }}\">See past events</a>\r\n</div>"
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events.  <a href=\"/past-events\">See past events</a>\r\n</div>"
           tokenize: true
       sorts:
         field_smart_date_value:
@@ -1684,7 +1684,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: "<div class=\"sfgov-no-events\">\r\n  There are no past events for this department.  <a href=\"/events/{{ arguments.field_dept_target_id }}\">See upcoming events</a>\r\n</div>"
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no past events.  <a href=\"/events\">See upcoming events</a>\r\n</div>"
           tokenize: true
       sorts:
         field_smart_date_value:
@@ -1873,6 +1873,1720 @@ display:
       max-age: -1
       contexts:
         - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
+  page_3:
+    id: page_3
+    display_title: 'Upcoming Events - topics'
+    display_plugin: page
+    position: 1
+    display_options:
+      title: Events
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events for this topic.  <a href=\"/events\">See all upcoming events</a>\r\n</div>"
+          tokenize: true
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      arguments:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: field_topics
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          default_action: empty
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: 'Events: {{ arguments.title }}'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: empty
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: ucwords
+          path_case: lower
+          transform_dash: true
+          break_phrase: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            event: event
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: today
+            type: offset
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_smart_date_end_value:
+          id: field_smart_date_end_value
+          table: node__field_smart_date
+          field: field_smart_date_end_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: today
+            type: offset
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+          2: OR
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      defaults:
+        empty: false
+        title: false
+        pager: false
+        style: false
+        row: false
+        relationships: false
+        sorts: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
+      relationships:
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
+          relationship: none
+          group_type: group
+          admin_label: 'field_topics: Content'
+          plugin_id: standard
+          required: true
+      display_description: 'A listing of upcoming events filtered by topic'
+      header:
+        entity_node:
+          id: entity_node
+          table: views
+          field: entity_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: entity
+          empty: true
+          target: '{{ raw_arguments.field_dept_target_id }}'
+          view_mode: title
+          tokenize: true
+          bypass_access: false
+      footer: {  }
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+      path: events/topic/%node
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
+  page_4:
+    id: page_4
+    display_title: 'Upcoming Events - depts'
+    display_plugin: page
+    position: 1
+    display_options:
+      title: 'Upcoming Events'
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no upcoming events for this department.  <a href=\"/events\">See all upcoming events</a>\r\n</div>"
+          tokenize: true
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      arguments:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: field_departments
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          default_action: empty
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: 'Events: {{ arguments.title }}'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: empty
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: ucwords
+          path_case: lower
+          transform_dash: true
+          break_phrase: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            event: event
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: today
+            type: offset
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_smart_date_end_value:
+          id: field_smart_date_end_value
+          table: node__field_smart_date
+          field: field_smart_date_end_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: today
+            type: offset
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+          2: OR
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      defaults:
+        empty: false
+        title: false
+        pager: false
+        style: false
+        row: false
+        relationships: false
+        sorts: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
+      relationships:
+        field_departments:
+          id: field_departments
+          table: node__field_departments
+          field: field_departments
+          relationship: none
+          group_type: group
+          admin_label: 'field_departments: Content'
+          plugin_id: standard
+          required: false
+      display_description: 'A listing of upcoming events filtered by departments'
+      header:
+        entity_node:
+          id: entity_node
+          table: views
+          field: entity_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: entity
+          empty: true
+          target: '{{ raw_arguments.field_dept_target_id }}'
+          view_mode: title
+          tokenize: true
+          bypass_access: false
+      footer: {  }
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+      path: events/department/%node
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
+  page_5:
+    id: page_5
+    display_title: 'Past Events - topics'
+    display_plugin: page
+    position: 1
+    display_options:
+      fields:
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: rendered_entity
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: teaser
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'F Y'
+          timezone: ''
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 1
+          tags:
+            next: Next
+            previous: Previous
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no past events for this topic.  <a href=\"/past-events\">See all past events</a>\r\n</div>"
+          tokenize: true
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      arguments:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: field_topics
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          default_action: empty
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: 'Events: {{ arguments.title }}'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: empty
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: ucwords
+          path_case: lower
+          transform_dash: true
+          break_phrase: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            event: event
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '<'
+          value:
+            min: ''
+            max: ''
+            value: today
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      defaults:
+        empty: false
+        pager: false
+        style: false
+        row: false
+        relationships: false
+        fields: false
+        sorts: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
+      relationships:
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
+          relationship: none
+          group_type: group
+          admin_label: 'field_topics: Content'
+          plugin_id: standard
+          required: false
+      display_description: 'A listing of past events filtered by topics'
+      header:
+        entity_node:
+          id: entity_node
+          table: views
+          field: entity_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: entity
+          empty: true
+          target: '{{ raw_arguments.field_dept_target_id }}'
+          view_mode: title
+          tokenize: true
+          bypass_access: false
+      footer: {  }
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+      path: past-events/topic/%node
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:core.entity_view_display.node.about.default'
+        - 'config:core.entity_view_display.node.about.teaser'
+        - 'config:core.entity_view_display.node.campaign.default'
+        - 'config:core.entity_view_display.node.campaign.teaser'
+        - 'config:core.entity_view_display.node.data_story.card'
+        - 'config:core.entity_view_display.node.data_story.default'
+        - 'config:core.entity_view_display.node.data_story.teaser'
+        - 'config:core.entity_view_display.node.department.default'
+        - 'config:core.entity_view_display.node.department.location_page'
+        - 'config:core.entity_view_display.node.department.search_index'
+        - 'config:core.entity_view_display.node.department.teaser'
+        - 'config:core.entity_view_display.node.department.title'
+        - 'config:core.entity_view_display.node.department_table.default'
+        - 'config:core.entity_view_display.node.department_table.teaser'
+        - 'config:core.entity_view_display.node.event.card'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.form_confirmation_page.default'
+        - 'config:core.entity_view_display.node.form_confirmation_page.full'
+        - 'config:core.entity_view_display.node.form_confirmation_page.teaser'
+        - 'config:core.entity_view_display.node.form_page.default'
+        - 'config:core.entity_view_display.node.form_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.default'
+        - 'config:core.entity_view_display.node.information_page.teaser'
+        - 'config:core.entity_view_display.node.information_page.teaser_simple'
+        - 'config:core.entity_view_display.node.landing.default'
+        - 'config:core.entity_view_display.node.landing.search_index'
+        - 'config:core.entity_view_display.node.landing.teaser'
+        - 'config:core.entity_view_display.node.location.card'
+        - 'config:core.entity_view_display.node.location.default'
+        - 'config:core.entity_view_display.node.location.location_page'
+        - 'config:core.entity_view_display.node.location.teaser'
+        - 'config:core.entity_view_display.node.meeting.card'
+        - 'config:core.entity_view_display.node.meeting.default'
+        - 'config:core.entity_view_display.node.meeting.teaser'
+        - 'config:core.entity_view_display.node.news.card'
+        - 'config:core.entity_view_display.node.news.card_compact'
+        - 'config:core.entity_view_display.node.news.default'
+        - 'config:core.entity_view_display.node.news.teaser'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.person.card'
+        - 'config:core.entity_view_display.node.person.card_with_image_small'
+        - 'config:core.entity_view_display.node.person.default'
+        - 'config:core.entity_view_display.node.person.person_section_display'
+        - 'config:core.entity_view_display.node.person.teaser'
+        - 'config:core.entity_view_display.node.public_body.card'
+        - 'config:core.entity_view_display.node.public_body.default'
+        - 'config:core.entity_view_display.node.public_body.teaser'
+        - 'config:core.entity_view_display.node.report.default'
+        - 'config:core.entity_view_display.node.resource_collection.default'
+        - 'config:core.entity_view_display.node.resource_collection.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.default'
+        - 'config:core.entity_view_display.node.step_by_step.teaser'
+        - 'config:core.entity_view_display.node.step_by_step.teaser_simple'
+        - 'config:core.entity_view_display.node.topic.card'
+        - 'config:core.entity_view_display.node.topic.default'
+        - 'config:core.entity_view_display.node.topic.search_index'
+        - 'config:core.entity_view_display.node.topic.teaser'
+        - 'config:core.entity_view_display.node.topic.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.card'
+        - 'config:core.entity_view_display.node.transaction.default'
+        - 'config:core.entity_view_display.node.transaction.part_of_label'
+        - 'config:core.entity_view_display.node.transaction.search_index'
+        - 'config:core.entity_view_display.node.transaction.side_bar'
+        - 'config:core.entity_view_display.node.transaction.teaser'
+        - 'config:core.entity_view_display.node.transaction.teaser_simple'
+        - 'config:core.entity_view_display.node.transaction.transaction_search_result_related_dept'
+  page_6:
+    id: page_6
+    display_title: 'Past Events - depts'
+    display_plugin: page
+    position: 1
+    display_options:
+      fields:
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: rendered_entity
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: teaser
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'F Y'
+          timezone: ''
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 1
+          tags:
+            next: Next
+            previous: Previous
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: "<div class=\"sfgov-no-events\">\r\n  There are no past events for this department.  <a href=\"/past-events\">See all past events</a>\r\n</div>"
+          tokenize: true
+      sorts:
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      arguments:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: field_departments
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          default_action: empty
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: 'Events: {{ arguments.title }}'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: empty
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: ucwords
+          path_case: lower
+          transform_dash: true
+          break_phrase: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            event: event
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: date
+          operator: '<'
+          value:
+            min: ''
+            max: ''
+            value: today
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+            -
+              field: field_smart_date_value
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      defaults:
+        empty: false
+        pager: false
+        style: false
+        row: false
+        relationships: false
+        fields: false
+        sorts: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
+      relationships:
+        field_departments:
+          id: field_departments
+          table: node__field_departments
+          field: field_departments
+          relationship: none
+          group_type: group
+          admin_label: 'field_departments: Content'
+          plugin_id: standard
+          required: false
+      display_description: 'A listing of past events filtered by department'
+      header:
+        entity_node:
+          id: entity_node
+          table: views
+          field: entity_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: entity
+          empty: true
+          target: '{{ raw_arguments.field_dept_target_id }}'
+          view_mode: title
+          tokenize: true
+          bypass_access: false
+      footer: {  }
+      rendering_language: '***LANGUAGE_language_interface***'
+      display_extenders: {  }
+      path: past-events/department/%node
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
