@@ -67,9 +67,9 @@ class VaxValues {
    */
   public function getAlert() {
     $alert_db = $this->state->get('vaccine_alert');
-    $alert_db_val = $alert_db['value'];
-    $alert_config_val = $this->settings('template_strings.page.alert.value');
-    return isset($alert_db) ? $alert_db_val : $alert_config_val;
+    return isset($alert_db)
+      ? $alert_db['value']
+      : $this->settings('template_strings.page.alert.value');
   }
 
   /**
@@ -84,10 +84,9 @@ class VaxValues {
    */
   public function getHeaderDescription() {
     $header_db = $this->state->get('header_description');
-    $header_db_val = $header_db['value'];
-    $header_config_val = $this->settings('template_strings.page.description');
-    $headerDescription = isset($header_db) ? $header_db_val : $header_config_val;
-    return $this->t($headerDescription);
+    return isset($header_db)
+      ? $header_db['value']
+      : $this->settings('template_strings.page.description');
   }
 
   /**
