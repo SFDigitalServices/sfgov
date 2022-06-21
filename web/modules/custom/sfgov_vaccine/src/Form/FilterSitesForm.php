@@ -72,9 +72,8 @@ class FilterSitesForm extends FormBase {
     $form['container']['toggle']['items'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => [
-        ]
-      ]
+        'class' => [],
+      ],
     ];
 
     // Single checkboxes.
@@ -82,7 +81,7 @@ class FilterSitesForm extends FormBase {
       '#type' => 'container',
       '#attributes' => [
         'class' => [
-          'mb-40'
+          'mb-40',
         ],
       ],
     ];
@@ -100,8 +99,7 @@ class FilterSitesForm extends FormBase {
       '#options' => $pediatric_options,
       '#multiple' => FALSE,
       '#attributes' => [
-        'class' => [
-        ],
+        'class' => [],
       ],
     ];
 
@@ -112,7 +110,7 @@ class FilterSitesForm extends FormBase {
       '#default_value' => FALSE,
       '#attributes' => [
         'class' => [
-          'mb-0'
+          'mb-0',
         ],
       ],
     ];
@@ -133,7 +131,7 @@ class FilterSitesForm extends FormBase {
       '#multiple' => FALSE,
       '#attributes' => [
         'class' => [
-          'mb-40'
+          'mb-40',
         ],
       ],
     ];
@@ -144,7 +142,7 @@ class FilterSitesForm extends FormBase {
       '#attributes' => [
         'class' => [
           'mt-40',
-          'flex-nowrap'
+          'flex-nowrap',
         ],
       ],
     ];
@@ -175,9 +173,8 @@ class FilterSitesForm extends FormBase {
       '#title_display' => 'invisible',
       '#attributes' => [
         'placeholder' => $this->t($this->settings('form_strings.location_label')),
-        'class' => [
-        ],
-      ]
+        'class' => [],
+      ],
     ];
 
     // Submit.
@@ -187,7 +184,7 @@ class FilterSitesForm extends FormBase {
       '#attributes' => [
         'class' => [
           'btn',
-          'mt-20'
+          'mt-20',
         ],
       ],
     ];
