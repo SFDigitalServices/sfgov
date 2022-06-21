@@ -125,6 +125,10 @@ jobs:
           command: ./.circleci/scripts/pantheon/04-merge-main
 
       - run:
+          name: import translations
+          command: ./scripts/custom/locale-import.sh
+
+      - run:
           name: clean up test fixtures
           command: ./.circleci/scripts/pantheon/09-cleanup-fixtures
 
