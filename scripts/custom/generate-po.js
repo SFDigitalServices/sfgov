@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 /* eslint-disable no-console, no-magic-numbers */
-const { dirname, extname, join } = require('path')
+const { dirname, basename, join } = require('path')
 const { readFileSync, writeFileSync } = require('fs')
 
-if (process.argv.includes('--help') || process.argv.length < 4) {
-  const script = process.argv[1]
-  die(`
-Usage:
+if (process.argv.includes('--help') || process.argv.length < 3) {
+  const script = process.argv[1].replace(`${process.cwd()}/`, '')
+  die(`Usage:
 
   cat <tab-separated-input> | ${script} <basename>
 
 Where <tab-separated-input> is tab-separated text (e.g. copied from Excel or Google Sheets)
 in the following form:
 
-  en     \tes     \tzh     \tfil
+  en     \tes     \tzh-hant\tfil
   English\tSpanish\tChinese\tFilipino
 
 In other words:
 - Each row is a string to be translated
 - Each column is a language identified by its language code in the header
 
-This script generates a gettext .po file for each language named:
+This script generates a gettext .po file for each language at:
 
   <basename>.<lang>.po
 
@@ -48,7 +47,7 @@ const lines = readFileSync('/dev/stdin', 'utf8')
   .filter(Boolean)
 
 if (lines.length < 2) {
-  die('You must provide at least two lines of tab-sepatated input')
+  die('You must provide at least two lines of tab-separated input')
 }
 
 const columns = lines.shift().split(TAB)
@@ -75,10 +74,10 @@ for (const { en, ...rest } of translations) {
 }
 
 const dir = dirname(base)
-const basename = extname(base)
+const filebase = basename(base)
 for (const [lang, strings] of Object.entries(entriesByLang)) {
-  const path = join(dir, `${basename}.${lang}.po`)
-  const header = `# ${lang} translations for ${description || basename}
+  const path = join(dir, `${filebase}.${lang}.po`)
+  const header = `# ${lang} translations for ${description || filebase}
 #
 msgid ""
 msgstr ""
@@ -89,6 +88,7 @@ msgstr ""
   const entries = Object.entries(strings).map(([id, str]) => {
     return `msgid ${JSON.stringify(id)}\nmsgstr ${JSON.stringify(str)}`
   })
+  console.warn('writing %d entries to', entries.length, path)
   writeFileSync(path, `${header}\n\n${entries.join('\n\n')}`)
 }
 
