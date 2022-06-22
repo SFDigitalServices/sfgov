@@ -10,5 +10,5 @@ for file in $files; do
   ext="${file##*.}"
   # remove the .po suffix; what's left should be the language code
   lang="${ext/.po/}"
-  terminus -n drush "$target_env" -- locale:import --type=customized --override=none "$lang" "$file"
+  terminus -n drush "$target_env" -- locale:import --type=customized --override=none "$lang" "/code/$file"
 done
