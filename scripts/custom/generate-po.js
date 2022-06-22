@@ -7,8 +7,8 @@ if (process.argv.includes('--help') || process.argv.length < 4) {
   const script = process.argv[1]
   die(`
 Usage:
-  cat <tab-separated-input> | \\
-  ${script} <basename>
+
+  cat <tab-separated-input> | ${script} <basename>
 
 Where <tab-separated-input> is tab-separated text (e.g. copied from Excel or Google Sheets)
 in the following form:
