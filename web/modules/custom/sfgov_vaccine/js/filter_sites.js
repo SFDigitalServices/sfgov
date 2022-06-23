@@ -295,8 +295,8 @@
 
       function inCityBounds ({ lat, lng }) {
         return (
-          lng < -122.93 || lng > -121.54 ||
-          lat < 37.0000 || lat > 38.0200
+          (lng > -122.93 || lng < -121.54) &&
+          (lat > 37.0000 || lat < 38.0200)
         )
       }
     }
