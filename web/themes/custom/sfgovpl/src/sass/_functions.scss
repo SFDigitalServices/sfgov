@@ -1,6 +1,8 @@
 /* purgecss start ignore */
+@use "sass:math";
+
 @function px-to-rem($px-number) {
-  @return ($px-number * 1rem) / $base-font-size;
+  @return math.div($px-number * 1rem, $base-font-size);
 }
 
 /// Remove the unit of a length
@@ -8,7 +10,7 @@
 /// @return {Number} - Unitless number
 @function strip-unit($number) {
   @if type-of($number) == 'number' and not unitless($number) {
-    @return $number / ($number * 0 + 1);
+    @return math.div($number, $number * 0 + 1);
   }
 
   @return $number;
