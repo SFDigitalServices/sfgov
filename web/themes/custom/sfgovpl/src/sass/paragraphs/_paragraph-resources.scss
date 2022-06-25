@@ -11,15 +11,31 @@
     .__title {
       @include fs-title-4;
       padding: 0;
+      margin: 0 0 1rem;
+      font-size: 24px;
       font-weight: 400;
-      margin: 0 0 20px 0;
+      line-height: 36px;
       @include media-max($medium-screen) {
+        margin: 0 0 1rem;
+        font-weight: 400;
+      }
+      @include media-max($mobile-screen) {
         margin: 0;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 27px;
+      }
+    }
+    details {
+      @include media-max($mobile-screen) {
+        margin: 15px 0 5px;
       }
     }
     @include media-max($medium-screen) {
       margin-bottom: 0;
     }
+
+
   }
 }
 
@@ -27,6 +43,9 @@
 .page-node-type-campaign {
   .sfgov-container-two-column,
   .sfgov-container-three-column {
+    @include media-max($mobile-screen) {
+      margin-top: -15px;
+    }
     a {
       max-width: 100%;
       .field--type-text-long {
