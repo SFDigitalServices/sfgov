@@ -330,7 +330,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: date
-          order: DESC
+          order: ASC
           expose:
             label: ''
             field_identifier: ''
@@ -628,7 +628,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: date
-          order: DESC
+          order: ASC
           expose:
             label: ''
             field_identifier: ''
@@ -922,15 +922,15 @@ display:
           offset: 0
           items_per_page: 3
       sorts:
-        field_start_date_value:
-          id: field_start_date_value
-          table: node__field_start_date
-          field: field_start_date_value
+        field_smart_date_value:
+          id: field_smart_date_value
+          table: node__field_smart_date
+          field: field_smart_date_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: datetime
-          order: DESC
+          plugin_id: date
+          order: ASC
           expose:
             label: ''
             field_identifier: ''
@@ -2002,23 +2002,23 @@ display:
           exposed: false
           granularity: second
       arguments:
-        title:
-          id: title
+        nid:
+          id: nid
           table: node_field_data
-          field: title
+          field: nid
           relationship: field_topics
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: title
-          plugin_id: string
+          entity_field: nid
+          plugin_id: node_nid
           default_action: empty
           exception:
             value: all
             title_enable: false
             title: All
           title_enable: true
-          title: 'Events: {{ arguments.title }}'
+          title: 'Events: {{ arguments.nid }}'
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -2037,12 +2037,8 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          glossary: false
-          limit: 0
-          case: ucwords
-          path_case: lower
-          transform_dash: true
           break_phrase: false
+          not: false
       filters:
         status:
           id: status
@@ -2230,6 +2226,7 @@ display:
         empty: false
         title: false
         pager: false
+        group_by: false
         style: false
         row: false
         relationships: false
@@ -2249,6 +2246,7 @@ display:
           admin_label: 'field_topics: Content'
           plugin_id: standard
           required: true
+      group_by: true
       display_description: 'A listing of upcoming events filtered by topic'
       header:
         entity_node:
@@ -2402,23 +2400,23 @@ display:
           exposed: false
           granularity: second
       arguments:
-        title:
-          id: title
+        nid:
+          id: nid
           table: node_field_data
-          field: title
+          field: nid
           relationship: field_departments
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: title
-          plugin_id: string
+          entity_field: nid
+          plugin_id: node_nid
           default_action: empty
           exception:
             value: all
             title_enable: false
             title: All
           title_enable: true
-          title: 'Events: {{ arguments.title }}'
+          title: 'Events: {{ arguments.nid }}'
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -2437,12 +2435,8 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          glossary: false
-          limit: 0
-          case: ucwords
-          path_case: lower
-          transform_dash: true
           break_phrase: false
+          not: false
       filters:
         status:
           id: status
@@ -2630,6 +2624,7 @@ display:
         empty: false
         title: false
         pager: false
+        group_by: false
         style: false
         row: false
         relationships: false
@@ -2649,6 +2644,7 @@ display:
           admin_label: 'field_departments: Content'
           plugin_id: standard
           required: false
+      group_by: true
       display_description: 'A listing of upcoming events filtered by departments'
       header:
         entity_node:
@@ -2905,23 +2901,23 @@ display:
           exposed: false
           granularity: second
       arguments:
-        title:
-          id: title
+        nid:
+          id: nid
           table: node_field_data
-          field: title
+          field: nid
           relationship: field_topics
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: title
-          plugin_id: string
+          entity_field: nid
+          plugin_id: node_nid
           default_action: empty
           exception:
             value: all
             title_enable: false
             title: All
           title_enable: true
-          title: 'Events: {{ arguments.title }}'
+          title: 'Events: {{ arguments.nid }}'
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -2940,12 +2936,8 @@ display:
             type: none
             fail: empty
           validate_options: {  }
-          glossary: false
-          limit: 0
-          case: ucwords
-          path_case: lower
-          transform_dash: true
           break_phrase: false
+          not: false
       filters:
         status:
           id: status
@@ -3086,6 +3078,7 @@ display:
       defaults:
         empty: false
         pager: false
+        group_by: false
         style: false
         row: false
         relationships: false
@@ -3106,6 +3099,7 @@ display:
           admin_label: 'field_topics: Content'
           plugin_id: standard
           required: false
+      group_by: true
       display_description: 'A listing of past events filtered by topics'
       header:
         entity_node:
@@ -3403,6 +3397,43 @@ display:
           path_case: lower
           transform_dash: true
           break_phrase: false
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: node_nid
+          default_action: empty
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: 'Events: {{ arguments.nid }}'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: empty
+          validate_options: {  }
+          break_phrase: false
+          not: false
       filters:
         status:
           id: status
@@ -3543,6 +3574,7 @@ display:
       defaults:
         empty: false
         pager: false
+        group_by: false
         style: false
         row: false
         relationships: false
@@ -3563,6 +3595,7 @@ display:
           admin_label: 'field_departments: Content'
           plugin_id: standard
           required: false
+      group_by: true
       display_description: 'A listing of past events filtered by department'
       header:
         entity_node:
