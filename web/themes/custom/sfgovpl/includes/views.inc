@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Url;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\views\Views;
 use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
@@ -54,9 +55,14 @@ function sfgovpl_preprocess_views_view__news__page_2(&$variables) {
  * Implements hook_preprocess_views_view()
  *
  * Adds a twig template variable for upcoming events
+ *
+ * @param $variables
+ * @param $display_id
  */
-function sfgovpl_preprocess_views_view__events__block(&$variables) {
+function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) {
   $view = $variables['view'];
+  $view_id = $view->id();
+
   $options = [
     'attributes' => [
       'target' => "_blank"
@@ -68,23 +74,77 @@ function sfgovpl_preprocess_views_view__events__block(&$variables) {
   // label processed and set as the argument.
   if (!empty($view->args[0])) {
     $node_manager = Drupal::entityTypeManager()->getStorage('node');
-    $department_id = $view->args[0];
-    if ($node = $node_manager->load($department_id)) {
+    if ($node = $node_manager->load($view->args[0])) {
 
-      // Start by setting the link to go to upcoming department events.
-      $view_id = 'view.events.page_4';
-      $options['attributes']['title'] = t('View upcoming events for @department', ['@department' => $node->label()]);
+      // Get some managers ready for later use.
+      $path_alias_manager = \Drupal::entityTypeManager()
+        ->getStorage('path_alias');
+      $view_manager = \Drupal::entityTypeManager()->getStorage('view');
+      $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-      // Change to the upcoming topic events if the contextual node is a topic.
+      // The the title and machine/url friendly version of the title for the
+      // topic or department we are going to link to.
+      $title = $node->label();
+      $url_friendly_title = \Drupal::service('pathauto.alias_cleaner')
+        ->cleanString($title);
+
+      // Start by setting the ids of the upcoming and past department events.
+      $upcoming_display_id = 'page_4';
+      $past_display_id = 'page_6';
+      $options['attributes']['title'] = t('View upcoming events for @department', ['@department' => $title]);
+
+      // Change to the upcoming and past topic events if the contextual node
+      // is a topic.
       if ($node->bundle() == 'topic') {
-        $view_id = 'view.events.page_3';
-        $options['attributes']['title'] = t('View upcoming events for the topic of @topic', ['@topic' => $node->label()]);
+        $upcoming_display_id = 'page_3';
+        $past_display_id = 'page_5';
+        $options['attributes']['title'] = t('View upcoming events for the topic of @topic', ['@topic' => $title]);
       }
 
-      // Generate the link to the contextually filtered view. We have to use the
-      // ID of the topic or department. The title can't handle certain characters
-      // when trying to process the filter.
-      $variables['more']['#url'] = Url::fromRoute($view_id, ['node' => $node->id()], $options);
+      // Get information about the view page that we are wanting to link to.
+      // This could be either upcoming or past events page displays for topics
+      // or departments. We run through both upcoming and past to make sure that
+      // those aliases are in place.
+      foreach ([$upcoming_display_id, $past_display_id] as $display_id) {
+        // Get the information of the upcoming and past displays.
+        $event_view = $view_manager->load($view_id)
+          ->getExecutable();
+        $event_view->initDisplay();
+        $event_view->setDisplay($display_id);
+        $event_view->execute();
+
+        // Generate a system url to the contextually filtered view. We have to
+        // use the ID of the topic or department. The title can't handle certain
+        // characters when trying to process the filter.
+        $url = Url::fromRoute("view.$view_id.$display_id", ['node' => $node->id()], $options);
+        // Numeric ID based path. (example: /events/topics/25)
+        $internal_path = '/' . $url->getInternalPath();
+        // Human friendly based path. (example: /events/topics/immigrants)
+        $generated_path = '/' . str_replace('%node', $url_friendly_title, $event_view->getPath());
+
+        // Determine if an alias exists for the View generated URL.
+        $alias_objects = $path_alias_manager->loadByProperties([
+          'path' => $internal_path,
+          'langcode' => $language,
+        ]);
+
+        // If no alias exists for the internal path and the language, create a
+        // human friendly alias for our no so human friendly path
+        // (Example: /events/topics/25 -> /events/topics/immigrants)
+        if (empty($alias_objects)) {
+          $path_alias = PathAlias::create([
+            'path' => $internal_path,
+            'alias' => $generated_path,
+            'langcode' => $language
+          ]);
+          $path_alias->save();
+        }
+      }
+
+      // Now If we have generated an alias, rebuild the url for the link so it can
+      // pick up the alias we just generated.
+      $redone_url = Url::fromRoute("view.$view_id.$upcoming_display_id", ['node' => $node->id()], $options);
+      $variables['more']['#url'] = $redone_url;
     }
   }
 }
