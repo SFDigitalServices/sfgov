@@ -69,22 +69,23 @@ function sfgovpl_preprocess_views_view__events__block(&$variables) {
   if (!empty($view->args[0])) {
     $node_manager = Drupal::entityTypeManager()->getStorage('node');
     $department_id = $view->args[0];
-    $node = $node_manager->load($department_id);
+    if ($node = $node_manager->load($department_id)) {
 
-    // Start by setting the link to go to upcoming department events.
-    $view_id = 'view.events.page_4';
-    $options['attributes']['title'] = t('View upcoming events for @department', ['@department' => $node->label()]);
+      // Start by setting the link to go to upcoming department events.
+      $view_id = 'view.events.page_4';
+      $options['attributes']['title'] = t('View upcoming events for @department', ['@department' => $node->label()]);
 
-    // Change to the upcoming topic events if the contextual node is a topic.
-    if ($node->bundle() == 'topic') {
-      $view_id = 'view.events.page_3';
-      $options['attributes']['title'] = t('View upcoming events for the topic of @topic', ['@topic' => $node->label()]);
+      // Change to the upcoming topic events if the contextual node is a topic.
+      if ($node->bundle() == 'topic') {
+        $view_id = 'view.events.page_3';
+        $options['attributes']['title'] = t('View upcoming events for the topic of @topic', ['@topic' => $node->label()]);
+      }
+
+      // Generate the link to the contextually filtered view. We have to use the
+      // ID of the topic or department. The title can't handle certain characters
+      // when trying to process the filter.
+      $variables['more']['#url'] = Url::fromRoute($view_id, ['node' => $node->id()], $options);
     }
-
-    // Generate the link to the contextually filtered view. We have to use the
-    // ID of the topic or department. The title can't handle certain characters
-    // when trying to process the filter.
-    $variables['more']['#url'] = Url::fromRoute($view_id, ['node' => $node->id()], $options);
   }
 }
 
