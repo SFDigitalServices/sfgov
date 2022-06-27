@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { danger, warn, fail } from 'danger'
 import { sync as globbySync } from 'globby'
 import { basename, join } from 'path'
@@ -17,19 +18,18 @@ if (!JIRA_REF_PATTERN.test(prDescription)) {
 
 checkTranslations('config/translations')
 
-function checkTranslations (cwd: string) {
-
+function checkTranslations (cwd) {
   const potFiles = globbySync('**/*.pot', { cwd })
   const poFiles = globbySync('**/*.po', { cwd })
-  const missingTemplates: string[] = []
+  const missingTemplates = []
 
   for (const poFile of poFiles) {
     const base = basename(poFile)
     const parts = base.split('.')
     const [lang] = parts.length > 2 ? parts.slice(-2) : []
     if (!lang) {
-      const possibleNames = translationLangs.map(lang => base.replace('.po', `.${lang}.po`))
-      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${list(possibleNames.map(code), ', or')}`)
+      const possibleNames = translationLangs.map(lang => `${base.replace('.po', `.${lang}.po`)} (${locales[lang]})`)
+      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${list(possibleNames.map(code), ', or ')}`)
     } else if (!translationLangs.includes(lang)) {
       fail(`Invalid language code ${code(lang)} in ${code(join(cwd, poFile))} (expected ${list(translationLangs.map(code), ', or ')})`)
     } else {
@@ -41,7 +41,7 @@ function checkTranslations (cwd: string) {
   }
 
   for (const potFile of missingTemplates) {
-    warn(`Missing English template ${code(potFile)} for ${code(potFile.replace('.pot', '.*.po'))}`)
+    warn(`Missing English template ${code(join(cwd, potFile))} for ${code(potFile.replace('.pot', '.*.po'))}`)
   }
 
   for (const potFile of potFiles) {
@@ -50,12 +50,12 @@ function checkTranslations (cwd: string) {
       .filter(({ path }) => !poFiles.includes(path))
     if (missingTranslations.length > 0) {
       const missingNames = missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`)
-      fail(`Missing translations for ${code(potFile)}: ${list(missingNames, ', and ')}`)
+      fail(`Missing translations for ${code(join(cwd, potFile))}: ${list(missingNames, ', and ')}`)
     }
   }
 }
 
-function list (parts: string[], lastGlue, glue = ', ') {
+function list (parts, lastGlue, glue = ', ') {
   const { length } = parts
   if (length < 2) return parts.join(glue)
   const last = length - 1
@@ -65,6 +65,6 @@ function list (parts: string[], lastGlue, glue = ', ') {
   }).join('')
 }
 
-function code (str: string) {
+function code (str) {
   return `\`${str}\``
 }
