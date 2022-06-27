@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: build assets
         run: npm run -ws build --if-present
-      - run: preactjs/compressed-size-action@v2
+      - uses: preactjs/compressed-size-action@v2
         with:
           pattern: '**/dist/**/*.{js,css}'
           exclude: '**/node_modules/**'
