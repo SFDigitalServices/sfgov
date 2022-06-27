@@ -683,9 +683,11 @@ function profile_page_fields($node) {
           if($deptId) {
             // Get department address id
             $dept_node =  \Drupal\node\Entity\Node::load(intval($deptId));
-            $addressId = $dept_node->get('field_address')->getValue() ? $dept_node->get('field_address')->getValue()[0]['target_id'] : null;
-            if($addressId) {
-              $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
+            if(!empty($dept_node)) {
+              $addressId = $dept_node->get('field_address')->getValue() ? $dept_node->get('field_address')->getValue()[0]['target_id'] : null;
+              if($addressId) {
+                $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
+              }
             }
           }
         }
