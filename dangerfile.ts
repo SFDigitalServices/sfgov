@@ -1,6 +1,6 @@
 import { danger, warn, fail } from 'danger'
 import { sync as globbySync } from 'globby'
-import { basename } from 'path'
+import { basename, extname } from 'path'
 import { locales } from './config/translations/locales.json'
 
 const MIN_PR_DESC_LENGTH = 50
@@ -25,16 +25,16 @@ function checkTranslations (cwd: string) {
 
   for (const poFile of poFiles) {
     const base = basename(poFile)
-    const parts = base.split('.')
-    const [lang] = parts.slice(-2)
+    const ext = extname(poFile).substring(1)
+    const [lang] = ext.split('.').slice(-2)
     if (!lang) {
-      fail(`Missing language code in .po filename: ${cwd}/${base} (should be ${parts.splice(-2, 0, translationLangs.join('|')).join('.')})`)
+      fail(`Missing language code in filename: \`${poFile}\` should be: \`${base}.(${translationLangs.join('|')}).po\`)`)
     } else if (!translationLangs.includes(lang)) {
-      fail(`Invalid language code in ${poFile}: "${lang}"; expected one of "${translationLangs.join('", "')}"`)
+      fail(`Invalid language code in ${poFile}: \`${lang}\`; expected one of \`${translationLangs.join('`, `')}\``)
     }
     const potFile = poFile.replace(/\.po$/, '.pot')
     if (!potFiles.includes(potFile) && !missingTemplates.has(potFile)) {
-      fail(`Missing English template ${potFile} to accompany ${cwd}/${parts.splice(-2, 0, '*').join('.')}`)
+      fail(`Missing English template \`${potFile}\` to accompany \`${poFile}\``)
       missingTemplates.add(potFile)
     }
   }
@@ -43,7 +43,7 @@ function checkTranslations (cwd: string) {
     for (const lang of translationLangs) {
       const poFile = potFile.replace(/\.pot$/, `.${lang}.po`)
       if (!poFiles.includes(poFile)) {
-        fail(`Missing ${locales[lang]} translation for ${potFile}: expected ${poFile}`)
+        fail(`Missing ${locales[lang]} translation for \`${potFile}\`: expected \`${poFile}\``)
       }
     }
   }
