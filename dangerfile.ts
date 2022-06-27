@@ -1,6 +1,6 @@
 import { danger, warn, fail } from 'danger'
 import { sync as globbySync } from 'globby'
-import { basename } from 'path'
+import { basename, join } from 'path'
 import { locales } from './config/translations/locales.json'
 
 const MIN_PR_DESC_LENGTH = 50
@@ -27,11 +27,11 @@ function checkTranslations (cwd: string) {
     const base = basename(poFile)
     const [lang] = base.split('.').slice(-2)
     if (!lang) {
-      fail(`Missing language code in filename: \`${poFile}\` should be: \`${base}.(${translationLangs.join('|')}).po\`)`)
+      fail(`Missing language code in filename: \`${join(cwd, poFile)}\` should be: \`${join(cwd, base)}.(${translationLangs.join('|')}).po\`)`)
     } else if (!translationLangs.includes(lang)) {
       fail(`Invalid language code in ${poFile}: \`${lang}\`; expected one of \`${translationLangs.join('`, `')}\``)
     }
-    const potFile = poFile.replace(/\.po$/, '.pot')
+    const potFile = poFile.replace(`.${lang}.po`, '.pot')
     if (!potFiles.includes(potFile) && !missingTemplates.includes(potFile)) {
       missingTemplates.push(potFile)
     }
