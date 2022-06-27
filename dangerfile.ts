@@ -28,9 +28,9 @@ function checkTranslations (cwd: string) {
     const parts = base.split('.')
     const [lang] = parts.length > 2 ? parts.slice(-2) : []
     if (!lang) {
-      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${code(`${base}.{${translationLangs.join(',')}}.po`)}`)
+      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${code(`${base.replace('.po', '')}.{${translationLangs.join(',')}}.po`)}`)
     } else if (!translationLangs.includes(lang)) {
-      fail(`Invalid language code "${lang}" in ${code(join(cwd, poFile))} (expected one of ${glue(translationLangs.map(code), ', ', ', or ')}`)
+      fail(`Invalid language code ${code(lang)} in ${code(join(cwd, poFile))} (expected one of ${glue(translationLangs.map(code), ', ', ', or ')})`)
     } else {
       const potFile = poFile.replace(lang ? `.${lang}.po` : '.po', '.pot')
       if (!potFiles.includes(potFile) && !missingTemplates.includes(potFile)) {
@@ -48,7 +48,7 @@ function checkTranslations (cwd: string) {
       .map(lang => ({ lang, path: potFile.replace(/\.pot$/, `.${lang}.po`) }))
       .filter(({ path }) => !poFiles.includes(path))
     if (missingTranslations.length > 0) {
-      fail(`Missing translations for ${code(potFile)}: ${glue(missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]}))`), ', ', ', and ')}`)
+      fail(`Missing translations for ${code(potFile)}: ${glue(missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`), ', ', ', and ')}`)
     }
   }
 }
