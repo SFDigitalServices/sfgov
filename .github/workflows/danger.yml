@@ -1,4 +1,4 @@
-name: danger
+name: checks
 on:
   pull_request:
     types:
@@ -6,14 +6,30 @@ on:
       - synchronize
 
 jobs:
-  danger:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+
+  danger:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
       - run: npm install
       - run: npx danger ci
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+  assets:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
+      - name: build assets
+        run: npm run -ws build --if-present
+      - run: preactjs/compressed-size-action@v2
+        with:
+          pattern: '**/dist/**/*.{js,css}'
+          exclude: '**/node_modules/**'
