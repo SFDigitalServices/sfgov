@@ -17,8 +17,6 @@ jobs:
       - run: npx danger ci
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: build assets
-        run: npm run -ws build --if-present
       - uses: preactjs/compressed-size-action@v2
         with:
           pattern: '**/dist/**/*.{js,css}'
