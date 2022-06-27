@@ -28,9 +28,10 @@ function checkTranslations (cwd: string) {
     const parts = base.split('.')
     const [lang] = parts.length > 2 ? parts.slice(-2) : []
     if (!lang) {
-      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${code(`${base.replace('.po', '')}.{${translationLangs.join(',')}}.po`)}`)
+      const possibleNames = translationLangs.map(lang => base.replace('.po', `.${lang}.po`))
+      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${list(possibleNames.map(code), ', or')}`)
     } else if (!translationLangs.includes(lang)) {
-      fail(`Invalid language code ${code(lang)} in ${code(join(cwd, poFile))} (expected one of ${glue(translationLangs.map(code), ', ', ', or ')})`)
+      fail(`Invalid language code ${code(lang)} in ${code(join(cwd, poFile))} (expected ${list(translationLangs.map(code), ', or ')})`)
     } else {
       const potFile = poFile.replace(lang ? `.${lang}.po` : '.po', '.pot')
       if (!potFiles.includes(potFile) && !missingTemplates.includes(potFile)) {
@@ -40,7 +41,7 @@ function checkTranslations (cwd: string) {
   }
 
   for (const potFile of missingTemplates) {
-    fail(`Missing English template ${code(potFile)} for ${code(potFile.replace('.pot', '.*.po'))}`)
+    warn(`Missing English template ${code(potFile)} for ${code(potFile.replace('.pot', '.*.po'))}`)
   }
 
   for (const potFile of potFiles) {
@@ -48,12 +49,13 @@ function checkTranslations (cwd: string) {
       .map(lang => ({ lang, path: potFile.replace(/\.pot$/, `.${lang}.po`) }))
       .filter(({ path }) => !poFiles.includes(path))
     if (missingTranslations.length > 0) {
-      fail(`Missing translations for ${code(potFile)}: ${glue(missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`), ', ', ', and ')}`)
+      const missingNames = missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`)
+      fail(`Missing translations for ${code(potFile)}: ${list(missingNames, ', and ')}`)
     }
   }
 }
 
-function glue (parts: string[], glue, lastGlue = glue) {
+function list (parts: string[], lastGlue, glue = ', ') {
   const { length } = parts
   if (length < 2) return parts.join(glue)
   const last = length - 1
