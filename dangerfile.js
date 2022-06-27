@@ -1,8 +1,8 @@
 /* eslint-disable no-magic-numbers */
-import { danger, warn, fail } from 'danger'
-import { sync as globbySync } from 'globby'
-import { basename, join } from 'path'
-import { locales } from './config/translations/locales.json'
+const { danger, warn, fail } = require('danger')
+const { sync: globbySync } = require('globby')
+const { basename, join } = require('path')
+const { locales } = require('./config/translations/locales.json')
 
 const MIN_PR_DESC_LENGTH = 50
 const JIRA_REF_PATTERN = /\b[A-Z]+-\d+\b/
@@ -29,9 +29,9 @@ function checkTranslations (cwd) {
     const [lang] = parts.length > 2 ? parts.slice(-2) : []
     if (!lang) {
       const possibleNames = translationLangs.map(lang => `${base.replace('.po', `.${lang}.po`)} (${locales[lang]})`)
-      fail(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${list(possibleNames.map(code), ', or ')}`)
+      warn(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${list(possibleNames.map(code), ', or ')}`)
     } else if (!translationLangs.includes(lang)) {
-      fail(`Invalid language code ${code(lang)} in ${code(join(cwd, poFile))} (expected ${list(translationLangs.map(code), ', or ')})`)
+      warn(`Unexpected language code ${code(lang)} in ${code(join(cwd, poFile))} (expected ${list(translationLangs.map(code), ', or ')})`)
     } else {
       const potFile = poFile.replace(lang ? `.${lang}.po` : '.po', '.pot')
       if (!potFiles.includes(potFile) && !missingTemplates.includes(potFile)) {
@@ -50,7 +50,7 @@ function checkTranslations (cwd) {
       .filter(({ path }) => !poFiles.includes(path))
     if (missingTranslations.length > 0) {
       const missingNames = missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`)
-      fail(`Missing translations for ${code(join(cwd, potFile))}: ${list(missingNames, ', and ')}`)
+      warn(`Missing translations for ${code(join(cwd, potFile))}: ${list(missingNames, ', and ')}`)
     }
   }
 }
