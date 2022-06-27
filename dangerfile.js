@@ -42,7 +42,7 @@ function checkTranslations (cwd) {
   }
 
   for (const potFile of missingTemplates) {
-    warn(`Missing English template ${code(join(cwd, potFile))} for ${code(potFile.replace('.pot', '.*.po'))}`)
+    warn(`Missing English template ${code(join(cwd, potFile))} for ${code(join(cwd, potFile.replace('.pot', '.*.po')))}`)
   }
 
   for (const potFile of potFiles) {
