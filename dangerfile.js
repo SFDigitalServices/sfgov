@@ -49,12 +49,13 @@ function checkTranslations (cwd) {
     const missingTranslations = translationLangs
       .map(lang => ({
         lang,
-        path: join(cwd, potFile.replace(/\.pot$/, `.${lang}.po`))
+        path: potFile.replace(/\.pot$/, `.${lang}.po`)
       }))
       .filter(file => !poFiles.includes(file.path))
     if (missingTranslations.length > 0) {
-      const missingNames = missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`)
-      warn(`Missing translations for ${code(join(cwd, potFile))}: ${list(missingNames, ', and ')}`)
+      const missingNames = missingTranslations.map(({ lang, path }) => `${code(join(cwd, path))} (${locales[lang]})`)
+      const path = join(cwd, potFile)
+      warn(`Missing translations for ${code(path)}: ${list(missingNames, ', and ')}`, path)
     }
   }
 }
