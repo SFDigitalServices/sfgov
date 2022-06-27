@@ -25,7 +25,8 @@ function checkTranslations (cwd: string) {
 
   for (const poFile of poFiles) {
     const base = basename(poFile)
-    const [lang] = base.split('.').slice(-2)
+    const parts = base.split('.')
+    const [lang] = parts.length >= 2 ? parts.slice(-2) : []
     if (!lang) {
       fail(`Missing language code in filename: \`${join(cwd, poFile)}\` should be: \`${join(cwd, base)}.(${translationLangs.join('|')}).po\`)`)
     } else if (!translationLangs.includes(lang)) {
