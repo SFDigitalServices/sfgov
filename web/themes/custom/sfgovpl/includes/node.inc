@@ -463,13 +463,15 @@ function public_body_page_fields($node) {
             $url = '';
             if($otherInfoContent->getType() == 'resource_entity') {
               $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
-              /** @var \Drupal\eck\Entity\EckEntity $resource */
-              $resource = $resource_storage->load($otherInfoContent->get('field_resource')[0]->target_id);
-              $url = $resource->get('field_url')->uri ?? '';
-              $title = $resource->get('title')->value;
-              $description = $resource->get('field_description')
-                ? $resource->field_description->value
-                : render($resource->get('field_description')->value);
+              if(!empty($otherInfoContent->get('field_resource')->getValue())) {
+                /** @var \Drupal\eck\Entity\EckEntity $resource */
+                $resource = $resource_storage->load($otherInfoContent->get('field_resource')[0]->target_id);
+                $url = $resource->get('field_url')->uri ?? '';
+                $title = $resource->get('title')->value;
+                $description = $resource->get('field_description')
+                  ? $resource->field_description->value
+                  : render($resource->get('field_description')->value);
+              }
             } else if($otherInfoContent->getType() == 'resource_node') {
               $node_storage = \Drupal::entityTypeManager()->getStorage('node');
               if(!empty($otherInfoContent->get('field_node')->getValue())) {
@@ -489,7 +491,7 @@ function public_body_page_fields($node) {
               $description = $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL;
               $url = $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL;
             }
-            
+
             if(!empty($title)) {
               $theFields['other_info'][$otherInfoKey]['content'][] = [
                 'id' => $id,
