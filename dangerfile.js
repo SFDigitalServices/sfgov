@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-const { danger, warn, fail } = require('danger')
+const { danger, warn } = require('danger')
 const { sync: globbySync } = require('globby')
 const { basename, join } = require('path')
 const { locales } = require('./config/translations/locales.json')
@@ -24,14 +24,15 @@ function checkTranslations (cwd) {
   const missingTemplates = []
 
   for (const poFile of poFiles) {
+    const path = join(cwd, poFile)
     const base = basename(poFile)
     const parts = base.split('.')
     const [lang] = parts.length > 2 ? parts.slice(-2) : []
     if (!lang) {
-      const possibleNames = translationLangs.map(lang => `${base.replace('.po', `.${lang}.po`)} (${locales[lang]})`)
-      warn(`Missing language code in filename: ${code(join(cwd, poFile))} should be named ${list(possibleNames.map(code), ', or ')}`)
+      const possibleNames = translationLangs.map(lang => `${code(base.replace('.po', `.${lang}.po`))} (${locales[lang]})`)
+      warn(`Missing language code in filename (should be named ${list(possibleNames, ', or ')})`, path)
     } else if (!translationLangs.includes(lang)) {
-      warn(`Unexpected language code ${code(lang)} in ${code(join(cwd, poFile))} (expected ${list(translationLangs.map(code), ', or ')})`)
+      warn(`Unexpected language code ${code(lang)} (expected ${list(translationLangs.map(code), ', or ')})`, path)
     } else {
       const potFile = poFile.replace(lang ? `.${lang}.po` : '.po', '.pot')
       if (!potFiles.includes(potFile) && !missingTemplates.includes(potFile)) {
@@ -46,8 +47,11 @@ function checkTranslations (cwd) {
 
   for (const potFile of potFiles) {
     const missingTranslations = translationLangs
-      .map(lang => ({ lang, path: potFile.replace(/\.pot$/, `.${lang}.po`) }))
-      .filter(({ path }) => !poFiles.includes(path))
+      .map(lang => ({
+        lang,
+        path: join(cwd, potFile.replace(/\.pot$/, `.${lang}.po`))
+      }))
+      .filter(file => !poFiles.includes(file.path))
     if (missingTranslations.length > 0) {
       const missingNames = missingTranslations.map(({ lang, path }) => `${code(path)} (${locales[lang]})`)
       warn(`Missing translations for ${code(join(cwd, potFile))}: ${list(missingNames, ', and ')}`)
