@@ -1,5 +1,5 @@
 import { danger, warn, fail } from 'danger'
-import { globbySync } from 'globby'
+import { sync as globbySync } from 'globby'
 import { basename } from 'path'
 import { locales } from './config/translations/locales.json'
 
