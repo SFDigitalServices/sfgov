@@ -463,36 +463,43 @@ function public_body_page_fields($node) {
             $url = '';
             if($otherInfoContent->getType() == 'resource_entity') {
               $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
-              /** @var \Drupal\eck\Entity\EckEntity $resource */
-              $resource = $resource_storage->load($otherInfoContent->get('field_resource')[0]->target_id);
-              $url = $resource->get('field_url')->uri ?? '';
-              $title = $resource->get('title')->value;
-              $description = $resource->get('field_description')
-                ? $resource->field_description->value
-                : render($resource->get('field_description')->value);
+              if(!empty($otherInfoContent->get('field_resource')->getValue())) {
+                /** @var \Drupal\eck\Entity\EckEntity $resource */
+                $resource = $resource_storage->load($otherInfoContent->get('field_resource')[0]->target_id);
+                $url = $resource->get('field_url')->uri ?? '';
+                $title = $resource->get('title')->value;
+                $description = $resource->get('field_description')
+                  ? $resource->field_description->value
+                  : render($resource->get('field_description')->value);
+              }
             } else if($otherInfoContent->getType() == 'resource_node') {
               $node_storage = \Drupal::entityTypeManager()->getStorage('node');
-              /** @var \Drupal\node\Entity\Node $node */
-              $node = $node_storage->load($otherInfoContent->get('field_node')[0]->target_id);
-              $id = $node->id();
-              $description = '';
-              if($node->hasField('field_description')) {
-                $description = $node->get('field_description') ? $node->field_description->value : render($node->get('field_description')->value);
+              if(!empty($otherInfoContent->get('field_node')->getValue())) {
+                /** @var \Drupal\node\Entity\Node $node */
+                $node = $node_storage->load($otherInfoContent->get('field_node')[0]->target_id);
+                $id = $node->id();
+                $description = '';
+                if($node->hasField('field_description')) {
+                  $description = $node->get('field_description') ? $node->field_description->value : render($node->get('field_description')->value);
+                }
+                $title = $node->getTitle();
+                $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
               }
-              $title = $node->getTitle();
-              $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
             } else {
               $id = $otherInfoContent->id();
               $title = $otherInfoContent->field_title->value;
               $description = $otherInfoContent->field_description ? $otherInfoContent->field_description->value : NULL;
               $url = $otherInfoContent->field_link->uri ? Url::fromUri($otherInfoContent->field_link->uri)->toString() : NULL;
             }
-            $theFields['other_info'][$otherInfoKey]['content'][] = [
-              'id' => $id,
-              'title' => $title,
-              'description' => $description,
-              'url' => $url,
-            ];
+
+            if(!empty($title)) {
+              $theFields['other_info'][$otherInfoKey]['content'][] = [
+                'id' => $id,
+                'title' => $title,
+                'description' => $description,
+                'url' => $url,
+              ];
+            }
           }
           break;
         case 'other_info_document':
@@ -683,9 +690,11 @@ function profile_page_fields($node) {
           if($deptId) {
             // Get department address id
             $dept_node =  \Drupal\node\Entity\Node::load(intval($deptId));
-            $addressId = $dept_node->get('field_address')->getValue() ? $dept_node->get('field_address')->getValue()[0]['target_id'] : null;
-            if($addressId) {
-              $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
+            if(!empty($dept_node)) {
+              $addressId = $dept_node->get('field_address')->getValue() ? $dept_node->get('field_address')->getValue()[0]['target_id'] : null;
+              if($addressId) {
+                $addressEntity = \Drupal::entityTypeManager()->getStorage('location')->load($addressId);
+              }
             }
           }
         }

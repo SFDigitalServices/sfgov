@@ -1,8 +1,7 @@
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 defaults: &defaults
   docker:
-    # TODO: use "build-tools-ci:6.x" when we're on Node 16.x
-    - image: quay.io/pantheon-public/build-tools-ci@sha256:ea1a5b8486b80b431bf82861e0402a3f4bd37dc0e913da16f2a35c89e88857b5
+    - image: quay.io/pantheon-public/build-tools-ci@sha256:2cebe0db5c0cf5682ad14fa28550435a402425d2c9ef3c000e343db62ad93fde
   working_directory: ~/example_drops_8_composer
   environment:
     #=========================================================================
@@ -124,6 +123,10 @@ jobs:
       - run:
           name: handle merge to main (if needed)
           command: ./.circleci/scripts/pantheon/04-merge-main
+
+      - run:
+          name: import translations
+          command: ./scripts/custom/locale-import.sh
 
       - run:
           name: clean up test fixtures

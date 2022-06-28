@@ -54,7 +54,7 @@
 
 {% if author %}
   <{{ tag }}{{ attributes.addClass(classes) }}>
-    <span class="media-caption__name">
+    <span class="media-caption__name text-grey-dark">
       {% if name %}
         &ldquo;{{- name|trim -}}&rdquo;
       {% else %}
@@ -62,16 +62,16 @@
       {% endif %}
     </span>
 
-    <span class="media-caption__author">
+    <span class="media-caption__author text-grey-dark">
       {%- if author and url -%}
-        {{- 'by'|t }} <a href="{{ url }}" rel="noopener" target="_blank">{{- author|trim -}}</a>
+        {{- 'by'|t }} <a class="text-grey-dark" href="{{ url }}" rel="noopener" target="_blank">{{- author|trim -}}</a>
       {%- else -%}
         {{- 'by'|t }} {{ author|trim -}}
       {%- endif -%}
     </span>
 
     {%- if license -%}
-      <span class="media-caption__license">, {{ license|trim -}}</span>
+      <span class="media-caption__license text-grey-dark">, {{ license|trim -}}</span>
     {%- endif -%}
   </{{ tag }}>
 {% endif %}

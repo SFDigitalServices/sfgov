@@ -1,4 +1,6 @@
 /* purgecss start ignore */
+@use "sass:math";
+
 @mixin ankle($field-element){
   padding-bottom: 60px;
   padding-top: 41px;
@@ -135,7 +137,7 @@
     padding: 40px;
     margin: -5px 0 40px 0;
     // Equals 349px at max width, but uses % for better responsiveness.
-    width: ((strip-unit($w-news-sidebar)) / (strip-unit($w-news-body-content))) * 100%;
+    width: math.div(strip-unit($w-news-sidebar), strip-unit($w-news-body-content)) * 100%;
   }
 
   p {
@@ -385,6 +387,7 @@
 
 @mixin focus-outline {
   outline: 2px dotted #aeb0b5;
+  outline-offset: 3px;
 }
 
 // visually-hidden
