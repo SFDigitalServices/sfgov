@@ -1,15 +1,14 @@
 <?php
 
-use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
+use Drupal\sfgov_utilities\Migration\ResourceMigration\ResourceMigration;
 
 $rm = new ResourceMigration();
 $rm->setDryRun(false);
 
-// $rm->migrateAboutAndPublicBodyResources();
-// $rm->migrateCampaignResources();
-// $rm->migrateTopicsAndDepartments();
-// $rm->migrateResourceCollections();
-
+$rm->migrateAboutAndPublicBodyResources();
+$rm->migrateCampaignResources();
+$rm->migrateResourceCollections();
+$rm->migrateTopicsAndDepartments();
 $rm->migrateTopicsAndDepartmentsResourceSubheading();
 
 // echo "\/***** verify migration report *****\/\n\n";

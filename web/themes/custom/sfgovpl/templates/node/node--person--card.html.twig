@@ -15,10 +15,10 @@
   {% block body %}
     {% include '@theme/person-card.twig' with {
       "url": url,
-      "first_name": node.field_first_name.value,
-      "last_name": node.field_last_name.value,
-      "position_title": node.field_title.value,
-      "position_subtitle": node.field_sub_title.value,
+      "first_name": node.field_first_name.value|default(''),
+      "last_name": node.field_last_name.value|default(''),
+      "position_title": node.field_title.value|default(''),
+      "position_subtitle": node.field_sub_title.value|default(''),
       "photo": photo_url
     } %}
   {% endblock body %}

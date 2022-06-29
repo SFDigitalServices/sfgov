@@ -4,7 +4,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
 use \Drupal\media\entity\Media;
 use Drupal\sfgov_utilities\Utility;
-use Drupal\sfgov_utilities\ResourceMigration\ResourceMigration;
+use Drupal\sfgov_utilities\Migration\ResourceMigration\ResourceMigration;
 use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
 
 /**
@@ -353,8 +353,19 @@ function sfgov_utilities_deploy_06_field_dept_migration() {
   }  
 }
 
-// migrate old field_transactions to better field_related_content on transaction content type
-function sfgov_utilities_deploy_07_field_transactions_migration() {
+/* migrate draft content with old resources to new resources */
+function sfgov_utilities_deploy_07_field_dept_migration() {
+  $rm = new ResourceMigration();
+  
+  $rm->migrateAboutAndPublicBodyResources();
+  $rm->migrateCampaignResources();
+  $rm->migrateResourceCollections();
+  $rm->migrateTopicsAndDepartments();
+  $rm->migrateTopicsAndDepartmentsResourceSubheading();
+}
+
+/* migrate old field_transactions to better field_related_content on transaction content type */
+function sfgov_utilities_deploy_08_field_transactions_migration() {
   try {
     $transactionNodes = Utility::getNodes('transaction');
     $relatedServicesFieldMigration = new TopLevelFieldMigration();

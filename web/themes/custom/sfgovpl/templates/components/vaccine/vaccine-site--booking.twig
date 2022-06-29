@@ -60,14 +60,11 @@
 {% set block_booking_link %}
   {% if result.booking.url %}
     <div {{ btn_attributes.addClass(btn_classes) }}>
-      <a class="btn" href="{{ result.booking.url }}">{{ btn_text }}</a>
+      <a class="btn btn-block lg:inline-flex lg:w-auto" href="{{ result.booking.url }}">{{ btn_text }}</a>
     </div>
   {% endif %}
   {% if result.booking.phone %}
-    <div class="vaccine-site__phone {{
-      result.available == 'no'
-        ? 'box-item-indented'
-      }}">
+    <div class="vaccine-site__phone text-center lg:text-left {{ result.available == 'no' ? 'box-item-indented' }}">
       {{ template_strings.result.phone.label|t }}
       <a href="tel:{{ result.booking.phone }}">{{ result.booking.phone }}</a>
     </div>
@@ -75,7 +72,15 @@
 {% endset %}
 
 {# Render box. #}
-<div {{ booking_box_attributes.addClass(booking_box_classes) }}>
+<div {{
+  booking_box_attributes
+    .addClass(booking_box_classes)
+    .addClass([
+      'bg-blue-1',
+      'p-20', 'md:p-40',
+      'mt-40', 'space-y-16'
+    ])
+}}>
   {% if fancy == true %}
     <div {{ field_attributes.addClass(field_classes) }}>
       <strong>

@@ -7,9 +7,8 @@ module.exports = {
     require('postcss-import')({
       filter: path => path.endsWith('.css')
     }),
-    require('postcss-node-sass')({
-      sass: require('node-sass'),
-      outputStyle: 'nested'
+    require('@csstools/postcss-sass')({
+      outputStyle: 'expanded'
     }),
     require('@fullhuman/postcss-purgecss')(purgeConfig),
     require('autoprefixer'),
