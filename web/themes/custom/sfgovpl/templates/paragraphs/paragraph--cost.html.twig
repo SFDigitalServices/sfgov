@@ -53,22 +53,22 @@
       {% endblock title %}
       {% if cost_type == 'free' %}
         {% block costfree %}
-          <div>{{ content.field_cost_type }}</div>
+          <div>{{ paragraph.field_cost_type.0.value|capitalize ~ '.' }}</div>
         {% endblock costfree %}
       {% endif %}
       {% if cost_type == 'flat' %}
         {% block costflat %}
-          {{ content.field_cost_flat_fee }}
+          {{ '$' ~ paragraph.field_cost_flat_fee.0.value ~ '.' }}
         {% endblock costflat %}
       {% endif %}
       {% if cost_type == 'minimum' and content.field_cost_minimum|render %}
         {% block costmin %}
-          {{ content.field_cost_minimum }} {{ ' and up'|t }}
+          {{ content.field_cost_minimum }} {{ ' and up.'|t }}
         {% endblock costmin %}
       {% endif %}
       {% if cost_type == 'range' and content.field_cost_minimum|render and content.field_cost_maximum|render %}
         <div class="inline-flex">
-          {{ content.field_cost_minimum }} - {{ content.field_cost_maximum }}
+          {{ '$' ~ paragraph.field_cost_minimum.0.value ~ ' to  $' ~ paragraph.field_cost_maximum.0.value ~ '.' }}
         </div>
       {% endif %}
     {{ content|without(
