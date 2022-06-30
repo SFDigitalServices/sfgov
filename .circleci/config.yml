@@ -89,6 +89,7 @@ jobs:
 
       - restore_cache:
           keys:
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
             - composer-{{ checksum "composer.lock" }}
             - terminus-install
 
