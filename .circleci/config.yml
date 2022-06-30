@@ -46,8 +46,9 @@ jobs:
       - restore_cache:
           keys:
             - terminus-install
+            # see: https://circleci.com/docs/2.0/caching#restoring-cache
             - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
-            - composer-{{ checksum "composer.lock" }}
+            - composer-{{ checksum "composer.lock" }}-
             - composer-
 
       - run:
@@ -61,8 +62,8 @@ jobs:
       - save_cache:
           key: composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
           paths:
-              - $HOME/.composer/cache
-              - vendor
+            - $HOME/.composer/cache
+            - vendor
 
       - save_cache:
           key: terminus-install
@@ -89,9 +90,11 @@ jobs:
 
       - restore_cache:
           keys:
-            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
-            - composer-{{ checksum "composer.lock" }}
             - terminus-install
+            # see: https://circleci.com/docs/2.0/caching#restoring-cache
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ checksum "composer.lock" }}-
+            - composer-
 
       - run:
           name: set up build environment (build-tools-ci)
