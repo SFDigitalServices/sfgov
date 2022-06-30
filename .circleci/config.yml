@@ -46,6 +46,7 @@ jobs:
       - restore_cache:
           keys:
             - terminus-install
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
             - composer-{{ checksum "composer.lock" }}
             - composer-
 
@@ -58,7 +59,7 @@ jobs:
           command: composer install
 
       - save_cache:
-          key: composer-{{ checksum "composer.lock" }}
+          key: composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
           paths:
               - $HOME/.composer/cache
               - vendor
