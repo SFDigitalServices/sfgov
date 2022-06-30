@@ -47,6 +47,7 @@ jobs:
           keys:
             - terminus-install
             - composer-{{ checksum "composer.lock" }}
+            - composer-
 
       - run:
           name: set up build environment (build-tools-ci)
@@ -60,7 +61,7 @@ jobs:
           key: composer-{{ checksum "composer.lock" }}
           paths:
               - $HOME/.composer/cache
-              - ./vendor
+              - vendor
 
       - save_cache:
           key: terminus-install
