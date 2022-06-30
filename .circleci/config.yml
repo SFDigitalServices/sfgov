@@ -45,8 +45,8 @@ jobs:
 
       - restore_cache:
           keys:
-            - composer-{{ checksum "composer.lock" }}
             - terminus-install
+            - composer-{{ checksum "composer.lock" }}
 
       - run:
           name: set up build environment (build-tools-ci)
@@ -60,11 +60,12 @@ jobs:
           key: composer-{{ checksum "composer.lock" }}
           paths:
               - $HOME/.composer/cache
+              - ./vendor
 
       - save_cache:
           key: terminus-install
           paths:
-              - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
+            - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
 
       - run:
           name: lint php code for syntax errors
@@ -86,7 +87,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - composer-cache
+            - composer-{{ checksum "composer.lock" }}
             - terminus-install
 
       - run:
