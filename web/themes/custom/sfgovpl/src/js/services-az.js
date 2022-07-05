@@ -12,7 +12,7 @@
 (function ($) {
   // function to check if a single character is alphanumeric
   function isAlphaNumeric (char) {
-    return char.length == 1 && char.match(/([a-zA-Z]|\d)/i)
+    return char.length === 1 && char.match(/([a-zA-Z]|\d)/i)
   }
 
   // function to escape special characters in a string
@@ -32,7 +32,7 @@
   }
 
   $('.sfgov-service-a-z').each(function () {
-    const title = $(this).html()
+    // const title = $(this).html()
     const sortTitle = $(this).attr('data-sort-title').split(' ')
 
     let regexStr = ''
@@ -56,7 +56,7 @@
         $(this).html(replacedTitle)
       }
     } catch (e) {
-      console.log('skipped: ' + $(this).html())
+      // console.log('skipped: ' + $(this).html())
     }
   })
 })(jQuery)
