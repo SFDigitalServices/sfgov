@@ -1,7 +1,11 @@
+/** @type {import('eslint').ESLint.ConfigData} */
 module.exports = {
   root: true,
-  plugins: ['sfgov'],
+  plugins: [
+    'sfgov'
+  ],
   extends: [
+    'plugin:sfgov/babel',
     'plugin:sfgov/recommended'
   ],
   env: {
