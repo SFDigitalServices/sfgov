@@ -14,7 +14,10 @@ jobs:
         with:
           node-version: 16
       - run: npm install
-      - run: npx danger ci
+      - name: lint JavaScript
+        run: npm run lint-js
+      - name: Dangerfile
+        run: npx danger ci
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - uses: preactjs/compressed-size-action@v2
