@@ -22,13 +22,13 @@
       })
 
       function toggleChart () {
-        const show_device = $(window).outerWidth() > 767 ? 'desktop' : 'mobile'
+        const showDevice = $(window).outerWidth() > 767 ? 'desktop' : 'mobile'
         $charts.each(function () {
           const $chart = $(this)
-          const $iframe = $chart.find('> .iframe-container')
+          // const $iframe = $chart.find('> .iframe-container')
           const device = $chart.data().device
 
-          if (device === show_device) {
+          if (device === showDevice) {
             $chart.show()
           } else {
             $chart.hide()
