@@ -1,6 +1,8 @@
 (function ($) {
   // Component container.
   const inPageMenuContainer = $('#sfgov-in-this-page')
+  const animateDuration = 300
+
   // Check if container exists.
   if (inPageMenuContainer.length) {
     const inPageItems = []
@@ -28,28 +30,28 @@
         scrollTo($(this).attr('href'))
       })
 
-      var scrollTo = function (elemSelector) {
-        console.log(elemSelector)
-        // Get padding offset of the wrapper container.
-        const elemSelectorPaddingTop = parseInt(
-          $(elemSelector)
-            .closest('.sfgov-in-this-page-target')
-            .css('padding-top')
-        )
-        console.log(elemSelectorPaddingTop)
-
-        $('html, body').animate(
-          {
-            scrollTop: $(elemSelector).offset().top - elemSelectorPaddingTop
-          },
-          300
-        )
-        return false
-      }
-
       if (window.location.hash) {
         scrollTo(window.location.hash)
       }
     }
+  }
+
+  function scrollTo (selector) {
+    const $el = $(selector)
+
+    // Get padding offset of the wrapper container.
+    const elemSelectorPaddingTop = parseInt(
+      $el
+        .closest('.sfgov-in-this-page-target')
+        .css('padding-top')
+    )
+
+    $('html, body').animate(
+      {
+        scrollTop: $el.offset().top - elemSelectorPaddingTop
+      },
+      animateDuration
+    )
+    return false
   }
 })(jQuery)
