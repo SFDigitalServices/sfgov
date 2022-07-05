@@ -32,8 +32,8 @@ module.exports = {
       avoidExplicitReturnArrows: true
     }],
     'prefer-arrow-callback': 'warn',
-    'promise/always-return': 'warn',
-    'promise/catch-or-return': 'warn',
+    'promise/always-return': 0,
+    'promise/catch-or-return': 0,
     semi: 'error',
     // we don't need "use strict" directives: @babel/preset-env adds them automatically
     strict: ['error', 'never']
