@@ -1,33 +1,37 @@
 function SFGovTranslate () {
-  $ = jQuery
+  const that = this
+  const $ = jQuery
+
   this.currentSelectedTranslation = null
   this.sfgovGTranslateFireEvent = function (a, b) {
     try {
       if (document.createEvent) {
-        var c = document.createEvent('HTMLEvents')
+        const c = document.createEvent('HTMLEvents')
         c.initEvent(b, true, true)
         a.dispatchEvent(c)
       } else {
-        var c = document.createEventObject()
+        const c = document.createEventObject()
         a.fireEvent('on' + b, c)
       }
-    } catch (e) {}
+    } catch (e) {
+    }
   }
 
   this.sfgovDoGTranslate = function (a) {
     $('body').hide()
     const deferred = jQuery.Deferred()
-    if (a == '') { return }
+    if (!a) return
     const b = a.split('|')[1]
     let c
 
     const d = document.getElementsByTagName('select')
     for (let i = 0; i < d.length; i++) {
-      if (d[i].className == 'goog-te-combo') { c = d[i] }
+      if (d[i].className === 'goog-te-combo') { c = d[i] }
     }
-    if (document.getElementById('google_translate_element2') == null || document.getElementById('google_translate_element2').innerHTML.length == 0 || c.length == 0 || c.innerHTML.length == 0) {
+    if (!document.getElementById('google_translate_element2') || !document.getElementById('google_translate_element2').innerHTML.length || !c.length || !c.innerHTML.length) {
       setTimeout(() => {
         that.sfgovDoGTranslate(a)
+      // eslint-disable-next-line no-magic-numbers
       }, 500)
     } else {
       c.value = b
@@ -52,22 +56,20 @@ function SFGovTranslate () {
     const lang = args.split('|')[1]
     const drupalTranslation = that.getDrupalTranslation(lang)
 
-    $('body').find('*').not('script, noscript, link, style, iframe, .goog-te-combo')
+    $('body')
+      .find('*')
+      .not('script, noscript, link, style, iframe, .goog-te-combo')
       .removeClass((i, classNames) => {
-        const classes = classNames.split(' ')
-        const classesToRemove = []
-        for (var i = 0; i < classes.length; i++) {
-          if (classes[i].indexOf('sfgov-translate-lang-') >= 0) {
-            classesToRemove.push(classes[i])
-          }
-        }
-        return classesToRemove.join(' ')
+        return classNames
+          .split(' ')
+          .filter(klass => klass.includes('sfgov-translate-lang-'))
+          .join(' ')
       })
 
     if (drupalTranslation) {
       // drupal translation always wins
       // set gtranslate to english to kill the gtranslate cookie
-      if (drupalTranslation.turl != window.location.pathname) {
+      if (drupalTranslation.turl !== window.location.pathname) {
         $.when(that.sfgovDoGTranslate('en|en')).then(() => {
           window.location.href = drupalTranslation.turl
         })
@@ -84,7 +86,7 @@ function SFGovTranslate () {
     if (drupalTranslations) {
       for (let i = 0; i < drupalTranslations.length; i++) {
         const someTranslation = drupalTranslations[i]
-        if (someTranslation.lang == lang) {
+        if (someTranslation.lang === lang) {
           return someTranslation
         }
       }
@@ -113,13 +115,15 @@ function SFGovTranslate () {
   this.checkCurrentLanguage = function () {
     const currentDrupalLanguage = drupalSettings.sfgov_translations.page.current_language
     const gTranslateCookie = getCookie('googtrans')
+    // eslint-disable-next-line no-magic-numbers
     const gTranslateLang = gTranslateCookie ? gTranslateCookie.split('/')[2] : null
+    let drupalTranslation
 
     // If translation cookie lang is different from Drupal current language,
     // remove the cookie, as we are using language path prefixes and should
     // always show the same language as the URL.
-    if (currentDrupalLanguage != 'en' || currentDrupalLanguage != gTranslateLang) {
-      var drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage)
+    if (currentDrupalLanguage !== 'en' || currentDrupalLanguage !== gTranslateLang) {
+      const drupalTranslation = that.getDrupalTranslation(currentDrupalLanguage)
       // Always translate page, even if a Drupal translation for the page exists.
       // If translated content is being shown on the page, it should be wrapped
       // in a container with class="notranslate" to allow other elements like
@@ -132,18 +136,16 @@ function SFGovTranslate () {
       return
     }
 
-    if (gTranslateLang && gTranslateLang != 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
+    if (gTranslateLang && gTranslateLang !== 'en') { // gtranslate cookie exists, a page was gtranslated somewhere
       that.addElementTranslationClass(gTranslateLang)
-      var drupalTranslation = that.getDrupalTranslation(gTranslateLang)
-      if (drupalTranslation && drupalTranslation.turl != window.location.pathname) { // drupal translation exists
+      drupalTranslation = that.getDrupalTranslation(gTranslateLang)
+      if (drupalTranslation && drupalTranslation.turl !== window.location.pathname) { // drupal translation exists
         $.when(that.sfgovDoGTranslate('en|en')).then(() => { // kill the cookie and redirect to the drupal translation
           window.location.href = drupalTranslation.turl
         })
       }
     }
   }
-
-  var that = this
 }
 
 function getCookie (cookieName) {
@@ -176,8 +178,8 @@ function getCookie (cookieName) {
     let elem = null
     for (let i = 0; i < mutationsList.length; i++) {
       const mutation = mutationsList[i]
-      if (mutation.type == 'childList') {
-        if (mutation.target.id == ':0.targetLanguage') {
+      if (mutation.type === 'childList') {
+        if (mutation.target.id === ':0.targetLanguage') {
           // catch the gtranslate dropdown
           elem = $('.gtranslate-link')
           break
@@ -204,6 +206,7 @@ function getCookie (cookieName) {
       setTimeout(() => {
         $('.goog-te-combo').append('<option value="en">English</option>')
         t.checkCurrentLanguage() // check the current language of the page AFTER english has been added
+      // eslint-disable-next-line no-magic-numbers
       }, 1000)
     }
   }
