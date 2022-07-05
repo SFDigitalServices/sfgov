@@ -11,6 +11,7 @@ module.exports = {
   env: {
   },
   globals: {
+    drupalSettings: 'readonly',
     Drupal: 'readonly',
     jQuery: 'readonly'
   },
