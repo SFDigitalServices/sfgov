@@ -16,7 +16,26 @@ if (!JIRA_REF_PATTERN.test(prDescription)) {
   warn(`Your PR description is too short (&lt;${MIN_PR_DESC_LENGTH} characters). Please be more descriptive.`)
 }
 
+checkMonorepoDependencyVersions()
+
 checkTranslations('config/translations')
+
+function checkMonorepoDependencyVersions () {
+  const rootPkg = require('./package.json')
+  const { workspaces = [] } = rootPkg
+  const allRootDeps = Object.assign({}, rootPkg.dependencies, rootPkg.devDependencies)
+
+  const packages = globbySync(workspaces.map(dir => `${dir}/package.json`), { })
+  for (const packageJson of packages) {
+    const pkg = require(`./${packageJson}`)
+    const allPkgDeps = Object.assign({}, pkg.dependencies, pkg.devDependencies)
+    for (const [name, version] of Object.entries(allPkgDeps)) {
+      if (allRootDeps[name] && allRootDeps[name] !== version) {
+        warn(`Dependency version mismatch: ${code(`${name}@${version}`)} does not match root ${code(allRootDeps[name])}`, packageJson)
+      }
+    }
+  }
+}
 
 function checkTranslations (cwd) {
   const potFiles = globbySync('**/*.pot', { cwd })
