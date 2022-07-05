@@ -1,17 +1,15 @@
-(function($, Drupal) {
-  'use strict';
-
+(function ($, Drupal) {
   Drupal.behaviors.video_embed = {
-    attach: function(context, settings) {
-      $('.toggle-transcript', context).click(function(e) {
-        e.preventDefault();
+    attach (context, settings) {
+      $('.toggle-transcript', context).click(function (e) {
+        e.preventDefault()
         $(this)
           .closest('.video-embed-component')
-          .toggleClass('js-opened');
+          .toggleClass('js-opened')
         $(this)
           .find('span')
-          .toggleClass('is-hidden');
-      });
-    },
-  };
-})(jQuery, Drupal);
+          .toggleClass('is-hidden')
+      })
+    }
+  }
+})(jQuery, Drupal)

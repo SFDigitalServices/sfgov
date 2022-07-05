@@ -1,8 +1,6 @@
-;(function ($, window, Drupal) {
-  'use strict'
-
+(function ($, window, Drupal) {
   Drupal.behaviors.meetings = {
-    attach: function (context) {
+    attach (context) {
       const $form = $('.sfgov-filters form')
 
       // Note: that we have two buttons instead of one because the visual
@@ -23,22 +21,22 @@
         $buttonHide.insertAfter($form).once()
 
         // Handle click events.
-        $buttonHide.on('click', function (e) {
+        $buttonHide.on('click', e => {
           e.preventDefault()
           toggleFilters($content, 'hide')
           // Focus the show button.
           $buttonShow.focus()
         })
-        $buttonShow.on('click', function (e) {
+        $buttonShow.on('click', e => {
           e.preventDefault()
           toggleFilters($content, 'show')
         })
 
         // Breakpoint at which sidebar becomes visible, and toggle functionality
         // is disabled.
-        var breakpoint = window.matchMedia('(min-width: 768px)')
+        const breakpoint = window.matchMedia('(min-width: 768px)')
 
-        function respondToBreakpoint(breakpoint) {
+        function respondToBreakpoint (breakpoint) {
           if (breakpoint.matches) {
             // > $medium-screen
             toggleFilters($content, 'show')
@@ -58,7 +56,7 @@
         breakpoint.addListener(respondToBreakpoint)
       })
 
-      function moveFilterTitle(size) {
+      function moveFilterTitle (size) {
         const $containerAttrStr = '[data-drupal-selector="edit-container"]'
         const $label = $form.find($containerAttrStr + ' > legend')
 
@@ -74,7 +72,7 @@
         }
       }
 
-      function toggleFilters($content, status) {
+      function toggleFilters ($content, status) {
         const $filter_container = $content.parents('.sfgov-filters')
         $filter_container.removeClass('is-expanded is-collapsed')
 
