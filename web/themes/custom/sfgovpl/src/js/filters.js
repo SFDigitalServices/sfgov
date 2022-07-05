@@ -73,19 +73,19 @@
       }
 
       function toggleFilters ($content, status) {
-        const $filter_container = $content.parents('.sfgov-filters')
-        $filter_container.removeClass('is-expanded is-collapsed')
+        const $filters = $content.parents('.sfgov-filters')
+        $filters.removeClass('is-expanded is-collapsed')
 
         if (status === 'hide') {
           $content.attr({ hidden: '', 'aria-hidden': true })
           $buttonShow.attr('aria-expanded', false).show()
           $buttonHide.attr('aria-expanded', true).hide()
-          $filter_container.addClass('is-collapsed')
+          $filters.addClass('is-collapsed')
         } else {
           $content.removeAttr('aria-hidden hidden')
           $buttonShow.attr('aria-expanded', true).hide()
           $buttonHide.attr('aria-expanded', false).show()
-          $filter_container.addClass('is-expanded')
+          $filters.addClass('is-expanded')
         }
       }
     }
