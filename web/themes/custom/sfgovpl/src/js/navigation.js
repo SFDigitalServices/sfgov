@@ -45,13 +45,9 @@
       inputWrapper.prepend(inputClearButton)
 
       input.keyup(function () {
-        const parent = $(this).parent('.form-item-sfgov-search-input')
-
-        if ($(this).val() != '') {
-          parent.addClass('is_typing')
-        } else {
-          parent.removeClass('is_typing')
-        }
+        $(this)
+          .parent('.form-item-sfgov-search-input')
+          .toggleClass('is_typing', !!$(this).val())
       })
 
       $('.input-clear').click(() => {
