@@ -1,7 +1,5 @@
 jQuery(() => {
   $(document).ready(() => {
-    // Track if accordions have been activated
-    const accordionActive = false
     const mobileSize = 701
     const rgroup = $('.sfgov-resources .paragraph--type--other-info-card')
     const sgroup = $('.sfgov-services')
@@ -10,24 +8,24 @@ jQuery(() => {
 
     rgroup.each(function () {
       if ($(this).hasClass('no-title')) {
-        return rtitle = false
+        return (rtitle = false)
       } else {
-        return rtitle = true
+        return (rtitle = true)
       }
     })
 
     sgroup.each(function () {
       if ($(this).hasClass('no-title')) {
-        return stitle = false
+        return (stitle = false)
       } else {
-        return stitle = true
+        return (stitle = true)
       }
     })
 
     // Check for mobile, initialize accordions
     if ($(window).width() < mobileSize) {
       // Add accordions
-      if (stitle == true) {
+      if (stitle === true) {
         $('.sfgov-services-section .sfgov-services').each(function () {
           if (!$(this).find('summary').length) {
             $(this).find('h3').wrap('<summary class="details__summary"></summary>')
@@ -45,7 +43,7 @@ jQuery(() => {
         })
       }
       // Department/Topic resource mobile accordions
-      if (rtitle == true) {
+      if (rtitle === true) {
         $('.sfgov-resources .paragraph--type--other-info-card').each(function () {
           if (!$(this).find('summary').length) {
             $(this).find('.__title').wrap('<summary class="details__summary"></summary>')
@@ -61,7 +59,7 @@ jQuery(() => {
       // disable mobile accordion styling
       if ($(window).width() >= mobileSize) {
         // Remove details accordion
-        if (stitle == true) {
+        if (stitle === true) {
           $('.sfgov-services-section .sfgov-services h3').each(function () {
             if ($(this).parent().is('summary')) {
               $(this).unwrap()
@@ -82,7 +80,7 @@ jQuery(() => {
           })
         }
         // Remove resources accordion
-        if (rtitle == true) {
+        if (rtitle === true) {
           $('.sfgov-resources .paragraph--type--other-info-card .__title').each(function () {
             if ($(this).parent().is('summary')) {
               $(this).unwrap()
@@ -92,7 +90,7 @@ jQuery(() => {
             }
           })
           $('.sfgov-resources .paragraph--type--other-info-card').each(function () {
-            console.log($(this))
+            // console.log($(this))
             if ($(this).find('.__resources').parent()
               .hasClass('details__content')) {
               $(this).find('.__resources').unwrap()
@@ -101,7 +99,7 @@ jQuery(() => {
         }
 
         // Remove More Services accordion
-        if (stitle == true) {
+        if (stitle === true) {
           $('.views-element-container .sfgov-services h5').each(function () {
             if ($(this).parent().is('summary')) {
               $(this).unwrap()
@@ -124,7 +122,7 @@ jQuery(() => {
       }
       if ($(window).width() < mobileSize) {
         // Add accordions
-        if (stitle == true) {
+        if (stitle === true) {
           $('.sfgov-services-section .sfgov-services').each(function () {
             if (!$(this).find('summary').length) {
               $(this).find('h3').wrap('<summary class="details__summary"></summary>')
@@ -142,7 +140,7 @@ jQuery(() => {
           })
         }
         // Add resources accordion
-        if (rtitle == true) {
+        if (rtitle === true) {
           $('.sfgov-resources .paragraph--type--other-info-card').each(function () {
             if (!$(this).find('summary').length) {
               $(this).find('.__title').wrap('<summary class="details__summary"></summary>')
