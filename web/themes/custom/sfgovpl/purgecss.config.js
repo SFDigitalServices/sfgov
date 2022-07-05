@@ -6,7 +6,7 @@ module.exports = {
     '../../../modules/custom/**/*.{html,inc,js,php,theme,twig}',
     '../../../../patches/**/*.patch'
   ],
-  defaultExtractor: (content) => content.match(/[\w-:./]+(?<!:)/g) || [],
+  defaultExtractor: content => content.match(/[\w-:./]+(?<!:)/g) || [],
   safelist: {
     greedy: [
       // preserve all "basic" margin and padding utilities (for forms)
