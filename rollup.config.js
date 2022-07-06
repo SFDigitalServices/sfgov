@@ -5,6 +5,9 @@ import resolve from '@rollup/plugin-node-resolve'
 
 /** @type {import('rollup').RollupOptions} */
 const config = {
+  treeshake: {
+    moduleSideEffects: true
+  },
   plugins: [
     resolve(),
     commonjs(),
