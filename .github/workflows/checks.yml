@@ -1,0 +1,25 @@
+name: checks
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npx danger ci
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: preactjs/compressed-size-action@v2
+        with:
+          pattern: '**/dist/**/*.{js,css}'
+          exclude: '**/node_modules/**'
+          build-script: 'build -ws --if-present'
+          clean-script: 'clean -ws --if-present'
