@@ -62,10 +62,22 @@
     {{ page.alpha }}
   {% endif %}
 
+  {% set logo = node.field_logo.entity.uri.value %}
+
+  {# set the title class to sr-only (screen reader only tailwind utility class from design system) if there is a logo #}
+  {% if logo is not empty %}
+    {% set titleVisibility = "sr-only" %}
+  {% endif %}
+
   <header role="banner">
     <div class="sfgov-nav-container">
       <div class="sfgov-nav-container__content">
-        <div class="sfgov-logo__container">{{ campaign_branding }}</div>
+        <div class="sfgov-logo__container">
+          <h1 class="{{ titleVisibility }}">{{ node.title.value }}</h1>
+          {% if logo is not empty %}
+            <img src="{{ node.field_logo.entity.uri.value | image_style('campaign_logo') }}" />
+          {% endif %}
+        </div>
         <div class="head-right--container">
           {{ page.header.gtranslate }}
         </div>
