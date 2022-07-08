@@ -122,29 +122,13 @@ function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) 
         // Human friendly based path. (example: /events/topics/immigrants)
         $generated_path = '/' . str_replace('%node', $url_friendly_title, $event_view->getPath());
 
-        // Determine if an alias exists for the View generated URL.
-        $alias_objects = $path_alias_manager->loadByProperties([
-          'path' => $internal_path,
-          'langcode' => $language,
-        ]);
-
-        // If no alias exists for the internal path and the language, create a
-        // human friendly alias for our no so human friendly path
-        // (Example: /events/topics/25 -> /events/topics/immigrants)
-        if (empty($alias_objects)) {
-          $path_alias = PathAlias::create([
-            'path' => $internal_path,
-            'alias' => $generated_path,
-            'langcode' => $language
-          ]);
-          $path_alias->save();
-        }
+        // Create an alias for the filtered view page if one does not exist.
+        sfgov_utilities_create_alias($internal_path, $generated_path);
       }
 
       // Now If we have generated an alias, rebuild the url for the link so it can
       // pick up the alias we just generated.
-      $redone_url = Url::fromRoute("view.$view_id.$upcoming_display_id", ['node' => $node->id()], $options);
-      $variables['more']['#url'] = $redone_url;
+      $variables['more']['#url'] = Url::fromRoute("view.$view_id.$upcoming_display_id", ['node' => $node->id()], $options);
     }
   }
 }
