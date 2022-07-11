@@ -74,7 +74,7 @@ function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) 
   // label processed and set as the argument.
   if (!empty($view->args[0])) {
     $node_manager = Drupal::entityTypeManager()->getStorage('node');
-    if ($node = $node_manager->load($view->args[0])) {
+    if ($node = $node_manager->load($view->args[0]) && !empty($node)) {
 
       // Get some managers ready for later use.
       $path_alias_manager = \Drupal::entityTypeManager()
