@@ -44,21 +44,5 @@ function sfgovpl_preprocess_page__node__campaign(&$variables) {
     if (!empty($node_variables['notranslate'])) {
       $class = ' class="notranslate"';
     }
-
-    // Conditionally render Logo or Title.
-    if ($node->field_logo->entity) {
-      $variables['campaign_branding'] = $node->field_logo->view([
-        'type' => 'image',
-        'label' => 'hidden',
-        'settings' => [
-          'image_style' => 'campaign_logo',
-        ],
-      ]);
-    }
-    else {
-      $variables['campaign_branding'] = [
-        '#markup' => '<h1' . $class . '>' . $node->label() . '</h1>',
-      ];
-    }
   }
 }
