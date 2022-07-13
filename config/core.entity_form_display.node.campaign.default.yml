@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.campaign.field_campaign_about
     - field.field.node.campaign.field_campaign_theme
     - field.field.node.campaign.field_contents
+    - field.field.node.campaign.field_departments
     - field.field.node.campaign.field_dept
     - field.field.node.campaign.field_header_spotlight
     - field.field.node.campaign.field_links
@@ -34,7 +35,7 @@ third_party_settings:
       label: 'Locations and Access'
       region: hidden
       parent_name: ''
-      weight: 22
+      weight: 23
       format_type: fieldset
       format_settings:
         classes: ''
@@ -44,7 +45,7 @@ third_party_settings:
     group_about:
       children:
         - field_campaign_about
-        - field_dept
+        - field_departments
         - field_links
       label: About
       region: content
@@ -100,9 +101,9 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-  field_dept:
+  field_departments:
     type: entity_reference_autocomplete
-    weight: 21
+    weight: 14
     region: content
     settings:
       match_operator: CONTAINS
@@ -131,7 +132,7 @@ content:
     third_party_settings: {  }
   field_links:
     type: link_default
-    weight: 22
+    weight: 15
     region: content
     settings:
       placeholder_url: ''
@@ -292,5 +293,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_dept: true
   promote: true
   sticky: true

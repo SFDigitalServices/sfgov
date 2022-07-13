@@ -27,7 +27,7 @@
         $inPageMenuContainer.show();
         var li = document.createElement('li');
         var a = document.createElement('a');
-        $(a).attr('href', '#'+sections[i].label.toLowerCase()).attr('data-section', sections[i].selector).text(sections[i].label);
+        $(a).attr('href', '#'+sections[i].label.toLowerCase()).attr('class', 'in-page-link').attr('data-section', sections[i].selector).text(sections[i].label);
         $(li).append(a);
         $inPageMenuList.append(li);
       }

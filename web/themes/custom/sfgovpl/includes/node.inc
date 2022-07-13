@@ -50,6 +50,28 @@ function sfgovpl_preprocess_node(&$variables) {
           break;
       }
     }
+
+    // Teaser.
+    if ($view_mode == 'teaser') {
+      switch ($content_type) {
+        case 'department':
+
+          // Set the target for department links on teasers.
+          // If the "Go to current URL" field is checked, it sets the target to
+          // "_blank". This will print the target on the department teaser
+          // template file (node--department--teaser.html.twig).
+          $variables['target'] = NULL;
+          if ($node->hasField('field_go_to_current_url')) {
+            $field_go_to_current_url = $node->get('field_go_to_current_url')
+              ->getValue();
+            if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
+              $variables['target'] = '_blank';
+            }
+          }
+          break;
+      }
+    }
+
     $variables['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 }
@@ -680,7 +702,7 @@ function profile_page_fields($node) {
         } else {
           $Addresstitle = $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
         }
-        // Choose a title value in descending order. 
+        // Choose a title value in descending order.
         $theFields['address']['title'] = $Addresstitle;
         // If one of the address fields was used as the title, remove it from
         // the render array so that it doesn't show up twice.
