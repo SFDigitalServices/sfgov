@@ -3,8 +3,7 @@
   <div class="transaction-card-container">
     <h2 class="transaction-card__title">
       {% if url %}
-        <a href="{{ url }}" class="transaction-card--link">{{ node.label }}</a>
-      {% else %}
+        <a href="{{ url }}" class="transaction-card--link" {% if target %}target="{{ target }}"{% endif %}>{{ node.label }}</a>      {% else %}
         {{ node.label }}
       {% endif %}
     </h2>

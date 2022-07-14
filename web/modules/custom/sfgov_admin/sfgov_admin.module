@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
@@ -153,6 +154,17 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
       if (isset($element['subform'][$field])) {
         $element['subform'][$field]['widget'][0]['value']['#default_value'] = $value;
       }
+    }
+  }
+
+  // Since we are changing some ckeditor settings to the text field of the
+  // accordions that make up the getting here content of location nodes, We go
+  // ahead and set the new text format to the text field (name = field_text), so
+  // that the author doesn't have to update it manually, or see a broken format.
+  if ($paragraph_entity_reference_field_name == 'field_getting_here_items') {
+    if (isset($element['subform']['field_text'])) {
+      $element['subform']['field_text']['widget'][0]['#format'] = 'sf_basic_html_with_restricted_headings';
+      $element['subform']['field_text']['widget'][0]['#allowed_formats'][1] = 'sf_basic_html_with_restricted_headings';
     }
   }
 }
@@ -431,4 +443,22 @@ function sfgov_admin_cron() {
         ->execute();
     }
   }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function sfgov_admin_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface $cacheability) {
+
+  // Remove the Files tab from the Content administration page.
+  unset($data['tabs'][0]['views_view:view.files.page_1']);
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function sfgov_admin_menu_links_discovered_alter(&$links) {
+
+  // Remove the Files tab from the Content administration page.
+  unset($links['admin_toolbar_tools.extra_links:view.files']);
 }
