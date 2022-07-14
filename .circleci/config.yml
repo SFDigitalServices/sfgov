@@ -45,26 +45,33 @@ jobs:
 
       - restore_cache:
           keys:
-            - composer-{{ checksum "composer.lock" }}
             - terminus-install
+
+      - restore_cache:
+          keys:
+            # see: https://circleci.com/docs/2.0/caching#restoring-cache
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ checksum "composer.lock" }}-
+            - composer-
 
       - run:
           name: set up build environment (build-tools-ci)
           command: /build-tools-ci/scripts/set-environment
+
+      - save_cache:
+          key: terminus-install
+          paths:
+            - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
 
       - run:
           name: composer install
           command: composer install
 
       - save_cache:
-          key: composer-{{ checksum "composer.lock" }}
+          key: composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
           paths:
-              - $HOME/.composer/cache
-
-      - save_cache:
-          key: terminus-install
-          paths:
-              - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
+            - $HOME/.composer/cache
+            - vendor
 
       - run:
           name: lint php code for syntax errors
@@ -83,11 +90,16 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - terminus-install
 
       - restore_cache:
           keys:
-            - composer-cache
-            - terminus-install
+            # see: https://circleci.com/docs/2.0/caching#restoring-cache
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ checksum "composer.lock" }}-
+            - composer-
 
       - run:
           name: set up build environment (build-tools-ci)
