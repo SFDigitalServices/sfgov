@@ -1,9 +1,7 @@
 <?php
 
 use Drupal\Core\Url;
-use Drupal\path_alias\Entity\PathAlias;
 use Drupal\views\Views;
-use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
 
 /**
@@ -84,7 +82,7 @@ function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) 
 
       // The the title and machine/url friendly version of the title for the
       // topic or department we are going to link to.
-      $title = $node->label();
+      $title = !empty($node) ? $node->label() : 'this department';
       $url_friendly_title = \Drupal::service('pathauto.alias_cleaner')
         ->cleanString($title);
 
@@ -208,7 +206,7 @@ function get_upcoming_event_count($view): ?int {
       break;
   }
 
-  $dept_id = !empty($view->args[0]) ? $view->args[0]: null;
+  $dept_id = !empty($view->args[0]) ? $view->args[0] : null;
   $viewId = $view->storage->id();
   $eventsView = Views::getView($viewId);
   $eventsView->setArguments([$dept_id]);
