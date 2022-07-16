@@ -1,12 +1,12 @@
 {{ content.content_moderation_control }}
 
  {% block header %}
-    {% include '@theme/hero-banner-with-image.twig' with {
+    {% include '@theme/hero-banner-color.twig' with {
       'banner': {
-        'image': file_url(node.field_banner_image.entity.uri.value | striptags),
-        'text': node.field_bann.value,
-        'backgroundcolor': node.field_banner_color.value
-      }
+        'title': label,
+        'text': node.field_description.value,
+        'color': 'bg-green-1'
+      },
     } %}
    {% endblock header %}
  <div class="confirmation--content">
