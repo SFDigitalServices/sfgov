@@ -9,8 +9,9 @@ dependencies:
     - field.field.node.form_confirmation_page.field_banner_image
     - field.field.node.form_confirmation_page.field_confirmation_sidebar
     - field.field.node.form_confirmation_page.field_departments
-    - field.field.node.form_confirmation_page.field_dept
+    - field.field.node.form_confirmation_page.field_description
     - field.field.node.form_confirmation_page.field_form_confirm_page_slug
+    - field.field.node.form_confirmation_page.field_related_content
     - field.field.node.form_confirmation_page.field_step
     - node.type.form_confirmation_page
   module:
@@ -70,14 +71,20 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_dept:
-    type: entity_reference_entity_view
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_related_content:
+    type: entity_reference_label
     label: above
     settings:
-      view_mode: default
-      link: false
+      link: true
     third_party_settings: {  }
-    weight: 10
+    weight: 9
     region: content
   field_step:
     type: entity_reference_revisions_entity_view
