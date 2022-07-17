@@ -60,6 +60,8 @@ function sfgovpl_preprocess_views_view__news__page_2(&$variables) {
 function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) {
   $view = $variables['view'];
   $view_id = $view->id();
+  $entity_manager = \Drupal::entityTypeManager();
+  $node_manager = $entity_manager->getStorage('node');
 
   $options = [
     'attributes' => [
@@ -71,14 +73,11 @@ function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) 
   // Generate a More link for the Department events block, with the departments
   // label processed and set as the argument.
   if (!empty($view->args[0])) {
-    $node_manager = Drupal::entityTypeManager()->getStorage('node');
-    if ($node = $node_manager->load($view->args[0]) && !empty($node)) {
-
+    $node = $node_manager->load($view->args[0]);
+    if ($node instanceof Node) {
+      
       // Get some managers ready for later use.
-      $path_alias_manager = \Drupal::entityTypeManager()
-        ->getStorage('path_alias');
       $view_manager = \Drupal::entityTypeManager()->getStorage('view');
-      $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
       // The the title and machine/url friendly version of the title for the
       // topic or department we are going to link to.
@@ -180,25 +179,25 @@ function sfgovpl_preprocess_views_view__events__page_2(&$variables) {
  * @return int|null
  */
 function get_upcoming_event_count($view): ?int {
-  if(!$view) {
+  if (!$view) {
     return 0;
   }
 
   $display = $view->current_display;
   switch ($display) {
-    // Set the upcoming events link for a topic filtered display.
+      // Set the upcoming events link for a topic filtered display.
     case 'page_3': // Event topic display
     case 'page_5': // Past topic display
       $display_to_count = 'page_3';
       break;
 
-    // Set the upcoming events link for a department filtered display.
+      // Set the upcoming events link for a department filtered display.
     case 'page_4': // Event department display
     case 'page_6': // Past department display
       $display_to_count = 'page_4';
       break;
 
-    // Set the upcoming events link for the all events display.
+      // Set the upcoming events link for the all events display.
     case 'page_1': // Event all display
     case 'page_2': // Past all display
     default:
@@ -228,17 +227,17 @@ function get_upcoming_event_view_url($view) {
   $parameters = $view->getUrl()->getRouteParameters();
 
   switch ($display) {
-    // Set the upcoming events link for a topic filtered display.
+      // Set the upcoming events link for a topic filtered display.
     case 'page_3': // Event topic display
     case 'page_5': // Past topic display
       return Url::fromRoute('view.events.page_3', $parameters)->toString();
 
-    // Set the upcoming events link for a department filtered display.
+      // Set the upcoming events link for a department filtered display.
     case 'page_4': // Event department display
     case 'page_6': // Past department display
       return Url::fromRoute('view.events.page_4', $parameters)->toString();
 
-    // Set the upcoming events link for the all events display.
+      // Set the upcoming events link for the all events display.
     case 'page_1': // Event all display
     case 'page_2': // Past all display
     default:
@@ -256,17 +255,17 @@ function get_past_event_view_url($view) {
   $parameters = $view->getUrl()->getRouteParameters();
 
   switch ($display) {
-    // Set the past events link for a topic filtered display.
+      // Set the past events link for a topic filtered display.
     case 'page_3': // Event topic display
     case 'page_5': // Past topic display
       return Url::fromRoute('view.events.page_5', $parameters)->toString();
 
-    // Set the past events link for a department filtered display.
+      // Set the past events link for a department filtered display.
     case 'page_4': // Event department display
     case 'page_6': // Past department display
       return Url::fromRoute('view.events.page_6', $parameters)->toString();
 
-    // Set the past events link for the all events display.
+      // Set the past events link for the all events display.
     case 'page_1': // Event all display
     case 'page_2': // Past all display
     default:
@@ -285,7 +284,7 @@ function get_is_upcoming_event_display($view): bool {
   $display = $view->current_display;
 
   switch ($display) {
-    // Set the past events link for a topic filtered display.
+      // Set the past events link for a topic filtered display.
     case 'page_1': // Event all display
     case 'page_3': // Event topic display
     case 'page_4': // Past topic display
