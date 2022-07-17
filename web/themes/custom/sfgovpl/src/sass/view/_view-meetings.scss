@@ -9,17 +9,21 @@
 
   .hero-banner {
     background-color: $c-green-3;
+
     a {
       color: $c-white;
     }
+
     .responsive-container {
       h1 {
         margin-bottom: 0;
         color: $c-white;
       }
+
       .lead-paragraph {
         margin-top: 20px;
         color: $c-white;
+
         p {
           margin: 0;
         }
@@ -29,6 +33,7 @@
 
   .content {
     padding: 60px 0;
+
     @media (max-width: $mobile-screen) {
       padding-top: 0;
     }
@@ -59,6 +64,7 @@
   .group--left {
     @include columns-780(left);
   }
+
   .group--right {
     @include columns-350(right);
 
@@ -76,11 +82,22 @@
         padding: 40px;
       }
 
-      a {
+      a:not(.link__plain) {
         @include button;
         margin-top: 20px;
         display: inline-block;
       }
+
+      a.link__plain {
+        font-size: 14px;
+        line-height: 18px;
+
+        .nobreak {
+          display: inline-block;
+          text-decoration: inherit;
+        }
+      }
+
     }
   }
 }

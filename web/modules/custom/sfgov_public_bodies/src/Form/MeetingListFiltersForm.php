@@ -2,9 +2,12 @@
 
 namespace Drupal\sfgov_public_bodies\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Class MeetingListFiltersForm.
@@ -77,6 +80,13 @@ class MeetingListFiltersForm extends FormBase {
       '#default_value' => \Drupal::request()->query->get('year'),
     ];
 
+    $form['container']['toggle']['items']['archive'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $this->getArchiveLink(),
+    ];
+
+
     if ($this->getSubcommittees()) {
       $query_subcommittees = \Drupal::request()->query->get('subcommittees');
       $form['container']['toggle']['items']['subcommittees'] = [
@@ -89,7 +99,7 @@ class MeetingListFiltersForm extends FormBase {
         // Note: When this is fixed, we can delete '#suffix' and the
         // corresponding code in sfgov_public_bodies_preprocess_fieldset() and
         // just use '#description'.
-        '#suffix' => '<div id="subcommittees-description" class="visually-hidden">'. t('Select one or more committees') . '</div>',
+        '#suffix' => '<div id="subcommittees-description" class="visually-hidden">' . t('Select one or more committees') . '</div>',
       ];
     }
 
@@ -120,8 +130,7 @@ class MeetingListFiltersForm extends FormBase {
             // subcommittees[1126]&subcommittees[1119] = returns no results
             // whereas an empty array results all.
             $filters[$key] = array_filter($value) ? $value : [];
-          }
-          else {
+          } else {
             $filters[$key] = $value;
           }
         }
@@ -147,8 +156,8 @@ class MeetingListFiltersForm extends FormBase {
       ->condition('d.bundle', 'meeting');
     $values_query->join('node__field_public_body', 'pb', 'pb.entity_id = d.entity_id AND pb.field_public_body_target_id = :pbid', array(':pbid' => $public_body_id));
     $values = $values_query->execute()
-           ->fetchAll();
-    
+      ->fetchAll();
+
     foreach ($values as $value) {
       $year = date('Y', $value->field_smart_date_value);
 
@@ -179,4 +188,33 @@ class MeetingListFiltersForm extends FormBase {
     return $subcommittees;
   }
 
+  /**
+   * Get Archive url.
+   */
+  public function getArchiveLink() {
+    $route = \Drupal::routeMatch();
+    $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
+
+    if ($public_body instanceof Node) {
+      $date = NULL;
+      if ($public_body->hasField('field_meeting_archive_date')) {
+        foreach ($public_body->field_meeting_archive_date->getValue() as $value) {
+          $date_formatter = \Drupal::service('date.formatter');
+          $date = $date_formatter->format(strtotime($value['value']), 'custom', 'M Y');
+          $date = new FormattableMarkup("<span class='nobreak'>@date</span>", ['@date' => $date]);
+        }
+      }
+
+      $text = $date ? $this->t('See archived meetings before @date', ['@date' => $date]) : $this->t('See archived meetings');
+
+      if ($public_body->hasField('field_meeting_archive_url')) {
+        foreach ($public_body->field_meeting_archive_url->getValue() as $value) {
+          $url = Url::fromUri($value['uri'], ['attributes' => ['class' => 'link__plain']]);
+          return Link::fromTextAndUrl($text, $url)->toString();
+        }
+      }
+    }
+
+    return false;
+  }
 }
