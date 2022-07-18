@@ -63,11 +63,7 @@ function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) 
   $entity_manager = \Drupal::entityTypeManager();
   $node_manager = $entity_manager->getStorage('node');
 
-  $options = [
-    'attributes' => [
-      'target' => "_blank"
-    ]
-  ];
+  $options = [];
 
   // [SG-1007]
   // Generate a More link for the Department events block, with the departments
