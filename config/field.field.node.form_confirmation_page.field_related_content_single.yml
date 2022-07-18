@@ -1,9 +1,9 @@
-uuid: 789d506a-ab30-48bf-a4ea-f24f83b628ae
+uuid: 1505e12f-d4a4-406e-93ce-7352a9da1f66
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_related_content
+    - field.storage.node.field_related_content_single
     - node.type.form_confirmation_page
     - node.type.form_page
   module:
@@ -12,27 +12,27 @@ dependencies:
 third_party_settings:
   datalayer:
     expose: 0
-    label: field_related_content
+    label: field_related_content_single
   tmgmt_content:
     excluded: false
-id: node.form_confirmation_page.field_related_content
-field_name: field_related_content
+id: node.form_confirmation_page.field_related_content_single
+field_name: field_related_content_single
 entity_type: node
 bundle: form_confirmation_page
 label: 'Related form'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: unpublished
   handler_settings:
     target_bundles:
       form_page: form_page
     sort:
       field: _none
       direction: ASC
-    auto_create: false
+    auto_create: 0
     auto_create_bundle: ''
 field_type: entity_reference
