@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Update formio functionality.
+ */
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Migrate old formio translations and phrase translations into the new system.
+ */
+function sfgov_formio_update_9001(&$sandbox) {
+  $nids = \Drupal::entityQuery('node')->condition('type', 'form_page')->execute();
+  $form_nodes = Node::loadMultiple($nids);
+
+  $needs_drupal_update = [];
+  $needs_phrase_update = [];
+  foreach ($form_nodes as $node) {
+    // If its translated into other languages besides english.
+    if ($languages = $node->getTranslationLanguages(FALSE)) {
+      foreach ($languages as $key => $language) {
+        $language_id = $language->getId();
+        $translated_node = $node->getTranslation($language_id);
+
+        // If it has data stored on NODE json content field.
+        if ($translated_node->get('field_formio_json_content')->value) {
+          $needs_drupal_update[$node->id()][] = $translated_node;
+        }
+      };
+    }
+
+    $formio_paragraph = $node->field_form_id->referencedEntities()[0];
+
+    if ($formio_paragraph->hasField('field_formio_render_options')) {
+      if ($render_options = $formio_paragraph->get('field_formio_render_options')->value) {
+        $render_data = (array) json_decode($render_options);
+        if (isset($render_data['phraseProjectId'])) {
+          $needs_phrase_update[] = [
+            'paragraph' => $formio_paragraph,
+            'phrase_id' => $render_data['phraseProjectId'],
+          ];
+        }
+      }
+    }
+  }
+
+  foreach ($needs_phrase_update as $formio_paragraph_data) {
+    $phrase_url = 'https://translation.api.sf.gov/api/phrase/' . $formio_paragraph_data['phrase_id'];
+    $phrase_data = (array) json_decode(file_get_contents($phrase_url), TRUE);
+    $formio_paragraph = $formio_paragraph_data['paragraph'];
+
+    // Run the process for each language.
+    foreach ($phrase_data['data'] as $language => $data) {
+      // zh-hant is stored as just zh in phrase.
+      $lang_code = ($language === 'zh') ? 'zh-hant' : $language;
+
+      // Phrase translations don't have the translated entities yet.
+      if (!$node->hasTranslation($lang_code)) {
+        $node->addTranslation($lang_code, $node->toArray());
+        $node->save();
+      }
+      if (!$formio_paragraph->hasTranslation($lang_code)) {
+        $formio_paragraph->addTranslation($lang_code, $formio_paragraph->toArray());
+        $formio_paragraph->save();
+      }
+
+      // Get and set the correct values for each translation.
+      $translated_node = $node->getTranslation($lang_code);
+      $translated_formio_paragraph = $formio_paragraph->getTranslation($lang_code);
+      $phrase_values = [];
+      foreach ($data as $phrase_key => $phrase_value) {
+        $skip = FALSE;
+
+        if (strlen($phrase_key) > 300) {
+          $skip = TRUE;
+          $error = t('The following key name is too long and needs to be shortened in Formio to be accepted on node %title : %key', [
+            '%title' => $node->getTitle(),
+            '%key' => $phrase_key,
+          ]);
+          \Drupal::logger('sfgov_formio')->notice($error);
+        }
+
+        if (!$skip) {
+          $phrase_values[] = [
+            'key' => $phrase_key,
+            'value' => $phrase_value,
+            'format' => 'plain_text',
+            'actions' => [],
+            'label' => substr($phrase_key, 0, 254),
+            'nested_location' => 1,
+          ];
+        }
+      }
+
+      // Delete the phrase data from the node.
+      $render_options_field = $formio_paragraph->get('field_formio_render_options');
+      $render_options = (array) json_decode($render_options_field->value);
+      unset($render_options['phraseProjectId']);
+      unset($render_options['phraseProjectVersion']);
+      $formio_paragraph->set('field_formio_render_options', json_encode($render_options));
+
+      // Save all the changes.
+      $translated_formio_paragraph->set('field_form_strings', $phrase_values);
+      $translated_formio_paragraph->save();
+      $translated_node->save();
+    }
+  }
+
+  foreach ($needs_drupal_update as $en_node_id => $translated_nodes) {
+    // Update the english node.
+    $en_node = Node::load($en_node_id);
+    $formio_paragraph = $en_node->field_form_id->referencedEntities()[0];
+    $formio_helpers = \Drupal::service('sfgov_formio.helpers');
+    $formio_helpers->setHelperData($formio_paragraph);
+    $field_data = $formio_helpers->getFormioData();
+    $en_fields = [];
+    foreach ($field_data['strings'] as $machine_name => $value) {
+      $en_fields[] = $formio_helpers->addFormioField($machine_name, $value);
+    }
+    $formio_paragraph->set('field_form_strings', $en_fields);
+    $formio_paragraph->save();
+    $en_node->save();
+
+    // Update the translated nodes.
+    foreach ($translated_nodes as $translated_node) {
+      $translated_json = $translated_node->get('field_formio_json_content')->value;
+      $paragraph_language_id = $translated_node->language()->getId();
+      $translated_json_decoded = (array) json_decode($translated_json)->$paragraph_language_id;
+      $translated_formio_paragraph = $formio_paragraph->getTranslation($paragraph_language_id);
+      $translated_fields = [];
+      foreach ($field_data['strings'] as $key => $value) {
+        if (array_key_exists($key, $translated_json_decoded)) {
+          $json_key = $key;
+        }
+        // In the old json, all '_' were replaced with '.'.
+        else {
+          $json_key = str_replace('_', '.', $key);
+        }
+        if (array_key_exists($json_key, $translated_json_decoded)) {
+          $value['value'] = $translated_json_decoded[$json_key];
+          $translated_fields[] = $formio_helpers->addFormioField($json_key, $value);
+        }
+
+      }
+      $translated_formio_paragraph->set('field_form_strings', $translated_fields);
+      $translated_formio_paragraph->save();
+      $translated_node->save();
+    }
+  }
+}
