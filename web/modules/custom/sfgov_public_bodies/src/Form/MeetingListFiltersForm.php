@@ -205,7 +205,7 @@ class MeetingListFiltersForm extends FormBase {
         }
       }
 
-      $text = $date ? $this->t('See archived meetings before @date', ['@date' => $date]) : $this->t('See archived meetings');
+      $text = $date ? $this->t('See past meetings before @date', ['@date' => $date]) : $this->t('See past meetings');
 
       if ($public_body->hasField('field_meeting_archive_url')) {
         foreach ($public_body->field_meeting_archive_url->getValue() as $value) {

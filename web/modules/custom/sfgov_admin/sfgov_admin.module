@@ -620,3 +620,33 @@ function sfgov_admin_menu_links_discovered_alter(&$links) {
   // Remove the Files tab from the Content administration page.
   unset($links['admin_toolbar_tools.extra_links:view.files']);
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_admin_form_node_public_body_edit_form_alter(&$form, FormStateInterface $form_state) {
+  // [SG-1748]
+  // Set the Meeting Archive date field to required if url is filled.
+  $form['field_meeting_archive_date']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_meeting_archive_url[0][uri]"]' => ['filled' => TRUE]
+    ],
+  ];
+
+  $form['#validate'][] = '_sfgov_admin_public_body_node_meeting_archive_url_and_date_form_validate';
+}
+
+/**
+ * Validates submission values in the FORM_ID() form.
+ */
+function _sfgov_admin_public_body_node_meeting_archive_url_and_date_form_validate($form, FormStateInterface $form_state) {
+  // [SG-1748]
+  // This validation handler ensures that if a meeting archive url is set, then 
+  // the meeting archive date must also be set.
+  $values = $form_state->getValues();
+  if (!empty($values['field_meeting_archive_url'][0]['uri'])) {
+    if (empty($values['field_meeting_archive_date'][0]['value'])) {
+      $form_state->setErrorByName("field_meeting_archive_date[0][value][date]", t('Meeting archive date is required if a meeting archive URL is set.'));
+    }
+  }
+}

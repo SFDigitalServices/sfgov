@@ -12,7 +12,7 @@ use Drupal\node\Entity\Node;
 function sfgovpl_preprocess_views_view__meetings__page(&$variables) {
   $nid = \Drupal::routeMatch()->getParameter('arg_0');
   $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-  $variables['public_body'] = $node->toLink()->toString()->getGeneratedLink();
+  $variables['public_body'] = '<span>' . t('Part of') . '</span> ' . $node->toLink()->toString()->getGeneratedLink();
 }
 
 /**
