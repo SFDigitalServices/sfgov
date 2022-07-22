@@ -124,14 +124,14 @@
 }
 
 @mixin blockquote {
-  @include fs-pull-large;
+  @include fs-big-description-mobile;
   background: $c-yellow-2;;
   border-radius: 10px;
-  font-style: italic;
   margin: 30px 0 40px 0;
   padding: 20px;
 
   @include media($narrow-screen) {
+    @include fs-big-description;
     clear: right;
     float: right;
     padding: 40px;
@@ -141,11 +141,16 @@
   }
 
   p {
+    @include fs-big-description-mobile;
     margin: 0;
     max-width: none;
 
     + p {
       margin-top: 1rem;
+    }
+
+    @include media($medium-screen) {
+      @include fs-big-description;
     }
   }
 }
