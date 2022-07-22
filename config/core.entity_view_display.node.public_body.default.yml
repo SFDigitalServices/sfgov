@@ -11,6 +11,8 @@ dependencies:
     - field.field.node.public_body.field_departments
     - field.field.node.public_body.field_description
     - field.field.node.public_body.field_email
+    - field.field.node.public_body.field_meeting_archive_date
+    - field.field.node.public_body.field_meeting_archive_url
     - field.field.node.public_body.field_other_info
     - field.field.node.public_body.field_phone_numbers
     - field.field.node.public_body.field_public_body
@@ -30,14 +32,14 @@ content:
   content_moderation_control:
     settings: {  }
     third_party_settings: {  }
-    weight: -20
+    weight: 0
     region: content
   field_about_description:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   field_address:
     type: entity_reference_label
@@ -54,14 +56,14 @@ content:
       timezone_override: ''
       format_type: medium
     third_party_settings: {  }
-    weight: 18
+    weight: 13
     region: content
   field_alert_text:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 17
+    weight: 12
     region: content
   field_board_members:
     type: entity_reference_revisions_entity_view
@@ -70,7 +72,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 16
+    weight: 11
     region: content
   field_departments:
     type: entity_reference_label
@@ -78,14 +80,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 7
+    weight: 6
     region: content
   field_description:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   field_email:
     type: entity_reference_revisions_entity_view
@@ -103,7 +105,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 7
     region: content
   field_phone_numbers:
     type: entity_reference_revisions_entity_view
@@ -121,7 +123,7 @@ content:
       view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 14
+    weight: 9
     region: content
   field_public_body_meetings:
     type: entity_reference_revisions_entity_view
@@ -130,7 +132,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 15
+    weight: 10
     region: content
   field_subcommittees:
     type: entity_reference_entity_view
@@ -139,9 +141,11 @@ content:
       view_mode: card
       link: false
     third_party_settings: {  }
-    weight: 9
+    weight: 8
     region: content
 hidden:
+  field_meeting_archive_date: true
+  field_meeting_archive_url: true
   langcode: true
   links: true
   search_api_excerpt: true
