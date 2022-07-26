@@ -2,6 +2,8 @@
 
 use Drupal\sfgov_profiles\Profiles;
 use Drupal\Core\Cache\Cache;
+use Drupal\node\Entity\Node;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
@@ -56,5 +58,157 @@ function sfgov_profiles_entity_presave($entity) {
         Cache::invalidateTags($profile_node->getCacheTags());
       }
     }
+  }
+}
+
+/**
+ * Implements hook_node_presave()
+ */
+function sfgov_profiles_node_presave($node) {
+  assignPositionToProfile($node);
+}
+
+/**
+ * Implements hook_node_insert()
+ * need to implement this hook for newly created nodes, otherwise, there is no node id, which we need for later reference
+ */
+function sfgov_profiles_node_insert($node) {
+  assignPositionToProfile($node);
+}
+
+// this will create a new position held on the profile node,
+// based on the position details added by the public body or department node
+function assignPositionToProfile($node) {
+  $profilePositions = [];
+  if (!empty($node->id())) {
+    $bundles = [
+      'public_body' => [
+        'field_name' => 'field_board_members',
+      ],
+      'department' => [
+        'field_name' => 'field_people'
+      ]
+    ];
+
+    if (array_key_exists($node->bundle(), $bundles)) {
+      $bundle = $node->bundle();
+      $fieldName = $bundles[$bundle]['field_name'];
+
+      // get profile groups
+      $profileGroups = $node->get($fieldName)->getValue();
+      foreach($profileGroups as $pg) {
+        $profileGroup = Paragraph::load($pg['target_id']);
+        $profiles = $profileGroup->get('field_profiles')->getValue();
+  
+        // collect the profiles and position information
+        foreach($profiles as $p) {
+          $profilePosition = Paragraph::load($p['target_id']);
+          $profilePositions[] = [
+            'profileNid' => $profilePosition->field_profile->target_id,
+            'agencyNid' => $node->id(),
+            'title' => $profilePosition->field_commission_position->value,
+            'type' => $profilePosition->field_position_type->value,
+            'start' => $profilePosition->field_starting_year->value,
+            'end' => $profilePosition->field_ending_year->value
+          ];
+        }
+      }
+  
+      // create a new position held item if it doesn't already exist
+      foreach($profilePositions as $pp) {
+        // attach to profile nodes in field_profile_positions_held
+        $profile = Node::load($pp['profileNid']);
+        $positionExists = false;
+        $currentPositions = $profile->get('field_profile_positions_held')->getValue();
+  
+        if (!empty($currentPositions)) {
+          // positions exist, check
+          foreach($currentPositions as $cp) {
+            $currentPosition = Paragraph::load($cp['target_id']);
+
+            // position title and agency id are the same, position already exists
+            if ($pp['title'] == $currentPosition->field_commission_position->value 
+              && $pp['agencyNid'] == $currentPosition->field_department->target_id) {
+                $positionExists = true;
+                break;
+            }
+          }
+        }
+  
+        if ($positionExists == false) {
+          // create position paragraph
+          $profilePositionsHeld = Paragraph::create([
+            'type' => 'public_body_profiles',
+            'field_department' => $pp['agencyNid'],
+            'field_commission_position' => $pp['title'],
+            'field_position_type' => $pp['type'],
+            'field_starting_year' => $pp['start'],
+            'field_ending_year' => $pp['end'],
+          ]);
+          
+          // add as position held item
+          $profile->get('field_profile_positions_held')->appendItem($profilePositionsHeld);
+          $profile->save();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
+  $parentEntity = $form_state->getFormObject()->getEntity();
+
+  if ($parentEntity->getType() === 'person') {
+    if ($element['#paragraph_type'] == 'public_body_profiles') {
+      // get field_ keys
+      $keys = array_keys($element['subform']);
+      $fieldKeys = preg_grep("/^field_/", $keys);
+
+      // rename edit button
+      $element['top']['actions']['actions']['edit_button']['#value'] = t('View');
+
+      // re-label profiles to position
+      $element['top']['type']['label']['#markup'] = str_replace('Profiles', t('Position'), $element['top']['type']['label']['#markup']);
+
+      // disable duplicate and remove buttons
+      $element['top']['actions']['dropdown_actions']['duplicate_button']['#disabled'] = true;
+      $element['top']['actions']['dropdown_actions']['remove_button']['#disabled'] = true;
+
+      error_log(print_r(array_keys($element['subform']['field_department']), 1));
+
+      // error_log($form_state->getValue('field_commission_position'));
+      error_log($element['subform']['field_department']['widget'][0]['target_id']['#type']);
+
+      // error_log(print_r(get_object_vars($element['subform']['field_department']['widget'][0]['target_id']['#default_value']), 1));
+
+      $element['subform']['field_department']['widget'][0]['target_id']['#title'] .= ' <a href="#">Click to edit</a>';
+
+      // disable inputs
+      foreach($fieldKeys as $fieldKey) {
+        $element['subform'][$fieldKey]['#disabled'] = true;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ */
+function sfgov_profiles_field_widget_multivalue_form_alter(&$element, $form_state, $context) {
+  // edit some button text
+  if(array_key_exists('#field_name', $element) && $element['#field_name'] == 'field_profile_positions_held') {
+
+    // re-label buttons
+    if(array_key_exists('header_actions', $element) && array_key_exists('actions', $element['header_actions'])) {
+      $element['header_actions']['actions']['edit_all']['#value'] = t('View all');
+    }
+
+    // disable and hide the add more button
+    $element['add_more']['#disabled'] = true;
+    $element['add_more']['#attributes']['class'][] = 'visually-hidden';
+    $element['add_more']['#suffix'] = '';
   }
 }
