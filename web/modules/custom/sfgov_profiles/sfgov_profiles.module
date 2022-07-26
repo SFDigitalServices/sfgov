@@ -62,9 +62,9 @@ function sfgov_profiles_entity_presave($entity) {
 }
 
 /**
- * Implements hook_node_presave()
+ * Implements hook_node_update()
  */
-function sfgov_profiles_node_presave($node) {
+function sfgov_profiles_node_update($node) {
   assignPositionToProfile($node);
 }
 
@@ -177,13 +177,7 @@ function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_stat
       $element['top']['actions']['dropdown_actions']['duplicate_button']['#disabled'] = true;
       $element['top']['actions']['dropdown_actions']['remove_button']['#disabled'] = true;
 
-      error_log(print_r(array_keys($element['subform']['field_department']), 1));
-
-      // error_log($form_state->getValue('field_commission_position'));
-      error_log($element['subform']['field_department']['widget'][0]['target_id']['#type']);
-
-      // error_log(print_r(get_object_vars($element['subform']['field_department']['widget'][0]['target_id']['#default_value']), 1));
-
+      // add link to edit agency
       $element['subform']['field_department']['widget'][0]['target_id']['#title'] .= ' <a href="#">Click to edit</a>';
 
       // disable inputs
