@@ -126,6 +126,87 @@ function sfgov_departments_form_node_department_edit_form_alter(&$form, FormStat
       $form['field_req_public_records']['widget']['#attributes']['disabled'] = 'disabled';
     }
   }
+
+  // [SG-1746]
+  // This setup sets the archive date field to be required, if the archive url
+  // is set. This ensures that if a department has an archive that the last
+  // archived date must be set.
+  $form['field_archive_date']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_archive_url[0][uri]"]' => ['filled' => TRUE]
+    ],
+  ];
+  $form['#validate'][] = '_sfgov_departments_dept_node_archive_url_and_date_form_validate';
+
+  // [SG-1746]
+  // This setup sets the request public records type fields to be required, if 
+  // the "Required public records" radio type field is set. This ensures that if 
+  // a department has a required type, that the type field associated with that is
+  // filled in.
+
+  // Set the Link field to required if checkbox is set to Link.
+  $form['field_req_public_records_link']['widget'][0]['uri']['#states'] = [
+    'required' => [
+      ':input[name="field_req_public_records"]' => ['value' => 'Link']
+    ],
+  ];
+
+  // Set the Email field to required if checkbox is set to Email.
+  $form['field_req_public_records_email']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_req_public_records"]' => ['value' => 'Email']
+    ],
+  ];
+
+  // Set the Phone field to required if checkbox is set to Phone.
+  $form['field_req_public_records_phone']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_req_public_records"]' => ['value' => 'Phone']
+    ],
+  ];
+
+  $form['#validate'][] = '_sfgov_departments_dept_req_public_records_form_validate';
+}
+
+/**
+ * Validates submission values in the FORM_ID() form.
+ */
+function _sfgov_departments_dept_node_archive_url_and_date_form_validate($form, FormStateInterface $form_state) {
+  // [SG-1746]
+  // This validation handler ensures that if an archive url is set, then the
+  // archive date must also be set.
+  $values = $form_state->getValues();
+  if (!empty($values['field_archive_url'][0]['uri'])) {
+    if (empty($values['field_archive_date'][0]['value'])) {
+      $form_state->setErrorByName("field_archive_date[0][value][date]", t('Archive date is required if an Archive URL is set.'));
+    }
+  }
+}
+
+/**
+ * Validates submission values in the FORM_ID() form.
+ */
+function _sfgov_departments_dept_req_public_records_form_validate($form, FormStateInterface $form_state) {
+  // [SG-1746]
+  // This validation handler ensures that if a request type is set, then the
+  // associated request type data field must also be set.
+  $values = $form_state->getValues();
+  if (!empty($values['field_req_public_records'][0]['value'])) {
+
+    $required_type = $values['field_req_public_records'][0]['value'];
+
+    if ($required_type == 'Link' && empty($values['field_req_public_records_link'][0]['uri'])) {
+      $form_state->setErrorByName("field_req_public_records_link", t('Public records link is required if request type is set to Link.'));
+    }
+
+    if ($required_type == 'Email' && empty($values['field_req_public_records_email'][0]['value'])) {
+      $form_state->setErrorByName("field_req_public_records_email", t('Public records email is required if request type is set to Email.'));
+    }
+
+    if ($required_type == 'Phone' && empty($values['field_req_public_records_phone'][0]['value'])) {
+      $form_state->setErrorByName("field_req_public_records_phone", t('Public records phone is required if request type is set to Phone.'));
+    }
+  }
 }
 
 /**
@@ -197,9 +278,9 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
   return $form['field_departments'];
 }
 
-/**  
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().  
- */  
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
 function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
   $parentEntity = $form_state->getFormObject()->getEntity();
 

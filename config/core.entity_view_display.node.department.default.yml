@@ -8,6 +8,8 @@ dependencies:
     - field.field.node.department.field_address
     - field.field.node.department.field_alert_expiration_date
     - field.field.node.department.field_alert_text
+    - field.field.node.department.field_archive_date
+    - field.field.node.department.field_archive_url
     - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
@@ -89,6 +91,27 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 23
+    region: content
+  field_archive_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F Y'
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  field_archive_url:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 25
     region: content
   field_call_to_action:
     type: entity_reference_revisions_entity_view
