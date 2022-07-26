@@ -16,6 +16,7 @@
     margin: 0 0 $rhythm 0;
     text-decoration: underline;
   }
+
   .description {
     @include fs-body-short;
     color: $c-slate;
@@ -25,8 +26,20 @@
       margin-bottom: 0;
     }
   }
+
   &:hover {
     border-color: $c-bright-blue;
   }
+
+  @include media-max($mobile-screen) {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+
+    &:hover {
+      border-color: none;
+    }
+  }
 }
+
 /* purgecss end ignore */
