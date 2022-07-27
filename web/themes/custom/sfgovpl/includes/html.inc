@@ -188,7 +188,6 @@ function sfgovpl_preprocess_html(&$variables) {
         ])->toString(),
         'status' => isset($langs[$langCode]) ?  $theNode->getTranslation($langCode)->isPublished() : false,
       ];
-      $test = 'test';
     }
     $variables['page']['#attached']['drupalSettings']['sfgov_translations']['page'] = $pageInfo;
   }

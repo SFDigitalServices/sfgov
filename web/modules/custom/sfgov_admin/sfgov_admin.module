@@ -289,16 +289,14 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
  * Override translation "add" links to fix machine translation URL alias 
  */
 function sfgov_admin_form_tmgmt_content_translate_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  // Brittle approach
+  // Brittle approach, not working as Drupal inserts the URL alias after the link is clicked which breaks
+  // tmgmt when trying to create a manually translated node
   foreach ($form['languages']['#options'] as $key => $lang_opts) {
     if (isset($lang_opts[4]) && isset($lang_opts[4]['data']['#links']['add'])) {
       $node_id = \Drupal::routeMatch()->getParameter('node')->Id();
-      //$form['languages']['#options'][4]['data']['#links']['add']['url']['options']['language'] = $lang_opts[4]['data']['#links']['add']['url']['options']['language']['defaultValues'];
       $form['languages']['#options'][$key][4]['data']['#links']['add']['url'] = \Drupal\Core\Url::fromUri('base://' . $key . '/node/' . $node_id . '/translations/add/en/' . $key);
-      $form_states = 'test';
     }
   }
-  $test = 'test';
 }
 
 /**
