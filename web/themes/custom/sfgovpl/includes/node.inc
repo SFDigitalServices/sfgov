@@ -758,10 +758,10 @@ function profile_page_fields($node) {
 
         // [SG-1814]
         // Changing the format of the trimmed text from the teaser, to restrict-
-        // ed_html or basic_html, helps to clear out the extra <p> and </br>
+        // ed_html or full_html, helps to clear out the extra <p> and </br>
         // tags. sf_restricted_html or sf_basic_html formats don't have the
         // setup to clear that stuff out.
-        $output_trim['#format'] = 'restricted_html';
+        $output_trim['#format'] = 'full_html';
 
         // Get the biography text from the full display (default) view mode
         // settings.
