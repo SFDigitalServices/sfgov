@@ -178,7 +178,9 @@ function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_stat
       $element['top']['actions']['dropdown_actions']['remove_button']['#disabled'] = true;
 
       // add link to edit agency
-      $element['subform']['field_department']['widget'][0]['target_id']['#title'] .= ' <a href="#">Click to edit</a>';
+      if(array_key_exists('field_department', $element['subform'])) {
+        $element['subform']['field_department']['widget'][0]['target_id']['#title'] .= ' <a href="#">Click to edit</a>';
+      }
 
       // disable inputs
       foreach($fieldKeys as $fieldKey) {
