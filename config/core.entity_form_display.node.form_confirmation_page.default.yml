@@ -94,7 +94,6 @@ third_party_settings:
         required_fields: true
     group_transaction_page_content:
       children:
-        - group_confirm
         - group_what_to_do
         - group_contact_and_related_inform
         - field_form_confirm_page_slug
@@ -118,9 +117,9 @@ third_party_settings:
       children:
         - field_bann
       label: 'Confirmation Banner'
-      region: content
-      parent_name: group_transaction_page_content
-      weight: 102
+      region: hidden
+      parent_name: ''
+      weight: 17
       format_type: fieldset
       format_settings:
         classes: ''
@@ -157,14 +156,6 @@ content:
     weight: 5
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_bann:
-    type: string_textarea
-    weight: 30
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
     third_party_settings: {  }
   field_confirmation_sidebar:
     type: sfgov_paragraphs
@@ -319,6 +310,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_bann: true
   field_banner_color: true
   field_banner_image: true
   langcode: true
