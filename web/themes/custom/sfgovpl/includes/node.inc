@@ -743,23 +743,41 @@ function profile_page_fields($node) {
 
     // Biography
     if($node->hasField('field_biography')) {
-      // Get trimmed profile bio
+
+      // Get trimmed profile biography text.
       $source = \Drupal::service('entity.repository')->getTranslationFromContext($node);
       $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
+
       if ($source && $source->hasField('field_biography') && $source->access('view')) {
         $value = $source->get('field_biography');
+
+        // Get the value of the trimmed biography text that comes from the
+        // teaser view mode settings.
         $output_trim = $viewBuilder->viewField($value, 'teaser');
         $output_trim = $output_trim[0] ?? [];
+
+        // [SG-1814]
+        // Changing the format of the trimmed text from the teaser, to restrict-
+        // ed_html or full_html, helps to clear out the extra <p> and </br>
+        // tags. sf_restricted_html or sf_basic_html formats don't have the
+        // setup to clear that stuff out.
+        $output_trim['#format'] = 'full_html';
+
+        // Get the biography text from the full display (default) view mode
+        // settings.
         $output_full = $viewBuilder->viewField($value, 'default');
         $output_full = $output_full[0] ?? [];
+
+        // If the full text is longer than the trimmed text, it means we need to
+        // output as the biotrim "See More"/"See Less" expanding style.
         if (!empty($output_full['#text']) && (strlen($output_full['#text']) > strlen($output_trim['#text']))) {
           $output_trim['#cache']['tags'] = $source->getCacheTags();
           $theFields['biotrim'] = !empty($output_trim) ? $output_trim : [];
         }
       }
     }
-
   }
+
   return $theFields;
 }
 
