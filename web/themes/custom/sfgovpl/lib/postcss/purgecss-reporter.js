@@ -1,5 +1,4 @@
 const { mkdirSync, writeFileSync } = require('fs')
-const { basename } = require('path')
 const { bold, green, yellow, red, white } = require('chalk')
 
 /**
@@ -34,18 +33,20 @@ module.exports = function purgeCSSReporter (options) {
             console.warn(red`⚠️  ${bold('all CSS has been purged')} (${selectors.length} un-referenced selectors) from`, output)
             console.warn(red`   you either don't need this file anymore, or you should`)
             console.warn(red`   exclude it from PurgeCSS with \`${white`scripts/add-purgecss-comments ${input}`}\``)
-          } else {
+          }
+          else {
             console.log(yellow`🔥 purged ${white(bold(selectors.length))} un-referenced selectors from`, output)
             console.log(yellow`   see ${white(purgedPath)} for the full list`)
           }
-        } else {
+        }
+        else {
           console.log(`👍 ${green('no unused selectors purged from')}`, output)
         }
         writeFileSync(purgedPath, JSON.stringify({ selectors }, null, 2), 'utf8')
-      } else {
+      }
+      else {
         console.log(green`🙈 purgecss did not process ${white(output)}`, `(source: ${input})`)
       }
     }
   }
 }
-
