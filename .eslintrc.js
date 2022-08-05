@@ -13,6 +13,9 @@ module.exports = {
     Drupal: 'readonly',
     jQuery: 'readonly'
   },
+  ignorePatterns: [
+    'dist/**'
+  ],
   rules: {
     'arrow-parens': ['warn', 'as-needed', {
       requireForBlockBody: false
