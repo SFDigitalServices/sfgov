@@ -66,7 +66,8 @@
         $(this.inputSelector).keyup(function () {
           if ($(this).val().length <= 0) {
             $(_this.topSearchContainerSelector).show()
-          } else {
+          }
+          else {
             $(_this.topSearchContainerSelector).hide()
           }
         })
@@ -94,7 +95,8 @@
                   autocompleteHtml += '<a role="option" id="aria-ac-opt-' + i + '" href="' + searchPathPrefix + autocompletes[i].disp + '">' + autocompletes[i].disp.replace(searchKeyword.toLowerCase(), '<strong>' + searchKeyword + '</strong>') + '</a>'
                 }
                 $(_this.autocompleteContainerSelector).html(autocompleteHtml)
-              } else {
+              }
+              else {
                 $(_this.autocompleteContainerSelector).hide()
                 $(_this.inputSelector).attr('aria-expanded', false)
               }
@@ -103,7 +105,8 @@
               })
             }
           })
-        } else {
+        }
+        else {
           $(_this.autocompleteContainerSelector).hide()
           $(_this.inputSelector).attr('aria-expanded', false)
         }
@@ -140,7 +143,8 @@
 
           if (result.metaData.sfgovTitle) {
             title = result.metaData.sfgovTitle
-          } else {
+          }
+          else {
             title = result.title
           }
 
@@ -148,18 +152,22 @@
           let truncatedSummary = ''
           if (result.metaData.sfgovSummary) {
             resultSummary = result.metaData.sfgovSummary
-          } else if (result.metaData.c) {
+          }
+          else if (result.metaData.c) {
             resultSummary = result.metaData.c
-          } else if (result.summary) {
+          }
+          else if (result.summary) {
             resultSummary = result.summary
-          } else {
+          }
+          else {
             resultSummary = 'No result summary'
           }
 
           if (resultSummary.length > 200) {
             truncatedSummary = resultSummary.substr(0, 200)
             truncatedSummary = truncatedSummary.substr(0, truncatedSummary.lastIndexOf(' ')) + ' ...'
-          } else {
+          }
+          else {
             truncatedSummary = resultSummary
           }
 
@@ -231,7 +239,8 @@
 
         if ($('#sfgov-search-results').hasClass('sfgov-search-mobile-results')) {
           $(elem).html($(elem).html() + html)
-        } else {
+        }
+        else {
           $(elem).html(html)
         }
 
@@ -257,10 +266,12 @@
             // make a request for the correctly spelled word
             search311.setParam('query', data.response.resultPacket.spell.text)
             search311.makeRequest()
-          } else {
+          }
+          else {
             if (results.length === 0) {
               emptyResultSet = true
-            } else {
+            }
+            else {
               _this.renderSearchResults(results, resultsSummary, highlightRegex, resultsDiv, true)
               if (!$('.sfgov-search-pagination').hasClass('has-nav')) {
                 _this.paginate(data)
@@ -271,12 +282,14 @@
               this.updateCountSummary(resultsSummary.totalMatching, resultsSummary.currStart, (resultsSummary.nextStart ? resultsSummary.nextStart - 1 : resultsSummary.totalMatching))
             }
           }
-        } else {
+        }
+        else {
           messagesDiv.prepend(Drupal.t('There was an error retrieving search results.  Please try again later.'))
           $('#sfgov-search-overlay').hide()
           $('#sfgov-search-loading').hide()
         }
-      } else {
+      }
+      else {
         emptyResultSet = true
       }
       if (emptyResultSet) {
@@ -313,13 +326,17 @@
         if (currentPage <= 2) {
           start = 1
           end = numPagesToShow
-        } else if (currentPage > (numPages - 2)) {
+        }
+        else if (currentPage > (numPages - 2)) {
           start = (numPages - numPagesToShow) + 1
           end = numPages
-        } else {
+        }
+        else {
           start = currentPage - 2
           end = currentPage + 2
-          if (start > 1) $(pageLinks[start - 1]).addClass('more-prev')
+          if (start > 1) {
+            $(pageLinks[start - 1]).addClass('more-prev')
+          }
         }
 
         if (end !== numPages) {
@@ -341,8 +358,12 @@
         $(paginateHtml).append('<li class="previous" style="display:none"><a href="javascript:void(0)" title="' + Drupal.t('Previous search results page') + '">' + Drupal.t('Previous') + '</a></li>')
         for (let i = 1; i <= numPages; i++) {
           let classname = ''
-          if (i === 1) classname += ' first current'
-          if (i === numPages) classname += ' last'
+          if (i === 1) {
+            classname += ' first current'
+          }
+          if (i === numPages) {
+            classname += ' last'
+          }
           const listItem = $('<li class="' + classname + ' page-num"></li>')
           const pageLink = $('<a href="javascript:void(0)" data-page-num="' + i + '" data-next-start="' + (((i - 1) * resultsPerPage) + 1) + '" title="' + Drupal.t('Search results page ') + i + '"></a>')
           $(listItem).append(pageLink)
@@ -356,13 +377,15 @@
 
             if (pageNum === last) {
               $('.sfgov-search-pagination-nav .next').hide()
-            } else {
+            }
+            else {
               $('.sfgov-search-pagination-nav .next').show()
             }
 
             if (pageNum === first) {
               $('.sfgov-search-pagination-nav .previous').hide()
-            } else {
+            }
+            else {
               $('.sfgov-search-pagination-nav .previous').show()
             }
 
@@ -380,7 +403,9 @@
 
         $('.sfgov-search-pagination').prepend(paginateHtml)
 
-        if (numPages > 1) $(paginateHtml).append('<li class="next"><a href="javascript:void(0)" title="' + Drupal.t('Next search results page') + '">' + Drupal.t('Next') + '</a></li>')
+        if (numPages > 1) {
+          $(paginateHtml).append('<li class="next"><a href="javascript:void(0)" title="' + Drupal.t('Next search results page') + '">' + Drupal.t('Next') + '</a></li>')
+        }
 
         // next click
         $('.sfgov-search-pagination-nav .next').click(() => {
@@ -434,7 +459,8 @@
       if ($(this).hasClass('close')) {
         $(this).removeClass('close')
         $(containerSelector).removeClass('mobile-open')
-      } else {
+      }
+      else {
         $(this).addClass('close')
         $(containerSelector).addClass('mobile-open')
       }
@@ -450,7 +476,8 @@
     if (width <= 770) {
       $('#sfgov-search-results').addClass('sfgov-search-mobile-results')
       $('#sfgov-search-results .sfgov-search-result.views-row').show()
-    } else {
+    }
+    else {
       $('#sfgov-search-results').removeClass('sfgov-search-mobile-results')
       $('#sfgov-search-results .sfgov-search-result.views-row:not([data-result-page-num="' + currentPage + '"])').hide()
     }
@@ -486,7 +513,8 @@
       let selector = ''
       if (autosuggestVisible) {
         selector = '#sfgov-search-autocomplete > a'
-      } else if (topSearchesVisible) {
+      }
+      else if (topSearchesVisible) {
         selector = '#sfgov-top-search-suggestions-container > .sfgov-top-search-suggestion a'
       }
       itemLength = selector.length > 0 ? $(selector).length : 0
@@ -496,13 +524,16 @@
         if (keyPressed === 40) { // arrow down
           if ($('#edit-sfgov-search-input').is(':focus')) { // input is focused, set focus on first element
             focusIndex = 0
-          } else {
+          }
+          else {
             focusIndex = (focusIndex === itemLength - 1) ? (itemLength - 1) : focusIndex + 1
           }
         }
         if (keyPressed === 38) {
           focusIndex--
-          if (focusIndex <= 0) focusIndex = 0
+          if (focusIndex <= 0) {
+            focusIndex = 0
+          }
         }
         $(selector)[focusIndex].focus()
         $('#edit-sfgov-search-input').attr('aria-activedescendant', $(selector + ':focus').attr('id'))

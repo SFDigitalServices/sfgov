@@ -8,8 +8,6 @@ module.exports = {
     'plugin:sfgov/babel',
     'plugin:sfgov/recommended'
   ],
-  env: {
-  },
   globals: {
     drupalSettings: 'readonly',
     Drupal: 'readonly',
@@ -19,8 +17,10 @@ module.exports = {
     'arrow-parens': ['warn', 'as-needed', {
       requireForBlockBody: false
     }],
+    'brace-style': ['warn', 'stroustrup'],
     camelcase: 'warn',
     'comma-dangle': 'warn',
+    curly: ['warn', 'all'],
     eqeqeq: ['error', 'smart'],
     'newline-per-chained-call': ['warn', {
       ignoreChainWithDepth: 3
@@ -36,7 +36,6 @@ module.exports = {
     'promise/always-return': 0,
     'promise/catch-or-return': 0,
     semi: 'error',
-    // we don't need "use strict" directives: @babel/preset-env adds them automatically
     strict: ['error', 'never']
   }
 }

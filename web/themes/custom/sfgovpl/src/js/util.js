@@ -9,7 +9,9 @@ SFGOV.util = {
       .split('&')
       .forEach(item => {
         tmp = item.split('=')
-        if (tmp[0] === name) result = decodeURIComponent(tmp[1])
+        if (tmp[0] === name) {
+          result = decodeURIComponent(tmp[1])
+        }
       })
     return result
   }

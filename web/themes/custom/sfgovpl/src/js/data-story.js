@@ -37,7 +37,8 @@
           now = $(window, context).scrollTop()
           if (then > now && now > 700) {
             $sticky.addClass('show')
-          } else {
+          }
+          else {
             $sticky.removeClass('show')
           }
           then = now
@@ -62,7 +63,8 @@
                   $target.focus()
                   if ($target.is(':focus')) {
                     return !1
-                  } else {
+                  }
+                  else {
                     $target.attr('tabindex', '-1')
                     $target.focus()
                   }

@@ -43,7 +43,8 @@
             $buttonShow.hide()
             $buttonHide.hide()
             moveFilterTitle('medium-plus')
-          } else {
+          }
+          else {
             // < $medium-screen
             toggleFilters($content, 'hide')
             moveFilterTitle()
@@ -66,7 +67,8 @@
         if (size === 'medium-plus') {
           // Restore original location.
           $form.find($containerAttrStr).prepend($label)
-        } else {
+        }
+        else {
           // Move label.
           $label.insertBefore($buttonShow)
         }
@@ -81,7 +83,8 @@
           $buttonShow.attr('aria-expanded', false).show()
           $buttonHide.attr('aria-expanded', true).hide()
           $filters.addClass('is-collapsed')
-        } else {
+        }
+        else {
           $content.removeAttr('aria-hidden hidden')
           $buttonShow.attr('aria-expanded', true).hide()
           $buttonHide.attr('aria-expanded', false).show()

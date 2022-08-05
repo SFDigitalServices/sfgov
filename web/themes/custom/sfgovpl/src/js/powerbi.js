@@ -30,7 +30,8 @@
 
           if (device === showDevice) {
             $chart.show()
-          } else {
+          }
+          else {
             $chart.hide()
           }
         })

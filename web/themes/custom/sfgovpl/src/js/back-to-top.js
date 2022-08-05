@@ -20,7 +20,8 @@
           now = $(window, context).scrollTop()
           if (then > now && now > 700) {
             $('#back-to-top').addClass('show')
-          } else {
+          }
+          else {
             $('#back-to-top').removeClass('show')
           }
           then = now

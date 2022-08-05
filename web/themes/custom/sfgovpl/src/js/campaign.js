@@ -13,10 +13,12 @@
             }
             const tallestHeight = $(tallestImage).height()
             $(this).find('.fact-item .item-wrapper').height(tallestHeight)
-          } else {
+          }
+          else {
             $(this).find('.fact-item .item-wrapper').css({ height: 'auto' })
           }
-        } else {
+        }
+        else {
           $(this).find('.fact-item .image').hide()
         }
       })

@@ -43,7 +43,8 @@
       const firstLetter = sortTitle[i].charAt(0)
       if (isAlphaNumeric(firstLetter)) {
         regexStr += '(' + firstLetter.toUpperCase() + '|' + firstLetter.toLowerCase() + ')' + replaceSpecialChars(sortTitle[i].slice(1)) + '(\\s+)?'
-      } else {
+      }
+      else {
         regexStr += replaceSpecialChars(sortTitle[i]) + '(\\s+)?'
       }
     }
@@ -55,7 +56,8 @@
         const replacedTitle = $(this).html().replace(match[0], '<strong>' + match[0] + '</strong>')
         $(this).html(replacedTitle)
       }
-    } catch (e) {
+    }
+    catch (e) {
       // console.log('skipped: ' + $(this).html())
     }
   })

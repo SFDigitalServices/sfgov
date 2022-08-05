@@ -9,31 +9,38 @@ function SFGovTranslate () {
         const c = document.createEvent('HTMLEvents')
         c.initEvent(b, true, true)
         a.dispatchEvent(c)
-      } else {
+      }
+      else {
         const c = document.createEventObject()
         a.fireEvent('on' + b, c)
       }
-    } catch (e) {
+    }
+    catch (e) {
     }
   }
 
   this.sfgovDoGTranslate = function (a) {
     $('body').hide()
     const deferred = jQuery.Deferred()
-    if (!a) return
+    if (!a) {
+      return
+    }
     const b = a.split('|')[1]
     let c
 
     const d = document.getElementsByTagName('select')
     for (let i = 0; i < d.length; i++) {
-      if (d[i].className === 'goog-te-combo') { c = d[i] }
+      if (d[i].className === 'goog-te-combo') {
+        c = d[i]
+      }
     }
     if (!document.getElementById('google_translate_element2') || !document.getElementById('google_translate_element2').innerHTML.length || !c.length || !c.innerHTML.length) {
       setTimeout(() => {
         that.sfgovDoGTranslate(a)
       // eslint-disable-next-line no-magic-numbers
       }, 500)
-    } else {
+    }
+    else {
       c.value = b
       that.sfgovGTranslateFireEvent(c, 'change')
       that.sfgovGTranslateFireEvent(c, 'change')
@@ -74,7 +81,8 @@ function SFGovTranslate () {
           window.location.href = drupalTranslation.turl
         })
       }
-    } else { // no drupal translation exists, use gtranslate
+    }
+    else { // no drupal translation exists, use gtranslate
       // TODO: Is this ever called? AFAICT drupalTranslation.turl always exists.
       that.sfgovDoGTranslate(args)
       that.currentSelectedTranslation = args
