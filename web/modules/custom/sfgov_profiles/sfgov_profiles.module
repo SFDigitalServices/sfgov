@@ -65,93 +65,153 @@ function sfgov_profiles_entity_presave($entity) {
  * Implements hook_node_update()
  */
 function sfgov_profiles_node_update($node) {
-  assignPositionToProfile($node);
+  // need to handle when entire profile group is removed - a node level update
+  $bundlesWithProfileGroups = [
+    'public_body' => [
+      'field_name' => 'field_board_members',
+    ],
+    'department' => [
+      'field_name' => 'field_people'
+    ]
+  ];
+
+  if (array_key_exists($node->bundle(), $bundlesWithProfileGroups)) {
+    $bundle = $node->bundle();
+    $fieldName = $bundlesWithProfileGroups[$bundle]['field_name'];
+
+    $updatedProfileGroups = $node->get($fieldName)->getValue(); // get updated profile groups
+    $ogProfileGroups = $node->original->get($fieldName)->getValue(); // get original profile groups
+
+    // compare for removals
+    $removedParagraphs = array_diff(array_column($ogProfileGroups, 'target_id'), array_column($updatedProfileGroups, 'target_id'));
+
+    // iterate removed target_id
+    foreach ($removedParagraphs as $rp) {
+
+      // load original profile group and profiles
+      $removedParagraph = Paragraph::load($rp);
+      $removedProfileGroupProfiles = $removedParagraph->get('field_profiles')->getValue();
+      
+      // remove position from profile
+      foreach ($removedProfileGroupProfiles as $rpgp) {
+        $removedPosition = Paragraph::load($rpgp['target_id']);
+        updateProfileNode([
+          'paragraphId' => $removedPosition->id(),
+          'profileNid' => $removedPosition->field_profile->target_id,
+          'agencyNid' => $node->id(),
+          'title' => $removedPosition->field_commission_position->value,
+          'type' => $removedPosition->field_position_type->value,
+          'start' => $removedPosition->field_starting_year->value,
+          'end' => $removedPosition->field_ending_year->value
+        ], true);
+      }
+    }
+  }
 }
 
 /**
- * Implements hook_node_insert()
- * need to implement this hook for newly created nodes, otherwise, there is no node id, which we need for later reference
+ * Implements hook_entity_update()
  */
-function sfgov_profiles_node_insert($node) {
-  assignPositionToProfile($node);
+function sfgov_profiles_paragraph_update($paragraph) {
+  assignPositionToProfile($paragraph);
 }
 
-// this will create a new position held on the profile node,
-// based on the position details added by the public body or department node
-function assignPositionToProfile($node) {
-  $profilePositions = [];
-  if (!empty($node->id())) {
-    $bundles = [
-      'public_body' => [
-        'field_name' => 'field_board_members',
-      ],
-      'department' => [
-        'field_name' => 'field_people'
-      ]
-    ];
+/**
+ * Implements hook_entity_insert()
+ */
+function sfgov_profiles_paragraph_insert($paragraph) {
+  assignPositionToProfile($paragraph);
+}
 
-    if (array_key_exists($node->bundle(), $bundles)) {
-      $bundle = $node->bundle();
-      $fieldName = $bundles[$bundle]['field_name'];
+function assignPositionToProfile($paragraph) {
+  if ($paragraph->bundle() == 'profile_group') {
+    $node = $paragraph->getParentEntity();
 
-      // get profile groups
-      $profileGroups = $node->get($fieldName)->getValue();
-      foreach($profileGroups as $pg) {
-        $profileGroup = Paragraph::load($pg['target_id']);
-        $profiles = $profileGroup->get('field_profiles')->getValue();
-  
-        // collect the profiles and position information
-        foreach($profiles as $p) {
-          $profilePosition = Paragraph::load($p['target_id']);
-          $profilePositions[] = [
-            'profileNid' => $profilePosition->field_profile->target_id,
-            'agencyNid' => $node->id(),
-            'title' => $profilePosition->field_commission_position->value,
-            'type' => $profilePosition->field_position_type->value,
-            'start' => $profilePosition->field_starting_year->value,
-            'end' => $profilePosition->field_ending_year->value
-          ];
-        }
+    $ogProfilePositions = $paragraph->original ? getPositions($node->id(), $paragraph->original->get('field_profiles')->referencedEntities()) : [];
+    $updatedProfilePositions = getPositions($node->id(), $paragraph->get('field_profiles')->getValue());
+
+    // check for removal
+    if (count($ogProfilePositions) > count($updatedProfilePositions)) {
+      $removeParagraphIds = array_diff(array_column($ogProfilePositions, 'paragraphId'), array_column($updatedProfilePositions, 'paragraphId'));
+
+      foreach ($removeParagraphIds as $removedParagraphId) {
+        $paragraphIds = array_column($ogProfilePositions, 'paragraphId');
+        $removedIndex = array_search($removedParagraphId, $paragraphIds);
+        updateProfileNode($ogProfilePositions[$removedIndex], true);
       }
-  
-      // create a new position held item if it doesn't already exist
-      foreach($profilePositions as $pp) {
-        // attach to profile nodes in field_profile_positions_held
-        $profile = Node::load($pp['profileNid']);
-        $positionExists = false;
-        $currentPositions = $profile->get('field_profile_positions_held')->getValue();
-  
-        if (!empty($currentPositions)) {
-          // positions exist, check
-          foreach($currentPositions as $cp) {
-            $currentPosition = Paragraph::load($cp['target_id']);
-
-            // position title and agency id are the same, position already exists
-            if ($pp['title'] == $currentPosition->field_commission_position->value 
-              && $pp['agencyNid'] == $currentPosition->field_department->target_id) {
-                $positionExists = true;
-                break;
-            }
-          }
-        }
-  
-        if ($positionExists == false) {
-          // create position paragraph
-          $profilePositionsHeld = Paragraph::create([
-            'type' => 'public_body_profiles',
-            'field_department' => $pp['agencyNid'],
-            'field_commission_position' => $pp['title'],
-            'field_position_type' => $pp['type'],
-            'field_starting_year' => $pp['start'],
-            'field_ending_year' => $pp['end'],
-          ]);
-          
-          // add as position held item
-          $profile->get('field_profile_positions_held')->appendItem($profilePositionsHeld);
-          $profile->save();
-        }
+    } else {
+      foreach($updatedProfilePositions as $updatedProfilePosition) {
+        updateProfileNode($updatedProfilePosition);
       }
     }
+
+  }
+}
+
+function getPositions($agencyId, $profiles) {
+  $positions = [];
+  
+  foreach($profiles as $p) {
+    $profilePosition = is_object($p) ? $p : Paragraph::load($p['target_id']);
+    $positions[] = [
+      'paragraphId' => $profilePosition->id(),
+      'profileNid' => $profilePosition->field_profile->target_id,
+      'agencyNid' => $agencyId,
+      'title' => $profilePosition->field_commission_position->value,
+      'type' => $profilePosition->field_position_type->value,
+      'start' => $profilePosition->field_starting_year->value,
+      'end' => $profilePosition->field_ending_year->value
+    ];
+  }
+
+  return $positions;
+}
+
+function updateProfileNode($position, $removed = false) {
+  // load profile node
+  if (!empty($position['profileNid'])) {
+    $profile = Node::load($position['profileNid']);
+    $positionsHeld = $profile->get('field_profile_positions_held')->getValue();
+    $positionExists = false;
+    $positionHeld = null;
+    $positionIndex = 0;
+
+    foreach($positionsHeld as $p) {
+      $positionHeld = Paragraph::load($p['target_id']);
+      if ($position['paragraphId'] == $positionHeld->field_title->value) {
+        $positionExists = true;
+        break;
+      } else {
+        $positionIndex++;
+      }
+    }
+
+    if ($positionExists == true) {
+      if ($removed == true) {
+        $profile->get('field_profile_positions_held')->removeItem($positionIndex);
+      } else { // update
+        $positionHeld->field_department->target_id = $position['agencyNid'];
+        $positionHeld->field_commission_position->value = $position['title'];
+        $positionHeld->field_position_type->value = $position['type'];
+        $positionHeld->field_starting_year->value = $position['start'];
+        $positionHeld->field_ending_year->value = $position['end'];
+        $positionHeld->save();
+      }
+    } else { // create new, add as position held item
+      $profile->get('field_profile_positions_held')->appendItem(
+        Paragraph::create([
+          'type' => 'public_body_profiles',
+          'field_title' => $position['paragraphId'],
+          'field_department' => $position['agencyNid'],
+          'field_commission_position' => $position['title'],
+          'field_position_type' => $position['type'],
+          'field_starting_year' => $position['start'],
+          'field_ending_year' => $position['end'],
+        ])
+      );
+    }
+
+    $profile->save();
   }
 }
 
@@ -162,6 +222,9 @@ function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_stat
   $parentEntity = $form_state->getFormObject()->getEntity();
 
   if ($parentEntity->getType() === 'person') {
+    $currentUser = \Drupal::currentUser();
+    $userRoles = $currentUser->getRoles();
+
     if ($element['#paragraph_type'] == 'public_body_profiles') {
       // get field_ keys
       $keys = array_keys($element['subform']);
@@ -175,17 +238,26 @@ function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_stat
 
       // disable duplicate and remove buttons
       $element['top']['actions']['dropdown_actions']['duplicate_button']['#disabled'] = true;
-      $element['top']['actions']['dropdown_actions']['remove_button']['#disabled'] = true;
+
+      // mainly for debugging
+      // saving an agency with profile groups will repopulate the positions held if positions exist for the profile      
+      if (!in_array('administrator', $userRoles) && !in_array('digital_services', $userRoles)) {
+        $element['top']['actions']['dropdown_actions']['remove_button']['#disabled'] = true;
+      }
 
       // add link to edit agency
       if(array_key_exists('field_department', $element['subform'])) {
-        $element['subform']['field_department']['widget'][0]['target_id']['#title'] .= ' <a href="#">Click to edit</a>';
+        $agency = $element['subform']['field_department']['widget'][0]['target_id']['#default_value'];
+        $element['subform']['field_department']['widget'][0]['target_id']['#title'] 
+          .= ' <a href="' . $agency->toUrl('canonical', ['absolute' => true])->toString() . '">Click to edit</a>';
       }
 
       // disable inputs
       foreach($fieldKeys as $fieldKey) {
         $element['subform'][$fieldKey]['#disabled'] = true;
       }
+
+      $element['subform']['field_title']['#attributes']['class'][] = 'visually-hidden';
     }
   }
 }
