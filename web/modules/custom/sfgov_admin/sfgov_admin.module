@@ -328,6 +328,23 @@ function sfgov_admin_field_widget_sfgov_customizable_paragraphs_form_alter(&$ele
  * Alters the SFGov paragraphs widget.
  */
 function sfgov_admin_field_widget_sfgov_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
+  // [SG-1809] - update form confirmation page content type
+  $parentEntity = $form_state->getFormObject()->getEntity();
+  
+  // SG-1809 - remove some paragraph types for the form confirmation page
+  // the #disabled key had the incorrect behavior of keeping the button, but breaking the form
+  // instead, store, modify, and reassign the add more links
+  if($parentEntity->getType() === 'form_confirmation_page') {
+    if (array_key_exists('#paragraph_type', $element) && $element['#paragraph_type'] == 'step') {
+      $keepOperationsLinks = $element['subform']['field_content']['widget']['add_more']['operations']['#links'];
+      unset($keepOperationsLinks['add_more_button_in_person_location']);
+      unset($keepOperationsLinks['add_more_button_callout']);
+      unset($keepOperationsLinks['add_more_button_email']);
+      unset($keepOperationsLinks['add_more_button_phone']);
+      $element['subform']['field_content']['widget']['add_more']['operations']['#links'] = $keepOperationsLinks;
+    }
+  }
+
   // [SG-1737] - Automatically reassign text formats.
   // We apply the same changes to the entity reference widget to this widget.
   return sfgov_admin_field_widget_entity_reference_paragraphs_form_alter($element, $form_state, $context);
