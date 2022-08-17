@@ -54,12 +54,17 @@
     {{ page.alpha }}
   {% endif %}
 
-  <header role="banner" class="{{ notranslate}}">
-    <div class="sfgov-nav-container">
-      <div class="sfgov-nav-container__content">
-        {{ [page.header.sfgovpl_branding] }}
-        <div class="head-right--container">
-          {{ page['#title']|raw }}
+  <header role="banner" class="{{ notranslate}} pb-0 md:py-48">
+    <div class="sfgov-nav-container"> <!-- style rules for this element still coming from css in this theme -->
+      <div class="sfgov-nav-container__content block md:flex md:flex-auto md:flex-row md:justify-between md:items-center">
+        <div class="w-full mb-20 md:w-1/3 md:mb-0">
+          {{ [page.header.sfgovpl_branding] }}
+        </div>
+        <div class="w-full h-2 border-solid border-grey-2 md:hidden"></div>
+        <div class="head-right--container text-body font-medium w-full py-16 text-left float-none md:text-big-desc-desktop md:w-2/3 md:p-0 md:m-0 md:mt-8">
+          {% block page_title %}
+            {{ page['#title']|raw }}
+          {% endblock page_title %}
           {{ page.header.gtranslate }}
         </div>
       </div>
