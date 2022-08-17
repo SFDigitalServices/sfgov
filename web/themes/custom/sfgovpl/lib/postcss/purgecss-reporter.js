@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { mkdirSync, writeFileSync } = require('fs')
 const { bold, green, yellow, red, white } = require('chalk')
 
@@ -42,6 +43,7 @@ module.exports = function purgeCSSReporter (options) {
         else {
           console.log(`👍 ${green('no unused selectors purged from')}`, output)
         }
+        // eslint-disable-next-line no-magic-numbers
         writeFileSync(purgedPath, JSON.stringify({ selectors }, null, 2), 'utf8')
       }
       else {
