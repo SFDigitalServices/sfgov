@@ -484,6 +484,8 @@
   }
 
   const search311 = new Search311()
+  window.search311 = search311
+
   $(document).ready(() => {
     $('.head-right--container #edit-sfgov-search-input').attr('placeholder', 'Search')
     const kw = getQueryParam('keyword') ? getQueryParam('keyword') : ''
