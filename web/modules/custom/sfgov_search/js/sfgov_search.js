@@ -19,7 +19,7 @@
         qsup: '',
         start_rank: 1,
         num_ranks: 10,
-        callback: 'search311.processSearchResults'
+        callback: 'drupalSettings.sfgovSearch.search311.processSearchResults'
       }
     }
 
@@ -484,7 +484,8 @@
   }
 
   const search311 = new Search311()
-  window.search311 = search311
+  // drupalSettings.sfgovSearch is an object created by this custom module at /src/Controller/SearchController.php
+  drupalSettings.sfgovSearch.search311 = search311
 
   $(document).ready(() => {
     $('.head-right--container #edit-sfgov-search-input').attr('placeholder', 'Search')
