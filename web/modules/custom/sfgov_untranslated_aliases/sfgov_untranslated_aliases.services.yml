@@ -1,0 +1,11 @@
+services:
+  sfgov_untranslated_aliases.path_processor_alias:
+    class: Drupal\sfgov_untranslated_aliases\PathProcessorUntranslatedAlias
+    tags:
+      - { name: path_processor_inbound, priority: 100 }
+      - { name: path_processor_outbound, priority: 100 }
+    arguments: [
+      '@path_alias.manager',
+      '@path_alias.repository',
+      '@language_manager'
+    ]
