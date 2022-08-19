@@ -172,6 +172,7 @@ function updateProfileNode($position, $removed = false) {
   if ((Node::load($position['agencyNid']))->bundle() == 'department') {
     return;
   }
+
   // load profile node
   if (!empty($position['profileNid'])) {
     $profile = Node::load($position['profileNid']);
@@ -205,7 +206,7 @@ function updateProfileNode($position, $removed = false) {
       $profile->get('field_profile_positions_held')->appendItem(
         Paragraph::create([
           'type' => 'public_body_profiles',
-          'field_title' => $position['paragraphId'],
+          'field_title' => $position['paragraphId'], // keep the paragraph id as a reference to know which position held to update (if updating)
           'field_department' => $position['agencyNid'],
           'field_commission_position' => $position['title'],
           'field_position_type' => $position['type'],
@@ -282,21 +283,5 @@ function sfgov_profiles_field_widget_multivalue_form_alter(&$element, $form_stat
     $element['add_more']['#disabled'] = true;
     $element['add_more']['#attributes']['class'][] = 'visually-hidden';
     $element['add_more']['#suffix'] = '';
-  }
-}
-
-function sfgov_profiles_theme_suggestions_field_alter(array &$suggestions, array $variables) {
-  $node = \Drupal::routeMatch()->getParameter('node');
-
-  if (!empty($node) && $node->bundle() == 'person') {
-    if ($node->hasField('field_profile_positions_held')) {
-      if (!empty($variables['element']['#field_name'] && $variables['element']['#field_name'] == 'field_profile_positions_held')) {
-        $suggestions[] = 'profile-positions-held--external';
-        // error_log(print_r(array_keys($variables['element']),1));
-        // // error_log(print_r(array_keys($variables['element']['#object']),1));
-        // error_log($variables['element']['#entity_type']);
-        // // error_log($variables['element']['#field_name']);
-      }
-    }
   }
 }
