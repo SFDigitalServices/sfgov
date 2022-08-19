@@ -59,4 +59,32 @@
       </div>
     </div>
   {% endif %}
+
+  {% if profileType|lower == 'external' %}
+    <div class="profile--role">
+      <div class="role-title">
+        {{ positionTitle }}
+      </div>
+      <div class="role-agency-title">
+        <a href="{{ positionAgencyUrl }}"> {{ positionAgency }} </a>
+      </div>
+      <div class="role-time">
+        {%- if positionType is not empty -%}
+          {{- positionType -}}
+        {%- endif -%}
+        {%- if positionType is not empty and (positionStart is not empty or positionEnd is not empty) -%}
+          {{- ": " -}}
+        {%- endif -%}
+        {% if positionStart is not empty %}
+          {{ positionStart|date('Y') }}
+        {% endif %}
+        {% if positionStart is not empty and positionEnd is not empty %}
+          -
+        {% endif %}
+        {% if positionEnd is not empty %}
+          {{ positionEnd|date('Y') }}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 {% endfor %}
