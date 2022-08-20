@@ -61,11 +61,8 @@ function sfgov_profiles_entity_presave($entity) {
   }
 }
 
-/**
- * Implements hook_node_update()
- */
-function sfgov_profiles_node_update($node) {
-  // need to handle when entire profile group is removed - a node level update
+// helper method to handle first level node field changes, eg removing an entire profile group
+function _f ($node) {
   $bundlesWithProfileGroups = [
     'public_body' => [
       'field_name' => 'field_board_members',
@@ -82,31 +79,53 @@ function sfgov_profiles_node_update($node) {
     $updatedProfileGroups = $node->get($fieldName)->getValue(); // get updated profile groups
     $ogProfileGroups = $node->original->get($fieldName)->getValue(); // get original profile groups
 
-    // compare for removals
-    $removedParagraphs = array_diff(array_column($ogProfileGroups, 'target_id'), array_column($updatedProfileGroups, 'target_id'));
+    if (!empty($ogProfileGroups)) {
+      // check for removals of an entire profile group
+      $removedParagraphs = array_diff(array_column($ogProfileGroups, 'target_id'), array_column($updatedProfileGroups, 'target_id'));
 
-    // iterate removed target_id
-    foreach ($removedParagraphs as $rp) {
+      // iterate removed target_id
+      foreach ($removedParagraphs as $rp) {
 
-      // load original profile group and profiles
-      $removedParagraph = Paragraph::load($rp);
-      $removedProfileGroupProfiles = $removedParagraph->get('field_profiles')->getValue();
-      
-      // remove position from profile
-      foreach ($removedProfileGroupProfiles as $rpgp) {
-        $removedPosition = Paragraph::load($rpgp['target_id']);
-        updateProfileNode([
-          'paragraphId' => $removedPosition->id(),
-          'profileNid' => $removedPosition->field_profile->target_id,
-          'agencyNid' => $node->id(),
-          'title' => $removedPosition->field_commission_position->value,
-          'type' => $removedPosition->field_position_type->value,
-          'start' => $removedPosition->field_starting_year->value,
-          'end' => $removedPosition->field_ending_year->value
-        ], true);
+        // load original profile group and profiles
+        $removedParagraph = Paragraph::load($rp);
+        $removedProfileGroupProfiles = $removedParagraph->get('field_profiles')->getValue();
+        
+        // remove position from profile
+        foreach ($removedProfileGroupProfiles as $rpgp) {
+          $removedPosition = Paragraph::load($rpgp['target_id']);
+          updateProfileNode([
+            'paragraphId' => $removedPosition->id(),
+            'profileNid' => $removedPosition->field_profile->target_id,
+            'agencyNid' => $node->id(),
+            'title' => $removedPosition->field_commission_position->value,
+            'type' => $removedPosition->field_position_type->value,
+            'start' => $removedPosition->field_starting_year->value,
+            'end' => $removedPosition->field_ending_year->value
+          ], true);
+        }
+      }
+    } else { // no original profile groups, this is a newly created node
+      foreach ($updatedProfileGroups as $pg) {
+        $profileGroup = Paragraph::load($pg['target_id']);
+        assignPositionToProfile($profileGroup);
       }
     }
   }
+}
+
+/**
+ * Implements hook_node_insert()
+ * need to implement this hook for newly created nodes, otherwise, there is no node id, which we need for later reference
+ */
+function sfgov_profiles_node_insert($node) {
+  _f($node);
+}
+
+/**
+ * Implements hook_node_update()
+ */
+function sfgov_profiles_node_update($node) {
+  _f($node);
 }
 
 /**
@@ -126,6 +145,10 @@ function sfgov_profiles_paragraph_insert($paragraph) {
 function assignPositionToProfile($paragraph) {
   if ($paragraph->bundle() == 'profile_group') {
     $node = $paragraph->getParentEntity();
+
+    if (empty($node)) {
+      return;
+    }
 
     $ogProfilePositions = $paragraph->original ? getPositions($node->id(), $paragraph->original->get('field_profiles')->referencedEntities()) : [];
     $updatedProfilePositions = getPositions($node->id(), $paragraph->get('field_profiles')->getValue());
