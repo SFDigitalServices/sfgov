@@ -243,11 +243,12 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
  * Implements hook_preprocess_node().
  */
 function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
-  $nid = $variables['node']->Id();
+  $nid = $variables['node']->id();
 
   if (\Drupal::routeMatch()->getParameter('node')) {
-    $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
+    $parent_nid = \Drupal::routeMatch()->getParameter('node')->id();
     $parent_node = Node::load($parent_nid);
+    $profile_node = Node::load($nid);
 
     // This bundle's display mode should invalidate caches when there are any
     // updates on public bodies nodes.
@@ -255,25 +256,13 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
 
     // Check for public body node, find profile's position field value
     if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
-      $profile_groups = $parent_node->field_board_members->getValue();
-      // Loop through people paragraphs
-      foreach ($profile_groups as $pg_id) {
-        $pgroup = \Drupal\paragraphs\Entity\Paragraph::load($pg_id['target_id']);
-        if ($pgroup->hasField('field_profiles')) {
-          $profiles = $pgroup->field_profiles->getValue();
-          foreach ($profiles as $gprofile) {
-            $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
-            $pprofile = \Drupal::service('entity.repository')->getTranslationFromContext($pprofile);
-            $pid = $pprofile->field_profile->getValue();
-            $pid = $pid[0]['target_id'];
-            // Find paragraph containing profile reference
-            if ($pid == $nid) {
-              $position = $pprofile->field_commission_position->getValue();
-              if (!empty($position[0]['value'])) {
-                $variables['profile_position'] = $position[0]['value'];
-              }
-            }
-          }
+      $positions = $profile_node->get('field_profile_positions_held')->getValue();
+
+      foreach($positions as $p) {
+        $position = Paragraph::load($p['target_id']);
+
+        if($position->field_department->target_id == $parent_nid) {
+          $variables['profile_position'] = $position->field_commission_position->value;
         }
       }
     }
