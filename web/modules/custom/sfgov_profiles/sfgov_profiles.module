@@ -77,7 +77,7 @@ function node_update ($node) {
     $fieldName = $bundlesWithProfileGroups[$bundle]['field_name'];
 
     $updatedProfileGroups = $node->get($fieldName)->getValue(); // get updated profile groups
-    $ogProfileGroups = $node->original->get($fieldName)->getValue(); // get original profile groups
+    $ogProfileGroups = !empty($node->original) ? $node->original->get($fieldName)->getValue() : []; // get original profile groups
 
     if (!empty($ogProfileGroups)) {
       // check for removals of an entire profile group
