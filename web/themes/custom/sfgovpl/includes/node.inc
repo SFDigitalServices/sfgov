@@ -616,14 +616,14 @@ function profile_page_fields($node) {
     }
 
     // Biography
-    if($node->hasField('field_biography')) {
+    if($node->hasField('body')) {
 
       // Get trimmed profile biography text.
       $source = \Drupal::service('entity.repository')->getTranslationFromContext($node);
       $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
 
-      if ($source && $source->hasField('field_biography') && $source->access('view')) {
-        $value = $source->get('field_biography');
+      if ($source && $source->hasField('body') && $source->access('view')) {
+        $value = $source->get('body');
 
         // Get the value of the trimmed biography text that comes from the
         // teaser view mode settings.

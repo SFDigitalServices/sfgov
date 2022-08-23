@@ -99,22 +99,22 @@
   {% endif %}
 
   {% if profile_fields.biotrim|length %}
-    {% if node.field_biography.value|length %}
+    {% if node.body.value|length %}
       <div class="profile--bio">
         <div class="bio-trimmed">
           {{ profile_fields.biotrim }}
         </div>
         <div class="bio-full">
-          {{ content.field_biography }}
+          {{ content.body }}
         </div>
         <div class="show-bio">{{ 'Show more'|t }}</div>
         <div class="hide-bio">{{ 'Show less'|t }}</div>
       </div>
     {% endif %}
-  {% elseif node.field_biography.value|length %}
+  {% elseif node.body.value|length %}
     <div class="profile--bio">
       <div class="biography">
-        {{ content.field_biography }}
+        {{ content.body }}
       </div>
     </div>
   {% endif %}

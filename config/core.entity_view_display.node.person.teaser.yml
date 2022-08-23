@@ -33,12 +33,7 @@ targetEntityType: node
 bundle: person
 mode: teaser
 content:
-  content_moderation_control:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  field_biography:
+  body:
     type: smart_trim
     label: hidden
     settings:
@@ -50,10 +45,17 @@ content:
       more_link: false
       more_class: more-link
       more_text: More
-      summary_handler: full
-      trim_options: {  }
+      summary_handler: ignore
+      trim_options:
+        text: false
+        trim_zero: false
     third_party_settings: {  }
     weight: 1
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
     region: content
   links:
     settings: {  }
@@ -61,8 +63,8 @@ content:
     weight: 2
     region: content
 hidden:
-  body: true
   field_address: true
+  field_biography: true
   field_city_department: true
   field_direct_external_url: true
   field_email: true
