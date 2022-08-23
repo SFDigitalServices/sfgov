@@ -13,13 +13,14 @@
 
 {% block node %}
   {% block body %}
+    {# at the moment bio summary is only for the mayor and only on the front page #}
     {% include '@theme/person-card.twig' with {
       "url": url,
       "first_name": node.field_first_name.value|default(''),
       "last_name": node.field_last_name.value|default(''),
       "position_title": node.field_title.value|default(''),
       "position_subtitle": node.field_sub_title.value|default(''),
-      "bio_summary": node.body.summary|default(''),
+      "bio_summary": (is_front and node.field_title.value|lower == 'mayor') ? node.body.summary|default('') : '',
       "photo": photo_url
     } %}
   {% endblock body %}
