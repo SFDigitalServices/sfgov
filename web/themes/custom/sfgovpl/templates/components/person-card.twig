@@ -23,18 +23,20 @@
     <div class="person-name notranslate">
       <a href="{{ url }}">{{ first_name }} {{ last_name }}</a>
     </div>
-    <div class="person-title">
-      {{ '@position_title'|t({'@position_title': position_title}) }}
-    </div>
-  {% if is_mayor %}
-    </div>
-    <div class="person-subtitle">
-      {{ '@position_subtitle'|t({'@position_subtitle': position_subtitle}) }}
-    </div>
-  {% else %}
-    <div class="person-subtitle">
-      {{ '@position_subtitle'|t({'@position_subtitle': position_subtitle}) }}
-    </div>
+    {% if position_title %}
+      <div class="person-title">
+        {{ '@position_title'|t({'@position_title': position_title}) }}
+      </div>
+    {% endif %}
+    {% if position_subtitle %}
+      <div class="person-subtitle">
+        {{ '@position_subtitle'|t({'@position_subtitle': position_subtitle}) }}
+      </div>
+    {% endif %}
+    {% if bio_summary %}
+      <div class="person-bio-summary">
+        {{ bio_summary }}
+      </div>
+    {% endif %}
   </div>
-{% endif %}
 </div>
