@@ -62,7 +62,7 @@ function sfgov_profiles_entity_presave($entity) {
 }
 
 // helper method to handle first level node field changes, eg removing an entire profile group
-function _f ($node) {
+function node_update ($node) {
   $bundlesWithProfileGroups = [
     'public_body' => [
       'field_name' => 'field_board_members',
@@ -118,14 +118,14 @@ function _f ($node) {
  * need to implement this hook for newly created nodes, otherwise, there is no node id, which we need for later reference
  */
 function sfgov_profiles_node_insert($node) {
-  _f($node);
+  node_update($node);
 }
 
 /**
  * Implements hook_node_update()
  */
 function sfgov_profiles_node_update($node) {
-  _f($node);
+  node_update($node);
 }
 
 /**
