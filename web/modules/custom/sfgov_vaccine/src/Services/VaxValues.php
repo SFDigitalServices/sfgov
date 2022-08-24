@@ -8,6 +8,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Vaccination site data.
+ */
 class VaxValues {
   use StringTranslationTrait;
 
@@ -26,8 +29,8 @@ class VaxValues {
   protected $configFactory;
 
   /**
-   * The string translation service
-   * 
+   * The string translation service.
+   *
    * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
   protected $stringTranslation;
@@ -41,6 +44,9 @@ class VaxValues {
     $this->stringTranslation = $stringTranslation;
   }
 
+  /**
+   * Create the class.
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('state'),
@@ -61,9 +67,9 @@ class VaxValues {
    */
   public function getAlert() {
     $alert_db = $this->state->get('vaccine_alert');
-    $alert_db_val = $alert_db['value'];
-    $alert_config_val = $this->settings('template_strings.page.alert.value');
-    return isset($alert_db) ? $alert_db_val : $alert_config_val;
+    return isset($alert_db)
+      ? $alert_db['value']
+      : $this->settings('template_strings.page.alert.value');
   }
 
   /**
@@ -73,16 +79,21 @@ class VaxValues {
     $this->state->set('vaccine_alert', $value);
   }
 
+  /**
+   * Get the header description.
+   */
   public function getHeaderDescription() {
     $header_db = $this->state->get('header_description');
-    $header_db_val = $header_db['value'];
-    $header_config_val = $this->settings('template_strings.page.description');
-    $headerDescription = isset($header_db) ? $header_db_val : $header_config_val;
-    return $this->t($headerDescription);
+    return isset($header_db)
+      ? $header_db['value']
+      : $this->settings('template_strings.page.description');
   }
 
+  /**
+   * Set the header description.
+   */
   public function setHeaderDescription($value) {
     $this->state->set('header_description', $value);
   }
-}
 
+}

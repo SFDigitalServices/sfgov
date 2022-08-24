@@ -1,8 +1,7 @@
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 defaults: &defaults
   docker:
-    # TODO: use "build-tools-ci:6.x" when we're on Node 16.x
-    - image: quay.io/pantheon-public/build-tools-ci@sha256:ea1a5b8486b80b431bf82861e0402a3f4bd37dc0e913da16f2a35c89e88857b5
+    - image: quay.io/pantheon-public/build-tools-ci:7.x-php7.4
   working_directory: ~/example_drops_8_composer
   environment:
     #=========================================================================
@@ -40,31 +39,39 @@ jobs:
   # @todo: common initialization: 'composer install' for the site-under-test
   build:
     <<: *defaults
+    resource_class: large
     steps:
       - checkout
 
       - restore_cache:
           keys:
-            - composer-{{ checksum "composer.lock" }}
             - terminus-install
+
+      - restore_cache:
+          keys:
+            # see: https://circleci.com/docs/2.0/caching#restoring-cache
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ checksum "composer.lock" }}-
+            - composer-
 
       - run:
           name: set up build environment (build-tools-ci)
           command: /build-tools-ci/scripts/set-environment
+
+      - save_cache:
+          key: terminus-install
+          paths:
+            - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
 
       - run:
           name: composer install
           command: composer install
 
       - save_cache:
-          key: composer-{{ checksum "composer.lock" }}
+          key: composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
           paths:
-              - $HOME/.composer/cache
-
-      - save_cache:
-          key: terminus-install
-          paths:
-              - $(TERMINUS_PLUGINS_DIR:-~/.terminus/plugins)
+            - $HOME/.composer/cache
+            - vendor
 
       - run:
           name: lint php code for syntax errors
@@ -83,11 +90,16 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - terminus-install
 
       - restore_cache:
           keys:
-            - composer-cache
-            - terminus-install
+            # see: https://circleci.com/docs/2.0/caching#restoring-cache
+            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ checksum "composer.lock" }}-
+            - composer-
 
       - run:
           name: set up build environment (build-tools-ci)
@@ -124,6 +136,10 @@ jobs:
       - run:
           name: handle merge to main (if needed)
           command: ./.circleci/scripts/pantheon/04-merge-main
+
+      - run:
+          name: import translations
+          command: ./scripts/custom/locale-import.sh
 
       - run:
           name: clean up test fixtures

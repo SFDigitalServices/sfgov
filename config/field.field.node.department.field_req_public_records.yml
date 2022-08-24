@@ -6,14 +6,22 @@ dependencies:
     - field.storage.node.field_req_public_records
     - node.type.department
   module:
+    - datalayer
     - options
+    - tmgmt_content
+third_party_settings:
+  datalayer:
+    expose: 0
+    label: field_req_public_records
+  tmgmt_content:
+    excluded: true
 id: node.department.field_req_public_records
 field_name: field_req_public_records
 entity_type: node
 bundle: department
 label: 'Request public records'
 description: 'Select the method that residents will use to contact the department for public records'
-required: false
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''

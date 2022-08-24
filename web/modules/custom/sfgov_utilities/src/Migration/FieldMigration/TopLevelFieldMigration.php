@@ -32,6 +32,7 @@ class TopLevelFieldMigration {
       $fromField = $node->get($fromFieldName);
       $fromFieldValues = $fromField->getValue();
       $toField = $node->get($toFieldName);
+      $toFieldValues = $toField->getValue();
       
       if(!empty($fromFieldValues)) {
         foreach($fromFieldValues as $fromFieldValue) {
@@ -39,26 +40,39 @@ class TopLevelFieldMigration {
           $refNode = Node::load($refId);
           $refNodeTitle = $refNode ? $refNode->getTitle() : 'empty reference, no title';
           
-          $reportLang = $node->get('langcode')->value != 'en' ? ($node->get('langcode')->value . '/') : '';
-          $this->report[] = [
-            'nid' => $nid,
-            'content_type' => $node->getType(),
-            'language' => $node->get('langcode')->value,
-            'node_title' => $node->getTitle(),
-            'url' => 'https://sf.gov/'. $reportLang . 'node/' . $nid,
-            'status' => $node->isPublished(),
-            'field_from' => $fromFieldName,
-            'field_to' => $toFieldName,
-            'ref_node_title' => $refNodeTitle,
-            'ref_id' => $refId,
-          ];
+          // add value if it doesn't exist
+          $valueFound = false;  
+                    
+          foreach($toFieldValues as $item) {
+            if($item['target_id'] == $refId) {
+              $valueFound = true;
+              break;
+            }
+          }
 
-          echo "updating (" . $node->getType() . ") [$nid] " . $node->getTitle() . "\n";
-
-          // assign to new field
-          $toField[] = [
-            'target_id' => $refId
-          ];
+          if(!$valueFound) {
+            $reportLang = $node->get('langcode')->value != 'en' ? ($node->get('langcode')->value . '/') : '';
+            $this->report[] = [
+              'nid' => $nid,
+              'content_type' => $node->getType(),
+              'language' => $node->get('langcode')->value,
+              'node_title' => $node->getTitle(),
+              'url' => 'https://sf.gov/'. $reportLang . 'node/' . $nid,
+              'status' => $node->isPublished(),
+              'field_from' => $fromFieldName,
+              'field_to' => $toFieldName,
+              'ref_node_title' => $refNodeTitle,
+              'ref_id' => $refId,
+            ];
+  
+            echo "updating (" . $node->getType() . ") [$nid] " . $node->getTitle() . "\n";
+            // assign to new field
+            $toField[] = [
+              'target_id' => $refId
+            ];
+          } else {
+            echo "not updating (" . $node->getType() . ") [$nid] " . $node->getTitle() . ", value $refNodeTitle [$refId] already exists\n";
+          }
 
           // remove old ref
           $fromField->removeItem(0);

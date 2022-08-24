@@ -1,4 +1,6 @@
 /* purgecss start ignore */
+@use "sass:math";
+
 @mixin ankle($field-element){
   padding-bottom: 60px;
   padding-top: 41px;
@@ -122,28 +124,33 @@
 }
 
 @mixin blockquote {
-  @include fs-pull-large;
+  @include fs-big-description-mobile;
   background: $c-yellow-2;;
   border-radius: 10px;
-  font-style: italic;
   margin: 30px 0 40px 0;
   padding: 20px;
 
   @include media($narrow-screen) {
+    @include fs-big-description;
     clear: right;
     float: right;
     padding: 40px;
-    margin: -5px 0 40px 0;
+    margin-bottom: 40px;
     // Equals 349px at max width, but uses % for better responsiveness.
-    width: ((strip-unit($w-news-sidebar)) / (strip-unit($w-news-body-content))) * 100%;
+    width: math.div(strip-unit($w-news-sidebar), strip-unit($w-news-body-content)) * 100%;
   }
 
   p {
+    @include fs-big-description-mobile;
     margin: 0;
     max-width: none;
 
     + p {
       margin-top: 1rem;
+    }
+
+    @include media($medium-screen) {
+      @include fs-big-description;
     }
   }
 }
@@ -384,7 +391,8 @@
 }
 
 @mixin focus-outline {
-  outline: 2px dotted #aeb0b5;
+  outline: 2px dotted #000;
+  outline-offset: 3px;
 }
 
 // visually-hidden
