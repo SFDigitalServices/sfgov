@@ -1,0 +1,40 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_help().
+ */
+function sfgov_readability_help($route_name, RouteMatchInterface $route_match) {
+
+}
+
+function sfgov_readability_preprocess_html(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if (!empty($node) && $node instanceof NodeInterface) {
+    $nid = $node->id();
+    error_log(print_r(array_keys($variables), 1));
+    error_log(print_r(array_keys($variables['page']['content']), 1));
+    error_log($variables['page']['content']['sfgovpl_content']['#pre_render'][0]);
+
+    error_log($variables['html']['#children']);
+
+    // error_log(\Drupal::request()->request->getContent());
+
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function sfgov_readability_page_attachments(array &$attachments) {
+  $loggedInUser = \Drupal::currentUser()->isAuthenticated();
+  $isEditPage = basename(\Drupal::service('path.current')->getPath()) === 'edit';
+  $isContentNode = !empty(\Drupal::routeMatch()->getParameter('node'));
+
+  if($loggedInUser && $isContentNode && !$isEditPage) {
+    $attachments['#attached']['library'][] = 'sfgov_readability/main';
+  }
+}
