@@ -253,6 +253,7 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
     // This bundle's display mode should invalidate caches when there are any
     // updates on public bodies nodes.
     $variables['#cache']['tags'][] = 'node_list:public_body';
+    $variables['#cache']['tags'][] = 'node_list:person';
 
     // Check for public body node, find profile's position field value
     if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
@@ -261,6 +262,8 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
       foreach($positions as $p) {
         $position = Paragraph::load($p['target_id']);
         if (!empty($position)) {
+          error_log('field_commission_position:' . $position->field_commission_position->value);
+          error_log('field_department:' . $position->field_department->target_id);
           if($position->field_department->target_id == $parent_nid) {
             $variables['profile_position'] = $position->field_commission_position->value;
             break;
