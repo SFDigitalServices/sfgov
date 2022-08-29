@@ -246,30 +246,25 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
   $nid = $variables['node']->id();
 
   if (\Drupal::routeMatch()->getParameter('node')) {
-    $parent_nid = \Drupal::routeMatch()->getParameter('node')->id();
-    $parent_node = Node::load($parent_nid);
-    $profile_node = Node::load($nid);
+    $parent_node = \Drupal::routeMatch()->getParameter('node');
+    $parent_node_type = $parent_node->getType();
+    $parent_nid = $parent_node->id();
+    $profileGroupTypes = ['public_body', 'department', 'location', 'landing'];
 
-    // This bundle's display mode should invalidate caches when there are any
-    // updates on public bodies nodes.
-    $variables['#cache']['tags'][] = 'node_list:public_body';
-    $variables['#cache']['tags'][] = 'node_list:person';
+    if ($parent_nid != $nid && in_array($parent_node_type, $profileGroupTypes)) {
+      $variables['parent_node_id'] = [
+        '#markup' => $parent_nid,
+        '#cache' => [
+          'max-age' => 0
+        ],
+      ];
 
-    // Check for public body node, find profile's position field value
-    if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
-      $positions = $profile_node->get('field_profile_positions_held')->getValue();
-
-      foreach($positions as $p) {
-        $position = Paragraph::load($p['target_id']);
-        if (!empty($position)) {
-          error_log('field_commission_position:' . $position->field_commission_position->value);
-          error_log('field_department:' . $position->field_department->target_id);
-          if($position->field_department->target_id == $parent_nid) {
-            $variables['profile_position'] = $position->field_commission_position->value;
-            break;
-          }
-        }
-      }
+      $variables['parent_is_front'] = [
+        '#markup' => \Drupal::service('path.matcher')->isFrontPage(),
+        '#cache' => [
+          'max-age' => 0
+        ]
+      ];
     }
   }
 }

@@ -203,7 +203,7 @@ function sortProfilePositions($positions) {
 
 function updateProfileNode($position, $removed = false) {
   // check the agency id. if it's a department, skip it
-  if ((Node::load($position['agencyNid']))->bundle() == 'department') {
+  if ((Node::load($position['agencyNid']))->bundle() !== 'public_body') {
     return;
   }
 
