@@ -260,9 +260,11 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
 
       foreach($positions as $p) {
         $position = Paragraph::load($p['target_id']);
-
-        if($position->field_department->target_id == $parent_nid) {
-          $variables['profile_position'] = $position->field_commission_position->value;
+        if (!empty($position)) {
+          if($position->field_department->target_id == $parent_nid) {
+            $variables['profile_position'] = $position->field_commission_position->value;
+            break;
+          }
         }
       }
     }
