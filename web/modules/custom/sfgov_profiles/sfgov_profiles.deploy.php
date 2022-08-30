@@ -5,7 +5,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 
 function sfgov_profiles_deploy_00_resave_public_bodies() {
   $nids = \Drupal::entityQuery('node')->condition('type','public_body')->execute();
-  $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+  $nodes = Node::loadMultiple($nids);
 
   foreach ($nodes as $node) {
     $profileGroups = $node->get('field_board_members')->getValue();
@@ -21,7 +21,7 @@ function sfgov_profiles_deploy_00_resave_public_bodies() {
 
 function sfgov_profiles_deploy_01_migrate_bio() {
   $nids = \Drupal::entityQuery('node')->condition('type','person')->execute();
-  $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+  $nodes = Node::loadMultiple($nids);
 
   foreach ($nodes as $node) {
     $bio = $node->get('field_biography')->value;
