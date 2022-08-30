@@ -24,9 +24,4 @@ echo "Rebuilding cache complete.\n";
 
 _test_hook_slack_notification("config import");
 
-// Deploy hooks
-echo "Running deploy:hook\n";
-passthru('drush deploy:hook -y');
-echo "Deploy hooks complete\n";
-
 require dirname(__DIR__) . '/translation-providers/credentials.php';
