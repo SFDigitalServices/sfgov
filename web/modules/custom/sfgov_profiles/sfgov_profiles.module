@@ -168,7 +168,6 @@ function assignPositionToProfile($paragraph) {
         updateProfileNode($updatedProfilePosition);
       }
     }
-
   }
 }
 
@@ -215,6 +214,8 @@ function updateProfileNode($position, $removed = false) {
     $positionHeld = null;
     $positionIndex = 0;
 
+    // search the positions held to see if the position already exists
+    // by checking against paragraph id
     foreach($positionsHeld as $p) {
       $positionHeld = Paragraph::load($p['target_id']);
       if ($position['paragraphId'] == $positionHeld->field_title->value) {
@@ -283,7 +284,7 @@ function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_stat
       // disable duplicate and remove buttons
       $element['top']['actions']['dropdown_actions']['duplicate_button']['#disabled'] = true;
 
-      // mainly for debugging
+      // disable removal for non-admin or non-ds roles mainly for debugging
       // saving an agency with profile groups will repopulate the positions held if positions exist for the profile      
       if (!in_array('administrator', $userRoles) && !in_array('digital_services', $userRoles)) {
         $element['top']['actions']['dropdown_actions']['remove_button']['#disabled'] = true;
