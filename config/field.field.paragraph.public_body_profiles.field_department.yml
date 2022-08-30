@@ -1,0 +1,40 @@
+uuid: 1aecd5b0-89d7-4069-927e-9dbab4c7e424
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_department
+    - node.type.department
+    - node.type.public_body
+    - paragraphs.paragraphs_type.public_body_profiles
+  module:
+    - datalayer
+    - tmgmt_content
+third_party_settings:
+  datalayer:
+    expose: 0
+    label: field_department
+  tmgmt_content:
+    excluded: false
+id: paragraph.public_body_profiles.field_department
+field_name: field_department
+entity_type: paragraph
+bundle: public_body_profiles
+label: 'Department/Public body'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      department: department
+      public_body: public_body
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: department
+field_type: entity_reference

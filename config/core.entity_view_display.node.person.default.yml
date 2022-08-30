@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.person.body
     - field.field.node.person.field_address
     - field.field.node.person.field_biography
     - field.field.node.person.field_city_department
@@ -16,7 +17,9 @@ dependencies:
     - field.field.node.person.field_primary_email
     - field.field.node.person.field_primary_phone_number
     - field.field.node.person.field_profile_photo
+    - field.field.node.person.field_profile_positions_held
     - field.field.node.person.field_profile_type
+    - field.field.node.person.field_pronouns
     - field.field.node.person.field_social_media
     - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
@@ -37,6 +40,13 @@ targetEntityType: node
 bundle: person
 mode: default
 content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 19
+    region: content
   content_moderation_control:
     settings: {  }
     third_party_settings: {  }
@@ -48,14 +58,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 18
-    region: content
-  field_biography:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 8
+    weight: 17
     region: content
   field_city_department:
     type: entity_reference_label
@@ -63,7 +66,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
   field_direct_external_url:
     type: link
@@ -75,7 +78,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 10
+    weight: 9
     region: content
   field_email:
     type: entity_reference_revisions_entity_view
@@ -84,7 +87,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 11
+    weight: 10
     region: content
   field_featured_items:
     type: entity_reference_revisions_entity_view
@@ -93,7 +96,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 13
+    weight: 12
     region: content
   field_first_name:
     type: string
@@ -118,7 +121,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 14
+    weight: 13
     region: content
   field_photo:
     type: image
@@ -129,14 +132,14 @@ content:
       image_loading:
         attribute: lazy
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_primary_email:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 16
+    weight: 15
     region: content
   field_primary_phone_number:
     type: telephone_formatter
@@ -146,7 +149,7 @@ content:
       link: true
       default_country: null
     third_party_settings: {  }
-    weight: 17
+    weight: 16
     region: content
   field_profile_photo:
     type: media_thumbnail
@@ -154,15 +157,34 @@ content:
     settings:
       image_link: ''
       image_style: profile
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 7
+    region: content
+  field_profile_positions_held:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: profile_position
+      link: ''
+    third_party_settings: {  }
+    weight: 18
     region: content
   field_profile_type:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 9
+    weight: 8
+    region: content
+  field_pronouns:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 20
     region: content
   field_social_media:
     type: entity_reference_revisions_entity_view
@@ -171,7 +193,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 15
+    weight: 14
     region: content
   field_spotlight:
     type: entity_reference_revisions_entity_view
@@ -180,7 +202,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 12
+    weight: 11
     region: content
   field_sub_title:
     type: string
@@ -199,6 +221,7 @@ content:
     weight: 3
     region: content
 hidden:
+  field_biography: true
   langcode: true
   links: true
   search_api_excerpt: true

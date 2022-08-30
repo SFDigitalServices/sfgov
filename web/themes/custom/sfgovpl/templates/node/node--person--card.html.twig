@@ -13,12 +13,34 @@
 
 {% block node %}
   {% block body %}
+    {#
+      rendering the parent_node_id in conjunction with the cache breaking max-age set in
+      sfgovpl_preprocess_node__person__card_with_image_small at web/themes/custom/sfgovpl/includes/node.inc
+      ensures that the correct position title appears for the corresponding public body
+    #}
+    <div class="visually-hidden">{{ parent_node_id }},{{ parent_is_front }}</div>
+    {% set commission_position = '' %}
+    {% set bio_summary = '' %}
+
+    {% if parent_is_front['#markup']|trim is not empty %}
+      {% set bio_summary = node.body.summary %}
+    {% endif %}
+
+    {% for position in node.field_profile_positions_held %}
+      {% if position.entity.field_department.target_id == parent_node_id['#markup']|trim %}
+        {% set commission_position = position.entity.field_commission_position.value %}
+      {% endif %}
+    {% endfor %}
+
+    {# at the moment bio summary is only for the mayor and only on the front page #}
     {% include '@theme/person-card.twig' with {
       "url": url,
+      "commission_position": commission_position,
       "first_name": node.field_first_name.value|default(''),
       "last_name": node.field_last_name.value|default(''),
       "position_title": node.field_title.value|default(''),
       "position_subtitle": node.field_sub_title.value|default(''),
+      "bio_summary": bio_summary,
       "photo": photo_url
     } %}
   {% endblock body %}

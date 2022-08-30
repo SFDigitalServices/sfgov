@@ -12,7 +12,7 @@
       ];
       
       $.each(do_not_translate, function (index, value) {
-        $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-subtitle', context)
+        $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-bio-summary', context)
           .filter("*:contains(" + value + ")")
           .html(function (_, html) {
             var regex = new RegExp('(?!<span class="notranslate\>)' + value + '(?!<\/span>)', 'g');

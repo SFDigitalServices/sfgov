@@ -243,39 +243,28 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
  * Implements hook_preprocess_node().
  */
 function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
-  $nid = $variables['node']->Id();
+  $nid = $variables['node']->id();
 
   if (\Drupal::routeMatch()->getParameter('node')) {
-    $parent_nid = \Drupal::routeMatch()->getParameter('node')->Id();
-    $parent_node = Node::load($parent_nid);
+    $parent_node = \Drupal::routeMatch()->getParameter('node');
+    $parent_node_type = $parent_node->getType();
+    $parent_nid = $parent_node->id();
+    $profileGroupTypes = ['public_body', 'department', 'location', 'landing'];
 
-    // This bundle's display mode should invalidate caches when there are any
-    // updates on public bodies nodes.
-    $variables['#cache']['tags'][] = 'node_list:public_body';
+    if ($parent_nid != $nid && in_array($parent_node_type, $profileGroupTypes)) {
+      $variables['parent_node_id'] = [
+        '#markup' => $parent_nid,
+        '#cache' => [
+          'max-age' => 0
+        ],
+      ];
 
-    // Check for public body node, find profile's position field value
-    if ($parent_nid != $nid && $parent_node->getType() == 'public_body') {
-      $profile_groups = $parent_node->field_board_members->getValue();
-      // Loop through people paragraphs
-      foreach ($profile_groups as $pg_id) {
-        $pgroup = \Drupal\paragraphs\Entity\Paragraph::load($pg_id['target_id']);
-        if ($pgroup->hasField('field_profiles')) {
-          $profiles = $pgroup->field_profiles->getValue();
-          foreach ($profiles as $gprofile) {
-            $pprofile = \Drupal\paragraphs\Entity\Paragraph::load($gprofile['target_id']);
-            $pprofile = \Drupal::service('entity.repository')->getTranslationFromContext($pprofile);
-            $pid = $pprofile->field_profile->getValue();
-            $pid = $pid[0]['target_id'];
-            // Find paragraph containing profile reference
-            if ($pid == $nid) {
-              $position = $pprofile->field_commission_position->getValue();
-              if (!empty($position[0]['value'])) {
-                $variables['profile_position'] = $position[0]['value'];
-              }
-            }
-          }
-        }
-      }
+      $variables['parent_is_front'] = [
+        '#markup' => \Drupal::service('path.matcher')->isFrontPage(),
+        '#cache' => [
+          'max-age' => 0
+        ]
+      ];
     }
   }
 }
@@ -527,132 +516,6 @@ function profile_page_fields($node) {
   if($node) {
     // Get field data related to profile
     $nid = $node->id();
-    $dept_nids = [];
-    $pbody_nids = [];
-    $pids = [];
-
-    // Find paragraphs referencing profile nid
-    $query = \Drupal::database()->select('paragraph__field_profile', 'pfp');
-    $query->addField('pfp', 'entity_id');
-    $query->condition('pfp.field_profile_target_id', $nid, '=');
-    $profile_ids = $query->execute()->fetchAll();
-    // Find container/group paragraphs
-    foreach ($profile_ids as $key => $pid) {
-      $query = \Drupal::database()->select('paragraph__field_profiles', 'pfp');
-      $query->addField('pfp', 'entity_id');
-      $query->condition('pfp.field_profiles_target_id', $pid->entity_id, '=');
-      $pids[] = $query->execute()->fetchAll();
-    }
-
-    // Find dept nodes referencing container paragraphs
-    $temp_ids = array();
-    foreach ($pids as $key => $pid) {
-      if (isset($pid[0]->entity_id)) {
-        $query = \Drupal::database()->select('node__field_people', 'nfp');
-        $query->addField('nfp', 'entity_id');
-        $query->condition('nfp.field_people_target_id', $pid[0]->entity_id, '=');
-        $temp_ids = $query->execute()->fetchAll();
-        if(isset($temp_ids[0]->entity_id)) {
-          $dept_nids[]['entity_id'] = $temp_ids[0]->entity_id;
-        }
-      }
-    }
-    // Build data variable for twig template
-    $dept_data = sfgovpl_profile_reference_nodes($dept_nids, 'department', $nid);
-
-    // Find public body nodes referencing container paragraphs
-    $temp_ids = array();
-    foreach ($pids as $key => $pid) {
-      if (isset($pid[0]->entity_id)) {
-        $query = \Drupal::database()->select('node__field_board_members', 'nfp');
-        $query->addField('nfp', 'entity_id');
-        $query->condition('nfp.field_board_members_target_id', $pid[0]->entity_id, '=');
-        $temp_ids = $query->execute()->fetchAll();
-        if(isset($temp_ids[0]->entity_id)) {
-          $pbody_nids[]['entity_id'] = $temp_ids[0]->entity_id;
-        }
-      }
-    }
-    // Build data variable for twig template
-    $pbody_data = sfgovpl_profile_reference_nodes($pbody_nids, 'public body', $nid);
-
-    if (isset($dept_nids[0]) && $dept_nids[0] > 1) {
-      $theFields['dept_pbody_ref_data'] = $dept_data;
-    }
-    if (isset($pbody_nids[0]) && $pbody_nids[0] > 1) {
-      foreach ($pbody_data as $pkey => $pvalue) {
-        $theFields['dept_pbody_ref_data'][] = $pvalue;
-      }
-    }
-
-    // Sort and filter dept/pbody references by start/end dates
-    if (isset($theFields['dept_pbody_ref_data'])) {
-      $chrono_sort = array();
-      $current_date = time();
-      foreach ($theFields['dept_pbody_ref_data'] as $dpkey => $dpvalue) {
-        if (isset($dpvalue['profile']['job']['start_year']) || isset($dpvalue['profile']['job']['end_year'])) {
-          $chrono_sort[$dpkey]['key'] = $dpkey;
-          $chrono_sort[$dpkey]['stime'] = strtotime($dpvalue['profile']['job']['stime']);
-          $chrono_sort[$dpkey]['etime'] = strtotime($dpvalue['profile']['job']['etime']);
-        }
-      }
-      // remove expired references
-      foreach ($chrono_sort as $ckey => $cvalue) {
-        if (isset($cvalue['etime']) && $cvalue['etime'] > 1000 && $cvalue['etime'] < $current_date) {
-          unset($theFields['dept_pbody_ref_data'][$cvalue['key']]);
-          unset($chrono_sort[$ckey]);
-        }
-      }
-
-      $chrono_temp = array();
-      // Build sorting array
-      foreach ($chrono_sort as $ckey => $cvalue) {
-        $chrono_temp[intval($ckey )] = intval($cvalue['stime']);
-      }
-      // Sort by start time
-      $chrono_sorted = array();
-      // Counter to prevent infinite loop
-      // profiles likely will not have over 100 references
-      $counter= 0;
-      // No start time flag
-      $nsflag = 0;
-      while (count($chrono_temp) && $counter < 100 && !$nsflag) {
-        $counter += 1;
-        foreach($chrono_temp as $fvalue) {
-          $nsflag = 1;
-          if ($fvalue > 0) {
-            $nsflag = 0;
-          }
-        }
-        foreach ($chrono_temp as $key1 => $value1) {
-          $lowest = FALSE;
-          if ($value1 != 0 && !$lowest) {
-            foreach($chrono_temp as $key2 => $value2) {
-              if ($value2 < $value1 && $value2 != 0) {
-                $lowest = FALSE;
-              } else {
-                $lowest = TRUE;
-              }
-            }
-          }
-          if ($lowest) {
-            $chrono_sorted[] = $chrono_sort[$key1];
-            unset($chrono_temp[$key1]);
-          }
-        }
-      }
-      // Add items without start times
-      foreach ($chrono_temp as $key => $value) {
-        $chrono_sorted[] = $chrono_sort[$key];
-      }
-      $temp = $theFields['dept_pbody_ref_data'];
-      if (array_keys($chrono_sorted)) {
-        $theFields['dept_pbody_ref_data'] = array();
-        foreach ($chrono_sorted as $value) {
-          $theFields['dept_pbody_ref_data'][] = $temp[$value['key']];
-        }
-      }
-    }
 
     // Get social media field data
     if($node->hasField('field_social_media')) {
@@ -742,14 +605,14 @@ function profile_page_fields($node) {
     }
 
     // Biography
-    if($node->hasField('field_biography')) {
+    if($node->hasField('body')) {
 
       // Get trimmed profile biography text.
       $source = \Drupal::service('entity.repository')->getTranslationFromContext($node);
       $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('node');
 
-      if ($source && $source->hasField('field_biography') && $source->access('view')) {
-        $value = $source->get('field_biography');
+      if ($source && $source->hasField('body') && $source->access('view')) {
+        $value = $source->get('body');
 
         // Get the value of the trimmed biography text that comes from the
         // teaser view mode settings.
