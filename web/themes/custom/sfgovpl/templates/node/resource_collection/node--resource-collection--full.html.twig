@@ -54,7 +54,7 @@
       This is a bit of a hack to keep the H2 on nodes created before
       Resource Collections were changed.
       #}
-      {% if rc_version == 1 %}
+      {% if rc_version == 1 and content.field_content|render|striptags|trim %}
         <h2 class="title-2">
           {{ 'Documents'|t }}
         </h2>
