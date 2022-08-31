@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.card_with_image_small
+    - field.field.node.person.body
     - field.field.node.person.field_address
     - field.field.node.person.field_biography
     - field.field.node.person.field_city_department
@@ -17,13 +18,17 @@ dependencies:
     - field.field.node.person.field_primary_email
     - field.field.node.person.field_primary_phone_number
     - field.field.node.person.field_profile_photo
+    - field.field.node.person.field_profile_positions_held
     - field.field.node.person.field_profile_type
+    - field.field.node.person.field_pronouns
     - field.field.node.person.field_social_media
     - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
+    - image.style.medium
     - node.type.person
   module:
+    - entity_reference_revisions
     - image
     - link
     - user
@@ -35,7 +40,7 @@ content:
   content_moderation_control:
     settings: {  }
     third_party_settings: {  }
-    weight: -20
+    weight: 0
     region: content
   field_direct_external_url:
     type: link
@@ -47,7 +52,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
   field_first_name:
     type: string
@@ -55,7 +60,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   field_last_name:
     type: string
@@ -63,7 +68,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   field_photo:
     type: image_url
@@ -71,7 +76,16 @@ content:
     settings:
       image_style: medium
     third_party_settings: {  }
-    weight: 4
+    weight: 5
+    region: content
+  field_profile_positions_held:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 7
     region: content
   field_sub_title:
     type: string
@@ -79,7 +93,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   field_title:
     type: string
@@ -87,20 +101,21 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
 hidden:
+  body: true
   field_address: true
   field_biography: true
   field_city_department: true
   field_email: true
   field_featured_items: true
   field_phone_numbers: true
-  field_photo: true
   field_primary_email: true
   field_primary_phone_number: true
   field_profile_photo: true
   field_profile_type: true
+  field_pronouns: true
   field_social_media: true
   field_spotlight: true
   langcode: true
