@@ -12,11 +12,31 @@ const { pr } = danger.github
 const prDescription = pr.body || ''
 if (!JIRA_REF_PATTERN.test(prDescription)) {
   warn('Please include at least one Jira ticket, e.g. SG-123 or DESSYS-123.')
-} else if (prDescription.length < MIN_PR_DESC_LENGTH) {
+}
+else if (prDescription.length < MIN_PR_DESC_LENGTH) {
   warn(`Your PR description is too short (&lt;${MIN_PR_DESC_LENGTH} characters). Please be more descriptive.`)
 }
 
+checkMonorepoDependencyVersions()
+
 checkTranslations('config/translations')
+
+function checkMonorepoDependencyVersions () {
+  const rootPkg = require('./package.json')
+  const { workspaces = [] } = rootPkg
+  const allRootDeps = Object.assign({}, rootPkg.dependencies, rootPkg.devDependencies)
+
+  const packages = globbySync(workspaces.map(dir => `${dir}/package.json`), { })
+  for (const packageJson of packages) {
+    const pkg = require(`./${packageJson}`)
+    const allPkgDeps = Object.assign({}, pkg.dependencies, pkg.devDependencies)
+    for (const [name, version] of Object.entries(allPkgDeps)) {
+      if (allRootDeps[name] && allRootDeps[name] !== version) {
+        warn(`Dependency version mismatch: ${code(`${name}@${version}`)} does not match root ${code(allRootDeps[name])}`, packageJson)
+      }
+    }
+  }
+}
 
 function checkTranslations (cwd) {
   const potFiles = globbySync('**/*.pot', { cwd })
@@ -31,9 +51,11 @@ function checkTranslations (cwd) {
     if (!lang) {
       const possibleNames = translationLangs.map(lang => `${code(base.replace('.po', `.${lang}.po`))} (${locales[lang]})`)
       warn(`Missing language code in filename (should be named ${list(possibleNames, ', or ')})`, path)
-    } else if (!translationLangs.includes(lang)) {
+    }
+    else if (!translationLangs.includes(lang)) {
       warn(`Unexpected language code ${code(lang)} (expected ${list(translationLangs.map(code), ', or ')})`, path)
-    } else {
+    }
+    else {
       const potFile = poFile.replace(lang ? `.${lang}.po` : '.po', '.pot')
       if (!potFiles.includes(potFile) && !missingTemplates.includes(potFile)) {
         missingTemplates.push(potFile)
@@ -62,7 +84,9 @@ function checkTranslations (cwd) {
 
 function list (parts, lastGlue, glue = ', ') {
   const { length } = parts
-  if (length < 2) return parts.join(glue)
+  if (length < 2) {
+    return parts.join(glue)
+  }
   const last = length - 1
   const secondToLast = last - 1
   return parts.flatMap((part, i) => {

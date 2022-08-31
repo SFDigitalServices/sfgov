@@ -1,21 +1,29 @@
+/** @type {import('eslint').ESLint.ConfigData} */
 module.exports = {
   root: true,
-  plugins: ['sfgov'],
+  plugins: [
+    'sfgov'
+  ],
   extends: [
+    'plugin:sfgov/babel',
     'plugin:sfgov/recommended'
   ],
-  env: {
-  },
   globals: {
+    drupalSettings: 'readonly',
     Drupal: 'readonly',
     jQuery: 'readonly'
   },
+  ignorePatterns: [
+    'dist/**'
+  ],
   rules: {
     'arrow-parens': ['warn', 'as-needed', {
       requireForBlockBody: false
     }],
+    'brace-style': ['warn', 'stroustrup'],
     camelcase: 'warn',
     'comma-dangle': 'warn',
+    curly: ['warn', 'all'],
     eqeqeq: ['error', 'smart'],
     'newline-per-chained-call': ['warn', {
       ignoreChainWithDepth: 3
@@ -28,10 +36,9 @@ module.exports = {
       avoidExplicitReturnArrows: true
     }],
     'prefer-arrow-callback': 'warn',
-    'promise/always-return': 'warn',
-    'promise/catch-or-return': 'warn',
+    'promise/always-return': 0,
+    'promise/catch-or-return': 0,
     semi: 'error',
-    // we don't need "use strict" directives: @babel/preset-env adds them automatically
     strict: ['error', 'never']
   }
 }

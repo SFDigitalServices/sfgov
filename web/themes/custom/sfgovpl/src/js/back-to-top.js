@@ -7,26 +7,26 @@
  */
 (function ($, Drupal) {
   Drupal.behaviors.backToTop = {
-    attach: function (context) {
-      $('#back-to-top', context).on('click', function(e) {
-        e.preventDefault();
-        $('html, body', context).animate({scrollTop: 0}, '300');
-      });
+    attach (context) {
+      $('#back-to-top', context).on('click', e => {
+        e.preventDefault()
+        $('html, body', context).animate({ scrollTop: 0 }, '300')
+      })
 
-      $(window, context).on('load', function() {
-        var then = 0;
-        var now = 0;
-        $(window, context).once('scroll').on('scroll', function() {
-          now = $(window, context).scrollTop();
+      $(window, context).on('load', () => {
+        let then = 0
+        let now = 0
+        $(window, context).once('scroll').on('scroll', () => {
+          now = $(window, context).scrollTop()
           if (then > now && now > 700) {
-            $('#back-to-top').addClass('show');
+            $('#back-to-top').addClass('show')
           }
           else {
-            $('#back-to-top').removeClass('show');
+            $('#back-to-top').removeClass('show')
           }
-          then = now;
-        });
-      });
+          then = now
+        })
+      })
     }
-  };
-})(jQuery, Drupal);
+  }
+})(jQuery, Drupal)

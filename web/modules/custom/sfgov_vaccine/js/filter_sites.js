@@ -56,7 +56,8 @@
             leftColumn.fadeIn(speed)
             if (locationField.attr('data-lat') && locationField.attr('data-lng')) {
               scrollUp(speed)
-            } else if ($('.vaccine-filter__sites .included').length > 0) {
+            }
+            else if ($('.vaccine-filter__sites .included').length > 0) {
               scrollUp(speed)
             }
           })
@@ -91,7 +92,8 @@
           const ageRange = ageRangeString.split('-').map(str => parseFloat(str))
           if (ageRange.every(n => !isNaN(n))) {
             filters.push(site => site.dosages.some(dosage => rangesOverlap(ageRange, dosage.ages)))
-          } else {
+          }
+          else {
             // console.warn('Bad age range:', ageRange)
           }
         }
@@ -121,7 +123,8 @@
                 .attr('data-distance', distance)
                 .find('[data-role=distance]')
                 .text(formatDistance(distance))
-            } else {
+            }
+            else {
               $site
                 .removeAttr('data-distance')
                 .find('[data-role=distance]').text('')
@@ -192,25 +195,29 @@
             hideCount()
             hideSites()
             showNoResultsMessage()
-          } else if (!inCityBounds({ lat, lng })) {
+          }
+          else if (!inCityBounds({ lat, lng })) {
             // GPS coords out of bounds
             hideCount()
             hideSites()
             invalidAddressAlert.show()
-          } else {
+          }
+          else {
             // If "Only show sites with available appointments" is not checked and
             // there are sites that meet the selected criteria.
             hideNoResultsMessage()
             showSites()
             showCount()
           }
-        } else if (editLocation.val()) {
+        }
+        else if (editLocation.val()) {
           // Invalid location entered, alert user
           hideSites()
           hideCount()
           sitesWrapper.hide()
           invalidAddressAlert.show()
-        } else {
+        }
+        else {
           // No location entered, show results
           if (
             // If there are no results.
@@ -219,7 +226,8 @@
             hideCount()
             hideSites()
             showNoResultsMessage()
-          } else {
+          }
+          else {
             // If "Only show sites with available appointments" is not checked and
             // there are sites that meet the selected criteria.
             hideNoResultsMessage()
@@ -233,7 +241,8 @@
       function layoutChange (e) {
         if (e.matches) {
           $('.vaccine-filter__filters').appendTo('.group--right')
-        } else {
+        }
+        else {
           $('.vaccine-filter__filters').appendTo(
             '.vaccine-filter__filter-top > div'
           )
@@ -255,7 +264,8 @@
       function tryParse (str) {
         try {
           return JSON.parse(str)
-        } catch (error) {
+        }
+        catch (error) {
           return undefined
         }
       }

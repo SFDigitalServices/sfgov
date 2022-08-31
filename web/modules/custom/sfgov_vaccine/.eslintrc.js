@@ -1,7 +1,5 @@
+/** @type {import('eslint').ESLint.ConfigData} */
 module.exports = {
-  extends: [
-    require.resolve('../../../../.eslintrc')
-  ],
   env: {
     jquery: true
   },

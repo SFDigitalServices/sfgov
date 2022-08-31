@@ -38,7 +38,8 @@ function locationSubmit () {
       status: 'ok',
       msg: 'Google Maps is not loaded'
     })
-  } else {
+  }
+  else {
     $('#edit-distance-from').show()
   }
 
@@ -49,7 +50,8 @@ function locationSubmit () {
     if (input.getAttribute('data-place-changed')) {
       resolve({ status: 'ok', msg: 'user selected place, further resolution not necessary' })
       return
-    } else if (!input.value) {
+    }
+    else if (!input.value) {
       resolve({ status: 'ok', msg: 'no place selected, further resolution not necessary' })
       return
     }
@@ -79,7 +81,8 @@ function locationSubmit () {
       pdService.getDetails({ placeId: firstPlaceId }, (placeResult, status) => {
         if (status !== google.maps.places.PlacesServiceStatus.OK || !placeResult) {
           reject(new Error('no place details from PlacesService'))
-        } else {
+        }
+        else {
           input.setAttribute('data-lat', placeResult.geometry.location.lat())
           input.setAttribute('data-lng', placeResult.geometry.location.lng())
           resolve({ status: 'done', msg: 'lat lng attributes set on input via AutocompleteService and PlacesService' })
