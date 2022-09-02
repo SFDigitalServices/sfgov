@@ -7,7 +7,15 @@ dependencies:
     - node.type.department
     - paragraphs.paragraphs_type.spotlight
   module:
+    - datalayer
     - entity_reference_revisions
+    - tmgmt_content
+third_party_settings:
+  datalayer:
+    expose: 0
+    label: field_spotlight
+  tmgmt_content:
+    excluded: false
 id: node.department.field_spotlight
 field_name: field_spotlight
 entity_type: node
@@ -15,7 +23,7 @@ bundle: department
 label: Spotlight
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -186,6 +194,12 @@ settings:
         enabled: false
       public_body_profiles:
         weight: 125
+        enabled: false
+      resource_entity:
+        weight: 129
+        enabled: false
+      resource_node:
+        weight: 130
         enabled: false
       resource_section:
         weight: 127
