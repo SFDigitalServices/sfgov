@@ -70,7 +70,6 @@ class VaccineController extends ControllerBase {
    */
   protected $vaxValues;
 
-
   /**
    * {@inheritdoc}
    */
@@ -101,7 +100,7 @@ class VaccineController extends ControllerBase {
   /**
    * Get the microservice url from config.
    */
-  private function getAPIUrl() {
+  private function getApiUrl() {
     return $this->vaxValues->settings('api_url');
   }
 
@@ -112,7 +111,7 @@ class VaccineController extends ControllerBase {
 
     try {
       $language = $this->languageManager()->getCurrentLanguage()->getId();
-      $url = $this->getAPIUrl() . '?lang=' . $language;
+      $url = $this->getApiUrl() . '?lang=' . $language;
       $request = $this->httpClient->get($url, [
         'http_errors' => FALSE,
       ]);
@@ -121,7 +120,7 @@ class VaccineController extends ControllerBase {
     catch (ConnectException | RequestException $e) {
       $response = NULL;
       $this->loggerFactory->get('sfgov_vaccine')->error('Could not fetch data from %url. %message', [
-        '%url' => isset($url) ? $url : 'url',
+        '%url' => $url ?? 'url',
         '%message' => $e->getMessage(),
       ]);
     }
@@ -131,13 +130,13 @@ class VaccineController extends ControllerBase {
   /**
    * Prepare API data for rendering.
    */
-  private function makeAPIData($allData) {
+  private function makeApiData($allData) {
 
     $error_message = $this->vaxValues->settings('error_message');
 
     return [
       'timestamp' => $allData['data']['generated'],
-      'api_url' => $this->getAPIUrl(),
+      'api_url' => $this->getApiUrl(),
       'error' => $allData == NULL ? $this->t($error_message) : NULL,
     ];
   }
@@ -147,28 +146,6 @@ class VaccineController extends ControllerBase {
    */
   private function makeFilters() {
     return $this->formBuilder->getForm('\Drupal\sfgov_vaccine\Form\FilterSitesForm');
-  }
-
-  /**
-   * Prepare each site's data-access-mode value.
-   */
-  private function getSiteAccessModeKeys($site_data) {
-
-    $access_mode_options = [
-      'walk' => $site_data['access_mode']["walk"],
-      'drive' => $site_data['access_mode']["drive"],
-    ];
-
-    $keys = [];
-    foreach ($access_mode_options as $key => $value) {
-      if ($value === TRUE) {
-        $key = $this->vaxValues->settings('access_mode.' . $key . '.short_key');
-        array_push($keys, $key);
-      }
-    }
-    array_push($keys, 'all');
-
-    return $keys;
   }
 
   /**
@@ -195,15 +172,13 @@ class VaccineController extends ControllerBase {
    */
   private function getSiteAccessModeText($site_data) {
     $access_mode_options = [
-      'walk' => $site_data['access_mode']["walk"],
-      'drive' => $site_data['access_mode']["drive"],
       'wheelchair' => $site_data['access']['wheelchair'],
     ];
 
     $printed = [];
     foreach ($access_mode_options as $key => $value) {
       if ($value === TRUE) {
-        $text = $this->vaxValues->settings('access_mode.' . $key . '.text');
+        $text = $this->vaxValues->settings("access_mode.${key}.text");
         array_push($printed, $this->t($text));
       }
     }
@@ -247,16 +222,36 @@ class VaccineController extends ControllerBase {
   private function getSiteEligibilities($site_data) {
 
     $printed = [];
+
+    if (isset($site_data['dosages']) && is_array($site_data['dosages'])) {
+      foreach ($site_data['dosages'] as $dosage) {
+        if ($dosage['ages'][1] <= 5) {
+          $brand = $this->t($dosage['brand']);
+          // Format < 1 decimal numbers (really just 0.5) with underscores
+          // instead of periods because Drupal or PHP's YAML parser doesn't
+          // like keys with periods in them.
+          $formatted_ages = array_map(function (float $age) {
+            $formatted = number_format($age, 1, '_', '');
+            return $age < 1 ? $formatted : strval($age);
+          }, $dosage['ages']);
+          $age_range = implode('-', $formatted_ages);
+          $age_range_string = $this->t($this->vaxValues->settings("pediatric_age_range_strings.$age_range") ?? $age_range);
+          array_push($printed, "$brand $age_range_string");
+        }
+      }
+    }
+
     foreach (['kids5to11', 'minors'] as $group) {
       if (isset($site_data[$group]['allowed'])) {
-        $allowed = $site_data[$group]['allowed'] ? 'true': 'false';
-        $text = $this->vaxValues->settings($group . '.' . $allowed . '_text');
+        $allowed = $site_data[$group]['allowed'] ? 'true' : 'false';
+        $text = $this->vaxValues->settings("${group}.${allowed}_text");
         if ($text) {
           $printed_value = $this->t($text);
           array_push($printed, $printed_value);
         }
       }
     }
+
     return $printed;
   }
 
@@ -288,7 +283,6 @@ class VaccineController extends ControllerBase {
       $eligibilities = $this->getSiteEligibilities($site_data);
       $language_keys = $this->getSiteLanguageKeys($site_data['access']);
       $language_text = $this->getSiteLanguageText($site_data['access']);
-      $access_mode_keys = $this->getSiteAccessModeKeys($site_data);
       $access_mode_text = $this->getSiteAccessModeText($site_data);
 
       // Usable variables.
@@ -309,12 +303,11 @@ class VaccineController extends ControllerBase {
         $info_url = $site_data['info']['url'];
       }
 
-      $booking = isset($site_data['booking']) ? $site_data['booking'] : NULL;
+      $booking = $site_data['booking'] ?? NULL;
       $booking['safe_info'] = isset($booking['info']) ? Xss::filter($booking['info'], $allowed_html_tags) : NULL;
 
       $last_updated = $site_data['appointments']['last_updated'];
-      $site_name = $site_data['name'];
-      $site_id = isset($site_data['site_id']) ? $site_data['site_id'] : NULL;
+      $site_id = $site_data['site_id'] ?? NULL;
       $restrictions = $site_data['open_to']['everyone'];
       $restrictions_text = $site_data['open_to']['text'] ? Xss::filter($site_data['open_to']['text'], $allowed_html_tags) : NULL;
       $location = $site_data['location'];
@@ -323,10 +316,10 @@ class VaccineController extends ControllerBase {
 
       // Map results.
       $result = [
-        'site_name' => $site_name,
+        'site' => $site_data,
         'attributes' => new Attribute([
           'class' => ['vaccine-site', 'no-hover'],
-          'data-site-id' => $site_id,
+          'id' => $site_id ? "site-$site_id" : NULL,
           // Single Selects.
           'data-restrictions' => $restrictions ? 0 : 1,
           'data-kids5to11' => $site_data['kids5to11']['allowed'] ? 1 : 0,
@@ -335,9 +328,9 @@ class VaccineController extends ControllerBase {
           // Multi-selects.
           'data-language' => $language_keys ? implode('-', $language_keys) : implode('-', $this->vaxValues->settings('languages')),
           'data-remote-asl' => $language_text['remote_asl'],
-          'data-access-mode' => implode('-', $access_mode_keys),
           'data-lat' => $location['lat'],
           'data-lng' => $location['lng'],
+          'data-site' => json_encode($site_data),
         ]),
         'last_updated' => date("F j, Y, g:i a", strtotime($last_updated)),
         'restrictions_text' => $restrictions_text,
@@ -366,7 +359,7 @@ class VaccineController extends ControllerBase {
       '#alert' => $this->vaxValues->getAlert(),
       '#header_description' => $this->vaxValues->getHeaderDescription(),
       '#template_strings' => $this->vaxValues->settings('template_strings'),
-      '#api_data' => $this->makeAPIData($this->allData),
+      '#api_data' => $this->makeApiData($this->allData),
       '#filters' => $this->makeFilters($this->allData),
       '#results' => $this->makeResults($this->allData),
     ];

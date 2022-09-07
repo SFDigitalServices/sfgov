@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\pathauto\PathautoState;
@@ -159,7 +160,7 @@ function sfgov_utilities_page_attachments(array &$page) {
   // Sandbox alert
   if (isset($_ENV['PANTHEON_ENVIRONMENT']) && $_ENV['PANTHEON_ENVIRONMENT'] !== 'live') {
     $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
-    
+
     /* sandbox user login */
     if ($_ENV['PANTHEON_ENVIRONMENT'] !== 'content') { // don't do this for the content environment
       $sandboxUserCredsPath = DRUPAL_ROOT . '/sites/default/files/private/secrets.json';
@@ -456,4 +457,56 @@ function sfgov_utilities_preprocess_views_view_field(&$variables) {
 
   }
 
+}
+
+/**
+ * Helper function to check and create an alias for an internal path.
+ *
+ * [SG-1007]
+ *
+ * @param $internal_path
+ * @param $generated_path
+ * @param string $langcode
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function sfgov_utilities_create_alias($internal_path, $alias_to_generate, string $langcode = '') {
+  if (!$langcode) {
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  }
+
+  $path_alias_manager = \Drupal::entityTypeManager()
+    ->getStorage('path_alias');
+
+  // Determine if an alias exists for the internal path URL.
+  $alias_object = $path_alias_manager->loadByProperties([
+    'path' => $internal_path,
+    'langcode' => $langcode,
+  ]);
+
+  // If no alias exists for the internal path and the language, create a
+  // human friendly alias for our no so human friendly path
+  // (Example: /events/topics/25 -> /events/topics/immigrants)
+  if (empty($alias_object)) {
+    $path_alias = PathAlias::create([
+      'path' => $internal_path,
+      'alias' => $alias_to_generate,
+      'langcode' => $langcode
+    ]);
+    $path_alias->save();
+
+  }
+
+  // If the alias exists, check if it needs to be updated
+  foreach ($alias_object as $id => $alias) {
+    $existing_alias_language = $alias->get('langcode');
+    $existing_alias = $alias->getAlias();
+    if ($existing_alias_language->langcode == $langcode && $existing_alias != $alias_to_generate) {
+      // Update the alias if it changed (possibly from a translation or manual)
+      $alias->setAlias($alias_to_generate)
+        ->save();
+    }
+  }
 }

@@ -1,45 +1,34 @@
 (function ($, Drupal, drupalSettings) {
-  Drupal.behaviors.excludeFromGtranslate = {
-    attach: function (context) {
-
-      var do_not_translate = [
-        'Mayor London Breed',
-        'Mayor London N. Breed',
-        'London Nicole Breed',
-        'Mayor Breed',
-        'London Breed',
-        'Breed',
-      ];
-      
-      $.each(do_not_translate, function (index, value) {
-        $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-subtitle', context)
-          .filter("*:contains(" + value + ")")
-          .html(function (_, html) {
-            var regex = new RegExp('(?!<span class="notranslate\>)' + value + '(?!<\/span>)', 'g');
-            return html.replace(regex, '<span class="notranslate">' + value + '</span>');
-          });
-      });
-    }
-  };
-
-})(jQuery, Drupal, drupalSettings);
-
-function SfGovExcludeFromTranslate(old_value) {
-  var do_not_translate = [
+  // TODO: make this configurable!!
+  const doNotTranslate = [
     'Mayor London Breed',
     'Mayor London N. Breed',
     'London Nicole Breed',
     'Mayor Breed',
     'London Breed',
-    'Breed',
-  ];
+    'Breed'
+  ].map(str => [
+    str,
+    new RegExp(`(?!<span class="notranslate>)${str}(?!</span>)`, 'g'),
+    `<span class="notranslate">${str}</span>`
+  ])
 
-  do_not_translate.forEach(function(value) {
-    if (old_value.includes(value)) {
-      var regex = new RegExp('(?!<span class="notranslate\>)' + value + '(?!<\/span>)', 'g');
-      old_value = old_value.replace(regex, '<span class="notranslate">' + value + '</span>');
+  Drupal.behaviors.excludeFromGtranslate = {
+    attach (context) {
+      for (const [str, find, replace] of doNotTranslate) {
+        $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-bio-summary', context)
+          .filter(`*:contains(${str})`)
+          .html((_, html) => html.replace(find, replace))
+      }
     }
-  });
+  }
 
-  return old_value;
-}
+  window.SfGovExcludeFromTranslate = function (oldValue) {
+    for (const [str, find, replace] of doNotTranslate) {
+      if (oldValue.includes(str)) {
+        oldValue = oldValue.replace(find, replace)
+      }
+    }
+    return oldValue
+  }
+})(jQuery, Drupal, drupalSettings)

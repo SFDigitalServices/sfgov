@@ -1,0 +1,67 @@
+uuid: 19c4766e-64d7-4460-ba65-38d762ac0b84
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.profile_position
+    - field.field.paragraph.public_body_profiles.field_commission_position
+    - field.field.paragraph.public_body_profiles.field_department
+    - field.field.paragraph.public_body_profiles.field_ending_year
+    - field.field.paragraph.public_body_profiles.field_position_type
+    - field.field.paragraph.public_body_profiles.field_profile
+    - field.field.paragraph.public_body_profiles.field_starting_year
+    - field.field.paragraph.public_body_profiles.field_title
+    - paragraphs.paragraphs_type.public_body_profiles
+  module:
+    - datetime
+    - options
+id: paragraph.public_body_profiles.profile_position
+targetEntityType: paragraph
+bundle: public_body_profiles
+mode: profile_position
+content:
+  field_commission_position:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_department:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ending_year:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_position_type:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_starting_year:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  field_profile: true
+  field_title: true
+  search_api_excerpt: true

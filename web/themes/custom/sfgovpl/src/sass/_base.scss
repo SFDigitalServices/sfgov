@@ -123,7 +123,21 @@ b {
 }
 
 *:focus {
-  outline: 2px dotted #aeb0b5;
-  outline-offset: 3px;
+  @include focus-outline;
+}
+
+// if a link is set to white text, a dark background, or a specific section,
+// Set the focus color to white.
+.text-white,
+.dark-blue,
+.sfgov-title--elected-officials,
+.paragraph--formio--feedback,
+.sfgov-footer {
+  *:focus {
+    outline-color: $c-white;
+  }
+}
+.btn-inverse:focus {
+  outline-color: $c-white;
 }
 /* purgecss end ignore */

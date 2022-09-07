@@ -1,0 +1,92 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Setup",
+      "dependsOn": [
+        "Composer install",
+        "Update database",
+        "Update config",
+        "Build theme",
+        "Clear cache"
+      ],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Composer install",
+      "dependsOn": [
+      ],
+      "type": "shell",
+      "command": "composer install",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Composer clean",
+      "type": "shell",
+      "command": "rm -rf vendor web/core web/libraries",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Lando start",
+      "type": "shell",
+      "command": "lando start",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Update database",
+      "type": "shell",
+      "command": "lando drush updatedb -y",
+      "problemMatcher": []
+    },
+    {
+      "label": "Update config",
+      "type": "shell",
+      "command": "lando drush cim -y",
+      "problemMatcher": []
+    },
+    {
+      "label": "Clear cache",
+      "type": "shell",
+      "command": "lando drush cr",
+      "problemMatcher": []
+    },
+    {
+      "label": "Export config",
+      "type": "shell",
+      "command": "lando drush cex -y"
+    },
+    {
+      "label": "Lint PHP",
+      "type": "shell",
+      "command": "lando php-sniff ${relativeFile}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Pull database (live)",
+      "type": "shell",
+      "command": "lando pull --files=none --code=none --database=live",
+      "problemMatcher": []
+    },
+    {
+      "label": "Pull files (live)",
+      "type": "shell",
+      "command": "lando pull --files=live --code=none --database=none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build assets",
+      "type": "shell",
+      "command": "npm install && npm run -ws build",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

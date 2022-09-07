@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sfgov_utilities\ResourceMigration;
+namespace Drupal\sfgov_utilities\Migration\ResourceMigration;
 
 class ResourceMigrationReport {
 

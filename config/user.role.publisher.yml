@@ -3,6 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - eck.eck_type.location.event_address
+    - eck.eck_type.location.mailing
+    - eck.eck_type.location.physical
     - filter.format.basic_html
     - filter.format.full_html
     - filter.format.restricted_html
@@ -21,11 +24,14 @@ dependencies:
     - node.type.department
     - node.type.department_table
     - node.type.event
+    - node.type.form_confirmation_page
     - node.type.form_page
     - node.type.information_page
+    - node.type.landing
     - node.type.location
     - node.type.meeting
     - node.type.news
+    - node.type.page
     - node.type.person
     - node.type.public_body
     - node.type.report
@@ -33,9 +39,12 @@ dependencies:
     - node.type.step_by_step
     - node.type.topic
     - node.type.transaction
+    - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.tags
     - workflows.workflow.editorial
   module:
     - admin_toolbar_search
+    - block_content
     - content_lock
     - content_moderation
     - content_translation
@@ -45,6 +54,8 @@ dependencies:
     - file
     - filter
     - media
+    - media_revisions_ui
+    - menu_link_content
     - node
     - paragraphs
     - protected_pages
@@ -88,11 +99,13 @@ permissions:
   - 'clone news content'
   - 'clone person content'
   - 'clone public_body content'
+  - 'clone report content'
   - 'clone resource_collection content'
   - 'clone step_by_step content'
   - 'create about content'
   - 'create audio media'
   - 'create campaign content'
+  - 'create content translations'
   - 'create data_story content'
   - 'create department content'
   - 'create department_table content'
@@ -129,6 +142,7 @@ permissions:
   - 'delete any resource_collection content'
   - 'delete any step_by_step content'
   - 'delete any transaction content'
+  - 'delete content translations'
   - 'delete media'
   - 'delete own about content'
   - 'delete own audio media'
@@ -200,23 +214,67 @@ permissions:
   - 'edit own transaction content'
   - 'edit own video media'
   - 'revert about revisions'
+  - 'revert all media revisions'
+  - 'revert audio media revisions'
   - 'revert campaign revisions'
   - 'revert data_story revisions'
   - 'revert department revisions'
   - 'revert department_table revisions'
   - 'revert event revisions'
+  - 'revert file media revisions'
+  - 'revert form_confirmation_page revisions'
+  - 'revert form_page revisions'
+  - 'revert image media revisions'
   - 'revert information_page revisions'
+  - 'revert landing revisions'
   - 'revert location revisions'
   - 'revert meeting revisions'
   - 'revert news revisions'
+  - 'revert page revisions'
   - 'revert person revisions'
   - 'revert public_body revisions'
+  - 'revert report revisions'
   - 'revert resource_collection revisions'
   - 'revert step_by_step revisions'
   - 'revert topic revisions'
   - 'revert transaction revisions'
+  - 'revert video media revisions'
+  - 'translate any entity'
+  - 'translate audio media'
+  - 'translate block_content'
+  - 'translate campaign node'
+  - 'translate data_story node'
+  - 'translate department node'
+  - 'translate department_table node'
+  - 'translate event node'
+  - 'translate event_address location'
+  - 'translate file media'
+  - 'translate form_confirmation_page node'
+  - 'translate form_page node'
+  - 'translate image media'
+  - 'translate information_page node'
+  - 'translate keywords taxonomy_term'
+  - 'translate landing node'
+  - 'translate location node'
+  - 'translate mailing location'
+  - 'translate meeting node'
+  - 'translate menu_link_content'
+  - 'translate news node'
+  - 'translate page node'
+  - 'translate paragraph'
+  - 'translate person node'
+  - 'translate physical location'
+  - 'translate public_body node'
+  - 'translate report node'
+  - 'translate resource_collection node'
+  - 'translate step_by_step node'
+  - 'translate tags taxonomy_term'
   - 'translate topic node'
+  - 'translate transaction node'
+  - 'translate user'
+  - 'translate video media'
   - 'update any media'
+  - 'update content translations'
   - 'update media'
   - 'use admin toolbar search'
   - 'use editorial transition archive'
@@ -238,11 +296,18 @@ permissions:
   - 'view any location entities'
   - 'view any resource entities'
   - 'view any unpublished content'
+  - 'view audio media revisions'
+  - 'view campaign revisions'
   - 'view data_story revisions'
   - 'view department revisions'
   - 'view department_table revisions'
   - 'view event revisions'
+  - 'view file media revisions'
+  - 'view form_confirmation_page revisions'
+  - 'view form_page revisions'
+  - 'view image media revisions'
   - 'view information_page revisions'
+  - 'view landing revisions'
   - 'view latest version'
   - 'view location revisions'
   - 'view meeting revisions'
@@ -251,11 +316,14 @@ permissions:
   - 'view own resource entities'
   - 'view own unpublished content'
   - 'view own unpublished media'
+  - 'view page revisions'
   - 'view person revisions'
   - 'view public_body revisions'
+  - 'view report revisions'
   - 'view resource_collection revisions'
   - 'view step_by_step revisions'
   - 'view topic revisions'
   - 'view transaction revisions'
   - 'view unpublished eck entities'
   - 'view unpublished paragraphs'
+  - 'view video media revisions'

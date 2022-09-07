@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\node\NodeInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Drupal\redirect\Entity\Redirect;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -185,28 +186,30 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
     if ($this->addCacheContextsToNode($event) != NULL) {
 
       $node = $this->addCacheContextsToNode($event);
-      $node_type = strtolower($node->type->entity->label());
+      if ($node instanceof Node) {
+        $node_type = strtolower($node->type->entity->label());
 
-      // Node redirect rule based on the field `field_direct_external_url`.
-      if ($node->hasField('field_direct_external_url')) {
-        $field_external_url = $node->get('field_direct_external_url')
-          ->getValue();
+        // Node redirect rule based on the field `field_direct_external_url`.
+        if ($node->hasField('field_direct_external_url')) {
+          $field_external_url = $node->get('field_direct_external_url')
+            ->getValue();
 
-        if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != '') {
-          $redirect_url = $field_external_url[0]['uri'];
+          if (!empty($field_external_url[0]) && $field_external_url[0]['uri'] != '') {
+            $redirect_url = $field_external_url[0]['uri'];
+          }
         }
-      }
 
-      // Node redirect rule based on the field `field_go_to_current_url`.
-      if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
-        $field_go_to_current_url = $node->get('field_go_to_current_url')
-          ->getValue();
+        // Node redirect rule based on the field `field_go_to_current_url`.
+        if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
+          $field_go_to_current_url = $node->get('field_go_to_current_url')
+            ->getValue();
 
-        if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
-          $field_dept_url = $node->get('field_url')->getValue();
+          if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
+            $field_dept_url = $node->get('field_url')->getValue();
 
-          if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
-            $redirect_url = $field_dept_url[0]['uri'];
+            if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
+              $redirect_url = $field_dept_url[0]['uri'];
+            }
           }
         }
       }

@@ -4,7 +4,7 @@
     {{ title_prefix }}
     {% include '@theme/hero-banner-color.twig' with {
       'banner': {
-        'label': content.field_news_type,
+        'label': content.field_news_type|render,
         'title': node.label,
         'text': content.field_description|render
       }
@@ -13,11 +13,13 @@
   {% endblock header %}
 
   {% block footer %}
-    <div class="news--meta">
+    <div class="news--meta bg-yellow-1 py-40 md:py-60">
       <div class="news--meta-inner responsive-container">
-        <div class="news--meta-text">
-          {{ content.field_abstract }}
-          {{ content.field_date }}
+        <div class="news--meta-text text-big-desc-desktop mb-20">
+          {{ node.field_abstract.value }}
+        </div>
+        <div class="news--meta-date text-body font-medium">
+          {{ node.field_date.value | date('F d, Y') }}
         </div>
       </div>
     </div>
@@ -25,7 +27,7 @@
 
   {% block content %}
     {% if content.field_image|render %}
-      <div class="news--image">
+      <div class="news--image pb-40 pt-20 md:pb-0 md:pr-0 md:pt-60">
         <div class="news--image-inner responsive-container">
           {% include '@theme/media-with-caption.twig' with {
             entity: node.field_image.entity,
@@ -35,7 +37,7 @@
       </div>
     {% endif %}
 
-    <div{{ content_attributes.addClass(bundle ~ '--body') }}>
+    <div class="news--body pt-20 pb-100">
       <div class="news--body-inner responsive-container">
         {{ content|without(
           'content_moderation_control',
@@ -49,7 +51,7 @@
     </div>
 
     {% if content.field_departments.0 %}
-      <div class="{{ bundle }}--ankle">
+      <div class="news--ankle">
         {{ content.field_departments }}
       </div>
     {% endif %}

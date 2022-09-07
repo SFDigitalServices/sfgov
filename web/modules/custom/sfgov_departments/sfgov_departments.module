@@ -5,6 +5,7 @@
  * Extends functionality for the department content type.
  */
 
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -70,6 +71,141 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
       $form['#attached']['library'][] = 'sfgov_departments/parent_departments';
 
       break;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_departments_form_node_department_form_alter(&$form, FormStateInterface $form_state) {
+  // We need to make sure the same stuff that is applied to both add and edit
+  // forms. Se we will run out code in the edit hook, and just reference it
+  // here.
+  sfgov_departments_form_node_department_edit_form_alter($form,  $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sfgov_departments_form_node_department_edit_form_alter(&$form, FormStateInterface $form_state) {
+
+  // https://sfgovdt.jira.com/browse/SG-1738
+  // We need to make sure that whatever value for "Request public records" is
+  // applied to all languages. However we can't just disable translation because
+  // the other information fields that depend on this fields value, also need to
+  // be translatable. We can't just completely disable translation on the
+  // the "Request public records" radios, because then it won't show on the
+  // translation form, and therefore the phone/email/link conditional fields
+  // won't display or be processed/added to the translation.
+  //
+  // So our work around is to make sure that translation is only turned off for
+  // TMGMT which fixes the issue of broken translations on that end, and then
+  // we make sure that all translations receive the same value from the default
+  // language, and then disabled so that it can't be changed in other languages.
+  // This ensures that the phone, link, and email related fields can still
+  // display conditionally, be editable for the language, and be translatable by
+  // all sources, but the parent "request" radio field stays locked down.
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityForm) {
+    $node = $form_object->getEntity();
+    $default_language = $node->getUntranslated()->language()->getId();
+    $language = $node->language()->getId();
+    // If the current language is different from the default, it means we are
+    // on a translation, and we need to work our magic.
+    if ($default_language != $language && $node->getUntranslated()->hasField('field_req_public_records')) {
+
+      // Get the "Request public records" value from the default translation...
+      $default_language_public_record_value = $node->getUntranslated()->get('field_req_public_records')->getValue();
+
+      // Apply that default value to the translation, so they stay in sync.
+      $form['field_req_public_records']['widget']['#default_value'] = $default_language_public_record_value[0]['value'];
+
+      // Disable the checkbox so that can't be changed per language, but the
+      // conditional display setup for the phone/link/email fields remains
+      // unbroken.
+      $form['field_req_public_records']['widget']['#attributes']['disabled'] = 'disabled';
+    }
+  }
+
+  // [SG-1746]
+  // This setup sets the archive date field to be required, if the archive url
+  // is set. This ensures that if a department has an archive that the last
+  // archived date must be set.
+  $form['field_archive_date']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_archive_url[0][uri]"]' => ['filled' => TRUE]
+    ],
+  ];
+  $form['#validate'][] = '_sfgov_departments_dept_node_archive_url_and_date_form_validate';
+
+  // [SG-1746]
+  // This setup sets the request public records type fields to be required, if 
+  // the "Required public records" radio type field is set. This ensures that if 
+  // a department has a required type, that the type field associated with that is
+  // filled in.
+
+  // Set the Link field to required if checkbox is set to Link.
+  $form['field_req_public_records_link']['widget'][0]['uri']['#states'] = [
+    'required' => [
+      ':input[name="field_req_public_records"]' => ['value' => 'Link']
+    ],
+  ];
+
+  // Set the Email field to required if checkbox is set to Email.
+  $form['field_req_public_records_email']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_req_public_records"]' => ['value' => 'Email']
+    ],
+  ];
+
+  // Set the Phone field to required if checkbox is set to Phone.
+  $form['field_req_public_records_phone']['widget'][0]['value']['#states'] = [
+    'required' => [
+      ':input[name="field_req_public_records"]' => ['value' => 'Phone']
+    ],
+  ];
+
+  $form['#validate'][] = '_sfgov_departments_dept_req_public_records_form_validate';
+}
+
+/**
+ * Validates submission values in the FORM_ID() form.
+ */
+function _sfgov_departments_dept_node_archive_url_and_date_form_validate($form, FormStateInterface $form_state) {
+  // [SG-1746]
+  // This validation handler ensures that if an archive url is set, then the
+  // archive date must also be set.
+  $values = $form_state->getValues();
+  if (!empty($values['field_archive_url'][0]['uri'])) {
+    if (empty($values['field_archive_date'][0]['value'])) {
+      $form_state->setErrorByName("field_archive_date[0][value][date]", t('Archive date is required if an Archive URL is set.'));
+    }
+  }
+}
+
+/**
+ * Validates submission values in the FORM_ID() form.
+ */
+function _sfgov_departments_dept_req_public_records_form_validate($form, FormStateInterface $form_state) {
+  // [SG-1746]
+  // This validation handler ensures that if a request type is set, then the
+  // associated request type data field must also be set.
+  $values = $form_state->getValues();
+  if (!empty($values['field_req_public_records'][0]['value'])) {
+
+    $required_type = $values['field_req_public_records'][0]['value'];
+
+    if ($required_type == 'Link' && empty($values['field_req_public_records_link'][0]['uri'])) {
+      $form_state->setErrorByName("field_req_public_records_link", t('Public records link is required if request type is set to Link.'));
+    }
+
+    if ($required_type == 'Email' && empty($values['field_req_public_records_email'][0]['value'])) {
+      $form_state->setErrorByName("field_req_public_records_email", t('Public records email is required if request type is set to Email.'));
+    }
+
+    if ($required_type == 'Phone' && empty($values['field_req_public_records_phone'][0]['value'])) {
+      $form_state->setErrorByName("field_req_public_records_phone", t('Public records phone is required if request type is set to Phone.'));
+    }
   }
 }
 
@@ -142,9 +278,9 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
   return $form['field_departments'];
 }
 
-/**  
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().  
- */  
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
 function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
   $parentEntity = $form_state->getFormObject()->getEntity();
 

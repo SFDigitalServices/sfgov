@@ -1,21 +1,39 @@
 display:
   default:
-    display_title: Máster
+    display_title: Master
     display_options:
       exposed_form:
         options:
-          submit_button: Filtro
-          reset_button_label: Restablecer
-          exposed_sorts_label: 'Ordenar por'
+          submit_button: Filter
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
       pager:
         options:
+          tags:
+            previous: '‹ anterior'
+            next: 'siguiente ›'
+            first: '« primero'
+            last: 'último »'
           expose:
-            items_per_page_label: 'Elementos por página'
-            items_per_page_options_all_label: '- Todo -'
-            offset_label: Desplazamiento
+            items_per_page_label: 'Items per page'
+            items_per_page_options_all_label: '- All -'
+            offset_label: Offset
+      fields:
+        redirect_bulk_form:
+          action_title: 'Con selección'
+        redirect_source__path:
+          label: Desde
+        created:
+          label: Creado
       filters:
+        redirect_source__path:
+          expose:
+            label: Desde
         redirect_redirect__uri:
           expose:
-            label: Para
+            label: To
+        language:
+          expose:
+            label: 'Lenguaje original'
   page_1:
-    display_title: Página
+    display_title: Page

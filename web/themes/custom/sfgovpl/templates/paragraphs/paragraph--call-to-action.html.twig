@@ -15,9 +15,12 @@
   {% if cta_title is not empty %}
     <p class="{{ textColor }} text-title-xs font-medium m-0 mb-24">{{ cta_title }}</p>
   {% endif %}
-  {% include "@sfgov-design-system/button/link.twig" with {
+  {% if ( url is not empty ) and ( btnText is not empty ) %}
+    {% include "@sfgov-design-system/button/link.twig" with {
       "href": url,
       "text": btnText,
       "classes": btnClasses
-  } %}
+    } %}
+  {% endif %}
+
 {% endblock %}

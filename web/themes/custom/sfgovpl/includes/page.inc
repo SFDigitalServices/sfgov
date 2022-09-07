@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\NodeInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements theme_preprocess_page_title(). 
@@ -29,6 +30,26 @@ function sfgovpl_preprocess_page__node__form_page(&$variables) {
 }
 
 /**
+ * Implements theme_preprocess_page
+ * for the form confirmation page content type specifically
+ */
+
+function sfgovpl_preprocess_page__node__form_confirmation_page(&$variables) {
+  _sfgovpl_node_object($variables);
+
+  if (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $node = $variables['node'];
+
+    // add the related form title to the variables array for use on template
+    if (!empty($node->get('field_related_content_single')->getValue())) {
+      $relatedForm = $node->get('field_related_content_single')->getValue();
+      $formNode = Node::load($relatedForm[0]['target_id']);
+      $variables['related_form_title'] = $formNode->getTitle(); 
+    }
+  }
+}
+
+/**
  * Implements theme_preprocess_HOOK().
  */
 function sfgovpl_preprocess_page__node__campaign(&$variables) {
@@ -43,22 +64,6 @@ function sfgovpl_preprocess_page__node__campaign(&$variables) {
     $class = '';
     if (!empty($node_variables['notranslate'])) {
       $class = ' class="notranslate"';
-    }
-
-    // Conditionally render Logo or Title.
-    if ($node->field_logo->entity) {
-      $variables['campaign_branding'] = $node->field_logo->view([
-        'type' => 'image',
-        'label' => 'hidden',
-        'settings' => [
-          'image_style' => 'campaign_logo',
-        ],
-      ]);
-    }
-    else {
-      $variables['campaign_branding'] = [
-        '#markup' => '<h1' . $class . '>' . $node->label() . '</h1>',
-      ];
     }
   }
 }

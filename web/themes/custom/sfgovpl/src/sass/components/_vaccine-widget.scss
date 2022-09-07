@@ -8,16 +8,13 @@
 }
 
 .vaccine-filter__body {
-  @include media($medium-screen) {
-    padding-top: 60px;
-  }
-
   .group--left {
     @include columns-720(left);
     @include media($medium-screen) {
       padding-right: 60px;
     }
   }
+
   .group--right {
     display: none;
     @include columns-350(right);
@@ -30,12 +27,12 @@
   }
 }
 
-.vaccine-filter__count {
-  margin-bottom: 40px;
-}
-
 .vaccine-filter-form {
-  [data-drupal-selector='edit-single-checkboxes'] {
+  label {
+    @include fs-body-bold;
+  }
+
+  [data-drupal-selector='edit-access'] {
     margin-bottom: 50px;
 
     .js-form-type-checkbox label {
@@ -54,10 +51,6 @@
     justify-content: space-between;
     flex-wrap: wrap;
 
-    label {
-      @include fs-body-bold;
-    }
-
     .js-form-item-radius {
       flex-grow: 1;
     }
@@ -65,7 +58,7 @@
     span {
       padding-left: 20px;
       margin-bottom: 20px;
-      padding-bottom: 9px;
+      padding-bottom: 8px;
       text-align: right;
 
       @media screen and (min-width: $medium-screen) and (max-width: 991px) {
@@ -79,10 +72,6 @@
       }
     }
   }
-
-  .fieldset-wrapper .form-wrapper .form-item-access-mode {
-    margin-bottom: 40px;
-  }
 }
 
 .vaccine-filter__empty {
@@ -95,15 +84,8 @@
 
 // Vaccine Site/Card.
 .vaccine-site {
-  @include rubik;
-  margin-bottom: 40px;
-  padding: 17px;
-  background: $c-white;
   border: 3px solid $c-grey-3;
   border-radius: $radius;
-  color: $c-slate;
-  display: block;
-  text-decoration: none;
 
   @include media($medium-screen) {
     padding: 35px;
@@ -134,92 +116,23 @@
   }
 }
 
-.distance-visible {
-  display: flex;
-}
-
-.vaccine-site__title {
-  @include fs-title-3-mobile;
-  margin: 0 0 10px 0;
-
-  .distance-visible & {
-    width: calc(100% - 66px);
-  }
-}
-
-.vaccine-site__distance {
-  .distance-visible & {
-    color: $c-light-slate;
-    text-align: right;
-    width: 66px;
-  }
-}
-
 .vaccine-site__address {
   @include background-image('icons/location-slate.svg');
-  margin-bottom: 20px;
-
-  a {
-    @include link-colors($c-bright-blue);
-  }
 }
 
 .vaccine-site__languages {
   @include background-image('icons/globe-slate.svg');
-  margin-bottom: 20px;
-}
-
-.vaccine-site__eligibilities {
-  margin-bottom: 18px;
-}
-
-.vaccine-site__eligibility {
-  @include fs-small-text;
-  background: $c-grey-2;
-  display: inline-block;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  padding: 3px 8px;
-  word-break: keep-all;
-}
-
-.vaccine-site__restrictions {
-  background: $c-yellow-1;
-  padding: 20px;
-  margin-bottom: 40px;
-
-  @include media($medium-screen) {
-    padding: 40px;
-  }
 }
 
 .vaccine-site__access-mode {
   @include background-image('icons/accessibility-slate.svg');
-  margin-bottom: 20px;
 }
 
 .vaccine-site__brands {
   @include background-image('icons/info-slate.svg');
-  margin-bottom: 20px;
 }
 
 .vaccine-site__booking_box {
-  background-color: $c-blue-1;
-  margin-top: 40px;
-  padding: 20px;
-
-  div {
-    margin-bottom: 15px;
-  }
-
-  > div:last-child {
-    margin-bottom: 0;
-  }
-
-  @include media($medium-screen) {
-    padding: 40px;
-  }
-
   [data-available='yes'] & {
     @include background-image('check-green.svg', 20px 25px, $c-blue-1);
 
@@ -253,20 +166,6 @@
   }
 
   .vaccine-site__booking-button {
-    text-align: center;
-
-    @include media($medium-screen) {
-      text-align: left;
-    }
-
-    a {
-      display: block;
-
-      @include media($medium-screen) {
-        display: inline-block;
-      }
-    }
-
     + .vaccine-site__phone {
       text-align: center;
 

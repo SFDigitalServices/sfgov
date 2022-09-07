@@ -16,7 +16,8 @@ for (const toggle of toggles) {
     if (toggle.hasAttribute('data-toggle-show')) {
       toggle.removeAttribute('data-toggle-show')
       triggerLink.innerHTML = showMoreText
-    } else {
+    }
+    else {
       toggle.setAttribute('data-toggle-show', 'true')
       triggerLink.innerHTML = showLessText
     }

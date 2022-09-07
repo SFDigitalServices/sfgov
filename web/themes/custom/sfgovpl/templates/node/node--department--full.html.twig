@@ -77,7 +77,7 @@
         'text': node.field_description.value
       }
     } %}
-  
+
       {% block logo %}
         {% if content.field_image|render|striptags %}
           <div class="hero-banner--logo">
@@ -164,14 +164,14 @@
 {% set numPublicBodies = content.field_public_bodies['#items']|length %}
 {% set numDivisions = content.field_divisions['#items']|length %}
 
-{% if content.field_about_or_description|render|striptags 
-    or about_page_link
-    or content.field_parent_department|render|striptags
-    or content.field_image|render|striptags
-    or content.field_call_to_action|render|striptags
-    or content.field_social_media|render|striptags
-    or numPublicBodies > 0
-    or numDivisions > 0
+{% if content.field_about_or_description|render|striptags
+  or about_page_link
+  or content.field_parent_department|render|striptags
+  or content.field_image|render|striptags
+  or content.field_call_to_action|render|striptags
+  or content.field_social_media|render|striptags
+  or numPublicBodies > 0
+  or numDivisions > 0
 %}
   {% set hasAboutSection = true %}
 {% endif %}
@@ -182,7 +182,7 @@
     <div class="sfgov-dept-about">
       <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
       {# parent department / part of #}
-      {% if node.field_parent_department.0 is not empty %}        
+      {% if node.field_parent_department.0 is not empty %}
         <h3 class="text-white text-body font-medium m-0 mb-28">
           {{ node.field_parent_department.fieldDefinition.label | t }}:
           <a class="text-white font-regular" href="{{ path('entity.node.canonical', {'node': node.field_parent_department.entity.nid.value}) }}">
@@ -205,13 +205,13 @@
           {% if about_page_link %}
             <div class="mb-60">
               {% include "@sfgov-design-system/button/link.twig" with {
-                  "href": about_page_link['#url'],
-                  "text": about_page_link['#title'],
-                  "classes": ['btn-inverse']
+                "href": about_page_link['#url'],
+                "text": about_page_link['#title'],
+                "classes": ['btn-inverse']
               } %}
             </div>
           {% endif %}
-          
+
           {# divisions and public bodies #}
           {% if content.field_divisions|render|striptags|trim or content.field_public_bodies|render|striptags|trim %}
             <div class="mb-60">
@@ -232,7 +232,7 @@
             </div>
           {% endif %}
 
-          {# call to action #}        
+          {# call to action #}
           {% if content.field_call_to_action|render|striptags|trim %}
             <div class="mb-60 lg:mb-0">
               {{ content.field_call_to_action }}
@@ -256,7 +256,7 @@
 
 {% if hasAddress or hasPhone or hasEmail %}
   <div id="sfgov-dept-contact" class="sfgov-dept-contact sfds-layout-container my-80">
-  <a name="contact"></a>
+    <a name="contact"></a>
     <div class="sfgov-dept-contact-content sfds-responsive-container">
       <div class="sfgov-contact-container">
         <h2 class="dept-heading--section">{{ 'Contact'|t }}</h2>
@@ -268,7 +268,7 @@
           {% endif %}
           {% if hasPhone %}
             <div class="sfgov-contact-section phone-numbers">
-            <p class="sfgov-contact-section-title">{{ 'Phone'|t }}</p>
+              <p class="sfgov-contact-section-title">{{ 'Phone'|t }}</p>
               {{ content.field_phone_numbers }}
             </div>
           {% endif %}
@@ -284,30 +284,87 @@
   </div>
 {% endif %}
 
+{% set hasPublicRecordsLink = content.field_req_public_records_link['#items'] is not empty %}
+{% set hasPublicRecordsEmail = content.field_req_public_records_email['#items'] is not empty %}
+{% set hasPublicRecordsPhone = content.field_req_public_records_phone['#items'] is not empty %}
+{% set hasArchiveUrl = content.field_archive_url['#items'] is not empty %}
+{% set hasArchiveDate = content.field_archive_date['#items'] is not empty %}
+
 {% set publicRecordsMethod = content.field_req_public_records|render|striptags|trim|lower %}
 {% set publicRecordsLink = content.field_req_public_records_link|render|striptags|trim %}
 {% set publicRecordsEmail = content.field_req_public_records_email|render|striptags|trim %}
 {% set publicRecordsPhone = content.field_req_public_records_phone|render|striptags|trim %}
 
-{% if publicRecordsLink is not empty or publicRecordsEmail is not empty or publicRecordsPhone is not empty %}
+{% if (hasPublicRecordsLink and publicRecordsMethod == "link")
+  or (hasPublicRecordsEmail and publicRecordsMethod == "email")
+  or (hasPublicRecordsPhone and publicRecordsMethod == "phone")
+  or hasArchiveUrl %}
   <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
     <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
       <div class="sfgov-dept-public-records-content">
-        <p class="title">{{ 'Request public records'|t }}</p>
-        <p>
-        {% if publicRecordsMethod == "phone" %}
-          <a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}
-        {% elseif publicRecordsMethod == "email" %}
-          <a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}
-        {% elseif publicRecordsMethod == "link" %}
-          {% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}
-        {% endif %}
-        </p>
+        <div class="lg:flex">
+
+          {% if (hasPublicRecordsLink and publicRecordsMethod == "link")
+            or (hasPublicRecordsEmail and publicRecordsMethod == "email")
+            or (hasPublicRecordsPhone and publicRecordsMethod == "phone") %}
+
+            {% set class = hasArchiveUrl ? 'lg:w-1/2 pb-28 lg:pb-0 lg:pr-28' : '' %}
+            {% set title = 'Request public records'|t %}
+
+            <div class="{{ class }}">
+              {% if publicRecordsMethod == "phone" %}
+
+                {# Print the phone info only if method is phone and phone is not empty #}
+                {% if hasPublicRecordsPhone %}
+                  <p class="title">{{ title }}</p>
+                  <p><a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}</p>
+                {% endif %}
+
+              {% elseif publicRecordsMethod == "email" %}
+
+                {# Print the email info only if method is email and email is not empty #}
+                {% if hasPublicRecordsEmail %}
+                  <p class="title">{{ title }}</p>
+                  <p><a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}</p>
+                {% endif %}
+
+              {% elseif publicRecordsMethod == "link" %}
+
+                {# Print the link info only if method is link and link is not empty #}
+                {% if hasPublicRecordsLink %}
+                  <p class="title">{{ title }}</p>
+                  <p>{% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}</p>
+                {% endif %}
+
+              {% else %}
+                {# do nothing #}
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if hasArchiveUrl %}
+            {% set class = hasPublicRecordsLink or hasPublicRecordsPhone or hasPublicRecordsEmail ? 'lg:w-1/2 lg:pl-28' : '' %}
+            <div class="{{ class }}">
+              <p class="title">{{ 'Archived website'|t }}</p>
+              <p>
+                {% set url = content.field_archive_url.0['#url']|render %}
+                {% set text = 'See previous website'|t %}
+
+                {% if hasArchiveDate %}
+                  {% set date = content.field_archive_date|render|striptags|trim %}
+                  <a target="_blank" href="{{ url }}">{{ text }}</a> {{ 'archived @date.'|trans({'@date': date}) }}
+                {% else %}
+                  <a target="_blank" href="{{ url }}">{{ text }}</a>.
+                {% endif %}
+
+              </p>
+            </div>
+          {% endif %}
+
+        </div>
       </div>
     </div>
   </div>
 {% endif %}
-
-</div>
 
 {{ attach_library('sfgovpl/sfgov-dept-homepage') }}

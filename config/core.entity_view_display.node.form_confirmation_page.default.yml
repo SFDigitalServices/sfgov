@@ -9,13 +9,13 @@ dependencies:
     - field.field.node.form_confirmation_page.field_banner_image
     - field.field.node.form_confirmation_page.field_confirmation_sidebar
     - field.field.node.form_confirmation_page.field_departments
-    - field.field.node.form_confirmation_page.field_dept
+    - field.field.node.form_confirmation_page.field_description
     - field.field.node.form_confirmation_page.field_form_confirm_page_slug
+    - field.field.node.form_confirmation_page.field_related_content_single
     - field.field.node.form_confirmation_page.field_step
     - node.type.form_confirmation_page
   module:
     - entity_reference_revisions
-    - image
     - text
     - user
 id: node.form_confirmation_page.default
@@ -35,30 +35,6 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-  field_bann:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 5
-    region: content
-  field_banner_color:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 6
-    region: content
-  field_banner_image:
-    type: image
-    label: above
-    settings:
-      image_link: ''
-      image_style: ''
-    third_party_settings: {  }
-    weight: 4
-    region: content
   field_confirmation_sidebar:
     type: entity_reference_revisions_entity_view
     label: above
@@ -68,14 +44,20 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_dept:
-    type: entity_reference_entity_view
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_related_content_single:
+    type: entity_reference_label
     label: above
     settings:
-      view_mode: default
-      link: false
+      link: true
     third_party_settings: {  }
-    weight: 10
+    weight: 5
     region: content
   field_step:
     type: entity_reference_revisions_entity_view
@@ -87,6 +69,9 @@ content:
     weight: 2
     region: content
 hidden:
+  field_bann: true
+  field_banner_color: true
+  field_banner_image: true
   field_departments: true
   field_form_confirm_page_slug: true
   formio_url: true

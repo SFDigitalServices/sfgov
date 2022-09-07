@@ -12,6 +12,8 @@ dependencies:
     - field.field.node.public_body.field_departments
     - field.field.node.public_body.field_description
     - field.field.node.public_body.field_email
+    - field.field.node.public_body.field_meeting_archive_date
+    - field.field.node.public_body.field_meeting_archive_url
     - field.field.node.public_body.field_other_info
     - field.field.node.public_body.field_phone_numbers
     - field.field.node.public_body.field_public_body
@@ -25,6 +27,7 @@ dependencies:
     - datetime
     - entity_browser
     - field_group
+    - link
     - maxlength
     - paragraphs
     - path
@@ -62,6 +65,22 @@ third_party_settings:
         classes: ''
         id: ''
         open: false
+        description: ''
+        required_fields: true
+    group_archive_information:
+      children:
+        - field_meeting_archive_url
+        - field_meeting_archive_date
+      label: 'Archive information'
+      region: content
+      parent_name: ''
+      weight: 22
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: true
         description: ''
         required_fields: true
 id: node.public_body.default
@@ -184,6 +203,20 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
+  field_meeting_archive_date:
+    type: datetime_default
+    weight: 24
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_meeting_archive_url:
+    type: link_default
+    weight: 23
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   field_other_info:
     type: paragraphs
     weight: 7
@@ -253,7 +286,7 @@ content:
     third_party_settings: {  }
   field_subcommittees:
     type: entity_reference_autocomplete
-    weight: 22
+    weight: 21
     region: content
     settings:
       match_operator: CONTAINS
