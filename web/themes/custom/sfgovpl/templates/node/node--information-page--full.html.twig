@@ -5,10 +5,6 @@
   {% set classes = ['info--has-tags'] %}
 {% endif %}
 
-{% if node.field_departments.value %}
-  {% set hasDept = true %}
-{% endif %}
-
 <article{{ attributes.addClass(classes) }}>
   {% include '@theme/hero-banner-color.twig' with {
     'banner': {
@@ -33,11 +29,9 @@
 
   </div>
 
-  {% if hasDept %}
-    <div class="info--pbody-depts-container">
-      <div class="info--pbody-depts">
-        {{ content.field_departments }}
-      </div>
+  {% if content.field_departments['#items'] is not empty %}
+    <div class="ankle {{ bundle }}--ankle">
+      {{ content.field_departments }}
     </div>
   {% endif %}
 </article>

@@ -67,16 +67,11 @@
       {{ content.field_content_bottom }}
     </div>
 
-    {# Ankle. See _node-transaction.scss #}
-    {% if node.field_departments.value %}
-      <div class="resource-collection--department-list">
-        <div class="resource-collection--department-list--ankle">
-          <h4 class="field__label">
-            {{ 'Departments'|t }}
-          </h4>
-          {{ content.field_departments }}
-        </div>
+    {% if content.field_departments['#items'] is not empty %}
+      <div class="ankle {{ bundle }}--ankle">
+        {{ content.field_departments }}
       </div>
     {% endif %}
+
   {% endblock content %}
 {% endembed %}

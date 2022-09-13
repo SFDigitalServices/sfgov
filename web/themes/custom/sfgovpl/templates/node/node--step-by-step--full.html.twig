@@ -17,10 +17,18 @@
       {{ content|without(
         'content_moderation_control',
         'field_description',
-        'field_topics'
+        'field_topics',
+        'field_departments'
       ) }}
     </div>
+
     {% include '@theme/last-updated.twig' with {
       'date': node.changedtime|date('F j, Y')
     } %}
+
+    {% if content.field_departments['#items'] is not empty %}
+      <div class="ankle {{ bundle }}--ankle">
+        {{ content.field_departments }}
+      </div>
+    {% endif %}
   {% endblock content %}
