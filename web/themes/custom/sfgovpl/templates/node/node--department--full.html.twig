@@ -69,6 +69,19 @@
 
 {% set description = node.get('field_description').getValue()[0]['value'] %}
 
+{%
+  set meetings_block = {
+    upcoming: {
+      render: drupal_view('meetings', 'block_upcoming', node.id),
+      result: drupal_view_result('meetings', 'block_upcoming', node.id)
+    },
+    past: {
+      render: drupal_view('meetings', 'block_past', node.id),
+      result: drupal_view_result('meetings', 'block_past', node.id)
+    }
+  }
+%}
+
 <div class="sfds-layout-container">
   <div class="sfds-responsive-container">
     {% embed '@theme/hero-banner-default.twig' with {
@@ -113,6 +126,27 @@
 {% endif %}
 
 {{ content.field_featured_items }}
+
+{% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) %}
+  <div class="sfgov-full-bleed">
+    <div class="sfgov-section-container">
+      <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
+      {% if meetings_block.upcoming.result is not empty %}
+        <h3 class"m-0 lg:mb-28 lg:text-title-md-desktop">{{ 'Upcoming meetings' | t }}</h3>
+        <div class="sfgov-section--content lg:mb-40">
+          {{ meetings_block.upcoming.render }}
+        </div>
+      {% endif %}
+
+      {% if meetings_block.past.result is not empty %}
+        <h3 class="m-0 lg:mb-28 lg:text-title-md-desktop">{{ 'Past meetings' | t }}</h3>
+        <div class="sfgov-section--content">
+          {{ meetings_block.past.render }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
 
 {% if content.field_department_services['#items'].getValue() %}
   <a name="services"></a>

@@ -1,8 +1,22 @@
 {% extends 'node.html.twig' %}
 
+{% 
+  set utilityClasses = [
+    'block',
+    'p-20',
+    'text-white',
+    'no-underline'
+  ]
+%}
+
 {% block node %}
-  <a href="{{ url }}"{{ attributes.addClass(classes)|without('id', 'role') }}>
-    <h5>{{ node.label }}</h5>
-    {{ content }}
+  <a href="{{ url }}"{{ attributes.addClass(classes|merge(utilityClasses))|without('id', 'role') }}>
+    <p class="title p-0 m-0 font-medium lg:pb-28 lg:text-title-xs">{{ node.label }}</p>
+      {% if content.field_smart_date[0]['#date'] %}
+        {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
+        {{ content.field_smart_date[0]['#date'] }}
+      {% else %}
+        {{ content.field_start_date.date|date('l, M j, Y, g:i a') }}
+      {% endif %}
   </a>
 {% endblock node %}
