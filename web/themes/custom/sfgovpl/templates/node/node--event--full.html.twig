@@ -1,7 +1,8 @@
 {% extends 'node--full.html.twig' %}
 
-  {% set in_person = node.field_location_in_person.value %}
-  {% set online = node.field_location_online.value %}
+{% set in_person = node.field_location_in_person.value %}
+{% set online = node.field_location_online.value %}
+{% set bundle = node.bundle|clean_class %}
 
   {% block header %}
     {% include '@theme/hero-banner-color.twig' with {

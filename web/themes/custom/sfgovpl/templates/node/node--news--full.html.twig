@@ -1,58 +1,60 @@
 {% extends 'node--full.html.twig' %}
 
-  {% block header %}
-    {{ title_prefix }}
-    {% include '@theme/hero-banner-color.twig' with {
-      'banner': {
-        'label': content.field_news_type|render,
-        'title': node.label,
-        'text': content.field_description|render
-      }
-    } %}
-    {{ title_suffix }}
-  {% endblock header %}
+{% set bundle = node.bundle|clean_class %}
 
-  {% block footer %}
-    <div class="news--meta bg-yellow-1 py-40 md:py-60">
-      <div class="news--meta-inner responsive-container">
-        <div class="news--meta-text text-big-desc-desktop mb-20">
-          {{ node.field_abstract.value }}
-        </div>
-        <div class="news--meta-date text-body font-medium">
-          {{ node.field_date.value | date('F d, Y') }}
-        </div>
+{% block header %}
+  {{ title_prefix }}
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'label': content.field_news_type|render,
+      'title': node.label,
+      'text': content.field_description|render
+    }
+  } %}
+  {{ title_suffix }}
+{% endblock header %}
+
+{% block footer %}
+  <div class="news--meta bg-yellow-1 py-40 md:py-60">
+    <div class="news--meta-inner responsive-container">
+      <div class="news--meta-text text-big-desc-desktop mb-20">
+        {{ node.field_abstract.value }}
+      </div>
+      <div class="news--meta-date text-body font-medium">
+        {{ node.field_date.value | date('F d, Y') }}
       </div>
     </div>
-  {% endblock footer %}
+  </div>
+{% endblock footer %}
 
-  {% block content %}
-    {% if content.field_image|render %}
-      <div class="news--image pb-40 pt-20 md:pb-0 md:pr-0 md:pt-60">
-        <div class="news--image-inner responsive-container">
-          {% include '@theme/media-with-caption.twig' with {
-            entity: node.field_image.entity,
-            media: content.field_image,
-          } only %}
-        </div>
-      </div>
-    {% endif %}
-
-    <div class="news--body pt-20 pb-100">
-      <div class="news--body-inner responsive-container">
-        {{ content|without(
-          'content_moderation_control',
-          'field_abstract',
-          'field_date',
-          'field_departments',
-          'field_image',
-          'field_news_type'
-        ) }}
+{% block content %}
+  {% if content.field_image|render %}
+    <div class="news--image pb-40 pt-20 md:pb-0 md:pr-0 md:pt-60">
+      <div class="news--image-inner responsive-container">
+        {% include '@theme/media-with-caption.twig' with {
+          entity: node.field_image.entity,
+          media: content.field_image,
+        } only %}
       </div>
     </div>
+  {% endif %}
 
-    {% if content.field_departments['#items'] is not empty %}
-      <div class="ankle {{ bundle }}--ankle bg-yellow-1">
-        {{ content.field_departments }}
-      </div>
-    {% endif %}
-  {% endblock content %}
+  <div class="news--body pt-20 pb-100">
+    <div class="news--body-inner responsive-container">
+      {{ content|without(
+        'content_moderation_control',
+        'field_abstract',
+        'field_date',
+        'field_departments',
+        'field_image',
+        'field_news_type'
+      ) }}
+    </div>
+  </div>
+
+  {% if content.field_departments['#items'] is not empty %}
+    <div class="ankle {{ bundle }}--ankle bg-yellow-1">
+      {{ content.field_departments }}
+    </div>
+  {% endif %}
+{% endblock content %}
