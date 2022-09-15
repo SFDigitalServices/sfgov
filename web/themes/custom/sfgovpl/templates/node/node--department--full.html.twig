@@ -127,10 +127,19 @@
 
 {{ content.field_featured_items }}
 
+{{ content.field_public_body_meetings }}
+
+{% set hasMeetingMeta = false %}
+{% if content.field_public_body_meetings|render %}
+  {% set hasMeetingMeta = true %}
+{% endif %}
+
 {% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) %}
   <div class="sfgov-full-bleed">
     <div class="sfgov-section-container">
-      <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
+      {% if hasMeetingMeta is empty %}
+        <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
+      {% endif %}
       {% if meetings_block.upcoming.result is not empty %}
         <h3 class"m-0 lg:mb-28 lg:text-title-md-desktop">{{ 'Upcoming meetings' | t }}</h3>
         <div class="sfgov-section--content lg:mb-40">
