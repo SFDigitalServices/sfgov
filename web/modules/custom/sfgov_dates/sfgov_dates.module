@@ -13,19 +13,21 @@ function sfgov_dates_node_presave($entity) {
     return;
   }
 
-  $date_data = $entity->get('field_smart_date');
-  if ($date_data->duration == 0) {
-    // Get '11:59pm' of that day for end value
-    $day_end = strtotime('midnight-1 minutes', $date_data->value);
-    $day_end = strtotime('+24 hours', $day_end);
+  if ($entity->hasfield('field_smart_date')) {
+    $date_data = $entity->get('field_smart_date');
+    if ($date_data->duration == 0) {
+      // Get '11:59pm' of that day for end value
+      $day_end = strtotime('midnight-1 minutes', $date_data->value);
+      $day_end = strtotime('+24 hours', $day_end);
 
-    $new_date = [
-      'storage' => 'smartdate',
-      'duration' => 0,
-      'timezone' => '',
-      'value' => $date_data->value,
-      'end_value' => $day_end,
-    ];
-    $entity->set('field_smart_date', $new_date);
+      $new_date = [
+        'storage' => 'smartdate',
+        'duration' => 0,
+        'timezone' => '',
+        'value' => $date_data->value,
+        'end_value' => $day_end,
+      ];
+      $entity->set('field_smart_date', $new_date);
+    }
   }
 }
