@@ -23,11 +23,6 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
   protected $dateRange = FALSE;
 
   /**
-   * Indicates if the date end date field is '11:59 pm' of the start date.
-   */
-  protected $noEndTime = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
@@ -77,27 +72,18 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
    *
    */
   protected function isTimeRange($start_time, $end_time = NULL) {
-    $start_time_formatted = date('h:i a', $start_time);
-    $end_time_formatted = date('h:i a', $end_time);
-    if ($start_time_formatted != $end_time_formatted) {
+    $start_time = date('h:i a', $start_time);
+    $end_time = date('h:i a', $end_time);
+    if ($start_time != $end_time) {
       // If you mark it as "all day" the smart_date saves the time values as
       // 11:59pm - 12:00am.
-      if ($start_time_formatted === '12:00 am' && $end_time_formatted === '11:59 pm') {
+      if ($start_time === '12:00 am' && $end_time === '11:59 pm') {
         $this->allDay = TRUE;
-      }
-      // If the end time is '11:59' on the day of the start time,
-      // hide it from display. This is how editors
-      // can indicate that there is no end time.
-      if ($end_time_formatted === '11:59 pm') {
-        if (date('Y-m-d', $end_time) == date('Y-m-d', $start_time)) {
-          $this->noEndTime = TRUE;
-        }
-      if (!$this->noEndTime) {
+      } else {
         $this->timeRange = TRUE;
       }
     }
   }
-}
 
   /**
    * Formats a date string.
