@@ -31,7 +31,7 @@ class SfgovSmartdateWidget extends SmartDateDefaultWidget {
     // settings don't allow 'custom' to be the default value, so we're setting
     // it here.
     $element['duration']['#default_value'] = 'custom';
-    $element['end_value']['#description'] = 'If end time is set to 11:59pm of the start day then the end time will not display on the front end.';
+
     return $element;
   }
 
