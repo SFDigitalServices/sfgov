@@ -1,4 +1,4 @@
-jQuery(function () {
+jQuery(function ($) {
   $(document).ready(function() {
     // Track if accordions have been activated
     var accordionActive = false;
@@ -151,4 +151,4 @@ jQuery(function () {
       }
     });
   });
-});
+}(jQuery));
