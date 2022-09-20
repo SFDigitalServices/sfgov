@@ -1,5 +1,7 @@
 {% embed 'node--full.html.twig' %}
 
+  {% set bundle = node.bundle|clean_class %}
+
   {% block header %}
     {% set partOfLabel = '' %}
 
@@ -91,8 +93,9 @@
 
     </div>
     <p class="updated">{{ 'Last updated'|t }} {{ node.changedtime|date('F j, Y') }}</p>
+
     {% if content.group_grey_boxes.field_departments.0 %}
-      <div class="{{ bundle }}--ankle">
+      <div class="ankle {{ bundle }}--ankle">
         {{ content.group_grey_boxes.field_departments }}
       </div>
     {% endif %}

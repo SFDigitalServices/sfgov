@@ -1,12 +1,10 @@
 {{ content.content_moderation_control }}
 
+{% set bundle = node.bundle|clean_class %}
+
 {% if node.field_transactions.value %}
   {% set hasTags = true %}
   {% set classes = ['info--has-tags'] %}
-{% endif %}
-
-{% if node.field_departments.value %}
-  {% set hasDept = true %}
 {% endif %}
 
 <article{{ attributes.addClass(classes) }}>
@@ -33,11 +31,9 @@
 
   </div>
 
-  {% if hasDept %}
-    <div class="info--pbody-depts-container">
-      <div class="info--pbody-depts">
-        {{ content.field_departments }}
-      </div>
+  {% if content.field_departments['#items'] is not empty %}
+    <div class="ankle {{ bundle }}--ankle">
+      {{ content.field_departments }}
     </div>
   {% endif %}
 </article>

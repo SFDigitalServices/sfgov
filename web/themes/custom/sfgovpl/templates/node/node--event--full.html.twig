@@ -1,7 +1,8 @@
 {% extends 'node--full.html.twig' %}
 
-  {% set in_person = node.field_location_in_person.value %}
-  {% set online = node.field_location_online.value %}
+{% set in_person = node.field_location_in_person.value %}
+{% set online = node.field_location_online.value %}
+{% set bundle = node.bundle|clean_class %}
 
   {% block header %}
     {% include '@theme/hero-banner-color.twig' with {
@@ -102,8 +103,6 @@
               {% if content.field_email['#items'] is not empty %}
                 <div class="event--content-email">
                   <h3>{{ 'Email'|t }}</h3>
-                  {# <div class="email-title">{{ content.field_email.0['#paragraph'].get('field_title').value }}</div>
-                  <div class="email-addres">{{ content.field_email.0['#paragraph'].get('field_email').value }}</div> #}
                   {{ content.field_email }}
                 </div>
               {% endif %}
@@ -112,8 +111,9 @@
         </div>
       </div>
     </div>
+
     {% if content.field_departments['#items'] is not empty %}
-      <div class="{{ bundle }}--footer">
+      <div class="ankle {{ bundle }}--ankle bg-green-2">
         {{ content.field_departments }}
       </div>
     {% endif %}

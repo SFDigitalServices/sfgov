@@ -1,28 +1,37 @@
 {{ content.content_moderation_control }}
 
- {% block header %}
-    {% include '@theme/hero-banner-color.twig' with {
-      'banner': {
-        'title': label,
-        'text': node.field_description.value,
-        'color': 'bg-green-1'
-      },
-    } %}
-   {% endblock header %}
- <div class="confirmation--content">
-  {% block content %}
-      <div class="confirmation--left">
-        {{ content|without(
-          'content_moderation_control',
-          'field_confirmation_sidebar',
-          'field_banner_color',
-          'field_banner_image',
-          'field_bann'
-        ) }}
-      </div>
+{% set bundle = node.bundle|clean_class %}
 
-      {% if content.field_confirmation_sidebar|render|striptags %}
-            {{ content.field_confirmation_sidebar }}
-      {% endif %}
+{% block header %}
+  {% include '@theme/hero-banner-color.twig' with {
+    'banner': {
+      'title': label,
+      'text': node.field_description.value,
+      'color': 'bg-green-1'
+    },
+  } %}
+{% endblock header %}
+
+{% block content %}
+  <div class="confirmation--content">
+    <div class="confirmation--left">
+      {{ content|without(
+        'content_moderation_control',
+        'field_confirmation_sidebar',
+        'field_banner_color',
+        'field_banner_image',
+        'field_bann',
+        'field_departments'
+      ) }}
+    </div>
+    {% if content.field_confirmation_sidebar|render|striptags %}
+      {{ content.field_confirmation_sidebar }}
+    {% endif %}
   </div>
-  {% endblock content %}
+
+  {% if content.field_departments['#items'] is not empty %}
+    <div class="ankle {{ bundle }}--ankle">
+      {{ content.field_departments }}
+    </div>
+  {% endif %}
+{% endblock content %}

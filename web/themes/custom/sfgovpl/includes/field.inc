@@ -58,3 +58,11 @@ function sfgovpl_preprocess_video_embed_iframe(&$variables) {
     'value' => $title,
   ];
 }
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgovpl_preprocess_field__node__field_departments(&$variables) {
+  $bundle = $variables['element']['#bundle'];
+  $variables['label'] = t('Departments', [], ['context' => 'Related departments field label for ' . $bundle]);
+}
