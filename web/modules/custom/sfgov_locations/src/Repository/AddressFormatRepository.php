@@ -65,7 +65,7 @@ class AddressFormatRepository extends AddressFormatRepositoryBase {
   /**
    * {@inheritdoc}
    */
-  protected function processDefinition($countryCode, array $definition) {
+  protected function processDefinition($countryCode, array $definition): array {
     $definition['country_code'] = $countryCode;
     // Merge-in defaults.
     $definition += $this->getGenericDefinition();
