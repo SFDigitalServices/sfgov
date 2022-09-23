@@ -51,7 +51,7 @@ class AddressFormatRepository extends AddressFormatRepositoryBase {
   /**
    * {@inheritdoc}
    */
-  public function getAll() {
+  public function getAll(): array {
     $definitions = $this->getDefinitions();
     $addressFormats = [];
     foreach ($definitions as $countryCode => $definition) {
@@ -83,7 +83,7 @@ class AddressFormatRepository extends AddressFormatRepositoryBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDefinitions() {
+  protected function getDefinitions(): array {
     $definitions = parent::getDefinitions();
     if (!empty($definitions['US'])) {
       $definitions['US']['format'] = "%givenName %familyName\n%organization\n%addressee\n%location_name\n%addressLine1\n%addressLine2\n%locality, %administrativeArea %postalCode";
