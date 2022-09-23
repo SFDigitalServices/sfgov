@@ -35,6 +35,7 @@ jQuery(function ($) {
               .removeClass('mb-20')
               .wrap('<summary class="details__summary"></summary>');
             $(this).find('.sfgov-dept-services-section-content').wrap('<div class="details__content"></div>');
+            $(this).find('.sfgov-dept-services-section-content a').removeClass('border-solid p-20').addClass('mb-40');
             $(this).wrapInner('<details></details>');
           }
         });
@@ -85,6 +86,7 @@ jQuery(function ($) {
             }
             if ($(this).find('.sfgov-dept-services-section-content').parent().hasClass('details__content')) {
               $(this).find('.sfgov-dept-services-section-content').unwrap();
+              $(this).find('.sfgov-dept-services-section-content a').addClass('border-solid p-20').removeClass('mb-40');
             }
           });
         }
@@ -139,6 +141,7 @@ jQuery(function ($) {
                 .removeClass('mb-20')
                 .wrap('<summary class="details__summary"></summary>');
               $(this).find('.sfgov-dept-services-section-content').wrap('<div class="details__content"></div>');
+              $(this).find('.sfgov-dept-services-section-content a').removeClass('border-solid p-20').addClass('mb-40');
               $(this).wrapInner('<details></details>');
             }
           });
