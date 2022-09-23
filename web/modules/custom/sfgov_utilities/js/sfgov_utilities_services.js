@@ -1,10 +1,10 @@
-jQuery(function () {
+jQuery(function ($) {
   $(document).ready(function() {
     // Track if accordions have been activated
     var accordionActive = false;
     const mobileSize = 701;
     const rgroup = $('.sfgov-resources .paragraph--type--other-info-card');
-    const sgroup = $('.sfgov-services');
+    const sgroup = $('.sfgov-services-section');
     var rtitle = null;
     var stitle = null;
 
@@ -28,13 +28,17 @@ jQuery(function () {
     if ($(window).width() < mobileSize) {
       // Add accordions
       if (stitle == true) {
-        $('.sfgov-services-section .sfgov-services').each(function(){
+        $('.sfgov-services-section').each(function(){
           if (!$(this).find('summary').length) {
-            $(this).find('h3').wrap('<summary class="details__summary"></summary>');
+            $(this).find('h3')
+              .addClass('font-medium')
+              .removeClass('mb-20')
+              .wrap('<summary class="details__summary"></summary>');
             $(this).find('.sfgov-dept-services-section-content').wrap('<div class="details__content"></div>');
             $(this).wrapInner('<details></details>');
           }
         });
+
         // More services accordion
         $('.views-element-container .sfgov-services').each(function(){
           if (!$(this).find('summary').length) {
@@ -44,6 +48,7 @@ jQuery(function () {
           }
         });
       }
+
       // Department/Topic resource mobile accordions
       if (rtitle == true) {
         $('.sfgov-resources .paragraph--type--other-info-card').each(function(){
@@ -62,16 +67,19 @@ jQuery(function () {
       if ($(window).width() >= mobileSize) {
         // Remove details accordion
         if (stitle == true) {
-          $('.sfgov-services-section .sfgov-services h3').each(function(){
+          $('.sfgov-services-section h3').each(function(){
             if ($(this).parent().is('summary')) {
               $(this).unwrap();
+              $(this)
+                .addClass('mb-20')
+                .removeClass('font-medium m-0');
             }
             if ($(this).parent().is('details')) {
               $(this).unwrap();
             }
           });
           
-          $('.sfgov-services-section .sfgov-services').each(function(){
+          $('.sfgov-services-section').each(function(){
             if ($(this).parent().is('summary')) {
               $(this).unwrap();
             }
@@ -80,6 +88,7 @@ jQuery(function () {
             }
           });
         }
+
         // Remove resources accordion
         if (rtitle == true) {
           $('.sfgov-resources .paragraph--type--other-info-card .__title').each(function(){
@@ -119,16 +128,21 @@ jQuery(function () {
           });
         }
       }
+
       if ($(window).width() < mobileSize) {
         // Add accordions
         if (stitle == true) {
-          $('.sfgov-services-section .sfgov-services').each(function(){
+          $('.sfgov-services-section').each(function(){
             if (!$(this).find('summary').length) {
-              $(this).find('h3').wrap('<summary class="details__summary"></summary>');
+              $(this).find('h3')
+                .addClass('font-medium')
+                .removeClass('mb-20')
+                .wrap('<summary class="details__summary"></summary>');
               $(this).find('.sfgov-dept-services-section-content').wrap('<div class="details__content"></div>');
               $(this).wrapInner('<details></details>');
             }
           });
+
           // More services accordion
           $('.views-element-container .sfgov-services').each(function(){
             if (!$(this).find('summary').length) {
@@ -138,6 +152,7 @@ jQuery(function () {
             }
           });
         }
+
         // Add resources accordion
         if (rtitle == true) {
           $('.sfgov-resources .paragraph--type--other-info-card').each(function(){
@@ -151,4 +166,4 @@ jQuery(function () {
       }
     });
   });
-});
+}(jQuery));

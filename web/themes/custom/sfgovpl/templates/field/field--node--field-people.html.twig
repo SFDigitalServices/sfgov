@@ -36,11 +36,19 @@
  * @see template_preprocess_field()
  */
 #}
-<div class="sfgov-resources">
-  <h2 class="title">{{ label | t }}</h2>
-  <div class="sfgov-resources-container sfgov-container-two-column">
-    {% for item in items %}
-      {{ item.content }}
-    {% endfor %}
-  </div>
+{%
+  set classes = [
+    'field',
+    'field--type-' ~ field_type|clean_class,
+    label_display == 'inline' ? 'field--inline',
+    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+    'grid',
+    'gap-y-60'
+  ]
+%}
+
+<div{{ attributes.addClass(classes) }}>
+  {% for item in items %}
+    <div>{{ item.content }}</div>
+  {% endfor %}
 </div>
