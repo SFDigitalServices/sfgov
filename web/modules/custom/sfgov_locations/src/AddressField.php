@@ -43,7 +43,7 @@ final class AddressField extends AbstractEnum {
      *
      * @return array The available values, keyed by constant.
      */
-    public static function getAll()
+    public static function getAll(): array
     {
         $class = get_called_class();
         if (!isset(static::$values[$class])) {

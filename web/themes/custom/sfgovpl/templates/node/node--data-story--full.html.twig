@@ -1,5 +1,7 @@
 {% extends 'node--full.html.twig' %}
 
+{% set bundle = node.bundle|clean_class %}
+
 {% block header %}
   {{ title_prefix }}
   {% include '@theme/hero-banner-color.twig' with {
@@ -25,7 +27,7 @@
                   "text": 'See all sections'|t
               } %}
             </div>
-  
+
             <div class="sfgov-toc-drawer">
               <div class="sfgov-toc-header">
                 <h2 class="sfgov-toc-header-title">
@@ -56,15 +58,13 @@
             {{ content.field_content }}
           </div>
         </div>
-      </div>      
+      </div>
     </div>
   </div>
+
   {% if content.field_departments['#items'] is not empty %}
-    <div class="sfgov-section--departments">
-      <div class="related-departments">
-        <span class="field-departments-title">Department</span>
-        {{ content.field_departments }}
-      </div>
+    <div class="ankle {{ bundle }}--ankle">
+      {{ content.field_departments }}
     </div>
   {% endif %}
 {% endblock content %}

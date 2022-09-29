@@ -76,7 +76,7 @@ class AddressFormat extends AddressFormatBase {
   /**
    * {@inheritdoc}
    */
-  public function getUsedFields() {
+  public function getUsedFields(): array {
     if (empty($this->usedFields)) {
       $this->usedFields = [];
       foreach (AddressField::getAll() as $field) {
@@ -92,7 +92,7 @@ class AddressFormat extends AddressFormatBase {
   /**
    * {@inheritdoc}
    */
-  public function getUsedSubdivisionFields() {
+  public function getUsedSubdivisionFields(): array {
     $fields = [
       AddressField::ADMINISTRATIVE_AREA,
       AddressField::LOCALITY,
