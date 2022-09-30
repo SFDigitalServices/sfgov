@@ -92,12 +92,12 @@ abstract class SfgovDateFormatterBase extends FormatterBase {
         if (date('Y-m-d', $end_time) == date('Y-m-d', $start_time)) {
           $this->noEndTime = TRUE;
         }
-      if (!$this->noEndTime) {
+      }
+      if (!$this->noEndTime && !$this->allDay) {
         $this->timeRange = TRUE;
       }
     }
   }
-}
 
   /**
    * Formats a date string.
