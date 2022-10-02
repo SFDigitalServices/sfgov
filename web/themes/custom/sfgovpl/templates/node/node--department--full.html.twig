@@ -146,24 +146,26 @@
           {{ content.field_public_body_meetings }}
         </div>
       {% endif %}
-      <div class="container mx-auto px-20 py-40 lg:py-60 xl:px-0">
-        {% if hasMeetingMeta is empty %}
-          <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
-        {% endif %}
-        {% if meetings_block.upcoming.result is not empty %}
-          <h3 class="m-0 mb-28 lg:text-title-md-desktop">{{ 'Upcoming meetings' | t }}</h3>
-          <div class="mb-40">
-            {{ meetings_block.upcoming.render }}
-          </div>
-        {% endif %}
+      {% if meetings_block.upcoming.result is not empty or  meetings_block.past.result is not empty %}
+        <div class="container mx-auto px-20 py-40 lg:py-60 xl:px-0">
+          {% if hasMeetingMeta is empty %}
+            <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
+          {% endif %}
+          {% if meetings_block.upcoming.result is not empty %}
+            <h3 class="m-0 mb-28 lg:text-title-md-desktop">{{ 'Upcoming meetings' | t }}</h3>
+            <div class="mb-40">
+              {{ meetings_block.upcoming.render }}
+            </div>
+          {% endif %}
 
-        {% if meetings_block.past.result is not empty %}
-          <h3 class="m-0 mb-28 lg:text-title-md-desktop">{{ 'Past meetings' | t }}</h3>
-          <div class="mb-40">
-            {{ meetings_block.past.render }}
-          </div>
-        {% endif %}
-      </div>
+          {% if meetings_block.past.result is not empty %}
+            <h3 class="m-0 mb-28 lg:text-title-md-desktop">{{ 'Past meetings' | t }}</h3>
+            <div class="mb-40">
+              {{ meetings_block.past.render }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
     </div>
   {% endif %}
 
@@ -310,8 +312,8 @@
   {% if hasAddress or hasPhone or hasEmail %}
     <div class="py-40 lg:py-60">
       <div class="container mx-auto px-20 xl:px-0">
-        <h2 class="dept-heading--section">{{ 'Contact'|t }}</h2>
-        <div class="sfgov-dept-section-content-container">
+        <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ 'Contact'|t }}</h2>
+        <div class="grid gap-20 lg:grid-cols-3">
           {% if hasAddress %}
             <div class="sfgov-contact-section address">
               {{ content.field_address }}
@@ -319,13 +321,16 @@
           {% endif %}
           {% if hasPhone %}
             <div class="sfgov-contact-section phone-numbers">
-              <p class="sfgov-contact-section-title">{{ 'Phone'|t }}</p>
+              <p class="font-medium text-title-xs lg:text-title-xs-desktop">{{ 'Phone'|t }}</p>
               {{ content.field_phone_numbers }}
             </div>
           {% endif %}
           {% if hasEmail %}
             <div class="sfgov-contact-section email">
-              <p class="sfgov-contact-section-title">{{ 'Email'|t }}</p>
+              <p class="flex font-medium mb-20 text-title-xs lg:text-title-xs-desktop">
+                <sfgov-icon class="mr-20" symbol="mail"></sfgov-icon>
+                <span>{{ 'Email'|t }}</span>
+              </p>
               {{ content.field_email }}
             </div>
           {% endif %}
