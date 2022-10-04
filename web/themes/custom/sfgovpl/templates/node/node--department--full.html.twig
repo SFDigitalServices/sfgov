@@ -121,7 +121,7 @@
 
   {% if content.field_featured_items|render|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container grid gap-20 lg:grid-cols-3 mx-auto px-20 xl:px-0">
+      <div class="responsive-container responsive-grid grid-cols-1 lg:grid-cols-3">
         {% for target in content.field_featured_items|field_target_entity %} {# this relies on the twig_field_value module #}
           {% include "@theme/featured-item.twig" with {
             "title": target.field_feature_title.value,
@@ -141,12 +141,12 @@
   {% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) or hasMeetingMeta is not empty %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       {% if hasMeetingMeta %}
-        <div class="container mx-auto px-20 xl:px-0">
+        <div class="responsive-container">
           {{ content.field_public_body_meetings }}
         </div>
       {% endif %}
       {% if meetings_block.upcoming.result is not empty or  meetings_block.past.result is not empty %}
-        <div class="container mx-auto px-20 py-40 lg:py-60 xl:px-0">
+        <div class="responsive-container py-40 lg:py-60">
           {% if hasMeetingMeta is empty %}
             <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
           {% endif %}
