@@ -374,3 +374,17 @@ function sfgov_utilities_deploy_08_field_transactions_migration() {
     error_log($e->getMessage(), "\n");
   }
 }
+
+/* set current departments' include in department list field to true */
+function sfgov_utilities_deploy_09_dept_include() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+    foreach($deptNodes as $dept) {
+      $dept->field_include_in_list->value = TRUE;
+      echo "Updated " . $dept->getTitle() . " (" . $dept->id() . ")\n";
+      $dept->save();
+    }
+  } catch(\Exception $e) {
+    error_log($e->getMessage(), "\n");
+  }
+}
