@@ -121,8 +121,14 @@
 
   {% if content.field_featured_items|render|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
-        {{ content.field_featured_items }}
+      <div class="responsive-container responsive-grid grid-cols-1 lg:grid-cols-3">
+        {% for target in content.field_featured_items|field_target_entity %} {# this relies on the twig_field_value module #}
+          {% include "@theme/featured-item.twig" with {
+            "title": target.field_feature_title.value,
+            "url": target.field_feature_link.uri,
+            "description": target.field_description.value
+          } %}
+        {% endfor %}
       </div>
     </div>
   {% endif %}
@@ -135,12 +141,12 @@
   {% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) or hasMeetingMeta is not empty %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       {% if hasMeetingMeta %}
-        <div class="container mx-auto px-20 xl:px-0">
+        <div class="responsive-container">
           {{ content.field_public_body_meetings }}
         </div>
       {% endif %}
       {% if meetings_block.upcoming.result is not empty or  meetings_block.past.result is not empty %}
-        <div class="container mx-auto px-20 py-40 lg:py-60 xl:px-0">
+        <div class="responsive-container py-40 lg:py-60">
           {% if hasMeetingMeta is empty %}
             <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
           {% endif %}
@@ -164,7 +170,7 @@
 
   {% if content.field_department_services['#items'].getValue() %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         {{ content.field_department_services }}
       </div>
     </div>
@@ -172,7 +178,7 @@
 
   {% if content.field_spotlight['#items'].getValue() %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         {{ content.field_spotlight }}
       </div>
     </div>
@@ -181,7 +187,7 @@
   {% set news_view = drupal_view('news', 'news_block_depts', node.id)|render  %}
   {%  if news_view|striptags|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         {{ news_view }}
       </div>
     </div>
@@ -190,7 +196,7 @@
   {% set events_view = drupal_view('events', 'block_1', node.id)|render %}
   {% if events_view|striptags|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         {{ events_view }}
       </div>
     </div>
@@ -198,7 +204,7 @@
 
   {% if content.field_resources['#items'].getValue() %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         {{ content.field_resources }}
       </div>
     </div>
@@ -222,7 +228,7 @@
 
   {% if hasAboutSection %}
     <div class="sfgov-dept-about bg-blue-dark py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         <h2 class="text-white text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
         {# parent department / part of #}
         {% if node.field_parent_department.0 is not empty %}
@@ -289,7 +295,7 @@
 
   {% if content.field_people|render %}
     <div class="py-40 lg:py-60">
-      <div class="container rounded mx-auto px-20 xl:px-0">
+      <div class="responsive-container rounded">
         <div class="px-20 py-60 bg-blue-1 rounded lg:p-60">
           <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ 'People' | t }}</h2>
           {{ content.field_people }}
@@ -304,7 +310,7 @@
 
   {% if hasAddress or hasPhone or hasEmail %}
     <div class="py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container">
         <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ 'Contact'|t }}</h2>
         <div class="grid gap-20 lg:grid-cols-3">
           {% if hasAddress %}
@@ -350,7 +356,7 @@
     or (hasPublicRecordsEmail and publicRecordsMethod == "email")
     or (hasPublicRecordsPhone and publicRecordsMethod == "phone")
     or hasArchiveUrl %}
-      <div class="container rounded bg-blue-1 mx-auto px-20 lg:mb-60 lg:mb-40 lg:p-40">
+      <div class="responsive-container rounded bg-blue-1 p-20 mb-40 lg:p-40 lg:mb-60">
           <div class="lg:flex">
 
             {% if (hasPublicRecordsLink and publicRecordsMethod == "link")
@@ -415,3 +421,4 @@
   {% endif %}
 </div>
 {{ attach_library('sfgovpl/sfgov-dept-homepage') }}
+{{ attach_library('sfgov_utilities/services') }}
