@@ -20,6 +20,7 @@ dependencies:
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
+    - field.field.node.department.field_include_in_list
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
@@ -64,7 +65,7 @@ third_party_settings:
       label: About
       region: content
       parent_name: ''
-      weight: 9
+      weight: 10
       format_type: details
       format_settings:
         classes: sfgov-dept-contact-group
@@ -80,7 +81,7 @@ third_party_settings:
       label: Contact
       region: content
       parent_name: ''
-      weight: 10
+      weight: 11
       format_type: details
       format_settings:
         classes: sfgov-dept-contact-group
@@ -97,7 +98,7 @@ third_party_settings:
       label: 'Request public records'
       region: content
       parent_name: ''
-      weight: 11
+      weight: 12
       format_type: details
       format_settings:
         classes: ''
@@ -110,7 +111,7 @@ third_party_settings:
       label: '01'
       region: hidden
       parent_name: ''
-      weight: 30
+      weight: 31
       format_type: tabs
       format_settings:
         classes: ''
@@ -123,7 +124,7 @@ third_party_settings:
       label: 'Archive information'
       region: content
       parent_name: ''
-      weight: 12
+      weight: 13
       format_type: details
       format_settings:
         classes: ''
@@ -139,7 +140,7 @@ third_party_settings:
       label: Alert
       region: content
       parent_name: ''
-      weight: 2
+      weight: 3
       format_type: details
       format_settings:
         classes: alert-fieldset
@@ -153,13 +154,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 20
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
   field_about_or_description:
     type: text_textarea
-    weight: 54
+    weight: 60
     region: content
     settings:
       rows: 5
@@ -225,7 +226,7 @@ content:
     third_party_settings: {  }
   field_call_to_action:
     type: paragraphs
-    weight: 60
+    weight: 65
     region: content
     settings:
       title: Paragraph
@@ -244,7 +245,7 @@ content:
     third_party_settings: {  }
   field_department_code:
     type: string_textfield
-    weight: 16
+    weight: 17
     region: content
     settings:
       size: 60
@@ -252,7 +253,7 @@ content:
     third_party_settings: {  }
   field_department_services:
     type: paragraphs
-    weight: 6
+    weight: 7
     region: content
     settings:
       title: Paragraph
@@ -287,7 +288,7 @@ content:
         maxlength_js_truncate_html: false
   field_divisions:
     type: entity_reference_autocomplete
-    weight: 57
+    weight: 63
     region: content
     settings:
       match_operator: CONTAINS
@@ -316,7 +317,7 @@ content:
     third_party_settings: {  }
   field_featured_items:
     type: paragraphs
-    weight: 4
+    weight: 5
     region: content
     settings:
       title: Paragraph
@@ -335,14 +336,14 @@ content:
     third_party_settings: {  }
   field_go_to_current_url:
     type: boolean_checkbox
-    weight: 15
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_image:
     type: entity_browser_entity_reference
-    weight: 55
+    weight: 61
     region: content
     settings:
       entity_browser: image
@@ -354,9 +355,16 @@ content:
       field_widget_display_settings: {  }
       selection_mode: selection_append
     third_party_settings: {  }
+  field_include_in_list:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_parent_department:
     type: entity_reference_autocomplete
-    weight: 56
+    weight: 62
     region: content
     settings:
       match_operator: CONTAINS
@@ -366,7 +374,7 @@ content:
     third_party_settings: {  }
   field_people:
     type: paragraphs
-    weight: 62
+    weight: 67
     region: content
     settings:
       title: Paragraph
@@ -404,7 +412,7 @@ content:
     third_party_settings: {  }
   field_public_bodies:
     type: paragraphs
-    weight: 58
+    weight: 64
     region: content
     settings:
       title: Paragraph
@@ -423,7 +431,7 @@ content:
     third_party_settings: {  }
   field_public_body_meetings:
     type: paragraphs
-    weight: 5
+    weight: 6
     region: content
     settings:
       title: Paragraph
@@ -470,7 +478,7 @@ content:
     third_party_settings: {  }
   field_resources:
     type: paragraphs
-    weight: 8
+    weight: 9
     region: content
     settings:
       title: Paragraph
@@ -489,7 +497,7 @@ content:
     third_party_settings: {  }
   field_social_media:
     type: paragraphs
-    weight: 61
+    weight: 66
     region: content
     settings:
       title: Paragraph
@@ -508,7 +516,7 @@ content:
     third_party_settings: {  }
   field_spotlight:
     type: paragraphs
-    weight: 7
+    weight: 8
     region: content
     settings:
       title: Paragraph
@@ -527,7 +535,7 @@ content:
     third_party_settings: {  }
   field_spotlight2:
     type: paragraphs
-    weight: 3
+    weight: 4
     region: content
     settings:
       title: Paragraph
@@ -546,7 +554,7 @@ content:
     third_party_settings: {  }
   field_topics:
     type: entity_reference_autocomplete
-    weight: 17
+    weight: 18
     region: content
     settings:
       match_operator: CONTAINS
@@ -556,7 +564,7 @@ content:
     third_party_settings: {  }
   field_url:
     type: link_default
-    weight: 14
+    weight: 15
     region: content
     settings:
       placeholder_url: ''
@@ -564,20 +572,20 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 13
+    weight: 14
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 26
+    weight: 27
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 18
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -590,19 +598,19 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp
-    weight: 24
+    weight: 25
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: options_select
-    weight: 19
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 22
+    weight: 23
     region: content
     settings:
       display_label: true
@@ -624,7 +632,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 21
+    weight: 22
     region: content
     settings:
       match_operator: CONTAINS
@@ -634,18 +642,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp
-    weight: 25
+    weight: 26
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: options_select
-    weight: 23
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 27
+    weight: 28
     region: content
     settings: {  }
     third_party_settings: {  }
