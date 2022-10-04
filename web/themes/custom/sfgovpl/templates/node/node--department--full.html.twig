@@ -121,8 +121,14 @@
 
   {% if content.field_featured_items|render|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
-        {{ content.field_featured_items }}
+      <div class="container grid gap-20 lg:grid-cols-3 mx-auto px-20 xl:px-0">
+        {% for target in content.field_featured_items|field_target_entity %} {# this relies on the twig_field_value module #}
+          {% include "@theme/featured-item.twig" with {
+            "title": target.field_feature_title.value,
+            "url": target.field_feature_link.uri,
+            "description": target.field_description.value
+          } %}
+        {% endfor %}
       </div>
     </div>
   {% endif %}
