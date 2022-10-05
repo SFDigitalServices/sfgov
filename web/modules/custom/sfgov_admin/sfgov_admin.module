@@ -151,6 +151,25 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
   $field_definition = $context['items']->getFieldDefinition();
   $paragraph_entity_reference_field_name = $field_definition->getName();
 
+  if ($paragraph_entity_reference_field_name == 'field_paragraphs') {
+    $paragraphType = $element['#paragraph_type'];
+    
+    if ($paragraphType == 'agency_section') {
+      $delta = $element['#delta'];
+      $selector = "select[name='field_paragraphs[$delta][subform][field_section_title_list]']";
+
+      // display the agency list based on the value of the selected title
+      $element['subform']['field_nodes']['#states'] = [
+        'visible' => [
+          $selector => [
+            ['value' => 'Divisions'],
+            ['value' => 'Subcommittees']
+          ]
+        ]
+      ];
+    }
+  }
+
   if ($paragraph_entity_reference_field_name == 'field_cost') {
     /** @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::formElement() */
     $widget_state = \Drupal\Core\Field\WidgetBase::getWidgetState($element['#field_parents'], $paragraph_entity_reference_field_name, $form_state);

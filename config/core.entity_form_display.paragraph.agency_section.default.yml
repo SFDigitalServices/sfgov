@@ -1,0 +1,32 @@
+uuid: e9d46d6f-0586-4699-94f5-4ffc32a273a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.agency_section.field_nodes
+    - field.field.paragraph.agency_section.field_section_title_list
+    - paragraphs.paragraphs_type.agency_section
+id: paragraph.agency_section.default
+targetEntityType: paragraph
+bundle: agency_section
+mode: default
+content:
+  field_nodes:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_section_title_list:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
