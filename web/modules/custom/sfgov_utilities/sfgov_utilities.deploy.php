@@ -388,3 +388,26 @@ function sfgov_utilities_deploy_09_dept_include() {
     error_log($e->getMessage(), "\n");
   }
 }
+
+/* 
+* migrate content from field_divisions and field_public_bodies to field_paragraphs -> agency section
+* field_divisions an entity reference field referencing department content type
+* field_public_bodies is entity reference revisions referencing link paragraph type
+* --> field_link
+*   --> uri
+*   --> title
+*/
+function sfgov_utilities_deploy_10_div_pb() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+    foreach($deptNodes as $dept) {
+      if ($dept->id() == 6602) {
+        // collect divisions
+        $divisions = $dept->field_divisions->value;
+        error_log(print_r($divisions, 1));
+      }
+    }
+  } catch (\Exception $e) {
+    error_log($e->getMessage(), "\n");
+  }
+}
