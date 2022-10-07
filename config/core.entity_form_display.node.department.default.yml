@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
+    - field.field.node.department.field_departments
     - field.field.node.department.field_description
     - field.field.node.department.field_divisions
     - field.field.node.department.field_email
@@ -59,6 +60,7 @@ third_party_settings:
         - field_image
         - field_parent_department
         - field_agency_sections
+        - field_departments
         - field_divisions
         - field_public_bodies
         - field_call_to_action
@@ -126,7 +128,7 @@ third_party_settings:
       label: 'Archive information'
       region: content
       parent_name: ''
-      weight: 13
+      weight: 14
       format_type: details
       format_settings:
         classes: ''
@@ -247,7 +249,7 @@ content:
     third_party_settings: {  }
   field_call_to_action:
     type: paragraphs
-    weight: 66
+    weight: 67
     region: content
     settings:
       title: Paragraph
@@ -266,7 +268,7 @@ content:
     third_party_settings: {  }
   field_department_code:
     type: string_textfield
-    weight: 17
+    weight: 18
     region: content
     settings:
       size: 60
@@ -291,6 +293,16 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
+  field_departments:
+    type: entity_reference_autocomplete
+    weight: 64
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_description:
     type: text_textarea
     weight: 1
@@ -309,7 +321,7 @@ content:
         maxlength_js_truncate_html: false
   field_divisions:
     type: entity_reference_autocomplete
-    weight: 64
+    weight: 65
     region: content
     settings:
       match_operator: CONTAINS
@@ -357,7 +369,7 @@ content:
     third_party_settings: {  }
   field_go_to_current_url:
     type: boolean_checkbox
-    weight: 16
+    weight: 17
     region: content
     settings:
       display_label: true
@@ -395,7 +407,7 @@ content:
     third_party_settings: {  }
   field_people:
     type: paragraphs
-    weight: 68
+    weight: 69
     region: content
     settings:
       title: Paragraph
@@ -433,7 +445,7 @@ content:
     third_party_settings: {  }
   field_public_bodies:
     type: paragraphs
-    weight: 65
+    weight: 66
     region: content
     settings:
       title: Paragraph
@@ -518,7 +530,7 @@ content:
     third_party_settings: {  }
   field_social_media:
     type: paragraphs
-    weight: 67
+    weight: 68
     region: content
     settings:
       title: Paragraph
@@ -575,7 +587,7 @@ content:
     third_party_settings: {  }
   field_topics:
     type: entity_reference_autocomplete
-    weight: 18
+    weight: 19
     region: content
     settings:
       match_operator: CONTAINS
@@ -585,7 +597,7 @@ content:
     third_party_settings: {  }
   field_url:
     type: link_default
-    weight: 15
+    weight: 16
     region: content
     settings:
       placeholder_url: ''
@@ -593,7 +605,7 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 14
+    weight: 15
     region: content
     settings:
       include_locked: true
@@ -606,7 +618,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 19
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
