@@ -11,6 +11,7 @@ try {
     if ($dept->id() == 6602) {
       // migrate divisions
       $divisions = $dept->get('field_divisions')->getValue();
+      $publicBodies = $dept->get('field_public_bodies')->getValue();
 
       if (!empty($divisions)) {
         // create agency section paragraph with divisions values
@@ -27,6 +28,11 @@ try {
 
         // remove old field values
         $dept->set('field_divisions', []);
+      }
+
+      if (!empty($publicBodies)) {
+        // check if url is internal or external
+        // if external, it cannot be added as a related agencies item
       }
 
       $dept->save();
