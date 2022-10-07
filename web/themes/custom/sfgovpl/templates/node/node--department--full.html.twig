@@ -270,7 +270,7 @@
                 {# public bodies #}
                 {{ content.field_public_bodies }}
 
-                {{ content.field_paragraphs }}
+                {{ content.field_agency_sections }}
               </div>
             {% endif %}
           </div>
@@ -366,31 +366,28 @@
               or (hasPublicRecordsPhone and publicRecordsMethod == "phone") %}
 
               {% set class = hasArchiveUrl ? 'lg:w-1/2 pb-28 lg:pb-0 lg:pr-28' : '' %}
-              {% set title = 'Request public records'|t %}
 
               <div class="{{ class }}">
+                <p class="font-medium text-big-desc mb-8">{{ 'Request public records'|t }}</p>
                 {% if publicRecordsMethod == "phone" %}
 
                   {# Print the phone info only if method is phone and phone is not empty #}
                   {% if hasPublicRecordsPhone %}
-                    <p class="title">{{ title }}</p>
-                    <p><a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}</p>
+                    <p class="text-body"><a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}</p>
                   {% endif %}
 
                 {% elseif publicRecordsMethod == "email" %}
 
                   {# Print the email info only if method is email and email is not empty #}
                   {% if hasPublicRecordsEmail %}
-                    <p class="title">{{ title }}</p>
-                    <p><a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}</p>
+                    <p class="text-body"><a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}</p>
                   {% endif %}
 
                 {% elseif publicRecordsMethod == "link" %}
 
                   {# Print the link info only if method is link and link is not empty #}
                   {% if hasPublicRecordsLink %}
-                    <p class="title">{{ title }}</p>
-                    <p>{% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}</p>
+                    <p class="text-body">{% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}</p>
                   {% endif %}
 
                 {% else %}
@@ -402,8 +399,8 @@
             {% if hasArchiveUrl %}
               {% set class = hasPublicRecordsLink or hasPublicRecordsPhone or hasPublicRecordsEmail ? 'lg:w-1/2 lg:pl-28' : '' %}
               <div class="{{ class }}">
-                <p class="title">{{ 'Archived website'|t }}</p>
-                <p>
+                <p class="font-medium text-big-desc mb-8">{{ 'Archived website'|t }}</p>
+                <p class="text-body">
                   {% set url = content.field_archive_url.0['#url']|render %}
                   {% set text = 'See previous website'|t %}
 
@@ -422,5 +419,6 @@
     </div>
   {% endif %}
 </div>
+
 {{ attach_library('sfgovpl/sfgov-dept-homepage') }}
 {{ attach_library('sfgov_utilities/services') }}
