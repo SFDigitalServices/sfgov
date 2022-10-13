@@ -3,12 +3,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.file.field_category
     - field.field.media.file.field_department
     - field.field.media.file.field_description
     - field.field.media.file.field_document_url
     - field.field.media.file.field_keywords
     - field.field.media.file.field_media_file
     - field.field.media.file.field_published_date
+    - field.field.media.file.field_tag
     - field.field.media.file.field_topic
     - media.type.file
   module:
@@ -22,6 +24,14 @@ targetEntityType: media
 bundle: file
 mode: default
 content:
+  field_category:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_department:
     type: entity_reference_label
     label: above
@@ -56,6 +66,14 @@ content:
       use_description_as_link_text: true
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_tag:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
     region: content
   field_topic:
     type: entity_reference_label
