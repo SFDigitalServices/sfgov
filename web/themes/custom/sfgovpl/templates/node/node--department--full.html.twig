@@ -82,12 +82,14 @@
   }
 %}
 
+{% set partOf = ('Part of ' | t) %}
+
 <div class="container mx-auto px-20 xl:px-0">
   {% embed '@theme/hero-banner.twig' with {
     'banner': {
       'title': node.label,
       'text': node.field_description.value,
-      'label': 'Part of: some label some label'
+      'label': drupal_view('departments', 'agency_part_of_agencies', node.id)
     }
   } %}
 
@@ -261,7 +263,7 @@
               </div>
             {% endif %}
 
-              {# divisions and public bodies #}
+            {# old divisions and public bodies #}
             {% if content.field_divisions|render|striptags|trim or content.field_public_bodies|render|striptags|trim %}
               <div class="responsive-grid grid-cols-1 gap-40 mb-60">
                 {# old divisions #}
@@ -277,8 +279,27 @@
                     {{ content.field_public_bodies }}
                   </div>
                 {% endif %}
+              </div>
+            {% endif %}
 
-                {{ content.field_agency_sections }}
+            {% if content.field_agency_sections|render|striptags|trim or content.field_departments|render|striptags|trim %}
+              <div class="responsive-grid grid-cols-1 gap-40 mb-60">
+                {# agency sections (divisions) #}
+                {% if content.field_agency_sections|render|striptags|trim %}
+                  {{ content.field_agency_sections }}
+                {% endif %}
+
+                {# related agencies #}
+                {% if content.field_departments|render|striptags|trim %}
+                  <div>
+                    <p class="text-title-xs font-medium m-0 mb-24">{{ content.field_departments['#title'] }}</p>
+                    <ul class="responsive-grid gap-y-20 list-none p-0 m-0 grid-cols-1 lg:grid-cols-2">
+                    {% for key, item in content.field_departments if key|first != '#' %}
+                      <li class="text-body"><a class="text-inherit" href="{{ item["#url"] }}">{{ item["#title"] }}</a></li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
               </div>
             {% endif %}
           </div>
