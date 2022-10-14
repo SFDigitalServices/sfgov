@@ -8,9 +8,10 @@ use Drupal\sfgov_utilities\Utility;
 try {
   $deptNodes = Utility::getNodes('department');
   $externalUrls = [];
+  $problems = [];
 
   foreach($deptNodes as $dept) {
-    if ($dept->id() == 6823) {
+    // if ($dept->id() == 160) {
       // migrate divisions
       $divisions = $dept->get('field_divisions')->getValue();
       $publicBodies = $dept->get('field_public_bodies')->getValue();
@@ -50,6 +51,13 @@ try {
           if (strpos($uri, 'entity') !== false || strpos($uri, 'https://sf.gov') !== false) { // internal url
             $drupalPath = \Drupal::service('path_alias.manager')->getPathByAlias(parse_url($uri, PHP_URL_PATH));
             $refNid = substr($drupalPath, strrpos($drupalPath, '/') + 1);
+            if (!is_numeric($refNid)) {
+              $problems[] = [
+                "nid" => $dept->id(),
+                "public_body_url_text" => $text,
+                "public_body_url" => $uri
+              ];
+            }
             echo "$drupalPath, ($refNid)\n";
             if (!empty($refNid)) {
               $relatedAgencies[] = [
@@ -73,13 +81,16 @@ try {
         $dept->set('field_public_bodies', []);
       }
 
-      $dept->save();
-    }
+      // $dept->save();
+    // }
 
   }
 
   echo "external urls\n";
   print_r($externalUrls);
+
+  echo "problems\n";
+  print_r($problems);
 } catch (\Exception $e) {
   error_log($e->getMessage());
 }
