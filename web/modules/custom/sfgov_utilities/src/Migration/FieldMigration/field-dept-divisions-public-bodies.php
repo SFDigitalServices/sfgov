@@ -7,57 +7,75 @@ use Drupal\sfgov_utilities\Utility;
 
 try {
   $deptNodes = Utility::getNodes('department');
+  $externalUrls = [];
+  
   foreach($deptNodes as $dept) {
-    if ($dept->id() == 6602) {
-      // migrate divisions
-      $divisions = $dept->get('field_divisions')->getValue();
-      $publicBodies = $dept->get('field_public_bodies')->getValue();
+    // migrate divisions
+    $divisions = $dept->get('field_divisions')->getValue();
+    $publicBodies = $dept->get('field_public_bodies')->getValue();
 
-      // migrate divisions
-      if (!empty($divisions)) {
-        // create agency section paragraph with divisions values
-        $agencySection = Paragraph::create([
-          "type" => "agency_section",
-          "field_section_title_list" => "Divisions",
-          "field_nodes" => $divisions,
-        ]);
+    // migrate divisions
+    if (!empty($divisions)) {
+      // create agency section paragraph with divisions values
+      $agencySection = Paragraph::create([
+        "type" => "agency_section",
+        "field_section_title_list" => "Divisions",
+        "field_nodes" => $divisions,
+      ]);
 
-        // append new agency section to divisions and subcommittees field (field_paragraphs)
-        $agencySections = $dept->get('field_agency_sections')->getValue();
-        $agencySections[] = $agencySection;
-        $dept->set('field_agency_sections', $agencySections);
+      // append new agency section to divisions and subcommittees field (field_paragraphs)
+      $agencySections = $dept->get('field_agency_sections')->getValue();
+      $agencySections[] = $agencySection;
+      $dept->set('field_agency_sections', $agencySections);
 
-        // remove old field values
-        $dept->set('field_divisions', []);
-      }
+      // remove old field values
+      $dept->set('field_divisions', []);
+    }
 
-      // migrate public bodies
-      if (!empty($publicBodies)) {
-        // check if url is internal or external
-        // if external, it cannot be added as a related agencies item
-        
-        // iterate through public body links
-        foreach ($publicBodies as $publicBody) {
-          $link = Paragraph::load($publicBody['target_id']);
-          $uri = $link->get('field_link')->getValue()[0]['uri'];
-          
-          // error_log($dept->getTitle() . " (" . $dept->id() . "): " . $uri);
-          // error_log(\Drupal\Component\Utility\UrlHelper::isExternal($uri));
-          // error_log(\Drupal::service('path_alias.manager')->getAliasByPath($uri));
+    // migrate public bodies
+    if (!empty($publicBodies)) {
+      $relatedAgencies = [];
+      // check if url is internal or external
+      // if external, it cannot be added as a related agencies item
 
-          if (strpos($uri, 'entity')) { // internal url
-            
-          } elseif (strpos($uri, 'https://sf.gov')) { // absolute sf.gov url
+      // iterate through public body links
+      foreach ($publicBodies as $publicBody) {
+        $link = Paragraph::load($publicBody['target_id']);
+        $linkValue = $link->get('field_link')->getValue();
+        $uri = $linkValue[0]['uri'];
+        $text = $linkValue[0]['title'];
+        $drupalPath = "";
 
-          } else { // other urls, report
-
+        if (strpos($uri, 'entity') !== false || strpos($uri, 'https://sf.gov') !== false) { // internal url
+          $drupalPath = \Drupal::service('path_alias.manager')->getPathByAlias(parse_url($uri, PHP_URL_PATH));
+          $refNid = substr($drupalPath, strrpos($drupalPath, '/') + 1);
+          if (!empty($refNid)) {
+            $relatedAgencies[] = [
+              "target_id" => $refNid
+            ];
           }
+        } else { // other urls, report
+          $externalUrls[] = [
+            "nid" => $dept->id(),
+            "public_body_url_text" => $text,
+            "public_body_url" => $uri,
+          ];
         }
       }
 
-      $dept->save();
+      echo "related agencies\n";
+      print_r($relatedAgencies);
+      echo "\n\n";
+
+      $dept->set('field_departments', $relatedAgencies);
+      $dept->set('field_public_bodies', []);
     }
+
+    $dept->save();
   }
+
+  echo "external urls\n";
+  print_r($externalUrls);
 } catch (\Exception $e) {
   error_log($e->getMessage());
 }
