@@ -11,8 +11,9 @@ try {
   $problems = [];
 
   foreach($deptNodes as $dept) {
-    // if ($dept->id() == 160) {
-      // migrate divisions
+    $deptId = $dept->id();
+    if ($deptId == 160) {
+      // collect things to migrate
       $divisions = $dept->get('field_divisions')->getValue();
       $publicBodies = $dept->get('field_public_bodies')->getValue();
 
@@ -53,7 +54,7 @@ try {
             $refNid = substr($drupalPath, strrpos($drupalPath, '/') + 1);
             if (!is_numeric($refNid)) {
               $problems[] = [
-                "nid" => $dept->id(),
+                "nid" => $deptId,
                 "public_body_url_text" => $text,
                 "public_body_url" => $uri
               ];
@@ -66,23 +67,25 @@ try {
             }
           } else { // other urls, report
             $externalUrls[] = [
-              "nid" => $dept->id(),
+              "nid" => $deptId,
               "public_body_url_text" => $text,
               "public_body_url" => $uri,
             ];
           }
         }
 
-        echo "related agencies\n";
-        print_r($relatedAgencies);
-        echo "\n\n";
+        if (!empty($relatedAgencies)) {
+          echo "related agencies\n";
+          print_r($relatedAgencies);
+          echo "\n\n";
+        }
 
         $dept->set('field_departments', $relatedAgencies);
         $dept->set('field_public_bodies', []);
       }
 
-      // $dept->save();
-    // }
+      $dept->save();
+    }
 
   }
 
