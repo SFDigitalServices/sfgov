@@ -213,8 +213,6 @@
   {% endif %}
 
   {% set hasAboutSection = false %}
-  {% set numPublicBodies = content.field_public_bodies['#items']|length %}
-  {% set numDivisions = content.field_divisions['#items']|length %}
 
   {% if content.field_about_or_description|render|striptags
     or about_page_link
@@ -222,8 +220,8 @@
     or content.field_image|render|striptags
     or content.field_call_to_action|render|striptags
     or content.field_social_media|render|striptags
-    or numPublicBodies > 0
-    or numDivisions > 0
+    or content.field_agency_sections|render|striptags
+    or content.field_departments|render|striptags
   %}
     {% set hasAboutSection = true %}
   {% endif %}
@@ -260,25 +258,6 @@
                   "text": about_page_link['#title'],
                   "classes": ['btn-inverse']
                 } %}
-              </div>
-            {% endif %}
-
-            {# old divisions and public bodies #}
-            {% if content.field_divisions|render|striptags|trim or content.field_public_bodies|render|striptags|trim %}
-              <div class="responsive-grid grid-cols-1 gap-40 mb-60">
-                {# old divisions #}
-                {% if content.field_divisions|render|striptags|trim %}
-                  <div>
-                    {{ content.field_divisions }}
-                  </div>
-                {% endif %}
-
-                {# old public bodies #}
-                {% if content.field_public_bodies|render|striptags|trim %}
-                  <div>
-                    {{ content.field_public_bodies }}
-                  </div>
-                {% endif %}
               </div>
             {% endif %}
 
