@@ -186,20 +186,20 @@
         $(onlineHelpText).toggle(checked);
       });
     }
-  }; // Set the Meeting archive date to have the required icon, if the 
+  }; // Set the Meeting archive date to have the required icon, if the
   // meeting archive url is filled in. Field becomes required in backend
-  // and in states api, but because of how the date field is built, the 
+  // and in states api, but because of how the date field is built, the
   // required icon doesn't get set in the form states api.
   Drupal.behaviors.sfgovPublicBodyRequiredMeetingArchiveDate = {
     attach: function (context, settings) {
       var meetingArchiveUrl = $('#edit-field-meeting-archive-url-0-uri');
       var meetingArchiveDateLabel = $('#edit-field-meeting-archive-date-wrapper h4');
-      
+
       var checkRequiredState = function() {
         if (meetingArchiveUrl.val() != ('')) {
           if (!meetingArchiveDateLabel.hasClass('js-form-required form-required')) {
             $(meetingArchiveDateLabel).addClass('js-form-required form-required');
-          } 
+          }
         } else {
           $(meetingArchiveDateLabel, meetingArchiveInformationLabel).removeClass('js-form-required form-required');
         }
@@ -207,14 +207,6 @@
 
       $(document).ready(checkRequiredState)
       $(meetingArchiveUrl).on('click input change', checkRequiredState);
-    }
-  };  // Add a description class to maxlength counter output, to help it match style
-  // of existing field description output.
-  Drupal.behaviors.sfgovCounterAddDescriptionClass = {
-    attach: function (context, settings) {
-      $(document).ready(function() {
-        $('.form-wrapper .form-item .counter').addClass('description')
-      })
     }
   };
 })(jQuery, Drupal, document, window);
