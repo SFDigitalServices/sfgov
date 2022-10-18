@@ -11,6 +11,7 @@ dependencies:
   module:
     - content_moderation
     - field_group
+    - maxlength
     - paragraphs
     - path
     - scheduler
@@ -42,8 +43,7 @@ content:
     type: datetime_timestamp
     weight: 2
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   field_form_id:
     type: paragraphs
@@ -87,35 +87,30 @@ content:
     settings:
       rows: 5
       placeholder: ''
-      orderable: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
     weight: 6
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
     weight: 4
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
     weight: 10
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
     weight: 12
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
@@ -123,7 +118,6 @@ content:
     region: content
     settings:
       display_label: true
-      orderable: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -132,8 +126,10 @@ content:
     settings:
       size: 60
       placeholder: ''
-      orderable: true
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: 'Titles explain your page. They should be descriptive, short and in sentence case. (<strong>@count</strong>/@limit)'
   translation:
     weight: 3
     region: content
@@ -148,21 +144,18 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
-      orderable: true
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
     weight: 11
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
     weight: 13
     region: content
-    settings:
-      orderable: true
+    settings: {  }
     third_party_settings: {  }
   update_formio_fields_test:
     weight: 11

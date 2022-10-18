@@ -217,4 +217,14 @@
     }
   };
 
+  // Add a description class to maxlength counter output, to help it match style
+  // of existing field description output.
+  Drupal.behaviors.sfgovCounterAddDescriptionClass = {
+    attach: function (context, settings) {
+      $(document).ready(function() {
+        $('.form-wrapper .form-item .counter').addClass('description')
+      })
+    }
+  };
+
 }(jQuery, Drupal, document, window));
