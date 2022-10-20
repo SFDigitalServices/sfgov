@@ -1,7 +1,6 @@
+const { content, ...purgeOptions } = require('./purgecss.config')
+
 /** @type {import('tailwindcss/types').Config} */
-
-const { content } = require('./purgecss.config')
-
 module.exports = {
   presets: [
     require('sfgov-design-system/tailwind.preset')
@@ -14,5 +13,8 @@ module.exports = {
       backgroundColor: ['odd']
     }
   },
-  content
+  content,
+  purge: {
+    options: purgeOptions
+  }
 }
