@@ -1,4 +1,4 @@
-const { content, ...purgeOptions } = require('./purgecss.config')
+const { content, safelist } = require('./purgecss.config')
 
 /** @type {import('tailwindcss/types').Config} */
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
     }
   },
   content,
-  purge: {
-    options: purgeOptions
-  }
+  safelist: safelist.greedy.map(pattern => {
+    return { pattern }
+  })
 }
