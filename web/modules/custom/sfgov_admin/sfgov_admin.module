@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -74,9 +75,40 @@ function sfgov_admin_custom_validate($form, &$form_state) {
 }
 
 /**
+ * Implements hook_block_access().
+ */
+function sfgov_admin_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+
+  // If on the node add or node edit form page...
+  if ($route_name == "node.add" || $route_name == "entity.node.edit_form") {
+    // SG-1870 -- Remove the help block on node add/edit forms. We moved the
+    // content to the title description in sfgov_admin_form_node_form_alter().
+    if ($operation == 'view' && $block->getPluginId() == 'help_block') {
+      return AccessResult::forbidden();
+    }
+  }
+
+  // No opinion.
+  return AccessResult::neutral();
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
+
+  // Get the node object being used on the form.
+  $node = $form_state->getFormObject()->getEntity();
+  // Get the node type object for the form.
+  $node_type = \Drupal\node\Entity\NodeType::load($node->getType());
+
+  // SG-1870 -- setup title description.
+  // Move the content type "submission help" text into the title field
+  // description.
+  $form['title']['widget'][0]['value']['#description'] = $node_type->get('help');
+  //$form['title']['widget'][0]['value']['#title'] = $form['title']['widget'][0]['value']['#title'] . '<span class="counter">TEST</span>';
+  // END SG-1870
 
   // SEE ALSO: sfgov_admin_field_widget_entity_reference_paragraphs_form_alter:236
   // - This setup applies to main level body type fields.
@@ -93,7 +125,7 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
             // limited allowed formats (ONLY 1 ALLOWED FORMAT)...
             if (isset($form[$field_name]['widget'][$delta]['#allowed_formats']) ) {
               if (count($form[$field_name]['widget'][$delta]['#allowed_formats']) == 1) {
-  
+
                 // Compare the applied format to the only allowed format, and if
                 // they do not match, begin the process of syncing them up and
                 // fixing the content.
@@ -102,10 +134,10 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
                 if ($applied_format != $allowed_format) {
                   $storage = $form_state->getStorage();
                   $langcode = $storage['langcode'];
-  
+
                   // Set the allowed format to the applied format value.
                   $form[$field_name]['widget'][$delta]['#format'] = $allowed_format;
-  
+
                   // Pull the text value, and if the allowed format is plain,
                   // remove any forbidden html tags...
                   $text = $form[$field_name]['widget'][$delta]['#default_value'] ?? '';
@@ -121,7 +153,7 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
                   if ($allowed_format == 'plain_text') {
                     $filtered_text = strip_tags($filtered_text);
                   }
-  
+
                   // Reapply the formatted text to the default value. This will
                   // help avoid issues with formatters being broken on body type
                   // fields. This setup only applies to those fields out of sync.
@@ -251,7 +283,7 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
             // limited allowed formats (ONLY 1 ALLOWED FORMAT)...
             if (isset($element['subform'][$field_name]['widget'][$delta]['#allowed_formats']) ) {
               if (count($element['subform'][$field_name]['widget'][$delta]['#allowed_formats']) == 1) {
-  
+
                 // Compare the applied format to the only allowed format, and if
                 // they do not match, begin the process of syncing them up and
                 // fixing the content.
@@ -260,28 +292,28 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
                 if ($applied_format != $allowed_format) {
                   $storage = $form_state->getStorage();
                   $langcode = $storage['langcode'];
-  
+
                   // Set the allowed format to the applied format value.
                   $element['subform'][$field_name]['widget'][$delta]['#format'] = $allowed_format;
-  
+
                   // Pull the text value, and if the allowed format is plain,
                   // remove any forbidden html tags...
                   $text = $element['subform'][$field_name]['widget'][$delta]['#default_value'] ?? '';
                   if ($allowed_format == 'plain_text') {
                     $text = strip_tags($text);
                   }
-  
+
                   // Apply the allowed format to the text value...
                   $filtered_text = check_markup($text, $allowed_format, $langcode);
                   $filtered_text = is_object($filtered_text) ? $filtered_text->__toString() : $filtered_text;
-  
+
                   // If the allowed format is plain, we need to clean the text one
                   // more time to clear out any html tags generated from the
                   // filtering.
                   if ($allowed_format == 'plain_text') {
                     $filtered_text = strip_tags($filtered_text);
                   }
-  
+
                   // Reapply the formatted text to the default value. This will
                   // help avoid issues with formatters being broken on body type
                   // fields. This setup only applies to those fields out of sync.
@@ -295,7 +327,7 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
             }
           }
         }
-        
+
       }
     }
   }
@@ -330,7 +362,7 @@ function sfgov_admin_field_widget_sfgov_customizable_paragraphs_form_alter(&$ele
 function sfgov_admin_field_widget_sfgov_paragraphs_form_alter(&$element, FormStateInterface $form_state, $context) {
   // [SG-1809] - update form confirmation page content type
   $parentEntity = $form_state->getFormObject()->getEntity();
-  
+
   // SG-1809 - remove some paragraph types for the form confirmation page
   // the #disabled key had the incorrect behavior of keeping the button, but breaking the form
   // instead, store, modify, and reassign the add more links
@@ -555,6 +587,10 @@ function sfgov_admin_form_node_type_form_alter(&$form, FormStateInterface $form_
   $form['menu']['menu_options']['#default_value'] = [];
   $form['menu']['menu_options']['#description'] = t('<i>This option is disabled in code.</i>');
   $form['menu']['#disabled'] = TRUE;
+
+  // SG-1870 -- Convert the content type submission help text into the title description.
+  $form['submission']['help']['#title'] = t('Title description/help text.');
+  $form['submission']['help']['#description'] = t('This text will be output in the description area of the title field.');
 }
 
 /**
@@ -658,7 +694,7 @@ function sfgov_admin_form_node_public_body_edit_form_alter(&$form, FormStateInte
  */
 function _sfgov_admin_public_body_node_meeting_archive_url_and_date_form_validate($form, FormStateInterface $form_state) {
   // [SG-1748]
-  // This validation handler ensures that if a meeting archive url is set, then 
+  // This validation handler ensures that if a meeting archive url is set, then
   // the meeting archive date must also be set.
   $values = $form_state->getValues();
   if (!empty($values['field_meeting_archive_url'][0]['uri'])) {
