@@ -52,6 +52,31 @@ function sfgovpl_preprocess_views_view__news__page_2(&$variables) {
 /**
  * Implements hook_preprocess_views_view()
  *
+ * Adds a twig template variable for topic news - departments.
+ */
+function sfgovpl_preprocess_views_view__news__news_block_depts(&$variables) {
+  // Clear the more link if their are no results returned, or the number of
+  // items is less than 3. This should completely remove the output.
+  if (empty($variables['rows']) || count($variables['rows'][0]['#rows']) <= 2) {
+    $variables['more'] = [];
+  }
+
+  // Add back the missing btn class, if the link still needs to be displayed.
+  if (!empty($variables['more'])) {
+    $url_options = array(
+      'attributes' => array(
+        'class' => array(
+          'btn',
+        ),
+      ),
+    );
+    $variables['more']['#url']->setOptions($url_options);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view()
+ *
  * Adds a twig template variable for upcoming events
  *
  * @param $variables
