@@ -703,3 +703,12 @@ function _sfgov_admin_public_body_node_meeting_archive_url_and_date_form_validat
     }
   }
 }
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function sfgov_admin_library_info_alter(array &$libraries, $extension) {
+  if ($extension === 'maxlength') {
+    $libraries['maxlength']['js'] = [];
+  }
+}
