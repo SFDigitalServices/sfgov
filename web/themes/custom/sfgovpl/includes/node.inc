@@ -76,6 +76,20 @@ function sfgovpl_preprocess_node(&$variables) {
   }
 }
 
+function sfgovpl_preprocess_node__department__full(&$variables) {
+  $node = $variables['node'];
+  $agencySections = $node->get('field_agency_sections')->getValue();
+  $divisionsOrSubcommittees = [$node->id()];
+
+  foreach ($agencySections as $agencySection) {
+    $agencySection = Paragraph::load($agencySection['target_id']);
+    $divisionsOrSubcommittees = array_merge($divisionsOrSubcommittees, array_map(function($item) { return $item['target_id']; }, $agencySection->field_nodes->getValue()));
+  }
+  
+  // pass this agency's id and it's divisions/subcommittees/child agencies ids to the template for rendering meeting blocks
+  $variables['division_ids'] = $divisionsOrSubcommittees;
+}
+
 /**
  * Implements hook_preprocess_node().
  */

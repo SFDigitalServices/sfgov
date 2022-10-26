@@ -68,16 +68,17 @@
 {{ content.content_moderation_control }}
 
 {% set description = node.get('field_description').getValue()[0]['value'] %}
+{% set divisionIds = division_ids|join(',') %}
 
 {%
   set meetings_block = {
     upcoming: {
-      render: drupal_view('meetings', 'block_upcoming', node.id),
-      result: drupal_view_result('meetings', 'block_upcoming', node.id)
+      render: drupal_view('meetings', 'block_upcoming', divisionIds),
+      result: drupal_view_result('meetings', 'block_upcoming', divisionIds)
     },
     past: {
-      render: drupal_view('meetings', 'block_past', node.id),
-      result: drupal_view_result('meetings', 'block_past', node.id)
+      render: drupal_view('meetings', 'block_past', divisionIds),
+      result: drupal_view_result('meetings', 'block_past', divisionIds)
     }
   }
 %}
