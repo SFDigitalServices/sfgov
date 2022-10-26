@@ -8,6 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * Class MeetingListFiltersForm.
@@ -173,12 +174,32 @@ class MeetingListFiltersForm extends FormBase {
   /**
    * Get subcommittees.
    */
-  public function getSubcommittees() {
+  public static function getSubcommittees($route = null) {
     $route = \Drupal::routeMatch();
     $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
     $subcommittees = [$public_body->id() => $public_body->label()];
+    $divisionsAndSubcommittees = [];
 
-    foreach ($public_body->field_subcommittees->getValue() as $value) {
+    // for the moment we still have departments/agencies and public bodies
+    // now that agencies can have meetings and divisions/subcommittees we will need to consider them in these meeting queries
+    // TODO: when migration from public body to agency is complete, remove unnecessary collection of field values for query conditions
+
+    // public body subcommittees
+    if ($public_body->hasField('field_subcommittees')) {
+      $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $public_body->field_subcommittees->getValue());
+    }
+
+    // agency divisions
+    if ($public_body->hasField('field_agency_sections')) {
+      $agencySections = $public_body->field_agency_sections->getValue();
+      foreach ($agencySections as $agencySection) {
+        $agencySection = Paragraph::load($agencySection['target_id']);
+        $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $agencySection->field_nodes->getValue());
+      }
+    }
+
+
+    foreach ($divisionsAndSubcommittees as $value) {
       $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
       if (!empty($subcommittee)) {
           $subcommittees[$subcommittee->id()] = $subcommittee->label();
