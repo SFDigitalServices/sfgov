@@ -16,12 +16,15 @@ dependencies:
     - field.field.node.department.field_department_services
     - field.field.node.department.field_departments
     - field.field.node.department.field_description
+    - field.field.node.department.field_direct_external_url
     - field.field.node.department.field_divisions
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
     - field.field.node.department.field_include_in_list
+    - field.field.node.department.field_meeting_archive_date
+    - field.field.node.department.field_meeting_archive_url
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
@@ -171,6 +174,18 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_direct_external_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 33
+    region: content
   field_divisions:
     type: entity_reference_label
     label: above
@@ -215,6 +230,27 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 28
+    region: content
+  field_meeting_archive_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 31
+    region: content
+  field_meeting_archive_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 32
     region: content
   field_parent_department:
     type: entity_reference_label

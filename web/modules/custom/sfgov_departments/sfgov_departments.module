@@ -292,3 +292,13 @@ function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_s
     }
   }
 }
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function sfgov_departments_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
+  if ($view->id() == 'departments' && ($view->getDisplay()->display['id'] == 'allowed_agency_references')) {
+    error_log(print_r($query->where, 1));
+    // $query->where[0]['conditions'][0]['field'] = str_replace('=', '!=', $query->where[0]['conditions'][0]['field']);
+  }
+}
