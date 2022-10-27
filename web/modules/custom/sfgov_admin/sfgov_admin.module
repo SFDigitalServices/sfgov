@@ -566,6 +566,9 @@ function sfgov_admin_views_pre_view(ViewExecutable $view) {
   }
 }
 
+/**
+ * Implements hook_views_query_alter
+ */
 function sfgov_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
   if ($view->id() == 'content' && $view->current_display == 'page_1') {
     $relatedDepartmentFilterValue = '';
@@ -580,6 +583,7 @@ function sfgov_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $qu
       }
     }
 
+    // add a condition to also include the related department filter value in the results
     if (!empty($relatedDepartmentFilterValue)) {
       $query->addWhere(count($query->where)+1, '"node_field_data"."nid"', $relatedDepartmentFilterValue, '=');
     }
