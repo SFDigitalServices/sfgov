@@ -530,3 +530,25 @@ function sfgov_utilities_deploy_11_dept_div_pb() {
     error_log($e->getMessage());
   }
 }
+
+// migrate field_url to field_direct_external_url
+function sfgov_utilities_deploy_12_dept_go_to_url() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+    foreach($deptNodes as $dept) {
+      $currentSite = $dept->field_url->uri;
+      $goToSite = $dept->field_go_to_current_url->value;
+      echo $dept->getTitle() . " (" . $dept->id() . ") \n" . 
+        "\tcurrent site url: $currentSite\n" .
+        "\tgo to site: $goToSite" .
+        "\n\n";
+  
+      $dept->set('field_direct_external_url', [
+        'uri' => $currentSite
+      ]);
+      $dept->save();
+    }
+  } catch(\Exception $e) {
+    error_log($e->getMessage(), "\n");
+  }
+}
