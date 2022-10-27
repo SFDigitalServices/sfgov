@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_nodes
+    - node.type.department
     - paragraphs.paragraphs_type.agency_section
   module:
     - datalayer
@@ -19,17 +20,19 @@ field_name: field_nodes
 entity_type: paragraph
 bundle: agency_section
 label: Agencies
-description: 'Only add agencies that are under your agency.'
+description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: views
+  handler: unpublished
   handler_settings:
-    view:
-      view_name: departments
-      display_name: allowed_agency_references
-      arguments:
-        - '6881'
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: 0
+    auto_create_bundle: ''
 field_type: entity_reference
