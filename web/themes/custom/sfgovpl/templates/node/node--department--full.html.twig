@@ -85,7 +85,7 @@
 
 {% set partOf = ('Part of ' | t) %}
 
-<div class="container mx-auto px-20 xl:px-0">
+<div class="responsive-container mx-auto px-20 xl:px-0">
   {% embed '@theme/hero-banner.twig' with {
     'banner': {
       'title': node.label,
@@ -116,7 +116,7 @@
 <div>
   {% if content.field_spotlight2['#items'].getValue() %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="container mx-auto px-20 xl:px-0">
+      <div class="responsive-container mx-auto px-20 xl:px-0">
         {{ content.field_spotlight2 }}
       </div>
     </div>
@@ -252,10 +252,12 @@
               </div>
             {% endif %}
 
-            {% if content.field_agency_sections|render|striptags|trim or content.field_departments|render|striptags|trim %}
+            {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) %}
+            
+            {% if hasAgencySection or content.field_departments|render|striptags|trim %}
               <div class="responsive-grid grid-cols-1 gap-40 mb-60">
                 {# agency sections (divisions) #}
-                {% if content.field_agency_sections|render|striptags|trim %}
+                {% if hasAgencySection %}
                   {{ content.field_agency_sections }}
                 {% endif %}
 
