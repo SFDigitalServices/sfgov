@@ -208,7 +208,7 @@
             $(meetingArchiveDateLabel).addClass('js-form-required form-required');
           } 
         } else {
-          $(meetingArchiveDateLabel, meetingArchiveInformationLabel).removeClass('js-form-required form-required');
+          $(meetingArchiveDateLabel, meetingArchiveUrl).removeClass('js-form-required form-required');
         }
       }
 
