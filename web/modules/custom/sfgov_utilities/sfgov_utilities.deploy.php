@@ -541,12 +541,15 @@ function sfgov_utilities_deploy_12_dept_go_to_url() {
       echo $dept->getTitle() . " (" . $dept->id() . ") \n" . 
         "\tcurrent site url: $currentSite\n" .
         "\tgo to site: $goToSite" .
-        "\n\n";
+        "\n";
   
-      $dept->set('field_direct_external_url', [
-        'uri' => $currentSite
-      ]);
-      $dept->save();
+      if ($goToSite == true) {
+        $dept->set('field_direct_external_url', [
+          'uri' => $currentSite
+        ]);
+        $dept->save();
+        echo "saved " . $dept->getTitle() . " <---\n";
+      }
     }
   } catch(\Exception $e) {
     error_log($e->getMessage(), "\n");

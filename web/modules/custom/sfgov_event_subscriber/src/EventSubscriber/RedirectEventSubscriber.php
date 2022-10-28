@@ -198,20 +198,6 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
             $redirect_url = $field_external_url[0]['uri'];
           }
         }
-
-        // Node redirect rule based on the field `field_go_to_current_url`.
-        if ($node_type == 'department' && $node->hasField('field_go_to_current_url')) {
-          $field_go_to_current_url = $node->get('field_go_to_current_url')
-            ->getValue();
-
-          if (!empty($field_go_to_current_url[0]) && $field_go_to_current_url[0]['value'] == '1') {
-            $field_dept_url = $node->get('field_url')->getValue();
-
-            if (!empty($field_dept_url[0]) && $field_dept_url[0]['uri'] != '') {
-              $redirect_url = $field_dept_url[0]['uri'];
-            }
-          }
-        }
       }
     }
     elseif ($media) {
