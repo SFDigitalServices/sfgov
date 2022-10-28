@@ -176,8 +176,8 @@ class MeetingListFiltersForm extends FormBase {
    */
   public static function getSubcommittees($route = null) {
     $route = \Drupal::routeMatch();
-    $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
-    $subcommittees = [$public_body->id() => $public_body->label()];
+    $agency = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
+    $subcommittees = [$agency->id() => $agency->label()];
     $divisionsAndSubcommittees = [];
 
     // for the moment we still have departments/agencies and public bodies
@@ -185,13 +185,13 @@ class MeetingListFiltersForm extends FormBase {
     // TODO: when migration from public body to agency is complete, remove unnecessary collection of field values for query conditions
 
     // public body subcommittees
-    if ($public_body->hasField('field_subcommittees')) {
-      $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $public_body->field_subcommittees->getValue());
+    if ($agency->hasField('field_subcommittees')) {
+      $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $agency->field_subcommittees->getValue());
     }
 
     // agency divisions
-    if ($public_body->hasField('field_agency_sections')) {
-      $agencySections = $public_body->field_agency_sections->getValue();
+    if ($agency->hasField('field_agency_sections')) {
+      $agencySections = $agency->field_agency_sections->getValue();
       foreach ($agencySections as $agencySection) {
         $agencySection = Paragraph::load($agencySection['target_id']);
         $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $agencySection->field_nodes->getValue());
@@ -214,12 +214,12 @@ class MeetingListFiltersForm extends FormBase {
    */
   public function getArchiveLink() {
     $route = \Drupal::routeMatch();
-    $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
+    $agency = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
 
-    if ($public_body instanceof Node) {
+    if ($agency instanceof Node) {
       $date = NULL;
-      if ($public_body->hasField('field_meeting_archive_date')) {
-        foreach ($public_body->field_meeting_archive_date->getValue() as $value) {
+      if ($agency->hasField('field_meeting_archive_date')) {
+        foreach ($agency->field_meeting_archive_date->getValue() as $value) {
           $date_formatter = \Drupal::service('date.formatter');
           $date = $date_formatter->format(strtotime($value['value']), 'custom', 'M Y');
           $date = new FormattableMarkup("<span class='nobreak'>@date</span>", ['@date' => $date]);
@@ -228,8 +228,8 @@ class MeetingListFiltersForm extends FormBase {
 
       $text = $date ? $this->t('See archived meetings before @date', ['@date' => $date]) : $this->t('See past meetings');
 
-      if ($public_body->hasField('field_meeting_archive_url')) {
-        foreach ($public_body->field_meeting_archive_url->getValue() as $value) {
+      if ($agency->hasField('field_meeting_archive_url')) {
+        foreach ($agency->field_meeting_archive_url->getValue() as $value) {
           $url = Url::fromUri($value['uri'], ['attributes' => ['class' => 'link__plain']]);
           return Link::fromTextAndUrl($text, $url)->toString();
         }
