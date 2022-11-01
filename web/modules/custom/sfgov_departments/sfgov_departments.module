@@ -8,13 +8,63 @@
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
+// prevent an agency from referencing itself or its parent as a division
+function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+  $delta = $form['field_agency_sections']['widget']['#max_delta']; // the index/position of the agency section
+  $agencySection = $form_state->getValue('field_agency_sections');
+
+  if (!empty($agencySection[$delta])) {
+    $agencyNodes = $agencySection[$delta]['subform']['field_nodes']; // get the list of agency nodes in the agency section paragraph
+    
+    if (!empty($agencyNodes)) {
+      // get the view that retrieves the parent agency/agencies of this agency
+      $view = \Drupal\views\Views::getView('departments');
+      $view->setDisplay('agency_part_of_agencies');
+      $view->setArguments([$node->id()]);
+      $view->execute();
+      $parentAgencies = [];
+
+      if ($view->total_rows > 0) {
+        foreach ($view->result as $id => $result) {
+          $parentNode = $result->_entity;
+          $parentAgencies[$parentNode->id()] = $parentNode->getTitle();
+        }
+      }
+
+      $i = 0; // track the index of the referenced agency list in field_nodes
+      foreach ($agencyNodes as $item) {
+        if (is_array($item)) { // the agency section node list can also contain the add_more object (if the list is empty)
+          $ref = $item['target_id'];
+          
+          if ($ref == $node->id()) {
+            $form_state->setErrorByName('field_agency_sections', t('An agency cannot reference itself as a division or subcommittee'));
+            break;
+          }
+
+          if(in_array($ref, array_keys($parentAgencies))) {
+            // the structure of this named reference is unique to the way the setErrorByName method
+            // parses the string to target the field for registering an error
+            $form_state->setErrorByName("field_agency_sections][$delta][subform][field_nodes][$i", 
+              t('An agency cannot reference its parent as a division or subcommittee (' . $parentAgencies[$ref] . ')'));
+            break;
+          }
+
+          $i++;
+        }
+      }
+    }
+  }
+}
+
 /**
  * Implements hook_form_alter().
  */
 function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   switch ($form_id) {
     case 'node_department_edit_form':
-      $form['field_about_description']['#disabled'] = 'disabled';
+    case 'node_department_form':
+      $form['#validate'][] = '_sfgov_departments_validate';
       break;
 
     case 'node_transaction_form':
@@ -290,15 +340,5 @@ function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_s
         $element['subform']['field_spotlight_img']['widget']['#description'] = t("Minimum 550 px wide. Square or horizontal is recommended.");
       }
     }
-  }
-}
-
-/**
- * Implements hook_views_query_alter().
- */
-function sfgov_departments_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
-  if ($view->id() == 'departments' && ($view->getDisplay()->display['id'] == 'allowed_agency_references')) {
-    error_log(print_r($query->where, 1));
-    // $query->where[0]['conditions'][0]['field'] = str_replace('=', '!=', $query->where[0]['conditions'][0]['field']);
   }
 }

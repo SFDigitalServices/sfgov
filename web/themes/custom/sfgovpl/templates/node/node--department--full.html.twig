@@ -214,14 +214,15 @@
   {% endif %}
 
   {% set hasAboutSection = false %}
+  {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) %}
 
   {% if content.field_about_or_description|render|striptags
     or about_page_link
     or content.field_image|render|striptags
     or content.field_call_to_action|render|striptags
     or content.field_social_media|render|striptags
-    or content.field_agency_sections|render|striptags
     or content.field_departments|render|striptags
+    or hasAgencySection
   %}
     {% set hasAboutSection = true %}
   {% endif %}
@@ -252,8 +253,6 @@
               </div>
             {% endif %}
 
-            {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) %}
-            
             {% if hasAgencySection or content.field_departments|render|striptags|trim %}
               <div class="responsive-grid grid-cols-1 gap-40 mb-60">
                 {# agency sections (divisions) #}
