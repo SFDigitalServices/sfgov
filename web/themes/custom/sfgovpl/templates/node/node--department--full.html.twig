@@ -70,15 +70,18 @@
 {% set description = node.get('field_description').getValue()[0]['value'] %}
 {% set divisionIds = division_ids|join(',') %} {# refer to web/themes/custom/sfgovpl/includes/node.inc, sfgovpl_preprocess_node__department__full #}
 
+{# these meeting views take two arguments #}
+{# argument 0 - the current node's id, for generating a proper "more" link in the view #}
+{# argument 1 - the current nodes's divisions/subcommittees id's, if any, for displaying the divisions/subcommittees meetings  #}
 {%
   set meetings_block = {
     upcoming: {
-      render: drupal_view('meetings', 'block_upcoming', divisionIds),
-      result: drupal_view_result('meetings', 'block_upcoming', divisionIds)
+      render: drupal_view('meetings', 'block_upcoming', node.id, divisionIds),
+      result: drupal_view_result('meetings', 'block_upcoming', node.id, divisionIds)
     },
     past: {
-      render: drupal_view('meetings', 'block_past', divisionIds),
-      result: drupal_view_result('meetings', 'block_past', divisionIds)
+      render: drupal_view('meetings', 'block_past', node.id, divisionIds),
+      result: drupal_view_result('meetings', 'block_past', node.id, divisionIds)
     }
   }
 %}

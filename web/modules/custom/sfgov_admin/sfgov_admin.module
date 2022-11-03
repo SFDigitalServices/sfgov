@@ -577,6 +577,7 @@ function sfgov_admin_views_pre_view(ViewExecutable $view) {
  * Implements hook_views_query_alter
  */
 function sfgov_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  // the admin content view
   if ($view->id() == 'content' && $view->current_display == 'page_1') {
     $relatedDepartmentFilterValue = '';
 
@@ -594,6 +595,15 @@ function sfgov_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $qu
     if (!empty($relatedDepartmentFilterValue)) {
       $query->addWhere(count($query->where)+1, '"node_field_data"."nid"', $relatedDepartmentFilterValue, '=');
     }
+  }
+
+  // the meetings blocks past and and upcoming meetings generate a more link based on the contextual filter ids
+  // if there are multiple ids, the more link isn't formed correctly and the more links will error out
+  // adding an additional contextual filter will default the where conditions to 'AND'
+  // we need to change the contextual filter type to use 'OR' so the query will use the first argument for the more link
+  // and the second argument for retrieving relevant meetings
+  if ($view->id() == 'meetings' && ($view->current_display == 'block_past' || $view->current_display == 'block_upcoming')) {
+    $query->where[0]['type'] = 'OR';
   }
 }
 
