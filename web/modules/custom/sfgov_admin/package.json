@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "run-p build-css build-js",
+    "build": "run-p optimize-images build-css build-js",
+    "optimize-images": "tinypng-go images -o dist/images",
     "build-css": "postcss --verbose -d dist/css 'css/*.css'",
     "build-js": "babel -d dist/js 'js/*.js'",
     "lint-js": "eslint .",
@@ -13,6 +14,7 @@
     "postcss": "^8.4.18",
     "postcss-cli": "^10.0.0",
     "postcss-import": "^15.0.0",
-    "postcss-scss": "^4.0.5"
+    "postcss-scss": "^4.0.5",
+    "tinypng-go": "^0.0.9"
   }
 }
