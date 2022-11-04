@@ -53,7 +53,12 @@ class VideoController extends ControllerBase {
    */
   public function page($video_id, $paragraph_id) {
     $paragraph = Paragraph::load($paragraph_id);
-    $transcript_text = !empty($paragraph->get('field_text')->value) ? $paragraph->get('field_text')->value : "";
+    $transcript_text = "";
+
+    if ($paragraph && $paragraph->hasField('field_text')) {
+      $transcript_text = $paragraph->get('field_text')->value;
+    }
+    
     return [
       '#theme' => 'sfgov_video_page',
       '#title' => $this->sfgovVideoUtilities->getVideoTitle($video_id),

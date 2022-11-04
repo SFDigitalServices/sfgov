@@ -192,7 +192,7 @@ content:
         hide_guidelines: '1'
       maxlength:
         maxlength_js: 450
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_label: (<strong>@count</strong>/@limit)
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
   field_address:
@@ -247,7 +247,7 @@ content:
         hide_guidelines: '1'
       maxlength:
         maxlength_js: 100
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_label: (<strong>@count</strong>/@limit)
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
   field_archive_date:
@@ -324,8 +324,8 @@ content:
         hide_help: '1'
         hide_guidelines: '1'
       maxlength:
-        maxlength_js: null
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js: 110
+        maxlength_js_label: (<strong>@count</strong>/@limit)
         maxlength_js_enforce: false
         maxlength_js_truncate_html: false
   field_direct_external_url:
@@ -693,7 +693,10 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: (<strong>@count</strong>/@limit)
   uid:
     type: entity_reference_autocomplete
     weight: 25
