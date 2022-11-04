@@ -370,5 +370,13 @@ function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_s
         $element['subform']['field_spotlight_img']['widget']['#description'] = t("Minimum 550 px wide. Square or horizontal is recommended.");
       }
     }
+
+    # hide the option to display a map when used in the context of meetings
+    if ($element['#paragraph_type'] == 'in_person_location') {
+      $parents = $element['subform']['#parents'];
+      if (in_array('field_public_body_meetings', $parents)) {
+        $element['subform']['field_address_display']['#attributes']['class'][] = 'visually-hidden';
+      }
+    }
   }
 }
