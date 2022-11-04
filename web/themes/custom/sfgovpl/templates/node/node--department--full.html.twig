@@ -298,7 +298,8 @@
     </div>
   {% endif %}
 
-  {% if content.field_people|render %}
+  {% set hasPeople = content.field_people|render|striptags|trim %}
+  {% if hasPeople %}
     <div class="py-40 lg:py-60">
       <div class="responsive-container rounded">
         <div class="px-20 py-60 bg-blue-1 rounded lg:p-60">
@@ -312,8 +313,9 @@
   {% set hasAddress = content.field_address['#items'] is not empty %}
   {% set hasPhone = content.field_phone_numbers['#items'] is not empty %}
   {% set hasEmail = content.field_email['#items'] is not empty %}
+  {% set hasContact = hasAddress or hasPhone or hasEmail %}
 
-  {% if hasAddress or hasPhone or hasEmail %}
+  {% if hasContact %}
     <div class="py-40 lg:py-60">
       <div class="responsive-container">
         <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ 'Contact'|t }}</h2>
@@ -361,7 +363,11 @@
     or (hasPublicRecordsEmail and publicRecordsMethod == "email")
     or (hasPublicRecordsPhone and publicRecordsMethod == "phone")
     or hasArchiveUrl %}
-      <div class="responsive-container rounded bg-blue-1 p-20 mb-40 lg:p-40 lg:mb-60">
+      {% set classes = "" %}
+      {% if hasPeople is empty and hasContact is empty %}
+        {% set classes = "mt-40 lg:mt-60" %}
+      {% endif %}
+      <div class="responsive-container rounded bg-blue-1 p-20 mb-40 lg:p-40 lg:mb-60 {{ classes }}">
           <div class="lg:flex">
 
             {% if (hasPublicRecordsLink and publicRecordsMethod == "link")
