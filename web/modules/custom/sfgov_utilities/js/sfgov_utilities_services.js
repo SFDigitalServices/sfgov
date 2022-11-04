@@ -102,7 +102,6 @@ jQuery(function ($) {
             }
           });
           $('.sfgov-resources .paragraph--type--other-info-card').each(function(){
-            console.log($(this));
             if ($(this).find('.__resources').parent().hasClass('details__content')) {
               $(this).find('.__resources').unwrap();
             }

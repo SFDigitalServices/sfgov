@@ -67,13 +67,6 @@ function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     $form['buttons']['save']['#validate'][] = 'sfgov_admin_custom_validate';
   }
-
-  // TODO: SG-1854 - remove this as part of post deployment task for department and public body mashup
-  if ($form_id == 'node_department_form' || $form_id == 'node_department_edit_form') {
-    $form['field_divisions']['#attributes']['class'][] = 'visually-hidden';
-    $form['field_public_bodies']['#attributes']['class'][] = 'visually-hidden';
-    $form['field_parent_department']['#attributes']['class'][] = 'visually-hidden';
-  }
 }
 
 function sfgov_admin_custom_validate($form, &$form_state) {
