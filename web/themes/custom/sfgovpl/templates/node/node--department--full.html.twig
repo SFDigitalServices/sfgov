@@ -93,13 +93,18 @@
     'banner': {
       'title': node.label,
       'text': node.field_description.value,
-      'label': drupal_view('departments', 'agency_part_of_agencies', node.id)
+      'label': drupal_view('departments', 'agency_part_of_agencies', node.id),
+      'logo': {
+        'src': file_url(node.field_image.entity.field_media_image.entity.uri.value),
+        'alt': node.field_image.entity.field_media_image.alt
+      }
     }
   } %}
 
+
     {% block logo %}
       {% if content.field_image|render|striptags %}
-        <div class="hero-banner--logo">
+        <div class="hero-banner--logo text-center w-1/4 mb-20 lg:mb-0">
           {{ content.field_image }}
         </div>
       {% endif %}
