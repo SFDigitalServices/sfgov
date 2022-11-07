@@ -446,9 +446,7 @@ function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $f
 
   // If not the view we are looking, move on
   if ($form['#id'] == 'views-exposed-form-media-media-page-list' || $form['#id'] == 'views-exposed-form-entity-browser-file-entity-browser-1') {
-    dump($form);
-    dump($form_state);
-    dump($form_id);
+
     // Query nodes
     $storage_d = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
     $nids_d = $storage_d->getQuery();
