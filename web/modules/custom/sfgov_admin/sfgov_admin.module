@@ -434,17 +434,89 @@ function sfgov_admin_preprocess_field_multiple_value_form__autocomplete(&$variab
 
 function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $viewId = $form['#id'];
-  if ($viewId != 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display
-    return;
+  if ($form['#id'] == 'views-exposed-form-content-transactions') { // return if this is not a content view transaction display
+    $form['field_direct_external_url_uri_op']['#options'] = array(
+      'All' => '- Any - ',
+      'empty' => 'Yes',
+      'not empty' => 'No',
+    );
+    $form['field_direct_external_url_uri_op']['#default_value'] = 'All';
+    $form['field_direct_external_url_uri_op']['#title'] = 'Has Start Page';
   }
 
-  $form['field_direct_external_url_uri_op']['#options'] = array(
-    'All' => '- Any - ',
-    'empty' => 'Yes',
-    'not empty' => 'No',
-  );
-  $form['field_direct_external_url_uri_op']['#default_value'] = 'All';
-  $form['field_direct_external_url_uri_op']['#title'] = 'Has Start Page';
+  // If not the view we are looking, move on
+  if ($form['#id'] == 'views-exposed-form-media-media-page-list' || $form['#id'] == 'views-exposed-form-entity-browser-file-entity-browser-1') {
+    dump($form);
+    dump($form_state);
+    dump($form_id);
+    // Query nodes
+    $storage_d = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
+    $nids_d = $storage_d->getQuery();
+
+    $storage_t = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
+    $nids_t = $storage_t->getQuery();
+
+    // Gather published department nodes and sort by title
+    $nids_dept = $nids_d->condition('type', 'department')
+    ->condition('status', 1)
+    ->sort('title')
+    ->execute();
+    
+    // Gather published topic nodes and sort by title
+    $nids_topic = $nids_t->condition('type', 'topic')
+    ->condition('status', 1)
+    ->sort('title')
+    ->execute();
+
+    // If there are no nodes, move on
+    if ($nids_dept) {
+      $options_d = [];
+      // Start building out the options for our select list
+      $depts = $storage_d->loadMultiple($nids_dept);
+
+      // Push titles into select list
+      foreach ($depts as $dept) {
+        $options_d[$dept->id()] = $dept->getTitle();
+      }
+
+      // Start building out our new form element
+      $department_field = 'field_department_target_id';
+      $form[$department_field]['#type'] = 'select';
+      $form[$department_field]['#title'] = 'Departments';
+      $form[$department_field]['#multiple'] = FALSE;
+
+      // Specify the empty option for our select list
+      $form[$department_field]['#empty_option'] = t('- Any -');
+
+      // Add the $options from above to our select list
+      $form[$department_field]['#options'] = $options_d;
+      unset($form[$department_field]['#size']);
+    }
+
+    if ($nids_topic) {
+      $options_t = [];
+      // Start building out the options for our select list
+      $topics = $storage_t->loadMultiple($nids_topic);
+
+      // Push titles into select list
+      foreach ($topics as $topic) {
+        $options_t[$topic->id()] = $topic->getTitle();
+      }
+
+      // Start building out our new form element
+      $topic_field = 'field_topic_target_id';
+      $form[$topic_field]['#type'] = 'select';
+      $form[$topic_field]['#title'] = 'Topics';
+      $form[$topic_field]['#multiple'] = FALSE;
+
+      // Specify the empty option for our select list
+      $form[$topic_field]['#empty_option'] = t('- Any -');
+
+      // Add the $options from above to our select list
+      $form[$topic_field]['#options'] = $options_t;
+      unset($form[$topic_field]['#size']);
+    }
+  } 
 }
 
 /**
