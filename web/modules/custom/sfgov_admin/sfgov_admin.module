@@ -67,6 +67,40 @@ function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     $form['buttons']['save']['#validate'][] = 'sfgov_admin_custom_validate';
   }
+
+  if ($form_id == 'node_meeting_form' || $form_id == 'node_meeting_edit_form') {
+    $form['#validate'][] = '_sfgov_admin_meeting_validate';
+  }
+}
+
+// custom validation for meeting content type
+function _sfgov_admin_meeting_validate(&$form, FormStateInterface $form_state) {
+  // change the error message for field_public_body
+  $publicBodyValue = $form_state->getValue('field_public_body');
+  $hasPublicBodyValue = false;
+  
+  foreach ($publicBodyValue as $item) {
+    if (is_array($item) && !empty($item['target_id'])) {
+      $hasPublicBodyValue = true;
+      break;
+    }
+  }
+
+  if ($hasPublicBodyValue == false) {
+    // preserve current form_state errors
+    $formErrors = $form_state->getErrors();
+
+    // clear all form_state errors
+    $form_state->clearErrors();
+
+    // alter field_public_body error message in saved form_state errors
+    $formErrors['field_public_body'] = t('Please tag the associated agency(s) to the the meeting page.');
+    
+    // re-apply error states and messages
+    foreach ($formErrors as $name => $errorMessage) {
+      $form_state->setErrorByName($name, $errorMessage);
+    }
+  }  
 }
 
 function sfgov_admin_custom_validate($form, &$form_state) {
@@ -522,7 +556,6 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
     }
   }
   if ($foundAsChild) {
-    error_log(print_r($parentTopics, 1));
     $form['field_top_level_topic']['widget']['value']['#description'] = t('This Topic cannot be top level because it is a child topic of the following: ' . implode(', ', $parentTopics));
     $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';
   }
