@@ -213,29 +213,32 @@
     </div>
   {% endif %}
 
+  {% set hasAboutSection = "false" %}
+  {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) ? "true" : "false" %}
+
+  {% if content.field_about_or_description|render|striptags
+    or about_page_link
+    or content.field_call_to_action|render|striptags
+    or content.field_social_media|render|striptags
+    or content.field_departments|render|striptags
+    or hasAgencySection != "false"
+  %}
+    {% set hasAboutSection = "true" %}
+  {% endif %}
+
   {% if content.field_resources['#items'].getValue() %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
+    {% set resourcesSpacing = "py-40 lg:py-60" %}
+    {% if hasAboutSection == "false" %}
+      {% set resourcesSpacing = "pt-40 pb-0 lg:pt-60 lg:pb-0" %}
+    {% endif %}
+    <div class="odd:bg-grey-1 {{ resourcesSpacing }}">
       <div class="responsive-container">
         {{ content.field_resources }}
       </div>
     </div>
   {% endif %}
 
-  {% set hasAboutSection = false %}
-  {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) %}
-
-  {% if content.field_about_or_description|render|striptags
-    or about_page_link
-    or content.field_image|render|striptags
-    or content.field_call_to_action|render|striptags
-    or content.field_social_media|render|striptags
-    or content.field_departments|render|striptags
-    or hasAgencySection
-  %}
-    {% set hasAboutSection = true %}
-  {% endif %}
-
-  {% if hasAboutSection %}
+  {% if hasAboutSection != "false" %}
     <div class="sfgov-dept-about bg-blue-dark py-40 lg:py-60">
       <div class="responsive-container">
         <h2 class="text-white text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
