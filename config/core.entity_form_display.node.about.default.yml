@@ -10,6 +10,7 @@ dependencies:
     - workflows.workflow.editorial
   module:
     - content_moderation
+    - maxlength
     - paragraphs
     - path
     - scheduler
@@ -118,7 +119,10 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: null
+        maxlength_js_label: (<strong>@count</strong>/@limit)
   uid:
     type: entity_reference_autocomplete
     weight: 2

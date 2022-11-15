@@ -47,7 +47,7 @@ class QLess {
   /**
    * Data from the microservice.
    *
-   * @var arrayorNULL
+   * @var array|NULL
    */
   protected $allData = NULL;
 
@@ -222,7 +222,21 @@ class QLess {
     $queues = $json['data']['queues'];
     $rows = [];
 
-    $queues_to_display = ['1069', '2510', '1077', '1076', '1079', '1080', '1081', '1085', '1087', '1068'];
+    $queues_to_display = [
+      '1069',  // Intake: OTC with plans
+      '2510',  // SFPlanning
+      '1077',  // Building: Non-Structural
+      '1076',  // Building: Structural
+      '1079',  // Mechanical review
+      '1080',  // Electrical review
+      '1081',  // Fire: Plan review
+      '1085',  // Public Works: Permits and Plan review
+      '1087',  // PUC: Plan review
+      '2586',  // Public Health: Plan review
+      '1068',  // Permit Processing: OTC with plans
+      '2395',  // Permit Processing: No plans / Trade
+      '2718',  // OSB Permit Center
+    ];
 
     // Filter out the queues we want and display them in order.
     foreach ($queues_to_display as $index => $queue_id) {
