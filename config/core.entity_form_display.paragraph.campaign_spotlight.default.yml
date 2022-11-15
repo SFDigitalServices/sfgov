@@ -51,9 +51,8 @@ content:
         hide_guidelines: '1'
       maxlength:
         maxlength_js: 300
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
-        maxlength_js_enforce: true
-        maxlength_js_truncate_html: true
+        maxlength_js_label: (<strong>@count</strong>/@limit)
+        maxlength_js_enforce: false
   field_is_reversed:
     type: boolean_checkbox
     weight: 6
@@ -80,7 +79,7 @@ content:
     settings:
       entity_browser: image
       field_widget_display: rendered_entity
-      field_widget_edit: true
+      field_widget_edit: false
       field_widget_remove: true
       field_widget_replace: false
       open: false
@@ -98,7 +97,7 @@ content:
     third_party_settings:
       maxlength:
         maxlength_js: 65
-        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_label: (<strong>@count</strong>/@limit)
   translation:
     weight: 10
     region: content

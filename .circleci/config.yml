@@ -124,6 +124,7 @@ jobs:
       - run:
           name: prepare database for site-under test
           command: ./.circleci/scripts/pantheon/02-init-site-under-test-clone-existing
+          no_output_timeout: 20m
 
       - run:
           name: run composer install again to get dev dependencies
