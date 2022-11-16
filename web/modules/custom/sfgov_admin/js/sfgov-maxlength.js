@@ -1,8 +1,13 @@
+// This is copied from maxlength contrib module code.
+// The changes in this allow for it to be attached to the field title.
+
 (function ($, Drupal) {
   // Make everything local
+  /*ignore jslint start*/
   let ml
   ml = ml || {}
   ml.options = ml.options || {}
+  /*ignore jslint end*/
 
   Drupal.behaviors.maxlength = {
     attach (context) {
@@ -198,8 +203,10 @@
             // the tag name.
             const expectedTagName = tagsOpen.pop()
             if (expectedTagName !== tagName) {
+              /*ignore jslint start*/
               // Should throw an exception, but for the moment just alert.
               alert('Expected end tag: ' + expectedTagName + '; Found end tag: ' + tagName)
+              /*ignore jslint end*/
             }
           }
           break
@@ -229,10 +236,12 @@
     }
     // Restore the open tags that were not closed. This happens when the text
     // got truncated in the middle of one or more html tags.
+    /*ignore jslint start*/
     let tag = ''
     while (tag = tagsOpen.pop()) {
       resultHtml += '</' + tag + '>'
     }
+    /*ignore jslint end*/
     return resultHtml
   }
 
@@ -297,6 +306,7 @@
   ml.ckeditor = function () {
     // Since Drupal.attachBehaviors() can be called more than once, and
     // ml.ckeditor() is being called in maxlength behavior, only run this once.
+    /*ignore jslint start*/
     if (!ml.ckeditorOnce) {
       ml.ckeditorOnce = true
       CKEDITOR.on('instanceReady', e => {
@@ -322,6 +332,7 @@
         }
       })
     }
+    /*ignore jslint end*/
   }
   // Invoke ml.calculate() for editor
   ml.ckeditorChange = function (e) {
