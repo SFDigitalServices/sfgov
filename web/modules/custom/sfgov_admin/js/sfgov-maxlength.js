@@ -1,6 +1,6 @@
 (function ($, Drupal) {
   // Make everything local
-  let ml;
+  let ml
   ml = ml || {}
   ml.options = ml.options || {}
 
@@ -144,7 +144,7 @@
             let tagName = ''
             let tagNameCompleted = false
             while (text.charAt(0) !== '>' && text.length > 0) {
-              let firstChar = text.charAt(0).toString()
+              const firstChar = text.charAt(0).toString()
               // Until the tag is closed, we do not append anything
               // to the visible text, only to the html.
               resultHtml += firstChar
@@ -184,7 +184,7 @@
             // otherwise, something is wrong with th html text.
             let tagName = ''
             while (text.charAt(0) !== '>' && text.length > 0) {
-              let firstChar = text.charAt(0).toString()
+              const firstChar = text.charAt(0).toString()
               if (firstChar !== '<' && firstChar !== '/') {
                 tagName += firstChar
               }
@@ -206,9 +206,9 @@
         }
         case '&': {
           // Don't truncate in the middle of an html entity count it as 1.
-          let entities = text.match(/&([a-z]+);/g)
+          const entities = text.match(/&([a-z]+);/g)
           if (entities) {
-            let nextEntity = entities[0]
+            const nextEntity = entities[0]
             resultHtml += nextEntity
             resultText += '#'
             text = text.slice(nextEntity.length - 1)
@@ -218,7 +218,7 @@
         default: {
           // In this case, we have a character that should also count for the
           // limit, so append it to both, the html and text result.
-          let firstChar = text.charAt(0).toString()
+          const firstChar = text.charAt(0).toString()
           resultHtml += firstChar
           resultText += firstChar
           break
@@ -302,7 +302,7 @@
       CKEDITOR.on('instanceReady', e => {
         const editor = $('#' + e.editor.name + '.maxlength')
         if (editor.length === 1) {
-          ml.options[e.editor.element.getId()].enforce = !!editor.hasClass('maxlength_js_enforce');
+          ml.options[e.editor.element.getId()].enforce = !!editor.hasClass('maxlength_js_enforce')
           // Add the events on the editor.
           e.editor.on('key', e => {
             setTimeout(() => {
