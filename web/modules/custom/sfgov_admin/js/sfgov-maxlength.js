@@ -1,13 +1,10 @@
 // This is copied from maxlength contrib module code.
 // The changes in this allow for it to be attached to the field title.
-
 (function ($, Drupal) {
   // Make everything local
-  /*ignore jslint start*/
   let ml
-  ml = ml || {}
+  ml = ml || {} // eslint-disable-line
   ml.options = ml.options || {}
-  /*ignore jslint end*/
 
   Drupal.behaviors.maxlength = {
     attach (context) {
@@ -79,14 +76,14 @@
       if (options.enforce) {
         if (wysiwyg !== undefined) {
           if (typeof ml[getter] == 'function' && typeof ml[setter] == 'function') {
-            const new_html = ml.truncate_html(ml[getter](wysiwyg), limit)
-            ml[setter](wysiwyg, new_html)
-            count = ml.strip_tags(new_html).length
+            const newHtml = ml.truncate_html(ml[getter](wysiwyg), limit)
+            ml[setter](wysiwyg, newHtml)
+            count = ml.strip_tags(newHtml).length
           }
         }
         else {
           obj.val(ml.truncate_html(obj.val(), limit))
-          // Re calculate text length
+          // Recalculate text length
           count = ml.strip_tags(obj.val()).length
         }
       }
@@ -112,7 +109,7 @@
   ml.strip_tags = function (input, allowed) {
     // Remove all newlines, spaces and tabs from the beginning and end of html.
     input = $.trim(input)
-    // making the lineendings with two chars
+    // making the line-endings with two chars
     input = ml.twochar_lineending(input)
     // input = input.split(' ').join('');
     // Strips HTML and PHP tags from a string
@@ -123,7 +120,7 @@
     const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
     const commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi
     input = input.replace(commentsAndPhpTags, '').replace(tags, ($0, $1) => {
-      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : ''
+      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '' // eslint-disable-line
     })
 
     // Replace all html entities with a single character (#) placeholder.
@@ -203,10 +200,8 @@
             // the tag name.
             const expectedTagName = tagsOpen.pop()
             if (expectedTagName !== tagName) {
-              /*ignore jslint start*/
               // Should throw an exception, but for the moment just alert.
-              alert('Expected end tag: ' + expectedTagName + '; Found end tag: ' + tagName)
-              /*ignore jslint end*/
+              alert('Expected end tag: ' + expectedTagName + '; Found end tag: ' + tagName) // eslint-disable-line
             }
           }
           break
@@ -236,12 +231,10 @@
     }
     // Restore the open tags that were not closed. This happens when the text
     // got truncated in the middle of one or more html tags.
-    /*ignore jslint start*/
     let tag = ''
-    while (tag = tagsOpen.pop()) {
+    while (tag = tagsOpen.pop()) { // eslint-disable-line
       resultHtml += '</' + tag + '>'
     }
-    /*ignore jslint end*/
     return resultHtml
   }
 
@@ -306,10 +299,9 @@
   ml.ckeditor = function () {
     // Since Drupal.attachBehaviors() can be called more than once, and
     // ml.ckeditor() is being called in maxlength behavior, only run this once.
-    /*ignore jslint start*/
     if (!ml.ckeditorOnce) {
       ml.ckeditorOnce = true
-      CKEDITOR.on('instanceReady', e => {
+      CKEDITOR.on('instanceReady', e => { // eslint-disable-line
         const editor = $('#' + e.editor.name + '.maxlength')
         if (editor.length === 1) {
           ml.options[e.editor.element.getId()].enforce = !!editor.hasClass('maxlength_js_enforce')
@@ -317,22 +309,21 @@
           e.editor.on('key', e => {
             setTimeout(() => {
               ml.ckeditorChange(e)
-            }, 100)
+            }, 100) // eslint-disable-line
           })
           e.editor.on('paste', e => {
             setTimeout(() => {
               ml.ckeditorChange(e)
-            }, 500)
+            }, 500) // eslint-disable-line
           })
           e.editor.on('elementsPathUpdate', e => {
             setTimeout(() => {
               ml.ckeditorChange(e)
-            }, 100)
+            }, 100) // eslint-disable-line
           })
         }
       })
     }
-    /*ignore jslint end*/
   }
   // Invoke ml.calculate() for editor
   ml.ckeditorChange = function (e) {
