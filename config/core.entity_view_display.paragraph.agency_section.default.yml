@@ -3,16 +3,27 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.agency_section.field_agencies
     - field.field.paragraph.agency_section.field_nodes
     - field.field.paragraph.agency_section.field_section_title_list
     - paragraphs.paragraphs_type.agency_section
   module:
+    - entity_reference_revisions
     - options
 id: paragraph.agency_section.default
 targetEntityType: paragraph
 bundle: agency_section
 mode: default
 content:
+  field_agencies:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_nodes:
     type: entity_reference_label
     label: hidden

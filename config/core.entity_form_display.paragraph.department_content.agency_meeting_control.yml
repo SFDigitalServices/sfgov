@@ -1,0 +1,67 @@
+uuid: 9f445f02-6a02-4861-bc60-98495578d263
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.paragraph.agency_meeting_control
+    - field.field.paragraph.department_content.field_department
+    - field.field.paragraph.department_content.field_document
+    - field.field.paragraph.department_content.field_event
+    - field.field.paragraph.department_content.field_link_column_1
+    - field.field.paragraph.department_content.field_link_column_2
+    - field.field.paragraph.department_content.field_meeting
+    - field.field.paragraph.department_content.field_news_content
+    - field.field.paragraph.department_content.field_show_meeting_parent_agency
+    - paragraphs.paragraphs_type.department_content
+  module:
+    - field_group
+third_party_settings:
+  field_group:
+    group_links:
+      children:
+        - field_link_column_1
+        - field_link_column_2
+      label: 'Link Overrides'
+      region: hidden
+      parent_name: ''
+      weight: 6
+      format_type: details
+      format_settings:
+        classes: ''
+        id: ''
+        open: false
+        description: ''
+        required_fields: true
+        formatter: closed
+id: paragraph.department_content.agency_meeting_control
+targetEntityType: paragraph
+bundle: department_content
+mode: agency_meeting_control
+content:
+  field_department:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_show_meeting_parent_agency:
+    type: boolean_checkbox
+    weight: 1
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_document: true
+  field_event: true
+  field_link_column_1: true
+  field_link_column_2: true
+  field_meeting: true
+  field_news_content: true
+  status: true
+  translation: true
