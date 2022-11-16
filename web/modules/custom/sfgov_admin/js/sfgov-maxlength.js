@@ -1,13 +1,16 @@
+// This is copied from maxlength contrib module code.
+// The changes in this allow for it to be attached to the field title.
 (function ($, Drupal) {
   // Make everything local
-  var ml = ml || {}
+  let ml
+  ml = ml || {} // eslint-disable-line
   ml.options = ml.options || {}
 
   Drupal.behaviors.maxlength = {
     attach (context) {
       const $context = $(context)
 
-      if (Drupal.ckeditor != undefined) {
+      if (Drupal.ckeditor !== undefined) {
         ml.ckeditor()
       }
 
@@ -22,7 +25,7 @@
           $this.charCount(options)
         })
     },
-    detach (context, settings) {
+    detach (context) {
       const $context = $(context)
       $context.find('.maxlength').removeOnce('data-maxlength').each(function () {
         $(this).charCount({
@@ -46,12 +49,15 @@
    *  @param count
    *    In case obj.val() wouldn't return the text to count, this should
    *    be passed with the number of characters.
+   *  @param wysiwyg
+   *  @param getter
+   *  @param setter
    */
   ml.calculate = function (obj, options, count, wysiwyg, getter, setter) {
     const counter = $('#' + obj.attr('id') + '-' + options.css)
     const limit = parseInt(obj.attr('data-maxlength'))
 
-    if (count == undefined) {
+    if (count === undefined) {
       count = ml.strip_tags(obj.val()).length
     }
 
@@ -68,16 +74,16 @@
       counter.addClass(options.cssExceeded)
       // Trim text.
       if (options.enforce) {
-        if (wysiwyg != undefined) {
+        if (wysiwyg !== undefined) {
           if (typeof ml[getter] == 'function' && typeof ml[setter] == 'function') {
-            const new_html = ml.truncate_html(ml[getter](wysiwyg), limit)
-            ml[setter](wysiwyg, new_html)
-            count = ml.strip_tags(new_html).length
+            const newHtml = ml.truncate_html(ml[getter](wysiwyg), limit)
+            ml[setter](wysiwyg, newHtml)
+            count = ml.strip_tags(newHtml).length
           }
         }
         else {
           obj.val(ml.truncate_html(obj.val(), limit))
-          // Re calculate text length
+          // Recalculate text length
           count = ml.strip_tags(obj.val()).length
         }
       }
@@ -103,7 +109,7 @@
   ml.strip_tags = function (input, allowed) {
     // Remove all newlines, spaces and tabs from the beginning and end of html.
     input = $.trim(input)
-    // making the lineendings with two chars
+    // making the line-endings with two chars
     input = ml.twochar_lineending(input)
     // input = input.split(' ').join('');
     // Strips HTML and PHP tags from a string
@@ -114,7 +120,7 @@
     const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
     const commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi
     input = input.replace(commentsAndPhpTags, '').replace(tags, ($0, $1) => {
-      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : ''
+      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '' // eslint-disable-line
     })
 
     // Replace all html entities with a single character (#) placeholder.
@@ -126,97 +132,97 @@
    */
   ml.truncate_html = function (text, limit) {
     // The html result after cut.
-    let result_html = ''
+    let resultHtml = ''
     // The text result, that will actually used when counting characters.
-    let result_text = ''
+    let resultText = ''
     // A stack that will keep the tags that are open at a given time.
-    const tags_open = new Array()
-    // making the lineendings with two chars
+    const tagsOpen = []
+    // making the line-endings with two chars
     text = ml.twochar_lineending(text)
-    while (result_text.length < limit && text.length > 0) {
+    while (resultText.length < limit && text.length > 0) {
       switch (text.charAt(0)) {
         case '<': {
-          if (text.charAt(1) != '/') {
-            var tag_name = ''
-            let tag_name_completed = false
-            while (text.charAt(0) != '>' && text.length > 0) {
-              var first_char = text.charAt(0).toString()
+          if (text.charAt(1) !== '/') {
+            let tagName = ''
+            let tagNameCompleted = false
+            while (text.charAt(0) !== '>' && text.length > 0) {
+              const firstChar = text.charAt(0).toString()
               // Until the tag is closed, we do not append anything
               // to the visible text, only to the html.
-              result_html += first_char
+              resultHtml += firstChar
               // Also, check if we have a valid tag name.
-              if (!tag_name_completed && first_char == ' ') {
+              if (!tagNameCompleted && firstChar === ' ') {
                 // We have the tag name, so push it into the stack.
-                tag_name_completed = true
-                tags_open.push(tag_name)
+                tagNameCompleted = true
+                tagsOpen.push(tagName)
               }
               // Check if we are still in the tag name.
-              if (!tag_name_completed && first_char != '<') {
-                tag_name += first_char
+              if (!tagNameCompleted && firstChar !== '<') {
+                tagName += firstChar
               }
               // If we have the combination "/>" it means that the tag
               // is closed, so remove it from the open tags stack.
-              if (first_char == '/' && text.length > 1 && text.charAt(1) == '>') {
-                tags_open.pop()
+              if (firstChar === '/' && text.length > 1 && text.charAt(1) === '>') {
+                tagsOpen.pop()
               }
               // Done with this char, remove it from the original text.
               text = text.substring(1)
             }
-            if (!tag_name_completed) {
+            if (!tagNameCompleted) {
               // In this case we have a tag like "<strong>some text</strong> so
               // we did not have any attributes in the tag, but still, the tag
               // has to be marked as open.
-              tags_open.push(tag_name)
+              tagsOpen.push(tagName)
             }
             // We are here, then the tag is closed, so just remove the
             // remaining ">" character.
             if (text.length > 0) {
-              result_html += text.charAt(0).toString()
+              resultHtml += text.charAt(0).toString()
             }
           }
           else {
             // In this case, we have an ending tag.
             // The name of the ending tag should match the last open tag,
             // otherwise, something is wrong with th html text.
-            var tag_name = ''
-            while (text.charAt(0) != '>' && text.length > 0) {
-              var first_char = text.charAt(0).toString()
-              if (first_char != '<' && first_char != '/') {
-                tag_name += first_char
+            let tagName = ''
+            while (text.charAt(0) !== '>' && text.length > 0) {
+              const firstChar = text.charAt(0).toString()
+              if (firstChar !== '<' && firstChar !== '/') {
+                tagName += firstChar
               }
-              result_html += first_char
+              resultHtml += firstChar
               text = text.substring(1)
             }
             if (text.length > 0) {
-              result_html = result_html + text.charAt(0).toString()
+              resultHtml = resultHtml + text.charAt(0).toString()
             }
             // Pop the last element from the tags stack and compare it with
             // the tag name.
-            const expected_tag_name = tags_open.pop()
-            if (expected_tag_name != tag_name) {
+            const expectedTagName = tagsOpen.pop()
+            if (expectedTagName !== tagName) {
               // Should throw an exception, but for the moment just alert.
-              alert('Expected end tag: ' + expected_tag_name + '; Found end tag: ' + tag_name)
+              alert('Expected end tag: ' + expectedTagName + '; Found end tag: ' + tagName) // eslint-disable-line
             }
           }
           break
         }
         case '&': {
           // Don't truncate in the middle of an html entity count it as 1.
-          entities = text.match(/&([a-z]+);/g)
+          const entities = text.match(/&([a-z]+);/g)
           if (entities) {
-            nextEntity = entities[0]
-            result_html += nextEntity
-            result_text += '#'
+            const nextEntity = entities[0]
+            resultHtml += nextEntity
+            resultText += '#'
             text = text.slice(nextEntity.length - 1)
-            break
           }
+          break
         }
         default: {
           // In this case, we have a character that should also count for the
           // limit, so append it to both, the html and text result.
-          var first_char = text.charAt(0).toString()
-          result_html += first_char
-          result_text += first_char
+          const firstChar = text.charAt(0).toString()
+          resultHtml += firstChar
+          resultText += firstChar
           break
         }
       }
@@ -226,10 +232,10 @@
     // Restore the open tags that were not closed. This happens when the text
     // got truncated in the middle of one or more html tags.
     let tag = ''
-    while (tag = tags_open.pop()) {
-      result_html += '</' + tag + '>'
+    while (tag = tagsOpen.pop()) { // eslint-disable-line
+      resultHtml += '</' + tag + '>'
     }
-    return result_html
+    return resultHtml
   }
 
   $.fn.charCount = function (options) {
@@ -245,10 +251,10 @@
       enforce: false
     }
 
-    var options = $.extend(defaults, options)
+    options = $.extend(defaults, options)
     ml.options[$(this).attr('id')] = options
 
-    if (options.action == 'detach') {
+    if (options.action === 'detach') {
       $(this).removeOnce('data-maxlength')
       $('#' + $(this).attr('id') + '-' + options.css).remove()
       delete ml.options[$(this).attr('id')]
@@ -295,30 +301,25 @@
     // ml.ckeditor() is being called in maxlength behavior, only run this once.
     if (!ml.ckeditorOnce) {
       ml.ckeditorOnce = true
-      CKEDITOR.on('instanceReady', e => {
+      CKEDITOR.on('instanceReady', e => { // eslint-disable-line
         const editor = $('#' + e.editor.name + '.maxlength')
-        if (editor.length == 1) {
-          if (editor.hasClass('maxlength_js_enforce')) {
-            ml.options[e.editor.element.getId()].enforce = true
-          }
-          else {
-            ml.options[e.editor.element.getId()].enforce = false
-          }
+        if (editor.length === 1) {
+          ml.options[e.editor.element.getId()].enforce = !!editor.hasClass('maxlength_js_enforce')
           // Add the events on the editor.
           e.editor.on('key', e => {
             setTimeout(() => {
               ml.ckeditorChange(e)
-            }, 100)
+            }, 100) // eslint-disable-line
           })
           e.editor.on('paste', e => {
             setTimeout(() => {
               ml.ckeditorChange(e)
-            }, 500)
+            }, 500) // eslint-disable-line
           })
           e.editor.on('elementsPathUpdate', e => {
             setTimeout(() => {
               ml.ckeditorChange(e)
-            }, 100)
+            }, 100) // eslint-disable-line
           })
         }
       })

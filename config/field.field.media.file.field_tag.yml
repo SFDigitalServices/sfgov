@@ -1,0 +1,38 @@
+uuid: dd1c8bd3-516f-48b7-94ad-17a30d9e90aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_tag
+    - media.type.file
+    - taxonomy.vocabulary.media_tags
+  module:
+    - datalayer
+    - tmgmt_content
+third_party_settings:
+  datalayer:
+    expose: 0
+    label: field_tag
+  tmgmt_content:
+    excluded: false
+id: media.file.field_tag
+field_name: field_tag
+entity_type: media
+bundle: file
+label: Tag
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      media_tags: media_tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

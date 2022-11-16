@@ -7,23 +7,25 @@ dependencies:
     - media.type.file
   module:
     - allowed_formats
+    - datalayer
     - text
+    - tmgmt_content
 third_party_settings:
   allowed_formats:
-    sf_restricted_html: sf_restricted_html
-    sf_basic_html: sf_basic_html
-    sf_basic_html_news: '0'
-    basic_html: '0'
-    restricted_html: '0'
-    full_html: '0'
-    plain_text: '0'
+    allowed_formats:
+      - sf_restricted_html
+  datalayer:
+    expose: 0
+    label: field_description
+  tmgmt_content:
+    excluded: false
 id: media.file.field_description
 field_name: field_description
 entity_type: media
 bundle: file
 label: Description
 description: 'Full sentence with any keywords not already in the title. Explain any acronyms not already described in title. <a href="https://sfdigitalservices.gitbook.io/style-guide/city-standards">Check the content style guide.</a>'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
