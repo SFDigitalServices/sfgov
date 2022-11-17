@@ -185,7 +185,7 @@ function _translations_outdated(array &$form, $form_state) {
   }
 
   $message =
-    "<span>The following translations have been marked as out of date</span>
+    "<span>The following translations have been marked as out of date:</span>
     <ul>
       $list
     </ul>";
@@ -201,13 +201,14 @@ function sfgov_translation_entity_presave($entity) {
   // When a translation is completed in tmgmt, uncheck the
   // 'translation outdated' field.
   if ($entity instanceof Drupal\tmgmt\Entity\JobItem) {
-      if ($original = $entity->original) {
-      $original_state = $original->get('state')->value;
-      $new_state = $entity->get('state')->value;
+    if ($original = $entity->original) {
+      $original_state = $original->getState();
+      $new_state = $entity->getState();
       // If it went from not accepted to accepted.
-      if ($original_state != 3 && $new_state == 3) {
+      $accepted_state = \Drupal\tmgmt\JobItemInterface::STATE_ACCEPTED;
+      if ($original_state != $accepted_state && $new_state == $accepted_state ) {
         $node_storage = \Drupal::entityTypeManager()->getStorage('node');
-        $node = $node_storage->load($entity->get('item_id')->value);
+        $node = $node_storage->load($entity->getItemId());
         $language = $entity->getJob()->target_language->value;
         $translated_node = $node->getTranslation($language);
         $translated_node->set('translation_outdated', 0);
@@ -215,12 +216,4 @@ function sfgov_translation_entity_presave($entity) {
       }
     }
   }
-}
-
-/**
- * Hide the default translation advanced form so that we can use our own.
- */
-function _sfgov_translation_form_replace($element, $form_state) {
-  $element['content_translation']['#access'] = FALSE;
-  return $element;
 }
