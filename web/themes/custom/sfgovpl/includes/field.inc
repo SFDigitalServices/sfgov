@@ -38,8 +38,16 @@ function sfgovpl_preprocess_field__node__field_related_content(&$variables) {
       // tries to grab a teaser version of the about field, trimmed down to 100
       // characters.
       elseif ($urlObject['entity']->hasField('field_campaign_about')) {
-        $variables['items'][$key]['content'][] = $urlObject['entity']->get('field_campaign_about')
+        $string = $urlObject['entity']->get('field_campaign_about')
           ->view('teaser');
+        // Grab the first <p> section from the content. The field is set to 200
+        // characters to allow for more content, but still needs to be cut into
+        // a summary paragraph. This snippet looks for the first closing p tag a
+        // sets that as the cutoff length.
+        $opening_p_point = strpos($string[0]['#text'], "<p");
+        $closing_p_point = strpos($string[0]['#text'], "</p>")+4;
+        $string[0]['#text'] = substr($string[0]['#text'], $opening_p_point, $closing_p_point);
+        $variables['items'][$key]['content'][] = $string;
       }
     }
   }
