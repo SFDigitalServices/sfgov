@@ -9,9 +9,11 @@ dependencies:
     - field.field.media.file.field_keywords
     - field.field.media.file.field_media_file
     - field.field.media.file.field_published_date
+    - field.field.media.file.field_tag
     - field.field.media.file.field_topic
     - media.type.file
   module:
+    - autocomplete_deluxe
     - datetime
     - file
     - link
@@ -26,13 +28,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 11
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   field_department:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -42,7 +44,7 @@ content:
     third_party_settings: {  }
   field_description:
     type: text_textarea
-    weight: 5
+    weight: 7
     region: content
     settings:
       rows: 5
@@ -50,7 +52,7 @@ content:
     third_party_settings: {  }
   field_document_url:
     type: link_default
-    weight: 3
+    weight: 5
     region: content
     settings:
       placeholder_url: ''
@@ -58,7 +60,7 @@ content:
     third_party_settings: {  }
   field_keywords:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 10
     region: content
     settings:
       match_operator: CONTAINS
@@ -75,13 +77,30 @@ content:
     third_party_settings: {  }
   field_published_date:
     type: datetime_default
-    weight: 4
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_tag:
+    type: autocomplete_deluxe
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      autocomplete_route_name: autocomplete_deluxe.autocomplete
+      size: 60
+      selection_handler: default
+      limit: 10
+      min_length: 0
+      delimiter: ''
+      not_found_message_allow: true
+      not_found_message: 'The term ''@term'' will be added'
+      new_terms: true
+      no_empty_message: 'No terms could be found. Please type in order to add a new term.'
+    third_party_settings: {  }
   field_topic:
     type: entity_reference_autocomplete
-    weight: 7
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -91,7 +110,7 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 9
+    weight: 11
     region: content
     settings:
       include_locked: true
@@ -112,7 +131,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 13
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -123,19 +142,19 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 14
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   translation:
-    weight: 12
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 12
     region: content
     settings:
       match_operator: CONTAINS

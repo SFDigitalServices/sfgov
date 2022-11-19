@@ -139,13 +139,13 @@
               if (phoneField.val().length > 0) {
                 const number = phoneField.val().match(regex).join('')
 
-                if (number.length === 10) {
+                if (number.length === 10) { // eslint-disable-line
                   phoneField.val(
-                    number.slice(0, 3) +
+                    number.slice(0, 3) + // eslint-disable-line
                       '-' +
-                      number.slice(3, 6) +
+                      number.slice(3, 6) + // eslint-disable-line
                       '-' +
-                      number.slice(6)
+                      number.slice(6) // eslint-disable-line
                   )
                 }
               }
