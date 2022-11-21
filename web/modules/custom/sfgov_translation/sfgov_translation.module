@@ -35,29 +35,12 @@ function sfgov_translation_views_data_alter(&$data) {
  */
 function sfgov_translation_views_query_alter($view, $query) {
   if ($view->id() === 'content' && $view->current_display === 'translations') {
-    foreach ($query->where as $key => &$condition_group) {
-      foreach ($condition_group['conditions'] as $key => &$condition) {
-        if ($inputs = $view->getExposedInput()) {
-          // Translated
-          if ($inputs['translation_outdated'] == 0) {
-            if ($condition['field'] === 'node_field_data.default_langcode') {
-              // Toggle default_langcode to filter only translated content.
-              $condition_group['conditions'][$key]['value'] = 0;
-            }
-          }
-          // Translation outdated
-          if ($inputs['translation_outdated'] == '1') {
-            if ($condition['field'] === 'node_field_data.default_langcode') {
-              unset($condition_group['conditions'][$key]);
-            }
-          }
-          // Any
-          if ($inputs['translation_outdated'] == 'All') {
-            if ($condition['field'] === 'node_field_data.default_langcode') {
-              unset($condition_group['conditions'][$key]);
-            }
-          }
-        }
+    $query->addField('node_field_data', 'nid', '', ['function' => 'groupby']);
+    $query->addGroupBy('node_field_data.nid');
+    if ($inputs = $view->getExposedInput()) {
+      // If user selects 'translated', only display content that has a translation.
+      if ($inputs['translation_outdated'] === '0') {
+        $query->addWhere(1, 'node_field_data.langcode', ['es', 'fil', 'zh-hant'], 'IN');
       }
     }
   }

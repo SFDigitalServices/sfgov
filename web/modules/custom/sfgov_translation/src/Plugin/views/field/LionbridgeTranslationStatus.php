@@ -75,7 +75,7 @@ class LionbridgeTranslationStatus extends FieldPluginBase {
   public function render(ResultRow $values) {
     $node = $values->_entity;
     $language_id = $this->options['has_translation'];
-    $nid = $values->nid;
+    $nid = $node->id();
 
     // Translation data.
     $translation_exists = $node->hasTranslation($language_id);
