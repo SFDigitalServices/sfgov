@@ -194,7 +194,12 @@ class MeetingListFiltersForm extends FormBase {
       $agencySections = $agency->field_agency_sections->getValue();
       foreach ($agencySections as $agencySection) {
         $agencySection = Paragraph::load($agencySection['target_id']);
-        $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $agencySection->field_nodes->getValue());
+        $agencyContents = $agencySection->field_agencies->getValue();
+
+        foreach($agencyContents as $ac) {
+          $agencyContent = Paragraph::load($ac['target_id']);
+          $divisionsAndSubcommittees[] = $agencyContent->field_department->getValue()[0];
+        }        
       }
     }
 
