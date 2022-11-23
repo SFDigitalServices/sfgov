@@ -86,7 +86,16 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
 
   foreach ($agencySections as $agencySection) {
     $agencySection = Paragraph::load($agencySection['target_id']);
-    $divisionsOrSubcommittees = array_merge($divisionsOrSubcommittees, array_map(function($item) { return $item['target_id']; }, $agencySection->field_nodes->getValue()));
+    $agencyContents = $agencySection->field_agencies->getValue();
+
+    foreach($agencyContents as $ac) {
+      $agencyContent = Paragraph::load($ac['target_id']);
+      $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
+      
+      if ($showMeetings == true) {
+        $divisionsOrSubcommittees[] = $agencyContent->field_department->getValue()[0]['target_id']; 
+      }
+    }
   }
   
   // pass this agency's id and it's divisions/subcommittees/child agencies ids to the template for rendering meeting blocks

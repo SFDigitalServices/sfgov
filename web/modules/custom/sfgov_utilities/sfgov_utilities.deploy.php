@@ -389,6 +389,7 @@ function sfgov_utilities_deploy_09_dept_include() {
   }
 }
 
+/* if department tagged it's parent, be sure to add the department as a division of parent department */
 function sfgov_utilities_deploy_10_dept_part_of() {
   try {
     $deptNodes = Utility::getNodes('department');
@@ -450,13 +451,24 @@ function sfgov_utilities_deploy_11_dept_div_pb() {
       $divisions = $dept->get('field_divisions')->getValue();
       $publicBodies = $dept->get('field_public_bodies')->getValue();
 
+      $agencyContents = [];
+
       // migrate divisions
       if (!empty($divisions)) {
         // create agency section paragraph with divisions values
+        foreach ($divisions as $division) {
+          $agencyContent = Paragraph::create([
+            "type" => "department_content",
+            "field_department" => $division['target_id']
+          ]);
+          $agencyContents[] = $agencyContent;
+        }
+
         $agencySection = Paragraph::create([
           "type" => "agency_section",
           "field_section_title_list" => "Divisions",
           "field_nodes" => $divisions,
+          "field_agencies" => $agencyContents
         ]);
 
         // append new agency section to divisions and subcommittees field (field_paragraphs)
