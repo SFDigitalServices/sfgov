@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.department.field_about_description
     - field.field.node.department.field_about_or_description
     - field.field.node.department.field_address
+    - field.field.node.department.field_agency_sections
     - field.field.node.department.field_alert_expiration_date
     - field.field.node.department.field_alert_text
     - field.field.node.department.field_archive_date
@@ -13,16 +14,22 @@ dependencies:
     - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
+    - field.field.node.department.field_departments
     - field.field.node.department.field_description
+    - field.field.node.department.field_direct_external_url
     - field.field.node.department.field_divisions
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
+    - field.field.node.department.field_include_in_list
+    - field.field.node.department.field_meeting_archive_date
+    - field.field.node.department.field_meeting_archive_url
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_public_bodies
+    - field.field.node.department.field_public_body_meetings
     - field.field.node.department.field_req_public_records
     - field.field.node.department.field_req_public_records_email
     - field.field.node.department.field_req_public_records_link
@@ -75,6 +82,15 @@ content:
       link: true
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_agency_sections:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: agency_content_agency_title_only
+      link: ''
+    third_party_settings: {  }
+    weight: 29
     region: content
   field_alert_expiration_date:
     type: datetime_default
@@ -131,6 +147,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_departments:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 30
+    region: content
   field_description:
     type: smart_trim
     label: hidden
@@ -149,6 +173,18 @@ content:
         trim_zero: false
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_direct_external_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 33
     region: content
   field_divisions:
     type: entity_reference_label
@@ -185,6 +221,37 @@ content:
     third_party_settings: {  }
     weight: 21
     region: content
+  field_include_in_list:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 28
+    region: content
+  field_meeting_archive_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 31
+    region: content
+  field_meeting_archive_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 32
+    region: content
   field_parent_department:
     type: entity_reference_label
     label: above
@@ -219,6 +286,15 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 13
+    region: content
+  field_public_body_meetings:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: department_paragraph
+      link: ''
+    third_party_settings: {  }
+    weight: 27
     region: content
   field_req_public_records:
     type: list_default
