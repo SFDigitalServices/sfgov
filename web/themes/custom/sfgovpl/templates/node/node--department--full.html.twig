@@ -68,266 +68,199 @@
 {{ content.content_moderation_control }}
 
 {% set description = node.get('field_description').getValue()[0]['value'] %}
-{% set divisionIds = division_ids|join(',') %} {# refer to web/themes/custom/sfgovpl/includes/node.inc, sfgovpl_preprocess_node__department__full #}
 
-{# these meeting views take two arguments #}
-{# argument 0 - the current node's id, for generating a proper "more" link in the view #}
-{# argument 1 - the current nodes's divisions/subcommittees id's, if any, for displaying the divisions/subcommittees meetings  #}
-{%
-  set meetings_block = {
-    upcoming: {
-      render: drupal_view('meetings', 'block_upcoming', node.id, divisionIds),
-      result: drupal_view_result('meetings', 'block_upcoming', node.id, divisionIds)
-    },
-    past: {
-      render: drupal_view('meetings', 'block_past', node.id, divisionIds),
-      result: drupal_view_result('meetings', 'block_past', node.id, divisionIds)
-    }
-  }
-%}
-
-{% set partOf = ('Part of ' | t) %}
-
-<div class="responsive-container mx-auto px-20 xl:px-0">
-  {% embed '@theme/hero-banner.twig' with {
-    'banner': {
-      'title': node.label,
-      'text': node.field_description.value,
-      'label': drupal_view('departments', 'agency_part_of_agencies', node.id),
-      'logo': {
-        'src': file_url(node.field_image.entity.field_media_image.entity.uri.value),
-        'alt': node.field_image.entity.field_media_image.alt
+<div class="sfds-layout-container">
+  <div class="sfds-responsive-container">
+    {% embed '@theme/hero-banner-default.twig' with {
+      'banner': {
+        'title': node.label,
+        'text': node.field_description.value
       }
-    }
-  } %}
+    } %}
 
+      {% block logo %}
+        {% if content.field_image|render|striptags %}
+          <div class="hero-banner--logo">
+            {{ content.field_image }}
+          </div>
+        {% endif %}
+      {% endblock logo %}
 
-    {% block logo %}
-      {% if content.field_image|render|striptags %}
-        <div class="hero-banner--logo text-center w-1/4 mb-20 lg:mb-0">
-          {{ content.field_image }}
-        </div>
-      {% endif %}
-    {% endblock logo %}
+    {% endembed %}
 
-  {% endembed %}
+  </div>
+</div>
 
+<div id="sfgov-dept-in-this-page" class="sfgov-dept-in-this-page sfds-layout-container mb-40">
+  <div class="sfgov-dept-in-this-page-container sfds-responsive-container">
+    <div class="sfgov-dept-in-this-page-label">{{ 'In this page'|t }}:</div>
+    <ul></ul>
+  </div>
 </div>
 
 {# Alert #}
 {% include '@theme/alert.twig' with {
   date_exp: node.field_alert_expiration_date.0.value,
   style: 'department',
-  bgClass: 'bg-yellow-3'
 } %}
 
-<div>
-  {% if content.field_spotlight2['#items'].getValue() %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="responsive-container mx-auto px-20 xl:px-0">
-        {{ content.field_spotlight2 }}
-      </div>
+{% if content.field_spotlight2['#items'].getValue() %}
+  <div class="sfgov-full-bleed padding-zero bg-grey-1 sfgov-spotlight-container">
+    <div class="sfgov-section-container">
+      {{ content.field_spotlight2 }}
     </div>
-  {% endif %}
+  </div>
+{% endif %}
 
-  {% if content.field_featured_items|render|trim %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="responsive-container responsive-grid grid-cols-1 lg:grid-cols-3">
-        {% for target in content.field_featured_items|field_target_entity %} {# this relies on the twig_field_value module #}
-          {% include "@theme/featured-item.twig" with {
-            "title": target.field_feature_title.value,
-            "url": target.field_feature_link.uri,
-            "description": target.field_description.value
-          } %}
-        {% endfor %}
-      </div>
+{{ content.field_featured_items }}
+
+{% if content.field_department_services['#items'].getValue() %}
+  <a name="services"></a>
+  <div id="sfgov-dept-services" class="sfgov-full-bleed light-blue card-container">
+    <div class="sfgov-section-container">
+      {{ content.field_department_services }}
     </div>
-  {% endif %}
+  </div>
+{% endif %}
 
-  {% set hasMeetingMeta = false %}
-  {% if content.field_public_body_meetings|render %}
-    {% set hasMeetingMeta = true %}
-  {% endif %}
+{% if content.field_spotlight['#items'].getValue() %}
+  <div class="sfgov-full-bleed padding-zero sfgov-spotlight-container">
+    <div class="sfgov-section-container">
+      {{ content.field_spotlight }}
+    </div>
+  </div>
+{% endif %}
 
-  {% if (meetings_block.past.result is not empty) or (meetings_block.upcoming.result is not empty) or hasMeetingMeta is not empty %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      {% if hasMeetingMeta %}
-        <div class="responsive-container">
-          {{ content.field_public_body_meetings }}
-        </div>
+{% set news_view = drupal_view('news', 'news_block_depts', node.id)|render  %}
+{%  if news_view|striptags|trim %}
+  <a name="news"></a>
+  <div id="sfgov-dept-news" class="sfgov-full-bleed light-yellow">
+    <div class="sfgov-section-container">
+      {{ news_view }}
+    </div>
+  </div>
+{% endif %}
+
+{% set events_view = drupal_view('events', 'block_1', node.id)|render %}
+{% if events_view|striptags|trim %}
+  <a name="events"></a>
+  <div id="sfgov-dept-events" class="sfgov-full-bleed white">
+    <div class="sfgov-section-container">
+      {{ events_view }}
+    </div>
+  </div>
+{% endif %}
+
+{% if content.field_resources['#items'].getValue() %}
+  <a name="resources"></a>
+  <div id="sfgov-dept-resources" class="sfgov-full-bleed light-blue">
+    <div class="sfgov-section-container">
+      {{ content.field_resources }}
+    </div>
+  </div>
+{% endif %}
+
+{% set hasAboutSection = false %}
+{% set numPublicBodies = content.field_public_bodies['#items']|length %}
+{% set numDivisions = content.field_divisions['#items']|length %}
+
+{% if content.field_about_or_description|render|striptags
+  or about_page_link
+  or content.field_parent_department|render|striptags
+  or content.field_image|render|striptags
+  or content.field_call_to_action|render|striptags
+  or content.field_social_media|render|striptags
+  or numPublicBodies > 0
+  or numDivisions > 0
+%}
+  {% set hasAboutSection = true %}
+{% endif %}
+
+{% if hasAboutSection %}
+  <a name="about"></a>
+  <div class="bg-blue-dark py-40 lg:py-60">
+    <div class="sfgov-dept-about">
+      <h2 class="text-white text-title-xl m-0 mb-40 lg:mb-28 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
+      {# parent department / part of #}
+      {% if node.field_parent_department.0 is not empty %}
+        <h3 class="text-white text-body font-medium m-0 mb-28">
+          {{ node.field_parent_department.fieldDefinition.label | t }}:
+          <a class="text-white font-regular" href="{{ path('entity.node.canonical', {'node': node.field_parent_department.entity.nid.value}) }}">
+            {{ node.field_parent_department.entity.title.value }}
+          </a>
+        </h3>
       {% endif %}
-      {% if meetings_block.upcoming.result is not empty or  meetings_block.past.result is not empty %}
-        <div class="responsive-container py-40 lg:py-60">
-          {% if hasMeetingMeta is empty %}
-            <h2 class="p-0 m-0 lg:mb-40 lg:text-title-xl-desktop">{{ 'Meetings' | t }}</h2>
-          {% endif %}
-          {% if meetings_block.upcoming.result is not empty %}
-            <h3 class="m-0 mb-28 lg:text-title-md-desktop">{{ 'Upcoming meetings' | t }}</h3>
-            <div class="mb-40">
-              {{ meetings_block.upcoming.render }}
+      <div class="lg:flex">
+        <div class="text-white text-big-desc-mobile lg:text-big-desc-desktop lg:w-2/3"> {# left hand side #}
+          {# about description #}
+          {% if content.field_about_or_description|render|striptags %}
+            <div class="mb-24 lg:mb-60">
+              {{ content.field_about_or_description | raw }}
             </div>
           {% endif %}
 
-          {% if meetings_block.past.result is not empty %}
-            <h3 class="m-0 mb-28 lg:text-title-md-desktop">{{ 'Past meetings' | t }}</h3>
-            <div class="mb-40">
-              {{ meetings_block.past.render }}
+          {# this element and text is hard coded in a custom module #}
+          {# it's presence is determined by the existence of an about page for the node referenced in field_parent_department #}
+          {# @see web/modules/custom/sfgov_about/sfgov_about.module #}
+          {% if about_page_link %}
+            <div class="mb-60">
+              {% include "@sfgov-design-system/button/link.twig" with {
+                "href": about_page_link['#url'],
+                "text": about_page_link['#title'],
+                "classes": ['btn-inverse']
+              } %}
+            </div>
+          {% endif %}
+
+          {# divisions and public bodies #}
+          {% if content.field_divisions|render|striptags|trim or content.field_public_bodies|render|striptags|trim %}
+            <div class="mb-60">
+              {# divisions #}
+              {{ content.field_divisions }}
+
+              {# public bodies #}
+              {{ content.field_public_bodies }}
             </div>
           {% endif %}
         </div>
-      {% endif %}
-    </div>
-  {% endif %}
 
-  {% if content.field_department_services['#items'].getValue() %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="responsive-container">
-        {{ content.field_department_services }}
-      </div>
-    </div>
-  {% endif %}
+        <div class="text-white flex flex-col-reverse lg:block lg:flex-none lg:w-1/3 lg:pl-60"> {# right hand side #}
+          {# social media #}
+          {% if content.field_social_media|render|striptags %}
+            <div class="social-media">
+              {{ content.field_social_media }}
+            </div>
+          {% endif %}
 
-  {% if content.field_spotlight['#items'].getValue() %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="responsive-container">
-        {{ content.field_spotlight }}
-      </div>
-    </div>
-  {% endif %}
-
-  {% set news_view = drupal_view('news', 'news_block_depts', node.id)|render  %}
-  {%  if news_view|striptags|trim %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="responsive-container">
-        {{ news_view }}
-      </div>
-    </div>
-  {% endif %}
-
-  {% set events_view = drupal_view('events', 'block_1', node.id)|render %}
-  {% if events_view|striptags|trim %}
-    <div class="odd:bg-grey-1 py-40 lg:py-60">
-      <div class="responsive-container">
-        {{ events_view }}
-      </div>
-    </div>
-  {% endif %}
-
-  {% set hasAboutSection = "false" %}
-  {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) ? "true" : "false" %}
-
-  {% if content.field_about_or_description|render|striptags
-    or about_page_link
-    or content.field_call_to_action|render|striptags
-    or content.field_social_media|render|striptags
-    or content.field_departments|render|striptags
-    or hasAgencySection != "false"
-  %}
-    {% set hasAboutSection = "true" %}
-  {% endif %}
-
-  {% if content.field_resources['#items'].getValue() %}
-    {% set resourcesSpacing = "py-40 lg:py-60" %}
-    {% if hasAboutSection == "false" %}
-      {% set resourcesSpacing = "pt-40 pb-0 lg:pt-60 lg:pb-0" %}
-    {% endif %}
-    <div class="odd:bg-grey-1 {{ resourcesSpacing }}">
-      <div class="responsive-container">
-        {{ content.field_resources }}
-      </div>
-    </div>
-  {% endif %}
-
-  {% if hasAboutSection != "false" %}
-    <div class="sfgov-dept-about bg-blue-dark py-40 lg:py-60">
-      <div class="responsive-container">
-        <h2 class="text-white text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ node.field_about_or_description.fieldDefinition.label | t }}</h2>
-        <div class="lg:flex">
-          <div class="text-white text-big-desc-mobile lg:text-big-desc-desktop lg:w-2/3"> {# left hand side #}
-            {# about description #}
-            {% if content.field_about_or_description|render|striptags %}
-              <div class="mb-24 lg:mb-60">
-                {{ content.field_about_or_description | raw }}
-              </div>
-            {% endif %}
-
-            {# this element and text is hard coded in a custom module #}
-            {# it's presence is determined by the existence of an about page for the node referenced in field_parent_department #}
-            {# @see web/modules/custom/sfgov_about/sfgov_about.module #}
-            {% if about_page_link %}
-              <div class="mb-60">
-                {% include "@sfgov-design-system/button/link.twig" with {
-                  "href": about_page_link['#url'],
-                  "text": about_page_link['#title'],
-                  "classes": ['btn-inverse']
-                } %}
-              </div>
-            {% endif %}
-
-            {% if hasAgencySection or content.field_departments|render|striptags|trim %}
-              <div class="responsive-grid grid-cols-1 gap-40 mb-60">
-                {# agency sections (divisions) #}
-                {% if hasAgencySection %}
-                  {{ content.field_agency_sections }}
-                {% endif %}
-
-                {# related agencies #}
-                {% if content.field_departments|render|striptags|trim %}
-                  <div>
-                    <p class="text-title-xs font-medium m-0 mb-24">{{ content.field_departments['#title'] }}</p>
-                    <ul class="responsive-grid gap-y-20 list-none p-0 m-0 grid-cols-1 lg:grid-cols-2">
-                    {% for key, item in content.field_departments if key|first != '#' %}
-                      <li class="text-body"><a class="text-inherit" href="{{ item["#url"] }}">{{ item["#title"] }}</a></li>
-                    {% endfor %}
-                    </ul>
-                  </div>
-                {% endif %}
-              </div>
-            {% endif %}
-          </div>
-
-          <div class="text-white flex flex-col-reverse lg:block lg:flex-none lg:w-1/3 lg:pl-60"> {# right hand side #}
-            {# social media #}
-            {% if content.field_social_media|render|striptags %}
-              <div class="social-media">
-                {{ content.field_social_media }}
-              </div>
-            {% endif %}
-
-            {# call to action #}
-            {% if content.field_call_to_action|render|striptags|trim %}
-              <div class="mb-60 lg:mb-0">
-                {{ content.field_call_to_action }}
-              </div>
-            {% endif %}
-          </div>
+          {# call to action #}
+          {% if content.field_call_to_action|render|striptags|trim %}
+            <div class="mb-60 lg:mb-0">
+              {{ content.field_call_to_action }}
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
-  {% endif %}
+  </div>
+{% endif %}
 
-  {% set hasPeople = content.field_people|render|striptags|trim %}
-  {% if hasPeople %}
-    <div class="py-40 lg:py-60">
-      <div class="responsive-container rounded">
-        <div class="px-20 py-60 bg-blue-1 rounded lg:p-60">
-          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ 'People' | t }}</h2>
-          {{ content.field_people }}
-        </div>
-      </div>
-    </div>
-  {% endif %}
+{% if content.field_people|render %}
+  <div class="sfgov-dept-about-people my-80">
+    {{ content.field_people }}
+  </div>
+{% endif %}
 
-  {% set hasAddress = content.field_address['#items'] is not empty %}
-  {% set hasPhone = content.field_phone_numbers['#items'] is not empty %}
-  {% set hasEmail = content.field_email['#items'] is not empty %}
-  {% set hasContact = hasAddress or hasPhone or hasEmail %}
+{% set hasAddress = content.field_address['#items'] is not empty %}
+{% set hasPhone = content.field_phone_numbers['#items'] is not empty %}
+{% set hasEmail = content.field_email['#items'] is not empty %}
 
-  {% if hasContact %}
-    <div class="py-40 lg:py-60">
-      <div class="responsive-container">
-        <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ 'Contact'|t }}</h2>
-        <div class="grid gap-20 lg:grid-cols-3">
+{% if hasAddress or hasPhone or hasEmail %}
+  <div id="sfgov-dept-contact" class="sfgov-dept-contact sfds-layout-container my-80">
+    <a name="contact"></a>
+    <div class="sfgov-dept-contact-content sfds-responsive-container">
+      <div class="sfgov-contact-container">
+        <h2 class="dept-heading--section">{{ 'Contact'|t }}</h2>
+        <div class="sfgov-dept-section-content-container">
           {% if hasAddress %}
             <div class="sfgov-contact-section address">
               {{ content.field_address }}
@@ -335,107 +268,103 @@
           {% endif %}
           {% if hasPhone %}
             <div class="sfgov-contact-section phone-numbers">
-              <p class="flex font-medium mb-20 text-title-xs lg:text-title-xs-desktop">
-                <sfgov-icon class="mr-20" symbol="phone"></sfgov-icon>
-                <span>{{ 'Phone'|t }}</span>
-              </p>
+              <p class="sfgov-contact-section-title">{{ 'Phone'|t }}</p>
               {{ content.field_phone_numbers }}
             </div>
           {% endif %}
           {% if hasEmail %}
             <div class="sfgov-contact-section email">
-              <p class="flex font-medium mb-20 text-title-xs lg:text-title-xs-desktop">
-                <sfgov-icon class="mr-20" symbol="mail"></sfgov-icon>
-                <span>{{ 'Email'|t }}</span>
-              </p>
+              <p class="sfgov-contact-section-title">{{ 'Email'|t }}</p>
               {{ content.field_email }}
             </div>
           {% endif %}
         </div>
       </div>
     </div>
-  {% endif %}
+  </div>
+{% endif %}
 
-  {% set hasPublicRecordsLink = content.field_req_public_records_link['#items'] is not empty %}
-  {% set hasPublicRecordsEmail = content.field_req_public_records_email['#items'] is not empty %}
-  {% set hasPublicRecordsPhone = content.field_req_public_records_phone['#items'] is not empty %}
-  {% set hasArchiveUrl = content.field_archive_url['#items'] is not empty %}
-  {% set hasArchiveDate = content.field_archive_date['#items'] is not empty %}
+{% set hasPublicRecordsLink = content.field_req_public_records_link['#items'] is not empty %}
+{% set hasPublicRecordsEmail = content.field_req_public_records_email['#items'] is not empty %}
+{% set hasPublicRecordsPhone = content.field_req_public_records_phone['#items'] is not empty %}
+{% set hasArchiveUrl = content.field_archive_url['#items'] is not empty %}
+{% set hasArchiveDate = content.field_archive_date['#items'] is not empty %}
 
-  {% set publicRecordsMethod = content.field_req_public_records|render|striptags|trim|lower %}
-  {% set publicRecordsLink = content.field_req_public_records_link|render|striptags|trim %}
-  {% set publicRecordsEmail = content.field_req_public_records_email|render|striptags|trim %}
-  {% set publicRecordsPhone = content.field_req_public_records_phone|render|striptags|trim %}
+{% set publicRecordsMethod = content.field_req_public_records|render|striptags|trim|lower %}
+{% set publicRecordsLink = content.field_req_public_records_link|render|striptags|trim %}
+{% set publicRecordsEmail = content.field_req_public_records_email|render|striptags|trim %}
+{% set publicRecordsPhone = content.field_req_public_records_phone|render|striptags|trim %}
 
-  {% if (hasPublicRecordsLink and publicRecordsMethod == "link")
-    or (hasPublicRecordsEmail and publicRecordsMethod == "email")
-    or (hasPublicRecordsPhone and publicRecordsMethod == "phone")
-    or hasArchiveUrl %}
-      {% set classes = "" %}
-      {% if hasPeople is empty and hasContact is empty %}
-        {% set classes = "mt-40 lg:mt-60" %}
-      {% endif %}
-      <div class="responsive-container rounded bg-blue-1 p-20 mb-40 lg:p-40 lg:mb-60 {{ classes }}">
-          <div class="lg:flex">
+{% if (hasPublicRecordsLink and publicRecordsMethod == "link")
+  or (hasPublicRecordsEmail and publicRecordsMethod == "email")
+  or (hasPublicRecordsPhone and publicRecordsMethod == "phone")
+  or hasArchiveUrl %}
+  <div class="sfgov-dept-section sfgov-dept-public-records sfds-layout-container">
+    <div class="sfgov-dept-public-records-content-container sfds-responsive-container">
+      <div class="sfgov-dept-public-records-content">
+        <div class="lg:flex">
 
-            {% if (hasPublicRecordsLink and publicRecordsMethod == "link")
-              or (hasPublicRecordsEmail and publicRecordsMethod == "email")
-              or (hasPublicRecordsPhone and publicRecordsMethod == "phone") %}
+          {% if (hasPublicRecordsLink and publicRecordsMethod == "link")
+            or (hasPublicRecordsEmail and publicRecordsMethod == "email")
+            or (hasPublicRecordsPhone and publicRecordsMethod == "phone") %}
 
-              {% set class = hasArchiveUrl ? 'lg:w-1/2 pb-28 lg:pb-0 lg:pr-28' : '' %}
+            {% set class = hasArchiveUrl ? 'lg:w-1/2 pb-28 lg:pb-0 lg:pr-28' : '' %}
+            {% set title = 'Request public records'|t %}
 
-              <div class="{{ class }}">
-                <p class="font-medium text-big-desc mb-8">{{ 'Request public records'|t }}</p>
-                {% if publicRecordsMethod == "phone" %}
+            <div class="{{ class }}">
+              {% if publicRecordsMethod == "phone" %}
 
-                  {# Print the phone info only if method is phone and phone is not empty #}
-                  {% if hasPublicRecordsPhone %}
-                    <p class="text-body"><a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}</p>
-                  {% endif %}
-
-                {% elseif publicRecordsMethod == "email" %}
-
-                  {# Print the email info only if method is email and email is not empty #}
-                  {% if hasPublicRecordsEmail %}
-                    <p class="text-body"><a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}</p>
-                  {% endif %}
-
-                {% elseif publicRecordsMethod == "link" %}
-
-                  {# Print the link info only if method is link and link is not empty #}
-                  {% if hasPublicRecordsLink %}
-                    <p class="text-body">{% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}</p>
-                  {% endif %}
-
-                {% else %}
-                  {# do nothing #}
+                {# Print the phone info only if method is phone and phone is not empty #}
+                {% if hasPublicRecordsPhone %}
+                  <p class="title">{{ title }}</p>
+                  <p><a href="tel:{{ publicRecordsPhone }}">{% trans %}Call {{ publicRecordsPhone }}</a> to submit a request.{% endtrans %}</p>
                 {% endif %}
-              </div>
-            {% endif %}
 
-            {% if hasArchiveUrl %}
-              {% set class = hasPublicRecordsLink or hasPublicRecordsPhone or hasPublicRecordsEmail ? 'lg:w-1/2 lg:pl-28' : '' %}
-              <div class="{{ class }}">
-                <p class="font-medium text-big-desc mb-8">{{ 'Archived website'|t }}</p>
-                <p class="text-body">
-                  {% set url = content.field_archive_url.0['#url']|render %}
-                  {% set text = 'See previous website'|t %}
+              {% elseif publicRecordsMethod == "email" %}
 
-                  {% if hasArchiveDate %}
-                    {% set date = content.field_archive_date|render|striptags|trim %}
-                    <a target="_blank" href="{{ url }}">{{ text }}</a> {{ 'archived @date.'|trans({'@date': date}) }}
-                  {% else %}
-                    <a target="_blank" href="{{ url }}">{{ text }}</a>.
-                  {% endif %}
+                {# Print the email info only if method is email and email is not empty #}
+                {% if hasPublicRecordsEmail %}
+                  <p class="title">{{ title }}</p>
+                  <p><a href="mailto:{{ publicRecordsEmail }}">{% trans %}Email {{ publicRecordsEmail }}</a> to submit a request.{% endtrans %}</p>
+                {% endif %}
 
-                </p>
-              </div>
-            {% endif %}
+              {% elseif publicRecordsMethod == "link" %}
 
-          </div>
+                {# Print the link info only if method is link and link is not empty #}
+                {% if hasPublicRecordsLink %}
+                  <p class="title">{{ title }}</p>
+                  <p>{% trans %}<a href="{{ publicRecordsLink }}">Submit requests</a> for the {{ node.getTitle() }}.{% endtrans %}</p>
+                {% endif %}
+
+              {% else %}
+                {# do nothing #}
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if hasArchiveUrl %}
+            {% set class = hasPublicRecordsLink or hasPublicRecordsPhone or hasPublicRecordsEmail ? 'lg:w-1/2 lg:pl-28' : '' %}
+            <div class="{{ class }}">
+              <p class="title">{{ 'Archived website'|t }}</p>
+              <p>
+                {% set url = content.field_archive_url.0['#url']|render %}
+                {% set text = 'See previous website'|t %}
+
+                {% if hasArchiveDate %}
+                  {% set date = content.field_archive_date|render|striptags|trim %}
+                  <a target="_blank" href="{{ url }}">{{ text }}</a> {{ 'archived @date.'|trans({'@date': date}) }}
+                {% else %}
+                  <a target="_blank" href="{{ url }}">{{ text }}</a>.
+                {% endif %}
+
+              </p>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
     </div>
-  {% endif %}
-</div>
+  </div>
+{% endif %}
 
 {{ attach_library('sfgovpl/sfgov-dept-homepage') }}
-{{ attach_library('sfgov_utilities/services') }}

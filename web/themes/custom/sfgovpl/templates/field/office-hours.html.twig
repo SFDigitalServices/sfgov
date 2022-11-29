@@ -1,22 +1,22 @@
 {#
 /**
-* @file
-* Template override for 'office hours' formatter, used by field_operating_hours
-* on Location entity, Address (physical) bundle.
-*/
+ * @file
+ * Template override for 'office hours' formatter, used by field_operating_hours
+ * on Location entity, Address (physical) bundle.
+ */
 #}
-<div class="text-body">
-  {% for item in items %}
-    <p>
-      <span>{{ item.label | replace({':':',', '-':'to'}) }}</span>
-      <span>{{ item.slots["#markup"] | replace({'-': 'to'}) }}</span>
-      <span>{{ item.comments }}</span>
-      <br />
-    </p>
-  {% endfor %}
-  {% if schema %}
-    {% for meta in schema %}
-      <meta property="openingHours" content="{{ meta.label }}{{ meta.slots }}">
+<div>
+    {% for item in items %}
+        <p>
+            <span>{{ item.label | replace({':':',', '-':'to'}) }}</span>
+            <span>{{ item.slots["#markup"] | replace({'-': 'to'}) }}</span>
+            <span>{{ item.comments }}</span>
+            <br />
+        </p>
     {% endfor %}
-  {% endif %}
+    {% if schema %}
+        {% for meta in schema %}
+            <meta property="openingHours" content="{{ meta.label }}{{ meta.slots }}">
+        {% endfor %}
+    {% endif %}
 </div>
