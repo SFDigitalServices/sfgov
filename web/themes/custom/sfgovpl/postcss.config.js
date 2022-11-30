@@ -4,7 +4,6 @@ const purgeReporter = require('./lib/postcss/purgecss-reporter')
 module.exports = {
   syntax: 'postcss-scss',
   plugins: [
-    require('tailwindcss'),
     require('postcss-import')({
       filter: path => path.endsWith('.css')
     }),

@@ -79,32 +79,6 @@ function sfgovpl_preprocess_node(&$variables) {
 /**
  * Implements hook_preprocess_node().
  */
-function sfgovpl_preprocess_node__department__full(&$variables) {
-  $node = $variables['node'];
-  $agencySections = $node->get('field_agency_sections')->getValue();
-  $divisionsOrSubcommittees = [$node->id()];
-
-  foreach ($agencySections as $agencySection) {
-    $agencySection = Paragraph::load($agencySection['target_id']);
-    $agencyContents = $agencySection->field_agencies->getValue();
-
-    foreach($agencyContents as $ac) {
-      $agencyContent = Paragraph::load($ac['target_id']);
-      $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
-      
-      if ($showMeetings == true) {
-        $divisionsOrSubcommittees[] = $agencyContent->field_department->getValue()[0]['target_id']; 
-      }
-    }
-  }
-  
-  // pass this agency's id and it's divisions/subcommittees/child agencies ids to the template for rendering meeting blocks
-  $variables['division_ids'] = $divisionsOrSubcommittees;
-}
-
-/**
- * Implements hook_preprocess_node().
- */
 function sfgovpl_preprocess_node__meeting__full(&$variables) {
   $node = $variables['node'];
 
