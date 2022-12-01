@@ -40,12 +40,16 @@
   set classes = [
     'field',
     'field--type-' ~ field_type|clean_class,
-    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class
+    label_display == 'inline' ? 'field--inline',
+    bundle|clean_class ~ '__' ~ field_name|replace({'field_' : ''})|clean_class,
+    'content-type-field'
   ]
 %}
-
-<div{{ attributes.addClass(classes, 'utility classes') }}>
-  <div class="flex flex-col gap-20 lg:flex-row">
+<!-- 
+  TODO: use design system grid when available and get rid of .sfgov-full-bleed and sfgov-section-container
+-->
+<div class="sfgov-full-bleed sfgov-quick-links p-0 mb-60">
+  <div class="sfgov-section-container flex flex-col gap-20 lg:flex-row">
     {% for item in items %}
         {{ item.content }}
     {% endfor %}

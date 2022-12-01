@@ -7,7 +7,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\query\QueryPluginBase;
 
 /**
  * Implements hook_theme().
@@ -67,40 +66,6 @@ function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     $form['buttons']['save']['#validate'][] = 'sfgov_admin_custom_validate';
   }
-
-  if ($form_id == 'node_meeting_form' || $form_id == 'node_meeting_edit_form') {
-    $form['#validate'][] = '_sfgov_admin_meeting_validate';
-  }
-}
-
-// custom validation for meeting content type
-function _sfgov_admin_meeting_validate(&$form, FormStateInterface $form_state) {
-  // change the error message for field_public_body
-  $publicBodyValue = $form_state->getValue('field_public_body');
-  $hasPublicBodyValue = false;
-  
-  foreach ($publicBodyValue as $item) {
-    if (is_array($item) && !empty($item['target_id'])) {
-      $hasPublicBodyValue = true;
-      break;
-    }
-  }
-
-  if ($hasPublicBodyValue == false) {
-    // preserve current form_state errors
-    $formErrors = $form_state->getErrors();
-
-    // clear all form_state errors
-    $form_state->clearErrors();
-
-    // alter field_public_body error message in saved form_state errors
-    $formErrors['field_public_body'] = t('Please tag the associated agency(s) to the the meeting page.');
-    
-    // re-apply error states and messages
-    foreach ($formErrors as $name => $errorMessage) {
-      $form_state->setErrorByName($name, $errorMessage);
-    }
-  }  
 }
 
 function sfgov_admin_custom_validate($form, &$form_state) {
@@ -217,34 +182,6 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
   /** @var \Drupal\field\Entity\FieldConfig $field_definition */
   $field_definition = $context['items']->getFieldDefinition();
   $paragraph_entity_reference_field_name = $field_definition->getName();
-
-  if ($paragraph_entity_reference_field_name == 'field_agency_sections') {
-    $paragraphType = $element['#paragraph_type'];
-    
-    if ($paragraphType == 'agency_section') {
-      $delta = $element['#delta'];
-      $selector = "select[name='field_agency_sections[$delta][subform][field_section_title_list]']";
-
-      // display the agency list based on the value of the selected title
-      $element['subform']['field_nodes']['#states'] = [
-        'visible' => [
-          $selector => [
-            ['value' => 'Divisions'],
-            ['value' => 'Subcommittees']
-          ]
-        ]
-      ];
-
-      $element['subform']['field_agencies']['#states'] = [
-        'visible' => [
-          $selector => [
-            ['value' => 'Divisions'],
-            ['value' => 'Subcommittees']
-          ]
-        ]
-      ];
-    }
-  }
 
   if ($paragraph_entity_reference_field_name == 'field_cost') {
     /** @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::formElement() */
@@ -630,6 +567,7 @@ function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\F
     }
   }
   if ($foundAsChild) {
+    error_log(print_r($parentTopics, 1));
     $form['field_top_level_topic']['widget']['value']['#description'] = t('This Topic cannot be top level because it is a child topic of the following: ' . implode(', ', $parentTopics));
     $form['field_top_level_topic']['widget']['value']['#attributes']['disabled'] = 'disabled';
   }
@@ -702,40 +640,6 @@ function sfgov_admin_views_pre_view(ViewExecutable $view) {
     $filters = $view->getDisplay()->getOption('filters');
     $filters["langcode"]["value"] = ["en"];
     $view->display_handler->overrideOption('filters', $filters);
-  }
-}
-
-/**
- * Implements hook_views_query_alter
- */
-function sfgov_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  // the admin content view
-  if ($view->id() == 'content' && $view->current_display == 'page_1') {
-    $relatedDepartmentFilterValue = '';
-
-    // get the exposed filter value for related department
-    foreach ($query->where as $conditionGroup) {
-      foreach ($conditionGroup['conditions'] as $condition) {
-        if ($condition['field'] == 'node__field_departments.field_departments_target_id') {
-          $relatedDepartmentFilterValue = $condition['value'][0];
-          break;
-        }
-      }
-    }
-
-    // add a condition to also include the related department filter value in the results
-    if (!empty($relatedDepartmentFilterValue)) {
-      $query->addWhere(count($query->where)+1, '"node_field_data"."nid"', $relatedDepartmentFilterValue, '=');
-    }
-  }
-
-  // the meetings blocks past and and upcoming meetings generate a more link based on the contextual filter ids
-  // if there are multiple ids, the more link isn't formed correctly and the more links will error out
-  // adding an additional contextual filter will default the where conditions to 'AND'
-  // we need to change the contextual filter type to use 'OR' so the query will use the first argument for the more link
-  // and the second argument for retrieving relevant meetings
-  if ($view->id() == 'meetings' && ($view->current_display == 'block_past' || $view->current_display == 'block_upcoming')) {
-    $query->where[0]['type'] = 'OR';
   }
 }
 

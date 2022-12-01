@@ -42,11 +42,10 @@
 {{ attach_library('sfgov_utilities/services') }}
 
 {% if paragraph.field_title.0.value|striptags is not empty %}
-  {% set title = '' %}
+{% set title = '' %}
 {% else %}
-  {% set title = 'no-title' %}
+{% set title = 'no-title' %}
 {% endif %}
-
 {%
   set classes = [
     'paragraph',
@@ -56,7 +55,6 @@
     title|clean_class,
   ]|merge(classes|default([]))
 %}
-
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
