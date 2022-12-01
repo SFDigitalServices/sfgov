@@ -133,12 +133,8 @@
   {% if content.field_featured_items|render|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       <div class="responsive-container responsive-grid grid-cols-1 lg:grid-cols-3">
-        {% for target in content.field_featured_items|field_target_entity %} {# this relies on the twig_field_value module #}
-          {% include "@theme/featured-item.twig" with {
-            "title": target.field_feature_title.value,
-            "url": target.field_feature_link.uri,
-            "description": target.field_description.value
-          } %}
+        {% for key, item in content.field_featured_items if key|first != '#' %}
+          {{ item }}
         {% endfor %}
       </div>
     </div>
