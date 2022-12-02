@@ -314,9 +314,9 @@
     </div>
   {% endif %}
 
-  {% set hasAddress = content.field_address['#items'] is not empty %}
-  {% set hasPhone = content.field_phone_numbers['#items'] is not empty %}
-  {% set hasEmail = content.field_email['#items'] is not empty %}
+  {% set hasAddress = content.field_address|render|striptags|trim %}
+  {% set hasPhone = content.field_phone_numbers|render|striptags|trim %}
+  {% set hasEmail = content.field_email|render|striptags|trim %}
   {% set hasContact = hasAddress or hasPhone or hasEmail %}
 
   {% if hasContact %}
