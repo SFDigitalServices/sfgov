@@ -1,0 +1,34 @@
+uuid: 262820ef-2c6a-462b-9b5b-901a1a54f040
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.agency_section.field_agencies
+    - field.field.paragraph.agency_section.field_section_title_list
+    - paragraphs.paragraphs_type.agency_section
+  module:
+    - entity_reference_revisions
+    - options
+id: paragraph.agency_section.default
+targetEntityType: paragraph
+bundle: agency_section
+mode: default
+content:
+  field_agencies:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: agency_content_agency_title_only
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_section_title_list:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

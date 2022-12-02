@@ -51,12 +51,11 @@
 {% set text = field_link['#title'] %}
 {% set href = field_link['#url'].toString() %}
 {% set parent = paragraph.parentEntity %}
-{% set parentFieldName = parent.parent_field_name.value %}
 {% set isDeptContentType = parent.parentEntity.bundle == 'department' ? true : false %}
 {% set btnClasses = parent.bundle == 'spotlight' ? ['btn-inverse'] : [] %}
 
 {# if this paragraph is part of a department content type and it's the first spotlight on the page, remove the inverse class #}
-{% if isDeptContentType == true and parentFieldName == 'field_spotlight2' %}
+{% if isDeptContentType == true %}
   {% set btnClasses = [] %}
 {% endif %}
 

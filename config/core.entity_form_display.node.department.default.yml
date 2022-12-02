@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.department.field_about_description
     - field.field.node.department.field_about_or_description
     - field.field.node.department.field_address
+    - field.field.node.department.field_agency_sections
     - field.field.node.department.field_alert_expiration_date
     - field.field.node.department.field_alert_text
     - field.field.node.department.field_archive_date
@@ -14,16 +15,22 @@ dependencies:
     - field.field.node.department.field_call_to_action
     - field.field.node.department.field_department_code
     - field.field.node.department.field_department_services
+    - field.field.node.department.field_departments
     - field.field.node.department.field_description
+    - field.field.node.department.field_direct_external_url
     - field.field.node.department.field_divisions
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
     - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
+    - field.field.node.department.field_include_in_list
+    - field.field.node.department.field_meeting_archive_date
+    - field.field.node.department.field_meeting_archive_url
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
     - field.field.node.department.field_public_bodies
+    - field.field.node.department.field_public_body_meetings
     - field.field.node.department.field_req_public_records
     - field.field.node.department.field_req_public_records_email
     - field.field.node.department.field_req_public_records_link
@@ -53,17 +60,17 @@ third_party_settings:
     group_about:
       children:
         - field_about_or_description
-        - field_image
         - field_parent_department
+        - field_agency_sections
+        - field_departments
         - field_divisions
         - field_public_bodies
         - field_call_to_action
         - field_social_media
-        - field_people
       label: About
       region: content
       parent_name: ''
-      weight: 8
+      weight: 12
       format_type: details
       format_settings:
         classes: sfgov-dept-contact-group
@@ -79,7 +86,7 @@ third_party_settings:
       label: Contact
       region: content
       parent_name: ''
-      weight: 9
+      weight: 14
       format_type: details
       format_settings:
         classes: sfgov-dept-contact-group
@@ -96,7 +103,7 @@ third_party_settings:
       label: 'Request public records'
       region: content
       parent_name: ''
-      weight: 10
+      weight: 15
       format_type: details
       format_settings:
         classes: ''
@@ -109,7 +116,7 @@ third_party_settings:
       label: '01'
       region: hidden
       parent_name: ''
-      weight: 29
+      weight: 35
       format_type: tabs
       format_settings:
         classes: ''
@@ -122,7 +129,7 @@ third_party_settings:
       label: 'Archive information'
       region: content
       parent_name: ''
-      weight: 11
+      weight: 16
       format_type: details
       format_settings:
         classes: ''
@@ -138,13 +145,29 @@ third_party_settings:
       label: Alert
       region: content
       parent_name: ''
-      weight: 2
+      weight: 4
       format_type: details
       format_settings:
         classes: alert-fieldset
         id: ''
         open: false
         required_fields: false
+    group_meeting_archive_informatio:
+      children:
+        - field_meeting_archive_date
+        - field_meeting_archive_url
+      label: 'Meeting archive information'
+      region: content
+      parent_name: ''
+      weight: 8
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: ''
+        required_fields: true
 id: node.department.default
 targetEntityType: node
 bundle: department
@@ -152,13 +175,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 19
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
   field_about_or_description:
     type: text_textarea
-    weight: 54
+    weight: 60
     region: content
     settings:
       rows: 5
@@ -185,6 +208,25 @@ content:
       open: false
       field_widget_display_settings: {  }
       selection_mode: selection_append
+    third_party_settings: {  }
+  field_agency_sections:
+    type: paragraphs
+    weight: 63
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
     third_party_settings: {  }
   field_alert_expiration_date:
     type: datetime_default
@@ -224,7 +266,7 @@ content:
     third_party_settings: {  }
   field_call_to_action:
     type: paragraphs
-    weight: 60
+    weight: 67
     region: content
     settings:
       title: Paragraph
@@ -240,18 +282,10 @@ content:
         add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
-    third_party_settings: {  }
-  field_department_code:
-    type: string_textfield
-    weight: 15
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   field_department_services:
     type: paragraphs
-    weight: 5
+    weight: 9
     region: content
     settings:
       title: Paragraph
@@ -267,6 +301,16 @@ content:
         add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
+    third_party_settings: {  }
+  field_departments:
+    type: entity_reference_autocomplete
+    weight: 64
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_description:
     type: text_textarea
@@ -283,9 +327,18 @@ content:
         maxlength_js: 110
         maxlength_js_label: (<strong>@count</strong>/@limit)
         maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
+  field_direct_external_url:
+    type: link_default
+    weight: 18
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   field_divisions:
     type: entity_reference_autocomplete
-    weight: 58
+    weight: 65
     region: content
     settings:
       match_operator: CONTAINS
@@ -314,7 +367,7 @@ content:
     third_party_settings: {  }
   field_featured_items:
     type: paragraphs
-    weight: 4
+    weight: 6
     region: content
     settings:
       title: Paragraph
@@ -333,14 +386,14 @@ content:
     third_party_settings: {  }
   field_go_to_current_url:
     type: boolean_checkbox
-    weight: 14
+    weight: 20
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_image:
     type: entity_browser_entity_reference
-    weight: 56
+    weight: 2
     region: content
     settings:
       entity_browser: image
@@ -352,9 +405,30 @@ content:
       field_widget_display_settings: {  }
       selection_mode: selection_append
     third_party_settings: {  }
+  field_include_in_list:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_meeting_archive_date:
+    type: datetime_default
+    weight: 31
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_meeting_archive_url:
+    type: link_default
+    weight: 32
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   field_parent_department:
     type: entity_reference_autocomplete
-    weight: 57
+    weight: 61
     region: content
     settings:
       match_operator: CONTAINS
@@ -364,7 +438,7 @@ content:
     third_party_settings: {  }
   field_people:
     type: paragraphs
-    weight: 62
+    weight: 13
     region: content
     settings:
       title: Paragraph
@@ -383,7 +457,7 @@ content:
     third_party_settings: {  }
   field_phone_numbers:
     type: paragraphs
-    weight: 37
+    weight: 36
     region: content
     settings:
       title: Paragraph
@@ -402,7 +476,7 @@ content:
     third_party_settings: {  }
   field_public_bodies:
     type: paragraphs
-    weight: 59
+    weight: 66
     region: content
     settings:
       title: Paragraph
@@ -419,15 +493,33 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
+  field_public_body_meetings:
+    type: paragraphs
+    weight: 7
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
   field_req_public_records:
     type: options_buttons
-    weight: 10
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   field_req_public_records_email:
     type: email_default
-    weight: 14
+    weight: 20
     region: content
     settings:
       placeholder: ''
@@ -435,7 +527,7 @@ content:
     third_party_settings: {  }
   field_req_public_records_link:
     type: link_default
-    weight: 13
+    weight: 19
     region: content
     settings:
       placeholder_url: ''
@@ -443,14 +535,14 @@ content:
     third_party_settings: {  }
   field_req_public_records_phone:
     type: telephone_default
-    weight: 11
+    weight: 17
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_resources:
     type: paragraphs
-    weight: 7
+    weight: 11
     region: content
     settings:
       title: Paragraph
@@ -469,7 +561,7 @@ content:
     third_party_settings: {  }
   field_social_media:
     type: paragraphs
-    weight: 61
+    weight: 68
     region: content
     settings:
       title: Paragraph
@@ -488,7 +580,7 @@ content:
     third_party_settings: {  }
   field_spotlight:
     type: paragraphs
-    weight: 6
+    weight: 10
     region: content
     settings:
       title: Paragraph
@@ -507,7 +599,7 @@ content:
     third_party_settings: {  }
   field_spotlight2:
     type: paragraphs
-    weight: 3
+    weight: 5
     region: content
     settings:
       title: Paragraph
@@ -526,7 +618,7 @@ content:
     third_party_settings: {  }
   field_topics:
     type: entity_reference_autocomplete
-    weight: 16
+    weight: 21
     region: content
     settings:
       match_operator: CONTAINS
@@ -536,7 +628,7 @@ content:
     third_party_settings: {  }
   field_url:
     type: link_default
-    weight: 13
+    weight: 19
     region: content
     settings:
       placeholder_url: ''
@@ -544,20 +636,20 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 12
+    weight: 17
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 25
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -570,19 +662,19 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp
-    weight: 23
+    weight: 28
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: options_select
-    weight: 18
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 21
+    weight: 26
     region: content
     settings:
       display_label: true
@@ -607,7 +699,7 @@ content:
         maxlength_js_label: (<strong>@count</strong>/@limit)
   uid:
     type: entity_reference_autocomplete
-    weight: 20
+    weight: 25
     region: content
     settings:
       match_operator: CONTAINS
@@ -617,21 +709,22 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp
-    weight: 24
+    weight: 29
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: options_select
-    weight: 22
+    weight: 27
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 26
+    weight: 31
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_about_description: true
+  field_department_code: true
   translation: true
