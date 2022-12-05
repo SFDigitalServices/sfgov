@@ -89,7 +89,7 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
 
   foreach ($agencySections as $agencySection) {
     $agencySection = Paragraph::load($agencySection['target_id']);
-    $agencyContents = $agencySection->field_agencies ?? $agencySection->field_agencies->getValue();
+    $agencyContents = !empty($agencySection->field_agencies) ? $agencySection->field_agencies->getValue() : [];
 
     if (!empty($agencyContents)) {
       foreach($agencyContents as $ac) {
