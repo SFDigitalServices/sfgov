@@ -89,30 +89,32 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
 
   foreach ($agencySections as $agencySection) {
     $agencySection = Paragraph::load($agencySection['target_id']);
-    $agencyContents = $agencySection->field_agencies->getValue();
+    $agencyContents = $agencySection->field_agencies ?? $agencySection->field_agencies->getValue();
 
-    foreach($agencyContents as $ac) {
-      $agencyContent = Paragraph::load($ac['target_id']);
-      $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
-      
-      $divisionId = $agencyContent->field_department->getValue()[0]['target_id'];
-      $division = Node::load($divisionId);
-      $divisionTitle = $division->getTitle();
-      $divisionUrl = $division->toUrl()->toString();
-
-      if ($division->hasTranslation($currentLanguage)) {
-        $divisionTranslation = $division->getTranslation($currentLanguage);
-        $divisionTitle = $divisionTranslation->getTitle();
-        $divisionUrl = $divisionTranslation->toUrl()->toString();
-      }
-      
-      $divisionList[] = [
-        "title" => $divisionTitle,
-        "url" => $divisionUrl,
-      ];
-      
-      if ($showMeetings == true) {
-        $divisionIds[] = $divisionId; 
+    if (!empty($agencyContents)) {
+      foreach($agencyContents as $ac) {
+        $agencyContent = Paragraph::load($ac['target_id']);
+        $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
+        
+        $divisionId = $agencyContent->field_department->getValue()[0]['target_id'];
+        $division = Node::load($divisionId);
+        $divisionTitle = $division->getTitle();
+        $divisionUrl = $division->toUrl()->toString();
+  
+        if ($division->hasTranslation($currentLanguage)) {
+          $divisionTranslation = $division->getTranslation($currentLanguage);
+          $divisionTitle = $divisionTranslation->getTitle();
+          $divisionUrl = $divisionTranslation->toUrl()->toString();
+        }
+        
+        $divisionList[] = [
+          "title" => $divisionTitle,
+          "url" => $divisionUrl,
+        ];
+        
+        if ($showMeetings == true) {
+          $divisionIds[] = $divisionId; 
+        }
       }
     }
   }
