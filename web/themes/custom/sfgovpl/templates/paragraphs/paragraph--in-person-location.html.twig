@@ -14,6 +14,11 @@ boolean value. #}
 {% set parent = paragraph.getParentEntity() %}
 {% set classes = ['parent--bundle--' ~ parent.bundle|clean_class] %}
 {% set pid = paragraph.field_location.entity.id() %}
+{% set parentNode = paragraph.parentEntity.bundle %}
+
+{% if parentNode is not empty and parentNode == 'department' %}
+  {% set display_map = false %}
+{% endif %}
 
 {% extends 'paragraph.html.twig' %}
 {% block content %}
@@ -28,7 +33,7 @@ boolean value. #}
       {% endif %}
     {% else %}
       {# Render with 'address_only' view mode. #}
-      {{ drupal_entity('location', pid, 'address_only') }}
+      {{ drupal_entity('location', pid, 'address_plus_notes') }}
     {% endif %}
   {% endif %}
 {% endblock %}

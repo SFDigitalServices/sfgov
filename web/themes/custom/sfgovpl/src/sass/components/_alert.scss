@@ -1,68 +1,18 @@
 /* purgecss start ignore */
 .alert {
-  @include fs-small-text;
-  background: $c-blue-2;
-  padding-bottom: 17px;
-  padding-top: 17px;
-
-  @include media($medium-screen) {
-    @include fs-body-bold;
-    padding-bottom: 32px;
-    padding-top: 34px;
-  }
-
-  .alert--container {
-    @include background-image('info.svg', 20px center);
-    @include contain-1090;
-    min-height: 20px;
-
-    @include media($wide-screen) {
-      @include background-image('info.svg', left center)
-    }
-  }
-
   a {
     color: $c-slate;
     &:link, &:visited {
       color: $c-slate;
     }
   }
-
-  p {
-    margin: 0 0 0 40px;
-    font-weight: normal;
-  }
   
   &[data-style="critical"] {
     @include antialiasing;
-    background: $c-red-3;
-    color: $c-white;
-
-    .alert--container {
-      @include background-image('info-white.svg', 20px center);
-
-      @include media($wide-screen) {
-        @include background-image('info-white.svg', left center)
-      }
-    }
-
     a {
       @include link-colors($c-white);
     }
   }
-
-  &[data-style="department"]{
-    background: $c-yellow-3;
-  }
 }
 
-.sfgov-alert-info {
-  @include fs-body-long;
-  @include background-image('info.svg', 42px 45px, $c-blue-1);
-  padding: 24px 32px 24px 89px;
-
-  &::before {
-    content: none;
-  }
-}
 /* purgecss end ignore */

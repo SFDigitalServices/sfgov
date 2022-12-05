@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\sfgov_public_bodies\Form\MeetingListFiltersForm;
 
 /**
  * Implements hook_help().
@@ -44,7 +46,6 @@ function sfgov_public_bodies_preprocess_views_view__meetings__page(&$variables) 
  * Implements hook_views_query_alter().
  */
 function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query) {
-  // error_log(print_r($query->where));
   if ($view->id() == 'meetings' && ($view->getDisplay()->display['id'] == 'page_upcoming' || $view->getDisplay()->display['id'] == 'page_past')) {
     $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($view->args[0]);
     $query_month = \Drupal::request()->query->get('month');
@@ -70,14 +71,7 @@ function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $vie
         else {
           $route = \Drupal::routeMatch();
           $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
-          $subcommittees = [$public_body->id() => $public_body->label()];
-
-          foreach ($public_body->field_subcommittees->getValue() as $value) {
-            $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-            if (!empty($subcommittee)) {
-                $subcommittees[$subcommittee->id()] = $subcommittee->label();
-            }
-          }
+          $subcommittees = MeetingListFiltersForm::getSubcommittees($route);
 
           foreach ($subcommittees as $key => $value) {
             $query->addWhere($group, 'node__field_public_body.field_public_body_target_id', $key, '=');

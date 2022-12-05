@@ -374,3 +374,196 @@ function sfgov_utilities_deploy_08_field_transactions_migration() {
     error_log($e->getMessage(), "\n");
   }
 }
+
+/* set current departments' include in department list field to true */
+function sfgov_utilities_deploy_09_dept_include() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+    foreach($deptNodes as $dept) {
+      $dept->field_include_in_list->value = TRUE;
+      echo "Updated " . $dept->getTitle() . " (" . $dept->id() . ")\n";
+      $dept->save();
+    }
+  } catch(\Exception $e) {
+    error_log($e->getMessage(), "\n");
+  }
+}
+
+/* if department tagged it's parent, be sure to add the department as a division of parent department */
+function sfgov_utilities_deploy_10_dept_part_of() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+
+    foreach($deptNodes as $dept) {
+      $deptId = $dept->id();
+
+      // get part of values
+      $partOf = $dept->get('field_parent_department')->getValue();
+
+      if (!empty($partOf)) {
+        $partOfRefId = $partOf[0]['target_id'];
+        $langcode = $dept->get('langcode')->value;
+
+        // load tagged parent
+        $parentDept = Node::load($partOfRefId);
+
+        if ($parentDept->hasTranslation($langcode)) { // check translation
+          $parentDeptTranslation = $parentDept->getTranslation($langcode);
+          $parentDivisions = $parentDeptTranslation->get('field_divisions')->getValue();
+
+          // check that this dept isn't already added as a division on the parent dept
+          $found = false;
+          foreach ($parentDivisions as $parentDivision) {
+            if ($deptId == $parentDivision["target_id"]) {
+              $found = true;
+              break;
+            }
+          }
+  
+          if ($found == false) {
+            $parentDivisions[] = [
+              'target_id' => $deptId
+            ];
+            $parentDeptTranslation->set('field_divisions', $parentDivisions);
+            $parentDeptTranslation->save();
+          }
+        }
+      }
+    }
+  } catch (\Exception $e) {
+    error_log($e->getMessage());
+  }
+}
+
+/* 
+* migrate content from field_divisions to field_agency_sections -> agency section
+* migrate content from field_public_bodies to field_departments (related agencies)
+*/
+function sfgov_utilities_deploy_11_dept_div_pb() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+    $externalUrls = [];
+    $problems = [];
+  
+    foreach($deptNodes as $dept) {
+      $deptId = $dept->id();
+      // collect things to migrate
+      $divisions = $dept->get('field_divisions')->getValue();
+      $publicBodies = $dept->get('field_public_bodies')->getValue();
+
+      $agencyContents = [];
+
+      // migrate divisions
+      if (!empty($divisions)) {
+        // create agency section paragraph with divisions values
+        foreach ($divisions as $division) {
+          $agencyContent = Paragraph::create([
+            "type" => "department_content",
+            "field_department" => $division['target_id']
+          ]);
+          $agencyContents[] = $agencyContent;
+        }
+
+        $agencySection = Paragraph::create([
+          "type" => "agency_section",
+          "field_section_title_list" => "Divisions",
+          "field_nodes" => $divisions,
+          "field_agencies" => $agencyContents
+        ]);
+
+        // append new agency section to divisions and subcommittees field (field_paragraphs)
+        $agencySections = $dept->get('field_agency_sections')->getValue();
+        $agencySections[] = $agencySection;
+        $dept->set('field_agency_sections', $agencySections);
+
+        // remove old field values
+        $dept->set('field_divisions', []);
+      }
+
+      // migrate public bodies
+      if (!empty($publicBodies)) {
+        $relatedAgencies = [];
+        // check if url is internal or external
+        // if external, it cannot be added as a related agencies item
+
+        // iterate through public body links
+        foreach ($publicBodies as $publicBody) {
+          $link = Paragraph::load($publicBody['target_id']);
+          $linkValue = $link->get('field_link')->getValue();
+          $uri = $linkValue[0]['uri'];
+          $text = $linkValue[0]['title'];
+          $drupalPath = "";
+
+          if (strpos($uri, 'entity') !== false || strpos($uri, 'https://sf.gov') !== false) { // internal url
+            $drupalPath = \Drupal::service('path_alias.manager')->getPathByAlias(parse_url($uri, PHP_URL_PATH));
+            $refNid = substr($drupalPath, strrpos($drupalPath, '/') + 1);
+
+            if (!is_numeric($refNid)) {
+              $problems[] = [
+                "nid" => $deptId,
+                "public_body_url_text" => $text,
+                "public_body_url" => $uri
+              ];
+            }
+
+            if (!empty($refNid)) {
+              $relatedAgencies[] = [
+                "target_id" => $refNid
+              ];
+            }
+          } else { // other urls, report
+            $externalUrls[] = [
+              "nid" => $deptId,
+              "public_body_url_text" => $text,
+              "public_body_url" => $uri,
+            ];
+          }
+        }
+
+        if (!empty($relatedAgencies)) {
+          echo "related agencies\n";
+          print_r($relatedAgencies);
+          echo "\n\n";
+        }
+
+        $dept->set('field_departments', $relatedAgencies);
+        $dept->set('field_public_bodies', []);
+      }
+
+      $dept->save();
+    }
+
+    echo "external urls\n";
+    print_r($externalUrls);
+  
+    echo "problems\n";
+    print_r($problems);
+  } catch (\Exception $e) {
+    error_log($e->getMessage());
+  }
+}
+
+// migrate field_url to field_direct_external_url
+function sfgov_utilities_deploy_12_dept_go_to_url() {
+  try {
+    $deptNodes = Utility::getNodes('department');
+    foreach($deptNodes as $dept) {
+      $currentSite = $dept->field_url->uri;
+      $goToSite = $dept->field_go_to_current_url->value;
+      echo $dept->getTitle() . " (" . $dept->id() . ") \n" . 
+        "\tcurrent site url: $currentSite\n" .
+        "\tgo to site: $goToSite" .
+        "\n";
+  
+      if ($goToSite == true) {
+        $dept->set('field_direct_external_url', [
+          'uri' => $currentSite
+        ]);
+        $dept->save();
+        echo "saved " . $dept->getTitle() . " <---\n";
+      }
+    }
+  } catch(\Exception $e) {
+    error_log($e->getMessage(), "\n");
+  }
+}

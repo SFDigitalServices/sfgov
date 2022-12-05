@@ -10,6 +10,7 @@ dependencies:
     - field.field.paragraph.department_content.field_link_column_2
     - field.field.paragraph.department_content.field_meeting
     - field.field.paragraph.department_content.field_news_content
+    - field.field.paragraph.department_content.field_show_meeting_parent_agency
     - paragraphs.paragraphs_type.department_content
   module:
     - entity_reference_revisions
@@ -19,14 +20,6 @@ targetEntityType: paragraph
 bundle: department_content
 mode: default
 content:
-  field_department:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 10
-    region: content
   field_document:
     type: entity_reference_revisions_entity_view
     label: above
@@ -34,19 +27,19 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 9
+    weight: 5
     region: content
   field_event:
     type: entity_reference_label
-    label: hidden
+    label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 3
+    weight: 0
     region: content
   field_link_column_1:
     type: link
-    label: hidden
+    label: above
     settings:
       trim_length: 80
       url_only: false
@@ -54,11 +47,11 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 7
+    weight: 2
     region: content
   field_link_column_2:
     type: link
-    label: hidden
+    label: above
     settings:
       trim_length: 80
       url_only: false
@@ -66,7 +59,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 3
     region: content
   field_meeting:
     type: entity_reference_label
@@ -74,15 +67,17 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 8
+    weight: 4
     region: content
   field_news_content:
     type: entity_reference_label
-    label: hidden
+    label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 4
+    weight: 1
     region: content
 hidden:
+  field_department: true
+  field_show_meeting_parent_agency: true
   search_api_excerpt: true

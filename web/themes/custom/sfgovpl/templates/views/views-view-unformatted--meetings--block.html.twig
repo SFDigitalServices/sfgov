@@ -15,15 +15,15 @@
  * @see template_preprocess_views_view_unformatted()
  */
 #}
-<div class="sfgov-container-three-column">
 {% for row in rows %}
   {%
     set row_classes = [
-      default_row_class ? 'sfgov-container-item',
+      default_row_class ? 'views-row',
+      'bg-green-3',
+      'rounded'
     ]
   %}
   <div{{ row.attributes.addClass(row_classes) }}>
     {{- row.content -}}
   </div>
 {% endfor %}
-</div>
