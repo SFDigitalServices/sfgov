@@ -17,10 +17,8 @@ dependencies:
     - field.field.node.department.field_departments
     - field.field.node.department.field_description
     - field.field.node.department.field_direct_external_url
-    - field.field.node.department.field_divisions
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
-    - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
     - field.field.node.department.field_include_in_list
     - field.field.node.department.field_meeting_archive_date
@@ -28,7 +26,6 @@ dependencies:
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
-    - field.field.node.department.field_public_bodies
     - field.field.node.department.field_public_body_meetings
     - field.field.node.department.field_req_public_records
     - field.field.node.department.field_req_public_records_email
@@ -39,7 +36,6 @@ dependencies:
     - field.field.node.department.field_spotlight
     - field.field.node.department.field_spotlight2
     - field.field.node.department.field_topics
-    - field.field.node.department.field_url
     - node.type.department
   module:
     - datetime
@@ -186,14 +182,6 @@ content:
     third_party_settings: {  }
     weight: 33
     region: content
-  field_divisions:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 12
-    region: content
   field_email:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -278,15 +266,6 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_public_bodies:
-    type: entity_reference_revisions_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    weight: 13
-    region: content
   field_public_body_meetings:
     type: entity_reference_revisions_entity_view
     label: above
@@ -366,21 +345,8 @@ content:
     third_party_settings: {  }
     weight: 24
     region: content
-  field_url:
-    type: link_separate
-    label: above
-    settings:
-      trim_length: 80
-      url_only: true
-      url_plain: false
-      rel: '0'
-      target: '0'
-    third_party_settings: {  }
-    weight: 4
-    region: content
 hidden:
   field_department_code: true
-  field_go_to_current_url: true
   field_topics: true
   formio_url: true
   langcode: true
