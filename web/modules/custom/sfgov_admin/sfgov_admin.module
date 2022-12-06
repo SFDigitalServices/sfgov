@@ -20,6 +20,9 @@ function sfgov_admin_theme($existing, $type, $theme, $path) {
     'field_multiple_value_form__autocomplete' => [
       'base hook' => 'field_multiple_value_form',
     ],
+    'views_view__content__translations' => [
+      'base hook' => 'views_view__content__translations'
+    ],
   ];
 }
 
@@ -697,7 +700,7 @@ function sfgov_admin_form_content_moderation_entity_moderation_form_alter(&$form
  * Implements hook_views_pre_view().
  */
 function sfgov_admin_views_pre_view(ViewExecutable $view) {
-  if ($view->id() == 'content') {
+  if ($view->id() == 'content' && $view->current_display != 'translations') {
     // Set english as default langcode for admin content list.
     $filters = $view->getDisplay()->getOption('filters');
     $filters["langcode"]["value"] = ["en"];
