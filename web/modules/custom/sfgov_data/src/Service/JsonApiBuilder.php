@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sfgov_data;
+namespace Drupal\sfgov_data\Service;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -33,6 +33,19 @@ class JsonApiBuilder {
   public function __construct(EntityToJsonApi $entity_to_jsonapi, EntityFieldManagerInterface $entity_field_manager) {
     $this->entityToJsonApi = $entity_to_jsonapi;
     $this->entityFieldManager = $entity_field_manager;
+  }
+
+  /**
+   * Method description.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return string
+   * @throws \Exception
+   */
+  public function buildJsonApi(EntityInterface $entity): string {
+    $includes = $this->getIncludes($entity);
+    return $this->entityToJsonApi->serialize($entity, $includes);
   }
 
   /**
