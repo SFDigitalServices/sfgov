@@ -9,7 +9,7 @@ module.exports = {
   defaultExtractor: content => content.match(/[\w-:./]+(?<!:)/g) || [],
   safelist: {
     greedy: [
-      // preserve all margin and padding utilities (for forms)
+      // preserve all margin and padding utilities for forms
       /[mp][trblxy]?-\d+/,
       // background color utilities
       /bg-(black|white|slate|blue|green|red|purple|yellow|grey)/,
