@@ -133,12 +133,8 @@
   {% if content.field_featured_items|render|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       <div class="responsive-container responsive-grid grid-cols-1 lg:grid-cols-3">
-        {% for target in content.field_featured_items|field_target_entity %} {# this relies on the twig_field_value module #}
-          {% include "@theme/featured-item.twig" with {
-            "title": target.field_feature_title.value,
-            "url": target.field_feature_link.uri,
-            "description": target.field_description.value
-          } %}
+        {% for key, item in content.field_featured_items if key|first != '#' %}
+          {{ item }}
         {% endfor %}
       </div>
     </div>
@@ -226,16 +222,21 @@
     {% set hasAboutSection = "true" %}
   {% endif %}
 
-  {% if content.field_resources['#items'].getValue() %}
-    {% set resourcesSpacing = "py-40 lg:py-60" %}
-    {% if hasAboutSection == "false" %}
-      {% set resourcesSpacing = "pt-40 pb-0 lg:pt-60 lg:pb-0" %}
-    {% endif %}
-    <div class="odd:bg-grey-1 {{ resourcesSpacing }}">
-      <div class="responsive-container">
-        {{ content.field_resources }}
+  {% if content.field_resources|render|striptags|trim %}
+    {% set resourceEntityExists = node.field_resources.0.entity.field_resources.0.entity.field_resource.getValue() | length %}
+    {% set sfgovLinkExists = node.field_resources.0.entity.field_resources.0.entity.field_node.getValue() | length %}
+    
+    {% if resourceEntityExists > 0 or sfgovLinkExists > 0 %}
+      {% set resourcesSpacing = "py-40 lg:py-60" %}
+      {% if hasAboutSection == "false" %}
+        {% set resourcesSpacing = "pt-40 pb-0 lg:pt-60 lg:pb-0" %}
+      {% endif %}
+      <div class="odd:bg-grey-1 {{ resourcesSpacing }}">
+        <div class="responsive-container">
+          {{ content.field_resources }}
+        </div>
       </div>
-    </div>
+    {% endif %}
   {% endif %}
 
   {% if hasAboutSection != "false" %}
@@ -268,7 +269,14 @@
               <div class="responsive-grid grid-cols-1 gap-40 mb-60">
                 {# agency sections (divisions) #}
                 {% if hasAgencySection %}
-                  {{ content.field_agency_sections }}
+                  <div>
+                    <p class="text-title-xs font-medium m-0 mb-24"> {{ node.field_agency_sections.0.entity.field_section_title_list.value | t }}</p>
+                    <ul class="responsive-grid gap-y-20 list-none p-0 m-0 grid-cols-1 lg:grid-cols-2">
+                      {% for division in division_list %}
+                        <li class="text-body"><a class="text-inherit" href="{{ division.url }}">{{ division.title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
                 {% endif %}
 
                 {# related agencies #}
@@ -318,9 +326,9 @@
     </div>
   {% endif %}
 
-  {% set hasAddress = content.field_address['#items'] is not empty %}
-  {% set hasPhone = content.field_phone_numbers['#items'] is not empty %}
-  {% set hasEmail = content.field_email['#items'] is not empty %}
+  {% set hasAddress = content.field_address|render|striptags|trim %}
+  {% set hasPhone = content.field_phone_numbers|render|striptags|trim %}
+  {% set hasEmail = content.field_email|render|striptags|trim %}
   {% set hasContact = hasAddress or hasPhone or hasEmail %}
 
   {% if hasContact %}

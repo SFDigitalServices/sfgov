@@ -1,0 +1,202 @@
+<?php
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\MessageCommand;
+
+/**
+ * @file
+ * Primary module hooks for Sfgov translation module.
+ *
+ */
+
+ /**
+  * Implements hook_views_data_alter().
+  */
+function sfgov_translation_views_data_alter(&$data) {
+  $data['views']['table']['group'] = t('Custom Global');
+  $data['views']['table']['join'] = [
+    // #global is a special flag which allows a table to appear all the time.
+    '#global' => [],
+  ];
+  // Add the option for lionbridge translation status view field
+  $data['views']['lionbridge_translation_status'] = [
+    'title' => t('Translation Status (Lionbridge)'),
+    'help' => t('Displays translation status according to Lionbridge.'),
+    'field' => [
+      'id' => 'lionbridge_translation_status',
+    ],
+  ];
+  return $data;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function sfgov_translation_views_query_alter($view, $query) {
+  if ($view->id() === 'content' && $view->current_display === 'translations') {
+    $query->addField('node_field_data', 'nid', '', ['function' => 'groupby']);
+    $query->addGroupBy('node_field_data.nid');
+    if ($inputs = $view->getExposedInput()) {
+      // If user selects 'translated', only display content that has a translation.
+      if ($inputs['translation_outdated'] === '0') {
+        $query->addWhere(1, 'node_field_data.langcode', ['es', 'fil', 'zh-hant'], 'IN');
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sfgov_translation_form_alter(&$form, $form_state, $form_id) {
+  if ($form['#id'] === 'views-exposed-form-content-translations') {
+    // Remove confusing options from the language dropdown. Can't get this
+    // to work from the views UI.
+    unset($form['langcode']['#options']['***LANGUAGE_site_default***']);
+    unset($form['langcode']['#options']['***LANGUAGE_language_interface***']);
+    unset($form['langcode']['#options']['und']);
+    unset($form['langcode']['#options']['zxx']);
+
+    // Change True and False to more useful labels.
+    $form['translation_outdated']['#options'][0] = 'Translated';
+    $form['translation_outdated']['#options'][1] = 'Translation Outdated';
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function sfgov_translation_entity_base_field_info($entity_type) {
+  if ($entity_type->id() === 'node') {
+    $fields['translation_outdated'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Mark translation as outdated'))
+      ->setTranslatable(TRUE)
+      ->setInitialValue(0)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
+    $fields['translation_notes'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Notes for the translation update'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textarea',
+        'settings' => [
+          'rows' => 4,
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sfgov_translation_form_node_form_alter(&$form, $form_state, $form_id) {
+  $has_translations = $form_state->getformObject()->getEntity()->getTranslationLanguages(FALSE);
+  if (empty($has_translations)) {
+    $form['translation_outdated']['#access'] = FALSE;
+    $form['translation_notes']['#access'] = FALSE;
+  }
+  elseif ($form_state->getStorage()['langcode'] === 'en') {
+    unset($form['translation_outdated']);
+    $form['mark_translations_outdated'] = [
+      '#type' => 'submit',
+      '#value' => t('Mark translations as outdated'),
+      '#weight' => $form['translation_notes']['#weight'] - 2,
+      '#ajax' => [
+        'callback' => '_translations_outdated',
+        'wrapper' => 'translation-outdated-confirmation'
+      ],
+      '#submit' => ['_translations_outdated_submit'],
+    ];
+    $form['translation_outdated_confirmation'] = [
+      '#type' => 'container',
+      '#prefix' => '<div id="translation-outdated-confirmation">',
+      '#suffix' => '</div>',
+      '#weight' => $form['translation_notes']['#weight'] - 1,
+    ];
+  }
+}
+
+/**
+ * Submit function for setting translations as outdated.
+ *
+ * @param object $form
+ *   Array element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ */
+function _translations_outdated_submit(&$form, &$form_state) {
+  $node = $form_state->getformObject()->getEntity();
+  $languages = $node->getTranslationLanguages(FALSE);
+  $nodes_updated = [];
+  foreach ($languages as $language) {
+    $langcode = $language->getId();
+    if ($node->hasTranslation($langcode)) {
+      $translated_node = $node->getTranslation($langcode);
+      $translated_node->set('translation_outdated', 1);
+      $translated_node->save();
+      $nodes_updated[] = $translated_node->toUrl()->setAbsolute()->toString();
+    }
+  }
+  $form_state->set('nodes_updated', $nodes_updated);
+}
+
+/**
+ * Ajax function for setting translations as outdated.
+ *
+ * @param object $form
+ *   Array element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ */
+function _translations_outdated(array &$form, $form_state) {
+  $response = new AjaxResponse();
+
+  $list = '';
+  foreach ($form_state->get('nodes_updated') as $url) {
+    $link = '<a href=' . $url . '>' . $url . '</a>';
+    $list .= "<li>" . $link . "</li>";
+  }
+
+  $message =
+    "<span>The following translations have been marked as out of date:</span>
+    <ul>
+      $list
+    </ul>";
+
+  $response->addCommand(new MessageCommand($message, '#translation-outdated-confirmation'));
+  return $response;
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function sfgov_translation_entity_presave($entity) {
+  // When a translation is completed in tmgmt, uncheck the
+  // 'translation outdated' field.
+  if ($entity instanceof Drupal\tmgmt\Entity\JobItem) {
+    if ($original = $entity->original) {
+      $original_state = $original->getState();
+      $new_state = $entity->getState();
+      // If it went from not accepted to accepted.
+      $accepted_state = \Drupal\tmgmt\JobItemInterface::STATE_ACCEPTED;
+      if ($original_state != $accepted_state && $new_state == $accepted_state ) {
+        $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+        $node = $node_storage->load($entity->getItemId());
+        $language = $entity->getJob()->target_language->value;
+        $translated_node = $node->getTranslation($language);
+        $translated_node->set('translation_outdated', 0);
+        $translated_node->save();
+      }
+    }
+  }
+}

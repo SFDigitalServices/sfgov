@@ -72,6 +72,7 @@ function sfgovpl_preprocess_node(&$variables) {
       }
     }
 
+    // expose current language to templates
     $variables['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 }
@@ -82,24 +83,45 @@ function sfgovpl_preprocess_node(&$variables) {
 function sfgovpl_preprocess_node__department__full(&$variables) {
   $node = $variables['node'];
   $agencySections = $node->get('field_agency_sections')->getValue();
-  $divisionsOrSubcommittees = [$node->id()];
+  $divisionIds = [$node->id()];
+  $divisionList = [];
+  $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
   foreach ($agencySections as $agencySection) {
     $agencySection = Paragraph::load($agencySection['target_id']);
-    $agencyContents = $agencySection->field_agencies->getValue();
+    $agencyContents = !empty($agencySection->field_agencies) ? $agencySection->field_agencies->getValue() : [];
 
-    foreach($agencyContents as $ac) {
-      $agencyContent = Paragraph::load($ac['target_id']);
-      $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
-      
-      if ($showMeetings == true) {
-        $divisionsOrSubcommittees[] = $agencyContent->field_department->getValue()[0]['target_id']; 
+    if (!empty($agencyContents)) {
+      foreach($agencyContents as $ac) {
+        $agencyContent = Paragraph::load($ac['target_id']);
+        $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
+        
+        $divisionId = $agencyContent->field_department->getValue()[0]['target_id'];
+        $division = Node::load($divisionId);
+        $divisionTitle = $division->getTitle();
+        $divisionUrl = $division->toUrl()->toString();
+  
+        if ($division->hasTranslation($currentLanguage)) {
+          $divisionTranslation = $division->getTranslation($currentLanguage);
+          $divisionTitle = $divisionTranslation->getTitle();
+          $divisionUrl = $divisionTranslation->toUrl()->toString();
+        }
+        
+        $divisionList[] = [
+          "title" => $divisionTitle,
+          "url" => $divisionUrl,
+        ];
+        
+        if ($showMeetings == true) {
+          $divisionIds[] = $divisionId; 
+        }
       }
     }
   }
   
   // pass this agency's id and it's divisions/subcommittees/child agencies ids to the template for rendering meeting blocks
-  $variables['division_ids'] = $divisionsOrSubcommittees;
+  $variables['division_ids'] = $divisionIds;
+  $variables['division_list'] = $divisionList;
 }
 
 /**

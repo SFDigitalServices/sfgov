@@ -1,0 +1,20 @@
+<?php
+
+function sfgov_translation_update_9401() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $changes = $definition_update_manager->getChangeList();
+
+  // As a good practice, check that the field is missing actually.
+  if ($changes['node']['field_storage_definitions']['translation_outdated'] ?? 0 && $changes['node']['field_storage_definitions']['translation_notes'] ?? 0) {
+    $entity_type = $definition_update_manager->getEntityType('node');
+
+    // Get fields definition from the scheduler module.
+    module_load_include('module', 'sfgov_translation');
+    $fields = sfgov_translation_entity_base_field_info($entity_type);
+
+    foreach ($fields as $field_name => $field_definition) {
+      $definition_update_manager->installFieldStorageDefinition($field_name, $entity_type->id(),
+        $entity_type->id(), $field_definition);
+    }
+  }
+}

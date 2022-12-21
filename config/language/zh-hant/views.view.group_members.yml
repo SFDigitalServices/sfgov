@@ -3,7 +3,7 @@ display:
     display_options:
       exposed_form:
         options:
-          submit_button: 套用
+          submit_button: Apply
           reset_button_label: 重設
           exposed_sorts_label: 排序依據
           sort_asc_label: 遞增
@@ -11,8 +11,10 @@ display:
       pager:
         options:
           tags:
-            first: '« 最前'
-            last: '最後 »'
+            previous: ‹‹
+            next: ››
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page_label: 每頁的項目數
             items_per_page_options_all_label: '- 全部 -'
@@ -20,15 +22,25 @@ display:
       fields:
         name:
           label: User
+          separator: ', '
         group_roles:
           label: 角色
+          separator: ', '
         changed:
-          label: 已更新
+          label: Updated
+          separator: ', '
+        created:
+          label: 已加入
+          separator: ', '
         dropbutton:
-          label: 操作
+          label: Operations
       arguments:
         gid:
           exception:
-            title: 所有
+            title: All
+      title: 會員
   page_1:
     display_title: 頁面
+    display_options:
+      menu:
+        title: 會員
