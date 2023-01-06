@@ -32,7 +32,7 @@ function sfgov_about_form_alter(&$form, FormStateInterface $form_state, $form_id
       /** @var \Drupal\Core\Entity\EntityForm $formObject */
       $formObject = $form_state->getFormObject();
       $entityRef = $formObject->getEntity()->get('field_parent_department')->entity;
-      
+
       if(!empty($entityRef)) {
         $form['field_parent_department']['#disabled'] = TRUE;
       }
@@ -137,8 +137,10 @@ function sfgov_about_preprocess_field__node__field_about_resources__about(&$vari
   foreach ($variables['items'] as $key => $item) {
     $paragraph = $item['content']['#paragraph'];
 
-    if (empty($paragraph->field_resources->getValue())) {
-      unset($variables['items'][$key]);
+    if ($paragraph->hasfield('field_resources')) {
+      if (empty($paragraph->field_resources->getValue())) {
+        unset($variables['items'][$key]);
+      }
     }
   }
 }
