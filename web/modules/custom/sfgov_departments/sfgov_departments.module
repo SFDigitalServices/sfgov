@@ -360,7 +360,7 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
 function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
   $parentEntity = $form_state->getFormObject()->getEntity();
 
-  if ($parentEntity->getType() === 'department') {
+  if ($parentEntity->getEntityTypeId() === 'node' && $parentEntity->getType() === 'department') {
     if ($element['#paragraph_type'] == 'spotlight') {
       if( $element['subform']['#parents'][0] == 'field_spotlight2') {
         $element['subform']['field_spotlight_img']['widget']['#description'] = t("Minimum 550 px wide. Square or horizontal is recommended.");
