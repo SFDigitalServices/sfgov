@@ -266,7 +266,7 @@ function updateProfileNode($position, $removed = false) {
 function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
   $parentEntity = $form_state->getFormObject()->getEntity();
 
-  if ($parentEntity->getType() === 'person') {
+  if ($parentEntity->getEntityTypeId() === 'node' && $parentEntity->getType() === 'person') {
     $currentUser = \Drupal::currentUser();
     $userRoles = $currentUser->getRoles();
 
