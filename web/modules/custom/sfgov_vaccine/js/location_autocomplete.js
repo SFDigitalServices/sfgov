@@ -33,14 +33,14 @@ function locationAutocomplete () {
 function locationSubmit () {
   if (typeof google === 'undefined') {
     console.warn('google maps is not defined! hiding the location search UI')
-    $('#edit-distance-from').hide()
+    document.querySelector('#edit-distance-from').classList.add('hidden')
     return Promise.resolve({
       status: 'ok',
       msg: 'Google Maps is not loaded'
     })
   }
   else {
-    $('#edit-distance-from').show()
+    document.querySelector('#edit-distance-from').classList.remove('hidden')
   }
 
   return new Promise((resolve, reject) => {
