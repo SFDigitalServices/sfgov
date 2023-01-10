@@ -28,7 +28,7 @@ class UpdateMigratedPublicBodyToAgencyCommands extends DrushCommands {
     $database = \Drupal::service('database');
     $query = $database->select('migrate_map_convert_public_body_to_agency', 'm');
     return $query
-      ->condition('m.source_row_status', 1)
+      ->condition('m.source_row_status', 0)
       ->fields('m', ['sourceid1', 'sourceid2', 'destid1'])
       ->orderBy('destid1', 'ASC')
       ->execute();
@@ -129,43 +129,18 @@ class UpdateMigratedPublicBodyToAgencyCommands extends DrushCommands {
    */
   public function publish_migrated_agencies() {
     $migration_mapping = $this->get_migration_mappings();
-    $database = \Drupal::service('database');
+    $storage_handler = \Drupal::entityTypeManager()->getStorage('node');
     $published_items = [];
     $moderated_items = [];
 
-    // Set all new agencies to status of published.
-    // table_name => column_name to compare new nid match.
-    $status_fields = [
-      'node_field_data' => 'nid',
-      'node_field_revision' => 'nid',
-    ];
-    foreach ($status_fields as $field_name => $column_name) {
-      foreach ($migration_mapping as $map) {
-        $updated = $database->update($field_name)
-          ->fields(['status' => TRUE])
-          ->condition($column_name, $map['new_agency_nid'], '=')
-          ->execute();
-        if ($updated) {
-          $published_items[] = 'node:' . $map['new_agency_nid'] . ' was set to published status';
-        }
-      }
-    }
-
-    // Set all new agencies to moderation state of published.
-    // table_name => column_name to compare new nid match.
-    $moderation_fields = [
-      'content_moderation_state_field_data' => 'content_entity_id',
-      'content_moderation_state_field_revision' => 'content_entity_id',
-    ];
-    foreach ($moderation_fields as $field_name => $column_name) {
-      foreach ($migration_mapping as $map) {
-        $updated = $database->update($field_name)
-          ->fields(['moderation_state' => 'published'])
-          ->condition($column_name, $map['new_agency_nid'], '=')
-          ->execute();
-        if ($updated) {
-          $moderated_items[] = 'node:' . $map['new_agency_nid'] . ' was moderated to published';
-        }
+    foreach ($migration_mapping as $map_pair) {
+      $node = $storage_handler->load($map_pair['new_agency_nid']);
+      if ($node->get('moderation_state')->value != 'published' || $node->get('status')->value != 1) {
+        $node->set('moderation_state', 'published');
+        $moderated_items[] = 'node:' . $map_pair['new_agency_nid'] . ' was moderated to published';
+        $node->setPublished();
+        $published_items[] = 'node:' . $map_pair['new_agency_nid'] . ' was set to published status';
+        $node->save();
       }
     }
 
@@ -187,6 +162,27 @@ class UpdateMigratedPublicBodyToAgencyCommands extends DrushCommands {
     if (count($published_items) > 0 || count($moderated_items) > 0) {
       drupal_flush_all_caches();
       $this->output->writeln('Caches cleared.');
+    }
+  }
+
+  /**
+   * Unpublishes all public_bodies.
+   *
+   * @command sfgov-change-content-type:unpub-public-bodies
+   * @aliases sfgov-unpub-public-bodies
+   * @usage sfgov-change-content-type:unpub-public-bodies
+   *   Display 'stuff'.
+   */
+  public function unpub_public_bodies() {
+    $nids = \Drupal::entityQuery('node')
+      ->condition('type', 'public_body')
+      ->execute();
+    $storage_handler = \Drupal::entityTypeManager()->getStorage('node');
+    $nodes = $storage_handler->loadMultiple($nids);
+    foreach ($nodes as $node) {
+      $node->set('moderation_state', 'archived');
+      $node->setUnpublished();
+      $node->save();
     }
   }
 
