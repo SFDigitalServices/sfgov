@@ -42,6 +42,7 @@ class UpdateMigratedPublicBodyToAgencyCommands extends DrushCommands {
   public function get_migration_mappings(): array {
     $items = [];
     foreach ($this->query_migration_table() as $record) {
+      $derp = true;
       $items[] = [
         'old_public_body_nid' => $record->sourceid1,
         'new_agency_nid' => $record->destid1,
@@ -202,6 +203,38 @@ class UpdateMigratedPublicBodyToAgencyCommands extends DrushCommands {
       $this->output()->writeln('Public body node/' . $record->sourceid1 . ' with vid:' . $record->sourceid2 . ' goes to new Agency node/' . $record->destid1);
     }
     $this->output()->writeln('Total count:' . count($items));
+  }
+
+  /**
+   * Echos back the subcommittees that need to be updated.
+   *
+   * @command sfgov-change-content-type:echo-subcommittee-list
+   * @aliases sfgov-echo-subcommittee-list
+   * @usage sfgov-change-content-type:echo-subcommittee-list
+   *   Display 'stuff'.
+   */
+  public function echo_subcommittee_list() {
+    $migration_mapping = [];
+    foreach ($this->query_migration_table() as $record) {
+      $migration_mapping[$record->sourceid1] = $record->destid1;
+    }
+
+    $database = \Drupal::service('database');
+    $query = $database->select('node__field_subcommittees', 's')
+      ->fields('s', ['entity_id', 'field_subcommittees_target_id'])
+      ->orderBy('entity_id', 'ASC');
+    $results = $query->execute()->fetchAll();
+    $storage_handler = \Drupal::entityTypeManager()->getStorage('node');
+
+    foreach ($results as $result) {
+      $agency = $storage_handler->load($migration_mapping[$result->entity_id]);
+      $subcommittee = $storage_handler->load($migration_mapping[$result->field_subcommittees_target_id]);
+      $agency_name = $agency->getTitle();
+      $agency_id = $agency->id();
+      $subcommittee_name = $subcommittee->getTitle();
+      $subcommittee_id = $subcommittee->id();
+      $this->output()->writeln("The agency {$agency_name} (id: {$agency_id}) should have subcommittee {$subcommittee_name} (id: {$subcommittee_id})");
+    }
   }
 
 }
