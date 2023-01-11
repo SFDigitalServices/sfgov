@@ -69,23 +69,7 @@
     {% set titleVisibility = "sr-only" %}
   {% endif %}
 
-  <header role="banner">
-    <div class="sfgov-nav-container">
-      <div class="sfgov-nav-container__content">
-        <div class="sfgov-logo__container">
-          <h1 class="notranslate {{ titleVisibility }}">{{ node.title.value }}</h1>
-          {% if logo is not empty %}
-            <img src="{{ node.field_logo.entity.uri.value | image_style('campaign_logo') }}"
-              alt="{{ node.field_logo.alt }}"
-            />
-          {% endif %}
-        </div>
-        <div class="head-right--container">
-          {{ page.header.gtranslate }}
-        </div>
-      </div>
-    </div>
-  </header>
+  {% include '@theme/header.twig' %}
 
   <main role="main">
     <a id="main-content" tabindex="-1"></a>
