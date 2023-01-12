@@ -16,64 +16,22 @@
     }
   }
 
-  header {
-    .sfgov-nav-container__content {
-      align-items: center;
-      display: flex;
-      flex-flow: row nowrap;
-    }
-
-    .sfgov-logo__container {
-      max-width: 80%;
-
-      h1 {
-        @include fs-title-2;
-        margin-bottom: 0;
-      }
-      img {
-        width: auto;
-        margin: -30px 0;
-
-        @include media-max($medium-screen) {
-          margin: 0;
-        }
-      }
-    }
-    .head-right--container {
-      display: flex;
-      align-self: flex-start;
-      justify-content: flex-end;
-      margin-left: auto;
-      padding-left: 20px;
-      width: auto;
-
-      @include media-max($medium-screen) {
-        flex-basis: 20%;
-      }
-
-      .gtranslate_container {
-        margin-right: 0;
-
-        @include media-max($medium-screen) {
-          position: static;
-          select {
-            margin-right: 0;
-            overflow: hidden;
-          }
-        }
-      }
-    }
+  .sfgov-nav-container__content {
+    border-bottom: 3px solid rgba(0, 43, 72, .1);
+    padding-bottom: 40px;
+    margin-bottom: 0;
   }
 
   .document-file--container {
     margin-top: 20px;
+
     .sfgov-icon-filefilled {
       &:before {
-        background: url(/themes/custom/sfgovpl/src/img/document.svg) no-repeat
-          50% 50% transparent;
+        background: url(/themes/custom/sfgovpl/src/img/document.svg) no-repeat 50% 50% transparent;
         min-height: 26px;
       }
     }
+
     .document {
       vertical-align: top;
     }
@@ -82,6 +40,7 @@
   .hero-banner {
     margin-bottom: 2.5rem;
   }
+
   .__campaign-about-wrapper {
     background: $c-dark-blue;
     color: $c-white;
@@ -91,15 +50,19 @@
       @include media($medium-screen) {
         max-width: 66%;
       }
-      > .field__label {
+
+      >.field__label {
         @include fs-h1;
         color: white;
       }
-      > .field__item {
+
+      >.field__item {
         @include fs-body-long;
+
         @include media($medium-screen) {
           @include fs-big-description;
         }
+
         a {
           color: #fff;
         }
@@ -116,8 +79,10 @@
         line-height: 42px;
         color: $c-white;
       }
+
       .field__item {
         padding-left: 40px;
+
         a {
           color: #fff;
           font-weight: normal;
@@ -131,6 +96,7 @@
       }
     }
   }
+
   .__campaign-about-dept-wrapper {
     @include contain-1090;
     margin-top: 60px;
@@ -138,6 +104,7 @@
 
     .field__item {
       margin-bottom: 20px;
+
       a {
         @include antialiasing;
         width: auto !important;
@@ -149,6 +116,7 @@
         flex-direction: column;
         display: flex;
         flex-wrap: wrap;
+
         @media screen and (min-width: $medium-screen) {
           flex-direction: row;
         }
@@ -156,10 +124,12 @@
         .field__item {
           width: 100%;
           margin-bottom: $rhythm * 2;
+
           @media screen and (min-width: $medium-screen) {
             display: flex;
             align-items: stretch;
-            > * {
+
+            >* {
               margin-right: $rhythm * 2;
               width: 100%;
             }
@@ -168,9 +138,10 @@
       }
 
       @media screen and (min-width: $medium-screen) {
-        .field__items > .field__item {
+        .field__items>.field__item {
           width: 50%;
-          &:nth-child(2n+2) > * {
+
+          &:nth-child(2n+2)>* {
             margin-right: 0;
           }
         }
@@ -182,27 +153,32 @@
   .paragraph--type--instagram-embed--large {
     @include contain-1090;
     padding: 80px 20px 60px 20px;
+
     .instagram-embed-title {
       @include fs-title-1;
       margin-bottom: 61px;
     }
+
     .instagram_gallery {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       margin-right: -20px;
-      > a {
+
+      >a {
         display: flex;
         width: 33.333%;
         margin-bottom: 20px;
         padding-right: 20px;
-        > img {
+
+        >img {
           width: 100%;
           align-self: center;
         }
       }
     }
   }
+
   .paragraph--type--instagram-embed--small {
     .instagram_gallery {
       margin-bottom: 10px;
@@ -211,7 +187,7 @@
 
   .__campaign-social-media-wrapper {
     background-color: $c-grey-2;
-    
+
     .field__label {
       @include fs-title-1;
     }
@@ -228,15 +204,18 @@
         margin: 0 15px;
 
         &.paragraph--type--instagram-embed {
+
           h4,
           .instagram-embed-title {
             font-weight: $fw-medium;
             font-size: 30px;
             line-height: 42px;
           }
+
           .__instagram-profile {
             margin: 0 -2%;
           }
+
           .instagram_gallery {
             overflow: hidden;
           }
@@ -270,9 +249,11 @@
       @include columns-720(left);
     }
   }
+
   .campaign-featured-image {
     @include contain-1090;
     margin-bottom: 109px;
   }
 }
+
 /* purgecss end ignore */
