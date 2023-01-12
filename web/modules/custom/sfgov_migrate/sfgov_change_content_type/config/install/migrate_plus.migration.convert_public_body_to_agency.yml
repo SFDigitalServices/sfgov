@@ -26,7 +26,11 @@ process:
   field_address: field_address
   field_phone_numbers: field_phone_numbers
   field_email: field_email
-  field_resources: field_other_info
+  field_resources:
+    plugin: paragraph_type_filter
+    allowed_types:
+      - other_info_card
+    source: field_other_info
 destination:
   plugin: 'entity:node'
   default_bundle: department

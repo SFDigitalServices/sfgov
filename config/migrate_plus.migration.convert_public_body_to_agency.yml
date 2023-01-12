@@ -2,8 +2,6 @@ uuid: a1d41ef8-a8f2-436b-95cf-f6c849c5a01d
 langcode: en
 status: true
 dependencies: {  }
-_core:
-  default_config_hash: IlCw3w0uzeAoFXGsETGcBBKBlXOgqdnf3nboSLY55Ag
 id: convert_public_body_to_agency
 class: null
 field_plugin_method: null
@@ -32,7 +30,11 @@ process:
   field_address: field_address
   field_phone_numbers: field_phone_numbers
   field_email: field_email
-  field_resources: field_other_info
+  field_resources:
+    plugin: paragraph_type_filter
+    allowed_types:
+      - other_info_card
+    source: field_other_info
 destination:
   plugin: 'entity:node'
   default_bundle: department
