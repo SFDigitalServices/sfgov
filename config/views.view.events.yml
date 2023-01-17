@@ -10,6 +10,7 @@ dependencies:
     - node.type.topic
   module:
     - node
+    - smart_date
     - user
 id: events
 label: Events
@@ -165,7 +166,20 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'There are no upcoming events right now.'
+            format: sf_restricted_html
+          tokenize: false
       sorts:
         field_start_date_value:
           id: field_start_date_value
@@ -322,6 +336,7 @@ display:
         options:
           offset: 0
           items_per_page: 3
+      empty: {  }
       sorts:
         field_smart_date_value:
           id: field_smart_date_value
@@ -546,6 +561,7 @@ display:
           replica: false
           query_tags: {  }
       defaults:
+        empty: false
         query: false
         pager: false
         use_more: false
@@ -571,7 +587,7 @@ display:
           required: true
       display_description: ''
       use_more: true
-      use_more_always: false
+      use_more_always: true
       use_more_text: 'See more events'
       link_display: page_1
       link_url: '{{ arguments.field_dept_target_id }}'
