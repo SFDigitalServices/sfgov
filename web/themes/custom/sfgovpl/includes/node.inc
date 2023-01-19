@@ -86,40 +86,50 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
   $divisionIds = [$node->id()];
   $divisionList = [];
   $currentLanguage = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $typeManager = \Drupal::entityTypeManager();
+  $nodeManager = $typeManager->getStorage('node');
+  $paragraphManager = $typeManager->getStorage('paragraph');
 
   foreach ($agencySections as $agencySection) {
-    $agencySection = Paragraph::load($agencySection['target_id']);
+    $agencySection = $paragraphManager->load($agencySection['target_id']);
     $agencyContents = !empty($agencySection->field_agencies) ? $agencySection->field_agencies->getValue() : [];
 
     if (!empty($agencyContents)) {
       foreach($agencyContents as $ac) {
-        $agencyContent = Paragraph::load($ac['target_id']);
-        $showMeetings = $agencyContent->field_show_meeting_parent_agency->value;
-        
-        $divisionId = $agencyContent->field_department->getValue()[0]['target_id'];
-        $division = Node::load($divisionId);
-        $divisionTitle = $division->getTitle();
-        $divisionUrl = $division->toUrl()->toString();
-  
-        if ($division->hasTranslation($currentLanguage)) {
-          $divisionTranslation = $division->getTranslation($currentLanguage);
-          $divisionTitle = $divisionTranslation->getTitle();
-          $divisionUrl = $divisionTranslation->toUrl()->toString();
+        $agencyContent = $paragraphManager->load($ac['target_id']);
+        $divisionId = $agencyContent->get('field_department')->getValue()[0]['target_id'];
+        $division = $nodeManager->load($divisionId);
+
+        // If current user can view the division, Build a list of titles/urls
+        // (using translations if available).
+        // [SG-1915]
+        // Use this "if" if you need to block both archived and draft.
+        // if ($division->access('view')) {
+        // Use the "if" below if only needing to block drafts with no current publication, but still allow archived.
+        if ($division->get('moderation_state')->getString() != "draft") {
+          $divisionTitle = $division->getTitle();
+          $divisionUrl = $division->toUrl()->toString();
+          if ($division->hasTranslation($currentLanguage)) {
+            $divisionTranslation = $division->getTranslation($currentLanguage);
+            $divisionTitle = $divisionTranslation->getTitle();
+            $divisionUrl = $divisionTranslation->toUrl()->toString();
+          }
+          $divisionList[] = [
+            "title" => $divisionTitle,
+            "url" => $divisionUrl,
+          ];
         }
-        
-        $divisionList[] = [
-          "title" => $divisionTitle,
-          "url" => $divisionUrl,
-        ];
-        
-        if ($showMeetings == true) {
-          $divisionIds[] = $divisionId; 
+
+        // If show parent meetings is set...
+        if ($agencyContent->get('field_show_meeting_parent_agency')->value) {
+          $divisionIds[] = $divisionId;
         }
       }
     }
   }
-  
-  // pass this agency's id and it's divisions/subcommittees/child agencies ids to the template for rendering meeting blocks
+
+  // pass this agency's id and it's divisions/subcommittees/child agencies ids
+  // to the template for rendering meeting blocks.
   $variables['division_ids'] = $divisionIds;
   $variables['division_list'] = $divisionList;
 }

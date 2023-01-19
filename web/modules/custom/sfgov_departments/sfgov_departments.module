@@ -89,11 +89,7 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
       $form['#validate'][] = '_sfgov_departments_validate';
 
       // TODO: SG-1854 - remove this as part of post deployment task for department and public body mashup
-      $form['field_divisions']['#attributes']['class'][] = 'visually-hidden';
-      $form['field_public_bodies']['#attributes']['class'][] = 'visually-hidden';
       $form['field_parent_department']['#attributes']['class'][] = 'visually-hidden';
-      $form['field_go_to_current_url']['#attributes']['class'][] = 'visually-hidden';
-      $form['field_url']['#attributes']['class'][] = 'visually-hidden';
 
       break;
 
@@ -364,7 +360,7 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
 function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
   $parentEntity = $form_state->getFormObject()->getEntity();
 
-  if ($parentEntity->getType() === 'department') {
+  if ($parentEntity->getEntityTypeId() === 'node' && $parentEntity->getType() === 'department') {
     if ($element['#paragraph_type'] == 'spotlight') {
       if( $element['subform']['#parents'][0] == 'field_spotlight2') {
         $element['subform']['field_spotlight_img']['widget']['#description'] = t("Minimum 550 px wide. Square or horizontal is recommended.");

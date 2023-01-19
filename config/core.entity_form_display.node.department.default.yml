@@ -18,10 +18,8 @@ dependencies:
     - field.field.node.department.field_departments
     - field.field.node.department.field_description
     - field.field.node.department.field_direct_external_url
-    - field.field.node.department.field_divisions
     - field.field.node.department.field_email
     - field.field.node.department.field_featured_items
-    - field.field.node.department.field_go_to_current_url
     - field.field.node.department.field_image
     - field.field.node.department.field_include_in_list
     - field.field.node.department.field_meeting_archive_date
@@ -29,7 +27,6 @@ dependencies:
     - field.field.node.department.field_parent_department
     - field.field.node.department.field_people
     - field.field.node.department.field_phone_numbers
-    - field.field.node.department.field_public_bodies
     - field.field.node.department.field_public_body_meetings
     - field.field.node.department.field_req_public_records
     - field.field.node.department.field_req_public_records_email
@@ -40,7 +37,6 @@ dependencies:
     - field.field.node.department.field_spotlight
     - field.field.node.department.field_spotlight2
     - field.field.node.department.field_topics
-    - field.field.node.department.field_url
     - node.type.department
     - workflows.workflow.editorial
   module:
@@ -63,8 +59,6 @@ third_party_settings:
         - field_parent_department
         - field_agency_sections
         - field_departments
-        - field_divisions
-        - field_public_bodies
         - field_call_to_action
         - field_social_media
       label: About
@@ -324,10 +318,9 @@ content:
         hide_help: '1'
         hide_guidelines: '1'
       maxlength:
-        maxlength_js: 110
+        maxlength_js: 140
         maxlength_js_label: (<strong>@count</strong>/@limit)
         maxlength_js_enforce: false
-        maxlength_js_truncate_html: false
   field_direct_external_url:
     type: link_default
     weight: 18
@@ -335,16 +328,6 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
-    third_party_settings: {  }
-  field_divisions:
-    type: entity_reference_autocomplete
-    weight: 65
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   field_email:
     type: paragraphs
@@ -383,13 +366,6 @@ content:
         add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
-    third_party_settings: {  }
-  field_go_to_current_url:
-    type: boolean_checkbox
-    weight: 20
-    region: content
-    settings:
-      display_label: true
     third_party_settings: {  }
   field_image:
     type: entity_browser_entity_reference
@@ -458,25 +434,6 @@ content:
   field_phone_numbers:
     type: paragraphs
     weight: 36
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
-      features:
-        add_above: '0'
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_public_bodies:
-    type: paragraphs
-    weight: 66
     region: content
     settings:
       title: Paragraph
@@ -626,14 +583,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_url:
-    type: link_default
-    weight: 19
-    region: content
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
   langcode:
     type: language_select
     weight: 17
@@ -697,6 +646,21 @@ content:
       maxlength:
         maxlength_js: null
         maxlength_js_label: (<strong>@count</strong>/@limit)
+  translation_notes:
+    type: string_textarea
+    weight: 102
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  translation_outdated:
+    type: boolean_checkbox
+    weight: 101
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
     weight: 25
