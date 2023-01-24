@@ -1,0 +1,37 @@
+id: convert_public_body_to_agency
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: change_content_type
+label: 'Convert public bodies to agencies (departments)'
+source:
+  plugin: 'content_entity:node'
+  bundle: public_body
+  constants:
+    include_in_list: 0
+    moderation_state_default: 'draft'
+process:
+  field_include_in_list: constants/include_in_list
+  field_about_or_description/value: field_about_description/0/value
+  field_about_or_description/format: constants/sf_basic_html
+  field_alert_text: field_alert_text
+  field_alert_expiration_date: field_alert_expiration_date
+  field_description: field_description
+  field_departments: field_departments
+  field_public_body_meetings: field_public_body_meetings
+  field_meeting_archive_date: field_meeting_archive_date
+  field_meeting_archive_url: field_meeting_archive_url
+  field_people: field_board_members
+  field_address: field_address
+  field_phone_numbers: field_phone_numbers
+  field_email: field_email
+  field_resources:
+    plugin: paragraph_type_filter
+    allowed_types:
+      - other_info_card
+    source: field_other_info
+destination:
+  plugin: 'entity:node'
+  default_bundle: department
+migration_dependencies: null
