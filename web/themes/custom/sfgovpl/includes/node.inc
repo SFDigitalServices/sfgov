@@ -132,6 +132,8 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
   // to the template for rendering meeting blocks.
   $variables['division_ids'] = $divisionIds;
   $variables['division_list'] = $divisionList;
+
+  $variables['count_resources'] = $node->get('field_resources')->referencedEntities();
 }
 
 /**
