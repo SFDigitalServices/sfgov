@@ -229,7 +229,7 @@
     {% set resourceEntityExists = node.field_resources.0.entity.field_resources.0.entity.field_resource.getValue() | length %}
     {% set sfgovLinkExists = node.field_resources.0.entity.field_resources.0.entity.field_node.getValue() | length %}
 
-    {% if resourceEntityExists > 0 or sfgovLinkExists > 0 %}
+    {% if count_resources > 0 or sfgovLinkExists > 0 %}
       {% set resourcesSpacing = "py-40 lg:py-60" %}
       {% if hasAboutSection == "false" %}
         {% set resourcesSpacing = "pt-40 pb-0 lg:pt-60 lg:pb-0" %}

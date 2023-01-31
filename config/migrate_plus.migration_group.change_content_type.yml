@@ -1,0 +1,36 @@
+uuid: 5f8a688c-8f11-4bcb-ac3b-24acad690b71
+langcode: en
+status: true
+dependencies: {  }
+id: change_content_type
+label: 'Change content type'
+description: 'Migrate content from one type to another'
+source_type: 'This site'
+module: null
+shared_configuration:
+  source:
+    key: default
+    constants:
+      uid_root: 1
+      status: 1
+      full_html: full_html
+      basic_html: basic_html
+      sf_basic_html: sf_basic_html
+      sf_restricted_html: sf_restricted_html
+  process:
+    title: title
+    created: created
+    promote: promote
+    sticky: sticky
+    status: constants/status
+    uid: uid
+    publish_on: publish_on
+    unpublish_on: unpublish_on
+    publish_state: publish_state
+    unpublish_state: unpublish_state
+    langcode: langcode
+    content_translation_source: content_translation_source
+    moderation_state: constants/moderation_state_default
+    metatag: metatag
+  destination:
+    plugin: 'entity:node'

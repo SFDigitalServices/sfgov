@@ -6,13 +6,21 @@ dependencies:
     - field.storage.paragraph.field_video
     - paragraphs.paragraphs_type.video
   module:
+    - datalayer
+    - tmgmt_content
     - video_embed_field
+third_party_settings:
+  datalayer:
+    expose: 0
+    label: field_video
+  tmgmt_content:
+    excluded: false
 id: paragraph.video.field_video
 field_name: field_video
 entity_type: paragraph
 bundle: video
 label: 'YouTube URL'
-description: 'YouTube video URL, in the format: https://www.youtube.com/watch?v=xyz'
+description: 'YouTube video URL, in the format: https://www.youtube.com/watch?v=xyz. Copy the link from the address bar, do not use the share button.'
 required: true
 translatable: false
 default_value: {  }
