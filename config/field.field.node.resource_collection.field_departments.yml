@@ -5,14 +5,16 @@ dependencies:
   config:
     - field.storage.node.field_departments
     - node.type.department
-    - node.type.public_body
     - node.type.resource_collection
   module:
     - datalayer
+    - tmgmt_content
 third_party_settings:
   datalayer:
     expose: 1
     label: field_departments
+  tmgmt_content:
+    excluded: false
 id: node.resource_collection.field_departments
 field_name: field_departments
 entity_type: node
@@ -28,7 +30,6 @@ settings:
   handler_settings:
     target_bundles:
       department: department
-      public_body: public_body
     sort:
       field: _none
       direction: ASC
