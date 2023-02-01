@@ -803,24 +803,6 @@ function sfgov_admin_toolbar_alter(&$items) {
 }
 
 /**
- * Implements hook_cron().
- */
-function sfgov_admin_cron() {
-  $purge_frequency = \Drupal::config('tmgmt.sfgov_admin_logs')->get('purge_frequency');
-  if ($purge_frequency != '_never') {
-    if ($purge_frequency == '1') {
-      \Drupal::database()->delete('tmgmt_message')->execute();
-    }
-    else {
-      $request_time = \Drupal::time()->getCurrentTime();
-      \Drupal::database()->delete('tmgmt_message')
-        ->condition('created', $request_time - (int) $purge_frequency, '<=')
-        ->execute();
-    }
-  }
-}
-
-/**
  * Implements hook_menu_local_tasks_alter().
  */
 function sfgov_admin_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface $cacheability) {

@@ -6,8 +6,17 @@ dependencies:
     - field.storage.node.field_about_resources
     - node.type.about
     - paragraphs.paragraphs_type.other_info_card
+    - paragraphs.paragraphs_type.other_info_document
   module:
+    - datalayer
     - entity_reference_revisions
+    - tmgmt_content
+third_party_settings:
+  datalayer:
+    expose: 0
+    label: field_about_resources
+  tmgmt_content:
+    excluded: false
 id: node.about.field_about_resources
 field_name: field_about_resources
 entity_type: node
@@ -23,6 +32,7 @@ settings:
   handler_settings:
     target_bundles:
       other_info_card: other_info_card
+      other_info_document: other_info_document
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -40,8 +50,14 @@ settings:
       additional_info:
         weight: 61
         enabled: false
+      agency_section:
+        weight: 80
+        enabled: false
       agenda_item:
         weight: 62
+        enabled: false
+      basic_html_section:
+        weight: 82
         enabled: false
       block:
         weight: 63
@@ -76,6 +92,15 @@ settings:
       custom_section:
         weight: 73
         enabled: false
+      data_story_reference_section:
+        weight: 94
+        enabled: false
+      data_story_reference_subsection:
+        weight: 95
+        enabled: false
+      data_story_section:
+        weight: 96
+        enabled: false
       department_content:
         weight: 74
         enabled: false
@@ -85,6 +110,12 @@ settings:
       document:
         weight: 76
         enabled: false
+      document_section:
+        weight: 100
+        enabled: false
+      document_subsection:
+        weight: 101
+        enabled: false
       email:
         weight: 77
         enabled: false
@@ -93,6 +124,9 @@ settings:
         enabled: false
       events:
         weight: 79
+        enabled: false
+      existing_agency:
+        weight: 105
         enabled: false
       fact:
         weight: 80
@@ -111,6 +145,9 @@ settings:
         enabled: false
       help:
         weight: 85
+        enabled: false
+      image:
+        weight: 112
         enabled: false
       image_with_text:
         weight: 86
@@ -141,7 +178,7 @@ settings:
         enabled: true
       other_info_document:
         weight: 95
-        enabled: false
+        enabled: true
       people:
         weight: 96
         enabled: false
@@ -151,8 +188,29 @@ settings:
       phone_numbers:
         weight: 98
         enabled: false
+      powerbi_embed:
+        weight: 126
+        enabled: false
       process_step:
         weight: 99
+        enabled: false
+      profile_group:
+        weight: 128
+        enabled: false
+      public_body_profiles:
+        weight: 129
+        enabled: false
+      resource_entity:
+        weight: 131
+        enabled: false
+      resource_node:
+        weight: 132
+        enabled: false
+      resource_section:
+        weight: 133
+        enabled: false
+      resource_subsection:
+        weight: 134
         enabled: false
       resources:
         weight: 100
@@ -192,5 +250,11 @@ settings:
         enabled: false
       video:
         weight: 112
+        enabled: false
+      video_external:
+        weight: 148
+        enabled: false
+      videos:
+        weight: 147
         enabled: false
 field_type: entity_reference_revisions

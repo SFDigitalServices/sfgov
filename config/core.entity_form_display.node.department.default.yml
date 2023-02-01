@@ -59,8 +59,6 @@ third_party_settings:
         - field_parent_department
         - field_agency_sections
         - field_departments
-        - field_divisions
-        - field_public_bodies
         - field_call_to_action
         - field_social_media
       label: About
@@ -212,7 +210,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -267,7 +265,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -286,7 +284,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -320,10 +318,9 @@ content:
         hide_help: '1'
         hide_guidelines: '1'
       maxlength:
-        maxlength_js: 110
+        maxlength_js: 140
         maxlength_js_label: (<strong>@count</strong>/@limit)
         maxlength_js_enforce: false
-        maxlength_js_truncate_html: false
   field_direct_external_url:
     type: link_default
     weight: 18
@@ -339,7 +336,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -358,7 +355,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -422,7 +419,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -441,7 +438,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -460,14 +457,15 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: _none
       features:
+        add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
@@ -507,7 +505,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -526,7 +524,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -545,7 +543,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -564,7 +562,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
@@ -649,6 +647,21 @@ content:
       maxlength:
         maxlength_js: null
         maxlength_js_label: (<strong>@count</strong>/@limit)
+  translation_notes:
+    type: string_textarea
+    weight: 102
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  translation_outdated:
+    type: boolean_checkbox
+    weight: 101
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
     weight: 25

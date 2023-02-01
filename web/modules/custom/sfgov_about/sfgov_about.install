@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file Update hooks for SF Gov About module.
+ */
+
+/**
+ *  Apply public body downloadable file paragraphs to a corresponding about page.
+ */
+function sfgov_about_update_9401(&$sandbox) {
+  $public_bodies = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'public_body']);
+  // Loop through each public body and get the downloadable files paragraphs
+  // (if there are any).
+  foreach ($public_bodies as $public_body) {
+    $public_body_resources = $public_body->get('field_other_info')->referencedEntities();
+    $downloadable_files_paragraphs = [];
+    foreach ($public_body_resources as $public_body_resource) {
+      if ($public_body_resource->bundle() === 'other_info_document') {
+        $downloadable_files_paragraphs[] = $public_body_resource;
+      }
+    }
+
+    if ($downloadable_files_paragraphs) {
+      // Load the corresponding about page by the public body id stored in its
+      // parent_department field.
+      $about_page = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_parent_department' => $public_body->id()]);
+      $body_title = $public_body->getTitle();
+
+      // This public body has a corresponding about page
+      if (count($about_page) === 1) {
+        $about_page = reset($about_page);
+        $about_page_resources = $about_page->get('field_about_resources');
+        foreach ($downloadable_files_paragraphs as $paragraph) {
+          $about_page_resources->appendItem($paragraph);
+        }
+        $count = count($downloadable_files_paragraphs);
+        $about_title = $about_page->getTitle();
+        $message = "{$count} Downloadable Files paragraphs have been moved from Public Body: {$body_title} to About: {$about_title}";
+        \Drupal::logger('sfgov_utilities')->notice($message);
+        $about_page->save();
+      }
+      // This public body has no corresponding about page
+      else {
+        $message = "Public Body: {$body_title} does not have a corresponding about page";
+        \Drupal::logger('sfgov_utilities')->notice($message);
+      }
+    }
+  }
+}
