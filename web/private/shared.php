@@ -43,8 +43,10 @@ function _curl_post($url, $headers=[], $body='')
   $header_size = $info['header_size'];
   $header_string = substr($res, 0, $header_size);
   $headers = array_reduce(explode("\n", $header_string), function ($h, $str) {
-    list($key, $value) = preg_split(': +', $str, 2);
-    $h[strtolower($key)] = $value;
+    if (str_contains($str, ':')) {
+      list($key, $value) = preg_split(': +', $str, 2);
+      $h[strtolower($key)] = $value;
+    }
     return $h;
   }, []);
   $body = substr($res, $header_size);
