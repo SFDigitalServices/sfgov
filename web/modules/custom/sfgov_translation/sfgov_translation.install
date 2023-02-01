@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Add the translation_outdated and translation nodes fields to all nodes.
+ */
 function sfgov_translation_update_9401() {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $changes = $definition_update_manager->getChangeList();
@@ -15,6 +18,44 @@ function sfgov_translation_update_9401() {
     foreach ($fields as $field_name => $field_definition) {
       $definition_update_manager->installFieldStorageDefinition($field_name, $entity_type->id(),
         $entity_type->id(), $field_definition);
+    }
+  }
+}
+
+
+/**
+ * Add departments to all translated notes
+ */
+function sfgov_translation_update_9403() {
+  // All the content types that have field_departments.
+  $content_types = [
+    'department',
+    'form_confirmation',
+    'meeting',
+    'step_by_step',
+  ];
+
+  foreach ($content_types as $content_type) {
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => $content_type]);
+    foreach ($nodes as $node) {
+      // If it has a non-english translation.
+      if ($translation_languages = $node->getTranslationLanguages(FALSE)) {
+        // If field_departments has a value.
+        if ($departments = $node->get('field_departments')->referencedEntities()) {
+          // Update each translated field_department value to reflect
+          // whats in the english node.
+          foreach ($translation_languages as $langcode) {
+            $translated_node = $node->getTranslation($langcode->getId());
+            $translated_node->set('field_departments', $departments);
+            // Also have to update some date fields to be able to save meeting nodes.
+            if ($node->hasField('field_smart_date')) {
+              $date_value = $node->get('field_smart_date')[0]->getValue();
+              $translated_node->set('field_smart_date', $date_value);
+            }
+            $translated_node->save();
+          }
+        }
+      }
     }
   }
 }
