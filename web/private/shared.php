@@ -39,8 +39,8 @@ function _curl_post($url, $headers=[], $body='')
   $info = curl_getinfo($curl);
   curl_close($curl);
 
-  $status = $info[CURLINFO_HTTP_CODE];
-  $header_size = $info[CURLINFO_HEADER_SIZE];
+  $status = $info['http_code'];
+  $header_size = $info['header_size'];
   $header_string = substr($res, 0, $header_size);
   $headers = array_reduce(explode("\n", $header_string), function ($h, $str) {
     list($key, $value) = preg_split(': +', $str, 2);
