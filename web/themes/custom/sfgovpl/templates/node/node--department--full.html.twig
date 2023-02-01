@@ -201,13 +201,16 @@
   {% endif %}
 
   {% set events_view = drupal_view('events', 'block_1', node.id)|render %}
-  {% if events_view|striptags|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       <div class="responsive-container">
+        {% if drupal_view_result('events', 'block_1', node.id) is empty %}
+          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">Events</h2>
+          <p>There are no upcoming events right now.</p>
+          <br>
+        {% endif %}
         {{ events_view }}
       </div>
     </div>
-  {% endif %}
 
   {% set hasAboutSection = "false" %}
   {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) ? "true" : "false" %}

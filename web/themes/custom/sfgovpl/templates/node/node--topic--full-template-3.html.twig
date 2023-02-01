@@ -27,7 +27,7 @@
         </div>
       </div>
     {% endif %}
-    
+
     {% if content.field_topics['#items'].getValue() %}
       <div class="sfgov-full-bleed white child-topics card-container template-3">
         <div class="sfgov-section-container">
@@ -46,14 +46,17 @@
     {% endif %}
 
     {% set events_view = drupal_view('events', 'events_block_topics')|render %}
-    {% if events_view|striptags|trim %}
       <div class="sfgov-full-bleed white card-container">
         <div class="sfgov-section-container">
-          {{ events_view }}
+        {% if drupal_view_result('events', 'events_block_topics', node.id) is empty %}
+          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">Events</h2>
+          <p>There are no upcoming events right now.</p>
+          <br>
+        {% endif %}
+        {{ events_view }}
         </div>
       </div>
-    {% endif %}
-    
+
     {% if content.field_content|render is not empty %}
       <div class="sfgov-full-bleed card-container">
         <div class="sfgov-section-container">
