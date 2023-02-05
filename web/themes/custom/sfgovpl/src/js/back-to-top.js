@@ -10,7 +10,7 @@
     attach: function (context) {
 
       // Set animation speed based on motion preference.
-      let animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
+      const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
 
       $('#back-to-top', context).on('click', e => {
         e.preventDefault()
