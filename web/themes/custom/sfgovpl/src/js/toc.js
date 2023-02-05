@@ -52,6 +52,9 @@
       const $anchors = $toc.find('a')
       const $content = $('.sfgov-section--content', context)
 
+      // Set animation speed based on motion preference.
+      const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1000;
+
       const locationPath = filterPath(location.pathname)
       $anchors.each(function () {
         const thisPath = filterPath(this.pathname) || locationPath
@@ -62,7 +65,7 @@
             if (target) {
               $(this).click(event => {
                 event.preventDefault()
-                $('html, body').animate({ scrollTop: $target.offset().top }, 1000, () => {
+                $('html, body').animate({ scrollTop: $target.offset().top }, animationSpeed, () => {
                   location.hash = target
                   $target.focus()
                   if ($target.is(':focus')) {

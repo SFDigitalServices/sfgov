@@ -7,10 +7,14 @@
  */
 (function ($, Drupal) {
   Drupal.behaviors.backToTop = {
-    attach (context) {
+    attach: function (context) {
+
+      // Set animation speed based on motion preference.
+      let animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
+
       $('#back-to-top', context).on('click', e => {
         e.preventDefault()
-        $('html, body', context).animate({ scrollTop: 0 }, '300')
+        $('html, body', context).animate({scrollTop: 0}, animationSpeed)
       })
 
       $(window, context).on('load', () => {
@@ -20,8 +24,7 @@
           now = $(window, context).scrollTop()
           if (then > now && now > 700) {
             $('#back-to-top').addClass('show')
-          }
-          else {
+          } else {
             $('#back-to-top').removeClass('show')
           }
           then = now

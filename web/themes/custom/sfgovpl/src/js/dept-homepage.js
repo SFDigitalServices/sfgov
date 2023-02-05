@@ -1,5 +1,9 @@
 (function ($) {
   $('body.page-node-type-department').each(() => {
+
+    // Set animation speed based on motion preference.
+    const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
+
     // an array of selectors for the dept homepage sections
     const sections = [
       { selector: '#sfgov-dept-services', label: 'Services' },
@@ -15,7 +19,7 @@
     const scrollTo = function (elemSelector) {
       $scrollElem.animate({
         scrollTop: $(elemSelector).offset().top
-      }, 300)
+      }, animationSpeed)
       return false
     }
 

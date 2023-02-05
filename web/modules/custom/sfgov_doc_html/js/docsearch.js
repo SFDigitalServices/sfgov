@@ -93,12 +93,13 @@
       }
 
       function jumpToMatch(index) {
+        let animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 500;
         const $el = $('mark').eq( (index == 0) ? index : index - 1 );
         $('mark').removeClass('current');
         $el.addClass('current');
         $('html, body').stop().animate({
           scrollTop: $el.offset().top - 100
-        }, 500);
+        }, animationSpeed);
       }
 
       function resultsInfo() {
