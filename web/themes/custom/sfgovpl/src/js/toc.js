@@ -53,7 +53,7 @@
       const $content = $('.sfgov-section--content', context)
 
       // Set animation speed based on motion preference.
-      const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1000;
+      const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1000
 
       const locationPath = filterPath(location.pathname)
       $anchors.each(function () {

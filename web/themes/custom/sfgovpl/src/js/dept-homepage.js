@@ -1,8 +1,7 @@
 (function ($) {
   $('body.page-node-type-department').each(() => {
-
     // Set animation speed based on motion preference.
-    const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
+    const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300
 
     // an array of selectors for the dept homepage sections
     const sections = [
