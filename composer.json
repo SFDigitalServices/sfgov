@@ -56,7 +56,7 @@
         "drupal/cshs": "^3.6",
         "drupal/csp": "^1.16",
         "drupal/ctools": "^3.0",
-        "drupal/datalayer": "^1.0@beta",
+        "drupal/datalayer": "^2.0@RC",
         "drupal/date_popup": "^1.1",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
@@ -131,6 +131,7 @@
         "drupal/telephone_validation": "^2.1",
         "drupal/tmgmt": "^1.12",
         "drupal/tmgmt_google": "^1.0",
+        "drupal/tmgmt_xtm": "^6.1",
         "drupal/toc_api": "^1.0",
         "drupal/toc_filter": "^2.0",
         "drupal/twig_field_value": "^2.0",
@@ -143,7 +144,7 @@
         "drupal/views_data_export": "^1.1",
         "drupal/views_infinite_scroll": "^1.5",
         "drush-ops/behat-drush-endpoint": "^0.0.5",
-        "drush/drush": "^10",
+        "drush/drush": "^11",
         "enyo/dropzone": "^5.7",
         "google/apiclient": "~2.0",
         "joachim-n/composer-manifest": "^1.0",
@@ -201,9 +202,7 @@
         "post-create-project-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],
-        "post-drupal-scaffold-cmd": [
-            "patch -p1 < patches/gitattributes.patch"
-        ]
+        "post-drupal-scaffold-cmd": []
     },
     "extra": {
         "installer-types": [
@@ -275,7 +274,7 @@
                 "Allow for deletion of a single value of a multiple value field": "https://www.drupal.org/files/issues/2021-03-30/1038316-235.patch",
                 "Node local tasks tabs do not appear on node revisions": "https://www.drupal.org/files/issues/2019-11-12/drupal-node_revision_local_tasks_canonical-2885278-15.patch",
                 "Invalid config structures can result in exceptions when saving a config entity": "https://www.drupal.org/files/issues/2021-11-29/2925890-29.patch",
-                "Allow tokens in entity reference views selection arguments": "https://www.drupal.org/files/issues/2021-12-21/1699378-235.patch",
+                "Allow tokens in entity reference views selection arguments": "https://www.drupal.org/files/issues/2022-12-21/1699378-241.patch",
                 "User can't reference unpublished content even when they have access to it": "https://www.drupal.org/files/issues/2022-06-17/2845144-67.patch",
                 "Notice: Undefined index: #type in Drupal\\Core\\Form\\FormHelper::processStates()": "https://www.drupal.org/files/issues/2021-05-12/2700667-133a.patch",
                 "TranslatableMarkup for Invalid Argument Exception: $string (Array) must be a string.": "https://www.drupal.org/files/issues/2019-04-01/2719553-26-null_for_string.patch"
@@ -307,11 +306,8 @@
                 "Multi value field file replace": "https://www.drupal.org/files/issues/2022-04-01/media_entity_file_replace-3254763-multiple-files-8.patch",
                 "Labels and descriptions update": "patches/media_entity_file_replace--update-labels.patch"
             },
-            "drupal/datalayer": {
-                "Update field output to always be an array to allow for multivalue fields": "https://www.drupal.org/files/issues/2019-03-24/2940811-update-field-output-to-array-12.patch"
-            },
-            "drupal/toc_api": {
-                "$dom->getElementById($item['id']) returns null": "https://www.drupal.org/files/issues/2022-04-29/drupal_toc_api-3274613-getElementById-returns-null.patch"
+            "drupal/views_data_export": {
+                "Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch"
             }
         },
         "enable-patching": "true"

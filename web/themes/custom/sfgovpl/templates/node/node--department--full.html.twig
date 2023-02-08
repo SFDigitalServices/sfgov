@@ -201,13 +201,16 @@
   {% endif %}
 
   {% set events_view = drupal_view('events', 'block_1', node.id)|render %}
-  {% if events_view|striptags|trim %}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       <div class="responsive-container">
+        {% if drupal_view_result('events', 'block_1', node.id) is empty %}
+          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">Events</h2>
+          <p>There are no upcoming events right now.</p>
+          <br>
+        {% endif %}
         {{ events_view }}
       </div>
     </div>
-  {% endif %}
 
   {% set hasAboutSection = "false" %}
   {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) ? "true" : "false" %}
@@ -225,8 +228,8 @@
   {% if content.field_resources|render|striptags|trim %}
     {% set resourceEntityExists = node.field_resources.0.entity.field_resources.0.entity.field_resource.getValue() | length %}
     {% set sfgovLinkExists = node.field_resources.0.entity.field_resources.0.entity.field_node.getValue() | length %}
-    
-    {% if resourceEntityExists > 0 or sfgovLinkExists > 0 %}
+
+    {% if count_resources > 0 or sfgovLinkExists > 0 %}
       {% set resourcesSpacing = "py-40 lg:py-60" %}
       {% if hasAboutSection == "false" %}
         {% set resourcesSpacing = "pt-40 pb-0 lg:pt-60 lg:pb-0" %}
