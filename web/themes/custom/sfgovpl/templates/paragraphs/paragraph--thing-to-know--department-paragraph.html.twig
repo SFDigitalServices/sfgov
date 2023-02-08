@@ -40,10 +40,7 @@
 #}
 {%
   set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
+    'meeting__thing-to-know',
   ]|merge(classes|default([]))
 %}
 
@@ -52,7 +49,7 @@
 
 {% block paragraph %}
   {% if title is not empty and text is not empty %}
-    <div>
+    <div{{ attributes.addClass(classes) }}>
       {% if title is not empty %}
         <p class="p-0 m-0 mb-8 font-medium lg:text-title-xs">{{ title }}</p>
       {% endif %}
