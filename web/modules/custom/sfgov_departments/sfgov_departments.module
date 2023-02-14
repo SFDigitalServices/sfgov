@@ -242,6 +242,10 @@ function sfgov_departments_form_node_department_edit_form_alter(&$form, FormStat
   ];
 
   $form['#validate'][] = '_sfgov_departments_dept_req_public_records_form_validate';
+
+  // Get this submit handler to run first to alter the agency values before
+  // default processing.
+  array_unshift($form['actions']['submit']['#submit'], '_sfgov_departments_agency_sections_alter_submit');
 }
 
 /**
@@ -283,6 +287,31 @@ function _sfgov_departments_dept_req_public_records_form_validate($form, FormSta
       $form_state->setErrorByName("field_req_public_records_phone", t('Public records phone is required if request type is set to Phone.'));
     }
   }
+}
+
+/**
+ * Custom submit handler to remove agency sections if no label.
+ *
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function _sfgov_departments_agency_sections_alter_submit(&$form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+  $label = $values['field_agency_sections'][0]['subform']['field_section_title_list'];
+
+  // If the section title is set to "None"
+  if (empty($label) || $label[0]['value'] == '_none') {
+
+    foreach ($values['field_agency_sections'][0]['subform']['field_agencies'] as $id => $item) {
+      // Remove each agency from the agency section.
+      if (is_numeric($id)) {
+        unset($values['field_agency_sections'][0]['subform']['field_agencies'][$id]);
+      }
+    }
+  }
+
+  // Reset the form values with the removed agencies.
+  $form_state->setValues($values);
 }
 
 /**
