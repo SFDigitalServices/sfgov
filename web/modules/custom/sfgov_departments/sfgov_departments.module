@@ -20,7 +20,10 @@ function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
 
   // prevent an agency from referencing itself or its parent as a division
   if (!empty($node->id()) && !empty($agencySection[$agencySectionDelta])) {
-    $agencyNodes = $agencySection[$agencySectionDelta]['subform']['field_agencies'][$agencySectionDelta]['subform']['field_department'];
+    // error_log(print_r(array_keys(), 1));
+    $agencyNodes = array_key_exists($agencySectionDelta, $agencySection[$agencySectionDelta]['subform']['field_agencies'])
+      ? $agencySection[$agencySectionDelta]['subform']['field_agencies'][$agencySectionDelta]['subform']['field_department']
+      : [];
     
     if (!empty($agencyNodes)) {
       // get the view that retrieves the parent agency/agencies of this agency
