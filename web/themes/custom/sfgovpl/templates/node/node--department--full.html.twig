@@ -213,7 +213,7 @@
     </div>
 
   {% set hasAboutSection = "false" %}
-  {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) ? "true" : "false" %}
+  {% set hasAgencySection = division_list|length > 0 %}
   {% set hasAgencySectionTitle = node.field_agency_sections.0.entity.field_section_title_list.value is not empty %}
 
   {% if content.field_about_or_description|render|striptags
@@ -272,7 +272,7 @@
             {% if hasAgencySection or content.field_departments|render|striptags|trim %}
               <div class="responsive-grid grid-cols-1 gap-40 mb-60">
                 {# agency sections (divisions) #}
-                {% if hasAgencySection and hasAgencySectionTitle %}
+                {% if hasAgencySection %}
                   <div>
                     <p class="text-title-xs font-medium m-0 mb-24"> {{ node.field_agency_sections.0.entity.field_section_title_list.value | t }}</p>
                     <ul class="responsive-grid gap-y-20 list-none p-0 m-0 grid-cols-1 lg:grid-cols-2">
