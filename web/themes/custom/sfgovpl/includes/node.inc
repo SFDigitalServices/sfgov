@@ -230,58 +230,102 @@ function sfgovpl_preprocess_node__transaction(&$variables) {
  * Implements hook_preprocess_node().
  */
 function sfgovpl_preprocess_node__data_story__full(&$variables) {
+  $manager = \Drupal::entityTypeManager();
+  $node_manager = $manager->getStorage('node');
+  $paragraph_manager = $manager->getStorage('paragraph');
 
   /* @var\Drupal\node\NodeInterface $node */
   $node = $variables['node'];
-  $nid = $node->id();
+  $nid = $node->id(); // 1917
+  $lang = $node->get('langcode')->value;
 
-  // Get subsection paragraphs that reference this node.
-  $query_step_1 = \Drupal::entityQuery('paragraph')
+  // We need to find resource nodes that have nested references to this data
+  // story node.
+  // First, we get the latest version of any subsection paragraphs
+  // that reference back to this data story node.
+  $data_subsections = $paragraph_manager->getQuery()
+    ->latestRevision()
+    ->exists('field_data_story')
+    ->condition('langcode', $lang)
     ->condition('type', 'data_story_reference_subsection')
-    ->condition('field_data_story.entity:node.nid', $nid);
-  $paragraph_subsectionids = $query_step_1->execute();
+    ->condition('field_data_story.target_id', $nid)
+    ->execute();
 
-  if (empty($paragraph_subsectionids)) {
-    return;
-  }
-
-  // Now get section paragraphs that reference the subsection.
-  $query_step_2 = \Drupal::entityQuery('paragraph')
+  // Next, we get the latest version of any section paragraphs that reference
+  // (are the parent of) the subsections we found above.
+  $data_sections = $paragraph_manager->getQuery()
+    ->latestRevision()
+    ->exists('field_content')
+    ->condition('langcode', $lang)
     ->condition('type', 'data_story_reference_section')
-    ->condition('field_content.entity:paragraph.id', $paragraph_subsectionids, 'IN');
-  $paragraph_sectionids = $query_step_2->execute();
+    ->condition('field_content.target_id', $data_subsections, 'IN')
+    ->execute();
 
-  if (empty($paragraph_sectionids)) {
-    return;
-  }
-
-  // Next get the nodes that reference the section paragraphs.
-  $query_step_3 = \Drupal::entityQuery('node')
-    ->condition('type', 'resource_collection')
+  // Next, we get that resource nodes that are the parent of the sections we
+  // found above.
+  $resource_nodes = $node_manager->getQuery()
+    ->latestRevision()
+    ->exists('field_paragraphs')
+    ->condition('langcode', $lang)
     ->condition('status', 1)
-    ->condition('field_paragraphs.entity:paragraph.id', $paragraph_sectionids, 'IN');
-  $resource_collection_nids = $query_step_3->execute();
+    ->condition('type', 'resource_collection')
+    ->condition('field_paragraphs.target_id', $data_sections, 'IN')
+    ->execute();
 
-  if (empty($resource_collection_nids)) {
-    return;
+  // Because of the order of locating this info, We don't know if the latest
+  // versions of the resources found above still reference back to this data
+  // story node. The queries can return past version references by default.
+  // We need to cycle thru the latest version of each resource node we found and
+  // check that it still has a reference back to this data story.
+  $nodes_for_links = [];
+  if (!empty($resource_nodes)) {
+    foreach ($resource_nodes as $rvid => $rnid) {
+      // load the latest version of the resource node.
+      $resource_node = $node_manager->loadRevision($rvid);
+      if ($resource_node->hasField('field_paragraphs')) {
+        $ds_sections = $resource_node->get('field_paragraphs')
+          ->referencedEntities();
+        foreach ($ds_sections as $section) {
+          if ($section->hasField('field_content')) {
+            $ds_subsections = $section->get('field_content')
+              ->referencedEntities();
+            foreach ($ds_subsections as $subsection) {
+              if ($subsection->hasField('field_data_story')) {
+                $data_stories = $subsection->get('field_data_story')
+                  ->referencedEntities();
+                foreach ($data_stories as $story) {
+                  // For each data story that is referenced at the deepest level
+                  // of the resource node, if it has a match to our current data
+                  // story node, that means it can be added to our link list.
+                  if ($story->id() == $nid) {
+                    $nodes_for_links[$resource_node->id()] = [
+                      'id' => $resource_node->id(),
+                      'label' => $resource_node->label()
+                    ];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
-  // Create the "Part of.." label for banner.
   $links = [];
-  foreach ($resource_collection_nids as $resource_collection_nid) {
-    $node_object = Node::load($resource_collection_nid);
-
+  foreach ($nodes_for_links as $link) {
     $links[] = Link::fromTextAndUrl(
-      t($node_object->label()),
-      Url::fromRoute('entity.node.canonical', ['node' => $node_object->id()])
+      $link['label'],
+      Url::fromRoute('entity.node.canonical', ['node' => $link['id']])
     )->toString();
-
   }
 
-  $links = implode(', ', $links);
-  $part_of = t('Part of ') . $links;
+  $build = [
+    '#markup' => !empty($links) ? t('Part of ') . implode(', ', $links) : '',
+    '#cache' => ['tags' => ['node_list:resource_collection']]
+  ];
 
-  $variables['part_of'] = $part_of;
+  $variables['part_of'] = \Drupal::service('renderer')->render($build);
 }
 
 /**
