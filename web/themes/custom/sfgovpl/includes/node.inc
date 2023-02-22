@@ -97,32 +97,35 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
     if (!empty($agencyContents)) {
       foreach($agencyContents as $ac) {
         $agencyContent = $paragraphManager->load($ac['target_id']);
-        $divisionId = $agencyContent->get('field_department')->getValue()[0]['target_id'];
-        $division = $nodeManager->load($divisionId);
+        $divisionId = $agencyContent->get('field_department')->getValue() ? $agencyContent->get('field_department')->getValue()[0]['target_id'] : [];
 
-        // If current user can view the division, Build a list of titles/urls
-        // (using translations if available).
-        // [SG-1915]
-        // Use this "if" if you need to block both archived and draft.
-        // if ($division->access('view')) {
-        // Use the "if" below if only needing to block drafts with no current publication, but still allow archived.
-        if ($division->get('moderation_state')->getString() != "draft") {
-          $divisionTitle = $division->getTitle();
-          $divisionUrl = $division->toUrl()->toString();
-          if ($division->hasTranslation($currentLanguage)) {
-            $divisionTranslation = $division->getTranslation($currentLanguage);
-            $divisionTitle = $divisionTranslation->getTitle();
-            $divisionUrl = $divisionTranslation->toUrl()->toString();
+        if (!empty($divisionId)) {
+          $division = $nodeManager->load($divisionId);
+
+          // If current user can view the division, Build a list of titles/urls
+          // (using translations if available).
+          // [SG-1915]
+          // Use this "if" if you need to block both archived and draft.
+          // if ($division->access('view')) {
+          // Use the "if" below if only needing to block drafts with no current publication, but still allow archived.
+          if ($division->get('moderation_state')->getString() != "draft") {
+            $divisionTitle = $division->getTitle();
+            $divisionUrl = $division->toUrl()->toString();
+            if ($division->hasTranslation($currentLanguage)) {
+              $divisionTranslation = $division->getTranslation($currentLanguage);
+              $divisionTitle = $divisionTranslation->getTitle();
+              $divisionUrl = $divisionTranslation->toUrl()->toString();
+            }
+            $divisionList[] = [
+              "title" => $divisionTitle,
+              "url" => $divisionUrl,
+            ];
           }
-          $divisionList[] = [
-            "title" => $divisionTitle,
-            "url" => $divisionUrl,
-          ];
-        }
-
-        // If show parent meetings is set...
-        if ($agencyContent->get('field_show_meeting_parent_agency')->value) {
-          $divisionIds[] = $divisionId;
+  
+          // If show parent meetings is set...
+          if ($agencyContent->get('field_show_meeting_parent_agency')->value) {
+            $divisionIds[] = $divisionId;
+          }
         }
       }
     }
