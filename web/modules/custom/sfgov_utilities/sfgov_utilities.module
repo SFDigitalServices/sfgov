@@ -510,3 +510,17 @@ function sfgov_utilities_create_alias($internal_path, $alias_to_generate, string
     }
   }
 }
+
+/**
+ * Implements hook_editor_js_settings_alter().
+ */
+function sfgov_utilities_editor_js_settings_alter(array &$settings) {
+
+  // Future modifications of Ckeditor output can be controlled here.
+  foreach (array_keys($settings['editor']['formats']) as $text_format) {
+    if ($text_format == 'sf_full_html_with_toc') {
+      // Limit the format tags available for sf_full_html_with_toc.
+      $settings['editor']['formats'][$text_format]['editorSettings']['format_tags'] = "p;h2;h3;h4;h5;h6";
+    }
+  }
+}
