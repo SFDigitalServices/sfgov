@@ -253,17 +253,17 @@ display:
     position: 7
     display_options:
       fields:
-        nid_export:
-          id: nid_export
+        nid:
+          id: nid
           table: node_field_data
-          field: nid_export
+          field: nid
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: node
           entity_field: nid
-          plugin_id: field_export
-          label: id
+          plugin_id: field
+          label: ID
           exclude: false
           alter:
             alter_text: false
@@ -308,7 +308,7 @@ display:
           type: number_integer
           settings:
             thousand_separator: ''
-            prefix_suffix: 1
+            prefix_suffix: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -316,7 +316,9 @@ display:
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
-          field_api_classes: 0
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         title_export:
           id: title_export
           table: node_field_data
@@ -943,6 +945,112 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
+          label: url
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: true
+          absolute: false
+        view_node_1:
+          id: view_node_1
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
+          label: 'Link to Content'
+          exclude: false
+          alter:
+            alter_text: true
+            text: '/node/{{ nid }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: true
+          absolute: false
       arguments: {  }
       style:
         type: data_export
@@ -962,8 +1070,8 @@ display:
         type: data_field
         options:
           field_options:
-            nid_export:
-              alias: nid
+            nid:
+              alias: ''
               raw_output: false
             title_export:
               alias: title
@@ -994,6 +1102,12 @@ display:
               raw_output: false
             status_export:
               alias: published
+              raw_output: false
+            view_node:
+              alias: url
+              raw_output: false
+            view_node_1:
+              alias: node_url
               raw_output: false
       defaults:
         relationships: false
@@ -1040,17 +1154,17 @@ display:
     position: 7
     display_options:
       fields:
-        nid_export:
-          id: nid_export
+        nid:
+          id: nid
           table: node_field_data
-          field: nid_export
+          field: nid
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: node
           entity_field: nid
-          plugin_id: field_export
-          label: id
+          plugin_id: field
+          label: ID
           exclude: false
           alter:
             alter_text: false
@@ -1095,7 +1209,7 @@ display:
           type: number_integer
           settings:
             thousand_separator: ''
-            prefix_suffix: 1
+            prefix_suffix: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1103,7 +1217,9 @@ display:
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
-          field_api_classes: 0
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         title_export:
           id: title_export
           table: node_field_data
@@ -1790,6 +1906,112 @@ display:
           delta_reversed: false
           delta_first_last: false
           field_api_classes: 0
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
+          label: 'Link to Content'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: true
+          absolute: false
+        view_node_1:
+          id: view_node_1
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
+          label: 'Link to Content'
+          exclude: false
+          alter:
+            alter_text: true
+            text: '/node/{{nid}}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: true
+          absolute: false
       arguments:
         nid:
           id: nid
@@ -1846,8 +2068,8 @@ display:
         type: data_field
         options:
           field_options:
-            nid_export:
-              alias: nid
+            nid:
+              alias: ''
               raw_output: false
             title_export:
               alias: title
@@ -1881,6 +2103,12 @@ display:
               raw_output: false
             status_export:
               alias: published
+              raw_output: false
+            view_node:
+              alias: url
+              raw_output: false
+            view_node_1:
+              alias: node_url
               raw_output: false
       defaults:
         relationships: false
