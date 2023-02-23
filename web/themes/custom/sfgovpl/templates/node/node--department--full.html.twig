@@ -213,7 +213,8 @@
     </div>
 
   {% set hasAboutSection = "false" %}
-  {% set hasAgencySection = (content.field_agency_sections|render|striptags|trim and node.field_agency_sections.0.entity.field_nodes | length > 0) ? "true" : "false" %}
+  {% set hasAgencySection = division_list|length > 0 %}
+  {% set hasAgencySectionTitle = node.field_agency_sections.0.entity.field_section_title_list.value is not empty %}
 
   {% if content.field_about_or_description|render|striptags
     or about_page_link
