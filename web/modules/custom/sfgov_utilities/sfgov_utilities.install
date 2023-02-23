@@ -124,3 +124,25 @@ function sfgov_utilities_update_8705() {
   }
 
 }
+
+/**
+ * Remove translations of field_process_step_type.
+ */
+function sfgov_utilities_update_8706() {
+  // Find all of the process_step paragraphs.
+  $paragraph_ids = \Drupal::entityQuery('paragraph')
+    ->condition('type','process_step')
+    ->condition('langcode', ['zh-hant', 'fil', 'es'], 'IN')
+    ->execute();
+
+  // Find the field and temporarily switch its value so that it can successfully
+  // resave and get rid of the translation.
+  $process_step_paragraphs = \Drupal::entityTypeManager()->getStorage('paragraph')->loadMultiple($paragraph_ids);
+  foreach ($process_step_paragraphs as $original_paragraph) {
+    $process_value = $original_paragraph->get('field_process_step_type')->value;
+    $original_paragraph->set('field_process_step_type', ['temp']);
+    $original_paragraph->save();
+    $original_paragraph->set('field_process_step_type', [$process_value]);
+    $original_paragraph->save();
+  }
+}

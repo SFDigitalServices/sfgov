@@ -1,0 +1,77 @@
+// Node Form Elements
+//------------------------------------------------------------------------------
+
+.node-form {
+  .form-item {
+    margin: 20px 0;
+
+    .form-composite & {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    label:not(.option) {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .field-prefix {
+    font-family: monospace;
+    font-size: 1.5em;
+  }
+
+  div.description,
+  div.counter,
+  .form-item .description,
+  .form-item .counter {
+    font-size: 0.85em;
+    margin-top: 10px;
+
+    .form-composite > .fieldset-wrapper > & {
+      margin-top: 0;
+    }
+  }
+
+  &.node-person-form,
+  &.node-person-edit-form {
+    #edit-title-wrapper {
+      display: none;
+    }
+  }
+
+  &.node-transaction-form,
+  &.node-transaction-edit-form {
+    #edit-field-sort-title-wrapper {
+      display: none;
+    }
+  }
+  &.node-form.node-campaign-form,
+  &.node-form.node-campaign-edit-form {
+    .form-item-field-instagram-feed-0-settings-label,
+    .form-item-field-instagram-feed-0-settings-label-display,
+    .form-item-field-instagram-feed-0-settings-simple-instagram-display-profile,
+    .form-item-field-instagram-feed-0-settings-simple-instagram-display-biography,
+    .form-item-field-instagram-feed-0-settings-simple-instagram-items-per-row,
+    .form-item-field-instagram-feed-0-settings-simple-instagram-styling {
+      display: none;
+    }
+    .instagram-feed-group {
+      [class$="field-block-0-plugin-id"],
+      [class$="settings-label"],
+      [class$="settings-label-display"],
+      [class$="settings-simple-instagram-display-profile"],
+      [class$="settings-simple-instagram-display-biography"],
+      [class$="simple-instagram-items-per-row"],
+      [class$="simple-instagram-styling"] {
+        display: none;
+      }
+    }
+  }
+}
+
+// Margin on review field description.
+.form-item [name="reviewer"] + .description.error {
+  margin-top: 10px;
+}

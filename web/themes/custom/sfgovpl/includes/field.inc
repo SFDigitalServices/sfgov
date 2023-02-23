@@ -38,8 +38,7 @@ function sfgovpl_preprocess_field__node__field_related_content(&$variables) {
       // tries to grab a teaser version of the about field, trimmed down to 100
       // characters.
       elseif ($urlObject['entity']->hasField('field_campaign_about')) {
-        $variables['items'][$key]['content'][] = $urlObject['entity']->get('field_campaign_about')
-          ->view('teaser');
+        // SG-1894 Removed the description from campaign about field.
       }
     }
   }

@@ -38,7 +38,7 @@ foreach($providers as $provider) {
     );
     
     if($creds != false) {
-        exec("drush config-set " . $provider["config_item"] . " " . $provider["config_item_key"] . " --input-format=yaml --value='" . $creds . "' -y 2>&1", $output, $status);
+        exec("drush config-set " . $provider["config_item"] . " " . $provider["config_item_key"] . " --input-format=yaml '" . $creds . "' -y 2>&1", $output, $status);
     
         $output = array_map(
             function ($item) {

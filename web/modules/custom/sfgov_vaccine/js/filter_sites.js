@@ -251,8 +251,10 @@
 
       // Scroll to Top.
       function scrollUp (speed) {
+        // Set animation speed based on motion preference.
+        const animationSpeed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : speed
         const newPosition = sectionCount.offset().top - 150
-        $('html, body').animate({ scrollTop: newPosition }, speed)
+        $('html, body').animate({ scrollTop: newPosition }, animationSpeed)
       }
 
       function getSiteData (el) {

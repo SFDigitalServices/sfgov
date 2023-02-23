@@ -13,7 +13,7 @@
   box-shadow: rgba(0,0,0,.25) 0px 5px 5px 2px;
   text-align: left;
   border-radius: 0 0 8px 8px;
-  @include media($medium-screen) {  
+  @include media($medium-screen) {
     width: calc(100% - 129px);
   }
 }
@@ -127,10 +127,10 @@
       }
     }
     @include media($medium-screen) {
-      
+
     }
   }
-  
+
   .sfgov-search-misspelled {
     @include fs-title-5;
     margin-bottom: 20px;
@@ -166,7 +166,7 @@
           position: relative;
         }
       }
-  
+
       .next {
         a {
           &::after {
@@ -181,7 +181,7 @@
           }
         }
       }
-  
+
       .previous {
         a {
           margin-left: 0;
@@ -201,7 +201,7 @@
           }
         }
       }
-  
+
       .page-num {
         &.more-prev::before,
         &.more-next::after {
@@ -209,7 +209,7 @@
           color: $c-slate;
         }
       }
-  
+
       ul {
         list-style-type: none;
         padding: 0;
@@ -334,6 +334,11 @@
 .loader[data-text][data-blink]:before{
   animation:blink 1s linear infinite alternate
 }
+@media (prefers-reduced-motion: reduce) {
+  .loader[data-text][data-blink]:before{
+    animation:none;
+  }
+}
 .loader-default[data-text]:before{
   top:calc(50% - 63px)
 }
@@ -354,6 +359,11 @@
 }
 .loader-default[data-inverse]:after{
   animation-direction:reverse
+}
+@media (prefers-reduced-motion: reduce) {
+  .loader-default:after{
+    animation:none;
+  }
 }
 // end loading css
 /* purgecss end ignore */

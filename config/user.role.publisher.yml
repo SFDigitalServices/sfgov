@@ -33,14 +33,13 @@ dependencies:
     - node.type.news
     - node.type.page
     - node.type.person
-    - node.type.public_body
     - node.type.report
     - node.type.resource_collection
     - node.type.step_by_step
     - node.type.topic
     - node.type.transaction
     - taxonomy.vocabulary.keywords
-    - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.media_tags
     - workflows.workflow.editorial
   module:
     - admin_toolbar_search
@@ -49,6 +48,7 @@ dependencies:
     - content_moderation
     - content_translation
     - contextual
+    - dropzonejs
     - eck
     - entity_browser
     - file
@@ -62,6 +62,7 @@ dependencies:
     - public_preview
     - quick_node_clone
     - system
+    - taxonomy
     - toolbar
 id: publisher
 label: Publisher
@@ -82,6 +83,7 @@ permissions:
   - 'access protected page password screen'
   - 'access resource entity listing'
   - 'access resource_entity entity browser pages'
+  - 'access taxonomy overview'
   - 'access toolbar'
   - 'access user profiles'
   - 'administer entity browsers'
@@ -98,7 +100,6 @@ permissions:
   - 'clone meeting content'
   - 'clone news content'
   - 'clone person content'
-  - 'clone public_body content'
   - 'clone report content'
   - 'clone resource_collection content'
   - 'clone step_by_step content'
@@ -119,11 +120,11 @@ permissions:
   - 'create meeting content'
   - 'create news content'
   - 'create person content'
-  - 'create public_body content'
   - 'create report content'
   - 'create resource entities'
   - 'create resource_collection content'
   - 'create step_by_step content'
+  - 'create terms in media_tags'
   - 'create transaction content'
   - 'create video media'
   - 'delete any campaign content'
@@ -137,7 +138,6 @@ permissions:
   - 'delete any meeting content'
   - 'delete any news content'
   - 'delete any person content'
-  - 'delete any public_body content'
   - 'delete any report content'
   - 'delete any resource_collection content'
   - 'delete any step_by_step content'
@@ -159,7 +159,6 @@ permissions:
   - 'delete own meeting content'
   - 'delete own news content'
   - 'delete own person content'
-  - 'delete own public_body content'
   - 'delete own report content'
   - 'delete own resource entities'
   - 'delete own resource_collection content'
@@ -167,6 +166,8 @@ permissions:
   - 'delete own topic content'
   - 'delete own transaction content'
   - 'delete own video media'
+  - 'delete terms in media_tags'
+  - 'dropzone upload files'
   - 'edit any about content'
   - 'edit any audio media'
   - 'edit any campaign content'
@@ -182,7 +183,6 @@ permissions:
   - 'edit any meeting content'
   - 'edit any news content'
   - 'edit any person content'
-  - 'edit any public_body content'
   - 'edit any report content'
   - 'edit any resource entities'
   - 'edit any resource_collection content'
@@ -205,7 +205,6 @@ permissions:
   - 'edit own meeting content'
   - 'edit own news content'
   - 'edit own person content'
-  - 'edit own public_body content'
   - 'edit own report content'
   - 'edit own resource entities'
   - 'edit own resource_collection content'
@@ -213,6 +212,7 @@ permissions:
   - 'edit own topic content'
   - 'edit own transaction content'
   - 'edit own video media'
+  - 'edit terms in media_tags'
   - 'revert about revisions'
   - 'revert all media revisions'
   - 'revert audio media revisions'
@@ -232,7 +232,6 @@ permissions:
   - 'revert news revisions'
   - 'revert page revisions'
   - 'revert person revisions'
-  - 'revert public_body revisions'
   - 'revert report revisions'
   - 'revert resource_collection revisions'
   - 'revert step_by_step revisions'
@@ -264,11 +263,9 @@ permissions:
   - 'translate paragraph'
   - 'translate person node'
   - 'translate physical location'
-  - 'translate public_body node'
   - 'translate report node'
   - 'translate resource_collection node'
   - 'translate step_by_step node'
-  - 'translate tags taxonomy_term'
   - 'translate topic node'
   - 'translate transaction node'
   - 'translate user'
@@ -318,7 +315,6 @@ permissions:
   - 'view own unpublished media'
   - 'view page revisions'
   - 'view person revisions'
-  - 'view public_body revisions'
   - 'view report revisions'
   - 'view resource_collection revisions'
   - 'view step_by_step revisions'

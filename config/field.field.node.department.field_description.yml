@@ -7,18 +7,25 @@ dependencies:
     - node.type.department
   module:
     - allowed_formats
+    - datalayer
     - text
+    - tmgmt_content
 third_party_settings:
   allowed_formats:
     allowed_formats:
       - plain_text
+  datalayer:
+    expose: 0
+    label: field_description
+  tmgmt_content:
+    excluded: false
 id: node.department.field_description
 field_name: field_description
 entity_type: node
 bundle: department
-label: 'Department Mission'
-description: 'Describe the department''s mission, for display in the header, search results, and social media embeds of this page.'
-required: false
+label: Description
+description: 'Descriptions should start with key words and help the user decide to read further.'
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''

@@ -8,13 +8,91 @@
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
+function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+
+  // agency sections
+  $agencySectionDelta = $form['field_agency_sections']['widget']['#max_delta']; // the index/position of the agency section
+  $agencySection = $form_state->getValue('field_agency_sections');
+
+  // meeting things to know
+  $meetingThingToKnow = $form_state->getValue('field_public_body_meetings');
+
+  // prevent an agency from referencing itself or its parent as a division
+  if (!empty($node->id()) && !empty($agencySection[$agencySectionDelta])) {
+    $agencyNodes = array_key_exists($agencySectionDelta, $agencySection[$agencySectionDelta]['subform']['field_agencies'])
+      ? $agencySection[$agencySectionDelta]['subform']['field_agencies'][$agencySectionDelta]['subform']['field_department']
+      : [];
+    
+    if (!empty($agencyNodes)) {
+      // get the view that retrieves the parent agency/agencies of this agency
+      $view = \Drupal\views\Views::getView('departments');
+      $view->setDisplay('agency_part_of_agencies');
+      $view->setArguments([$node->id()]);
+      $view->execute();
+      $parentAgencies = [];
+
+      if ($view->total_rows > 0) {
+        foreach ($view->result as $id => $result) {
+          $parentNode = $result->_entity;
+          $parentAgencies[$parentNode->id()] = $parentNode->getTitle();
+        }
+      }
+
+      $i = 0; // track the index of the referenced agency list in field_nodes
+      foreach ($agencyNodes as $item) {
+        if (is_array($item)) { // the agency section node list can also contain the add_more object (if the list is empty)
+          $ref = $item['target_id'];
+          
+          if ($ref == $node->id()) {
+            // the structure of this named reference is unique to the way the setErrorByName method
+            // parses the string to target the field for registering an error
+            $form_state->setErrorByName("field_agency_sections][$agencySectionDelta][subform][field_agencies][$agencySectionDelta][subform][field_department][$i", t("You can't make an agency a division or subcommittee of itself."));
+            break;
+          }
+
+          if(in_array($ref, array_keys($parentAgencies))) {
+            $form_state->setErrorByName("field_agency_sections][$agencySectionDelta][subform][field_agencies][$agencySectionDelta][subform][field_department][$i", 
+              t("You can't add your parent agency as a division or subcommittee (" . $parentAgencies[$ref] . ")"));
+            break;
+          }
+
+          $i++;
+        }
+      }
+    }
+  }
+
+  // prevent more than 2 meeting things to know
+  // TODO: remove this check after existing public bodies have been migrated to department/agency content type
+  // $form['field_public_body_meetings']['widget']['#cardinality'] = 2; // this property assignment effectively prevents adding more things to know past 2, but there is no feedback regarding the restriction
+  $thingCount = 0;
+  foreach ($meetingThingToKnow as $meetingThing) {
+    if (is_array($meetingThing)) {
+      if (!empty($meetingThing['subform'])) {
+        $thingCount++;
+      }
+    }
+  }
+
+  if ($thingCount > 2) {
+    $form_state->setErrorByName('field_public_body_meetings', t('Meetings can have 2 things to know max. You can add more information on the meeting pages, or on the About page.'));
+  }
+  // end prevent more than 2 meeting things to know
+}
+
 /**
  * Implements hook_form_alter().
  */
 function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   switch ($form_id) {
     case 'node_department_edit_form':
-      $form['field_about_description']['#disabled'] = 'disabled';
+    case 'node_department_form':
+      $form['#validate'][] = '_sfgov_departments_validate';
+
+      // TODO: SG-1854 - remove this as part of post deployment task for department and public body mashup
+      $form['field_parent_department']['#attributes']['class'][] = 'visually-hidden';
+
       break;
 
     case 'node_transaction_form':
@@ -166,6 +244,10 @@ function sfgov_departments_form_node_department_edit_form_alter(&$form, FormStat
   ];
 
   $form['#validate'][] = '_sfgov_departments_dept_req_public_records_form_validate';
+
+  // Get this submit handler to run first to alter the agency values before
+  // default processing.
+  array_unshift($form['actions']['submit']['#submit'], '_sfgov_departments_agency_sections_alter_submit');
 }
 
 /**
@@ -207,6 +289,31 @@ function _sfgov_departments_dept_req_public_records_form_validate($form, FormSta
       $form_state->setErrorByName("field_req_public_records_phone", t('Public records phone is required if request type is set to Phone.'));
     }
   }
+}
+
+/**
+ * Custom submit handler to remove agency sections if no label.
+ *
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function _sfgov_departments_agency_sections_alter_submit(&$form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+  $label = $values['field_agency_sections'][0]['subform']['field_section_title_list'];
+
+  // If the section title is set to "None"
+  if (empty($label) || $label[0]['value'] == '_none') {
+
+    foreach ($values['field_agency_sections'][0]['subform']['field_agencies'] as $id => $item) {
+      // Remove each agency from the agency section.
+      if (is_numeric($id)) {
+        unset($values['field_agency_sections'][0]['subform']['field_agencies'][$id]);
+      }
+    }
+  }
+
+  // Reset the form values with the removed agencies.
+  $form_state->setValues($values);
 }
 
 /**
@@ -284,10 +391,18 @@ function _fetch_departments_submit(array &$form, FormStateInterface $form_state)
 function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_state, $context) {
   $parentEntity = $form_state->getFormObject()->getEntity();
 
-  if ($parentEntity->getType() === 'department') {
+  if ($parentEntity->getEntityTypeId() === 'node' && $parentEntity->getType() === 'department') {
     if ($element['#paragraph_type'] == 'spotlight') {
       if( $element['subform']['#parents'][0] == 'field_spotlight2') {
         $element['subform']['field_spotlight_img']['widget']['#description'] = t("Minimum 550 px wide. Square or horizontal is recommended.");
+      }
+    }
+
+    # hide the option to display a map when used in the context of meetings
+    if ($element['#paragraph_type'] == 'in_person_location') {
+      $parents = $element['subform']['#parents'];
+      if (in_array('field_public_body_meetings', $parents)) {
+        $element['subform']['field_address_display']['#attributes']['class'][] = 'visually-hidden';
       }
     }
   }

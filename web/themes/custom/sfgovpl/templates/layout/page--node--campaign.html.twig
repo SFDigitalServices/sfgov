@@ -62,34 +62,28 @@
     {{ page.alpha }}
   {% endif %}
 
-  {% set logo = node.field_logo.entity.uri.value %}
+  {% set campaign_logo = node.field_logo.entity.uri.value %}
 
   {# set the title class to sr-only (screen reader only tailwind utility class from design system) if there is a logo #}
-  {% if logo is not empty %}
+  {% if campaign_logo is not empty %}
     {% set titleVisibility = "sr-only" %}
   {% endif %}
 
-  <header role="banner">
-    <div class="sfgov-nav-container">
-      <div class="sfgov-nav-container__content">
-        <div class="sfgov-logo__container">
-          <h1 class="{{ titleVisibility }}">{{ node.title.value }}</h1>
-          {% if logo is not empty %}
-            <img src="{{ node.field_logo.entity.uri.value | image_style('campaign_logo') }}" 
-              alt="{{ node.field_logo.alt }}"
-            />
-          {% endif %}
-        </div>
-        <div class="head-right--container">
-          {{ page.header.gtranslate }}
-        </div>
-      </div>
-    </div>
-  </header>
+  {% include '@theme/header.twig' %}
 
   <main role="main">
     <a id="main-content" tabindex="-1"></a>
     <div class="main-content-container">
+      <div class="campaign-featured-image mb-0">
+        <h1 class="p-0 m-0 mb-40 lg:text-title-lg-desktop notranslate {{ titleVisibility }}">{{ node.title.value }}</h1>
+        {% if campaign_logo is not empty %}
+          <div class="mb-40">
+            <img src="{{ campaign_logo | image_style('campaign_logo') }}"
+              alt="{{ node.field_logo.alt }}"
+            />
+          </div>
+        {% endif %}
+      </div>
       {% if page.content_top %}
         <div class="content-top-container">
           {{ page.content_top }}
