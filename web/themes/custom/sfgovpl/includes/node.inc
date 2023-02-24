@@ -254,57 +254,59 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
     ->condition('field_data_story.target_id', $nid)
     ->execute();
 
-  // Next, we get the latest version of any section paragraphs that reference
-  // (are the parent of) the subsections we found above.
-  $data_sections = $paragraph_manager->getQuery()
-    ->latestRevision()
-    ->exists('field_content')
-    ->condition('langcode', $lang)
-    ->condition('type', 'data_story_reference_section')
-    ->condition('field_content.target_id', $data_subsections, 'IN')
-    ->execute();
+  if (!empty($data_subsections)) {
+    // Next, we get the latest version of any section paragraphs that reference
+    // (are the parent of) the subsections we found above.
+    $data_sections = $paragraph_manager->getQuery()
+      ->latestRevision()
+      ->exists('field_content')
+      ->condition('langcode', $lang)
+      ->condition('type', 'data_story_reference_section')
+      ->condition('field_content.target_id', $data_subsections, 'IN')
+      ->execute();
 
-  // Next, we get that resource nodes that are the parent of the sections we
-  // found above.
-  $resource_nodes = $node_manager->getQuery()
-    ->latestRevision()
-    ->exists('field_paragraphs')
-    ->condition('langcode', $lang)
-    ->condition('status', 1)
-    ->condition('type', 'resource_collection')
-    ->condition('field_paragraphs.target_id', $data_sections, 'IN')
-    ->execute();
+    // Next, we get that resource nodes that are the parent of the sections we
+    // found above.
+    $resource_nodes = $node_manager->getQuery()
+      ->latestRevision()
+      ->exists('field_paragraphs')
+      ->condition('langcode', $lang)
+      ->condition('status', 1)
+      ->condition('type', 'resource_collection')
+      ->condition('field_paragraphs.target_id', $data_sections, 'IN')
+      ->execute();
 
-  // Because of the order of locating this info, We don't know if the latest
-  // versions of the resources found above still reference back to this data
-  // story node. The queries can return past version references by default.
-  // We need to cycle thru the latest version of each resource node we found and
-  // check that it still has a reference back to this data story.
-  $nodes_for_links = [];
-  if (!empty($resource_nodes)) {
-    foreach ($resource_nodes as $rvid => $rnid) {
-      // load the latest version of the resource node.
-      $resource_node = $node_manager->loadRevision($rvid);
-      if ($resource_node->hasField('field_paragraphs')) {
-        $ds_sections = $resource_node->get('field_paragraphs')
-          ->referencedEntities();
-        foreach ($ds_sections as $section) {
-          if ($section->hasField('field_content')) {
-            $ds_subsections = $section->get('field_content')
-              ->referencedEntities();
-            foreach ($ds_subsections as $subsection) {
-              if ($subsection->hasField('field_data_story')) {
-                $data_stories = $subsection->get('field_data_story')
-                  ->referencedEntities();
-                foreach ($data_stories as $story) {
-                  // For each data story that is referenced at the deepest level
-                  // of the resource node, if it has a match to our current data
-                  // story node, that means it can be added to our link list.
-                  if ($story->id() == $nid) {
-                    $nodes_for_links[$resource_node->id()] = [
-                      'id' => $resource_node->id(),
-                      'label' => $resource_node->label()
-                    ];
+    // Because of the order of locating this info, We don't know if the latest
+    // versions of the resources found above still reference back to this data
+    // story node. The queries can return past version references by default.
+    // We need to cycle thru the latest version of each resource node we found and
+    // check that it still has a reference back to this data story.
+    $nodes_for_links = [];
+    if (!empty($resource_nodes)) {
+      foreach ($resource_nodes as $rvid => $rnid) {
+        // load the latest version of the resource node.
+        $resource_node = $node_manager->loadRevision($rvid);
+        if ($resource_node->hasField('field_paragraphs')) {
+          $ds_sections = $resource_node->get('field_paragraphs')
+            ->referencedEntities();
+          foreach ($ds_sections as $section) {
+            if ($section->hasField('field_content')) {
+              $ds_subsections = $section->get('field_content')
+                ->referencedEntities();
+              foreach ($ds_subsections as $subsection) {
+                if ($subsection->hasField('field_data_story')) {
+                  $data_stories = $subsection->get('field_data_story')
+                    ->referencedEntities();
+                  foreach ($data_stories as $story) {
+                    // For each data story that is referenced at the deepest level
+                    // of the resource node, if it has a match to our current data
+                    // story node, that means it can be added to our link list.
+                    if ($story->id() == $nid) {
+                      $nodes_for_links[$resource_node->id()] = [
+                        'id' => $resource_node->id(),
+                        'label' => $resource_node->label()
+                      ];
+                    }
                   }
                 }
               }
@@ -313,14 +315,13 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
         }
       }
     }
-  }
-
-  $links = [];
-  foreach ($nodes_for_links as $link) {
-    $links[] = Link::fromTextAndUrl(
-      $link['label'],
-      Url::fromRoute('entity.node.canonical', ['node' => $link['id']])
-    )->toString();
+    $links = [];
+    foreach ($nodes_for_links as $link) {
+      $links[] = Link::fromTextAndUrl(
+        $link['label'],
+        Url::fromRoute('entity.node.canonical', ['node' => $link['id']])
+      )->toString();
+    }
   }
 
   $build = [
