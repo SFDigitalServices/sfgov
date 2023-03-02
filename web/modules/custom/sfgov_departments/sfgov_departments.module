@@ -106,7 +106,9 @@ function sfgov_departments_form_alter(&$form, FormStateInterface $form_state, $f
       if ($field_departments = $form_state->getValue('field_departments')) {
         foreach ($field_departments as $delta => $value) {
           if (is_numeric($delta)) {
-            $default_values[$delta] = $value;
+            if (!empty($default_values[$delta])) {
+              $default_values[$delta] = $value;
+            }
           }
         }
       }
