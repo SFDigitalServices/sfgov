@@ -49,6 +49,12 @@
 
         {% include '@theme/transaction-steps.twig' %}
 
+        {% if mohcd_embed %}
+          <div class="sfgov-section mohcd-calculator__wrapper">
+            {{ mohcd_embed }}
+          </div>
+        {% endif %}
+
         {{ content.field_custom_section }}
 
         {% if content.field_special_cases|render %}
