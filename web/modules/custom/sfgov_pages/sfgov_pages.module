@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function sfgov_pages_preprocess_node__transaction__full(&$variables) {
+  $variables['#cache']['contexts'][] = 'url.query_args';
+  $node = $variables['node'];
+
+  // Create the embed mchod calculator embed variable.
+  $nid_to_embed_on = \Drupal::state()->get('sfgov_pages_mohcd_embed_page');
+  $variables['mohcd_embed'] = NULL;
+
+  // If current transaction node matches the mohcd embed node...
+  if ($node->id() == $nid_to_embed_on) {
+    $variables['mohcd_embed'] = \Drupal::formBuilder()->getForm('\Drupal\sfgov_pages\mohcd\Form\CalculatorForm');
+  }
+}
+
