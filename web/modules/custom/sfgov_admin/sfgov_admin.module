@@ -154,7 +154,7 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
   // Go thru every field, searching for "containers" with widgets, and search
   // thru those widgets for any field of a type "text_format"...
   foreach (Element::children($form) as $field_name) {
-    if ($form[$field_name]['#type'] == 'container' && isset($form[$field_name]['widget'])) {
+    if (isset($form[$field_name]['#type']) && $form[$field_name]['#type'] == 'container' && isset($form[$field_name]['widget'])) {
       foreach (Element::children($form[$field_name]['widget']) as $delta) {
         if (array_key_exists('#type', $form[$field_name]['widget'][$delta])) {
           if ($form[$field_name]['widget'][$delta]['#type'] == 'text_format') {
