@@ -2,8 +2,12 @@
 
 namespace Drupal\sfgov_pages\mohcd\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use NumberFormatter;
 
 class CalculatorForm extends FormBase {
   /**
@@ -18,64 +22,65 @@ class CalculatorForm extends FormBase {
     $yearAMI = \Drupal::state()->get('sfgov_pages_mohcd_yearAMI');
     $yearAMIArray = preg_split('/\r\n|\r|\n/', $yearAMI);
 
-    $options = [];
+    $options = ['- Select year -'];
     foreach($yearAMIArray as $yearAMI) {
       $value = explode("|", $yearAMI);
       $options[trim($value[1])] = trim($value[0]);
     }
 
-    $form['label'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'h2',
-      '#value' => $this->t('Calculate'),
-    ];
+    $form['#tree'] = TRUE;
 
-    $form['description'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => $this->t('Your purchase information can be found in the Promissory Note and closing documents.'),
-    ];
+    $form['bmrCalculator'] = array(
+      '#type'  => 'fieldset',
+      '#title' => $this->t('Calculate'),
+      '#description' => $this->t('Your purchase information can be found in the Promissory Note and closing documents.'),
+      '#description_display' => 'before',
+    );
 
-    $form['purchasePrice'] = [
+    $form['bmrCalculator']['purchasePrice'] = [
       '#id' => 'purchasePrice',
       '#type' => 'textfield',
-      '#title' => t('What is the purchase price?'),
-      '#field_suffix' => '<div id="purchasePriceError" class="hidden">Please enter a valid number (no $ sign)</div>',
-      '#required' => TRUE,
+      '#title' => t('Purchase price?'),
+      '#field_prefix' => '<div id="purchasePriceError"></div>',
     ];
 
-    $form['purchaseYear'] = [
+    $form['bmrCalculator']['purchaseYear'] = [
       '#id' => 'purchaseYear',
       '#type' => 'select',
-      '#title' => t('What is the purchase year?'),
+      '#title' => t('Purchase year?'),
       '#options' => $options,
-      '#field_suffix' => '<div id="purchaseYearError" class="hidden">Please select a purchase year</div>',
-      '#required' => TRUE,
+      '#description' => t('Enter a year between 1996 and 2022'),
+      '#field_prefix' => '<div id="purchaseYearError"></div>',
     ];
 
-    $form['btnCalc'] = [
+    $form['bmrCalculator']['btnCalc'] = [
       '#id' => 'btnCalc',
       '#type' => 'button',
       '#value' => t('Calculate'),
       '#attributes' => [
         'class' => ['button button-primary'],
       ],
+      '#ajax' => [
+        'callback' => '::calculateBMRValuation',
+        'effect' => 'fade',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Calculating...'),
+        ),
+      ],
     ];
 
-    $form['bmrValuation'] = [
-      '#id' => 'bmrValuation',
-      '#type' => 'textfield',
-      '#title' => t('Your current BMR valuation:'),
-      '#field_suffix' => '<div id="valuationError" class="hidden">Please check fields for valid values (all fields are required)</div>',
-      '#attributes' => [
-        'readonly' => true,
-      ]
+    $form['bmrCalculator']['bmrValuation'] = [
+      '#type' => 'markup',
+      '#markup'=> '<div id="bmrValuation"></div> ',
     ];
 
     $form['#attached']['library'][] = 'sfgov_pages/mohcd_calculator';
     $form['#attached']['drupalSettings']['sfgov']['mohcd']['calculator']['currentYearAMI'] = $currentYearAMI;
 
     $form['#attributes']['class'][] = 'sfgov-section__content';
+
+    $form['#cache']['max-age'] = 0;
 
     return $form;
   }
@@ -85,4 +90,57 @@ class CalculatorForm extends FormBase {
 
   // no submission, calculation handled in src/mohcd/js/mohcd-calculator.js
   public function submitForm(array &$form, FormStateInterface $form_state) {}
+
+  public function calculateBMRValuation(array $form, FormStateInterface $form_state): AjaxResponse {
+    $ajax_response = new AjaxResponse();
+
+    $currentYearAMI = \Drupal::state()->get('sfgov_pages_mohcd_currentYearAMI');
+    $has_error = FALSE;
+    $values = $form_state->getValues();
+    $purchasePrice = $values['bmrCalculator']['purchasePrice'];
+    $purchaseYearAMI = $values['bmrCalculator']['purchaseYear'];
+
+    // Assert the purchasePrice is valid
+    $ajax_response->addCommand(new HtmlCommand('#purchasePriceError', ''));
+    if (!$purchasePrice || !is_numeric($purchasePrice)) {
+      $has_error = TRUE;
+      $ajax_response->addCommand(new HtmlCommand('#purchasePriceError', t("Please enter a valid number.")));
+    }
+
+    // Assert the purchaseYear is valid
+    $ajax_response->addCommand(new HtmlCommand('#purchaseYearError', ''));
+    if (!$purchaseYearAMI || empty($purchaseYearAMI)) {
+      $has_error = TRUE;
+      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t("Please select a purchase year.")));
+    }
+
+    if (!$has_error) {
+      $value = (int) round($purchasePrice + ($purchasePrice * (($currentYearAMI - $purchaseYearAMI) / $purchaseYearAMI)));
+
+      $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
+      $value = $formatter->formatCurrency($value, 'USD');
+
+      $text = [];
+
+      $text['label'] = [
+        '#type' => 'markup',
+        '#prefix' => '<div id="bmrValuationLabel">',
+        '#markup' => t('Your current BMR valuation:'),
+        '#suffix' => '</div>',
+      ];
+
+      $text['value'] = [
+        '#type' => 'markup',
+        '#prefix' => '<div id="bmrValuationResults">',
+        '#markup' => $value,
+        '#suffix' => '</div>',
+      ];
+
+      $ajax_response->addCommand(new HtmlCommand('#bmrValuation', \Drupal::service('renderer')->render($text)));
+    } else {
+      $ajax_response->addCommand(new HtmlCommand('#bmrValuation', ''));
+    }
+
+    return $ajax_response;
+  }
 }
