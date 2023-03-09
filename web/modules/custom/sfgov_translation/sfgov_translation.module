@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\MessageCommand;
@@ -197,6 +198,28 @@ function sfgov_translation_entity_presave($entity) {
         $translated_node->set('translation_outdated', 0);
         $translated_node->save();
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_tmgmt_translatable_fields_alter().
+ */
+function sfgov_translation_tmgmt_translatable_fields_alter(ContentEntityInterface $entity, array &$translatable_fields) {
+
+  // Fields to remove from the tmgmt translation source.
+  //
+  // For example, remove the formio json content field from form pages, because
+  // it's just a duplicate and the individual strings are already pulled into
+  // their own sources. This will help reduce the word/character count for
+  // translation services.
+  $excluded_fields = [
+    'field_formio_json_content'
+  ];
+
+  foreach ($excluded_fields as $field) {
+    if (isset($translatable_fields[$field])) {
+      unset($translatable_fields[$field]);
     }
   }
 }
