@@ -1,4 +1,8 @@
 function fcalc () {
+  //
+  // This file is not in use. The functionality has been moved to an ajax based
+  // form, where the calculation is handled in CalculatorForm.php
+  //
   // this value is coming from configuration in sfgov_pages module
   const fCurrentYearAMI = drupalSettings.sfgov.mohcd.calculator.currentYearAMI
   const fPurchaseYearSelect = document.getElementById('purchaseYear')

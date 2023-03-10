@@ -3,8 +3,8 @@
   padding: 1.25rem;
   border-radius: 8px;
   display: flex;
-  margin: 2rem auto 2rem 60px;
-  max-width: unset;
+  margin: 2rem auto;
+  max-width: 1090px;
 }
 
 #edit-bmrcalculator .fieldset-wrapper {
@@ -13,6 +13,20 @@
   flex-wrap: wrap;
   column-gap: 1.45rem;
   position: relative;
+}
+
+#purchasePriceWrapper,
+#purchaseYearWrapper {
+  flex: 0 0 calc(50% - 0.75rem);
+  position: relative;
+}
+
+@media screen and (max-width: 768px) {
+  #purchasePriceWrapper,
+  #purchaseYearWrapper {
+    flex: 0 0 calc(100% - 0.75rem);
+    margin-bottom: 1.5rem;
+  }
 }
 
 #edit-bmrcalculator legend {
@@ -24,7 +38,21 @@
 #edit-bmrcalculator label {
   font-size: 1.5rem;
   font-weight: normal;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
+  order: 1;
+}
+
+#edit-bmrcalculator .field-prefix {
+  order: 5;
+}
+
+#edit-bmrcalculator #purchasePrice--description,
+#edit-bmrcalculator #purchaseYear--description {
+  order: 4;
+}
+
+#edit-bmrcalculator .field-suffix {
+  order: 2;
 }
 
 #edit-bmrcalculator--description {
@@ -40,40 +68,18 @@
 }
 
 #edit-bmrcalculator .form-item {
-  flex: 0 0 calc(50% - 0.75rem);
-  position: relative;
-}
-
-@media screen and (max-width: 768px) {
-  #edit-bmrcalculator .form-item {
-    flex: 0 0 calc(100% - 0.75rem);
-    margin-bottom: 1.5rem;
-  }
-}
-
-#purchasePrice {
-  padding-left: 3.5rem;
-}
-
-.form-item-bmrcalculator-purchaseprice:after {
-  content: '$';
-  height: 49.75px;
-  width: 50px;
-  border-radius: 8px 0 0 8px;
-  border: 2px solid #1c3e57;;
-  background: #E2E2E2;
   display: flex;
-  position: absolute;
-  z-index: 5;
-  bottom: 32.5px;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
-@media screen and (max-width: 768px) {
-  .form-item-bmrcalculator-purchaseprice:after {
-    bottom: 0;
-  }
+#purchasePriceInput,
+#purchaseYear {
+  order: 3;
+}
+
+#purchasePrice,
+#purchaseYear {
+  height: 56px;
 }
 
 #purchasePriceError {
@@ -94,6 +100,7 @@
   margin-right: auto;
   display: block;
   width: auto;
+  font-family: "Rubik", sans-serif;
 }
 
 #btnCalc:focus {
@@ -134,7 +141,27 @@
   width: auto;
 }
 
+.input__has-prefix {
+  display: inline-flex;
+  flex-direction: row;
+}
 
+.input__has-prefix span {
+  flex: 0 0 50px;
+  border-color: #1c3e57;
+  border-width: 2px;
+  border-style: solid;
+  border-right: 0;
+  background: lightgray;
+  border-radius: 8px 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input__has-prefix input {
+  border-radius: 0 8px 8px 0;
+}
 
 
 

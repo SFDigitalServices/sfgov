@@ -9,7 +9,11 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use NumberFormatter;
 
+/**
+ * MOHCD Calculator form.
+ */
 class CalculatorForm extends FormBase {
+
   /**
    * {@inheritdoc}
    */
@@ -17,16 +21,31 @@ class CalculatorForm extends FormBase {
     return 'mohcd_calculator_form';
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $currentYearAMI = \Drupal::state()->get('sfgov_pages_mohcd_currentYearAMI');
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrentYearAMI() {
+    return \Drupal::state()->get('sfgov_pages_mohcd_currentYearAMI');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getYearAMI($year) {
+    $options = [];
+    $year = (int) $year;
     $yearAMI = \Drupal::state()->get('sfgov_pages_mohcd_yearAMI');
     $yearAMIArray = preg_split('/\r\n|\r|\n/', $yearAMI);
-
-    $options = ['- Select year -'];
     foreach($yearAMIArray as $yearAMI) {
       $value = explode("|", $yearAMI);
-      $options[trim($value[1])] = trim($value[0]);
+      $options[trim($value[0])] = trim($value[1]);
     }
+
+    return $options[$year];
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $currentYearAMI = $this->getCurrentYearAMI();
 
     $form['#tree'] = TRUE;
 
@@ -40,17 +59,31 @@ class CalculatorForm extends FormBase {
     $form['bmrCalculator']['purchasePrice'] = [
       '#id' => 'purchasePrice',
       '#type' => 'textfield',
-      '#title' => t('Purchase price?'),
-      '#field_prefix' => '<div id="purchasePriceError"></div>',
+      '#title' => t('Purchase price'),
+      '#prefix' => '<div id="purchasePriceWrapper">',
+      '#field_suffix' => '<div id="purchasePriceError"></div>',
+      '#suffix' => '</div>',
+      '#attributes' => [
+        'minlength' => '4',
+        'maxlength' => '12',
+      ],
     ];
 
     $form['bmrCalculator']['purchaseYear'] = [
       '#id' => 'purchaseYear',
-      '#type' => 'select',
-      '#title' => t('Purchase year?'),
-      '#options' => $options,
-      '#description' => t('Enter a year between 1996 and 2022'),
-      '#field_prefix' => '<div id="purchaseYearError"></div>',
+      '#type' => 'textfield',
+      '#title' => t('Purchase year'),
+      '#description' => t('Enter a year between 1996 and @year', ['@year' => date("Y") - 1]),
+      '#prefix' => '<div id="purchaseYearWrapper">',
+      '#field_suffix' => '<div id="purchaseYearError"></div>',
+      '#suffix' => '</div>',
+      '#attributes' => [
+        'minlength' => '4',
+        'maxlength' => '4',
+        'pattern' => '_[0-9]+',
+        'min' => '1996',
+        'max' => date("Y") - 1,
+      ],
     ];
 
     $form['bmrCalculator']['btnCalc'] = [
@@ -64,7 +97,7 @@ class CalculatorForm extends FormBase {
         'callback' => '::calculateBMRValuation',
         'effect' => 'fade',
         'progress' => array(
-          'type' => 'throbber',
+          'type' => 'none',
           'message' => t('Calculating...'),
         ),
       ],
@@ -85,20 +118,15 @@ class CalculatorForm extends FormBase {
     return $form;
   }
 
-  // no validation handled in src/mohcd/js/mohcd-calculator.js
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
-
-  // no submission, calculation handled in src/mohcd/js/mohcd-calculator.js
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
-
   public function calculateBMRValuation(array $form, FormStateInterface $form_state): AjaxResponse {
     $ajax_response = new AjaxResponse();
 
-    $currentYearAMI = \Drupal::state()->get('sfgov_pages_mohcd_currentYearAMI');
     $has_error = FALSE;
+    $currentYearAMI = $this->getCurrentYearAMI();
     $values = $form_state->getValues();
     $purchasePrice = $values['bmrCalculator']['purchasePrice'];
-    $purchaseYearAMI = $values['bmrCalculator']['purchaseYear'];
+    $purchaseYear = (int) $values['bmrCalculator']['purchaseYear'];
+    $purchaseYearAMI = $this->getYearAMI($purchaseYear);
 
     // Assert the purchasePrice is valid
     $ajax_response->addCommand(new HtmlCommand('#purchasePriceError', ''));
@@ -109,9 +137,9 @@ class CalculatorForm extends FormBase {
 
     // Assert the purchaseYear is valid
     $ajax_response->addCommand(new HtmlCommand('#purchaseYearError', ''));
-    if (!$purchaseYearAMI || empty($purchaseYearAMI)) {
+    if (!$purchaseYearAMI || !is_numeric($purchaseYearAMI)) {
       $has_error = TRUE;
-      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t("Please select a purchase year.")));
+      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t("Please enter a valid year.")));
     }
 
     if (!$has_error) {
@@ -143,4 +171,10 @@ class CalculatorForm extends FormBase {
 
     return $ajax_response;
   }
+
+  // no validation handled in src/mohcd/js/mohcd-calculator.js
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
+
+  // no submission, calculation handled in src/mohcd/js/mohcd-calculator.js
+  public function submitForm(array &$form, FormStateInterface $form_state) {}
 }
