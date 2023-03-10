@@ -154,52 +154,54 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
   // Go thru every field, searching for "containers" with widgets, and search
   // thru those widgets for any field of a type "text_format"...
   foreach (Element::children($form) as $field_name) {
-    if (isset($form[$field_name]['#type']) && $form[$field_name]['#type'] == 'container' && isset($form[$field_name]['widget'])) {
-      foreach (Element::children($form[$field_name]['widget']) as $delta) {
-        if (array_key_exists('#type', $form[$field_name]['widget'][$delta])) {
-          if ($form[$field_name]['widget'][$delta]['#type'] == 'text_format') {
-
-            // Look thru those "text_format" body type fields for any that have
-            // limited allowed formats (ONLY 1 ALLOWED FORMAT)...
-            if (isset($form[$field_name]['widget'][$delta]['#allowed_formats']) ) {
-              if (count($form[$field_name]['widget'][$delta]['#allowed_formats']) == 1) {
-
-                // Compare the applied format to the only allowed format, and if
-                // they do not match, begin the process of syncing them up and
-                // fixing the content.
-                $applied_format = $form[$field_name]['widget'][$delta]['#format'];
-                $allowed_format = $form[$field_name]['widget'][$delta]['#allowed_formats'][0];
-                if ($applied_format != $allowed_format) {
-                  $storage = $form_state->getStorage();
-                  $langcode = $storage['langcode'];
-
-                  // Set the allowed format to the applied format value.
-                  $form[$field_name]['widget'][$delta]['#format'] = $allowed_format;
-
-                  // Pull the text value, and if the allowed format is plain,
-                  // remove any forbidden html tags...
-                  $text = $form[$field_name]['widget'][$delta]['#default_value'] ?? '';
-                  if ($allowed_format == 'plain_text') {
-                    $text = strip_tags($text);
+    if (array_key_exists('#type', $form[$field_name])) {
+      if ($form[$field_name]['#type'] == 'container' && isset($form[$field_name]['widget'])) {
+        foreach (Element::children($form[$field_name]['widget']) as $delta) {
+          if (array_key_exists('#type', $form[$field_name]['widget'][$delta])) {
+            if ($form[$field_name]['widget'][$delta]['#type'] == 'text_format') {
+  
+              // Look thru those "text_format" body type fields for any that have
+              // limited allowed formats (ONLY 1 ALLOWED FORMAT)...
+              if (isset($form[$field_name]['widget'][$delta]['#allowed_formats']) ) {
+                if (count($form[$field_name]['widget'][$delta]['#allowed_formats']) == 1) {
+  
+                  // Compare the applied format to the only allowed format, and if
+                  // they do not match, begin the process of syncing them up and
+                  // fixing the content.
+                  $applied_format = $form[$field_name]['widget'][$delta]['#format'];
+                  $allowed_format = $form[$field_name]['widget'][$delta]['#allowed_formats'][0];
+                  if ($applied_format != $allowed_format) {
+                    $storage = $form_state->getStorage();
+                    $langcode = $storage['langcode'];
+  
+                    // Set the allowed format to the applied format value.
+                    $form[$field_name]['widget'][$delta]['#format'] = $allowed_format;
+  
+                    // Pull the text value, and if the allowed format is plain,
+                    // remove any forbidden html tags...
+                    $text = $form[$field_name]['widget'][$delta]['#default_value'] ?? '';
+                    if ($allowed_format == 'plain_text') {
+                      $text = strip_tags($text);
+                    }
+                    // Apply the allowed format to the text value...
+                    $filtered_text = check_markup($text, $allowed_format, $langcode);
+                    $filtered_text = is_object($filtered_text) ? $filtered_text->__toString() : $filtered_text;
+                    // If the allowed format is plain, we need to clean the text one
+                    // more time to clear out any html tags generated from the
+                    // filtering.
+                    if ($allowed_format == 'plain_text') {
+                      $filtered_text = strip_tags($filtered_text);
+                    }
+  
+                    // Reapply the formatted text to the default value. This will
+                    // help avoid issues with formatters being broken on body type
+                    // fields. This setup only applies to those fields out of sync.
+                    // It will not run on body type fields that are already in sync
+                    // or have more that 1 allowed format. It is still possible that
+                    // a field could be out of sync, but this setup should address
+                    // the majority of items.
+                    $form[$field_name]['widget'][$delta]['#default_value'] = $filtered_text;
                   }
-                  // Apply the allowed format to the text value...
-                  $filtered_text = check_markup($text, $allowed_format, $langcode);
-                  $filtered_text = is_object($filtered_text) ? $filtered_text->__toString() : $filtered_text;
-                  // If the allowed format is plain, we need to clean the text one
-                  // more time to clear out any html tags generated from the
-                  // filtering.
-                  if ($allowed_format == 'plain_text') {
-                    $filtered_text = strip_tags($filtered_text);
-                  }
-
-                  // Reapply the formatted text to the default value. This will
-                  // help avoid issues with formatters being broken on body type
-                  // fields. This setup only applies to those fields out of sync.
-                  // It will not run on body type fields that are already in sync
-                  // or have more that 1 allowed format. It is still possible that
-                  // a field could be out of sync, but this setup should address
-                  // the majority of items.
-                  $form[$field_name]['widget'][$delta]['#default_value'] = $filtered_text;
                 }
               }
             }
@@ -340,60 +342,62 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
   // Go thru every field, searching for "containers" with widgets, and search
   // thru those widgets for any field of a type "text_format"...
   foreach (Element::children($element['subform']) as $field_name) {
-    if (isset($element['subform'][$field_name]['#type']) && $element['subform'][$field_name]['#type'] == 'container') {
-      foreach (Element::children($element['subform'][$field_name]['widget']) as $delta) {
-        if (array_key_exists('#type', $element['subform'][$field_name]['widget'][$delta])) {
-          if ($element['subform'][$field_name]['widget'][$delta]['#type'] == 'text_format') {
-
-            // Look thru those "text_format" body type fields for any that have
-            // limited allowed formats (ONLY 1 ALLOWED FORMAT)...
-            if (isset($element['subform'][$field_name]['widget'][$delta]['#allowed_formats']) ) {
-              if (count($element['subform'][$field_name]['widget'][$delta]['#allowed_formats']) == 1) {
-
-                // Compare the applied format to the only allowed format, and if
-                // they do not match, begin the process of syncing them up and
-                // fixing the content.
-                $applied_format = $element['subform'][$field_name]['widget'][$delta]['#format'];
-                $allowed_format = $element['subform'][$field_name]['widget'][$delta]['#allowed_formats'][0];
-                if ($applied_format != $allowed_format) {
-                  $storage = $form_state->getStorage();
-                  $langcode = $storage['langcode'];
-
-                  // Set the allowed format to the applied format value.
-                  $element['subform'][$field_name]['widget'][$delta]['#format'] = $allowed_format;
-
-                  // Pull the text value, and if the allowed format is plain,
-                  // remove any forbidden html tags...
-                  $text = $element['subform'][$field_name]['widget'][$delta]['#default_value'] ?? '';
-                  if ($allowed_format == 'plain_text') {
-                    $text = strip_tags($text);
+    if (array_key_exists('#type', $element['subform'][$field_name])) {
+      if (isset($element['subform'][$field_name]['#type']) && $element['subform'][$field_name]['#type'] == 'container') {
+        foreach (Element::children($element['subform'][$field_name]['widget']) as $delta) {
+          if (array_key_exists('#type', $element['subform'][$field_name]['widget'][$delta])) {
+            if ($element['subform'][$field_name]['widget'][$delta]['#type'] == 'text_format') {
+  
+              // Look thru those "text_format" body type fields for any that have
+              // limited allowed formats (ONLY 1 ALLOWED FORMAT)...
+              if (isset($element['subform'][$field_name]['widget'][$delta]['#allowed_formats']) ) {
+                if (count($element['subform'][$field_name]['widget'][$delta]['#allowed_formats']) == 1) {
+  
+                  // Compare the applied format to the only allowed format, and if
+                  // they do not match, begin the process of syncing them up and
+                  // fixing the content.
+                  $applied_format = $element['subform'][$field_name]['widget'][$delta]['#format'];
+                  $allowed_format = $element['subform'][$field_name]['widget'][$delta]['#allowed_formats'][0];
+                  if ($applied_format != $allowed_format) {
+                    $storage = $form_state->getStorage();
+                    $langcode = $storage['langcode'];
+  
+                    // Set the allowed format to the applied format value.
+                    $element['subform'][$field_name]['widget'][$delta]['#format'] = $allowed_format;
+  
+                    // Pull the text value, and if the allowed format is plain,
+                    // remove any forbidden html tags...
+                    $text = $element['subform'][$field_name]['widget'][$delta]['#default_value'] ?? '';
+                    if ($allowed_format == 'plain_text') {
+                      $text = strip_tags($text);
+                    }
+  
+                    // Apply the allowed format to the text value...
+                    $filtered_text = check_markup($text, $allowed_format, $langcode);
+                    $filtered_text = is_object($filtered_text) ? $filtered_text->__toString() : $filtered_text;
+  
+                    // If the allowed format is plain, we need to clean the text one
+                    // more time to clear out any html tags generated from the
+                    // filtering.
+                    if ($allowed_format == 'plain_text') {
+                      $filtered_text = strip_tags($filtered_text);
+                    }
+  
+                    // Reapply the formatted text to the default value. This will
+                    // help avoid issues with formatters being broken on body type
+                    // fields. This setup only applies to those fields out of sync.
+                    // It will not run on body type fields that are already in sync
+                    // or have more that 1 allowed format. It is still possible that
+                    // a field could be out of sync, but this setup should address
+                    // the majority of items.
+                    $element['subform'][$field_name]['widget'][$delta]['#default_value'] = $filtered_text;
                   }
-
-                  // Apply the allowed format to the text value...
-                  $filtered_text = check_markup($text, $allowed_format, $langcode);
-                  $filtered_text = is_object($filtered_text) ? $filtered_text->__toString() : $filtered_text;
-
-                  // If the allowed format is plain, we need to clean the text one
-                  // more time to clear out any html tags generated from the
-                  // filtering.
-                  if ($allowed_format == 'plain_text') {
-                    $filtered_text = strip_tags($filtered_text);
-                  }
-
-                  // Reapply the formatted text to the default value. This will
-                  // help avoid issues with formatters being broken on body type
-                  // fields. This setup only applies to those fields out of sync.
-                  // It will not run on body type fields that are already in sync
-                  // or have more that 1 allowed format. It is still possible that
-                  // a field could be out of sync, but this setup should address
-                  // the majority of items.
-                  $element['subform'][$field_name]['widget'][$delta]['#default_value'] = $filtered_text;
                 }
               }
             }
           }
+  
         }
-
       }
     }
   }
