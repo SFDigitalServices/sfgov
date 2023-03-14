@@ -64,6 +64,8 @@ class CalculatorForm extends FormBase {
       '#field_suffix' => '<div id="purchasePriceError"></div>',
       '#suffix' => '</div>',
       '#attributes' => [
+        'inputmode' => 'numeric',
+        'pattern' => '[0-9]*',
         'minlength' => '4',
         'maxlength' => '12',
       ],
@@ -78,9 +80,10 @@ class CalculatorForm extends FormBase {
       '#field_suffix' => '<div id="purchaseYearError"></div>',
       '#suffix' => '</div>',
       '#attributes' => [
+        'inputmode' => 'numeric',
         'minlength' => '4',
         'maxlength' => '4',
-        'pattern' => '_[0-9]+',
+        'pattern' => '[0-9]*',
         'min' => '1996',
         'max' => date("Y") - 1,
       ],
