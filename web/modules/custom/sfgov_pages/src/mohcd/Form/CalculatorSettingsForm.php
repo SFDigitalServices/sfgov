@@ -59,6 +59,8 @@ class CalculatorSettingsForm extends ConfigFormBase {
       'currentYearAMI' => $this->state->get('sfgov_pages_mohcd_currentYearAMI'),
       'yearAMI' => $this->state->get('sfgov_pages_mohcd_yearAMI'),
       'embed_page' => $this->state->get('sfgov_pages_mohcd_embed_page'),
+      'label' => $this->state->get('sfgov_pages_mohcd_label'),
+      'description' => $this->state->get('sfgov_pages_mohcd_description'),
     ];
   }
 
@@ -125,6 +127,26 @@ class CalculatorSettingsForm extends ConfigFormBase {
       ];
     }
 
+    $form['content'] = [
+      '#type' => 'details',
+      '#title' => 'Content',
+      '#open' => FALSE,
+    ];
+
+    $form['content']['label'] = [
+      '#type' => 'textfield',
+      '#title' => t('Calculator label'),
+      '#required' => TRUE,
+      '#default_value' => !empty($state['label']) ? $state['label'] : t('Calculate'),
+    ];
+
+    $form['content']['description'] = [
+      '#type' => 'textarea',
+      '#title' => t('Calculator description/help text'),
+      '#required' => TRUE,
+      '#default_value' => !empty($state['description']) ? $state['description'] : t('Your purchase information can be found in the Promissory Note and closing documents.'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -179,6 +201,12 @@ class CalculatorSettingsForm extends ConfigFormBase {
       }
       if ($key == 'embed_page') {
         $this->setState('sfgov_pages_mohcd_embed_page', $value);
+      }
+      if ($key == 'label') {
+        $this->setState('sfgov_pages_mohcd_label', $value);
+      }
+      if ($key == 'description') {
+        $this->setState('sfgov_pages_mohcd_description', $value);
       }
     }
 

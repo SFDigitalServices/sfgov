@@ -4,7 +4,6 @@ namespace Drupal\sfgov_pages\mohcd\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use NumberFormatter;
@@ -22,16 +21,30 @@ class CalculatorForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Return the calculator label
+   */
+  public function getLabel() {
+    return \Drupal::state()->get('sfgov_pages_mohcd_label') ?? t('Calculate');
+  }
+
+  /**
+   * Return the calculator description/help text
+   */
+  public function getDescription() {
+    return \Drupal::state()->get('sfgov_pages_mohcd_description') ?? t('Your purchase information can be found in the Promissory Note and closing documents.');
+  }
+
+  /**
+   * Return the current AMI
    */
   public function getCurrentYearAMI() {
     return \Drupal::state()->get('sfgov_pages_mohcd_currentYearAMI');
   }
 
   /**
-   * {@inheritdoc}
+   * Get the complete year|AMI list
    */
-  public function getYearAMIList() {
+  public function getYearAMIList(): array {
     $options = [];
     $yearAMI = \Drupal::state()->get('sfgov_pages_mohcd_yearAMI');
     $yearAMIArray = preg_split('/\r\n|\r|\n/', $yearAMI);
@@ -43,7 +56,7 @@ class CalculatorForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the least recent (earliest) year from the AMI list
    */
   public function getEarliestYear() {
     $options = $this->getYearAMIList();
@@ -52,7 +65,7 @@ class CalculatorForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the most recent (latest) year from the AMI list
    */
   public function getLatestYear() {
     $options = $this->getYearAMIList();
@@ -61,7 +74,7 @@ class CalculatorForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Return the AMI value for the given year.
    */
   public function getYearAMI($year) {
     $options = $this->getYearAMIList();
@@ -69,7 +82,7 @@ class CalculatorForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Build the calculator.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $currentYearAMI = $this->getCurrentYearAMI();
@@ -78,8 +91,8 @@ class CalculatorForm extends FormBase {
 
     $form['bmrCalculator'] = array(
       '#type'  => 'fieldset',
-      '#title' => $this->t('Calculate'),
-      '#description' => $this->t('Your purchase information can be found in the Promissory Note and closing documents.'),
+      '#title' => $this->getLabel(),
+      '#description' => $this->getDescription(),
       '#description_display' => 'before',
     );
 
@@ -151,6 +164,9 @@ class CalculatorForm extends FormBase {
     return $form;
   }
 
+  /**
+   * Calculate the BMR Value and display on the form.
+   */
   public function calculateBMRValuation(array $form, FormStateInterface $form_state): AjaxResponse {
     $ajax_response = new AjaxResponse();
 
@@ -174,7 +190,8 @@ class CalculatorForm extends FormBase {
       $has_error = TRUE;
       $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t("Year must be 4 numbers.")));
     }
-    // Assert the purchaseYear must be between the earliest and latest years.
+
+    // Assert the purchaseYear must be between the earliest and latest years. ##UNCOMMENT BELOW TO TRIGGER VALIDATION.
 //    if ($purchaseYear && is_numeric($purchaseYear) && ($purchaseYear < $this->getEarliestYear() || $purchaseYear > $this->getLatestYear())) {
 //      $has_error = TRUE;
 //      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t('Year must be between @firstyear and @latestyear', [
