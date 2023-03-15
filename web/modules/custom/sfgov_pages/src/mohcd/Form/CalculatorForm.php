@@ -31,19 +31,46 @@ class CalculatorForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getYearAMI($year) {
+  public function getYearAMIList() {
     $options = [];
-    $year = (int) $year;
     $yearAMI = \Drupal::state()->get('sfgov_pages_mohcd_yearAMI');
     $yearAMIArray = preg_split('/\r\n|\r|\n/', $yearAMI);
     foreach($yearAMIArray as $yearAMI) {
       $value = explode("|", $yearAMI);
       $options[trim($value[0])] = trim($value[1]);
     }
-
-    return $options[$year];
+    return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getEarliestYear() {
+    $options = $this->getYearAMIList();
+    $years = array_flip($options);
+    return min($years);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLatestYear() {
+    $options = $this->getYearAMIList();
+    $years = array_flip($options);
+    return max($years);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getYearAMI($year) {
+    $options = $this->getYearAMIList();
+    return $options[$year] ?? FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $currentYearAMI = $this->getCurrentYearAMI();
 
@@ -75,7 +102,10 @@ class CalculatorForm extends FormBase {
       '#id' => 'purchaseYear',
       '#type' => 'textfield',
       '#title' => t('Purchase year'),
-      '#description' => t('Enter a year between 1996 and @year', ['@year' => date("Y") - 1]),
+      '#description' => t('Enter a year between @firstyear and @latestyear', [
+        '@firstyear' => $this->getEarliestYear(),
+        '@latestyear' => $this->getLatestYear()
+      ]),
       '#prefix' => '<div id="purchaseYearWrapper">',
       '#field_suffix' => '<div id="purchaseYearError"></div>',
       '#suffix' => '</div>',
@@ -84,8 +114,8 @@ class CalculatorForm extends FormBase {
         'minlength' => '4',
         'maxlength' => '4',
         'pattern' => '[0-9]*',
-        'min' => '1996',
-        'max' => date("Y") - 1,
+        'min' => $this->getEarliestYear(),
+        'max' => $this->getLatestYear(),
       ],
     ];
 
@@ -135,15 +165,23 @@ class CalculatorForm extends FormBase {
     $ajax_response->addCommand(new HtmlCommand('#purchasePriceError', ''));
     if (!$purchasePrice || !is_numeric($purchasePrice)) {
       $has_error = TRUE;
-      $ajax_response->addCommand(new HtmlCommand('#purchasePriceError', t("Please enter a valid number.")));
+      $ajax_response->addCommand(new HtmlCommand('#purchasePriceError', t("Price must be in numbers only.")));
     }
 
     // Assert the purchaseYear is valid
     $ajax_response->addCommand(new HtmlCommand('#purchaseYearError', ''));
     if (!$purchaseYearAMI || !is_numeric($purchaseYearAMI)) {
       $has_error = TRUE;
-      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t("Please enter a valid year.")));
+      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t("Year must be 4 numbers.")));
     }
+    // Assert the purchaseYear must be between the earliest and latest years.
+//    if ($purchaseYear && is_numeric($purchaseYear) && ($purchaseYear < $this->getEarliestYear() || $purchaseYear > $this->getLatestYear())) {
+//      $has_error = TRUE;
+//      $ajax_response->addCommand(new HtmlCommand('#purchaseYearError ', t('Year must be between @firstyear and @latestyear', [
+//        '@firstyear' => $this->getEarliestYear(),
+//        '@latestyear' => $this->getLatestYear()
+//      ])));
+//    }
 
     if (!$has_error) {
       $value = (int) round($purchasePrice + ($purchasePrice * (($currentYearAMI - $purchaseYearAMI) / $purchaseYearAMI)));

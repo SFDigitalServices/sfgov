@@ -95,7 +95,7 @@ class CalculatorSettingsForm extends ConfigFormBase {
       '#type' => 'textarea',
       '#title' => t('Year AMI values'),
       '#rows' => 29,
-      '#description' => t('Enter values as YEAR|AMI.  One value per line.'),
+      '#description' => t('Enter values as YEAR|AMI.  One value per line. The earliest year and latest year in this list are used to set the min/max years for the form.'),
       '#description_display' => 'before',
       '#required' => TRUE,
       '#default_value' => !empty($state['yearAMI']) ? $state['yearAMI'] : '',
