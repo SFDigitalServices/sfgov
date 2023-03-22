@@ -7,17 +7,26 @@
       </div>
     {% endif %}
 
-    {% set events_view = drupal_view('events', 'events_block_topics')|render %}
+    {% set events_view = drupal_view('events', 'events_block_topics', node.id)|render %}
+    {% set has_events = drupal_view_result('events', 'events_block_topics', node.id) %}
+    {% set has_past_events = drupal_view_result('events', 'page_5', node.id) %}
+    {% set event_heading = 'Events'|t({}, {'context' : 'Topic template 2 event section heading'})  %}
+    {% if has_events is empty and has_past_events is not empty%}
       <div class="sfgov-full-bleed light-green card-container">
         <div class="sfgov-section-container">
-        {% if drupal_view_result('events', 'events_block_topics', node.id) is empty %}
-          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">Events</h2>
+          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ event_heading }}</h2>
           <p>There are no upcoming events right now.</p>
           <br>
-        {% endif %}
-        {{ events_view }}
+          {{ events_view }}
         </div>
       </div>
+    {% elseif has_events is not empty %}
+      <div class="sfgov-full-bleed light-green card-container">
+        <div class="sfgov-section-container">
+          {{ events_view }}
+        </div>
+      </div>
+    {% endif %}
 
     {% set services_field = content.field_department_services %}
     {% set services_view = services_exclude ? drupal_view('services', 'topics_more_services', node.id, services_exclude) : drupal_view('services', 'block_1') %}

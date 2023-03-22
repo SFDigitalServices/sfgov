@@ -201,16 +201,25 @@
   {% endif %}
 
   {% set events_view = drupal_view('events', 'block_1', node.id)|render %}
+  {% set has_events = drupal_view_result('events', 'block_1', node.id) %}
+  {% set has_past_events = drupal_view_result('events', 'page_6', node.id) %}
+  {% set event_heading = 'Events'|t({}, {'context' : 'Agency event section heading'})  %}
+  {% if has_events is empty and has_past_events is not empty%}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       <div class="responsive-container">
-        {% if drupal_view_result('events', 'block_1', node.id) is empty %}
-          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">Events</h2>
-          <p>There are no upcoming events right now.</p>
-          <br>
-        {% endif %}
+        <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ event_heading }}</h2>
+        <p>There are no upcoming events right now.</p>
+        <br>
         {{ events_view }}
       </div>
     </div>
+  {% elseif has_events is not empty %}
+    <div class="odd:bg-grey-1 py-40 lg:py-60">
+      <div class="responsive-container">
+        {{ events_view }}
+      </div>
+    </div>
+  {% endif %}
 
   {% set hasAboutSection = "false" %}
   {% set hasAgencySection = division_list|length > 0 %}
