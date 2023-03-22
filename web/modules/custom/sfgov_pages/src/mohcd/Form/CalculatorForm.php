@@ -91,8 +91,8 @@ class CalculatorForm extends FormBase {
 
     $form['bmrCalculator'] = array(
       '#type'  => 'fieldset',
-      '#title' => $this->getLabel(),
-      '#description' => $this->getDescription(),
+      '#title' => t('@label', ['@label' => $this->getLabel()]),
+      '#description' => t('@description', ['@description' => $this->getDescription()]),
       '#description_display' => 'before',
     );
 
