@@ -70,7 +70,7 @@ function _sfgovpl_node_object(&$variables) {
   }
 }
 
-/** 
+/**
  * If the current language matches an existing Drupal translation,
  * show the Drupal-translated node and do not let Google translate it.
  */
@@ -104,4 +104,15 @@ function _sfgovpl_node_notranslate($node, $view_mode) {
     }
   }
   return $variables;
+}
+
+/**
+ * Remove &nbsp; from strings.
+ *
+ * @param $text
+ *
+ * @return array|string|string[]
+ */
+function _sfgovpl_remove_nbsp($text) {
+  return str_replace('&nbsp;', ' ', $text);
 }
