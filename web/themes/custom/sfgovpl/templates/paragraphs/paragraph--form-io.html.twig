@@ -104,6 +104,8 @@
     var el = document.getElementById('formio-{{ form_id }}')
     var options = safeJSONParse(el.getAttribute('data-options'))
     options.i18n = safeJSONParse(el.getAttribute('data-translations'))
+    options.saveDraft = true
+    options.saveDraftThrottle = 10000
 
     /*
      * Every key in this object is a form event name, and the value is a
@@ -200,6 +202,8 @@
     Formio.createForm(el, dataSource, options)
       .then(function(form) {
         amp('form.load', { load_time: Date.now() - time })
+
+        form.nosubmit = false;
 
         Object.keys(formEventHandlers).forEach(function(eventName) {
           form.on(eventName, function() {
