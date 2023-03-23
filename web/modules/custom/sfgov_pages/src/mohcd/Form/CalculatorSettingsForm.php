@@ -103,7 +103,7 @@ class CalculatorSettingsForm extends ConfigFormBase {
       '#default_value' => !empty($state['yearAMI']) ? $state['yearAMI'] : '',
     ];
 
-    $transaction_node = $node_manager->load($state['embed_page']);
+    $transaction_node = !empty($state['embed_page']) ? $node_manager->load($state['embed_page']) : null;
     $form['embed_page'] = [
       '#type' => 'entity_autocomplete',
       '#target_type' => 'node',
@@ -115,7 +115,7 @@ class CalculatorSettingsForm extends ConfigFormBase {
       '#title' => t('Transaction embed'),
       '#description' => t('Enter the transaction page you would like to embed the calculator on. This will render the calculator after the "What to do" section.'),
       '#description_display' => 'before',
-      '#default_value' => !empty($state['embed_page']) ? $transaction_node : null,
+      '#default_value' => $transaction_node,
     ];
 
     if (!empty($state['embed_page'])) {
