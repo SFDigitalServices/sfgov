@@ -23,7 +23,7 @@ function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
     $agencyNodes = array_key_exists($agencySectionDelta, $agencySection[$agencySectionDelta]['subform']['field_agencies'])
       ? $agencySection[$agencySectionDelta]['subform']['field_agencies'][$agencySectionDelta]['subform']['field_department']
       : [];
-    
+
     if (!empty($agencyNodes)) {
       // get the view that retrieves the parent agency/agencies of this agency
       $view = \Drupal\views\Views::getView('departments');
@@ -43,7 +43,7 @@ function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
       foreach ($agencyNodes as $item) {
         if (is_array($item)) { // the agency section node list can also contain the add_more object (if the list is empty)
           $ref = $item['target_id'];
-          
+
           if ($ref == $node->id()) {
             // the structure of this named reference is unique to the way the setErrorByName method
             // parses the string to target the field for registering an error
@@ -52,7 +52,7 @@ function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
           }
 
           if(in_array($ref, array_keys($parentAgencies))) {
-            $form_state->setErrorByName("field_agency_sections][$agencySectionDelta][subform][field_agencies][$agencySectionDelta][subform][field_department][$i", 
+            $form_state->setErrorByName("field_agency_sections][$agencySectionDelta][subform][field_agencies][$agencySectionDelta][subform][field_department][$i",
               t("You can't add your parent agency as a division or subcommittee (" . $parentAgencies[$ref] . ")"));
             break;
           }
@@ -219,8 +219,8 @@ function sfgov_departments_form_node_department_edit_form_alter(&$form, FormStat
   $form['#validate'][] = '_sfgov_departments_dept_node_archive_url_and_date_form_validate';
 
   // [SG-1746]
-  // This setup sets the request public records type fields to be required, if 
-  // the "Required public records" radio type field is set. This ensures that if 
+  // This setup sets the request public records type fields to be required, if
+  // the "Required public records" radio type field is set. This ensures that if
   // a department has a required type, that the type field associated with that is
   // filled in.
 
@@ -328,58 +328,91 @@ function _sfgov_departments_agency_sections_alter_submit(&$form, FormStateInterf
  *
  * @return array
  *   Department field.
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
 function _fetch_departments_submit(array &$form, FormStateInterface $form_state) {
   $storage = $form_state->getStorage();
   $values = $form_state->getValues();
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $input = $form_state->getUserInput();
 
   // Get current department values.
   $field_departments = $values['field_departments'];
 
   // Store and unset the add_more action.
-  $add_more = $field_departments['add_more'];
+  $actions = $field_departments[0]['actions'] ?? [];
   unset($field_departments['add_more']);
 
-  // Get only the field values.
+  // Get the id's from the manually added related departments.
   $clean_values = [];
+  $key = NULL;
+
   foreach ($field_departments as $key => $value) {
     if (is_numeric($key) && $value['target_id']) {
-      $clean_values[] = $value['target_id'];
+      $clean_values[$key] = $value['target_id'];
     }
   }
+
+  // We increase the key here by 1 from above to start our next weight value
+  // for any parent nodes that are added.
+  $key++;
 
   // Do nothing if there is no value.
   if (!empty($clean_values)) {
     foreach ($clean_values as $value) {
-      /** @var \Drupal\node\NodeInterface $node */
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load($value);
+      // Load up our manually added related department nodes from the clean id
+      // array.
+      $related_department_node = $node_storage->load($value);
 
-      // Get parent values.
-      if ($node && $node->hasField('field_parent_department') && ($parent_node = $node->field_parent_department->entity)) {
-        if (!in_array($parent_node->id(), array_values($clean_values))) {
-          $clean_values[] = $parent_node->id();
+      // Get parent node values from our manually added related department.
+      if ($related_department_node
+        && $related_department_node->hasField('field_parent_department')
+        && ($parent_nodes = $related_department_node->get('field_parent_department')->referencedEntities())) {
+        foreach ($parent_nodes as $delta => $parent_node) {
+          if (!in_array($parent_node->id(), array_values($clean_values))) {
+            $title = $parent_node->label();
+            $nid = $parent_node->id();
 
-          \Drupal::messenger()->addMessage(t('"@parent_department" is a parent department of "@department" and has been added by default. You can remove this selection if it does not apply for this content.', [
-            '@parent_department' => $parent_node->label(),
-            '@department' => $node->label(),
-          ]));
+            // Prepare values for submission.
+            // Here we add directly to existing values array.
+            $values['field_departments'][] = [
+              'target_id' => $nid,
+              '_weight' => $key,
+              'actions' => $actions,
+            ];
+
+            // Prepare input for display on form interface.
+            // Here we add directly to existing values array.
+            $input['field_departments'][] = [
+              'target_id' => "$title ($nid)",
+              '_weight' => $key,
+            ];
+
+            \Drupal::messenger()
+              ->addMessage(t('"@parent_department" is a parent department of "@department" and has been added by default. You can remove this selection if it does not apply for this content.', [
+                '@parent_department' => $title,
+                '@department' => $related_department_node->label(),
+              ]));
+          }
+          // We increase the key here to set the next weight value for the next
+          // item.
+          $key++;
         }
       }
     }
 
-    // Reset field count.
-    $storage['field_storage']['#parents']['#fields']['field_departments']['items_count'] = count($clean_values);
+    // Reset field count so the form is aware of the final total items on
+    // rebuild.
+    $storage['field_storage']['#parents']['#fields']['field_departments']['items_count'] = count($input['field_departments']);
     $form_state->setStorage($storage);
 
-    // Get user input.
-    $input = $form_state->getUserInput();
+    // Because we directly applied our new values to the existing values array,
+    // we can just apply the values array for the departments back in.
+    $form_state->setValue('field_departments', $values['field_departments']);
 
-    // Clear the input so that it can be populated with the new values.
-    $input['field_departments'] = [];
-
-    // Set new values, and rebuild the form state.
-    $clean_values['add_more'] = $add_more;
-    $form_state->setValue('field_departments', $clean_values);
+    // Because we directly applied our new values to the existing input array,
+    // we can just apply the input value directly back in.
     $form_state->setUserInput($input);
     $form_state->setRebuild();
   }
