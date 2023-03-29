@@ -48,9 +48,13 @@
   ]
 %}
 {% set optional = paragraph.field_process_optional.getValue()[0].value %}
+{% set stepType = paragraph.field_process_step_type.getValue()[0].value %}
 {% set showMoreText = 'Show more'|t %}
 {% set showLessText = 'Show less'|t %}
 {% block paragraph %}
+  {% if stepType != '#' %}
+    <div class="step-type conjuction">{{ content.field_process_step_type }}</div>
+  {% endif %}
   <div{{ attributes.addClass(classes) }} data-toggle-container>
     {% block content %}
       <div class="step-left">

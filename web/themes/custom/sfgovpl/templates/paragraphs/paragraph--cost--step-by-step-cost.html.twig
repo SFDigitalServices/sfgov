@@ -1,13 +1,13 @@
 {% extends 'paragraph--cost.html.twig' %}
 
 {% block title %}
-  <h4>{{ 'Cost' | t }}:</h4>
+  <h4>{{ 'Cost'|t }}:</h4>
 {% endblock title %}
 
 {% block costflat %}
-  {{ '$' ~ paragraph.field_cost_flat_fee.0.value ~ '.' }}
+  {{ '$@flat.'|t({'@flat': paragraph.field_cost_flat_fee.0.value}) }}
 {% endblock costflat %}
 
 {% block costmin %}
-  {{ content.field_cost_minimum }} {{ ' and up.'|t }} </br>
+  {{ '$@min and up.'|t({'@min': content.field_cost_minimum}) }} </br>
 {% endblock costmin %}

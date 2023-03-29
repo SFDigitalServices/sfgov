@@ -58,17 +58,17 @@
       {% endif %}
       {% if cost_type == 'flat' %}
         {% block costflat %}
-          {{ '$' ~ paragraph.field_cost_flat_fee.0.value ~ '.' }}
+          {{ '$@flat.'|t({'@flat': paragraph.field_cost_flat_fee.0.value}) }}
         {% endblock costflat %}
       {% endif %}
       {% if cost_type == 'minimum' and content.field_cost_minimum|render %}
         {% block costmin %}
-          {{ content.field_cost_minimum }} {{ ' and up.'|t }}
+          {{ '$@min and up.'|t({'@min': content.field_cost_minimum}) }}
         {% endblock costmin %}
       {% endif %}
       {% if cost_type == 'range' and content.field_cost_minimum|render and content.field_cost_maximum|render %}
         <div class="inline-flex">
-          {{ '$' ~ paragraph.field_cost_minimum.0.value ~ ' to  $' ~ paragraph.field_cost_maximum.0.value ~ '.' }}
+          {{ '$@min to $@max'|t({'@min': paragraph.field_cost_minimum.0.value, '@max': paragraph.field_cost_maximum.0.value}) }}
         </div>
       {% endif %}
     {{ content|without(

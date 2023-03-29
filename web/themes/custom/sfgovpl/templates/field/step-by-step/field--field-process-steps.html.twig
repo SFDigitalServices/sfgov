@@ -42,14 +42,12 @@
   {% if stepType == '#' %}
     {% set stepTypeValue = stepNumber %}
     {% set stepTypeClass = 'number' %}
-  {% else %}
-    {% set stepTypeValue = stepType is not empty ? stepType : 'and'|t %}
-    {% set stepTypeClass = 'conjuction' %}
-    {% set stepNumber = stepNumber - 1 %}
+    {% set stepNumber = stepNumber + 1 %}
   {% endif %}
-  {% set stepNumber = stepNumber + 1 %}
   <div class="step-by-step-container {{ loop.last ? 'last' : '' }}">
+    {% if stepType == '#' %}
     <div class="step-type {{ stepTypeClass }}">{{ stepTypeValue }}</div>
+    {% endif %}
     {{ item.content }}
   </div>
 {% endfor %}
