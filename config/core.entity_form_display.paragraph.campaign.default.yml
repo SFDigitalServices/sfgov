@@ -10,19 +10,28 @@ dependencies:
     - paragraphs.paragraphs_type.campaign
   module:
     - entity_browser
-    - link
+    - link_attributes
 id: paragraph.campaign.default
 targetEntityType: paragraph
 bundle: campaign
 mode: default
 content:
   field_link:
-    type: link_default
+    type: link_attributes
     weight: 1
     region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
+      enabled_attributes:
+        aria-label: true
+        id: false
+        name: false
+        target: false
+        rel: false
+        class: false
+        accesskey: false
+        title: false
     third_party_settings: {  }
   field_media:
     type: entity_browser_entity_reference

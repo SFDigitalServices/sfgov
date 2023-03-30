@@ -1,6 +1,8 @@
 {% for item in items %}
   {% include "@sfgov-design-system/button/link.twig" with {
-      "href": item.content['#url'],
-      "text": item.content['#title'],
+    "href": item.content['#url'],
+    "text": item.content['#title'],
+    "attributes": item.content['#options']['attributes']|default([]),
+    "options": item.content['#options'],
   } %}
 {% endfor %}

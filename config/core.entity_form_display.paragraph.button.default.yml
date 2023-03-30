@@ -6,24 +6,29 @@ dependencies:
     - field.field.paragraph.button.field_link
     - paragraphs.paragraphs_type.button
   module:
-    - link
-    - maxlength
+    - link_attributes
 id: paragraph.button.default
 targetEntityType: paragraph
 bundle: button
 mode: default
 content:
   field_link:
-    type: link_default
+    type: link_attributes
     weight: 1
     region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
-    third_party_settings:
-      maxlength:
-        maxlength_js: 25
-        maxlength_js_label: '<strong>@count</strong>/@limit'
+      enabled_attributes:
+        aria-label: true
+        id: false
+        name: false
+        target: false
+        rel: false
+        class: false
+        accesskey: false
+        title: false
+    third_party_settings: {  }
   translation:
     weight: 0
     region: content
