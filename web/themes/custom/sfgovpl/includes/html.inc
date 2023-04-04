@@ -58,6 +58,31 @@ function sfgovpl_preprocess_html(&$variables) {
 
         $variables['page']['#attached']['html_head'][] = [$metaDeptPhone, 'departmentPhone'];
         $variables['page']['#attached']['html_head'][] = [$metaDeptAddress, 'departmentAddress'];
+
+        // Add the Mastodon verification to the Head if a url is present.
+        if ($node->hasField('field_social_media')) {
+          if (count($node->get('field_social_media')->getValue()) > 0) {
+            $paragraphSocialMediaId = $node->get('field_social_media')->getValue()[0]['target_id'];
+            $paragraphSocialMedia = Paragraph::load($paragraphSocialMediaId);
+            if ($paragraphSocialMedia->hasField('field_mastodon')) {
+              $mastodon_url = $paragraphSocialMedia->get('field_mastodon')
+                ->getValue();
+              if (isset($mastodon_url[0]['uri'])) {
+                $mastadonVerificationLink = [
+                  '#tag' => 'link',
+                  '#attributes' => [
+                    'href' => $mastodon_url[0]['uri'],
+                    'rel' => 'me'
+                  ]
+                ];
+                $variables['page']['#attached']['html_head'][] = [
+                  $mastadonVerificationLink,
+                  'mastadonVerificationLink'
+                ];
+              }
+            }
+          }
+        }
         break;
 
       case 'transaction':
