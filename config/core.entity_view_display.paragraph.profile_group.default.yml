@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.profile_group.field_description
+    - field.field.paragraph.profile_group.field_heading_size
     - field.field.paragraph.profile_group.field_profiles
     - field.field.paragraph.profile_group.field_title
     - paragraphs.paragraphs_type.profile_group
   module:
     - entity_reference_revisions
+    - options
     - text
 id: paragraph.profile_group.default
 targetEntityType: paragraph
@@ -21,6 +23,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_heading_size:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_profiles:
     type: entity_reference_revisions_entity_view
