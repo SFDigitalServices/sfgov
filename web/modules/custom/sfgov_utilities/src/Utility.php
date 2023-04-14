@@ -21,7 +21,7 @@
     /*
     * get nodes and their translations for a given content type machine name string regardless of published status
     */
-    public static function getNodes($contentType) {
+    public static function getNodes($contentType, $translations = false) {
       $nids = \Drupal::entityQuery('node')
       ->condition('type', $contentType)
       ->execute();
@@ -31,10 +31,12 @@
       $nodes = Node::loadMultiple($nids);
       $nodeTranslations = [];
   
-      foreach($nodes as $node) {
-        foreach($languages as $language) {
-          if($node->hasTranslation($language)) {
-            $nodeTranslations[] = $node->getTranslation($language);
+      if ($translations) {
+        foreach($nodes as $node) {
+          foreach($languages as $language) {
+            if($node->hasTranslation($language)) {
+              $nodeTranslations[] = $node->getTranslation($language);
+            }
           }
         }
       }
