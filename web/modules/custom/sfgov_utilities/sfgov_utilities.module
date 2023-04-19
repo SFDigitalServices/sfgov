@@ -6,10 +6,7 @@ use Drupal\user\Entity\User;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\pathauto\PathautoState;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Cache\Cache;
-use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
-use Drush\Drush;
 
 /**
  * Implements hook_template_preprocess_default_variables_alter().
@@ -198,11 +195,14 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
   // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
   // This will make sure to apply transliteration cleanup and appropirate URL patterns.
   // @see SG-1154
-  if(!empty($entity->path)) {
-    if ($entity->path->pathauto == PathautoState::SKIP) {
-      \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
-    }
+  if (
+    $entity->hasField('path') &&
+    !empty($entity->path) &&
+    ($entity->path->pathauto == PathautoState::SKIP)
+  ) {
+    \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'insert');
   }
+
   if ($entity->bundle() === 'department' || $entity->bundle() === 'topic') {
     sfgov_utilities_entity_update($entity);
   }
@@ -236,11 +236,14 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
   // Enforcing URL generation even when "Generate automatic URL alias" is unchecked.
   // This will make sure to apply transliteration cleanup and appropirate URL patterns.
   // @see SG-1154
-  if (!empty($entity->path)) {
-    if ($entity->path->pathauto == PathautoState::SKIP) {
-      \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
-    }
+  if (
+    $entity->hasField('path') &&
+    !empty($entity->path) &&
+    ($entity->path->pathauto == PathautoState::SKIP)
+  ) {
+    \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
   }
+
   // Add or edit redirects for news view pages.
   if ($entity->bundle() === 'department' || $entity->bundle() === 'topic') {
     if ($entity->bundle() === 'department') {
@@ -251,7 +254,7 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
     }
     $entity_path = $entity_path_root . $entity->id();
     $path_alias_manager = \Drupal::entityTypeManager()->getStorage('path_alias');
-    /* @var $alias_objects PathAliasInterface */
+    /* @var $alias_objects \Drupal\path_alias\PathAliasInterface */
     $alias_objects = $path_alias_manager->loadByProperties([
       'path' => $entity_path,
       'langcode' => 'en',
@@ -272,15 +275,18 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
         foreach ($alias_objects as $alias_object) {
           if ($alias_object->getPath() == $entity_path) {
             $retrieved_alias = $alias_object->getAlias();
-            $news_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id());
-            $position = strrpos($news_alias, '/');
-            $existing_alias = $position === FALSE ? $news_alias : substr($news_alias, $position + 1);
-            if ($retrieved_alias != $news_alias) {
+            $node_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id(), 'en');
+            $position = strrpos($node_alias, '/');
+            $existing_alias = $position === FALSE ? $node_alias : substr($node_alias, $position + 1);
+            $updated_alias = $entity_path_root . $existing_alias;
+            if ($retrieved_alias != $updated_alias) {
               // Note that redirect module will create a new redirect for us, from the
               // old alias to the subpage path, in the process of this save.
-              $updated_alias = $entity_path_root . $existing_alias;
-              $alias_object->setAlias($updated_alias);
-              $alias_object->save();
+              // Prevent saving infinite redirects from the path to the alias.
+              if ($alias_object->getPath() != $updated_alias) {
+                $alias_object->setAlias($updated_alias);
+                $alias_object->save();
+              }
             }
           }
         }
