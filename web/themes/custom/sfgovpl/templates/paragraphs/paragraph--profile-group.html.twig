@@ -56,7 +56,11 @@
     {% block content %}
       <div class="inner">
         {% if content.field_title.0 is not empty %}
-          <{{ content.field_heading_size.0|default('h2') }} class="title">{{ content.field_title.0 }}</{{ content.field_heading_size.0|default('h2') }}>
+          {% if paragraph.field_title.value|clean_class == 'elected-officials' %}
+            <h2 class="title">{{ content.field_title.0 }}</h2>
+          {% else %}
+            <h3 class="title">{{ content.field_title.0 }}</h3>
+          {% endif %}
         {% endif %}
         {% if content.field_description.0 is not empty and is_front is empty %}
           <div class="description {{ descriptionClass }}">
