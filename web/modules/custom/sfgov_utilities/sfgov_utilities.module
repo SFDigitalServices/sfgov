@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\user\Entity\User;
@@ -196,6 +197,7 @@ function sfgov_utilities_entity_insert(EntityInterface $entity) {
   // This will make sure to apply transliteration cleanup and appropirate URL patterns.
   // @see SG-1154
   if (
+    ($entity instanceof ContentEntityInterface) &&
     $entity->hasField('path') &&
     !empty($entity->path) &&
     ($entity->path->pathauto == PathautoState::SKIP)
@@ -237,6 +239,7 @@ function sfgov_utilities_entity_update(EntityInterface $entity) {
   // This will make sure to apply transliteration cleanup and appropirate URL patterns.
   // @see SG-1154
   if (
+    ($entity instanceof ContentEntityInterface) &&
     $entity->hasField('path') &&
     !empty($entity->path) &&
     ($entity->path->pathauto == PathautoState::SKIP)
