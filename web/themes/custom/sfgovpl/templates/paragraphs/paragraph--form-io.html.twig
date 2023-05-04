@@ -198,12 +198,8 @@
     time = Date.now()
     var dataSource = el.getAttribute('data-source')
     var params = new URL(location).searchParams
-    if (params.submission) {
-      dataSource += `/submission/${params.submission}`
-      // options.saveDraft = true
-      Formio.setUser({
-        _id: '123'
-      })
+    if (params.submission_id) {
+      dataSource += `/submission/${params.submission_id}`
     }
     Formio.createForm(el, dataSource, options)
       .then(function(form) {
