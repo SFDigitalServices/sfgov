@@ -146,3 +146,65 @@ function sfgov_utilities_update_8706() {
     $original_paragraph->save();
   }
 }
+
+/**
+ * Fix path aliases for topic and news pages.
+ */
+function sfgov_utilities_update_8707(&$sandbox) {
+  $pathAliasManager = \Drupal::entityTypeManager()->getStorage('path_alias');
+
+  if (!isset($sandbox['progress'])) {
+    $resultsNews = $pathAliasManager->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('alias', '^/news/\\d+$', 'REGEXP')
+      ->condition('langcode', 'en')
+      ->execute();
+    $resultsTopics = $pathAliasManager->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('alias', '^/news/topics/\d+$', 'REGEXP')
+      ->condition('langcode', 'en')
+      ->execute();
+
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = count($resultsNews) + count($resultsTopics);
+    $sandbox['ids'] = $resultsNews + $resultsTopics;
+  }
+
+  // Slice the $results array into chunks of 20 and iterate over each.
+  $ids = array_slice($sandbox['ids'], $sandbox['progress'], 20);
+
+  /* @var $aliases \Drupal\path_alias\PathAliasInterface[] */
+  $aliases = $pathAliasManager->loadMultiple($ids);
+  foreach ($aliases as $alias) {
+    $parts = explode('/', $alias->getPath());
+    $nid = end($parts);
+    $entity_path_root = in_array('topics', $parts) ? '/news/topics/' : '/news/';
+    $node_alias = \Drupal::service('path_alias.manager')
+      ->getAliasByPath('/node/' . $nid, 'en');
+    if ($node_alias) {
+      $position = strrpos($node_alias, '/');
+      $existing_alias = $position === FALSE ? $node_alias : substr($node_alias, $position + 1);
+      $updated_alias = $entity_path_root . $existing_alias;
+      $alias->setAlias($updated_alias);
+      $alias->save();
+    }
+    else {
+      $alias->delete();
+    }
+
+    $sandbox['progress']++;
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}
+
+/**
+ * Delete possible redirect loops.
+ */
+function sfgov_utilities_update_8708(&$sandbox) {
+  $query = Drupal::database()->delete('redirect');
+  $query->where("redirect_redirect__uri = CONCAT(:prefix, redirect_source__path)", [
+    ':prefix' => 'internal:/',
+  ]);
+  $query->execute();
+}
