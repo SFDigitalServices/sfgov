@@ -1,5 +1,6 @@
 // hide the address' country field
-.form-item-field-address-0-address-country-code, .form-item-inline-entity-form-field-address-0-address-country-code {
+.form-item-field-address-0-address-country-code,
+.form-item-inline-entity-form-field-address-0-address-country-code {
   display: none;
 }
 
@@ -16,7 +17,8 @@
     display: inline-block;
     width: 28%;
     margin-right: 20px;
-    input[name="field_page_design"] + label.option {
+
+    input[name="field_page_design"]+label.option {
       &::after {
         content: '';
         display: block;
@@ -27,17 +29,20 @@
       }
     }
   }
-  [data-drupal-selector="edit-field-page-design-1"] + label.option {
+
+  [data-drupal-selector="edit-field-page-design-1"]+label.option {
     &::after {
       background-image: url('../images/Services.png');
     }
   }
-  [data-drupal-selector="edit-field-page-design-2"] + label.option {
+
+  [data-drupal-selector="edit-field-page-design-2"]+label.option {
     &::after {
       background-image: url('../images/Events.png');
     }
   }
-  [data-drupal-selector="edit-field-page-design-3"] + label.option {
+
+  [data-drupal-selector="edit-field-page-design-3"]+label.option {
     &::after {
       background-image: url('../images/Spotlight.png');
     }
@@ -48,9 +53,11 @@
 table {
   &.field-multiple-table td {
     position: relative;
+
     input.form-autocomplete {
       width: 82%;
     }
+
     input[class^=remove-field-delta] {
       right: 0;
       position: absolute;
@@ -59,6 +66,7 @@ table {
       transform: translateY(-50%);
     }
   }
+
   &#field-form-strings-values {
     .field-multiple-drag {
       display: none;
@@ -68,11 +76,13 @@ table {
 
 // Tweaks for the formio paragraph
 table #field-custom-form-strings-values {
+
   // These remove buttons have weird positioning if they follow the above style.
   input[class^=remove-field-delta] {
     position: inherit !important;
     transform: inherit !important;
   }
+
   .field-multiple-drag {
     display: none;
   }
@@ -92,6 +102,7 @@ table #field-custom-form-strings-values {
       padding-bottom: 10px;
     }
   }
+
   .key-value-widget-key {
     padding-bottom: 10px;
   }
@@ -110,11 +121,17 @@ table[id^=field-formio-fields-values] {
   }
 }
 
-input[data-drupal-selector *= "field-resource"] + p {
+input[data-drupal-selector *="field-resource"]+p {
   display: none;
 }
 
-label .counter  {
+label .counter {
   margin: 0 0 0 .65rem;
   font-size: .75rem !important;
+}
+
+// hide link_attribute module's fields
+.field--type-link [id*="options-attributes"] [class*="attributes-rel"],
+.field--type-link [id*="options-attributes"] [class*="attributes-class"] {
+  display: none;
 }
