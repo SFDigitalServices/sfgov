@@ -92,3 +92,21 @@ function sfgovpl_preprocess_field__paragraph__field_owner(&$variables) {
     $variables['items'][$key]['content']['#context']['value'] = _sfgovpl_remove_nbsp($variables['items'][$key]['content']['#context']['value']);
   }
 }
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgovpl_preprocess_field__paragraph__field_link(&$variables) {
+  $paragraph_title = '';
+  $paragraph = $variables['element']['#object'];
+  if ($paragraph->hasField('field_title')) {
+    $paragraph_title = $paragraph->get('field_title')->getValue()[0]['value'];
+  }
+
+  foreach ($variables['items'] as $delta => $item) {
+    $link_title = $variables['items'][$delta]['content']['#title'];
+    if (empty($variables['items'][$delta]['content']['#options']['attributes']['aria-label'])) {
+      $variables['items'][$delta]['content']['#options']['attributes']['aria-label'] = $link_title . ' ' . $paragraph_title;
+    }
+  }
+}
