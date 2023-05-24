@@ -71,7 +71,7 @@ function sfgovpl_preprocess_field__node__field_departments(&$variables) {
  */
 function sfgovpl_preprocess_field__node__title(&$variables) {
   foreach ($variables['items'] as $key => $value) {
-    $variables['items'][$key]['content']['#context']['value'] = _sfgovpl_remove_nbsp($variables['items'][$key]['content']['#context']['value']) . ' BACON';
+    $variables['items'][$key]['content']['#context']['value'] = _sfgovpl_remove_nbsp($variables['items'][$key]['content']['#context']['value']);
   }
 }
 

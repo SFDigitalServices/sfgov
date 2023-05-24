@@ -5,6 +5,7 @@
       {% set facebook = item.content['#paragraph'].get('field_facebook').getValue()[0].uri %}
       {% set instagram = item.content['#paragraph'].get('field_instagram').getValue()[0].uri %}
       {% set twitter = item.content['#paragraph'].get('field_twitter').getValue()[0].uri %}
+      {% set mastodon = item.content['#paragraph'].get('field_mastodon').getValue()[0].uri %}
       {% if facebook %}
         <li class="flex mb-20">
           <a class="sm-icon facebook text-white text-body pl-40" href="{{ facebook }}">{{ 'Facebook' | t }}</a>
@@ -18,6 +19,11 @@
       {% if twitter %}
         <li class="flex mb-20">
           <a class="sm-icon twitter text-white text-body pl-40" href="{{ twitter }}">{{ 'Twitter' | t }}</a>
+        </li>
+      {% endif %}
+      {% if mastodon %}
+        <li class="flex mb-20">
+          <a class="sm-icon mastodon text-white text-body pl-40" href="{{ mastodon }}" rel="me">{{ 'Mastodon' | t }}</a>
         </li>
       {% endif %}
     {% endfor %}

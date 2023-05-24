@@ -304,6 +304,11 @@ function sfgov_profiles_field_widget_paragraphs_form_alter(&$element, $form_stat
 
       $element['subform']['field_title']['#attributes']['class'][] = 'visually-hidden';
     }
+
+    if ($element['#paragraph_type'] == 'social_media') {
+      // Hide mastadon field from social_media paragraphs on people profiles.
+      $element['subform']['field_mastodon']['#access'] = FALSE;
+    }
   }
 }
 
