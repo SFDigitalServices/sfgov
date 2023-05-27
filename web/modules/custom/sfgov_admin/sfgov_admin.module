@@ -865,25 +865,10 @@ function sfgov_admin_library_info_alter(array &$libraries, $extension) {
 }
 
 /**
- * Implements hook_entity_base_field_info_alter().
+ * Implements hook_link_attributes_plugin_alter().
  */
-function sfgov_admin_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'menu_link_content') {
-    $fields['link']->setDisplayOptions('form', [
-      'type' => 'link_attributes',
-      'weight' => -2,
-      'settings' => [
-        'enabled_attributes' => [
-          'id' => FALSE,
-          'name' => FALSE,
-          'target' => TRUE,
-          'rel' => FALSE,
-          'class' => FALSE,
-          'accesskey' => FALSE,
-          // Add your own custom attributes as required.
-          'YOURCUSTOMATTRIBUTE' => TRUE,
-        ],
-      ],
-    ]);
-  }
+function sfgov_admin_link_attributes_plugin_alter(array &$plugins) {
+  // Set a default value for the target attribute.
+  $plugins['aria-label']['title'] = t('Button text for screenreaders (ARIA label)');
+  $plugins['aria-label']['description'] = t('ARIA labels are read by screenreaders, but do not show. ARIA labels use button text + title by default, unless you add custom text.');
 }
