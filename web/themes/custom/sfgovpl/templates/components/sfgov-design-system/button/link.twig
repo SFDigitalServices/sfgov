@@ -1,2 +1,2 @@
 {% set attributes = options.attributes ? create_attribute(options.attributes) : [] %}
-<a href="{{ href }}" class="btn {{ classes|join(' ') }}" {{ attributes }}>{{ text }}</a>
+<a href="{{ href }}" class="btn {{ classes|merge(options.attributes.class)|join(' ') }} {{ options.attributes}}" {{ attributes }}>{{ text }}</a>
