@@ -93,7 +93,7 @@ function _sfgov_formiojs_source() {
   // Check for query parameters first.
   if (\Drupal::request()->query) {
     $query = \Drupal::request()->query->get('formiojsVersion');
-    $query = strip_tags($query);
+    $query = $query ? strip_tags($query) : '';
   }
 
   // Prefer source from query params.
@@ -122,7 +122,7 @@ function _sfgov_formio_sfds_source() {
   // Check for query parameters.
   if (\Drupal::request()->query) {
     $query = \Drupal::request()->query->get('formio-sfdsVersion');
-    $query = strip_tags($query);
+    $query = $query ? strip_tags($query) : '';
   }
 
   // Prefer version from query params, if available.
