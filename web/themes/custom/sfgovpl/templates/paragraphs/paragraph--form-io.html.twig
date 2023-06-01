@@ -197,6 +197,11 @@
 
     time = Date.now()
     var dataSource = el.getAttribute('data-source')
+    var params = new URL(location).searchParams
+    var submissionId = params.get('submission')
+    if (submissionId) {
+      dataSource += `/submission/${submissionId}`
+    }
     Formio.createForm(el, dataSource, options)
       .then(function(form) {
         amp('form.load', { load_time: Date.now() - time })
