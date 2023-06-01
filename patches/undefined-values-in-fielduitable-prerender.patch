@@ -1,0 +1,30 @@
+diff --git a/core/modules/field_ui/src/Element/FieldUiTable.php b/core/modules/field_ui/src/Element/FieldUiTableChange.php
+--- a/core/modules/field_ui/src/Element/FieldUiTable.php
++++ b/core/modules/field_ui/src/Element/FieldUiTable.php
+@@ -61,7 +61,7 @@
+     while ($list) {
+       foreach ($list as $name) {
+         $row = &$elements[$name];
+-        $parent = $row['parent_wrapper']['parent']['#value'];
++        $parent = $row['parent_wrapper']['parent']['#value'] ?? '';
+         // Proceed if parent is known.
+         if (empty($parent) || isset($parents[$parent])) {
+           // Grab parent, and remove the row from the next iteration.
+@@ -69,7 +69,7 @@
+           unset($list[$name]);
+
+           // Determine the region for the row.
+-          $region_name = call_user_func_array($row['#region_callback'], [&$row]);
++          $region_name = $row['#region_callback'] ? call_user_func_array($row['#region_callback'], [&$row]) : '';
+
+           // Add the element in the tree.
+           // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+@@ -77,7 +77,7 @@
+           foreach ($parents[$name] as $key) {
+             $target = &$target['children'][$key];
+           }
+-          $target['children'][$name] = ['name' => $name, 'weight' => $row['weight']['#value']];
++          $target['children'][$name] = ['name' => $name, 'weight' => $row['weight']['#value'] ?? '0'];
+
+           // Add tabledrag indentation to the first row cell.
+           if ($depth = count($parents[$name])) {
