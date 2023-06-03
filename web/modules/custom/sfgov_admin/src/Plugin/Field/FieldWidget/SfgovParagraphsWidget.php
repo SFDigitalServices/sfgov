@@ -181,7 +181,7 @@ class SfgovParagraphsWidget extends ParagraphsWidget {
           $row_content = $child_paragraph->bundle() === "powerbi_embed" ? $item_bundles[$child_paragraph->bundle()]['label'] : '';
           if (!$heading && $child_paragraph->hasField('field_text')) {
             if ($text = $localized_paragraph->get('field_text')->value) {
-              $text = strip_tags($text);
+              $text = !empty($text) ? strip_tags($text) : $text;
               $row_content = $text;
             }
           }
