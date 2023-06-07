@@ -13,8 +13,8 @@ function sfgov_profiles_field_widget_entity_reference_paragraphs_form_alter(&$el
   if ($element['#paragraph_type'] == 'public_body_profiles') {
     $node = \Drupal::routeMatch()->getParameter('node');
     if ($node && $node->bundle() != 'public_body') {
-      $element['subform']['field_commission_position']['#access'] = FALSE;
-      $element['subform']['field_position_type']['#access'] = FALSE;
+      // $element['subform']['field_commission_position']['#access'] = FALSE;
+      // $element['subform']['field_position_type']['#access'] = FALSE;
       $element['subform']['field_ending_year']['#access'] = FALSE;
       $element['subform']['field_starting_year']['#access'] = FALSE;
     }
