@@ -135,11 +135,13 @@ function sfgov_admin_block_access(\Drupal\block\Entity\Block $block, $operation,
  * Implements hook_form_FORM_ID_alter().
  */
 function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $user = \Drupal::currentUser();
 
   // Get the node object being used on the form.
   $node = $form_state->getFormObject()->getEntity();
+  $bundle = $node->getType();
   // Get the node type object for the form.
-  $node_type = \Drupal\node\Entity\NodeType::load($node->getType());
+  $node_type = \Drupal\node\Entity\NodeType::load($bundle);
 
   // SG-1870 -- setup title description.
   // Move the content type "submission help" text into the title field
@@ -181,7 +183,7 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
                     // remove any forbidden html tags...
                     $text = $form[$field_name]['widget'][$delta]['#default_value'] ?? '';
                     if ($allowed_format == 'plain_text') {
-                      $text = strip_tags($text);
+                      $text = !empty($text) ? strip_tags($text) : $text;
                     }
                     // Apply the allowed format to the text value...
                     $filtered_text = check_markup($text, $allowed_format, $langcode);
@@ -190,9 +192,9 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
                     // more time to clear out any html tags generated from the
                     // filtering.
                     if ($allowed_format == 'plain_text') {
-                      $filtered_text = strip_tags($filtered_text);
+                      $filtered_text = !empty($filtered_text) ? strip_tags($filtered_text) : $filtered_text;
                     }
-  
+
                     // Reapply the formatted text to the default value. This will
                     // help avoid issues with formatters being broken on body type
                     // fields. This setup only applies to those fields out of sync.
@@ -211,6 +213,27 @@ function sfgov_admin_form_node_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 
+  // SG-2000 -- hide language picker from editors (writer and publisher roles,
+  // basically anyone who isn't an admin or in digital services)
+  $bundles_to_hide_language_picker = [
+    'transaction',
+    'location',
+    'campaign',
+    'department_table',
+    'about',
+    'data_story',
+    'topic',
+    'page',
+    'landing',
+  ];
+
+  if (in_array($bundle, $bundles_to_hide_language_picker)) {
+    $roles = $user->getRoles();
+    if (!in_array('administrator' , $roles) &&
+        !in_array('digital_services' , $roles)) {
+      $form['langcode']['#access'] = FALSE;
+    }
+  }
 }
 
 /**
@@ -369,9 +392,9 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
                     // remove any forbidden html tags...
                     $text = $element['subform'][$field_name]['widget'][$delta]['#default_value'] ?? '';
                     if ($allowed_format == 'plain_text') {
-                      $text = strip_tags($text);
+                      $text = !empty($text) ? strip_tags($text) : $text;
                     }
-  
+
                     // Apply the allowed format to the text value...
                     $filtered_text = check_markup($text, $allowed_format, $langcode);
                     $filtered_text = is_object($filtered_text) ? $filtered_text->__toString() : $filtered_text;
@@ -380,9 +403,9 @@ function sfgov_admin_field_widget_entity_reference_paragraphs_form_alter(&$eleme
                     // more time to clear out any html tags generated from the
                     // filtering.
                     if ($allowed_format == 'plain_text') {
-                      $filtered_text = strip_tags($filtered_text);
+                      $filtered_text = !empty($filtered_text) ? strip_tags($filtered_text) : $filtered_text;
                     }
-  
+
                     // Reapply the formatted text to the default value. This will
                     // help avoid issues with formatters being broken on body type
                     // fields. This setup only applies to those fields out of sync.
