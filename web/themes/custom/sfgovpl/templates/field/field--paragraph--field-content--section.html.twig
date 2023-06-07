@@ -67,7 +67,8 @@
           </div>
 
         {% elseif paragraph_type == 'spotlight' %}
-          <div{{ item.attributes.addClass('sfgov-full-bleed--breakout', 'padding-zero', 'sfgov-spotlight-container--nested', multipleItemClasses) }}>
+          {% set containerClass = is_front ? 'sfgov-full-bleed' : 'sfgov-full-bleed--breakout' %}
+          <div{{ item.attributes.addClass(containerClass, 'padding-zero', 'sfgov-spotlight-container--nested', multipleItemClasses) }}>
             <div class="sfgov-section-container">
               {{ item.content }}
             </div>
