@@ -37,18 +37,24 @@
         float: right;
         width: 100%;
         max-width: 33%;
+        @include media-max($narrow-screen) {
+          display: block;
+          max-width: 100%;
+        }
       }
 
       .profile--direct-contact,
       .profile--social {
+        margin: 2rem 0;
         clear: right;
         @include media-max($narrow-screen) {
-          display: none;
+          display: block;
+          margin-block-start: 0;
+          margin-block-end: 2rem;
         }
       }
 
       .profile--social {
-        margin: 40px 0;
         span {
           @include fs-title-5;
         }
@@ -106,8 +112,8 @@
 
         @include media-max($narrow-screen) {
           float: none;
-          margin-bottom: 40px;
-          max-width: 350px;
+          margin-block-end: 2rem;
+          //max-width: 350px;
         }
       }
 
