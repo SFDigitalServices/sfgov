@@ -10,12 +10,11 @@ boolean value. #}
 {% set display_map = paragraph.field_address_display.value %}
 {% set display_map = (display_map is empty or display_map == 1) ? true : false %}
 {% set contact_type = display_map ? 'in-person-location' : 'mailing-address' %}
-{% set attrcibutes = attributes.setAttribute('data-contact', contact_type) %}
+{% set attributes = attributes.setAttribute('data-contact', contact_type) %}
 {% set parent = paragraph.getParentEntity() %}
 {% set classes = ['parent--bundle--' ~ parent.bundle|clean_class] %}
 {% set pid = paragraph.field_location.entity.id() %}
 {% set parentNode = paragraph.parentEntity.bundle %}
-
 {% if parentNode is not empty and parentNode == 'department' %}
   {% set display_map = false %}
 {% endif %}
@@ -26,14 +25,14 @@ boolean value. #}
     {% if display_map %}
       {% if parent.bundle in ['step'] %}
         {# Render with 'default_h4' view mode. #}
-        {{ drupal_entity('location', pid, 'default_h4') }}
+        {{ drupal_entity('location', pid, 'default_h4', current_language) }}
       {% else %}
         {# Render with 'default' view mode. #}
         {{ content }}
       {% endif %}
     {% else %}
       {# Render with 'address_only' view mode. #}
-      {{ drupal_entity('location', pid, 'address_plus_notes') }}
+      {{ drupal_entity('location', pid, 'address_plus_notes', current_language) }}
     {% endif %}
   {% endif %}
 {% endblock %}

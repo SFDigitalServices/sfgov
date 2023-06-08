@@ -29,6 +29,7 @@ function sfgovpl_preprocess_paragraph__form(&$variables) {
 
     }
 }
+
 /**
  * Implements template_preprocess_paragraph().
  */
@@ -49,6 +50,9 @@ function sfgovpl_preprocess_paragraph__process_step(&$variables) {
   }
 }
 
+/**
+ * Implements template_preprocess_paragraph().
+ */
 function sfgovpl_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $paragraph_type = $paragraph->getType();
@@ -57,13 +61,16 @@ function sfgovpl_preprocess_paragraph(&$variables) {
     $preprocess($variables);
   }
 
-  if($paragraph_type == 'mailing_address') {
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $variables['current_language'] = $language;
+
+  if ($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
       $variables['nodetype'] = $node->getType();
   }
 
-  if($paragraph_type == 'mailing_address') {
+  if ($paragraph_type == 'mailing_address') {
       // Get node info for use in twig templates
       $node = \Drupal::request()->attributes->get('node');
       $variables['nodetype'] = $node->getType();
@@ -326,7 +333,7 @@ function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
   }
 }
 
-/*
+/**
  * Implements hook_preprocess_paragraph().
  */
 function sfgovpl_preprocess_paragraph__form_io(&$variables) {
