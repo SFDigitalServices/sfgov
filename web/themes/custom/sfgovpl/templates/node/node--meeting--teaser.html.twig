@@ -72,10 +72,13 @@
 
 <div class="meeting--teaser">
   <div class="meeting-details">
-    {% if node.get('field_meeting_cancel').value %}
-      <span class="cancelled">{{ 'Cancelled'|t }}</span>
-    {% endif %}
-    <a class="inline-block font-medium mb-8 text-title-xs" href="{{ url }}" rel="bookmark">{{ label }}</a>
+
+    <a class="inline-block font-medium mb-8 text-title-xs" href="{{ url }}" rel="bookmark">
+      {{ label }}
+      {% if node.get('field_meeting_cancel').value %}
+        <span class="cancelled">{{ 'Cancelled'|t }}</span>
+      {% endif %}
+    </a>
     <div class="mb-8 font-medium text-body">
       {{ content.field_smart_date[0]['#date'] }}
     </div>
