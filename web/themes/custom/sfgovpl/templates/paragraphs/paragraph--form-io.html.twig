@@ -259,7 +259,10 @@
             }
           }
 
-          if (confirmationURL) {
+          // we want to navigate to the confirmation page only on final submission.
+          // saving a draft also triggers the submitDone event, but we want to keep
+          // the user on the current page in that case.
+          if (confirmationURL && submission.state !== 'draft') {
             // see: <https://github.com/formio/formio.js/pull/3592> for more details
             var formLang = form.language || form.options.language
             var lang = formLanguageMap[formLang] || formLang
