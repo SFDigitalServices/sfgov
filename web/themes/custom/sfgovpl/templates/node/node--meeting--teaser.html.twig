@@ -78,6 +78,11 @@
       {% if node.get('field_meeting_cancel').value %}
         <span class="cancelled">{{ 'Cancelled'|t }}</span>
       {% endif %}
+      {% if node.get('moderation_state').value == 'archived'%}
+        <span class="archived">{{ 'Archived'|t }}</span>
+      {% elseif not node.isPublished() %}
+        <span class="unpublished">{{ 'Unpublished'|t }}</span>
+      {% endif %}
     </a>
     <div class="mb-8 font-medium text-body">
       {{ content.field_smart_date[0]['#date'] }}

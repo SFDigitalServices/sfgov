@@ -15,6 +15,12 @@
     {% if node.get('field_meeting_cancel').value %}
       <span class="cancelled">{{ 'Cancelled'|t }}</span>
     {% endif %}
+    {% if node.get('moderation_state').value == 'archived'%}
+      <span class="archived">{{ 'Archived'|t }}</span>
+    {% elseif not node.isPublished() %}
+      <span class="unpublished">{{ 'Unpublished'|t }}</span>
+    {% endif %}
+
     <p class="title p-0 m-0 font-medium lg:pb-28 lg:text-title-xs">{{ node.label }}</p>
       {% if content.field_smart_date[0]['#date'] %}
         {# field_smart_date uses a custom field formatter defined in sfgov_dates module #}
