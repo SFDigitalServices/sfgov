@@ -72,7 +72,18 @@
 
 <div class="meeting--teaser">
   <div class="meeting-details">
-    <a class="inline-block font-medium mb-8 text-title-xs" href="{{ url }}" rel="bookmark">{{ label }}</a>
+
+    <a class="inline-block font-medium mb-8 mr-8 text-title-xs" href="{{ url }}" rel="bookmark">
+      {{ label }}
+    </a>
+    {% if node.get('field_meeting_cancel').value %}
+      <span class="cancelled">{{ 'Cancelled'|t }}</span>
+    {% endif %}
+    {% if node.get('moderation_state').value == 'archived'%}
+      <span class="archived">{{ 'Archived'|t }}</span>
+    {% elseif not node.isPublished() %}
+      <span class="unpublished">{{ 'Unpublished'|t }}</span>
+    {% endif %}
     <div class="mb-8 font-medium text-body">
       {{ content.field_smart_date[0]['#date'] }}
     </div>
