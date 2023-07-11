@@ -2,12 +2,17 @@
   See /core/themes/stable/templates/views/views-view-unformatted.html.twig
   for variable comments and original template.
 #}
+{% set columns = is_front ? 2 : 3 %}
 
 <div class="view-news-block">
   {% if view.getTitle() %}
-    <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ view.getTitle() | t }}</h2>
+    <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">
+      {{ view.getTitle()|t }}
+    </h2>
   {% endif %}
   {% block rows %}
-    {% include '@theme/molecules/news-cards.twig' %}
-  {% endblock rows %}
+    {% include '@theme/molecules/news-cards.twig' with {
+      columns: columns
+    } %}
+  {% endblock %}
 </div>

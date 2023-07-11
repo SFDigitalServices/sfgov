@@ -1,5 +1,6 @@
-{% set columns = columns or (rows | length) %}
-{% set column_modifier = columns >= 3 ? 'three' : 'two' %}
+{% set columns = columns ? columns : (rows|length) %}
+{% set column_modifier = (columns|number_format) >= 3 ? 'three' : 'two' %}
+
 <div class="sfgov-container-{{ column_modifier }}-column">
   {% for card in rows %}
     <div class="sfgov-container-item">
