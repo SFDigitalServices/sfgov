@@ -3,8 +3,14 @@
 {% block title %}
 {% endblock title %}
 
-{% if node.field_profile_photo|file_url %}
-  {% set photo_url = file_url(node.field_profile_photo|file_url) %}
+{% set photo_url = '' %}
+
+{#{% if node.field_profile_photo|file_url %}#}
+{#  {% set photo_url = file_url(node.field_profile_photo|file_url) %}#}
+{#{% endif %}#}
+
+{% if node.field_profile_photo[0].entity.field_media_image.entity.fileuri %}
+  {% set photo_url = node.field_profile_photo[0].entity.field_media_image.entity.fileuri|image_style('profile') %}
 {% endif %}
 
 {% if node.field_photo.entity.fileuri %}
