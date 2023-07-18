@@ -6,7 +6,7 @@
     'London Nicole Breed',
     'Mayor Breed',
     'London Breed',
-    'Breed'
+    ' Breed'
   ].map(str => [
     str,
     new RegExp(`(?!<span class="notranslate>)${str}(?!</span>)`, 'g'),
