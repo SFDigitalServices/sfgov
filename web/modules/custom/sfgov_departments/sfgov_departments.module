@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewExecutable;
 
 function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
@@ -440,5 +441,26 @@ function sfgov_departments_field_widget_paragraphs_form_alter(&$element, $form_s
         $element['subform']['field_address_display']['#attributes']['class'][] = 'visually-hidden';
       }
     }
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function sfgov_departments_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+  if ($view->id() == 'content' && $display_id == 'page_1') {
+
+    $exposed_filters = $view->getExposedInput();
+    $fields = $view->display_handler->getOption('fields');
+
+    // SG-2014 - Alter department column label depending on Content type filter.
+    $fields['field_dept']['label'] = t('Agency');
+    if (!empty($exposed_filters) &&
+      isset($exposed_filters['type']) &&
+      $exposed_filters['type'] == "department") {
+      $fields['field_dept']['label'] = t('Related Agency');
+    }
+
+    $view->display_handler->setOption('fields', $fields);
   }
 }
