@@ -13,7 +13,6 @@ dependencies:
     - field.field.paragraph.public_body_profiles.field_title
     - paragraphs.paragraphs_type.public_body_profiles
   module:
-    - datetime
     - maxlength
 id: paragraph.public_body_profiles.profile_position
 targetEntityType: paragraph
@@ -38,24 +37,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_ending_year:
-    type: datetime_default
-    weight: 5
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_position_type:
-    type: options_select
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_starting_year:
-    type: datetime_default
-    weight: 4
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_title:
     type: string_textfield
     weight: 0
@@ -68,11 +49,14 @@ content:
         maxlength_js: null
         maxlength_js_label: (<strong>@count</strong>/@limit)
   translation:
-    weight: 6
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   created: true
+  field_ending_year: true
+  field_position_type: true
   field_profile: true
+  field_starting_year: true
   status: true

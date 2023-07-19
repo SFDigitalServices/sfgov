@@ -37,8 +37,10 @@
  */
 #}
 {% set profileType = element['#object'].get('field_profile_type').value %}
+<div class="profile--roles">
+  {# <div class="profile--roles--label">{{ 'Additional groups and roles'|t }}</div> #}
 
-{% for item in items %}
+  {% for item in items %}
   {% set paragraph = item.content['#paragraph'] %}
   {% set positionType = paragraph.field_position_type.value %}
   {% set positionTitle = paragraph.field_commission_position.value %}
@@ -47,42 +49,18 @@
   {% set positionStart = paragraph.field_starting_year.value %}
   {% set positionEnd = paragraph.field_ending_year.value %}
 
-  {% if profileType|lower == 'city employee' %}
-    <div class="profile--additional-role">
-      {% if positionTitle is not empty %}
-        <div class="additional-role-title">{{ positionTitle }},</div>
-      {% endif %}
-      <div class="additional-role-agency-title">
-        <a href="{{ positionAgencyUrl }}">{{ positionAgency }}</a>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if profileType|lower == 'external' %}
-    <div class="profile--role">
-      <div class="role-title">
-        {{ positionTitle }}
-      </div>
-      <div class="role-agency-title">
-        <a href="{{ positionAgencyUrl }}"> {{ positionAgency }} </a>
-      </div>
-      <div class="role-time">
-        {%- if positionType is not empty -%}
-          {{- positionType -}}
-        {%- endif -%}
-        {%- if positionType is not empty and (positionStart is not empty or positionEnd is not empty) -%}
-          {{- ": " -}}
-        {%- endif -%}
-        {% if positionStart is not empty %}
-          {{ positionStart|date('Y') }}
-        {% endif %}
-        {% if positionStart is not empty and positionEnd is not empty %}
-          -
-        {% endif %}
-        {% if positionEnd is not empty %}
-          {{ positionEnd|date('Y') }}
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
+  <div class="profile--role">
+    {%- if positionTitle is not empty -%}
+      <span class="role-title">
+        {{- positionTitle -}}
+        {%- if positionAgency is not empty -%}, {%- endif -%}
+      </span>
+    {%- endif -%}
+    {%- if positionAgency is not empty -%}
+      <span class="role-agency-title">
+        <a href="{{ positionAgencyUrl }}">{{- positionAgency -}}</a>
+      </span>
+    {%- endif -%}
+  </div>
 {% endfor %}
+</div>

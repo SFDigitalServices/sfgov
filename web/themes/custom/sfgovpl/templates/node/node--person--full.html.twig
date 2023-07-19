@@ -16,13 +16,16 @@
 
   {{ attach_library('sfgovpl/sfgov-person') }}
 
+  <span class="hero-banner--border"><span class="hero-banner--border-contain"></span></span>
+
   <div class="profile--container-narrow">
 
     <div class="profile--info">
+
       <h1 class="profile--name">
         <div>{{ node.field_first_name.0.value|striptags }} {{ node.field_last_name.0.value|striptags }}</div>
         {%- if content.field_pronouns|render|striptags|trim -%}
-          <div class="tracking-0 font-regular text-big-desc mt-16 lg:text-big-desc-desktop">({{- node.field_pronouns.value|replace({'(': '', ')': ''})|lower -}})</div>
+          <div class="profile--pronouns tracking-0 font-regular text-big-desc lg:text-big-desc-desktop">({{- node.field_pronouns.value|replace({'(': '', ')': ''})|lower -}})</div>
         {%- endif -%}
       </h1>
 
@@ -65,196 +68,180 @@
       </div>
 
       <div class="profile--job">
-        {% if profile_type == 'City Employee' %}
-        <div class="city-employee">
-          {% else %}
-          <div class="commissioner">
-            {% endif %}
-            {% if node.field_title.value|length %}
-              {{ node.field_title.value|striptags }}{% if (node.field_title.value|length) and (node.field_sub_title.value) %}<br>{% endif %}
-            {% endif %}
-            {% if node.field_sub_title.value %}
-              {{ node.field_sub_title.value|striptags }}
-            {% endif %}
-
-            {% if profile_type == 'City Employee' %}
-              {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) %}
-                <div class="role-agency-title">
-                  <a href="{{ path('entity.node.canonical', {'node': node.field_city_department.entity.nid.value}) }}">
-                    {# translate entity reference title if it exists #}
-                    {# variable language is exposed via hook_preprocess_node #}
-                    {# @see web/themes/custom/sfgovpl/includes/node.inc #}
-                    {% if node.field_city_department.entity.hasTranslation(language) %}
-                      {{ node.field_city_department.entity.translation(language).title.value }}
-                    {% else %}
-                      {{ node.field_city_department.entity.title.value }}
-                    {% endif %}
-                  </a>
-                </div>
+        {% if node.field_title.value|length %}
+          <span class="profile--job__title">
+            {{- node.field_title.value|striptags|trim -}}
+            {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) or (node.field_sub_title.value) %}{{- ',' -}}{% endif %}
+          </span>
+        {% endif %}
+        {% if node.field_sub_title.value %}
+          <span class="profile--job__sub-title">
+            {{- node.field_sub_title.value|striptags|trim -}}
+          </span>
+        {% endif %}
+        {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) %}
+          <span class="profile--role-agency-title">
+            <a href="{{ path('entity.node.canonical', {'node': node.field_city_department.entity.nid.value}) }}">
+              {# translate entity reference title if it exists #}
+              {# variable language is exposed via hook_preprocess_node #}
+              {# @see web/themes/custom/sfgovpl/includes/node.inc #}
+              {% if node.field_city_department.entity.hasTranslation(language) %}
+                {{- node.field_city_department.entity.translation(language).title.value|trim -}}
+              {% else %}
+                {{- node.field_city_department.entity.title.value|trim -}}
               {% endif %}
-            {% endif %}
-
-          </div>
-        </div>
-
-        {% if profile_type == 'External' %}
-          {{ content.field_profile_positions_held }}
+            </a>
+          </span>
         {% endif %}
-
-        {% if profile_fields.biotrim|length %}
-          {% if node.body.value|length %}
-            <div class="profile--bio">
-              <div class="bio-trimmed">
-                {{ profile_fields.biotrim }}
-              </div>
-              <div class="bio-full">
-                {{ content.body }}
-              </div>
-              <div class="show-bio">{{ 'Show more'|t }}</div>
-              <div class="hide-bio">{{ 'Show less'|t }}</div>
-            </div>
-          {% endif %}
-        {% elseif node.body.value|length %}
-          <div class="profile--bio">
-            <div class="biography">
-              {{ content.body }}
-            </div>
-          </div>
-        {% endif %}
-
-        <div class="profile--optional-content">
-          {{ content.field_spotlight }}
-          {{ content.field_featured_items }}
-        </div>
       </div>
-    </div>
 
-    {% if (profile_type == 'City Employee' and content.field_profile_positions_held|render) %}
-      <div class="profile--container-wide additional-roles">
-        <div class="profile--container-narrow">
-          <div class="profile--additional-roles">
-            <h2>{{ 'Additional city roles'|t }}</h2>
-            {{ content.field_profile_positions_held }}
-          </div>
-        </div>
-      </div>
-    {% endif %}
-
-    {% if hasAddress or hasPhone or hasEmail %}
-    <div class="profile--container-narrow">
-      <div class="profile--contact city-employee">
-        <h2>{{ 'Contact'|t }}</h2>
-        <div class="contact-wrapper">
-          <div class="sfgov-container-three-column">
-            {% if hasAddress %}
-              <div class="contact-address sfgov-container-item">
-                <div class="sfgov-contact-section address">
-                  <label>{{ profile_fields.address.title }}</label>
-                  <p>
-                    {% if profile_fields.address.organization %}
-                      {{ profile_fields.address.organization }} <br/>
-                    {% endif %}
-                    {% if profile_fields.address.addressee %}
-                      {{ profile_fields.address.addressee }} <br/>
-                    {% endif %}
-                    {% if profile_fields.address.location_name %}
-                      {{ profile_fields.address.location_name }} <br/>
-                    {% endif %}
-                    {% if profile_fields.address.line1 %}
-                      {{ profile_fields.address.line1 }} <br/>
-                    {% endif %}
-                    {% if profile_fields.address.line2 %}
-                      {{ profile_fields.address.line2 }} <br/>
-                    {% endif %}
-                    {% if (profile_fields.address.city) or (profile_fields.address.state) %}
-                      {{ profile_fields.address.city }}, {{ profile_fields.address.state }} {{ profile_fields.address.zip }}
-                    {% endif %}
-                  </p>
-
-                  {% if profile_fields.map %}
-                    <div class="map">
-                      {% if profile_fields.map.map_img_url %}
-                        <div class="simple-gmap-static-map">
-                          <a href="{{ profile_fields.map.map_site_url }}"><img src="{{ profile_fields.map.map_img_url }}" alt="{{ 'View location on google maps'|t }}"/></a>
-                        </div>
-                      {% endif %}
-                      {% if profile_fields.map.map_directions_url %}
-                        <p class="simple-gmap-link">
-                          <a href="{{ profile_fields.map.map_directions_url }}">{{ 'Get directions'|t }}</a>
-                        </p>
-                      {% endif %}
-                    </div>
-                  {% endif %}
-
-                </div>
-              </div>
-            {% endif %}
-
-            {% if hasPhone %}
-              <div class="contact-phone sfgov-container-item">
-                <div class="sfgov-contact-section phone">
-                  <label>{{ 'Phone'|t }}</label>
-
-                  {% for key, item in node.field_city_department[0].entity.field_phone_numbers if key|first != '#'%}
-                    <div class="phone-wrapper">
-                      {% if item.entity.field_tel.value %}
-                        <div class="phone-title">
-                          {{ item.entity.field_owner.value|raw }}
-                        </div>
-                        <div class="phone-number">
-                          <a href="tel:+{{ item.entity.field_tel.value|raw }}">
-                            {{ item.entity.field_tel.value|raw }}
-                          </a>
-                        </div>
-                        <div class="phone-desc">
-                          {{ item.entity.field_text.value|raw }}
-                        </div>
-                      {% endif %}
-                    </div>
-                  {% endfor %}
-
-                  {% if content.field_phone_numbers %}
-                    {{ content.field_phone_numbers }}
-                  {% endif %}
-
-                </div>
-              </div>
-            {% endif %}
-
-            {% if hasEmail %}
-              <div class="contact-email sfgov-container-item">
-                <div class="sfgov-contact-section email">
-                  <label>{{ 'Email'|t }}</label>
-
-                  {% for key, item in node.field_city_department[0].entity.field_email if key|first != '#'%}
-                    <div class="email-wrapper">
-                      {% if item.entity.field_email.value %}
-                        <div class="email-title">
-                          {{ item.entity.field_title.value|raw }}
-                        </div>
-                        <div class="email-email">
-                          <a href="mailto:{{ node.field_city_department[0].entity.field_email[0].entity.field_email.value|raw }}">
-                            {{ item.entity.field_email.value|raw }}
-                          </a>
-                        </div>
-                      {% endif %}
-                    </div>
-                  {% endfor %}
-
-                  {% if content.field_email %}
-                    {{ content.field_email }}
-                  {% endif %}
-
-                </div>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
+      {% if (node.field_profile_positions_held.value|length) %}
+        {{ content.field_profile_positions_held }}
       {% endif %}
 
+      {% if profile_fields.biotrim|length %}
+        {% if node.body.value|length %}
+          <div class="profile--bio">
+            <div class="bio-trimmed">
+              {{ profile_fields.biotrim }}
+            </div>
+            <div class="bio-full">
+              {{ content.body }}
+            </div>
+            <div class="show-bio">{{ 'Show more'|t }}</div>
+            <div class="hide-bio">{{ 'Show less'|t }}</div>
+          </div>
+        {% endif %}
+      {% elseif node.body.value|length %}
+        <div class="profile--bio">
+          <div class="biography">
+            {{ content.body }}
+          </div>
+        </div>
+      {% endif %}
 
+      <div class="profile--optional-content">
+        {{ content.field_spotlight }}
+        {{ content.field_featured_items }}
+      </div>
     </div>
+  </div>
+
+  {% if hasAddress or hasPhone or hasEmail %}
+    <div class="profile--container-narrow">
+    <div class="profile--contact city-employee">
+      <h2>{{ 'Contact'|t }}</h2>
+      <div class="contact-wrapper">
+        <div class="sfgov-container-three-column">
+          {% if hasAddress %}
+            <div class="contact-address sfgov-container-item">
+              <div class="sfgov-contact-section address">
+                <label>{{ profile_fields.address.title }}</label>
+                <p>
+                  {% if profile_fields.address.organization %}
+                    {{ profile_fields.address.organization }} <br/>
+                  {% endif %}
+                  {% if profile_fields.address.addressee %}
+                    {{ profile_fields.address.addressee }} <br/>
+                  {% endif %}
+                  {% if profile_fields.address.location_name %}
+                    {{ profile_fields.address.location_name }} <br/>
+                  {% endif %}
+                  {% if profile_fields.address.line1 %}
+                    {{ profile_fields.address.line1 }} <br/>
+                  {% endif %}
+                  {% if profile_fields.address.line2 %}
+                    {{ profile_fields.address.line2 }} <br/>
+                  {% endif %}
+                  {% if (profile_fields.address.city) or (profile_fields.address.state) %}
+                    {{ profile_fields.address.city }}, {{ profile_fields.address.state }} {{ profile_fields.address.zip }}
+                  {% endif %}
+                </p>
+
+                {% if profile_fields.map %}
+                  <div class="map">
+                    {% if profile_fields.map.map_img_url %}
+                      <div class="simple-gmap-static-map">
+                        <a href="{{ profile_fields.map.map_site_url }}"><img src="{{ profile_fields.map.map_img_url }}" alt="{{ 'View location on google maps'|t }}"/></a>
+                      </div>
+                    {% endif %}
+                    {% if profile_fields.map.map_directions_url %}
+                      <p class="simple-gmap-link">
+                        <a href="{{ profile_fields.map.map_directions_url }}">{{ 'Get directions'|t }}</a>
+                      </p>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+              </div>
+            </div>
+          {% endif %}
+
+          {% if hasPhone %}
+            <div class="contact-phone sfgov-container-item">
+              <div class="sfgov-contact-section phone">
+                <label>{{ 'Phone'|t }}</label>
+
+                {% for key, item in node.field_city_department[0].entity.field_phone_numbers if key|first != '#'%}
+                  <div class="phone-wrapper">
+                    {% if item.entity.field_tel.value %}
+                      <div class="phone-title">
+                        {{ item.entity.field_owner.value|raw }}
+                      </div>
+                      <div class="phone-number">
+                        <a href="tel:+{{ item.entity.field_tel.value|raw }}">
+                          {{ item.entity.field_tel.value|raw }}
+                        </a>
+                      </div>
+                      <div class="phone-desc">
+                        {{ item.entity.field_text.value|raw }}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+
+                {% if content.field_phone_numbers %}
+                  {{ content.field_phone_numbers }}
+                {% endif %}
+
+              </div>
+            </div>
+          {% endif %}
+
+          {% if hasEmail %}
+            <div class="contact-email sfgov-container-item">
+              <div class="sfgov-contact-section email">
+                <label>{{ 'Email'|t }}</label>
+
+                {% for key, item in node.field_city_department[0].entity.field_email if key|first != '#'%}
+                  <div class="email-wrapper">
+                    {% if item.entity.field_email.value %}
+                      <div class="email-title">
+                        {{ item.entity.field_title.value|raw }}
+                      </div>
+                      <div class="email-email">
+                        <a href="mailto:{{ node.field_city_department[0].entity.field_email[0].entity.field_email.value|raw }}">
+                          {{ item.entity.field_email.value|raw }}
+                        </a>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+
+                {% if content.field_email %}
+                  {{ content.field_email }}
+                {% endif %}
+
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+
+  </div>
   </div>
   </div>
 
