@@ -53,7 +53,7 @@
       {% endblock title %}
       {% if cost_type == 'free' %}
         {% block costfree %}
-          <div>{{ paragraph.field_cost_type.0.value|capitalize ~ '.' }}</div>
+          {{ '@free.'|t({'@free': content.field_cost_type[0]['#markup']}) }}
         {% endblock costfree %}
       {% endif %}
       {% if cost_type == 'flat' %}
