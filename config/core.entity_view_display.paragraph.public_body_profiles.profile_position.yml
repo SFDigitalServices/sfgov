@@ -12,9 +12,6 @@ dependencies:
     - field.field.paragraph.public_body_profiles.field_starting_year
     - field.field.paragraph.public_body_profiles.field_title
     - paragraphs.paragraphs_type.public_body_profiles
-  module:
-    - datetime
-    - options
 id: paragraph.public_body_profiles.profile_position
 targetEntityType: paragraph
 bundle: public_body_profiles
@@ -36,32 +33,10 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_ending_year:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_position_type:
-    type: list_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_starting_year:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 3
-    region: content
 hidden:
+  field_ending_year: true
+  field_position_type: true
   field_profile: true
+  field_starting_year: true
   field_title: true
   search_api_excerpt: true
