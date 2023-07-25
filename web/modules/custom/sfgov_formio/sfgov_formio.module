@@ -88,7 +88,7 @@ function sfgov_formio_page_attachments(array &$attachments) {
  */
 function _sfgov_formiojs_source() {
   // Fallback (latest version).
-  $source = 'https://unpkg.com/formiojs/dist/formio.full.min.js';
+  $source = 'https://cdn.jsdelivr.net/npm/formiojs@latest/dist/formio.form.min.js';
 
   // Check for query parameters first.
   if (\Drupal::request()->query) {
@@ -98,12 +98,12 @@ function _sfgov_formiojs_source() {
 
   // Prefer source from query params.
   if (!empty($query)) {
-    $source = 'https://unpkg.com/formiojs@' . $query . '/dist/formio.full.min.js';
+    $source = 'https://cdn.jsdelivr.net/npm/formiojs@' . $query . '/dist/formio.form.min.js';
   }
 
   // Use settings configured at 'admin/config/services/sfgov_formio'.
   elseif ($config = \Drupal::config('sfgov_formio.settings')->get('formio_version')) {
-    $source = 'https://unpkg.com/formiojs@' . $config . '/dist/formio.full.min.js';
+    $source = 'https://cdn.jsdelivr.net/npm/formiojs@' . $config . '/dist/formio.form.min.js';
   }
 
   return $source;
