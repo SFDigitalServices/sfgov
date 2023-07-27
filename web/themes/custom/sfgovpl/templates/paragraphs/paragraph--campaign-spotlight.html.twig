@@ -7,7 +7,7 @@
 {# Spotlight Image #}
 {% if content.field_spotlight_img|render %}
   {% set image = paragraph.field_spotlight_img.entity %}
-  {% set img_url = image ? file_url(image.field_media_image.entity.fileuri) : null %}
+  {% set img_url = image ? paragraph.field_spotlight_img[0].entity.field_media_image.entity.fileuri|image_style('836x484') : null %}
   {% set img_alt = image.field_media_image.alt|trim|default('image') %}
   {% set img_attributes = create_attribute({
     'role': 'img',
