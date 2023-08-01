@@ -71,10 +71,10 @@
         {% if node.field_title.value|length %}
           <span class="profile--job__title">
             {{- node.field_title.value|striptags|trim -}}
-            {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) or (node.field_sub_title.value) %}{{- ',' -}}{% endif %}
+            {% if (node.field_city_department.entity.title.value) and (node.field_city_department.entity.nid.value != node.nid.value) or (node.field_sub_title.value|length) %}{{- ',' -}}{% endif %}
           </span>
         {% endif %}
-        {% if node.field_sub_title.value %}
+        {% if node.field_sub_title.value|length %}
           <span class="profile--job__sub-title">
             {{- node.field_sub_title.value|striptags|trim -}}
           </span>
