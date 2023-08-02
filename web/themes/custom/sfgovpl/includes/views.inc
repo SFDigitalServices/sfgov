@@ -71,6 +71,8 @@ function sfgovpl_preprocess_views_view__news__news_block_depts(&$variables) {
       ),
     );
     $variables['more']['#url']->setOptions($url_options);
+
+    $variables['more']['#title'] = t('See more news', [], ['context' => 'News Block - Dept']);
   }
 }
 
@@ -96,7 +98,7 @@ function sfgovpl_preprocess_views_view__events__block(&$variables, $display_id) 
   if (!empty($view->args[0])) {
     $node = $node_manager->load($view->args[0]);
     if ($node instanceof Node) {
-      
+
       // Get some managers ready for later use.
       $view_manager = \Drupal::entityTypeManager()->getStorage('view');
 
