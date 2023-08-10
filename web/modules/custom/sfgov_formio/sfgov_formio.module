@@ -45,12 +45,16 @@ function sfgov_formio_entity_view_alter(&$build, $entity, $display) {
  */
 function sfgov_formio_page_attachments(array &$attachments) {
   $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    $bundle = $node->bundle();
+  }
 
   // The version we load takes query parameters into account. We are NOT using
   // libraries here because they are too heavily cached, and unable to respond
   // request-level changes. This is one of the only asset-related hooks which
   // can evaluate a page request. hook_library_info_build/alter(), etc. cannot.
-  if ($active_theme == 'sfgovpl') {
+  if ($active_theme == 'sfgovpl' && $bundle == 'form_page') {
     $attachments['#attached']['html_head'][] = [
       [
         '#tag' => 'script',
