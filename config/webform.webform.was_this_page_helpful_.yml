@@ -20,6 +20,7 @@ elements: |-
       'Yes': 'Yes'
       'No': 'No'
       'Report Somthing Wrong with this page': 'Report Somthing Wrong with this page'
+    '#wrapper_type': form_element
   'yes':
     '#type': fieldset
     '#title': 'Yes'
@@ -34,6 +35,8 @@ elements: |-
     what_was_helpful_about_this_page_:
       '#type': textarea
       '#title': 'What was helpful about this page?'
+      '#description': 'We cannot reply individually to all feedback. If you need assistance, call 311.'
+      '#rows': 3
   'no':
     '#type': fieldset
     '#title': 'No'
@@ -48,6 +51,8 @@ elements: |-
     what_s_wrong_with_this_page_:
       '#type': textarea
       '#title': 'What''s wrong with this page?'
+      '#description': 'We cannot reply individually to all feedback. If you need assistance, call 311.'
+      '#rows': 3
   report_something_wrong_with_this_page:
     '#type': fieldset
     '#title': 'Report something wrong with this page'
@@ -62,10 +67,18 @@ elements: |-
     what_s_wrong_with_this_page_feedback:
       '#type': textarea
       '#title': 'What''s wrong with this page?'
-      '#description': 'We cannont reply individually to all feedback. If you need assistance, call 311.'
+      '#description': 'We cannot reply individually to all feedback. If you need assistance, call 311.'
+      '#rows': 3
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
+    '#states':
+      visible:
+        ':input[name="was_this_page_helpful_"]':
+          checked: true
+      invisible:
+        ':input[name="was_this_page_helpful_"]':
+          unchecked: true
     '#submit__label': 'Send feedback'
     '#submit__attributes':
       class:
@@ -178,7 +191,7 @@ settings:
   confirmation_type: inline
   confirmation_url: ''
   confirmation_title: 'Thank you. If you have anything to add, give us more feedback.'
-  confirmation_message: "<p>\r\nThank you. If you have anything to add, give us more feedback.\r\n</p>\r\n<a class=\"btn btn-primary\" hreft=\"/node/1168\">Give us more feedback</a>"
+  confirmation_message: "<p>Thank you. If you have anything to add, give us more feedback.</p>\r\n<a class=\"btn btn-primary\" href=\"/node/1168\">Give us more feedback</a>"
   confirmation_attributes: {  }
   confirmation_back: false
   confirmation_back_label: ''
