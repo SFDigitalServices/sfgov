@@ -28,7 +28,7 @@ It's possible to test different versions, without having to edit the above setti
 
 | Parameter name | Example Query String | Resulting Source |
 | :--- | :--- | :---
-| `formiojsVersion` | `/home?formiojsVersion=4.11.2` | `https://unpkg.com/formiojs@4.11.2/dist/formio.full.min.js` |
+| `formiojsVersion` | `/home?formiojsVersion=4.11.2` | `https://unpkg.com/formiojs@4.11.2/dist/formio.form.min.js` |
 | `formio-sfdsVersion` | `/home?formio-sfdsVersion=7.0.2` | `https://unpkg.com/formio-sfds@7.0.2/dist/formio-sfds.standalone.js` |
 
 ## Content
