@@ -751,7 +751,7 @@ function profile_page_fields($node) {
         $department = FALSE;
         if (!$addressEntity->get('field_department')->isEmpty()) {
           $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
-          $Addresstitle = $department->label();
+          $Addresstitle = $department ? $department->label() : '';
         } else {
           $Addresstitle = $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
         }
@@ -801,7 +801,9 @@ function profile_page_fields($node) {
         $output_trim = $output_trim[0] ?? [];
 
         // Remove odd items from trimmed text (like '&#13;').
-        $output_trim['#output']['#text'] = str_replace("&#13;", "", $output_trim['#output']['#text']);
+        if (isset($output_trim['#output']['#text'])) {
+          $output_trim['#output']['#text'] = str_replace("&#13;", "", $output_trim['#output']['#text']);
+        }
 
         // [SG-1814]
         // Changing the format of the trimmed text from the teaser, to restrict-
