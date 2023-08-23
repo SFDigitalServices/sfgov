@@ -121,7 +121,7 @@ function sfgovpl_preprocess_node__department__full(&$variables) {
               "url" => $divisionUrl,
             ];
           }
-  
+
           // If show parent meetings is set...
           if ($agencyContent->get('field_show_meeting_parent_agency')->value) {
             $divisionIds[] = $divisionId;
@@ -381,6 +381,76 @@ function sfgovpl_preprocess_node__person__card_with_image_small(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ */
+function sfgovpl_preprocess_node__person__full(&$variables) {
+  $manager = \Drupal::entityTypeManager();
+  $paragraph_manager = $manager->getStorage('paragraph');
+  $node_manager = $manager->getStorage('node');
+  $node = $variables['elements']['#node'];
+
+  // [SG-1813]
+  // Current position information.
+  $current_job_title = $node->hasField('field_title') ? $node->get('field_title')->getValue()[0]['value'] : NULL;
+  $current_department = $node->get('field_city_department')->getValue();
+  $current_ids = [];
+  foreach ($current_department as $item) {
+    $current_ids[] = $item['target_id'];
+  }
+
+  // [SG-1813]
+  // Held position information.
+  $held_position = [];
+  if ($node->hasField('field_profile_positions_held')) {
+    $positions_held = $node->get('field_profile_positions_held')->getValue();
+    foreach ($positions_held as $delta => $position) {
+      $p = $paragraph_manager->load($position['target_id']);
+      $dept = $p->get('field_department')->getValue();
+      $dept_id = !empty($dept[0]['target_id']) ? $dept[0]['target_id'] : NULL;
+      $pos = $p->get('field_commission_position')->getValue();
+      $job_title = !empty($pos[0]['value']) ? $pos[0]['value'] : NULL;
+
+      // Gather an array of held position department ID's and job titles.
+      $held_position[$delta] = [
+        'id' => $dept_id,
+        'title' => $job_title,
+      ];
+    }
+  }
+
+  // [SG-1813]
+  // Clear out redundant and duplicate positions/departments.
+  $existing_ids = [];
+  foreach ($held_position as $i => $position) {
+    $remove = FALSE;
+
+    // If the held department and title match the current department and title,
+    // remove.
+    if (in_array($position['id'], $current_ids) && ($position['title'] == $current_job_title)) {
+      $remove = TRUE;
+    }
+
+    // If the held department matches the current department and held job title
+    // is empty, remove.
+    if (in_array($position['id'], $current_ids) && empty($position['title'])) {
+      $remove = TRUE;
+    }
+
+    // If the department has already been printed, and has no job title, remove.
+    if (in_array($position['id'], $existing_ids) && empty($position['title'])) {
+      $remove = TRUE;
+    }
+
+    // If any of the above criteria was met, remove the position from display.
+    if ($remove) {
+      unset($variables['content']['field_profile_positions_held'][$i]);
+    }
+
+    $existing_ids[] = $position['id'];
+  }
+}
+
+/**
  * Retrieve the transaction ids in field_department_services that will be
  * excluded from "more services" section on topic page send the list of ids to a
  * Twig var which will then get passed to view contextual filters via
@@ -618,7 +688,7 @@ function public_body_page_fields($node) {
   return $theFields;
 }
 
-/*
+/**
  * Prepare profile field data from entities referencing the profile
  */
 function profile_page_fields($node) {
@@ -681,7 +751,7 @@ function profile_page_fields($node) {
         $department = FALSE;
         if (!$addressEntity->get('field_department')->isEmpty()) {
           $department = \Drupal::entityTypeManager()->getStorage('node')->load($addressEntity->get('field_department')->target_id);
-          $Addresstitle = $department->title->value;
+          $Addresstitle = $department ? $department->label() : '';
         } else {
           $Addresstitle = $addressValues['organization'] ?: $addressValues['addressee'] ?: $addressValues['location_name'];
         }
@@ -730,6 +800,11 @@ function profile_page_fields($node) {
         $output_trim = $viewBuilder->viewField($value, 'teaser');
         $output_trim = $output_trim[0] ?? [];
 
+        // Remove odd items from trimmed text (like '&#13;').
+        if (isset($output_trim['#output']['#text'])) {
+          $output_trim['#output']['#text'] = str_replace("&#13;", "", $output_trim['#output']['#text']);
+        }
+
         // [SG-1814]
         // Changing the format of the trimmed text from the teaser, to restrict-
         // ed_html or full_html, helps to clear out the extra <p> and </br>
@@ -755,7 +830,7 @@ function profile_page_fields($node) {
   return $theFields;
 }
 
-/*
+/**
  * Helper function for building profile page data
  */
 function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
