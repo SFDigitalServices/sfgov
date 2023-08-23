@@ -25,12 +25,13 @@ dependencies:
     - field.field.node.person.field_spotlight
     - field.field.node.person.field_sub_title
     - field.field.node.person.field_title
-    - image.style.medium
+    - image.style.thumbnail
     - node.type.person
   module:
     - entity_reference_revisions
     - image
     - link
+    - media
     - user
 id: node.person.card_with_image_small
 targetEntityType: node
@@ -52,7 +53,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 7
     region: content
   field_first_name:
     type: string
@@ -78,6 +79,17 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
+  field_profile_photo:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: thumbnail
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_profile_positions_held:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -85,7 +97,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 7
+    weight: 8
     region: content
   field_sub_title:
     type: string
@@ -113,7 +125,6 @@ hidden:
   field_phone_numbers: true
   field_primary_email: true
   field_primary_phone_number: true
-  field_profile_photo: true
   field_profile_type: true
   field_pronouns: true
   field_social_media: true
