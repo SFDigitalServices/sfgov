@@ -5,7 +5,6 @@ namespace Drupal\sfgov_search\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use \Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class GoogleSearchForm extends FormBase {
