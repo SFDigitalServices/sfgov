@@ -15,14 +15,14 @@ class GoogleSearchController extends ControllerBase {
       '#tag' => 'script',
       '#attributes' => [
         'async' => 'async',
-        'src' => "https://cse.google.com/cse.js?cx=c785e24afcb1a4da8&key=AIzaSyC2EwXHN65Wgo2SQwNApPYZzUV52TPzjCs",
+        'src' => "https://cse.google.com/cse.js?cx=d6bea1ac480ab41ae",
       ]
     ];
 
     $form = \Drupal::formBuilder()->getForm('Drupal\sfgov_search\Form\GoogleSearchForm');
     $build['markup'] = [
       '#theme' => 'google_search',
-      '#title' => 'Google Search',
+      '#title' => 'Search',
       '#form' => $form,
       '#attached' => [
         'library' => [
