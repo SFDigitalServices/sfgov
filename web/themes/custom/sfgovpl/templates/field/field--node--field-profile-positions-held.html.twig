@@ -36,31 +36,33 @@
  * @see template_preprocess_field()
  */
 #}
+
 {% set profileType = element['#object'].get('field_profile_type').value %}
+
 <div class="profile--roles">
   {# <div class="profile--roles--label">{{ 'Additional groups and roles'|t }}</div> #}
 
   {% for item in items %}
-  {% set paragraph = item.content['#paragraph'] %}
-  {% set positionType = paragraph.field_position_type.value %}
-  {% set positionTitle = paragraph.field_commission_position.value %}
-  {% set positionAgency = paragraph.field_department.entity.label %}
-  {% set positionAgencyUrl = url('entity.node.canonical', {'node': paragraph.field_department.target_id}) %}
-  {% set positionStart = paragraph.field_starting_year.value %}
-  {% set positionEnd = paragraph.field_ending_year.value %}
+    {% set paragraph = item.content['#paragraph'] %}
+    {% set positionType = paragraph.field_position_type.value %}
+    {% set positionTitle = paragraph.field_commission_position.value %}
+    {% set positionAgency = paragraph.field_department.entity.label %}
+    {% set positionAgencyUrl = url('entity.node.canonical', {'node': paragraph.field_department.target_id}) %}
+    {% set positionStart = paragraph.field_starting_year.value %}
+    {% set positionEnd = paragraph.field_ending_year.value %}
 
-  <div class="profile--role">
-    {%- if positionTitle is not empty -%}
-      <span class="role-title">
-        {{- positionTitle -}}
-        {%- if positionAgency is not empty -%}, {%- endif -%}
-      </span>
-    {%- endif -%}
-    {%- if positionAgency is not empty -%}
-      <span class="role-agency-title">
-        <a href="{{ positionAgencyUrl }}">{{- positionAgency -}}</a>
-      </span>
-    {%- endif -%}
-  </div>
-{% endfor %}
+    <div class="profile--role">
+      {%- if positionTitle is not empty -%}
+        <span class="role-title">
+          {{- positionTitle -}}
+          {%- if positionAgency is not empty -%}, {%- endif -%}
+        </span>
+      {%- endif -%}
+      {%- if positionAgency is not empty -%}
+        <span class="role-agency-title">
+          <a href="{{ positionAgencyUrl }}">{{- positionAgency -}}</a>
+        </span>
+      {%- endif -%}
+    </div>
+  {% endfor %}
 </div>

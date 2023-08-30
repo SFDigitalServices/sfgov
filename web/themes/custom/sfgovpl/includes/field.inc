@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\paragraphs\Entity\Paragraph;
+
 /**
  * Implements template_preprocess_field().
  */
@@ -107,6 +109,30 @@ function sfgovpl_preprocess_field__paragraph__field_link(&$variables) {
     $link_title = $variables['items'][$delta]['content']['#title'];
     if (empty($variables['items'][$delta]['content']['#options']['attributes']['aria-label'])) {
       $variables['items'][$delta]['content']['#options']['attributes']['aria-label'] = $link_title . ' ' . $paragraph_title;
+    }
+  }
+}
+
+/**
+ * Implements template_preprocess_field().
+ */
+function sfgovpl_preprocess_field__node__field_profile_positions_held(&$variables) {
+  $entity_manager = \Drupal::entityTypeManager();
+
+  foreach ($variables['items'] as $delta => $content) {
+    $paragraph = $content['content']['#paragraph'] ?? NULL;
+    if ($paragraph instanceof Paragraph && $paragraph->hasField('field_department')) {
+      $value = $paragraph->get('field_department')->getValue();
+      $nid = $value[0]['target_id'];
+      $node = $entity_manager->getStorage('node')->load($nid);
+      $bundle = $node->bundle();
+
+      // If the type of the referenced node is of department or public body,
+      // then we keep the reference. If not, then we remove it from display.
+      $keep_value = ($bundle == 'department' || $bundle == 'public_body');
+      if (!$keep_value) {
+        unset($variables['items'][$delta]);
+      }
     }
   }
 }
