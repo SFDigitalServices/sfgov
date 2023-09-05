@@ -40,7 +40,7 @@ class GoogleSearchForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $keyword = \Drupal::request()->query->get('sfgov_search_input');
+    $keyword = \Drupal::request()->query->get('keys');
 
     $config = \Drupal::config('sfgov_google_search.settings');
 
@@ -57,7 +57,7 @@ class GoogleSearchForm extends FormBase {
 //    $suffix_markup = '<div id="sfgov-search-describedby" aria-hidden="true" class="visually-hidden">' . t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value') . '</div>';
 //    $suffix_markup .= '<div id="sfgov-search-autocomplete" role="listbox" aria-label="' . t("Search autocomplete") . '"></div>';
 
-    $form['sfgov_search_input'] = array(
+    $form['keys'] = array(
       '#title' => t('Search'),
       '#type' => 'textfield',
       '#placeholder' => t('Google Search'),
@@ -78,7 +78,7 @@ class GoogleSearchForm extends FormBase {
 //      '#suffix' => $suffix_markup,
     );
 
-    $form['#attached']['library'][] = 'sfgov_search/google_search';
+    // $form['#attached']['library'][] = 'sfgov_search/google_search';
     //$form['#attached']['drupalSettings']['sfgovSearch']['collection'] = empty($config->get('search_collection')) ? null : $config->get('search_collection');
     //$form['#attached']['drupalSettings']['sfgovSearch']['qie'] = empty($config->get('qie_influence')) ? null : $config->get('qie_influence');
 
@@ -99,8 +99,8 @@ class GoogleSearchForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $search = $form_state->getValues()['sfgov_search_input'];
-    $form_state->setRedirect('sfgov_google_search.content', ['sfgov_search_input' => $search], [
+    $search = $form_state->getValues()['keys'];
+    $form_state->setRedirect('search.view_google_json_api_search', ['keys' => $search], [
       'language' => $this->languageManager->getCurrentLanguage(),
     ]);
   }
