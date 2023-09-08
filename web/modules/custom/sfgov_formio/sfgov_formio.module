@@ -48,6 +48,8 @@ function sfgov_formio_page_attachments(array &$attachments) {
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node instanceof \Drupal\node\NodeInterface) {
     $bundle = $node->bundle();
+  } else {
+    $bundle = '';
   }
 
   // The version we load takes query parameters into account. We are NOT using
