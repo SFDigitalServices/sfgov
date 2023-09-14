@@ -275,5 +275,60 @@ access:
     roles: {  }
     users: {  }
     permissions: {  }
-handlers: {  }
+handlers:
+  remote_post:
+    id: remote_post
+    handler_id: remote_post
+    label: 'Remote post'
+    notes: 'Integration with SF.gov Feedback Airtable'
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      method: POST
+      type: json
+      excluded_data:
+        serial: serial
+        sid: sid
+        uuid: uuid
+        token: token
+        uri: uri
+        created: created
+        completed: completed
+        changed: changed
+        in_draft: in_draft
+        current_page: current_page
+        remote_addr: remote_addr
+        uid: uid
+        langcode: langcode
+        webform_id: webform_id
+        entity_type: entity_type
+        entity_id: entity_id
+        locked: locked
+        sticky: sticky
+        notes: notes
+        was_this_page_helpful_: was_this_page_helpful_
+        what_was_helpful_about_this_page_: what_was_helpful_about_this_page_
+        what_s_wrong_with_this_page_: what_s_wrong_with_this_page_
+        what_s_wrong_with_this_page_feedback: what_s_wrong_with_this_page_feedback
+      custom_data: "records:\r\n  -  fields:\r\n      \"SubmissionId\": \"[webform_submission:sid]\"\r\n      \"Path\": \"[webform_submission:source-url:path]\"\r\n      \"PageHelpful?\": \"[webform_submission:values:was_this_page_helpful_]\"\r\n      \"Message\": \"[webform_submission:values:what_was_helpful_about_this_page_][webform_submission:values:what_s_wrong_with_this_page_][webform_submission:values:what_s_wrong_with_this_page_feedback]\"\r\n      \"SubmissionDate\": \"[webform_submission:completed:html_datetime]\""
+      custom_options: "headers:\r\n  Authorization: \"Bearer patdyBT3PF1rWihc2.b6e1858fcd50a323cae459fdc6b93b58525033afee34b36f4e35a1d3093e857f\""
+      file_data: true
+      cast: false
+      debug: false
+      completed_url: null
+      completed_custom_data: ''
+      updated_url: ''
+      updated_custom_data: ''
+      deleted_url: ''
+      deleted_custom_data: ''
+      draft_created_url: ''
+      draft_created_custom_data: ''
+      draft_updated_url: ''
+      draft_updated_custom_data: ''
+      converted_url: ''
+      converted_custom_data: ''
+      message: ''
+      messages: {  }
+      error_url: ''
 variants: {  }
