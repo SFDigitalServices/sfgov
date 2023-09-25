@@ -951,7 +951,7 @@ display:
         - 'config:field.storage.user.field_departments'
   data_export_1:
     id: data_export_1
-    display_title: 'Data export'
+    display_title: 'Last access 3 months'
     display_plugin: data_export
     position: 2
     display_options:
@@ -1007,7 +1007,20 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          type: user_name
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         mail:
           id: mail
           table: users_field_data
@@ -1019,7 +1032,7 @@ display:
           entity_field: mail
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1054,7 +1067,7 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: true
+          element_default_classes: false
           empty: ''
           hide_empty: false
           empty_zero: false
@@ -1525,6 +1538,7 @@ display:
         sorts: false
         filters: false
         filter_groups: false
+      display_description: 'Last access no greater than 3 months ago'
       display_extenders: {  }
       path: admin/reports/user-last-access
       filename: ''
