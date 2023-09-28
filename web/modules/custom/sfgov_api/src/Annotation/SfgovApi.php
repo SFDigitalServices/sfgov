@@ -40,4 +40,11 @@ class SfgovApi extends Plugin {
    * @var string
    */
   public $entity_id;
+
+  /**
+   * The language code being queried.
+   *
+   * @var string
+   */
+  public $langcode;
 }

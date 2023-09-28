@@ -8,9 +8,6 @@ use Drupal\node\Entity\Node;
 /**
  * Base class for sfgov_api node plugins.
  *
- * @SfgovApi(
- *  entity_type = "node",
- * )
  */
 abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
 
@@ -71,13 +68,23 @@ abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
     return $base_data;
   }
 
-  public function getEntities($entity_type, $bundle, $entity_id = NULL) {
+  public function getEntities($entity_type, $bundle, $langcode = 'en', $entity_id = NULL) {
     if ($entity_id) {
       $entities = Node::load($entity_id) ? [Node::load($entity_id)] : [];
     }
     else {
       $nids = \Drupal::entityQuery($entity_type)->condition('type', $bundle)->execute();
       $entities = Node::loadMultiple($nids);
+    }
+
+    if ($langcode != 'en') {
+      foreach ($entities as $key => $entity) {
+        if ($entity->hasTranslation($langcode)) {
+          $entities[$key] = $entity->getTranslation($langcode);
+        }
+        else {
+          unset($entities[$key]);}
+      }
     }
     return $entities;
   }

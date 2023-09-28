@@ -10,9 +10,9 @@ use Drupal\sfgov_api\SfgovApiParagraphPluginBase;
  * @SfgovApi(
  *   id = "paragraph_process_step",
  *   title = @Translation("Paragraph Process Step"),
- *   entity_type = "paragraph",
  *   bundle = "process_step",
  *   entity_id = {},
+ *   langcode = {},
  * )
  */
 class ProcessStep extends SfgovApiParagraphPluginBase {
