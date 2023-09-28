@@ -10,9 +10,9 @@ use Drupal\sfgov_api\SfgovApiParagraphPluginBase;
  * @SfgovApi(
  *   id = "paragraph_cost",
  *   title = @Translation("Paragraph Cost"),
- *   entity_type = "paragraph",
  *   bundle = "cost",
  *   entity_id = {},
+ *   langcode = {},
  * )
  */
 class Cost extends SfgovApiParagraphPluginBase {

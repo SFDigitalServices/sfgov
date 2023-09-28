@@ -16,6 +16,10 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
     return (string) $this->pluginDefinition['bundle'];
   }
 
+  public function getLangcode() {
+    return (string) $this->configuration['langcode'] ?? $this->pluginDefinition['langcode'];
+  }
+
   public function getEntityId() {
     return (string) $this->configuration['entity_id'] ?? $this->pluginDefinition['entity_id'];
   }
@@ -24,10 +28,10 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
 
   abstract public function setCustomData($entity);
 
-  abstract public function getEntities($entity_type, $bundle, $entity_id = NULL);
+  abstract public function getEntities($entity_type, $bundle, $langcode = 'en', $entity_id = NULL);
 
   public function prepareData() {
-    $entities = $this->getEntities($this->entity_type, $this->getBundle(), $this->getEntityId());
+    $entities = $this->getEntities($this->entity_type, $this->getBundle(), $this->getLangcode(), $this->getEntityId());
     $data = [];
     foreach ($entities as $entity) {
       $base_data = $this->setBaseData($entity);
@@ -51,6 +55,7 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
     foreach ($entities as $entity) {
       $entity_type = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
+      $langcode = $this->configuration['langcode'];
       $entity_data = [];
 
       if ($reference_only) {
@@ -77,7 +82,9 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
         }
 
         if (in_array($plugin_label, array_keys($available_plugins))) {
-          $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, []);
+          $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
+            'langcode' => $langcode,
+          ]);
           $entity_data[] = $plugin->prepareData();
         } else {
           $entity_data[] = 'Error: no available plugins for this entity';

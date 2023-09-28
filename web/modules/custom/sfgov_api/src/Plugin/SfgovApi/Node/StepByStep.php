@@ -12,6 +12,7 @@ use Drupal\sfgov_api\SfgovApiNodePluginBase;
  *   title = @Translation("Node Step By Step"),
  *   bundle = "step_by_step",
  *   entity_id = {},
+ *   langcode = {},
  * )
  */
 class StepByStep extends SfgovApiNodePluginBase {

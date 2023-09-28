@@ -13,7 +13,7 @@ class SfgovApiController extends ControllerBase {
   /**
    * Builds the response.
    */
-  public function fetchEntityData(string $entity_type, string $bundle, $entity_id = NULL) {
+  public function fetchEntityData(string $entity_type, string $bundle, $langcode = 'en', $entity_id = NULL) {
     if (!$bundle) {
       return new JsonResponse(['error' => 'Please specify a bundle.']);
     }
@@ -26,6 +26,7 @@ class SfgovApiController extends ControllerBase {
     $plugin_label = "{$entity_type}_{$bundle}";
     if (in_array($plugin_label, array_keys($available_plugins))) {
       $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
+        'langcode' => $langcode,
         'entity_id' => $entity_id,
       ]);
       return $plugin->sendJsonResponse();
