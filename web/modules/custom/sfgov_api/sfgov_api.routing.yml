@@ -1,7 +1,10 @@
-sfgov_api.example:
-  path: '/sfgov-api/example'
+sfgov_api.entity:
+  path: '/sfgov-api/entity/{entity_type}/{bundle}/{entity_id}'
   defaults:
-    _title: 'Example'
-    _controller: '\Drupal\sfgov_api\Controller\SfgovApiController::data'
+    _title: 'entity'
+    _controller: '\Drupal\sfgov_api\Controller\SfgovApiController::fetchEntityData'
+    entity_type: ''
+    bundle: ''
+    entity_id: ''
   requirements:
     _permission: 'administer site configuration'
