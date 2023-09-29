@@ -2,6 +2,8 @@
 
 namespace Drupal\sfgov_api\Plugin\SfgovApi;
 
+use Drupal\Core\Datetime\DrupalDateTime;
+
 /**
  * Helper functions for converting field data to a form that wagtail can use.
  */
@@ -19,16 +21,15 @@ trait ApiFieldHelperTrait {
    *   An array of entity data.
    */
   public function getReferencedData(array $entities, $reference_only = FALSE) {
-    $entity_data = [];
+    $entities_data = [];
 
     foreach ($entities as $entity) {
       $entity_type = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
       $langcode = $this->configuration['langcode'];
-      $entity_data = [];
 
       if ($reference_only) {
-        $entity_data[] = [
+        $entities_data[] = [
           'bundle' => $bundle,
           'id' => $entity->id(),
           'type' => $entity_type,
@@ -46,8 +47,12 @@ trait ApiFieldHelperTrait {
             $plugin_label = 'node_' . $bundle;
             break;
 
+          case 'media':
+            $plugin_label = 'media_' . $bundle;
+            break;
+
           default:
-            $entity_data[] = 'no data found';
+            $entities_data[] = 'no data found';
             break;
         }
 
@@ -56,14 +61,29 @@ trait ApiFieldHelperTrait {
           $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
             'langcode' => $langcode,
           ]);
-          $entity_data[] = $plugin->prepareData();
+          $entities_data = array_merge($entities_data, $plugin->prepareData([$entity]));
         }
         else {
-          $entity_data[] = 'Error: no available plugins for this entity';
+          $entities_data[] = 'Error: no available plugins for this entity';
         }
       }
     }
-    return $entity_data;
+
+    return $entities_data;
+  }
+
+  /**
+   * Return time in the format that wagtail expects.
+   *
+   * @param int $timestamp
+   *   A unix timestamp.
+   *
+   * @return string
+   *   A string in the format that wagtail expects.
+   */
+  public function getWagtailTime($timestamp) {
+    $drupal_datetime = DrupalDateTime::createFromTimestamp($timestamp);
+    return $drupal_datetime->format('Y-m-d\TH:i:s.uP');
   }
 
 }

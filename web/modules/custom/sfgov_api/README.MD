@@ -28,7 +28,11 @@ The json object consists of three parts for each entity, and the data is set in 
 
 ## Building on the API
 With this structure, every entity that needs to be exposed for the API will need its own plugin. At time of writing
-there are example plugins in place for Nodes and Paragraphs. When building a new plugin make sure to respect the
+there are example plugins in place for Nodes and Paragraphs.
+
+You can easily generate new plugins with the command `drush generate custom:api-plugin`
+
+When building a new plugin make sure to respect the
 different layers of responsibility set out in the previous section. Each entity level plugin should focus on building
 the actual field data that wagtail expects in the `setCustomData` function. The idea here is that they return an array
 shaped like so
@@ -53,13 +57,11 @@ uses said plugin to map out the fields and data.
 ## Todo
 ### Features
 - add proper pagination to `SfgovApiPluginBase::prepareData()` (currently limited to 20 results)
-- build baseplugin for media referencing
-- fix `ApiFieldHelperTrait::getReferencedData` adding an extra array level
-- add plugin generator
 - add proper security to the route(s)
 
 ### Plugins
 - Figure out correct values for baseData in `SfgovApiNodePluginBase`
+- Figure out correct values for baseData in `sfgov_api/src/Plugin/SfgovApi/Media/Image.php`
 - Figure out correct field names for custom data in `sfgov_api/src/Plugin/SfgovApi/Paragraph/ProcessStep.php`
   and `sfgov_api/src/Plugin/SfgovApi/Paragraph/ProcessStep.php`. currently using the Drupal field names for
   proof of concept.

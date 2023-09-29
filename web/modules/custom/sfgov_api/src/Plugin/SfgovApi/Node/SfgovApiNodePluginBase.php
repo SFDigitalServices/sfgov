@@ -1,13 +1,16 @@
 <?php
 
-namespace Drupal\sfgov_api;
+namespace Drupal\sfgov_api\Plugin\SfgovApi\Node;
 
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
+use Drupal\sfgov_api\SfgovApiPluginBase;
 
 /**
  * Base class for sfgov_api node plugins.
  */
 abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
+
+  use ApiFieldHelperTrait;
 
   /**
    * {@inheritDoc}
@@ -20,12 +23,9 @@ abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
   public function setBaseData($node) {
     $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
     $temp = 'temp';
-    $created = DrupalDateTime::createFromTimestamp($node->get('created')->value);
-    $changed = DrupalDateTime::createFromTimestamp($node->get('changed')->value);
 
     // @todo All of the comments below are whats in the API. this list needs to be refined.
     $base_data = [
-      'drupal_id' => $node->id(),
       'url' => $url,
     // 2
       'parent' => $temp,
@@ -43,8 +43,8 @@ abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
       'translation_key' => $temp,
       'live' => TRUE,
       'has_unpublished_changes' => FALSE,
-      'first_published_at' => $created->format('Y-m-d\TH:i:s.uP'),
-      'last_published_at' => $changed->format('Y-m-d\TH:i:s.uP'),
+      'first_published_at' => $this->getWagtailTime($node->get('created')->value),
+      'last_published_at' => $this->getWagtailTime($node->get('changed')->value),
       'go_live_at' => NULL,
       'expire_at' => NULL,
       'expired' => FALSE,

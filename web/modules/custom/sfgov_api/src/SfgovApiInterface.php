@@ -38,7 +38,7 @@ interface SfgovApiInterface {
    * @return array
    *   The prepared data.
    */
-  public function prepareData();
+  public function prepareData(array $entities);
 
   /**
    * Send the JSON response.

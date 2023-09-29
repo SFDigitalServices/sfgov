@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\sfgov_api;
+namespace Drupal\sfgov_api\Plugin\SfgovApi\Paragraph;
+
+use Drupal\sfgov_api\SfgovApiPluginBase;
 
 /**
  * Base class for sfgov_api plugins.
