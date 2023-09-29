@@ -54,8 +54,7 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
    * @return array
    *   The prepared data.
    */
-  public function prepareData() {
-    $entities = $this->getEntities($this->entityType, $this->getBundle(), $this->getLangcode(), $this->getEntityId());
+  public function prepareData(array $entities) {
     $data = [];
     foreach ($entities as $entity) {
       $drupal_data = [
@@ -88,7 +87,8 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
    *   The JsonResponse of the prepared data.
    */
   public function sendJsonResponse() {
-    return new JsonResponse($this->prepareData());
+    $entities = $this->getEntities($this->entityType, $this->getBundle(), $this->getLangcode(), $this->getEntityId());
+    return new JsonResponse($this->prepareData($entities));
   }
 
   /**
@@ -110,17 +110,19 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
     $entities = [];
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_storage = $entity_type_manager->getStorage($entity_type);
-    $entity_id_key = $entity_type_manager->getDefinition($entity_type)->getKeys()['id'];
+    $entity_definition = $entity_type_manager->getDefinition($entity_type);
+    $entity_id_key = $entity_definition->getKeys()['id'];
+    $bundle_key = $entity_definition->getKeys()['bundle'];
     $query = \Drupal::entityQuery($entity_type)
-      ->condition('type', $bundle);
+      ->condition($bundle_key, $bundle);
 
     // If an entity_id is passed, only return that entity.
     if ($entity_id) {
       $query->condition($entity_id_key, $entity_id);
     }
 
-    $nids = $query->execute();
-    $entities = $entity_storage->loadMultiple($nids);
+    $ids = $query->execute();
+    $entities = $entity_storage->loadMultiple($ids);
 
     // If the langcode is not 'en', get the translation for each entity. Remove
     // any entities that do not have a translation.

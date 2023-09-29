@@ -3,7 +3,6 @@
 namespace Drupal\sfgov_api\Plugin\SfgovApi\Paragraph;
 
 use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
-use Drupal\sfgov_api\SfgovApiParagraphPluginBase;
 
 /**
  * Plugin implementation of the sfgov_api.

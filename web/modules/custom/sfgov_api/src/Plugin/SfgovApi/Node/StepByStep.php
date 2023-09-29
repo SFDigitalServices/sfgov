@@ -3,7 +3,6 @@
 namespace Drupal\sfgov_api\Plugin\SfgovApi\Node;
 
 use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
-use Drupal\sfgov_api\SfgovApiNodePluginBase;
 
 /**
  * Plugin implementation of the sfgov_api.
