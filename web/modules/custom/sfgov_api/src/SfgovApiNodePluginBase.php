@@ -3,54 +3,71 @@
 namespace Drupal\sfgov_api;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\node\Entity\Node;
 
 /**
  * Base class for sfgov_api node plugins.
- *
  */
 abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
 
-  protected $entity_type = 'node';
+  /**
+   * {@inheritDoc}
+   */
+  protected $entityType = 'node';
 
+  /**
+   * {@inheritDoc}
+   */
   public function setBaseData($node) {
-    $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$node->id());
+    $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
     $temp = 'temp';
     $created = DrupalDateTime::createFromTimestamp($node->get('created')->value);
     $changed = DrupalDateTime::createFromTimestamp($node->get('changed')->value);
 
+    // @todo All of the comments below are whats in the API. this list needs to be refined.
     $base_data = [
       'drupal_id' => $node->id(),
       'url' => $url,
-      'parent' => $temp, // 2
-      'html_path' => $temp, //'http://localhost/budget-process-timeline/'
-      'detail_url' => $temp, // 'https://api.staging.dev.sf.gov/api/cms/sf.StepByStep/98'
-      'path' => $temp, // '000100020010'
-      'depth' => $temp, // 3
-      'numchild' => $temp, // 0
-      'translation_key' => $temp, // '83a4bb33-7fec-4db4-bc22-ad803d8c1c7d',
-      'live' => true,
-      'has_unpublished_changes' => false,
+    // 2
+      'parent' => $temp,
+    // 'http://localhost/budget-process-timeline/'
+      'html_path' => $temp,
+    // 'https://api.staging.dev.sf.gov/api/cms/sf.StepByStep/98'
+      'detail_url' => $temp,
+    // '000100020010'
+      'path' => $temp,
+    // 3
+      'depth' => $temp,
+    // 0
+      'numchild' => $temp,
+    // '83a4bb33-7fec-4db4-bc22-ad803d8c1c7d',
+      'translation_key' => $temp,
+      'live' => TRUE,
+      'has_unpublished_changes' => FALSE,
       'first_published_at' => $created->format('Y-m-d\TH:i:s.uP'),
       'last_published_at' => $changed->format('Y-m-d\TH:i:s.uP'),
-      'go_live_at' => null,
-      'expire_at' => null,
-      'expired' => false,
-      'locked' => false,
-      'locked_at' => null,
+      'go_live_at' => NULL,
+      'expire_at' => NULL,
+      'expired' => FALSE,
+      'locked' => FALSE,
+      'locked_at' => NULL,
       'title' => $node->getTitle(),
       'draft_title' => $node->getTitle(),
-      'slug' => $temp, // 'budget-process-timeline',
-      'url_path' => $temp, // '/home/budget-process-timeline/',
+    // 'budget-process-timeline',
+      'slug' => $temp,
+    // '/home/budget-process-timeline/',
+      'url_path' => $temp,
       'seo_title' => '',
-      'show_in_menus' => false,
+      'show_in_menus' => FALSE,
       'search_description' => '',
-      'latest_revision_created_at' => $temp, // '2023-08-15T09:08:00.382823-07:00',
-      'locale' => $temp, // 'https://api.staging.dev.sf.gov/api/cms/locales/1',
-      'locked_by' => null,
-      'alias_of' => null,
+    // '2023-08-15T09:08:00.382823-07:00',
+      'latest_revision_created_at' => $temp,
+    // 'https://api.staging.dev.sf.gov/api/cms/locales/1',
+      'locale' => $temp,
+      'locked_by' => NULL,
+      'alias_of' => NULL,
       'aliases' => [
-          $temp, // 'https://api.staging.dev.sf.gov/api/cms/pages/99'
+    // 'https://api.staging.dev.sf.gov/api/cms/pages/99'
+        $temp,
       ],
       'formsubmission_set' => [],
       'redirect_set' => [],
@@ -66,27 +83,6 @@ abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
     ];
 
     return $base_data;
-  }
-
-  public function getEntities($entity_type, $bundle, $langcode = 'en', $entity_id = NULL) {
-    if ($entity_id) {
-      $entities = Node::load($entity_id) ? [Node::load($entity_id)] : [];
-    }
-    else {
-      $nids = \Drupal::entityQuery($entity_type)->condition('type', $bundle)->execute();
-      $entities = Node::loadMultiple($nids);
-    }
-
-    if ($langcode != 'en') {
-      foreach ($entities as $key => $entity) {
-        if ($entity->hasTranslation($langcode)) {
-          $entities[$key] = $entity->getTranslation($langcode);
-        }
-        else {
-          unset($entities[$key]);}
-      }
-    }
-    return $entities;
   }
 
 }
