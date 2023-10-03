@@ -1,11 +1,11 @@
 sfgov_api.entity:
-  path: '/sfgov-api/entity/{entity_type}/{bundle}/{langcode}/{entity_id}'
+  path: '/sfgov-api/entity/{langcode}/{entity_type}/{bundle}/{entity_id}'
   defaults:
     _title: 'entity'
-    _controller: '\Drupal\sfgov_api\Controller\SfgovApiController::fetchEntityData'
+    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::fetchEntityData'
+    langcode: 'en'
     entity_type: ''
     bundle: ''
-    langcode: 'en'
     entity_id: ''
   requirements:
     _permission: 'administer site configuration'

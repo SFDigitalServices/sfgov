@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Media;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Media;
 
-use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 
 /**
  * Plugin implementation of the sfgov_api.
  *
- * @SfgovApi(
+ * @SfgApi(
  *   id = "media_image",
- *   title = @Translation("Media Image"),
+ *   title = @Translation("Media image"),
  *   bundle = "image",
  *   entity_id = {},
  *   langcode = {},
  * )
  */
-class Image extends SfgovApiMediaPluginBase {
+class Image extends SfgApiMediaBase {
 
   use ApiFieldHelperTrait;
 
@@ -46,7 +46,6 @@ class Image extends SfgovApiMediaPluginBase {
     // 'e347b7f97001d5ed72acddfe0f78489e686ff564',
       'file_hash' => $temp,
     ];
-
   }
 
 }

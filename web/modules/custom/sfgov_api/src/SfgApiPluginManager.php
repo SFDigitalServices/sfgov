@@ -7,12 +7,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * SfgovApi plugin manager.
+ * SfgApi plugin manager.
  */
-class SfgovApiPluginManager extends DefaultPluginManager {
+class SfgApiPluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs SfgovApiPluginManager object.
+   * Constructs SfgApiPluginManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -24,11 +24,11 @@ class SfgovApiPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct(
-      'Plugin/SfgovApi',
+      'Plugin/SfgApi',
       $namespaces,
       $module_handler,
-      'Drupal\sfgov_api\SfgovApiInterface',
-      'Drupal\sfgov_api\Annotation\SfgovApi'
+      'Drupal\sfgov_api\SfgApiInterface',
+      'Drupal\sfgov_api\Annotation\SfgApi'
     );
     $this->alterInfo('sfgov_api_info');
     $this->setCacheBackend($cache_backend, 'sfgov_api_plugins');

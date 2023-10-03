@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Node;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Node;
 
-use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
-use Drupal\sfgov_api\SfgovApiPluginBase;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
+use Drupal\sfgov_api\SfgApiPluginBase;
 
 /**
  * Base class for sfgov_api node plugins.
  */
-abstract class SfgovApiNodePluginBase extends SfgovApiPluginBase {
+abstract class SfgApiNodeBase extends SfgApiPluginBase {
 
   use ApiFieldHelperTrait;
 

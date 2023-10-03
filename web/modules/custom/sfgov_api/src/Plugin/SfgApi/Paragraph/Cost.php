@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Paragraph;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
 
 /**
  * Plugin implementation of the sfgov_api.
  *
- * @SfgovApi(
+ * @SfgApi(
  *   id = "paragraph_cost",
  *   title = @Translation("Paragraph Cost"),
  *   bundle = "cost",
@@ -13,7 +13,7 @@ namespace Drupal\sfgov_api\Plugin\SfgovApi\Paragraph;
  *   langcode = {},
  * )
  */
-class Cost extends SfgovApiParagraphPluginBase {
+class Cost extends SfgApiParagraphBase {
 
   /**
    * {@inheritDoc}

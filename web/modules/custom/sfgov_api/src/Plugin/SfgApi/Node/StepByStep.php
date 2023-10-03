@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Node;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Node;
 
-use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 
 /**
  * Plugin implementation of the sfgov_api.
  *
- * @SfgovApi(
+ * @SfgApi(
  *   id = "node_step_by_step",
  *   title = @Translation("Node Step By Step"),
  *   bundle = "step_by_step",
@@ -15,7 +15,7 @@ use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
  *   langcode = {},
  * )
  */
-class StepByStep extends SfgovApiNodePluginBase {
+class StepByStep extends SfgApiNodeBase {
 
   use ApiFieldHelperTrait;
 
