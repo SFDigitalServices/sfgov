@@ -10,7 +10,7 @@ use DrupalCodeGenerator\Utils;
  */
 class ApiPluginGenerator extends ModuleGenerator {
 
-  protected string $name = 'custom:api-plugin';
+  protected string $name = 'sfgov:api-plugin';
   protected string $description = 'Generates an sfgov API plugin';
   protected string $templatePath = 'modules/custom/sfgov_api/src/Templates';
 
@@ -48,7 +48,7 @@ class ApiPluginGenerator extends ModuleGenerator {
       }
     }
 
-    $this->addFile('src/Plugin/SfgovApi/{entity_type_ucfirst}/{bundle_camelize}.php', 'PluginTemplate.twig');
+    $this->addFile('src/Plugin/SfgApi/{entity_type_ucfirst}/{bundle_camelize}.php', 'PluginTemplate.twig');
   }
 
 }

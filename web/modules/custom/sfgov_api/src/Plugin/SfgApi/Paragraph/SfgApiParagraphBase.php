@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Paragraph;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
 
-use Drupal\sfgov_api\SfgovApiPluginBase;
+use Drupal\sfgov_api\SfgApiPluginBase;
 
 /**
  * Base class for sfgov_api plugins.
  */
-abstract class SfgovApiParagraphPluginBase extends SfgovApiPluginBase {
+abstract class SfgApiParagraphBase extends SfgApiPluginBase {
 
   /**
    * {@inheritDoc}

@@ -3,12 +3,11 @@
 namespace Drupal\sfgov_api;
 
 use Drupal\Component\Plugin\PluginBase;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Base class for sfgov_api plugins.
  */
-abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterface {
+abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
 
   /**
    * The entity type.
@@ -54,7 +53,7 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
    * @return array
    *   The prepared data.
    */
-  public function prepareData(array $entities) {
+  public function renderEntities(array $entities) {
     $data = [];
     foreach ($entities as $entity) {
       $drupal_data = [
@@ -81,14 +80,13 @@ abstract class SfgovApiPluginBase extends PluginBase implements SfgovApiInterfac
   }
 
   /**
-   * Send the data as a JsonResponse.
+   * Send a list of entities.
    *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   The JsonResponse of the prepared data.
+   * @return array
+   *   The prepared data.
    */
-  public function sendJsonResponse() {
-    $entities = $this->getEntities($this->entityType, $this->getBundle(), $this->getLangcode(), $this->getEntityId());
-    return new JsonResponse($this->prepareData($entities));
+  public function getEntitiesList() {
+    return $this->getEntities($this->entityType, $this->getBundle(), $this->getLangcode(), $this->getEntityId());
   }
 
   /**

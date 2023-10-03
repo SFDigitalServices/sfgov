@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Paragraph;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
 
-use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 
 /**
  * Plugin implementation of the sfgov_api.
  *
- * @SfgovApi(
+ * @SfgApi(
  *   id = "paragraph_process_step",
  *   title = @Translation("Paragraph Process Step"),
  *   bundle = "process_step",
@@ -15,7 +15,7 @@ use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
  *   langcode = {},
  * )
  */
-class ProcessStep extends SfgovApiParagraphPluginBase {
+class ProcessStep extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 

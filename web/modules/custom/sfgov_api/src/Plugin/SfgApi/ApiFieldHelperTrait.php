@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi;
+namespace Drupal\sfgov_api\Plugin\SfgApi;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -30,9 +30,9 @@ trait ApiFieldHelperTrait {
 
       if ($reference_only) {
         $entities_data[] = [
+          'drupal_id' => $entity->id(),
+          'entity_type' => $entity_type,
           'bundle' => $bundle,
-          'id' => $entity->id(),
-          'type' => $entity_type,
         ];
       }
       else {
@@ -61,7 +61,7 @@ trait ApiFieldHelperTrait {
           $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
             'langcode' => $langcode,
           ]);
-          $entities_data = array_merge($entities_data, $plugin->prepareData([$entity]));
+          $entities_data = array_merge($entities_data, $plugin->renderEntities([$entity]));
         }
         else {
           $entities_data[] = 'Error: no available plugins for this entity';

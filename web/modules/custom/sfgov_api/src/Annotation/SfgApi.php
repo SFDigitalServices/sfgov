@@ -9,7 +9,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class SfgovApi extends Plugin {
+class SfgApi extends Plugin {
 
   /**
    * The plugin ID.

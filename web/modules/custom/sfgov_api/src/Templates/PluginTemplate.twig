@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\{{ entity_type_ucfirst }};
+namespace Drupal\sfgov_api\Plugin\SfgApi\{{ entity_type_ucfirst }};
 
 {% if use_helper %}
-use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 {% endif %}
 
 /**
  * Plugin implementation of the sfgov_api.
  *
- * @SfgovApi(
+ * @SfgApi(
  *   id = "{{entity_type}}_{{ bundle }}",
  *   title = @Translation("{{ entity_type_ucfirst }} {{ bundle }}"),
  *   bundle = "{{ bundle }}",
@@ -17,7 +17,7 @@ use Drupal\sfgov_api\Plugin\SfgovApi\ApiFieldHelperTrait;
  *   langcode = {},
  * )
  */
-class {{ bundle_camelize }} extends SfgovApi{{ entity_type_ucfirst }}PluginBase {
+class {{ bundle_camelize }} extends SfgApi{{ entity_type_ucfirst }}Base {
 
 {% if use_helper %}
   use ApiFieldHelperTrait;

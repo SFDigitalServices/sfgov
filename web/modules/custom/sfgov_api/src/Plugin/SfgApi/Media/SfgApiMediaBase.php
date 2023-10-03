@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\sfgov_api\Plugin\SfgovApi\Media;
+namespace Drupal\sfgov_api\Plugin\SfgApi\Media;
 
-use Drupal\sfgov_api\SfgovApiPluginBase;
+use Drupal\sfgov_api\SfgApiPluginBase;
 
 /**
  * Base class for sfgov_api plugins.
  */
-abstract class SfgovApiMediaPluginBase extends SfgovApiPluginBase {
+abstract class SfgApiMediaBase extends SfgApiPluginBase {
 
   /**
    * {@inheritDoc}
