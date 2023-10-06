@@ -54,12 +54,30 @@ so that they can be used in other plugins.
 Note: The aforementioned `getReferencedData` function relies on there being a plugin for the entity type it is referencing. It
 uses said plugin to map out the fields and data.
 
+## Pushing to Wagtail
+At time of writing there are two custom drush commands for pushing nodes into the Wagtail API. It only supports pushing to a
+local version of the wagtail site.
+
+**This approach might change in future iterations and is currently very rough and limited**
+
+### Requirements
+1. This setup assumes you're hosting your Drupal site through lando.
+2. Install the wagtail site locally from sfgov's github
+3. Force wagtail to accept external connections by adding the following to your local_settings.py in the Wagtail repo.
+```
+ALLOWED_HOSTS = ['localhost', 'host.docker.internal', '127.0.0.1']
+```
+
+### Usage
+There are currently two functions, each one for sending individual entities/pages to the Wagtail API. The only difference between the two is how they gather their respective json payloads.
+**pushLiteralData** Lets you set the literal field values being pushed. This is mainly for experimentation purposes.
+**pushEntityById** Hooks into the larger plugin infrastructure built in this module to generate that json payload.
+
 ## Todo
 ### Features
 - add proper pagination to `SfgApiPluginBase::prepareData()` (currently limited to 20 results)
 - add proper security to the route(s)
 - add interfaces
-- finalize readme per function name changes
 
 ### Plugins
 - Figure out correct values for baseData in `SfgApiNodePluginBase`
