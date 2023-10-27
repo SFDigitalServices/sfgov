@@ -14,6 +14,7 @@
       $nids = $nids->condition('type', $contentType)
       ->condition('status', 1)
       ->sort('title')
+      ->accessCheck()
       ->execute();
       return empty($nids) ? null : $storage->loadMultiple($nids);;
     }
@@ -24,6 +25,7 @@
     public static function getNodes($contentType) {
       $nids = \Drupal::entityQuery('node')
       ->condition('type', $contentType)
+      ->accessCheck()
       ->execute();
   
       $languages = ['es','fil','zh-hant'];

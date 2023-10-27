@@ -11,10 +11,10 @@ use Drupal\sfgov_utilities\Migration\FieldMigration\TopLevelFieldMigration;
  * Create media entities for existing profile field_photo_images and assign to new field_profile_photo media entity reference
  */
 function sfgov_utilities_deploy_00_profile_photos() {
-  $nids = \Drupal::entityQuery('node')->condition('type','person')->execute();
+  $nids = \Drupal::entityQuery('node')->condition('type','person')->accessCheck()->execute();
   $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
 
-  $mediaIds = \Drupal::entityQuery('media')->condition('bundle', 'image')->execute();
+  $mediaIds = \Drupal::entityQuery('media')->condition('bundle', 'image')->accessCheck()->execute();
   $mediaImages = Media::loadMultiple($mediaIds);
   $mediaFileNames = [];
 
@@ -186,7 +186,7 @@ function sfgov_utilities_deploy_02_content_type_profile_group() {
   foreach ($contentTypes as $contentType) {
     $bundle = $contentType["bundle"];
     $fieldName = $contentType["field_name"];
-    $nids = \Drupal::entityQuery('node')->condition('type', $bundle)->execute();
+    $nids = \Drupal::entityQuery('node')->condition('type', $bundle)->accessCheck()->execute();
     $nodes = Node::loadMultiple($nids);
     foreach($nodes as $node) {
       echo "processing " . $bundle . ":" . $node->getTitle() . "(" . $node->id() . ")\n";
@@ -278,7 +278,7 @@ function sfgov_utilities_deploy_05_dept_page_about() {
   $user = reset($users);
   $user_id = $user->id();
   
-  $nids = \Drupal::entityQuery('node')->condition('type','department')->execute();
+  $nids = \Drupal::entityQuery('node')->condition('type','department')->accessCheck()->execute();
   $nodes = Node::loadMultiple($nids);
   
   foreach($nodes as $node) {
