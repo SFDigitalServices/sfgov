@@ -345,7 +345,7 @@ function sfgovpl_preprocess_node__report__full(&$variables) {
   $variables['print_version_url'] = NULL;
   if ($node->hasField('field_print_version') && ($media_entities = $node->field_print_version->referencedEntities())) {
     $media = reset($media_entities);
-    $variables['print_version_url'] = file_create_url($media->field_media_file->entity->getFileUri());
+    $variables['print_version_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($media->field_media_file->entity->getFileUri());
     $variables['print_version_label'] = $media->label();
   }
 }
@@ -640,7 +640,7 @@ function public_body_page_fields($node) {
                 $title = $resource->get('title')->value;
                 $description = $resource->get('field_description')
                   ? $resource->field_description->value
-                  : render($resource->get('field_description')->value);
+                  : \Drupal::service('renderer')->render($resource->get('field_description')->value);
               }
             } else if($otherInfoContent->getType() == 'resource_node') {
               $node_storage = \Drupal::entityTypeManager()->getStorage('node');
@@ -650,7 +650,7 @@ function public_body_page_fields($node) {
                 $id = $node->id();
                 $description = '';
                 if($node->hasField('field_description')) {
-                  $description = $node->get('field_description') ? $node->field_description->value : render($node->get('field_description')->value);
+                  $description = $node->get('field_description') ? $node->field_description->value : \Drupal::service('renderer')->render($node->get('field_description')->value);
                 }
                 $title = $node->getTitle();
                 $url = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
@@ -676,7 +676,7 @@ function public_body_page_fields($node) {
           foreach ($otherInfoParagraph->field_file as $value) {
             $theFields['other_info'][$otherInfoKey]['content'][] = [
               'label' => !empty($value->entity) ? $value->entity->label() : '',
-              'url' => !empty($value->entity->field_media_file->entity) ? file_create_url($value->entity->field_media_file->entity->getFileUri()) : NULL,
+              'url' => !empty($value->entity->field_media_file->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($value->entity->field_media_file->entity->getFileUri()) : NULL,
               'link' => !empty($value->entity->field_document_url->uri) ? Url::fromUri($value->entity->field_document_url->uri)->toString() : NULL,
             ];
           }
@@ -733,7 +733,7 @@ function profile_page_fields($node) {
           $deptId = $node->get('field_city_department')->getValue() ? $node->get('field_city_department')->getValue()[0]['target_id'] : null;
           if($deptId) {
             // Get department address id
-            $dept_node =  \Drupal\node\Entity\Node::load(intval($deptId));
+            $dept_node =  Node::load(intval($deptId));
             if(!empty($dept_node)) {
               $addressId = $dept_node->get('field_address')->getValue() ? $dept_node->get('field_address')->getValue()[0]['target_id'] : null;
               if($addressId) {
@@ -838,7 +838,7 @@ function sfgovpl_profile_reference_nodes($ref_nids, $reftype, $nid) {
 
   // Build department data for profile page
   foreach($ref_nids as $key => $value) {
-    $node =  \Drupal\node\Entity\Node::load(intval($value['entity_id']));
+    $node =  Node::load(intval($value['entity_id']));
     $node = $node->hasTranslation($currentLanguage) ? $node->getTranslation($currentLanguage) : $node;
     $ref_data[$key]['profile']['node_title'] = $node->label();
     $ref_data[$key]['profile']['node_url'] = $node->toUrl()->toString();
