@@ -8,6 +8,8 @@ rm -rf \
   web/modules/custom/*/node_modules \
   web/themes/custom/*/node_modules
 
+terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
+
 target_env="$TERMINUS_SITE.$TERMINUS_ENV"
 source_env="$TERMINUS_SITE.dev"
 # check if the $TERMINUS_ENV already exists.  if it does, don't clone the content
