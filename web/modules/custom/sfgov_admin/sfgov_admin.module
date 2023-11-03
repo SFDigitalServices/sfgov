@@ -573,10 +573,10 @@ function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $f
 
     // Query nodes
     $storage_d = \Drupal::entityTypeManager()->getStorage('node');
-    $nids_d = $storage_d->getQuery();
+    $nids_d = $storage_d->getQuery()->accessCheck();
 
     $storage_t = \Drupal::entityTypeManager()->getStorage('node');
-    $nids_t = $storage_t->getQuery();
+    $nids_t = $storage_t->getQuery()->accessCheck();
 
     // Gather published department nodes and sort by title
     $nids_dept = $nids_d->condition('type', 'department')
@@ -643,7 +643,7 @@ function sfgov_admin_form_views_exposed_form_alter(&$form, FormStateInterface $f
  */
 function sfgov_admin_form_node_topic_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   $topicId = $form_state->getFormObject()->getEntity()->id();
-  $topicNids = \Drupal::entityQuery('node')->condition('type','topic')->execute();
+  $topicNids = \Drupal::entityQuery('node')->accessCheck()->condition('type','topic')->execute();
   $topicNodes = \Drupal\node\Entity\Node::loadMultiple($topicNids);
   $childTopics = null;
   $foundAsChild = false;

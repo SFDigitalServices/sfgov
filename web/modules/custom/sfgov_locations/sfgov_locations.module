@@ -74,7 +74,7 @@ function sfgov_locations_form_views_exposed_form_alter(&$form, FormStateInterfac
 
       // Query list of Departments, sorted by Title.
       $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
-      $nids = $storage->getQuery();
+      $nids = $storage->getQuery()->accessCheck();
       $nids = $nids->condition('type', 'department')
         ->condition('status', 1)
         ->sort('title')

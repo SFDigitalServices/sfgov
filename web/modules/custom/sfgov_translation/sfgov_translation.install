@@ -12,7 +12,7 @@ function sfgov_translation_update_9401() {
     $entity_type = $definition_update_manager->getEntityType('node');
 
     // Get fields definition from the scheduler module.
-    \Drupal::module_handler()->loadInclude('module', 'sfgov_translation');
+    \Drupal::module_handler()->loadInclude('sfgov_translation', 'module');
     $fields = sfgov_translation_entity_base_field_info($entity_type);
 
     foreach ($fields as $field_name => $field_definition) {

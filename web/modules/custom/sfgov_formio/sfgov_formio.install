@@ -11,7 +11,7 @@ use Drupal\node\Entity\Node;
  * Migrate old formio translations and phrase translations into the new system.
  */
 function sfgov_formio_update_9001(&$sandbox) {
-  $nids = \Drupal::entityQuery('node')->condition('type', 'form_page')->execute();
+  $nids = \Drupal::entityQuery('node')->accessCheck()->condition('type', 'form_page')->execute();
   $form_nodes = Node::loadMultiple($nids);
 
   $needs_drupal_update = [];
