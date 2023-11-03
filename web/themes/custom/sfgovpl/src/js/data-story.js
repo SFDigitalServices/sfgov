@@ -1,4 +1,4 @@
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, once) {
   Drupal.behaviors.dataStory = {
     attach (context, settings) {
       const $toc = $('.sfgov-toc', context)
@@ -33,16 +33,18 @@
       $(window, context).on('load', () => {
         let then = 0
         let now = 0
-        $(window, context).once('scroll-toc').on('scroll', () => {
-          now = $(window, context).scrollTop()
-          if (then > now && now > 700) {
-            $sticky.addClass('show')
-          }
-          else {
-            $sticky.removeClass('show')
-          }
-          then = now
-        })
+        if (once('scroll-toc', 'html').length) {
+          $(window).on('scroll', () => {
+            now = $(window, context).scrollTop()
+            if (then > now && now > 700) {
+              $sticky.addClass('show')
+            }
+            else {
+              $sticky.removeClass('show')
+            }
+            then = now
+          })
+        }
       })
 
       const $anchors = $toc.find('a')
@@ -125,4 +127,4 @@
       })
     }
   }
-})(jQuery, Drupal, drupalSettings)
+})(jQuery, Drupal, drupalSettings, once)

@@ -1,4 +1,4 @@
-(function ($, window, Drupal) {
+(function ($, window, Drupal, once) {
   Drupal.behaviors.meetings = {
     attach (context) {
       const $form = $('.sfgov-filters form')
@@ -17,8 +17,8 @@
       $('[data-filter-toggle-content]', context).each(function () {
         const $content = $(this)
 
-        $buttonShow.insertBefore($form).once()
-        $buttonHide.insertAfter($form).once()
+        once('button-show', $buttonShow.insertBefore($form))
+        once('button-hide', $buttonHide.insertAfter($form).once())
 
         // Handle click events.
         $buttonHide.on('click', e => {
@@ -93,4 +93,4 @@
       }
     }
   }
-})(jQuery, window, Drupal)
+})(jQuery, window, Drupal, once)

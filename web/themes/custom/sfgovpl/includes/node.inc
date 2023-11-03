@@ -247,6 +247,7 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
   // First, we get the latest version of any subsection paragraphs
   // that reference back to this data story node.
   $data_subsections = $paragraph_manager->getQuery()
+    ->accessCheck()
     ->latestRevision()
     ->exists('field_data_story')
     ->condition('langcode', $lang)
@@ -260,6 +261,7 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
     // Next, we get the latest version of any section paragraphs that reference
     // (are the parent of) the subsections we found above.
     $data_sections = $paragraph_manager->getQuery()
+      ->accessCheck()
       ->latestRevision()
       ->exists('field_content')
       ->condition('langcode', $lang)
@@ -271,6 +273,7 @@ function sfgovpl_preprocess_node__data_story__full(&$variables) {
       // Next, we get that resource nodes that are the parent of the sections we
       // found above.
       $resource_nodes = $node_manager->getQuery()
+        ->accessCheck()
         ->latestRevision()
         ->exists('field_paragraphs')
         ->condition('langcode', $lang)

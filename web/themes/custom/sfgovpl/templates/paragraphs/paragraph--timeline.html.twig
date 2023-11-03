@@ -48,11 +48,13 @@
 %}
 
 {% set counter = 0 %}
-{% for key, item in content.field_timeline_item['#items'] if key|first != '#' %}
-  {% set counter = counter + 1 %}
+{% for key, item in content.field_timeline_item['#items'] %}
+  {% if key|first != '#' %}
+    {% set counter = counter + 1 %}
+  {% endif %}
 {% endfor %}
 
-{% spaceless %}
+{% apply spaceless %}
 {% block paragraph %}
 <div class="paragraph-timeline">
     
@@ -72,4 +74,4 @@
   </div>
 </div>
 {% endblock paragraph %}
-{% endspaceless %}
+{% endapply %}

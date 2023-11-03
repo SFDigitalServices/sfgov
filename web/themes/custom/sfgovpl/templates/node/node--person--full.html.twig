@@ -182,22 +182,24 @@
               <div class="sfgov-contact-section phone">
                 <label>{{ 'Phone'|t }}</label>
 
-                {% for key, item in node.field_city_department[0].entity.field_phone_numbers if key|first != '#'%}
-                  <div class="phone-wrapper">
-                    {% if item.entity.field_tel.value %}
-                      <div class="phone-title">
-                        {{ item.entity.field_owner.value|raw }}
-                      </div>
-                      <div class="phone-number">
-                        <a href="tel:+{{ item.entity.field_tel.value|raw }}">
-                          {{ item.entity.field_tel.value|raw }}
-                        </a>
-                      </div>
-                      <div class="phone-desc">
-                        {{ item.entity.field_text.value|raw }}
-                      </div>
-                    {% endif %}
-                  </div>
+                {% for key, item in node.field_city_department[0].entity.field_phone_numbers %}
+                  {% if key|first != '#' %}
+                    <div class="phone-wrapper">
+                      {% if item.entity.field_tel.value %}
+                        <div class="phone-title">
+                          {{ item.entity.field_owner.value|raw }}
+                        </div>
+                        <div class="phone-number">
+                          <a href="tel:+{{ item.entity.field_tel.value|raw }}">
+                            {{ item.entity.field_tel.value|raw }}
+                          </a>
+                        </div>
+                        <div class="phone-desc">
+                          {{ item.entity.field_text.value|raw }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 {% endfor %}
 
                 {% if content.field_phone_numbers %}
@@ -213,19 +215,21 @@
               <div class="sfgov-contact-section email">
                 <label>{{ 'Email'|t }}</label>
 
-                {% for key, item in node.field_city_department[0].entity.field_email if key|first != '#'%}
-                  <div class="email-wrapper">
-                    {% if item.entity.field_email.value %}
-                      <div class="email-title">
-                        {{ item.entity.field_title.value|raw }}
-                      </div>
-                      <div class="email-email">
-                        <a href="mailto:{{ node.field_city_department[0].entity.field_email[0].entity.field_email.value|raw }}">
-                          {{ item.entity.field_email.value|raw }}
-                        </a>
-                      </div>
-                    {% endif %}
-                  </div>
+                {% for key, item in node.field_city_department[0].entity.field_email %}
+                  {% if key|first != '#' %}
+                    <div class="email-wrapper">
+                      {% if item.entity.field_email.value %}
+                        <div class="email-title">
+                          {{ item.entity.field_title.value|raw }}
+                        </div>
+                        <div class="email-email">
+                          <a href="mailto:{{ node.field_city_department[0].entity.field_email[0].entity.field_email.value|raw }}">
+                            {{ item.entity.field_email.value|raw }}
+                          </a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 {% endfor %}
 
                 {% if content.field_email %}

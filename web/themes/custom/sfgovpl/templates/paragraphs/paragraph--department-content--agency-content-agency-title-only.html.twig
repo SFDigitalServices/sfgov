@@ -49,7 +49,9 @@
 {% block paragraph %}
   {% set items = content.field_department %}
   
-  {% for key, item in items if key|first != '#' %}
-    <a class="text-inherit" href="{{ item["#url"] }}">{{ item["#title"] }}</a>
+  {% for key, item in items %}
+    {% if key|first != '#' %}
+      <a class="text-inherit" href="{{ item["#url"] }}">{{ item["#title"] }}</a>
+    {% endif %}
   {% endfor %}
 {% endblock paragraph %}
