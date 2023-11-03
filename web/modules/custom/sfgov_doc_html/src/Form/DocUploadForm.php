@@ -166,16 +166,16 @@ class DocUploadForm extends FormBase {
           if ($file = File::load($fid)) {
             $tag->setAttribute('data-entity-type', 'file');
             $tag->setAttribute('data-entity-uuid', $file->uuid());
-            $tag->setAttribute('src', file_url_transform_relative(file_create_url($file->getFileUri())));
+            $tag->setAttribute('src', \Drupal::service('file_url_generator')->generateString($file->getFileUri()));
             $imageFound = TRUE;
           }
           else {
             $directory = 'public://inline-images/' . date("Y-m") . '/';
             \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-            if ($file = file_save_data(base64_decode($base64),  $directory . uniqid() . '.' . $ext)) {
+            if ($file = \Drupal::service('file.repository')->writeData(base64_decode($base64), $directory . uniqid() . '.' . $ext)) {
               $tag->setAttribute('data-entity-type', 'file');
               $tag->setAttribute('data-entity-uuid', $file->uuid());
-              $tag->setAttribute('src', file_url_transform_relative(file_create_url($file->getFileUri())));
+              $tag->setAttribute('src', \Drupal::service('file_url_generator')->generateString($file->getFileUri()));
               \Drupal::database()
                 ->insert('sfgov_doc_html_images')
                 ->fields([
