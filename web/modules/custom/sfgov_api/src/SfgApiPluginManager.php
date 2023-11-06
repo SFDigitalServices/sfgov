@@ -34,4 +34,52 @@ class SfgApiPluginManager extends DefaultPluginManager {
     $this->setCacheBackend($cache_backend, 'sfgov_api_plugins');
   }
 
+  /**
+   * Fetch the data from the plugin.
+   *
+   * @param string $plugin_label
+   *   The plugin label.
+   * @param string $langcode
+   *   The language code.
+   * @param int $entity_id
+   *   The entity id.
+   */
+  public function fetchJsonData($plugin_label, $langcode, $entity_id = NULL) {
+    $plugin = $this->createInstance($plugin_label, [
+      'langcode' => $langcode,
+      'entity_id' => $entity_id,
+    ]);
+    $entities = $plugin->getEntitiesList();
+    if (!empty($entities)) {
+      $prepared_data = $plugin->renderEntities($entities);
+    }
+    else {
+      $prepared_data = [];
+    }
+    return $prepared_data;
+  }
+
+  /**
+   * Validate that the plugin exists.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The bundle.
+   *
+   * @return string|bool
+   *   The plugin label or FALSE.
+   */
+  public function validatePlugin($entity_type, $bundle) {
+    $available_plugins = $this->getDefinitions();
+    $plugin_label = "{$entity_type}_{$bundle}";
+
+    if (in_array($plugin_label, array_keys($available_plugins))) {
+      return $plugin_label;
+    }
+    else {
+      return FALSE;
+    }
+  }
+
 }

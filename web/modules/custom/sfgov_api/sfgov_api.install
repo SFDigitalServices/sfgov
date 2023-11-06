@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Sfgov API module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function sfgov_api_schema() {
+  $languages = \Drupal::languageManager()->getLanguages();
+  $schemas = [];
+
+  $schemas['drupal_wagtail_id_map'] = [
+    'description' => 'Drupal to Wagtail Id map',
+    'fields' => [
+      'drupal_id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The Drupal ID.',
+      ],
+    ],
+    'primary key' => ['drupal_id'],
+    'unique keys' => [
+      'drupal_id' => ['drupal_id'],
+    ],
+  ];
+
+  foreach ($languages as $language) {
+    $table_label = 'wagtail_id_' . $language->getId();
+    $schemas['drupal_wagtail_id_map']['fields'][$table_label] = [
+      'type' => 'varchar',
+      'length' => 255,
+    ];
+    $status_label = $table_label . '_error';
+    $schemas['drupal_wagtail_id_map']['fields'][$status_label] = [
+      'type' => 'varchar',
+      'length' => 255,
+    ];
+  }
+
+  $schemas['drupal_wagtail_errors'] = [
+    'description' => 'Errors in the wagtail migration',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'drupal_id' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The Drupal ID.',
+      ],
+      'type' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The type of error.',
+      ],
+      'langcode' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The language code.',
+      ],
+      'message' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'The error message.',
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schemas;
+}
+
+/**
+ * Implements hook_install().
+ */
+function sfgov_api_install() {
+  $schemas = sfgov_api_schema();
+  $connection = \Drupal::database();
+
+  foreach ($schemas as $table_name => $schema) {
+    if (!$connection->schema()->tableExists($table_name)) {
+      $connection->schema()->createTable($table_name, $schema);
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function sfgov_api_uninstall() {
+  $schemas = sfgov_api_schema();
+  $connection = \Drupal::database();
+
+  foreach (array_keys($schemas) as $table_name) {
+    $connection->schema()->dropTable($table_name);
+  }
+}

@@ -14,13 +14,15 @@ trait ApiFieldHelperTrait {
    *
    * @param array $entities
    *   An array of entities.
+   * @param string $wag_entity_type
+   *   The wagtail entity type.
    * @param bool $reference_only
    *   Whether to return only the reference data or the full entity data.
    *
    * @return array
    *   An array of entity data.
    */
-  public function getReferencedData(array $entities, $reference_only = FALSE) {
+  public function getReferencedData(array $entities, $wag_entity_type, $reference_only = FALSE) {
     $entities_data = [];
 
     foreach ($entities as $entity) {
@@ -30,6 +32,7 @@ trait ApiFieldHelperTrait {
 
       if ($reference_only) {
         $entities_data[] = [
+          'is_reference' => TRUE,
           'drupal_id' => $entity->id(),
           'entity_type' => $entity_type,
           'bundle' => $bundle,
@@ -61,7 +64,10 @@ trait ApiFieldHelperTrait {
           $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
             'langcode' => $langcode,
           ]);
-          $entities_data = array_merge($entities_data, $plugin->renderEntities([$entity]));
+          $entities_data[] = [
+            'type' => $wag_entity_type,
+            'value' => $plugin->renderEntity($entity),
+          ];
         }
         else {
           $entities_data[] = 'Error: no available plugins for this entity';
@@ -84,6 +90,26 @@ trait ApiFieldHelperTrait {
   public function getWagtailTime($timestamp) {
     $drupal_datetime = DrupalDateTime::createFromTimestamp($timestamp);
     return $drupal_datetime->format('Y-m-d\TH:i:s.uP');
+  }
+
+  /**
+   * Generate a random slug for testing (delete this later).
+   *
+   * @param int $length
+   *   The length of the slug.
+   *
+   * @return string
+   *   The random slug.
+   */
+  public function generateRandomSlug($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $random_slug = '';
+
+    for ($i = 0; $i < $length; $i++) {
+      $random_slug .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    return $random_slug;
   }
 
 }
