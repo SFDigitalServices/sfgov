@@ -9,6 +9,7 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
  *   id = "paragraph_cost",
  *   title = @Translation("Paragraph Cost"),
  *   bundle = "cost",
+ *   wag_bundle = "cost",
  *   entity_id = {},
  *   langcode = {},
  * )
@@ -21,11 +22,13 @@ class Cost extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     // @todo change field names (key) to what wagtail expects.
     return [
-      'field_text' => $entity->get('field_text')->value,
-      'field_cost_type' => $entity->get('field_cost_type')->value,
-      'field_cost_flat_fee' => $entity->get('field_cost_flat_fee')->value,
-      'field_cost_maximum' => $entity->get('field_cost_maximum')->value,
-      'field_cost_minimum' => $entity->get('field_cost_minimum')->value,
+      'description' => $entity->get('field_text')->value,
+      'cost' => $entity->get('field_cost_type')->value,
+      'flat_fee' => $entity->get('field_cost_flat_fee')->value,
+      'range' => [
+        'maximum' => $entity->get('field_cost_maximum')->value,
+        'minimum' => $entity->get('field_cost_minimum')->value,
+      ],
     ];
   }
 

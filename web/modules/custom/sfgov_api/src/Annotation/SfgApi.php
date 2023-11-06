@@ -35,6 +35,13 @@ class SfgApi extends Plugin {
   public $bundle;
 
   /**
+   * The wagtail bundle this will migrate into.
+   *
+   * @var string
+   */
+  public $wag_bundle;
+
+  /**
    * The entity ID being queried.
    *
    * @var string

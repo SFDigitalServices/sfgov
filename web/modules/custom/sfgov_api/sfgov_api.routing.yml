@@ -1,11 +1,19 @@
-sfgov_api.entity:
+sfgov_api.api_viewer:
   path: '/sfgov-api/entity/{langcode}/{entity_type}/{bundle}/{entity_id}'
   defaults:
-    _title: 'entity'
-    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::fetchEntityData'
+    _title: 'View entity data'
+    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewEntityData'
     langcode: 'en'
     entity_type: ''
     bundle: ''
     entity_id: ''
+  requirements:
+    _permission: 'administer site configuration'
+
+sfgov_api.wagtail_api_credentials:
+  path: '/admin/config/system/wagtail-api-credentials'
+  defaults:
+    _title: 'Wagtail api credentials'
+    _form: 'Drupal\sfgov_api\Form\WagtailApiCredentialsForm'
   requirements:
     _permission: 'administer site configuration'

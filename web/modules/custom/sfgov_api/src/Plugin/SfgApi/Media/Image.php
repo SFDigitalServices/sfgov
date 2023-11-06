@@ -11,6 +11,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "media_image",
  *   title = @Translation("Media image"),
  *   bundle = "image",
+ *   wag_bundle = "image",
  *   entity_id = {},
  *   langcode = {},
  * )

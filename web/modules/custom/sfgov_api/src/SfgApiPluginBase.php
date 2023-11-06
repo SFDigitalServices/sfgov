@@ -24,6 +24,13 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   }
 
   /**
+   * Get the wagtail bundle value.
+   */
+  public function getWagBundle() {
+    return (string) $this->pluginDefinition['wag_bundle'];
+  }
+
+  /**
    * Get the langcode value.
    */
   public function getLangcode() {
@@ -53,30 +60,56 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
    * @return array
    *   The prepared data.
    */
-  public function renderEntities(array $entities) {
+  public function renderEntities($entities) {
     $data = [];
-    foreach ($entities as $entity) {
-      $drupal_data = [
-        'drupal_data' => [
-          'drupal_id' => $entity->id(),
-          'entity_type' => $this->entityType,
-          'bundle' => $this->getBundle(),
-        ],
-      ];
-      // Set in the corresponding entity base plugin.
-      $base_data = $this->setBaseData($entity);
-      // Set in the corresponding bundle plugin.
-      $custom_data = $this->setCustomData($entity);
-      $data[] = array_merge($drupal_data, $base_data, $custom_data);
 
-      // @todo this limit is here because some queries end up being too big
-      // figure out pagination or some other solution.
-      if (count($data) > 20) {
+    foreach ($entities as $entity) {
+      $data[] = $this->renderEntity($entity);
+      // If the page attempts to display too many entities it might not load.
+      if (count($data) > 30) {
         break;
       }
     }
 
     return $data;
+  }
+
+  /**
+   * Prepare an individual entity's data for the API.
+   *
+   * @param EntityInterface $entity
+   *   The entity.
+   *
+   * @return array
+   *   The prepared data.
+   */
+  public function renderEntity($entity) {
+    $drupal_data = [
+      'drupal_data' => [
+        'drupal_id' => $entity->id(),
+        'entity_type' => $this->entityType,
+        'bundle' => $this->getBundle(),
+        'langcode' => $this->getLangcode(),
+        'translations' => array_keys($entity->getTranslationLanguages()),
+      ],
+    ];
+    if ($entity->hasTranslation($this->configuration['langcode'])) {
+      $entity = $entity->getTranslation($this->configuration['langcode']);
+      // Set in the corresponding entity base plugin.
+      $base_data = $this->setBaseData($entity);
+      // Set in the corresponding bundle plugin.
+      $custom_data = $this->setCustomData($entity);
+    }
+    else {
+      $base_data = [
+        'error' => [
+          'type' => 'no translation',
+          'message' => 'no translation found of ' . $entity->getType() . ':' . $entity->id() . ' in langcode ' . $this->configuration['langcode'],
+        ],
+      ];
+      $custom_data = [];
+    }
+    return array_merge($drupal_data, $base_data, $custom_data);
   }
 
   /**
@@ -86,7 +119,7 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
    *   The prepared data.
    */
   public function getEntitiesList() {
-    return $this->getEntities($this->entityType, $this->getBundle(), $this->getLangcode(), $this->getEntityId());
+    return $this->getEntities($this->entityType, $this->getBundle(), $this->getEntityId());
   }
 
   /**
@@ -96,16 +129,13 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
    *   The entity type.
    * @param string $bundle
    *   The bundle.
-   * @param string $langcode
-   *   The langcode, defaults to 'en'.
    * @param string $entity_id
    *   The entity id (optional).
    *
    * @return array
    *   An array of entities.
    */
-  public function getEntities($entity_type, $bundle, $langcode, $entity_id = NULL) {
-    $entities = [];
+  public function getEntities($entity_type, $bundle, $entity_id = NULL) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_storage = $entity_type_manager->getStorage($entity_type);
     $entity_definition = $entity_type_manager->getDefinition($entity_type);
@@ -120,21 +150,7 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     }
 
     $ids = $query->execute();
-    $entities = $entity_storage->loadMultiple($ids);
-
-    // If the langcode is not 'en', get the translation for each entity. Remove
-    // any entities that do not have a translation.
-    if ($langcode != 'en') {
-      foreach ($entities as $key => $entity) {
-        if ($entity->hasTranslation($langcode)) {
-          $entities[$key] = $entity->getTranslation($langcode);
-        }
-        else {
-          unset($entities[$key]);
-        }
-      }
-    }
-    return $entities;
+    return $entity_storage->loadMultiple($ids);
   }
 
 }

@@ -11,6 +11,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "paragraph_process_step",
  *   title = @Translation("Paragraph Process Step"),
  *   bundle = "process_step",
+ *   wag_bundle = "cost",
  *   entity_id = {},
  *   langcode = {},
  * )
@@ -23,15 +24,14 @@ class ProcessStep extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    // @todo change field names (key) to what wagtail expects.
     return [
-      'field_cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
-      'field_process_optional' => $entity->get('field_process_optional')->value,
-      'field_process_step_description' => $entity->get('field_process_step_description')->value,
-      'field_process_step_type' => $entity->get('field_process_step_type')->value,
-      'field_text_time' => $entity->get('field_text_time')->value,
-      'field_title' => $entity->get('field_title')->value,
-      'field_transaction' => $this->getReferencedData($entity->get('field_transaction')->referencedEntities(), TRUE),
+      'step_type' => $entity->get('field_process_step_type')->value,
+      'title' => $entity->get('field_title')->value,
+      'optional' => $entity->get('field_process_optional')->value,
+      'time' => $entity->get('field_text_time')->value,
+      'step_description' => $entity->get('field_process_step_description')->value,
+      'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities(), 'cost'),
+      // 'related_content_transactions' => $this->getReferencedData($entity->get('field_transaction')->referencedEntities(), TRUE),
     ];
   }
 
