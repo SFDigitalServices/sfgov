@@ -37,26 +37,27 @@
     </div>
     {% endif %}
 
-    {% set events_view = drupal_view('events', 'events_block_topics', node.id)|render %}
-    {% set has_events = drupal_view_result('events', 'events_block_topics', node.id) %}
-    {% set has_past_events = drupal_view_result('events', 'page_5', node.id) %}
-    {% set event_heading = 'Events'|t({}, {'context' : 'Topic template 1 event section heading'})  %}
-    {% if has_events is empty and has_past_events is not empty%}
-      <div class="sfgov-full-bleed white card-container">
-        <div class="sfgov-section-container">
-          <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ event_heading }}</h2>
-          <p>There are no upcoming events right now.</p>
-          <br>
-          {{ events_view }}
-        </div>
+{% set events_view = drupal_view('events', 'block_1', node.id)|render %}
+  {% set has_events = drupal_view_result('events', 'block_1', node.id) %}
+  {% set has_past_events = drupal_view_result('events', 'page_6', node.id) %}
+  {% set event_heading = 'Events'|t({}, {'context' : 'Agency event section heading'})  %}
+  {% if has_events is empty and has_past_events is empty%}
+  {% elseif has_events is empty and has_past_events is not empty%}
+    <div class="odd:bg-grey-1 py-40 lg:py-60">
+      <div class="responsive-container">
+        <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ event_heading }}</h2>
+        <p>There are no upcoming events right now.</p>
+        <br>
+        {{ events_view }}
       </div>
-    {% elseif has_events is not empty %}
-      <div class="sfgov-full-bleed white card-container">
-        <div class="sfgov-section-container">
-          {{ events_view }}
-        </div>
+    </div>
+  {% elseif has_events is not empty %}
+    <div class="odd:bg-grey-1 py-40 lg:py-60">
+      <div class="responsive-container">
+        {{ events_view }}
       </div>
-    {% endif %}
+    </div>
+  {% endif %}
 
     {% if content.field_content['#items'] %}
       <div class="sfgov-full-bleed card-container">
