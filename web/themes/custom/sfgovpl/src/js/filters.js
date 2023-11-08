@@ -93,4 +93,4 @@
       }
     }
   }
-})(jQuery, window, Drupal, once)
+})(jQuery, window, Drupal)

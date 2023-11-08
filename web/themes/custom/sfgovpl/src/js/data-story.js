@@ -127,4 +127,4 @@
       })
     }
   }
-})(jQuery, Drupal, drupalSettings, once)
+})(jQuery, Drupal, drupalSettings)
