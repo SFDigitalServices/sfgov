@@ -202,6 +202,15 @@ function sfgovpl_preprocess_views_view__events__block_1(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_views_view()
+ *
+ * Adds a twig template variable for past events
+ */
+function sfgovpl_preprocess_views_view__events__events_block_topics(&$variables) {
+  $variables['empty']['display_link']['#options']['attributes']['class'][] = 'btn';
+}
+
+/**
  * Get a count of upcoming events.
  *
  * Can get a count of all events, or a count filtered by a topic or department.

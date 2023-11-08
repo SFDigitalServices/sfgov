@@ -45,9 +45,9 @@
     </div>
     {% endif %}
 
-{% set events_view = drupal_view('events', 'block_1', node.id)|render %}
-  {% set has_events = drupal_view_result('events', 'block_1', node.id) %}
-  {% set has_past_events = drupal_view_result('events', 'page_6', node.id) %}
+  {% set events_view = drupal_view('events', 'events_block_topics', node.id)|render %}
+  {% set has_events = drupal_view_result('events', 'events_block_topics', node.id) %}
+  {% set has_past_events = drupal_view_result('events', 'page_5', node.id) %}
   {% set event_heading = 'Events'|t({}, {'context' : 'Agency event section heading'})  %}
   {% if has_events is empty and has_past_events is empty%}
   {% elseif has_events is empty and has_past_events is not empty%}
