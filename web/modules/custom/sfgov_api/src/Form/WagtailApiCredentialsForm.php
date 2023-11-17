@@ -76,6 +76,8 @@ class WagtailApiCredentialsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Manually assemble a URL base for the API and store it with the config.
+    $api_url_base = 'http://' . $form_state->getValue('host_ip') . ':' . $form_state->getValue('port') . '/api/cms/';
     $this->config('sfgov_api.settings')
       ->set('username', $form_state->getValue('username'))
       ->set('password', $form_state->getValue('password'))
@@ -85,6 +87,7 @@ class WagtailApiCredentialsForm extends ConfigFormBase {
       ->set('wag_parent_es', $form_state->getValue('wag_parent_es'))
       ->set('wag_parent_fil', $form_state->getValue('wag_parent_fil'))
       ->set('wag_parent_zh_hant', $form_state->getValue('wag_parent_zh_hant'))
+      ->set('api_url_base', $api_url_base)
       ->save();
     parent::submitForm($form, $form_state);
   }
