@@ -35,7 +35,7 @@ class SfgApiPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Fetch the data from the plugin.
+   * Fetch the payload from the plugin.
    *
    * @param string $plugin_label
    *   The plugin label.
@@ -44,19 +44,13 @@ class SfgApiPluginManager extends DefaultPluginManager {
    * @param int $entity_id
    *   The entity id.
    */
-  public function fetchJsonData($plugin_label, $langcode, $entity_id = NULL) {
+  public function fetchPayload($plugin_label, $langcode, $entity_id) {
     $plugin = $this->createInstance($plugin_label, [
       'langcode' => $langcode,
       'entity_id' => $entity_id,
     ]);
-    $entities = $plugin->getEntitiesList();
-    if (!empty($entities)) {
-      $prepared_data = $plugin->renderEntities($entities);
-    }
-    else {
-      $prepared_data = [];
-    }
-    return $prepared_data;
+    $payload = $plugin->getPayload();
+    return $payload;
   }
 
   /**

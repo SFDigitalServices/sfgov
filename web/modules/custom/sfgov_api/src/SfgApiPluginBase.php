@@ -3,11 +3,16 @@
 namespace Drupal\sfgov_api;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\sfgov_api\Payload\Payload;
 
 /**
  * Base class for sfgov_api plugins.
  */
 abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type.
@@ -15,6 +20,57 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
    * @var string
    */
   protected $entityType;
+
+  /**
+   * The plugin errors.
+   *
+   * @var array
+   */
+  protected $pluginErrors = [];
+
+  /**
+   * The payload.
+   *
+   * @var \Drupal\sfgov_api\Payload\Payload
+   */
+  protected $payload;
+
+  /**
+   * The entity.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $entity;
+
+  /**
+   * Constructs a new SfgApiPluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entity = $this->setEntity();
+    $this->payload = $this->setPayload();
+  }
+
+  /**
+   * Get the payload value.
+   */
+  public function getPayload() {
+    return $this->payload;
+  }
+
+  /**
+   * Get the entity value.
+   */
+  public function getEntity() {
+    return $this->entity;
+  }
 
   /**
    * Get the bundle value.
@@ -47,110 +103,80 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   /**
    * Set BaseData for the prepareData function.
    */
-  abstract public function setBaseData($entity);
+  abstract public function setBaseData(EntityInterface $entity);
 
   /**
    * Set CustomData for the prepareData function.
    */
-  abstract public function setCustomData($entity);
+  abstract public function setCustomData(EntityInterface $entity);
 
   /**
-   * Prepare the data for the API.
-   *
-   * @return array
-   *   The prepared data.
+   * Set the entity being processed and return errors if it doesn't exist.
    */
-  public function renderEntities($entities) {
-    $data = [];
+  public function setEntity() {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_storage = $entity_type_manager->getStorage($this->entityType);
+    $entity = $entity_storage->load($this->getEntityId());
+    $requested_langcode = $this->getLangcode();
 
-    foreach ($entities as $entity) {
-      $data[] = $this->renderEntity($entity);
-      // If the page attempts to display too many entities it might not load.
-      if (count($data) > 30) {
-        break;
-      }
+    // Make sure the entity actually exists.
+    if (!$entity) {
+      $message = $this->t('No @entity_type of type @bundle with ID @id found.', [
+        '@entity_type' => $this->entityType,
+        '@bundle' => $this->getBundle(),
+        '@id' => $this->getEntityId(),
+      ]);
+      $this->addPluginError('No entity', $message);
+      $entity = NULL;
     }
-
-    return $data;
-  }
-
-  /**
-   * Prepare an individual entity's data for the API.
-   *
-   * @param EntityInterface $entity
-   *   The entity.
-   *
-   * @return array
-   *   The prepared data.
-   */
-  public function renderEntity($entity) {
-    $drupal_data = [
-      'drupal_data' => [
-        'drupal_id' => $entity->id(),
-        'entity_type' => $this->entityType,
-        'bundle' => $this->getBundle(),
-        'langcode' => $this->getLangcode(),
-        'translations' => array_keys($entity->getTranslationLanguages()),
-      ],
-    ];
-    if ($entity->hasTranslation($this->configuration['langcode'])) {
-      $entity = $entity->getTranslation($this->configuration['langcode']);
-      // Set in the corresponding entity base plugin.
-      $base_data = $this->setBaseData($entity);
-      // Set in the corresponding bundle plugin.
-      $custom_data = $this->setCustomData($entity);
+    // Make sure the entity exists in that language.
+    elseif (!$entity->hasTranslation($requested_langcode)) {
+      $message = $this->t('No @entity_type of type @bundle with ID @id in langcode @langcode found.', [
+        '@entity_type' => $entity->getEntityTypeId(),
+        '@bundle' => $entity->bundle(),
+        '@id' => $entity->id(),
+        '@langcode' => $requested_langcode,
+      ]);
+      $this->addPluginError('No translation', $message);
+      // Leave entity at the english version for error processing.
     }
     else {
-      $base_data = [
-        'error' => [
-          'type' => 'no translation',
-          'message' => 'no translation found of ' . $entity->getType() . ':' . $entity->id() . ' in langcode ' . $this->configuration['langcode'],
-        ],
-      ];
-      $custom_data = [];
+      $entity = $entity->getTranslation($requested_langcode);
     }
-    return array_merge($drupal_data, $base_data, $custom_data);
+    return $this->entity = $entity;
   }
 
   /**
-   * Send a list of entities.
-   *
-   * @return array
-   *   The prepared data.
+   * Set the payload.
    */
-  public function getEntitiesList() {
-    return $this->getEntities($this->entityType, $this->getBundle(), $this->getEntityId());
+  public function setPayload() {
+    $entity = $this->getEntity();
+    $base_data = [];
+    $custom_data = [];
+    if ($entity) {
+      $base_data = $this->setBaseData($entity);
+      $custom_data = $this->setCustomData($entity);
+    }
+    $requested_langcode = $this->getLangcode();
+    $wag_bundle = $this->getWagBundle();
+    $plugin_errors = $this->pluginErrors;
+    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors);
+    return $this->payload = $payload;
   }
 
   /**
-   * Get the entities requested by the query.
+   * Add a plugin error.
    *
-   * @param string $entity_type
-   *   The entity type.
-   * @param string $bundle
-   *   The bundle.
-   * @param string $entity_id
-   *   The entity id (optional).
-   *
-   * @return array
-   *   An array of entities.
+   * @param string $type
+   *   The type of error.
+   * @param string $message
+   *   The error message.
    */
-  public function getEntities($entity_type, $bundle, $entity_id = NULL) {
-    $entity_type_manager = \Drupal::entityTypeManager();
-    $entity_storage = $entity_type_manager->getStorage($entity_type);
-    $entity_definition = $entity_type_manager->getDefinition($entity_type);
-    $entity_id_key = $entity_definition->getKeys()['id'];
-    $bundle_key = $entity_definition->getKeys()['bundle'];
-    $query = \Drupal::entityQuery($entity_type)
-      ->condition($bundle_key, $bundle);
-
-    // If an entity_id is passed, only return that entity.
-    if ($entity_id) {
-      $query->condition($entity_id_key, $entity_id);
-    }
-
-    $ids = $query->execute();
-    return $entity_storage->loadMultiple($ids);
+  public function addPluginError(string $type, string $message) {
+    $this->pluginErrors[] = [
+      'type' => $type,
+      'message' => $message,
+    ];
   }
 
 }

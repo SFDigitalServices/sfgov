@@ -11,9 +11,12 @@
 function sfgov_api_schema() {
   $languages = \Drupal::languageManager()->getLanguages();
   $schemas = [];
+  $wagtail_id_tables = [
+    'node',
+    'media',
+  ];
 
-  $schemas['drupal_wagtail_id_map'] = [
-    'description' => 'Drupal to Wagtail Id map',
+  $id_map_fields = [
     'fields' => [
       'drupal_id' => [
         'type' => 'serial',
@@ -27,17 +30,22 @@ function sfgov_api_schema() {
     ],
   ];
 
-  foreach ($languages as $language) {
-    $table_label = 'wagtail_id_' . $language->getId();
-    $schemas['drupal_wagtail_id_map']['fields'][$table_label] = [
-      'type' => 'varchar',
-      'length' => 255,
-    ];
-    $status_label = $table_label . '_error';
-    $schemas['drupal_wagtail_id_map']['fields'][$status_label] = [
-      'type' => 'varchar',
-      'length' => 255,
-    ];
+  foreach ($wagtail_id_tables as $entity_type) {
+    $table_name = 'drupal_wagtail_' . $entity_type . '_id_map';
+    $schemas[$table_name]['description'] = 'Drupal to Wagtail ' . $entity_type . ' Id map';
+    $schemas[$table_name] = $id_map_fields;
+    foreach ($languages as $language) {
+      $field_label = 'wagtail_id_' . $language->getId();
+      $schemas[$table_name]['fields'][$field_label] = [
+        'type' => 'varchar',
+        'length' => 255,
+      ];
+      $status_label = $field_label . '_status';
+      $schemas[$table_name]['fields'][$status_label] = [
+        'type' => 'varchar',
+        'length' => 255,
+      ];
+    }
   }
 
   $schemas['drupal_wagtail_errors'] = [
@@ -54,7 +62,13 @@ function sfgov_api_schema() {
         'not null' => TRUE,
         'description' => 'The Drupal ID.',
       ],
-      'type' => [
+      'entity_type' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The type of entity.',
+      ],
+      'error_type' => [
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,

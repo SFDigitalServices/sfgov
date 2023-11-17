@@ -2,6 +2,7 @@
 
 namespace Drupal\sfgov_api\Plugin\SfgApi\Media;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 
 /**
@@ -11,7 +12,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "media_image",
  *   title = @Translation("Media image"),
  *   bundle = "image",
- *   wag_bundle = "image",
+ *   wag_bundle = "images",
  *   entity_id = {},
  *   langcode = {},
  * )
@@ -19,34 +20,33 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 class Image extends SfgApiMediaBase {
 
   use ApiFieldHelperTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    $temp = 'temp';
     $referenced_file = $entity->get('field_media_image')->referencedEntities()[0];
-    $image_values = $entity->get('field_media_image')[0]->getValue();
-    $file_name = $referenced_file->getFilename();
-    $wagtail_base_file_path = 'https://media.www-temp.staging.dev.sf.gov/original_images/';
+    $file_uri = $referenced_file->getFileUri();
+    $file_path = \Drupal::service('file_system')->realpath($file_uri);
+    $referenced_file->getFilename();
 
-    // @todo All of the comments below are whats in the API. this list needs to be refined.
-    return [
-    // "https://api.staging.dev.sf.gov/api/cms/images/1",
-      'detail_url' => $temp,
+    $custom_data = [
       'title' => $entity->get('name')->value,
-      'file' => "{$wagtail_base_file_path}{$file_name}",
-      'width' => $image_values['width'],
-      'height' => $image_values['height'],
-      'created_at' => $this->getWagtailTime($referenced_file->get('created')->value),
-      'focal_point_x' => NULL,
-      'focal_point_y' => NULL,
-      'focal_point_width' => NULL,
-      'focal_point_height' => NULL,
-      'file_size' => $referenced_file->getSize(),
-    // 'e347b7f97001d5ed72acddfe0f78489e686ff564',
-      'file_hash' => $temp,
+      'file' => $file_path,
     ];
+
+    if (!$file_path) {
+      $message = $this->t('No base file found for @entity_type of type @bundle with id @entity_id in langcode @langcode', [
+        '@entity_type' => $entity->getEntityTypeId(),
+        '@bundle' => $this->getBundle(),
+        '@entity_id' => $entity->id(),
+        '@langcode' => $this->configuration['langcode'],
+      ]);
+      $this->addPluginError('No file', $message);
+    }
+
+    return $custom_data;
   }
 
 }

@@ -35,7 +35,7 @@ class {{ bundle_camelize }} extends SfgApi{{ entity_type_ucfirst }}Base {
     {% if entity_fields %}
     // ATTENTION: THIS IS JUST A STARTING POINT, REFINE THESE DOWN TO THE FIELDS YOU ACTUALLY WANT. ALSO THE ->value function won't work for all fields
     {% for entity_field in entity_fields %}
-      '{{ entity_field }}' => $this->get('{{ entity_field }}')->value,
+      '{{ entity_field }}' => $entity->get('{{ entity_field }}')->value,
     {% endfor %}
     {% endif %}
     ];

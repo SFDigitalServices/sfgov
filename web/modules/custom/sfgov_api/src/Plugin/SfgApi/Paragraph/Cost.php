@@ -20,7 +20,6 @@ class Cost extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    // @todo change field names (key) to what wagtail expects.
     return [
       'description' => $entity->get('field_text')->value,
       'cost' => $entity->get('field_cost_type')->value,

@@ -28,7 +28,6 @@ abstract class SfgApiNodeBase extends SfgApiPluginBase {
     $base_data = [
       'parent_id' => $wag_api_settings->get('wag_parent_' . $this->configuration['langcode']),
       'title' => $node->getTitle(),
-      'wag_bundle' => $this->getWagBundle(),
       'slug' => basename($alias),
       'aliases' => [],
       'formsubmission_set' => [],

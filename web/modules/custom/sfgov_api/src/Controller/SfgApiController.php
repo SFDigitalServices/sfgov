@@ -38,21 +38,38 @@ class SfgApiController extends ControllerBase {
   /**
    * Builds the response.
    */
-  public function viewEntityData($langcode, string $entity_type, string $bundle, $entity_id = NULL) {
-    $response = ['error' => 'No plugin found for bundle: ' . $bundle];
+  public function viewEntityData($langcode, string $entity_type, string $bundle, $entity_id) {
+    $plugin_label = $this->sfgApiPluginManager->validatePlugin($entity_type, $bundle);
 
-    if (!$bundle) {
-      $response = ['error' => 'Please specify a bundle.'];
-    }
-    if (!$entity_type) {
-      $response = ['error' => 'Please specify an entity type.'];
+    $display = [];
+    if (empty($plugin_label)) {
+      $display[]['error'] = 'No plugin found for bundle: ' . $bundle;
     }
 
-    if ($plugin_label = $this->sfgApiPluginManager->validatePlugin($entity_type, $bundle)) {
-      $response = $this->sfgApiPluginManager->fetchJsonData($plugin_label, $langcode, $entity_id);
+    if (empty($bundle)) {
+      $display[]['error'] = 'Please specify a bundle.';
+    }
+    if (empty($entity_type)) {
+      $display[]['error'] = 'Please specify an entity type.';
+    }
+    if (empty($langcode)) {
+      $display[]['error'] = 'Please specify a language code.';
+    }
+    if (empty($entity_id)) {
+      $display[]['error'] = 'Please specify an entity id.';
     }
 
-    return new JsonResponse($response);
+    if (empty($display)) {
+      $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id);
+      if ($errors = $payload->getErrors()) {
+        $display = $errors;
+      }
+      else {
+        $display = $payload->getPayloadData();
+      }
+    }
+
+    return new JsonResponse($display);
   }
 
 }
