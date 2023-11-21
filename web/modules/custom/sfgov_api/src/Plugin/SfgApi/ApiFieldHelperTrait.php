@@ -88,13 +88,13 @@ trait ApiFieldHelperTrait {
       $reference_data = [];
       // @todo entity reference field feature in progress on wagtail.
       if ($entity_type === 'node') {
-        $reference_data['drupal_id'] = $entity_id;
+        $reference_data['drupal_id'] = (int) $entity_id;
         $reference_data['entity_type'] = $entity_type;
         // If its a streamfield wagtail expects the following two values to
         // identify the node. They Can also be used to identify a node for a
         // regular entity reference field.
         $reference_data['type'] = $bundle;
-        $reference_data['value'] = $wagtail_id;
+        $reference_data['value'] = (int) $wagtail_id;
       }
       elseif ($entity_type === 'media') {
         $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
