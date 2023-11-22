@@ -302,7 +302,8 @@ class SfgovApiCommands extends DrushCommands {
           if ($options['print']) {
             {
             // Save the error to an HTML page.
-            $filename = 'html_error_' . time() . '.html';
+            $wag_id = $wag_page_id ?: 'xx';
+            $filename = 'error_' . $drupal_id . '-' . $wag_id . '.html';
             $filepath = $this->moduleHandler->getModule('sfgov_api')->getPath() . '/src/Drush/Errors/' . $filename;
             file_put_contents($filepath, $response_info);
             $message = 'Something went wrong, check the error directory for an html file and curl command with the timecode ' . time();

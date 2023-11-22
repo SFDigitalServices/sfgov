@@ -123,8 +123,6 @@ There are two custom drush commands for pushing entities into the Wagtail API.
 - `sfgov_api:push_entity_by_bundle` (alias: peb): pushes every entity of a provided bundle type.
   - `drush peb node step_by_step es` push every spanish step by step
 
-**Note: At time of writing these are only designed to support pushing nodes and their attached paragraphs**
-
 Both of these commands have the following optional parameters
 - `--print`: Use this for debugging, it will print some useful error data to the console and add two files to
 `web/modules/custom/sfgov_api/src/Drush/Errors`. One file is an exact print of the curl command used for the push, the
