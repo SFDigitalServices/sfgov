@@ -38,7 +38,7 @@ class SfgovParagraphsWidgetTest extends UnitTestCase {
     $string_translation = $this
       ->getMockBuilder('\Drupal\Core\StringTranslation\TranslationManager')
       ->disableOriginalConstructor()
-      ->setMethods(['translate'])
+      ->onlyMethods(['translate'])
       ->getMock();
     $string_translation
       ->expects($this->any())
@@ -49,7 +49,7 @@ class SfgovParagraphsWidgetTest extends UnitTestCase {
     // Mock the container.
     $container = $this
       ->getMockBuilder('\Symfony\Component\DependencyInjection\Container')
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $container
       ->expects($this->any())
