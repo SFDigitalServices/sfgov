@@ -60,7 +60,7 @@ class GoogleSearchForm extends FormBase {
     $form['keys'] = array(
       '#title' => t('Search'),
       '#type' => 'textfield',
-      '#placeholder' => t('Google Search'),
+      '#placeholder' => t('Search'),
       '#id' => 'edit-sfgov-search-input',
       '#default_value' => $keyword,
       '#attributes' => array(
