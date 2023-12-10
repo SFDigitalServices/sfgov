@@ -13,22 +13,12 @@
       // "formioSFDSOptOut": true
       var options = safeJSONParse(el.getAttribute('data-options'));
 
-      // Get the properties defined in the Amplitude event for "Feedback form".
-      var amplitudeData = {};
-      if (typeof amplitude != 'undefined' && drupalSettings.amplitude.events.length > 0) {
-        drupalSettings.amplitude.events.find(function(obj) {
-          if (obj.name === 'Feedback form') {
-            amplitudeData = safeJSONParse(obj.properties);
-          }
-        });
-      }
-
       Formio.createForm(el, el.getAttribute('data-source'), options)
         .then(function(form) {
           // This is used to conditionally hide the following elements on form
           // form pages: wasThisPageHelpful, helpfulYes, helpfulNo. See field
           // configuration: Conditions (tab) > Advanced conditions > JavaScript.
-          form.data.isFormPage = (amplitudeData && amplitudeData.content_type === 'Form page') ? 'Yes' : 'No';
+          // form.data.isFormPage = (amplitudeData && amplitudeData.content_type === 'Form page') ? 'Yes' : 'No';
 
           var feedbackSuccess, messageComponent = '';
           if (!feedbackSuccess || !messageComponent) {
@@ -60,23 +50,6 @@
                 // Gtranslate tries to translate this even if it's already translated.
                 // Block gtranslate from doing so.
                 $(messageComponent.element).addClass('notranslate');
-
-                // Capture which button was clicked and log to Amplitude.
-                if (typeof amplitude != 'undefined') {
-                  var eventDescription = '';
-                  if (form.data.helpfulNo === true) {
-                    eventDescription = 'No button clicked';
-                  }
-                  if (form.data.reportIssue === true) {
-                    eventDescription = 'Report issue button clicked';
-                  }
-                  amplitudeData.feedback = {
-                    'type': 'change',
-                    'description': eventDescription,
-                    'data': event.data,
-                  }
-                  amplitude.getInstance().logEvent('Feedback Form Interaction', amplitudeData);
-                }
               }
             }
           });
@@ -89,16 +62,6 @@
 
             // Hide the form. It cannot be submitted again/updated.
             document.getElementById(form.id).style.display = 'none';
-
-            // Log event with Drupal and form submission data to Amplitude.
-            if (typeof amplitude != 'undefined') {
-              amplitudeData.feedback = {
-                'type': 'submit',
-                'description': submission.data.isHelpful === 'Yes' ? 'Helpful' : 'Not Helpful',
-                'data': submission.data,
-              }
-              amplitude.getInstance().logEvent('Feedback Form Submission', amplitudeData);
-            }
           });
       });
 
