@@ -23,38 +23,42 @@ function sfgov_search_preprocess_pager(&$variables) {
   // because the pager itself starts at 1, but the API results are zero-based.
   $path = \Drupal::routeMatch()->getRouteName();
   if ($path === 'search.view_google_json_api_search') {
-    // Add one to the pager total to account for the zero-based API results.
-    $page_total = $variables['pager']['#quantity'] + 1;
-    $pointer = $variables['current'];
-    // Generate the pager range where the current page is in the middle.
-    $range = _get_pager_range($pointer, $page_total);
+    // Ensure there are actual results to paginate.
+    if (isset($variables['items']['pages'])) {
+      // Add one to the pager total to account for the zero-based API results.
+      $page_total = $variables['pager']['#quantity'] + 1;
+      $pointer = $variables['current'] ?: NULL;
+      // Generate the pager range where the current page is in the middle.
+      $range = _get_pager_range($pointer, $page_total);
 
-    $query_params = [];
-    $query_url = reset($variables['items']['pages'])['href'];
-    // Delete the previous pages list because it doesn't assemble correctly.
-    $variables['items']['pages'] = [];
+      $query_params = [];
+      $query_url = reset($variables['items']['pages'])['href'];
+      // Delete the previous pages list because it doesn't assemble correctly.
+      $variables['items']['pages'] = [];
 
-    // // Parse the query string into an associative array
-    parse_str(parse_url($query_url, PHP_URL_QUERY), $query_params);
+      // // Parse the query string into an associative array
+      parse_str(parse_url($query_url, PHP_URL_QUERY), $query_params);
 
-    // Build out a new set of links.
-    for ($i=reset($range); $i <= end($range) ; $i++) {
-      // Subtract one from the page number to make it zero-based.
-      $query_params['page'] = $i - 1;
-      $variables['items']['pages'][$i] = [
-        'href' => 'google?' . http_build_query($query_params),
-        'attributes' => [],
-      ];
+      // Build out a new set of links.
+      for ($i=reset($range); $i <= end($range) ; $i++) {
+        // Subtract one from the page number to make it zero-based.
+        $query_params['page'] = $i - 1;
+        $variables['items']['pages'][$i] = [
+          'href' => 'google?' . http_build_query($query_params),
+          'attributes' => [],
+        ];
+      }
+      // Edit ellipses variable to line up with the existing template.
+      if ($variables['current'] > 1) {
+        $variables['ellipses']['previous'] = TRUE;
+      }
+      if ($variables['current'] < $page_total) {
+        $variables['ellipses']['next'] = TRUE;
+      }
     }
+
   }
 
-  // Edit ellipses variable to line up with the existing template.
-  if ($variables['current'] > 1) {
-    $variables['ellipses']['previous'] = TRUE;
-  }
-  if ($variables['current'] < $page_total) {
-    $variables['ellipses']['next'] = TRUE;
-  }
 }
 
 /**
