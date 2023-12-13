@@ -26,7 +26,7 @@ abstract class SfgApiNodeBase extends SfgApiPluginBase {
     $alias = $path_alias_manager->getAliasByPath('/node/' . $node_id);
     $wag_api_settings = \Drupal::config('sfgov_api.settings');
     $base_data = [
-      'parent_id' => $wag_api_settings->get('wag_parent_' . $this->configuration['langcode']),
+      'parent_id' => (int) $wag_api_settings->get('wag_parent_' . $this->configuration['langcode']),
       'title' => $node->getTitle(),
       'slug' => basename($alias),
       'aliases' => [],
