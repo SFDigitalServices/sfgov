@@ -159,7 +159,7 @@ class Payload {
     $entity = $this->entity;
     if (!empty($entity)) {
       $metadata = [
-        'drupal_id' => $entity->id(),
+        'drupal_id' => (int) $entity->id(),
         'entity_type' => $entity->getEntityTypeId(),
         'bundle' => $entity->bundle(),
         'langcode' => $this->requestedLangcode,
@@ -180,7 +180,7 @@ class Payload {
     if (!empty($entity)) {
       if ($entity instanceof Node) {
         $stub = [
-          'parent_id' => $this->baseData['parent_id'],
+          'parent_id' => (int) $this->baseData['parent_id'],
           'title' => $this->baseData['title'],
           'slug' => $this->baseData['slug'],
           'wag_bundle' => $this->wagBundle,

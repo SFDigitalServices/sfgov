@@ -175,12 +175,19 @@ class SfgovApiCommands extends DrushCommands {
     $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id);
 
     if (empty($payload->getPayloadData())) {
-      $message = $this->t('No @entity_type of type @bundle with ID @entity_id in langcode @langcode found.', [
-        '@entity_type' => $entity_type,
-        '@bundle' => $bundle,
-        '@entity_id' => $entity_id,
-        '@langcode' => $langcode,
-      ]);
+      // Try to send an error message from the payload since it will be more
+      // specific. If that doesn't work, send a generic message.
+      if ($payload_error = $payload->getErrors()) {
+        $message = $payload_error[0]['message'];
+      }
+      else {
+        $message = $this->t('No @entity_type of type @bundle with ID @entity_id in langcode @langcode found.', [
+          '@entity_type' => $entity_type,
+          '@bundle' => $bundle,
+          '@entity_id' => $entity_id,
+          '@langcode' => $langcode,
+        ]);
+      }
       return $this->output()->writeln($message);
     }
 

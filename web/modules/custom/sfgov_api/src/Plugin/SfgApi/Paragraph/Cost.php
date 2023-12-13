@@ -2,6 +2,8 @@
 
 namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
 
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
+
 /**
  * Plugin implementation of the sfgov_api.
  *
@@ -16,13 +18,15 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
  */
 class Cost extends SfgApiParagraphBase {
 
+  use ApiFieldHelperTrait;
+
   /**
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
     return [
       'description' => $entity->get('field_text')->value,
-      'cost' => $entity->get('field_cost_type')->value,
+      'cost' => $this->editFieldValue($entity->get('field_cost_type')->value, ['flat' => 'flat_fee']),
       'flat_fee' => $entity->get('field_cost_flat_fee')->value,
       'range' => [
         'maximum' => $entity->get('field_cost_maximum')->value,

@@ -14,13 +14,11 @@ trait ApiFieldHelperTrait {
    *
    * @param array $entities
    *   An array of entities.
-   * @param string $wag_entity_type
-   *   The wagtail entity type.
    *
    * @return array
    *   An array of entity data.
    */
-  public function getReferencedData(array $entities, $wag_entity_type) {
+  public function getReferencedData(array $entities) {
     $sfgov_api_plugin_manager = \Drupal::service('plugin.manager.sfgov_api');
     $available_plugins = $sfgov_api_plugin_manager->getDefinitions();
 
@@ -55,7 +53,7 @@ trait ApiFieldHelperTrait {
           'entity_id' => $entity->id(),
         ]);
         $entities_data[] = [
-          'type' => $wag_entity_type,
+          'type' => $plugin->pluginDefinition['wag_bundle'],
           'value' => $plugin->getPayload()->getPayloadData(),
         ];
       }
@@ -140,6 +138,26 @@ trait ApiFieldHelperTrait {
     $drupalDatetime = DrupalDateTime::createFromFormat($input_format, $value);
     // Format the datetime as 'YYYY-MM-DD'.
     return $drupalDatetime->format('Y-m-d');
+  }
+
+  /**
+   * Edit a field value based on a provided map.
+   *
+   * @param string $value
+   *   The value from drupal to edit.
+   * @param array $value_map
+   *   An array of values to map drupal_value => wagtail_value.
+   *
+   * @return string
+   *   The edited value that wagtail expects.
+   */
+  public function editFieldValue($value, $value_map) {
+    if (array_key_exists($value, $value_map)) {
+      return $value_map[$value];
+    }
+    else {
+      return $value;
+    }
   }
 
 }

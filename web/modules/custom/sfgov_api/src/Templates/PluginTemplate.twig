@@ -34,11 +34,11 @@ class {{ bundle_camelize }} extends SfgApi{{ entity_type_ucfirst }}Base {
     return [
     {% if entity_fields %}
     // Notes:
-    - Fields below are just a starting point, refine these down to the fields you actually want.
-    - The ->value function won't work for all fields and is just there to kickstart the process.
-    - Make sure to manually double check and update the wag_bundle in the annotation above.
-    - To small adjustments to the data only relevant to this entity, you add functions to this plugin.
-    - Look at ApiFieldHelperTrait.php for broad functions that can be used across all entities (like entity references).
+    // - Fields below are just a starting point, refine these down to the fields you actually want.
+    // - The ->value function won't work for all fields and is just there to kickstart the process.
+    // - Make sure to manually double check and update the wag_bundle in the annotation above.
+    // - To small adjustments to the data only relevant to this entity, you add functions to this plugin.
+    // - Look at ApiFieldHelperTrait.php for broad functions that can be used across all entities (like entity references).
     {% for entity_field in entity_fields %}
       '{{ entity_field }}' => $entity->get('{{ entity_field }}')->value,
     {% endfor %}
