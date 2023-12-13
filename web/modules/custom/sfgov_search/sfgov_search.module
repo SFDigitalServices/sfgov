@@ -16,6 +16,18 @@ function sfgov_search_theme() {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function sfgov_search_form_search_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $derp = true;
+  $form['keys']['#prefix'] = '<div class="js-form-item-keys">';
+  $form['keys']['#suffix'] = '</div>';
+  $form['keys']['#id'] = 'edit-sfgov-search-input';
+  $derp = true;
+}
+
+
+/**
  * Implements hook_preprocess_pager().
  */
 function sfgov_search_preprocess_pager(&$variables) {
