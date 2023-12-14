@@ -78,25 +78,11 @@
     var dataSource = el.getAttribute('data-source')
     var params = new URL(location).searchParams
     var submissionId = params.get('submission')
-    var formEventHandlers = {}
     if (submissionId) {
       dataSource += `/submission/${submissionId}`
     }
     Formio.createForm(el, dataSource, options)
       .then(function(form) {
-        Object.keys(formEventHandlers).forEach(function(eventName) {
-          form.on(eventName, function() {
-            try {
-              var formData = formEventHandlers[eventName].apply(form, arguments)
-              if (formData && typeof formData === 'object') {
-                formData.url = form.url
-              }
-            } catch (error) {
-              console.error('There was an error handling form event "%s":', eventName, error)
-            }
-          })
-        })
-
         var sfoptions = options.sfoptions || {}
         // perform sfoptions, hide certain elements
         if (sfoptions.hide instanceof Object) {
