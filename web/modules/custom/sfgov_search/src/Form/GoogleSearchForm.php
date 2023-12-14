@@ -44,56 +44,48 @@ class GoogleSearchForm extends FormBase {
 
     $config = \Drupal::config('sfgov_google_search.settings');
 
-   $form['#attributes'] = array(
-     'id' => 'sfgov-search-form',
-     'class' => array(
-       'sfgov-search-form',
-       'sfgov-search-form-311',
-     ),
-     'role' => 'search',
-     'novalidate' => 'novalidate',
-   );
-
-//    $suffix_markup = '<div id="sfgov-search-describedby" aria-hidden="true" class="visually-hidden">' . t('When autocomplete results are available use up and down arrows to review and enter to select, or type the value') . '</div>';
-//    $suffix_markup .= '<div id="sfgov-search-autocomplete" role="listbox" aria-label="' . t("Search autocomplete") . '"></div>';
-
-    $form['keys'] = array(
-      '#title' => t('Search'),
-      '#type' => 'textfield',
-      '#placeholder' => t('Search'),
-      '#id' => 'edit-sfgov-search-input',
-      '#default_value' => $keyword,
-      '#attributes' => array(
-        'class' => array(
-          'sf-gov-search-input-class',
-        ),
-        'title' => t('Search'),
-        'role' => t('combobox'),
-        'aria-autocomplete' => t('both'),
-        'aria-describedby' => 'sfgov-search-describedby',
-        'aria-expanded' => 'false',
-        'aria-owns' => 'sfgov-search-autocomplete',
-        'aria-activedescendant' => '',
+    $form['#attributes'] = array(
+      'id' => 'sfgov-search-form',
+      'class' => array(
+        'sfgov-search-form',
+        'sfgov-search-form-311',
       ),
-//      '#suffix' => $suffix_markup,
+      'role' => 'search',
+      'novalidate' => 'novalidate',
     );
 
-    // $form['#attached']['library'][] = 'sfgov_search/google_search';
-    //$form['#attached']['drupalSettings']['sfgovSearch']['collection'] = empty($config->get('search_collection')) ? null : $config->get('search_collection');
-    //$form['#attached']['drupalSettings']['sfgovSearch']['qie'] = empty($config->get('qie_influence')) ? null : $config->get('qie_influence');
-
-    $form['actions']['#type'] = 'actions';
-
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Search'),
-      '#button_type' => 'primary',
-      '#attributes' => array(
-        'class' => array(
-          'btn', // button class from design system
+      $form['keys'] = array(
+        '#title' => t('Search'),
+        '#type' => 'textfield',
+        '#placeholder' => t('Search'),
+        '#id' => 'edit-sfgov-search-input',
+        '#default_value' => $keyword,
+        '#attributes' => array(
+          'class' => array(
+            'sf-gov-search-input-class',
+          ),
+          'title' => t('Search'),
+          'role' => t('combobox'),
+          'aria-autocomplete' => t('both'),
+          'aria-describedby' => 'sfgov-search-describedby',
+          'aria-expanded' => 'false',
+          'aria-owns' => 'sfgov-search-autocomplete',
+          'aria-activedescendant' => '',
         ),
-      )
-    );
+      );
+
+      $form['actions']['#type'] = 'actions';
+
+      $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => $this->t('Search'),
+        '#button_type' => 'primary',
+        '#attributes' => array(
+          'class' => array(
+            'btn', // button class from design system
+          ),
+        )
+      );
 
     return $form;
   }
