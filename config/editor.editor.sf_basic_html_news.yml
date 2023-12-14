@@ -1,48 +1,61 @@
-uuid: bcd78a44-d2b4-4c4b-8db6-97ccc586145c
+uuid: bb690ff5-01c0-4c5d-8175-b10fbcaf533f
 langcode: en
 status: true
 dependencies:
   config:
     - filter.format.sf_basic_html_news
   module:
-    - ckeditor
+    - ckeditor5
 format: sf_basic_html_news
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formatting
-          items:
-            - Format
-            - Bold
-            - Italic
-            - Underline
-            - RemoveFormat
-        -
-          name: Links
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-            - Outdent
-            - Indent
-        -
-          name: Media
-          items:
-            - Blockquote
-        -
-          name: Tools
-          items:
-            - ShowBlocks
-            - Maximize
+    items:
+      - heading
+      - bold
+      - italic
+      - underline
+      - removeFormat
+      - '|'
+      - link
+      - '|'
+      - bulletedList
+      - numberedList
+      - outdent
+      - indent
+      - '|'
+      - blockQuote
+      - '|'
+      - code
+      - sourceEditing
   plugins:
-    drupallink:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<cite>'
+        - '<dd>'
+        - '<dl>'
+        - '<dt>'
+        - '<span>'
+        - '<blockquote cite>'
+        - '<h2 id>'
+        - '<h3 id>'
+        - '<h4 id>'
+        - '<h5 id>'
+        - '<h6 id>'
+        - '<ol type>'
+        - '<ul type>'
+        - '<a hreflang title>'
+    ckeditor5_list:
+      reversed: false
+      startIndex: true
+    linkit_extension:
       linkit_enabled: true
       linkit_profile: default
 image_upload:

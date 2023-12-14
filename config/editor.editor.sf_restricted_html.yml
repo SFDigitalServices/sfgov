@@ -1,41 +1,40 @@
-uuid: b8a38473-c6db-4f6d-9165-a8107c938207
+uuid: 64ef142a-bf5f-474c-be9d-d292566674c6
 langcode: en
 status: true
 dependencies:
   config:
     - filter.format.sf_restricted_html
   module:
-    - ckeditor
+    - ckeditor5
 format: sf_restricted_html
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formatting
-          items:
-            - Bold
-            - Underline
-            - RemoveFormat
-        -
-          name: Links
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-            - Indent
-            - Outdent
-        -
-          name: Tools
-          items:
-            - ShowBlocks
+    items:
+      - bold
+      - underline
+      - removeFormat
+      - '|'
+      - link
+      - '|'
+      - bulletedList
+      - numberedList
+      - indent
+      - outdent
+      - '|'
+      - italic
+      - sourceEditing
   plugins:
-    drupallink:
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<span>'
+        - '<ol type>'
+        - '<ul type>'
+        - '<a hreflang title>'
+    ckeditor5_list:
+      reversed: false
+      startIndex: true
+    linkit_extension:
       linkit_enabled: true
       linkit_profile: default
 image_upload:

@@ -5,7 +5,7 @@ dependencies:
   module:
     - editor
     - linkit
-    - media
+    - toc_filter
 name: 'SF Restricted HTML'
 format: sf_restricted_html
 weight: -9
@@ -23,7 +23,7 @@ filters:
     status: true
     weight: -49
     settings:
-      allowed_html: '<br> <em> <li> <ol type start> <p> <span> <strong> <u> <ul type> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title>'
+      allowed_html: '<br> <p> <span> <ol type start> <ul type> <a hreflang title href data-entity-type data-entity-uuid data-entity-substitution> <strong> <em> <u> <li>'
       filter_html_help: true
       filter_html_nofollow: false
   filter_autop:
@@ -75,12 +75,13 @@ filters:
     weight: 0
     settings:
       title: true
-  media_embed:
-    id: media_embed
-    provider: media
+  toc_filter:
+    id: toc_filter
+    provider: toc_filter
     status: false
-    weight: 100
+    weight: 0
     settings:
-      default_view_mode: default
-      allowed_view_modes: {  }
-      allowed_media_types: {  }
+      type: default
+      auto: ''
+      block: '0'
+      exclude_above: '0'
