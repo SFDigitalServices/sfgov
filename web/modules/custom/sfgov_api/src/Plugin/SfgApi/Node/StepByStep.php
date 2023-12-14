@@ -27,8 +27,7 @@ class StepByStep extends SfgApiNodeBase {
     return [
       'description' => $entity->get('field_description')->value,
       'intro' => (string) $entity->get('field_intro_text')->value,
-      // Entity Reference not currently supported by Wagtail.
-      'related_content_topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
+      'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
       'steps' => $this->getReferencedData($entity->get('field_process_steps')->referencedEntities()),
     ];
   }
