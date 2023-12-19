@@ -16,9 +16,9 @@
   Drupal.behaviors.excludeFromGtranslate = {
     attach (context) {
       for (const [str, find, replace] of doNotTranslate) {
-        $('P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-bio-summary', context)
+        $('TITLE, P, A, SPAN, H1, H2, H3, H4, H5, H6, LI, div.field.__abstract, div.person-bio-summary', context)
           .filter(`*:contains(${str})`)
-          .html((_, html) => html.replace(find, replace))
+          .attr('translate', 'no')
       }
     }
   }

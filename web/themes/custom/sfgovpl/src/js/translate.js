@@ -139,6 +139,7 @@ function SFGovTranslate () {
       if (drupalTranslation && drupalTranslation.status) {
         $('main[role="main"]').addClass('notranslate').attr('translate', 'no')
         $('.google-title-translate').addClass('notranslate').attr('translate', 'no')
+        $('title').attr('translate', 'no')
       }
       that.sfgovDoGTranslate('en|' + currentDrupalLanguage)
       that.addElementTranslationClass(currentDrupalLanguage)
