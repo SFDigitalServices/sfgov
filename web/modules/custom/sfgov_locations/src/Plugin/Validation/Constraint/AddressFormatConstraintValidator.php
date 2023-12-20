@@ -165,7 +165,7 @@ class AddressFormatConstraintValidator extends ConstraintValidator implements Co
                 continue;
             }
 
-            if ($subdivision->getPostalCodePatternType() == PatternType::FULL) {
+            if ($subdivision->getPostalCodePatternType() == 'full') {
                 $fullPattern = $pattern;
             } else {
                 $startPattern = $pattern;

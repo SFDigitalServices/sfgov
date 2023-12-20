@@ -93,7 +93,7 @@ class DocUploadForm extends FormBase {
       $uri = $file->getFileUri();
       $source = \Drupal::service('file_system')->realpath($uri);
       $doc_object = IOFactory::load($source);
-      $info = $doc_object->getDocumentProperties();
+      $info = $doc_object->getDocInfo();
       $html_object = IOFactory::createWriter($doc_object, 'HTML');
       if ($contents = $html_object->getContent()) {
         preg_match("/<body[^>]*>(.*?)<\/body>/is", $contents, $matches);
