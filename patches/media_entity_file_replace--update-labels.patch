@@ -1,15 +1,15 @@
 diff --git a/media_entity_file_replace.module b/media_entity_file_replace.module
-index ecee72f..5aa2da2 100644
+index 097051e..be46238 100644
 --- a/media_entity_file_replace.module
 +++ b/media_entity_file_replace.module
-@@ -118,8 +118,8 @@ function media_entity_file_replace_form_media_form_alter(&$form, FormStateInterf
-     // must have the same extension.
-     $originalExtension = '.' . pathinfo($fileFieldItem->entity->getFilename(), PATHINFO_EXTENSION);
-     $form['replace_file']['keep_original_filename'] = [
--      '#title' => t('Overwrite original file (@originalExtension)', ['@originalExtension' => $originalExtension]),
--      '#description' => t('When checked, the original filename is kept and its contents are replaced with the new file, which <strong>must have the same file extension: @originalExtension</strong>. If unchecked, the filename of the replacement file will be used with any allowed file type and the original file may be deleted if no previous revision references it (depending on your specific site configuration).', ['@originalExtension' => $originalExtension]),
-+      '#title' => t('Keep the original file name'),
-+      '#description' => t('Check this box if you want to keep the original file name when you replace the file.'),
-       '#type' => 'checkbox',
-       '#default_value' => TRUE,
-     ];
+@@ -160,8 +160,8 @@ function media_entity_file_replace_form_media_form_alter(&$form, FormStateInterf
+   // must have the same extension.
+   $originalExtension = '.' . pathinfo($fileFieldItem->entity->getFilename(), PATHINFO_EXTENSION);
+   $form['replace_file']['keep_original_filename'] = [
+-    '#title' => t('Overwrite original file (@originalExtension)', ['@originalExtension' => $originalExtension]),
+-    '#description' => t('When checked, the original filename is kept and its contents are replaced with the new file, which <strong>must have the same file extension: @originalExtension</strong>. If unchecked, the filename of the replacement file will be used with any allowed file type and the original file may be deleted if no previous revision references it (depending on your specific site configuration).', ['@originalExtension' => $originalExtension]),
++    '#title' => t('Keep the original file name'),
++    '#description' => t('Check this box if you want to keep the original file name when you replace the file.'),
+     '#type' => 'checkbox',
+     '#default_value' => TRUE,
+   ];
