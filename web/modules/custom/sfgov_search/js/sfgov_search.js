@@ -173,9 +173,9 @@
 
           // Exclude certain strings from translation.
           // @see web/themes/custom/sfgovpl/src/js/exclude-from-gtranslate.js
-          if (typeof window.SfGovExcludeFromTranslate === 'function') {
-            truncatedSummary = window.SfGovExcludeFromTranslate(truncatedSummary)
-          }
+          // if (typeof window.SfGovExcludeFromTranslate === 'function') {
+          //   truncatedSummary = window.SfGovExcludeFromTranslate(truncatedSummary)
+          // }
 
           truncatedSummary = truncatedSummary.replace(hr, '<strong>$&</strong>')
 
