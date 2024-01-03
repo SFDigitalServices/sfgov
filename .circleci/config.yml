@@ -1,7 +1,7 @@
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
 defaults: &defaults
   docker:
-    - image: quay.io/pantheon-public/build-tools-ci:7.x-php7.4
+    - image: quay.io/pantheon-public/build-tools-ci:8.x-php8.0
   working_directory: ~/example_drops_8_composer
   environment:
     #=========================================================================
@@ -50,9 +50,9 @@ jobs:
       - restore_cache:
           keys:
             # see: https://circleci.com/docs/2.0/caching#restoring-cache
-            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
-            - composer-{{ checksum "composer.lock" }}-
-            - composer-
+            - composer-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}-
+            - composer-{{ .Environment.CACHE_VERSION }}-
 
       - run:
           name: set up build environment (build-tools-ci)
@@ -96,10 +96,10 @@ jobs:
 
       - restore_cache:
           keys:
-            # see: https://circleci.com/docs/2.0/caching#restoring-cache
-            - composer-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
-            - composer-{{ checksum "composer.lock" }}-
-            - composer-
+            # see:  
+            - composer-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}-{{ checksum ".circleci/config.yml" }}
+            - composer-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.lock" }}-
+            - composer-{{ .Environment.CACHE_VERSION }}-
 
       - run:
           name: set up build environment (build-tools-ci)
