@@ -39,14 +39,18 @@
     // Search Clear Input functionality.
     const searchClearInput = function () {
       const input = $('[data-drupal-selector="edit-sfgov-search-input"]')
-      const inputWrapper = $('.form-item-sfgov-search-input')
+      const inputWrapper = $('.js-form-item-keys')
       const inputClearButton = '<span class="input-clear"></span>'
 
+      console.log(input)
+      console.log(inputWrapper)
+      console.log(inputClearButton)
       inputWrapper.prepend(inputClearButton)
 
       input.keyup(function () {
+        console.log('up')
         $(this)
-          .parent('.form-item-sfgov-search-input')
+          .parent('.js-form-item-keys')
           .toggleClass('is_typing', !!$(this).val())
       })
 
