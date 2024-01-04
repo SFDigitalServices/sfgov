@@ -48,22 +48,41 @@ class WagtailApiCredentialsForm extends ConfigFormBase {
       '#title' => $this->t('Port'),
       '#default_value' => $this->config('sfgov_api.settings')->get('port'),
     ];
-    $form['wag_parent_en'] = [
+    $form['use_port'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Use Port'),
+      '#default_value' => $this->config('sfgov_api.settings')->get('use_port'),
+    ];
+    $form['api_url_base'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('API URL Base'),
+      '#description' => $this->t('Save the form to generate this value.'),
+      '#disabled' => TRUE,
+      '#default_value' => $this->config('sfgov_api.settings')->get('api_url_base'),
+      '#disabled' => TRUE,
+    ];
+
+    $form['wag_parent'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Wagtail Parent IDs'),
+      '#description' => $this->t('These are the Wagtail page IDs for the parent pages of the translated pages.'),
+    ];
+    $form['wag_parent']['wag_parent_en'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wagtail Parent ID for English'),
       '#default_value' => $this->config('sfgov_api.settings')->get('wag_parent_en'),
     ];
-    $form['wag_parent_es'] = [
+    $form['wag_parent']['wag_parent_es'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wagtail Parent ID for Spanish'),
       '#default_value' => $this->config('sfgov_api.settings')->get('wag_parent_es'),
     ];
-    $form['wag_parent_fil'] = [
+    $form['wag_parent']['wag_parent_fil'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wagtail Parent ID for Filipino'),
       '#default_value' => $this->config('sfgov_api.settings')->get('wag_parent_fil'),
     ];
-    $form['wag_parent_zh_hant'] = [
+    $form['wag_parent']['wag_parent_zh_hant'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wagtail Parent ID for Chinese'),
       '#default_value' => $this->config('sfgov_api.settings')->get('wag_parent_zh_hant'),
@@ -77,11 +96,13 @@ class WagtailApiCredentialsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Manually assemble a URL base for the API and store it with the config.
-    $api_url_base = 'http://' . $form_state->getValue('host_ip') . ':' . $form_state->getValue('port') . '/api/cms/';
+    $use_port = $form_state->getValue('use_port');
+    $api_url_base = 'https://' . $form_state->getValue('host_ip') . ($use_port ? ':' . $form_state->getValue('port') : '') . '/api/cms/';
     $this->config('sfgov_api.settings')
       ->set('username', $form_state->getValue('username'))
       ->set('password', $form_state->getValue('password'))
       ->set('host_ip', $form_state->getValue('host_ip'))
+      ->set('use_port', $form_state->getValue('use_port'))
       ->set('port', $form_state->getValue('port'))
       ->set('wag_parent_en', $form_state->getValue('wag_parent_en'))
       ->set('wag_parent_es', $form_state->getValue('wag_parent_es'))
