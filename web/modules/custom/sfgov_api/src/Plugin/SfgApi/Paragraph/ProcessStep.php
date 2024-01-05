@@ -27,7 +27,7 @@ class ProcessStep extends SfgApiParagraphBase {
     return [
       'step_type' => $this->editFieldValue($entity->get('field_process_step_type')->value, ['#' => 'number']),
       'title' => $entity->get('field_title')->value,
-      'optional' => $entity->get('field_process_optional')->value,
+      'optional' => (int) $entity->get('field_process_optional')->value,
       'time' => $entity->get('field_text_time')->value,
       'step_description' => $entity->get('field_process_step_description')->value,
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
