@@ -165,3 +165,4 @@ echo "from django.contrib.auth import get_user_model; User = get_user_model(); U
 ./manage.py setup_locales &&
 ./manage.py loaddata home_translations &&
 ./manage.py runserver
+```

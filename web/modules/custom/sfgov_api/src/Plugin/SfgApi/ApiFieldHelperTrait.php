@@ -106,14 +106,8 @@ trait ApiFieldHelperTrait {
       }
       $entities_data[] = $reference_data;
     }
-    // If there is only one result, flatten the array.
-    if (count($entities_data) === 1) {
-      $final_data = $entities_data[0];
-    }
-    else {
-      $final_data = $entities_data;
-    }
-    return $final_data;
+
+    return $entities_data;
   }
 
   /**
