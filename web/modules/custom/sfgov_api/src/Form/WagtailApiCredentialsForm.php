@@ -53,6 +53,15 @@ class WagtailApiCredentialsForm extends ConfigFormBase {
       '#title' => $this->t('Use Port'),
       '#default_value' => $this->config('sfgov_api.settings')->get('use_port'),
     ];
+    $form['protocol'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Which protocol to use'),
+      '#options' => [
+        'https://' => $this->t('https'),
+        'http://' => $this->t('http'),
+      ],
+      '#default_value' => $this->config('sfgov_api.settings')->get('protocol'),
+    ];
     $form['api_url_base'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API URL Base'),
@@ -97,12 +106,13 @@ class WagtailApiCredentialsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Manually assemble a URL base for the API and store it with the config.
     $use_port = $form_state->getValue('use_port');
-    $api_url_base = 'https://' . $form_state->getValue('host_ip') . ($use_port ? ':' . $form_state->getValue('port') : '') . '/api/cms/';
+    $api_url_base = $form_state->getValue('protocol') . $form_state->getValue('host_ip') . ($use_port ? ':' . $form_state->getValue('port') : '') . '/api/cms/';
     $this->config('sfgov_api.settings')
       ->set('username', $form_state->getValue('username'))
       ->set('password', $form_state->getValue('password'))
       ->set('host_ip', $form_state->getValue('host_ip'))
       ->set('use_port', $form_state->getValue('use_port'))
+      ->set('protocol', $form_state->getValue('protocol'))
       ->set('port', $form_state->getValue('port'))
       ->set('wag_parent_en', $form_state->getValue('wag_parent_en'))
       ->set('wag_parent_es', $form_state->getValue('wag_parent_es'))
