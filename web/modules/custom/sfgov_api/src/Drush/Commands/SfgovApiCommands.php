@@ -276,7 +276,7 @@ class SfgovApiCommands extends DrushCommands {
         $return_data_array = json_decode($return_json, TRUE);
 
         // Parse the URL to get an ID.
-        $url_elements = parse_url($return_data_array['detail_url']);
+        $url_elements = parse_url($return_data_array['url']);
         $url_array = explode('/', trim($url_elements['path'], '/'));
         $wag_page_id = end($url_array);
         $wag_page_status = $options['stub'] ? 'stub' : 'complete';
