@@ -23,17 +23,16 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
    * {@inheritDoc}
    */
   public function setBaseData($media) {
-    $referenced_file = $media->get('field_media_image')->referencedEntities()[0];
-    $file_uri = $referenced_file->getFileUri();
-    $file_path = \Drupal::service('file_system')->realpath($file_uri);
-    $referenced_file->getFilename();
-
+    $file_data = $this->getReferencedFile($media);
     $base_data = [
       'title' => $media->get('name')->value,
-      'file' => $file_path,
+      'file' => $file_data['path'],
+      'fid' => $file_data['fid'],
+      // @todo, remove once we have a better source for alt text.
+      'alt_text' => 'temp',
     ];
 
-    if (!$file_path) {
+    if (!$file_data['path']) {
       $message = $this->t('No base file found for media of type @bundle with id @entity_id in langcode @langcode', [
         '@bundle' => $this->getBundle(),
         '@entity_id' => $media->id(),
@@ -42,6 +41,39 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
       $this->addPluginError('No file', $message);
     }
     return $base_data;
+  }
+
+  /**
+   * Get the referenced file from the media entity.
+   *
+   * @param \Drupal\media\MediaInterface $media
+   *   The media entity.
+   *
+   * @return array
+   *   The referenced file.
+   */
+  public function getReferencedFile($media) {
+    $file_field_name = '';
+    $bundle = $media->bundle();
+    switch ($bundle) {
+      case 'file':
+        $file_field_name = 'field_media_file';
+        break;
+      case 'image':
+        $file_field_name = 'field_media_image';
+        break;
+    }
+
+    $referenced_file = $media->get($file_field_name)->referencedEntities()[0];
+    $file_uri = $referenced_file->getFileUri();
+
+    $file_data = [
+      'name' => $referenced_file->getFilename(),
+      'path' => \Drupal::service('file_system')->realpath($file_uri),
+      'fid' => $referenced_file->id(),
+    ];
+
+    return $file_data;
   }
 
 }

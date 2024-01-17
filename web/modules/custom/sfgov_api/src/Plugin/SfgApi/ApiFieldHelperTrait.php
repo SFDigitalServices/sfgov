@@ -69,11 +69,15 @@ trait ApiFieldHelperTrait {
    *
    * @param array $entities
    *   An array of entities.
+   * @param bool $id_only
+   *  Whether to return only the id of the referenced entity.
+   * @param bool $flatten
+   *  Whether to flatten the array into a single entry.
    *
    * @return array
    *   An array of entity references.
    */
-  public function getReferencedEntity(array $entities) {
+  public function getReferencedEntity(array $entities, $id_only = FALSE, $flatten = FALSE) {
     $wagtail_utilities = \Drupal::service('sfgov_api.utilities');
     $entities_data = [];
     foreach ($entities as $entity) {
@@ -96,32 +100,65 @@ trait ApiFieldHelperTrait {
 
         case 'node':
           // Node references are made via their Wagtail ID and bundle.
-          $reference_data = '/api/cms/sf.' . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
+          if ($id_only) {
+            $reference_data = $wagtail_id;
+          }
+          else {
+            $reference_data = '/api/cms/sf.' . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
+          }
           break;
 
         case 'media':
           // Media references are very similar to node references.
-          $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
+          if ($id_only) {
+            $reference_data = $wagtail_id;
+          }
+          else {
+            $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
+          }
           break;
       }
       $entities_data[] = $reference_data;
+    }
+
+    if ($flatten) {
+      $entities_data = $entities_data[0];
     }
 
     return $entities_data;
   }
 
   /**
-   * Return time in the format that wagtail expects.
+   * Take drupal data and combine it into a streamfield for Wagtail.
+   *
+   * @param array $data
+   *   An array of data.
+   *
+   * @return array
+   *   An array in the expected streamfield shape.
+   */
+  public function setToStreamField($data, $streamfield_type) {
+    $streamfield_array = [
+      'type' => $streamfield_type,
+      'value' => $data,
+    ];
+    return $streamfield_array;
+  }
+
+  /**
+   * Convert a timestamp to a specific date format.
    *
    * @param int $timestamp
-   *   A unix timestamp.
+   *   The timestamp to convert.
+   * @param string $format
+   *   The format to convert to.
    *
    * @return string
-   *   A string in the format that wagtail expects.
+   *   The converted date.
    */
-  public function getWagtailTime(int $timestamp) {
+  public function convertTimestampToFormat(int $timestamp, string $format) {
     $drupal_datetime = DrupalDateTime::createFromTimestamp($timestamp);
-    return $drupal_datetime->format('Y-m-d\TH:i:s.uP');
+    return $drupal_datetime->format($format);
   }
 
   /**
@@ -135,10 +172,9 @@ trait ApiFieldHelperTrait {
    * @return string
    *   The converted date in format 'YYYY-MM-DD'.
    */
-  public function convertDateFromFormat(string $input_format, string $value) {
+  public function convertDateFromFormat(string $input_format, string $value, $output_format) {
     $drupalDatetime = DrupalDateTime::createFromFormat($input_format, $value);
-    // Format the datetime as 'YYYY-MM-DD'.
-    return $drupalDatetime->format('Y-m-d');
+    return $drupalDatetime->format($output_format);
   }
 
   /**
