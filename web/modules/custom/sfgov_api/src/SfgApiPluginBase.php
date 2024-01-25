@@ -101,6 +101,20 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   }
 
   /**
+   * The emptyReference value.
+   *
+   * @var array
+   */
+  protected $emptyReference = [];
+
+  /**
+   * Get the emptyReference value.
+   */
+  public function getEmptyReferences() {
+    return $this->emptyReference;
+  }
+
+  /**
    * Set BaseData for the prepareData function.
    */
   abstract public function setBaseData(EntityInterface $entity);

@@ -72,6 +72,18 @@ Examples:
  - media image:8825 in english `/sfgov-api-viewer/entity/en/media/image/8825`
  - paragraph process_step:1646 in english: `/sfgov-api-viewer/entity/en/paragraph/process_step/1646`
 
+Note: If you see a field that looks like the following
+```
+  "empty_reference": true,
+  "entity_type": "node",
+  "bundle": "transaction",
+  "langcode": "en",
+  "entity_id": "397"
+```
+This means that the field is an entity reference, but the node being referenced doesn't yet exist in wagtail.
+Run your `sfgov_api:push_entity` or `sfgov_api:push_entity_by_bundle` commands with the `--references` flag
+to update these references before pushing the node
+
 **For an entity type to work it has to have a corresponding plugin in sfgov_api/src/Plugin/SfgApi**
 
 # Pushing to Wagtail
@@ -129,8 +141,13 @@ Both of these commands have the following optional parameters
 other is an html file of what went wrong in Wagtail.
 - `--stub`: Use to push just the stub data of an entity (title, slug, parent page)
 - `--update`: Update the data of an existing node in Wagtail
+- `--references`: Push stub versions of the entities this node depends on
 
 Both of these basically route to the `pushToWagtail` function which does the heavy lifting.
+
+There is also a command to clear out the wagtail tables in Drupal when you want to start from scratch.
+`sfgov_api:clear_wagtail_tables`. It requires an extra option of `--node`, `--media`, `--error`, or `--all`
+depending on which table(s) you want to clear.
 
 ## Error handling
 There are three primary types of errors that can come from this process. This list might expand
@@ -166,3 +183,5 @@ echo "from django.contrib.auth import get_user_model; User = get_user_model(); U
 ./manage.py loaddata home_translations &&
 ./manage.py runserver
 ```
+
+(If you do this make sure to also clear our the Drupal side with `drush sfgov_api:clear_wagtail_tables --all`)

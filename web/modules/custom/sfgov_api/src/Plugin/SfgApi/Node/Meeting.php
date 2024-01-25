@@ -26,7 +26,7 @@ class Meeting extends SfgApiNodeBase {
   public function setCustomData($entity) {
     $date_data = $this->convertSmartDate($entity->get('field_smart_date')->getValue()[0]);
     return [
-      //@todo: still in progress
+      // @todo still in progress
       'cancelled' => $entity->get('field_meeting_cancel')->value,
       'date_time' => $this->setToStreamField($date_data, 'date_time'),
       // 'meeting_location' => // blocked by addresses
@@ -50,7 +50,6 @@ class Meeting extends SfgApiNodeBase {
       // 'field_meeting_artifacts' => $entity->get('field_meeting_artifacts')->value,
       // 'cancel' => $entity->get('field_meeting_cancel')->value,
       // 'field_phone_numbers' => $entity->get('field_phone_numbers')->value,
-
     ];
   }
 

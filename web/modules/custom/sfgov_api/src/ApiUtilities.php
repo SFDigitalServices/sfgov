@@ -226,6 +226,10 @@ class ApiUtilities {
    *   The ID of the corresponding Wagtail page.
    */
   public function updateWagIdTable(string $entity_type, int $drupal_id, string $wag_page_status, string $langcode, string $wag_page_id) {
+    // If there is already a wag page ID, use that.
+    if ($wag_page_id === 'none') {
+      $wag_page_id = $this->getWagtailId($drupal_id, $entity_type, $langcode);
+    }
     $table_name = 'drupal_wagtail_' . $entity_type . '_id_map';
     $this->connection->upsert($table_name)
       ->key('drupal_id')
@@ -258,6 +262,13 @@ class ApiUtilities {
     );
 
     return $client_config;
+  }
+
+  /**
+   * Clear all references from tables that Drupal is using to track migration.
+   */
+  public function clearWagtailTable($table_name) {
+    $this->connection->truncate($table_name)->execute();
   }
 
 }

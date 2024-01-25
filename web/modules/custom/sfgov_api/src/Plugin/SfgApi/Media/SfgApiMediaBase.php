@@ -28,7 +28,7 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
       'title' => $media->get('name')->value,
       'file' => $file_data['path'],
       'fid' => $file_data['fid'],
-      // @todo, remove once we have a better source for alt text.
+      // @todo , remove once we have a better source for alt text.
       'alt_text' => 'temp',
     ];
 
@@ -59,6 +59,7 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
       case 'file':
         $file_field_name = 'field_media_file';
         break;
+
       case 'image':
         $file_field_name = 'field_media_image';
         break;

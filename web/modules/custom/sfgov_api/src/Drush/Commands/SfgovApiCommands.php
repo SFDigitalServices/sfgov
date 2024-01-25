@@ -133,6 +133,7 @@ class SfgovApiCommands extends DrushCommands {
     'print' => FALSE,
     'stub' => FALSE,
     'update' => FALSE,
+    'references' => FALSE,
   ]) {
     $bundle_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('bundle');
     $query = $this->entityTypeManager->getStorage($entity_type)->getQuery()
@@ -166,6 +167,7 @@ class SfgovApiCommands extends DrushCommands {
     'print' => FALSE,
     'stub' => FALSE,
     'update' => FALSE,
+    'references' => FALSE,
   ]) {
     // Get the correct plugin for the display.
     if (!$plugin_label = $this->sfgApiPluginManager->validatePlugin($entity_type, $bundle)) {
@@ -191,7 +193,60 @@ class SfgovApiCommands extends DrushCommands {
       return $this->output()->writeln($message);
     }
 
+    // If the references option is set, get the referenced entities and push
+    // stubs of them first.
+    if ($options['references']) {
+      $referenced_entities = $payload->getEmptyReferences();
+      foreach ($referenced_entities as $referenced_entity) {
+        $this->pushEntity(
+          $referenced_entity['entity_type'],
+          $referenced_entity['bundle'],
+          $referenced_entity['langcode'],
+          $referenced_entity['entity_id'],
+          [
+            'print' => FALSE,
+            'stub' => TRUE,
+            'update' => FALSE,
+            'references' => FALSE,
+          ]);
+      }
+      $message = $this->t('All references updated for @entity_type:@bundle with ID @entity_id in langcode @langcode updated.', [
+        '@entity_type' => $entity_type,
+        '@bundle' => $bundle,
+        '@entity_id' => $entity_id,
+        '@langcode' => $langcode,
+      ]);
+      return $this->output()->writeln($message);
+    }
     return $this->pushToWagtail($payload, $bundle, $options);
+  }
+
+  /**
+   * Clear all content from the wagtail tables in Drupal.
+   *
+   * @command sfgov_api:clear_wagtail_tables
+   * @aliases cwt
+   */
+  public function clearWagtailTables($options = [
+    'node' => FALSE,
+    'media' => FALSE,
+    'errors' => FALSE,
+    'all' => FALSE,
+  ]) {
+    $tables = [];
+    if ($options['node'] || $options['all']) {
+      $tables[] = 'drupal_wagtail_node_id_map';
+    }
+    if ($options['media'] || $options['all']) {
+      $tables[] = 'drupal_wagtail_media_id_map';
+    }
+    if ($options['errors'] || $options['all']) {
+      $tables[] = 'drupal_wagtail_errors';
+    }
+    foreach ($tables as $table_name) {
+      $this->apiUtilities->clearWagtailTable($table_name);
+      $this->output()->writeln('Cleared table: ' . $table_name);
+    }
   }
 
   /**
@@ -248,7 +303,8 @@ class SfgovApiCommands extends DrushCommands {
       $client_config = $this->apiUtilities->printCurlCommand($client_config);
     }
 
-    if ($options['stub']) {
+    // Stub entities should really only be nodes.
+    if ($options['stub'] && $entity_type === 'node') {
       $client_config['query']['stub'] = TRUE;
       $client_config['json'] = $payload->getStubData();
     }
@@ -276,7 +332,7 @@ class SfgovApiCommands extends DrushCommands {
         $return_data_array = json_decode($return_json, TRUE);
 
         // Parse the URL to get an ID.
-        $url_elements = parse_url($return_data_array['url']);
+        $url_elements = isset($return_data_array['detail_url']) ? parse_url($return_data_array['detail_url']) : parse_url($return_data_array['url']);
         $url_array = explode('/', trim($url_elements['path'], '/'));
         $wag_page_id = end($url_array);
         $wag_page_status = $options['stub'] ? 'stub' : 'complete';

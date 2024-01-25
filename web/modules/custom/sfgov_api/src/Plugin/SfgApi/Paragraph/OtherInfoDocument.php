@@ -29,11 +29,11 @@ class OtherInfoDocument extends SfgApiParagraphBase {
     $file_info = $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE);
     $title = $entity->get('field_title')->value;
     $data = [
-        'title' => $title,
-        'documents' => [
-          'type' => 'document',
-          'value' => $file_info[0],
-        ]
+      'title' => $title,
+      'documents' => [
+        'type' => 'document',
+        'value' => $file_info[0],
+      ],
     ];
     return $data;
   }

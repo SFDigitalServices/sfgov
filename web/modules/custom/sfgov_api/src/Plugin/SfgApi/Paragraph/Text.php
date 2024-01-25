@@ -8,15 +8,15 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "paragraph_image",
- *   title = @Translation("Paragraph image"),
- *   bundle = "image",
- *   wag_bundle = "image",
+ *   id = "paragraph_text",
+ *   title = @Translation("Paragraph text"),
+ *   bundle = "text",
+ *   wag_bundle = "text",
  *   entity_id = {},
  *   langcode = {},
  * )
  */
-class Image extends SfgApiParagraphBase {
+class Text extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 
@@ -25,7 +25,7 @@ class Image extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'image' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), FALSE, TRUE),
+      'text' => $entity->get('field_text')->value,
     ];
   }
 
