@@ -11,7 +11,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "node_information_page",
  *   title = @Translation("Node information_page"),
  *   bundle = "information_page",
- *   wag_bundle = "information_page",
+ *   wag_bundle = "Information",
  *   entity_id = {},
  *   langcode = {},
  * )
@@ -30,7 +30,7 @@ class InformationPage extends SfgApiNodeBase {
       'information_section' => $this->getReferencedData($entity->get('field_information_section')->referencedEntities()),
       'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
-      // // @todo, this field references a bunch of content types that don't exist in the API yet.
+      // @todo , this field references a bunch of content types that don't exist in the API yet.
       'related_pages' => $this->getReferencedEntity($entity->get('field_related_content')->referencedEntities()),
     ];
   }

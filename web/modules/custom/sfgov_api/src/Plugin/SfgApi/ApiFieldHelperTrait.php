@@ -65,14 +65,14 @@ trait ApiFieldHelperTrait {
   }
 
   /**
-   * Get entity reference data using the corresponding plugins.
+   * Get references to entities using the corresponding plugins.
    *
    * @param array $entities
    *   An array of entities.
    * @param bool $id_only
-   *  Whether to return only the id of the referenced entity.
+   *   Whether to return only the id of the referenced entity.
    * @param bool $flatten
-   *  Whether to flatten the array into a single entry.
+   *   Whether to flatten the array into a single entry.
    *
    * @return array
    *   An array of entity references.
@@ -85,44 +85,53 @@ trait ApiFieldHelperTrait {
       $entity_type = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
       $langcode = $entity->language()->getId();
-      $wagtail_id = $wagtail_utilities->getWagtailId($entity_id, $entity_type, $langcode) ?: 'not found';
+      $wagtail_id = $wagtail_utilities->getWagtailId($entity_id, $entity_type, $langcode) ?: NULL;
       $reference_data = [];
 
-      switch ($entity_type) {
-        case 'paragraph':
-          // Paragraphs become streamfields in wagtail. Which expect a type and
-          // a value. Other data is just metadata.
-          $reference_data['drupal_id'] = (int) $entity_id;
-          $reference_data['entity_type'] = $entity_type;
-          $reference_data['type'] = $bundle;
-          $reference_data['value'] = (int) $wagtail_id;
-          break;
+      if (!$wagtail_id) {
+        $reference_data = [
+          'empty_reference' => TRUE,
+          'entity_type' => $entity_type,
+          'bundle' => $bundle,
+          'langcode' => $langcode,
+          'entity_id' => $entity_id,
+        ];
+      }
+      elseif ($id_only) {
+        $reference_data = (int) $wagtail_id;
+      }
+      else {
+        switch ($entity_type) {
+          case 'paragraph':
+            // Paragraphs become streamfields in wagtail. Which expect a type and
+            // a value. Other data is just metadata.
+            $reference_data['drupal_id'] = (int) $entity_id;
+            $reference_data['entity_type'] = $entity_type;
+            $reference_data['type'] = $bundle;
+            $reference_data['value'] = (int) $wagtail_id;
+            break;
 
-        case 'node':
-          // Node references are made via their Wagtail ID and bundle.
-          if ($id_only) {
-            $reference_data = $wagtail_id;
-          }
-          else {
+          case 'node':
+            // Node references are made via their Wagtail ID and bundle.
             $reference_data = '/api/cms/sf.' . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
-          }
-          break;
+            break;
 
-        case 'media':
-          // Media references are very similar to node references.
-          if ($id_only) {
-            $reference_data = $wagtail_id;
-          }
-          else {
+          case 'media':
+            // Media references are very similar to node references.
             $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
-          }
-          break;
+            break;
+        }
       }
       $entities_data[] = $reference_data;
     }
 
     if ($flatten) {
-      $entities_data = $entities_data[0];
+      if (isset($entities_data[0])) {
+        $entities_data = $entities_data[0];
+      }
+      else {
+        $entities_data = '';
+      }
     }
 
     return $entities_data;

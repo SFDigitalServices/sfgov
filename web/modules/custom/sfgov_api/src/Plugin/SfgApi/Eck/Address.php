@@ -14,7 +14,7 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Media;
  *   langcode = {},
  * )
  */
-class Image extends SfgApiMediaBase {
+class Address extends SfgApiMediaBase {
 
   /**
    * {@inheritDoc}

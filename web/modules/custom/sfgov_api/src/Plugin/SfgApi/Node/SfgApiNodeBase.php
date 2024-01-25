@@ -41,6 +41,10 @@ abstract class SfgApiNodeBase extends SfgApiPluginBase {
       'related_content_part_of' => [],
       'relatedcontenttopic_set' => [],
       'related_content_topics' => [],
+      'related_information' => [],
+      'part_of_locations' => [],
+      'related_locations' => [],
+      'related_transaction' => [],
     ];
 
     return $base_data;

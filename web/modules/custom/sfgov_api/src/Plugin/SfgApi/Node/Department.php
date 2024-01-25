@@ -27,7 +27,6 @@ class Department extends SfgApiNodeBase {
     return [
       // @todo this plugin is incomplete and only exists for entity referencing
       // at the moment.
-
       // 'field_about_description' => $entity->get('field_about_description')->value,
       // 'field_about_or_description' => $entity->get('field_about_or_description')->value,
       // 'field_address' => $entity->get('field_address')->value,

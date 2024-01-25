@@ -84,6 +84,13 @@ class Payload {
   protected $pluginErrors;
 
   /**
+   * The empty references.
+   *
+   * @var array
+   */
+  protected $emptyReferences;
+
+  /**
    * Constructs a new Payload object.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -113,6 +120,8 @@ class Payload {
     $this->metadata = $this->setMetadata();
     $this->stub = $this->setStub();
     $this->payloadData = $this->setPayloadData();
+    $this->emptyReferences = [];
+    $this->setEmptyReferences($this->customData);
   }
 
   /**
@@ -144,6 +153,13 @@ class Payload {
   }
 
   /**
+   * Get the empty references.
+   */
+  public function getEmptyReferences() {
+    return $this->emptyReferences;
+  }
+
+  /**
    * Check for errors in the plugin and entity request.
    */
   public function checkErrors() {
@@ -165,6 +181,7 @@ class Payload {
         'langcode' => $this->requestedLangcode,
         'translations' => array_keys($entity->getTranslationLanguages()),
         'wag_bundle' => $this->wagBundle,
+        'empty_references' => $this->emptyReferences ?: [],
       ];
     }
 
@@ -202,6 +219,24 @@ class Payload {
     }
 
     return $this->payloadData = $payload;
+  }
+
+  /**
+   * Collect all the empty references.
+   *
+   * @param array $custom_data
+   *   The custom data.
+   */
+  public function setEmptyReferences($custom_data) {
+    $empty_references = [];
+    foreach ($custom_data as $key => $value) {
+      if (is_array($value)) {
+        $empty_references[$key] = $this->setEmptyReferences($value);
+      }
+      elseif ($key == 'empty_reference') {
+        $this->emptyReferences[] = $custom_data;
+      }
+    }
   }
 
 }
