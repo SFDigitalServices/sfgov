@@ -26,7 +26,7 @@ class DataStorySection extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       'title' => $entity->get('field_title')->value,
-      'field_content' => $this->getReferencedData($entity->get('field_content')->value),
+      'field_content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
     ];
   }
 

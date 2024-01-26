@@ -61,6 +61,21 @@ trait ApiFieldHelperTrait {
         $entities_data[] = 'Error: no available plugins for this entity';
       }
     }
+
+    // For some reason Wagtail needs streamfields with a single entry to be
+    // flattened. Currently this is only in place to make the paragraph_image
+    // plugin work but there are probably other paragraphs that will need this.
+    foreach ($entities_data as $key => $entity_data) {
+      if (is_array($entity_data)) {
+        if (count($entity_data['value']) == 1) {
+          $entities_data[$key] = [
+            'type' => $entity_data['type'],
+            'value' => $entity_data['value']['value'],
+          ];
+        }
+      }
+    }
+
     return $entities_data;
   }
 
@@ -73,11 +88,13 @@ trait ApiFieldHelperTrait {
    *   Whether to return only the id of the referenced entity.
    * @param bool $flatten
    *   Whether to flatten the array into a single entry.
+   * @param bool $multitype
+   *   Whether the referenced entity can be any type.
    *
    * @return array
    *   An array of entity references.
    */
-  public function getReferencedEntity(array $entities, $id_only = FALSE, $flatten = FALSE) {
+  public function getReferencedEntity(array $entities, $id_only = FALSE, $flatten = FALSE, $multitype = FALSE) {
     $wagtail_utilities = \Drupal::service('sfgov_api.utilities');
     $entities_data = [];
     foreach ($entities as $entity) {
@@ -101,6 +118,8 @@ trait ApiFieldHelperTrait {
         $reference_data = (int) $wagtail_id;
       }
       else {
+        // This is an awkward point to insert the multitype logic but it works.
+        $entity_type = $multitype ? 'multitype' : $entity_type;
         switch ($entity_type) {
           case 'paragraph':
             // Paragraphs become streamfields in wagtail. Which expect a type and
@@ -120,11 +139,19 @@ trait ApiFieldHelperTrait {
             // Media references are very similar to node references.
             $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . $wagtail_utilities->getWagBundle($entity) . '/' . $wagtail_id;
             break;
+
+          case 'multitype':
+            // Reference link is slightly different when the entity can be any
+            // type.
+            $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . 'pages' . '/' . $wagtail_id;
+            break;
         }
       }
       $entities_data[] = $reference_data;
     }
 
+    // Generally if there is only a single reference we want to flatten the
+    // array into a single entry, otherwise wagtail errors out.
     if ($flatten) {
       if (isset($entities_data[0])) {
         $entities_data = $entities_data[0];
@@ -203,6 +230,33 @@ trait ApiFieldHelperTrait {
     }
     else {
       return $value;
+    }
+  }
+
+  public function getWagtailId($entity) {
+    // Allow values to pass through this function and retain their type.
+    // if nothing is there since Wagtail is really finicky about typing.
+    if (!$entity) {
+      return $entity;
+    }
+    $wagtail_utilities = \Drupal::service('sfgov_api.utilities');
+    $entity_id = $entity->id();
+    $entity_type = $entity->getEntityTypeId();
+    $bundle = $entity->bundle();
+    $langcode = $entity->language()->getId();
+    $wagtail_id = $wagtail_utilities->getWagtailId($entity_id, $entity_type, $langcode) ?: NULL;
+
+    if (!$wagtail_id) {
+      return [
+        'empty_reference' => TRUE,
+        'entity_type' => $entity_type,
+        'bundle' => $bundle,
+        'langcode' => $langcode,
+        'entity_id' => $entity_id,
+      ];
+    }
+    else {
+      return $wagtail_id;
     }
   }
 

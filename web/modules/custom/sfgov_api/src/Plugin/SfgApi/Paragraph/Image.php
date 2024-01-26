@@ -25,7 +25,7 @@ class Image extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'image' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), FALSE, TRUE),
+      'value' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), TRUE, TRUE),
     ];
   }
 
