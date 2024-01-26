@@ -174,6 +174,11 @@ class SfgovApiCommands extends DrushCommands {
       return $this->output()->writeln('no matching plugin found with those arguments');
     }
 
+    $node_exists = $this->apiUtilities->getWagtailId($entity_id, $entity_type, $langcode);
+    if ($node_exists && !$options['update']) {
+      return $this->output()->writeln('Entity already exists, use the --update option to update it.');
+    }
+
     $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id);
 
     if (empty($payload->getPayloadData())) {
@@ -198,17 +203,20 @@ class SfgovApiCommands extends DrushCommands {
     if ($options['references']) {
       $referenced_entities = $payload->getEmptyReferences();
       foreach ($referenced_entities as $referenced_entity) {
-        $this->pushEntity(
-          $referenced_entity['entity_type'],
-          $referenced_entity['bundle'],
-          $referenced_entity['langcode'],
-          $referenced_entity['entity_id'],
+        $reference_exists = $this->apiUtilities->getWagtailId($referenced_entity['entity_id'], $referenced_entity['entity_type'], $referenced_entity['langcode']);
+        if (!$reference_exists) {
+          $this->pushEntity(
+            $referenced_entity['entity_type'],
+            $referenced_entity['bundle'],
+            $referenced_entity['langcode'],
+            $referenced_entity['entity_id'],
           [
             'print' => FALSE,
             'stub' => TRUE,
             'update' => FALSE,
             'references' => FALSE,
           ]);
+        }
       }
       $message = $this->t('All references updated for @entity_type:@bundle with ID @entity_id in langcode @langcode updated.', [
         '@entity_type' => $entity_type,
@@ -218,7 +226,9 @@ class SfgovApiCommands extends DrushCommands {
       ]);
       return $this->output()->writeln($message);
     }
-    return $this->pushToWagtail($payload, $bundle, $options);
+    else {
+      return $this->pushToWagtail($payload, $bundle, $options);
+    }
   }
 
   /**
