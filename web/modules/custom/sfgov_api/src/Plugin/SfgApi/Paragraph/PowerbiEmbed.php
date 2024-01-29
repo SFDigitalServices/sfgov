@@ -25,6 +25,7 @@ class PowerbiEmbed extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
+      'alt_text' => $entity->get('field_title')->value,
       'data_notes' => $entity->get('field_data_notes')->value,
       'source_data' => $entity->get('field_source_data')->value,
       'aspect_ratios' => [
@@ -39,7 +40,6 @@ class PowerbiEmbed extends SfgApiParagraphBase {
       ],
       'desktop_embed_url' => $entity->get('field_desktop_embed_url')->value,
       'mobile_embed_url' => $entity->get('field_mobile_embed_url')->value,
-      // 'field_title' => $entity->get('field_title')->value,
     ];
   }
 
