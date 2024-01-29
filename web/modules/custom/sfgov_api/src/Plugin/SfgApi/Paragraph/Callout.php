@@ -25,7 +25,7 @@ class Callout extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'field_text' => $entity->get('field_text')->value,
+      'value' => $entity->get('field_text')->value,
     ];
   }
 

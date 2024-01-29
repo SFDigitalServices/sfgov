@@ -62,16 +62,23 @@ trait ApiFieldHelperTrait {
       }
     }
 
-    // For some reason Wagtail needs streamfields with a single entry to be
-    // flattened. Currently this is only in place to make the paragraph_image
-    // plugin work but there are probably other paragraphs that will need this.
+    // There are some paragraphs that, if not filled out properly, will
+    // cause errors in wagtail. These are miscellaneous pieces of code
+    // to remove or edit certain paragraphs.
     foreach ($entities_data as $key => $entity_data) {
       if (is_array($entity_data)) {
+        // flatten image paragraphs.
         if (count($entity_data['value']) == 1) {
           $entities_data[$key] = [
             'type' => $entity_data['type'],
-            'value' => $entity_data['value']['value'],
+            'value' => reset($entity_data['value']),
           ];
+        }
+        // remove empty "section" paragraphs.
+        if ($entity_data['type'] == 'section') {
+          if ($entity_data["value"]["title"] === NULL && empty($entity_data["value"]["section_content"])) {
+            unset($entities_data[$key]);
+          }
         }
       }
     }

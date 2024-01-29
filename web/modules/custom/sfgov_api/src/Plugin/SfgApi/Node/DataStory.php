@@ -11,7 +11,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "node_data_story",
  *   title = @Translation("Node data_story"),
  *   bundle = "data_story",
- *   wag_bundle = "dataStory",
+ *   wag_bundle = "DataStory",
  *   entity_id = {},
  *   langcode = {},
  * )
@@ -25,9 +25,9 @@ class DataStory extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
-      'description' => $entity->get('field_description')->value,
+      'description' => $entity->get('field_description')->value ?: '',
       'content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
-      'field_departments' => $entity->get('field_departments')->value,
+      'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
     ];
   }
 
