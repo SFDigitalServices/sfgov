@@ -41,6 +41,11 @@ trait ApiFieldHelperTrait {
           $plugin_label = 'media_' . $bundle;
           break;
 
+        // Special case for "Resources" since ECK
+        case 'resource':
+          $plugin_label = 'eck_resource';
+          break;
+
         default:
           $entities_data[] = 'no data found';
           break;
