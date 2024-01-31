@@ -26,8 +26,11 @@ class AgendaItem extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       // 'field_file' => $entity->get('field_file')->value,
-      'field_text_agenda_item' => $entity->get('field_text_agenda_item')->value,
-      'field_title' => $entity->get('field_title')->value,
+      'documents' => $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE, TRUE),
+      'title_and_text' => [
+        'title' => $entity->get('field_title')->value,
+        'text' => $entity->get('field_text_agenda_item')->value,
+      ],
     ];
   }
 

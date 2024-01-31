@@ -30,7 +30,6 @@ class Video extends SfgApiParagraphBase {
       // 'field_description' => $entity->get('field_description')->value,
       // 'field_text' => $entity->get('field_text')->value,
       'title' => $entity->get('field_title')->value,
-      'description' => $entity->get('field_description')->value,
       'video_type' => [
         'type' => 'external_link',
         'value' => [
@@ -40,6 +39,7 @@ class Video extends SfgApiParagraphBase {
           'link_text' => 'Watch Video',
         ],
       ],
+      'description' => $entity->get('field_description')->value,
       // 'field_video' => $entity->get('field_video')->value,
     ];
   }
