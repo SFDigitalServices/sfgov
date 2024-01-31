@@ -86,6 +86,17 @@ to update these references before pushing the node
 
 **For an entity type to work it has to have a corresponding plugin in sfgov_api/src/Plugin/SfgApi**
 
+## ECK entities
+There are a handful of ECK entities that need to be migrated to wagtail. They are technically their own
+entity type with bundles. For instance, ECK 'address' is its own entity type, and physical/event_address are
+their own bundles on that entity type. This breaks the existing patterns that this module relies on.
+To solve this issue there are some workarounds at play:
+- The getReferencedEntity and getReferencedData functions have some manual
+  directions to the plugin.
+- The plugins themselves don't use a specialized base data plugin and instead
+  go straight to SfgApiPluginBase.
+- an extra tracking table.
+
 # Pushing to Wagtail
 
 ## Migration Strategy

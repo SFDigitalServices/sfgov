@@ -9,15 +9,15 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "eck_location_physical",
+ *   id = "eck_location_event_address",
  *   title = @Translation("ECK Location"),
- *   bundle = "physical",
+ *   bundle = "event_address",
  *   wag_bundle = "address",
  *   entity_id = {},
  *   langcode = {},
  * )
  */
-class Address extends SfgApiPluginBase {
+class EventAddress extends SfgApiPluginBase {
 
   use ApiFieldHelperTrait;
 
@@ -41,11 +41,7 @@ class Address extends SfgApiPluginBase {
    */
   public function setCustomData($entity) {
     $custom_data = [
-      'title' => $entity->get('title')->value,
       'address' => $entity->get('field_address')->getValue(),
-      'operating_hours' => $entity->get('field_operating_hours')->getValue(),
-      'description' => $entity->get('field_text')->getValue(),
-      'department' => $this->getReferencedEntity($entity->get('field_department')->referencedEntities()),
     ];
     return $custom_data;
   }
