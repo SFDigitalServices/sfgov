@@ -18,7 +18,7 @@ trait ApiFieldHelperTrait {
    * @return array
    *   An array of entity data.
    */
-  public function getReferencedData(array $entities) {
+  public function getReferencedData(array $entities, $type_reference = TRUE) {
     $sfgov_api_plugin_manager = \Drupal::service('plugin.manager.sfgov_api');
     $available_plugins = $sfgov_api_plugin_manager->getDefinitions();
 
@@ -41,9 +41,17 @@ trait ApiFieldHelperTrait {
           $plugin_label = 'media_' . $bundle;
           break;
 
-        // Special case for "Resources" since ECK
+        // These are all for ECK entities. see README for details.
+        case 'physical':
+          $plugin_label = 'eck_location_physical';
+          break;
+
+        case 'event_address':
+          $plugin_label = 'eck_location_event_address';
+          break;
+
         case 'resource':
-          $plugin_label = 'eck_resource';
+          $plugin_label = 'eck_resource_resource';
           break;
 
         default:
@@ -57,10 +65,18 @@ trait ApiFieldHelperTrait {
           'langcode' => $langcode,
           'entity_id' => $entity->id(),
         ]);
-        $entities_data[] = [
-          'type' => $plugin->pluginDefinition['wag_bundle'],
-          'value' => $plugin->getPayload()->getPayloadData(),
-        ];
+        if ($type_reference) {
+          $entities_data[] = [
+            'type' => $plugin->pluginDefinition['wag_bundle'],
+            'value' => $plugin->getPayload()->getPayloadData(),
+          ];
+        // most of the time we need to wrap the data in an array. But if it
+        // is expecting a streamfield that can have multiple values then
+        // we need to return only the data.
+        } else {
+          $entities_data[] = $plugin->getPayload()->getPayloadData();
+        }
+
       }
       else {
         $entities_data[] = 'Error: no available plugins for this entity';
@@ -71,7 +87,7 @@ trait ApiFieldHelperTrait {
     // cause errors in wagtail. These are miscellaneous pieces of code
     // to remove or edit certain paragraphs.
     foreach ($entities_data as $key => $entity_data) {
-      if (is_array($entity_data)) {
+      if (is_array($entity_data && $type_reference)) {
         // flatten image paragraphs.
         if (count($entity_data['value']) == 1) {
           $entities_data[$key] = [
@@ -270,6 +286,52 @@ trait ApiFieldHelperTrait {
     else {
       return $wagtail_id;
     }
+  }
+
+    /**
+   * Convert the smart date field to a format that can be used by the
+   * date_time field. Same logic thats used in SfgovDateFormatterBase
+   *
+   * @param array $data
+   *   The smart date field data.
+   *
+   * @return array
+   *   The converted data.
+   */
+  public function convertSmartDate($data) {
+    $start_date = $this->convertTimestampToFormat($data['value'], 'Y-m-d');
+    $start_time = $this->convertTimestampToFormat($data['value'], 'H:i:s');
+    $is_all_day = FALSE;
+    $include_end_date_time = TRUE;
+    $end_date = $this->convertTimestampToFormat($data['end_value'], 'Y-m-d');
+    $end_time = $this->convertTimestampToFormat($data['end_value'], 'H:i:s');
+
+    if ($start_time != $end_time) {
+      // If you mark it as "all day" the smart_date saves the time values as
+      // 11:59pm - 12:00am.
+      if ($start_time === '00:00:00' && $end_time === '23:59:00') {
+        $is_all_day = TRUE;
+      }
+      // If the end time is '11:59' on the day of the start time,
+      // hide it from display. This is how editors
+      // can indicate that there is no end time.
+      if ($end_time === '23:59:00') {
+        if ($start_date == $end_date) {
+          $include_end_date_time = FALSE;
+        }
+      }
+    }
+
+    $data = [
+      'end_date' => $end_date,
+      'end_time' => $end_time,
+      'is_all_day' => $is_all_day,
+      'start_date' => $start_date,
+      'start_time' => $start_time,
+      // @todo, change this back to a boolean once its fixed on the wagtail side.
+      'include_end_date_time' => $include_end_date_time ? 'yes' : 'no',
+    ];
+    return $data;
   }
 
 }
