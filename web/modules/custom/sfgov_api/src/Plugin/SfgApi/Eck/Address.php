@@ -2,6 +2,8 @@
 
 namespace Drupal\sfgov_api\Plugin\SfgApi\Eck;
 
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
+
 /**
  * Plugin implementation of the sfgov_api.
  *
@@ -16,6 +18,8 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Eck;
  */
 class Address extends SfgApiEckBase {
 
+  use ApiFieldHelperTrait;
+
   /**
    * {@inheritDoc}
    *
@@ -28,9 +32,11 @@ class Address extends SfgApiEckBase {
    */
   public function setCustomData($entity) {
     $custom_data = [
+      'title' => $entity->get('title')->value,
       'address' => $entity->get('field_address')->getValue(),
       'operating_hours' => $entity->get('field_operating_hours')->getValue(),
-      'text' => $entity->get('field_text')->getValue(),
+      'description' => $entity->get('field_text')->getValue(),
+      'department' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
     ];
     return $custom_data;
   }
