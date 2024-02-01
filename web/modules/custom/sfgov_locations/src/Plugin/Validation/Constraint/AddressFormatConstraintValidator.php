@@ -16,6 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\address\LabelHelper;
 
 class AddressFormatConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface
 {
@@ -195,19 +196,15 @@ class AddressFormatConstraintValidator extends ConstraintValidator implements Co
     /**
      * Adds a violation.
      *
-     * @param string $field          The field.
-     * @param string        $message        The error message.
-     * @param mixed         $invalidValue   The invalid, validated value.
-     * @param AddressFormat $addressFormat The address format.
+     * @param string $message        The error message.
+     * @param mixed  $invalidValue   The invalid, validated value.
      */
-    protected function addViolation($field, $message, $invalidValue, AddressFormat $addressFormat) {
-      $labels = LabelHelper::getFieldLabels($address_format);
-      $label = $labels[$field];
-
-      $this->context->buildViolation($message, ['@name' => $label])
-        ->atPath(FieldHelper::getPropertyName($field))
-        ->setInvalidValue($invalid_value)
-        ->addViolation();
+    protected function addViolation(string $field, string $message, mixed $invalidValue, AddressFormat $addressFormat): void
+    {
+        $this->context->buildViolation($message)
+            ->atPath('[' . $field . ']')
+            ->setInvalidValue($invalidValue)
+            ->addViolation();
     }
 
     /**
