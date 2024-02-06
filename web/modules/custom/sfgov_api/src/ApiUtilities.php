@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
@@ -78,8 +79,8 @@ class ApiUtilities {
     $this->configFactory = $configFactory;
     $this->connection = $connection;
     $this->moduleHandler = $moduleHandler;
-    $this->credentials = $this->setCredentials();
     $this->languageManager = $languageManager;
+    $this->credentials = $this->setCredentials();
   }
 
   /**
