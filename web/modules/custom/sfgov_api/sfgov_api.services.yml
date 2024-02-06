@@ -11,7 +11,7 @@ services:
     class: Drupal\sfgov_api\Drush\Commands\SfgovApiCommands
     tags:
       - { name: drush.command }
-    arguments: ['@http_client', '@plugin.manager.sfgov_api', '@module_handler', '@config.factory', '@sfgov_api.utilities', '@entity_type.manager']
+    arguments: ['@http_client', '@plugin.manager.sfgov_api', '@module_handler', '@config.factory', '@sfgov_api.utilities', '@entity_type.manager', '@database']
 
   api_plugin.generator:
     class: Drupal\sfgov_api\Generators\ApiPluginGenerator

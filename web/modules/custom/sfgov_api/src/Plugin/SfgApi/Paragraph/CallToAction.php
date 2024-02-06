@@ -24,7 +24,6 @@ class CallToAction extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    $derp = true;
     return [
       // By default the getReferencedData method will return the data wrapped
       // in an array. this works most of the time, but breaks when wagtail

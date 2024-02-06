@@ -73,6 +73,13 @@ class SfgovApiCommands extends DrushCommands {
   protected $entityTypeManager;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * Constructs a SfgovApiCommands object.
    *
    * @param \GuzzleHttp\ClientInterface $httpClient
@@ -87,8 +94,10 @@ class SfgovApiCommands extends DrushCommands {
    *   The API utilities service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
    */
-  public function __construct(ClientInterface $httpClient, SfgApiPluginManager $sfgApiPluginManager, ModuleHandlerInterface $moduleHandler, ConfigFactoryInterface $configFactory, ApiUtilities $apiUtilities, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(ClientInterface $httpClient, SfgApiPluginManager $sfgApiPluginManager, ModuleHandlerInterface $moduleHandler, ConfigFactoryInterface $configFactory, ApiUtilities $apiUtilities, EntityTypeManagerInterface $entityTypeManager, Connection $database) {
     parent::__construct();
     $this->httpClient = $httpClient;
     $this->sfgApiPluginManager = $sfgApiPluginManager;
@@ -96,6 +105,7 @@ class SfgovApiCommands extends DrushCommands {
     $this->configFactory = $configFactory;
     $this->apiUtilities = $apiUtilities;
     $this->entityTypeManager = $entityTypeManager;
+    $this->database = $database;
   }
 
   /**
@@ -108,8 +118,30 @@ class SfgovApiCommands extends DrushCommands {
       $container->get('module_handler'),
       $container->get('config.factory'),
       $container->get('sfgov_api.utilities'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('database')
     );
+  }
+
+  /**
+   * Install all current tracking tables based on existing plugins.
+   *
+   * @command sfgov_api:install_tracking_tables
+   * @aliases itt
+   */
+  public function installTrackingTables() {
+    $database = $this->database;
+    $plugins = $this->sfgApiPluginManager->getDefinitions();
+    foreach ($plugins as $plugin) {
+      // We need tables for everything except paragraphs.
+      if (!str_starts_with($plugin['id'], 'paragraph')) {
+        $table_name = 'dw_migration_' . $plugin['id'] . '_id_map';
+        if (!$database->schema()->tableExists($table_name)) {
+          $schema = $this->apiUtilities->buildTrackingTableSchema($plugin['id']);
+          $database->schema()->createTable($table_name, $schema[$table_name]);
+        }
+      }
+    }
   }
 
   /**
@@ -124,8 +156,10 @@ class SfgovApiCommands extends DrushCommands {
    * @param array $options
    *   Other options.
    *
-   * @option print Print the output from the cURL command.
-   * @option format The format of the output, either full or stub.
+   * @option print: Print the output from the cURL command.
+   * @option stub: Push stubs of the entities.
+   * @option update: Update the entities.
+   * @option references: Push stubs of the referenced entities.
    * @command sfgov_api:push_entity_by_bundle
    * @aliases peb
    */
@@ -158,8 +192,10 @@ class SfgovApiCommands extends DrushCommands {
    * @param array $options
    *   Other options.
    *
-   * @option print Print the output from the cURL command.
-   * @option format The format of the output, either full or stub.
+   * @option print: Print the output from the cURL command.
+   * @option stub: Push stubs of the entities.
+   * @option update: Update the entities.
+   * @option references: Push stubs of the referenced entities.
    * @command sfgov_api:push_entity
    * @aliases pe
    */
@@ -174,7 +210,7 @@ class SfgovApiCommands extends DrushCommands {
       return $this->output()->writeln('no matching plugin found with those arguments');
     }
 
-    $node_exists = $this->apiUtilities->getWagtailId($entity_id, $entity_type, $langcode);
+    $node_exists = $this->apiUtilities->getWagtailId($entity_id, $entity_type, $bundle, $langcode);
     if ($node_exists && !$options['update']) {
       return $this->output()->writeln('Entity already exists, use the --update option to update it.');
     }
@@ -203,7 +239,7 @@ class SfgovApiCommands extends DrushCommands {
     if ($options['references']) {
       $referenced_entities = $payload->getEmptyReferences();
       foreach ($referenced_entities as $referenced_entity) {
-        $reference_exists = $this->apiUtilities->getWagtailId($referenced_entity['entity_id'], $referenced_entity['entity_type'], $referenced_entity['langcode']);
+        $reference_exists = $this->apiUtilities->getWagtailId($referenced_entity['entity_id'], $referenced_entity['entity_type'], $referenced_entity['bundle'], $referenced_entity['langcode']);
         if (!$reference_exists) {
           $this->pushEntity(
             $referenced_entity['entity_type'],
@@ -234,24 +270,45 @@ class SfgovApiCommands extends DrushCommands {
   /**
    * Clear all content from the wagtail tables in Drupal.
    *
+   * @param array $options
+   *   Which table set to clear.
+   *
    * @command sfgov_api:clear_wagtail_tables
    * @aliases cwt
    */
   public function clearWagtailTables($options = [
     'node' => FALSE,
     'media' => FALSE,
+    'eck' => FALSE,
     'errors' => FALSE,
     'all' => FALSE,
   ]) {
+    $plugins = $this->sfgApiPluginManager->getDefinitions();
+
     $tables = [];
     if ($options['node'] || $options['all']) {
-      $tables[] = 'drupal_wagtail_node_id_map';
+      foreach ($plugins as $plugin) {
+        if (str_starts_with($plugin['id'], 'node')) {
+          $tables[] = 'dw_migration_' . $plugin['id'] . '_id_map';
+        }
+      }
     }
     if ($options['media'] || $options['all']) {
-      $tables[] = 'drupal_wagtail_media_id_map';
+      foreach ($plugins as $plugin) {
+        if (str_starts_with($plugin['id'], 'media')) {
+          $tables[] = 'dw_migration_' . $plugin['id'] . '_id_map';
+        }
+      }
+    }
+    if ($options['eck'] || $options['all']) {
+      foreach ($plugins as $plugin) {
+        if (str_starts_with($plugin['id'], 'eck')) {
+          $tables[] = 'dw_migration_' . $plugin['id'] . '_id_map';
+        }
+      }
     }
     if ($options['errors'] || $options['all']) {
-      $tables[] = 'drupal_wagtail_errors';
+      $tables[] = 'dw_migration_errors';
     }
     foreach ($tables as $table_name) {
       $this->apiUtilities->clearWagtailTable($table_name);
@@ -320,7 +377,7 @@ class SfgovApiCommands extends DrushCommands {
     }
 
     if ($options['update']) {
-      $update_id = $this->apiUtilities->getWagtailId($drupal_id, $entity_type, $langcode);
+      $update_id = $this->apiUtilities->getWagtailId($drupal_id, $entity_type, $bundle, $langcode);
       $api_url_complete .= '/' . $update_id;
     }
 
@@ -391,7 +448,7 @@ class SfgovApiCommands extends DrushCommands {
       $wag_page_status = 'error (' . $error_id . ')';
       $wag_page_id = 'none';
     }
-    $this->apiUtilities->updateWagIdTable($entity_type, $drupal_id, $wag_page_status, $langcode, $wag_page_id);
+    $this->apiUtilities->updateWagIdTable($entity_type, $bundle, $drupal_id, $wag_page_status, $langcode, $wag_page_id);
     $this->output()->writeln($message);
   }
 

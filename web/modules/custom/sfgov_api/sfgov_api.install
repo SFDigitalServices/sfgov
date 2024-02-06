@@ -9,47 +9,7 @@
  * Implements hook_schema().
  */
 function sfgov_api_schema() {
-  $languages = \Drupal::languageManager()->getLanguages();
   $schemas = [];
-  $wagtail_id_tables = [
-    'node',
-    'media',
-    // This is for ECK entities, see the readme.
-    'location',
-  ];
-
-  $id_map_fields = [
-    'fields' => [
-      'drupal_id' => [
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'The Drupal ID.',
-      ],
-    ],
-    'primary key' => ['drupal_id'],
-    'unique keys' => [
-      'drupal_id' => ['drupal_id'],
-    ],
-  ];
-
-  foreach ($wagtail_id_tables as $entity_type) {
-    $table_name = 'drupal_wagtail_' . $entity_type . '_id_map';
-    $schemas[$table_name]['description'] = 'Drupal to Wagtail ' . $entity_type . ' Id map';
-    $schemas[$table_name] = $id_map_fields;
-    foreach ($languages as $language) {
-      $field_label = 'wagtail_id_' . $language->getId();
-      $schemas[$table_name]['fields'][$field_label] = [
-        'type' => 'varchar',
-        'length' => 255,
-      ];
-      $status_label = $field_label . '_status';
-      $schemas[$table_name]['fields'][$status_label] = [
-        'type' => 'varchar',
-        'length' => 255,
-      ];
-    }
-  }
-
   $schemas['drupal_wagtail_errors'] = [
     'description' => 'Errors in the wagtail migration',
     'fields' => [
@@ -90,6 +50,15 @@ function sfgov_api_schema() {
     ],
     'primary key' => ['id'],
   ];
+
+  $plugins = \Drupal::service('plugin.manager.sfgov_api')->getDefinitions();
+  foreach ($plugins as $plugin) {
+    // We need tables for everything except paragraphs.
+    if (!str_starts_with($plugin['id'], 'paragraph')) {
+      $table_data = \Drupal::service('sfgov_api.utilities')->buildTrackingTableSchema($plugin['id']);
+      $schemas[array_key_first($table_data)] = $table_data[array_key_first($table_data)];
+    }
+  }
 
   return $schemas;
 }

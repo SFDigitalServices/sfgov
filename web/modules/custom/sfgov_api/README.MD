@@ -95,18 +95,15 @@ To solve this issue there are some workarounds at play:
   directions to the plugin.
 - The plugins themselves don't use a specialized base data plugin and instead
   go straight to SfgApiPluginBase.
-- an extra tracking table.
 
 # Pushing to Wagtail
 
 ## Migration Strategy
 A successful push to the Wagtail API returns the wagtail id of the page created. Those ids then get stored in the
-`drupal_wagtail_node_id_map` table next to their Drupal ID. This allows Drupal to have some idea of what has been migrated and where
-The plan is to migrate all nodes in stub form first then update them to have their actual content. It has to be done this
-way to make the entity relationships work.
-
-**Note:** Media follows the same standard but is stored at `drupal_wagtail_media_id_map`. The rest of this doc will only mention
-the node table, but whatever applies to it also applies to the media table.
+corresponding entity table next to their Drupal ID (e.g. `dw_migration_node_news_id_map`). The tables also list
+the status of the node sorted by language (complete, stub, or error) This allows Drupal to have some idea of what
+has been migrated and where The plan is to migrate all nodes in stub form first then update them to have their
+actual content. It has to be done this way to make the entity relationships work.
 
 ### Entity Relationships
 Wagtail does normal entity reference fields by connecting them to a secondary table entity to create the relationship
@@ -128,7 +125,7 @@ value: "2",
 
 ### Translations
 Wagtail treats each language of a node as a separate entity while Drupal does not. To keep track
-of these ids there is one entry per language in the `drupal_wagtail_id_node_map` table.
+of these ids there is one entry per language in the the individual node tables
 
 Also, Wagtail differentiates translations by giving them a different parent page. Those parent pages
 are automatically created as part of the wagtail setup with the `./manage.py setup_locales` and
@@ -157,7 +154,7 @@ other is an html file of what went wrong in Wagtail.
 Both of these basically route to the `pushToWagtail` function which does the heavy lifting.
 
 There is also a command to clear out the wagtail tables in Drupal when you want to start from scratch.
-`sfgov_api:clear_wagtail_tables`. It requires an extra option of `--node`, `--media`, `--error`, or `--all`
+`sfgov_api:clear_wagtail_tables`. It requires an extra option of `--node`, `--eck`, `--media`, `--error`, or `--all`
 depending on which table(s) you want to clear.
 
 ## Error handling
@@ -170,8 +167,8 @@ error logs and tables look confusing without explicitly calling this out.
 - **Wagtail Errors:** Sometimes when you push it breaks Wagtail in a non-api way. Wagtail's response is to generate
 an html page with the full error message (e.g. pushing a slug that already exists)
 
-Every node that that is pushed registers data to the `drupal_wagtail_node_id_map` table. If it has an error then it will
-record the error id which can then be looked up in the `drupal_wagtail_errors` table.
+Every node that that is pushed registers data to its table. If it has an error then it will
+record the error id which can then be looked up in the `dw_migration_errors` table.
 
 # Wrangling Wagtail
 **Shape of Wagtail Data**
