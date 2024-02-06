@@ -13,7 +13,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   bundle = "event",
  *   wag_bundle = "Event",
  *   entity_id = {},
-*   langcode = {},
+ *   langcode = {},
  * )
  */
 class Event extends SfgApiNodeBase {
@@ -34,8 +34,6 @@ class Event extends SfgApiNodeBase {
     // if ($phone = $entity->get('field_phone_numbers')->referencedEntities()) {
     //   $contact[] = $this->getReferencedData($phone)[0];
     // }
-
-
     $location = [];
     if ($entity->get('field_location_online')->value == 1) {
       $location[] = [
@@ -43,16 +41,15 @@ class Event extends SfgApiNodeBase {
         'value' => NULL,
       ];
     }
-    // blocked by address issue.
+    // Blocked by address issue.
     // if ($address_entity = $entity->get('field_address')->referencedEntities()) {
     //   $location[] = $this->getReferencedEntity($address_entity, TRUE);
-    // }
-
+    // }.
     return [
       'description' => $entity->get('field_description')->value,
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
-      // blocked by address issue.
+      // Blocked by address issue.
       // 'address' => $entity->get('field_address')->value,
       // blocked by optionality field issue.
       // 'call_to_action' => $this->getReferencedData($entity->get('field_call_to_action')->referencedEntities()),

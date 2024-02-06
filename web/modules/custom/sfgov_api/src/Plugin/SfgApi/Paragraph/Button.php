@@ -24,7 +24,7 @@ class Button extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    //@todo clean up and add optionality when that is working on the wagtail side.
+    // @todo clean up and add optionality when that is working on the wagtail side.
     $link_data = $entity->get('field_link')[0];
     $url = $link_data->getUrl()->toString();
     $title = $link_data->title;

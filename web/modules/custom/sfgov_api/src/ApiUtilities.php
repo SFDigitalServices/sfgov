@@ -53,6 +53,13 @@ class ApiUtilities {
   protected $moduleHandler;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs an ApiUtilities object.
    *
    * @param \Drupal\sfgov_api\SfgApiPluginManager $sfgovApiPluginManager
@@ -63,13 +70,60 @@ class ApiUtilities {
    *   The database connection.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
+   *   The language manager.
    */
-  public function __construct(SfgApiPluginManager $sfgovApiPluginManager, ConfigFactoryInterface $configFactory, Connection $connection, ModuleHandlerInterface $moduleHandler) {
+  public function __construct(SfgApiPluginManager $sfgovApiPluginManager, ConfigFactoryInterface $configFactory, Connection $connection, ModuleHandlerInterface $moduleHandler, LanguageManagerInterface $languageManager) {
     $this->sfgovApiPluginManager = $sfgovApiPluginManager;
     $this->configFactory = $configFactory;
     $this->connection = $connection;
     $this->moduleHandler = $moduleHandler;
     $this->credentials = $this->setCredentials();
+    $this->languageManager = $languageManager;
+  }
+
+  /**
+   * Build the schema for the tracking table.
+   *
+   * @param string $plugin_id
+   *   The plugin ID.
+   *
+   * @return array
+   *   The schema for the tracking table.
+   */
+  public function buildTrackingTableSchema($plugin_id) {
+    $languages = $this->languageManager->getLanguages();
+    $id_map_fields = [
+      'fields' => [
+        'drupal_id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'The Drupal ID.',
+        ],
+      ],
+      'primary key' => ['drupal_id'],
+      'unique keys' => [
+        'drupal_id' => ['drupal_id'],
+      ],
+    ];
+
+    $schema = [];
+    $table_name = 'dw_migration_' . $plugin_id . '_id_map';
+    $schema[$table_name]['description'] = 'Drupal to Wagtail ' . $plugin_id . ' Id map';
+    $schema[$table_name] = $id_map_fields;
+    foreach ($languages as $language) {
+      $field_label = 'wagtail_id_' . $language->getId();
+      $schema[$table_name]['fields'][$field_label] = [
+        'type' => 'varchar',
+        'length' => 255,
+      ];
+      $status_label = $field_label . '_status';
+      $schema[$table_name]['fields'][$status_label] = [
+        'type' => 'varchar',
+        'length' => 255,
+      ];
+    }
+    return $schema;
   }
 
   /**
@@ -79,15 +133,17 @@ class ApiUtilities {
    *   The Drupal ID of the entity.
    * @param string $entity_type
    *   The entity type.
+   * @param string $bundle
+   *   The bundle of the entity.
    * @param string $langcode
    *   The language code of the entity.
    */
-  public function getWagtailId($drupal_id, $entity_type, $langcode) {
+  public function getWagtailId($drupal_id, $entity_type, $bundle, $langcode) {
     // Specify the column based on the provided language code.
     $column_name = 'wagtail_id_' . $langcode;
 
     // Use the Drupal database API to query the table.
-    $table_name = 'drupal_wagtail_' . $entity_type . '_id_map';
+    $table_name = 'dw_migration_' . $entity_type . '_' . $bundle . '_id_map';
     $query = $this->connection->select($table_name, 'm');
     $query->fields('m', [$column_name]);
     $query->condition('drupal_id', $drupal_id);
@@ -216,6 +272,8 @@ class ApiUtilities {
    *
    * @param string $entity_type
    *   The entity type.
+   * @param string $bundle
+   *   The bundle of the entity.
    * @param int $drupal_id
    *   The Drupal ID of the entity.
    * @param string $wag_page_status
@@ -225,12 +283,12 @@ class ApiUtilities {
    * @param string $wag_page_id
    *   The ID of the corresponding Wagtail page.
    */
-  public function updateWagIdTable(string $entity_type, int $drupal_id, string $wag_page_status, string $langcode, string $wag_page_id) {
+  public function updateWagIdTable(string $entity_type, string $bundle, int $drupal_id, string $wag_page_status, string $langcode, string $wag_page_id) {
     // If there is already a wag page ID, use that.
     if ($wag_page_id === 'none') {
-      $wag_page_id = $this->getWagtailId($drupal_id, $entity_type, $langcode);
+      $wag_page_id = $this->getWagtailId($drupal_id, $entity_type, $bundle, $langcode);
     }
-    $table_name = 'drupal_wagtail_' . $entity_type . '_id_map';
+    $table_name = 'dw_migration_' . $entity_type . '_' . $bundle . '_id_map';
     $this->connection->upsert($table_name)
       ->key('drupal_id')
       ->fields([

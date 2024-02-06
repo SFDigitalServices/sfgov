@@ -54,6 +54,7 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->checkTrackingTable();
     $this->entity = $this->setEntity();
     $this->payload = $this->setPayload();
   }
@@ -191,6 +192,20 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
       'type' => $type,
       'message' => $message,
     ];
+  }
+
+  /**
+   * Verify that a plugin has a corresponding tracking table.
+   */
+  public function checkTrackingTable() {
+    $plugin_id = $this->getPluginId();
+    if (!str_starts_with($plugin_id, 'paragraph')) {
+      $database = \Drupal::database();
+      $table_name = 'dw_migration_' . $plugin_id . '_id_map';
+      if (!$database->schema()->tableExists($table_name)) {
+        $this->addPluginError('No tracking table', 'No tracking table found for ' . $plugin_id . '. Please run drush sfgov_api:install_tracking_tables to create all tables.');
+      }
+    }
   }
 
 }

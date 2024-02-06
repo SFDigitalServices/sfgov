@@ -14,6 +14,8 @@ trait ApiFieldHelperTrait {
    *
    * @param array $entities
    *   An array of entities.
+   * @param bool $type_reference
+   *   Whether to return the type of the referenced entity.
    *
    * @return array
    *   An array of entity data.
@@ -70,10 +72,11 @@ trait ApiFieldHelperTrait {
             'type' => $plugin->pluginDefinition['wag_bundle'],
             'value' => $plugin->getPayload()->getPayloadData(),
           ];
-        // most of the time we need to wrap the data in an array. But if it
-        // is expecting a streamfield that can have multiple values then
-        // we need to return only the data.
-        } else {
+          // Most of the time we need to wrap the data in an array. But if it
+          // is expecting a streamfield that can have multiple values then
+          // we need to return only the data.
+        }
+        else {
           $entities_data[] = $plugin->getPayload()->getPayloadData();
         }
 
@@ -88,14 +91,14 @@ trait ApiFieldHelperTrait {
     // to remove or edit certain paragraphs.
     foreach ($entities_data as $key => $entity_data) {
       if (is_array($entity_data && $type_reference)) {
-        // flatten image paragraphs.
+        // Flatten image paragraphs.
         if (count($entity_data['value']) == 1) {
           $entities_data[$key] = [
             'type' => $entity_data['type'],
             'value' => reset($entity_data['value']),
           ];
         }
-        // remove empty "section" paragraphs.
+        // Remove empty "section" paragraphs.
         if ($entity_data['type'] == 'section') {
           if ($entity_data["value"]["title"] === NULL && empty($entity_data["value"]["section_content"])) {
             unset($entities_data[$key]);
@@ -130,7 +133,7 @@ trait ApiFieldHelperTrait {
       $entity_type = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
       $langcode = $entity->language()->getId();
-      $wagtail_id = $wagtail_utilities->getWagtailId($entity_id, $entity_type, $langcode) ?: NULL;
+      $wagtail_id = $wagtail_utilities->getWagtailId($entity_id, $entity_type, $bundle, $langcode) ?: NULL;
       $reference_data = [];
 
       if (!$wagtail_id) {
@@ -150,8 +153,8 @@ trait ApiFieldHelperTrait {
         $entity_type = $multitype ? 'multitype' : $entity_type;
         switch ($entity_type) {
           case 'paragraph':
-            // Paragraphs become streamfields in wagtail. Which expect a type and
-            // a value. Other data is just metadata.
+            // Paragraphs become streamfields in wagtail. Which expect a type
+            // and a value. Other data is just metadata.
             $reference_data['drupal_id'] = (int) $entity_id;
             $reference_data['entity_type'] = $entity_type;
             $reference_data['type'] = $bundle;
@@ -197,6 +200,8 @@ trait ApiFieldHelperTrait {
    *
    * @param array $data
    *   An array of data.
+   * @param string $streamfield_type
+   *   The type of streamfield to create.
    *
    * @return array
    *   An array in the expected streamfield shape.
@@ -232,6 +237,8 @@ trait ApiFieldHelperTrait {
    *   The input format.
    * @param string $value
    *   The value to convert.
+   * @param string $output_format
+   *   The output format.
    *
    * @return string
    *   The converted date in format 'YYYY-MM-DD'.
@@ -261,36 +268,8 @@ trait ApiFieldHelperTrait {
     }
   }
 
-  public function getWagtailId($entity) {
-    // Allow values to pass through this function and retain their type.
-    // if nothing is there since Wagtail is really finicky about typing.
-    if (!$entity) {
-      return $entity;
-    }
-    $wagtail_utilities = \Drupal::service('sfgov_api.utilities');
-    $entity_id = $entity->id();
-    $entity_type = $entity->getEntityTypeId();
-    $bundle = $entity->bundle();
-    $langcode = $entity->language()->getId();
-    $wagtail_id = $wagtail_utilities->getWagtailId($entity_id, $entity_type, $langcode) ?: NULL;
-
-    if (!$wagtail_id) {
-      return [
-        'empty_reference' => TRUE,
-        'entity_type' => $entity_type,
-        'bundle' => $bundle,
-        'langcode' => $langcode,
-        'entity_id' => $entity_id,
-      ];
-    }
-    else {
-      return $wagtail_id;
-    }
-  }
-
-    /**
-   * Convert the smart date field to a format that can be used by the
-   * date_time field. Same logic thats used in SfgovDateFormatterBase
+  /**
+   * Convert the smart date field to different format.
    *
    * @param array $data
    *   The smart date field data.
@@ -299,6 +278,7 @@ trait ApiFieldHelperTrait {
    *   The converted data.
    */
   public function convertSmartDate($data) {
+    // Same logic thats used in SfgovDateFormatterBase.
     $start_date = $this->convertTimestampToFormat($data['value'], 'Y-m-d');
     $start_time = $this->convertTimestampToFormat($data['value'], 'H:i:s');
     $is_all_day = FALSE;
@@ -328,7 +308,7 @@ trait ApiFieldHelperTrait {
       'is_all_day' => $is_all_day,
       'start_date' => $start_date,
       'start_time' => $start_time,
-      // @todo, change this back to a boolean once its fixed on the wagtail side.
+      // @todo , change this back to a boolean once its fixed on the wagtail side.
       'include_end_date_time' => $include_end_date_time ? 'yes' : 'no',
     ];
     return $data;
