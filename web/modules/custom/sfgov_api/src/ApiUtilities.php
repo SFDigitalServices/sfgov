@@ -256,7 +256,7 @@ class ApiUtilities {
    *   The ID of the inserted row and error record.
    */
   public function updateWagErrorTable(string $entity_type, int $drupal_id, string $error_type, string $error_message, string $langcode) {
-    $query = $this->connection->insert('drupal_wagtail_errors')
+    $query = $this->connection->insert('dw_migration_errors')
       ->fields([
         'drupal_id' => $drupal_id,
         'entity_type' => $entity_type,

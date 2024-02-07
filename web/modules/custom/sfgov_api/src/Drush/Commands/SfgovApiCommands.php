@@ -3,6 +3,7 @@
 namespace Drupal\sfgov_api\Drush\Commands;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -14,7 +15,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Database\Connection;
 
 /**
  * A Drush commandfile.
@@ -139,6 +139,7 @@ class SfgovApiCommands extends DrushCommands {
         $table_name = 'dw_migration_' . $plugin['id'] . '_id_map';
         if (!$database->schema()->tableExists($table_name)) {
           $schema = $this->apiUtilities->buildTrackingTableSchema($plugin['id']);
+          $this->output()->writeln('Creating table: ' . $table_name);
           $database->schema()->createTable($table_name, $schema[$table_name]);
         }
       }
@@ -303,7 +304,7 @@ class SfgovApiCommands extends DrushCommands {
     }
     if ($options['eck'] || $options['all']) {
       foreach ($plugins as $plugin) {
-        if (str_starts_with($plugin['id'], 'eck')) {
+        if (str_starts_with($plugin['id'], 'location') || str_starts_with($plugin['id'], 'resource')) {
           $tables[] = 'dw_migration_' . $plugin['id'] . '_id_map';
         }
       }
@@ -363,6 +364,12 @@ class SfgovApiCommands extends DrushCommands {
       case 'media':
         $api_url_complete = $this->apiUtilities->getCredentials()['api_url_base'] . $wag_bundle;
         $client_config['multipart'] = $this->apiUtilities->prepMultipart($payload->getPayloadData());
+        break;
+
+      // Special exceptions for Eck entities.
+      case 'location':
+        $api_url_complete = $this->apiUtilities->getCredentials()['api_url_base'] . 'cms.' . $wag_bundle;
+        $client_config['json'] = $payload->getPayloadData();
         break;
     }
 

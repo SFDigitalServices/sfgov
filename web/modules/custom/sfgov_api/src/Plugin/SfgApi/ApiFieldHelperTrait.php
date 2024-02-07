@@ -43,17 +43,18 @@ trait ApiFieldHelperTrait {
           $plugin_label = 'media_' . $bundle;
           break;
 
+        // @todo . refactor to default to entity_type + bundle to catch these
         // These are all for ECK entities. see README for details.
         case 'physical':
-          $plugin_label = 'eck_location_physical';
+          $plugin_label = 'location_physical';
           break;
 
         case 'event_address':
-          $plugin_label = 'eck_location_event_address';
+          $plugin_label = 'location_event_address';
           break;
 
         case 'resource':
-          $plugin_label = 'eck_resource_resource';
+          $plugin_label = 'resource_resource';
           break;
 
         default:
@@ -241,7 +242,7 @@ trait ApiFieldHelperTrait {
    *   The output format.
    *
    * @return string
-   *   The converted date in format 'YYYY-MM-DD'.
+   *   The converted date in the requested format.
    */
   public function convertDateFromFormat(string $input_format, string $value, $output_format) {
     $drupalDatetime = DrupalDateTime::createFromFormat($input_format, $value);

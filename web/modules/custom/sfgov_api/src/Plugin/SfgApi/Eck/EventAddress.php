@@ -9,7 +9,7 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "eck_location_event_address",
+ *   id = "location_event_address",
  *   title = @Translation("ECK Location"),
  *   bundle = "event_address",
  *   wag_bundle = "address",

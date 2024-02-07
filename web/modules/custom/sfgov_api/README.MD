@@ -96,6 +96,8 @@ To solve this issue there are some workarounds at play:
 - The plugins themselves don't use a specialized base data plugin and instead
   go straight to SfgApiPluginBase.
 
+**note: To view eck entities in the API you need to use the Eck bundle like so `https://sfgov.lndo.site/sfgov-api-viewer/entity/en/location/physical/1`**
+
 # Pushing to Wagtail
 
 ## Migration Strategy
