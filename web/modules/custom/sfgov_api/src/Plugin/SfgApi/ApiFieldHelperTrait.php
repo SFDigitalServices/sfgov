@@ -91,12 +91,12 @@ trait ApiFieldHelperTrait {
     // cause errors in wagtail. These are miscellaneous pieces of code
     // to remove or edit certain paragraphs.
     foreach ($entities_data as $key => $entity_data) {
-      if (is_array($entity_data && $type_reference)) {
+      if (is_array($entity_data)) {
         // Flatten image paragraphs.
-        if (count($entity_data['value']) == 1) {
+        if ($plugin_label === 'paragraph_image') {
           $entities_data[$key] = [
             'type' => $entity_data['type'],
-            'value' => reset($entity_data['value']),
+            'value' => $entity_data['value']['value'],
           ];
         }
         // Remove empty "section" paragraphs.

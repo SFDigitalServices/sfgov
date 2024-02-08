@@ -42,9 +42,9 @@ class Event extends SfgApiNodeBase {
       ];
     }
     // Blocked by address issue.
-    // if ($address_entity = $entity->get('field_address')->referencedEntities()) {
-    //   $location[] = $this->getReferencedEntity($address_entity, TRUE);
-    // }.
+    if ($address_entity = $entity->get('field_address')->referencedEntities()) {
+      $location[] = $this->getReferencedEntity($address_entity, TRUE);
+    }
     return [
       'description' => $entity->get('field_description')->value,
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],

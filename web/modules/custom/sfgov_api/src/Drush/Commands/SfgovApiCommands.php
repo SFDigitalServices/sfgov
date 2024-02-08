@@ -409,7 +409,13 @@ class SfgovApiCommands extends DrushCommands {
         // Parse the URL to get an ID.
         $url_elements = isset($return_data_array['detail_url']) ? parse_url($return_data_array['detail_url']) : parse_url($return_data_array['url']);
         $url_array = explode('/', trim($url_elements['path'], '/'));
-        $wag_page_id = end($url_array);
+        // For some reason the file bundle has a different URL structure.
+        if ($bundle === 'file') {
+          $wag_page_id = $url_array[1];
+        }
+        else {
+          $wag_page_id = end($url_array);
+        }
         $wag_page_status = $options['stub'] ? 'stub' : 'complete';
         $message = $this->t('Successfully pushed entity: @bundle:@drupal_id to Wagtail with ID: @wag_page_id', [
           '@bundle' => $bundle,

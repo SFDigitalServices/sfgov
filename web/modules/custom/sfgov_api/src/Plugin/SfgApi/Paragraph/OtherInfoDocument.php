@@ -24,18 +24,21 @@ class OtherInfoDocument extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    // The other_info_document paragraph holds both the entity reference and
-    // the title, so we have to jump through some hoops to get the data we need.
-    $file_info = $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE);
-    $title = $entity->get('field_title')->value;
-    $data = [
-      'title' => $title,
-      'documents' => [
+    // @todo make this a function (also used in agendaitem)
+    // This is a multivalue reference field so we have to jump through some
+    // hoops to make it work.
+    $file_ids = $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE);
+    $document_references = [];
+    foreach ($file_ids as $file_id) {
+      $document_references[] = [
         'type' => 'document',
-        'value' => $file_info[0],
-      ],
+        'value' => $file_id,
+      ];
+    }
+    return [
+      'title' => $entity->get('field_title')->value,
+      'documents' => $document_references,
     ];
-    return $data;
   }
 
 }

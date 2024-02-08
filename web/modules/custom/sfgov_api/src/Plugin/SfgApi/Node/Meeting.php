@@ -25,22 +25,47 @@ class Meeting extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     $date_data = $this->convertSmartDate($entity->get('field_smart_date')->getValue()[0]);
+    $meeting_address = [
+      'type' => 'address',
+      'value' => $this->getReferencedEntity($entity->get('field_address')->referencedEntities(), TRUE, TRUE),
+    ];
+    $meeting_online = [];
+
+    if ($entity->get('field_location_online')->value == 1) {
+      // @todo link function.
+      $meeting_online = [
+        'type' => 'online',
+        'value' => [
+          'link' => [
+            // Hardcoding as an external URL since the field in Drupal only
+            // allows for external links.
+            'url' => $entity->get('field_link')->uri,
+            'page' => NULL,
+            'link_to' => 'url',
+            'link_text' => $entity->get('field_link')->title,
+          ],
+          // Works, but blocked by needing to make decisions about phone numbers that
+          // weren't validated properly.
+          // 'phone' => $this->getReferencedData($entity->get('field_phone_numbers')->referencedEntities()),
+          'phone' => [],
+          'description' => $entity->get('field_abstract')->value ?: '',
+        ],
+      ];
+    }
+    $meeting_location = [$meeting_address, $meeting_online];
     return [
-      // @todo still in progress
       'cancelled' => $entity->get('field_meeting_cancel')->value,
-      // Extra array here is to force the data into a shape that streamfields.
+      // Extra array here is to force the data into a shape that streamfields
       // expect.
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
-      // // 'meeting_location' => // blocked by addresses
+      // Want to use $meeting_location, but that doesnt work for som reason.
+      'meeting_location' => $meeting_location,
       'overview' => $entity->get('body')->value,
-      // Blocked by inconsistent document upload. AND not being able to
-      // reference files in streamfields.
-      // 'agenda' => $this->getReferencedData($entity->get('field_agenda')->referencedEntities()),
+      'agenda' => $this->getReferencedData($entity->get('field_agenda')->referencedEntities()),
       // Blocked by needing to remove the "internal" option from video ui
       // 'videos' => $this->getReferencedData($entity->get('field_videos')->referencedEntities()),
       'notices' => $this->getReferencedData($entity->get('field_regulations_accordions')->referencedEntities()),
-      // Blocked by inconsistent document upload.
-      // 'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),
+      'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),
     ];
   }
 

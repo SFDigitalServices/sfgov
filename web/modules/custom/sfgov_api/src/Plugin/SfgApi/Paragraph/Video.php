@@ -30,6 +30,7 @@ class Video extends SfgApiParagraphBase {
       // 'field_description' => $entity->get('field_description')->value,
       // 'field_text' => $entity->get('field_text')->value,
       'title' => $entity->get('field_title')->value,
+      // @todo link function.
       'video_type' => [
         'type' => 'external_link',
         'value' => [
