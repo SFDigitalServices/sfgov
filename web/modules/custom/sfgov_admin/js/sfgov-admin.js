@@ -19,6 +19,48 @@
   }
 
   /**
+   * Show/hide cost paragraph fields based on selection.
+   */
+  Drupal.behaviors.sfgovAdminCostField = {
+    attach (context) {
+      $(once('costfield', $(context).find('.paragraph-type--cost'))).each(function () {
+        console.log($(this))
+        const type = $(this).find('.form-radios')
+        const flatfee = $(this).find('.field--name-field-cost-flat-fee')
+        const rangestart = $(this).find('.field--name-field-cost-minimum')
+        const rangeend = $(this).find('.field--name-field-cost-maximum')
+        $(flatfee).hide()
+        $(rangestart).hide()
+        $(rangeend).hide()
+        $(type).find('.form-type--radio').each(function () {
+          const value = $(this).find('input').val()
+          $(this).data('radio-type', value)
+        })
+        $(type).on('click touch', function () {
+          const checked = $(this).find('input:checked').parent().data('radio-type')
+          if (checked === 'flat') {
+            $(flatfee).show()
+            $(rangestart).hide()
+            $(rangeend).hide()
+          } else if (checked === 'minimum') {
+            $(flatfee).hide()
+            $(rangestart).show()
+            $(rangeend).hide()
+          } else if (checked === 'range') {
+            $(flatfee).hide()
+            $(rangestart).show()
+            $(rangeend).show()
+          } else {
+            $(flatfee).hide()
+            $(rangestart).hide()
+            $(rangeend).hide()
+          }
+        })
+      })
+    }
+  }
+
+  /**
    * Adds a button that Toggles the Node edit form sidebar.
    */
   Drupal.behaviors.sfgovAdminSidebarToggle = {
