@@ -23,8 +23,7 @@
    */
   Drupal.behaviors.sfgovAdminSidebarToggle = {
     attach (context) {
-      $('.layout-region-node-secondary', context)
-        .once('sidebarToggle')
+      $(once('sidebarToggle', $(context).find('.layout-region-node-secondary')))
         .wrapInner('<div id="sidebar-toggle-content"/>')
         .prepend(
           '<button id="sidebar-toggle" class="sidebar-toggle"><span class="sidebar-toggle__text">' +
@@ -32,8 +31,7 @@
             '</span><span class="sidebar-toggle__icon"></span></button>'
         )
 
-      $('#sidebar-toggle', context)
-        .once()
+      $(once('sidbarToggleEvent', $(context).find('#sidebar-toggle')))
         .on('click', event => {
           event.preventDefault()
           const $container = $('.layout-node-form', context)
@@ -74,8 +72,7 @@
   Drupal.behaviors.sfgovParagraphAddDropbutton = {
     attach (context) {
       // The add button is just a placeholder for the add buttons. Clicking it should have no affect.
-      $('.sfgov-admin-paragraph-add-link', context)
-        .once()
+      $(once('adminParagraphAddLink', $(context).find('.sfgov-admin-paragraph-add-link')))
         .on('click', e => {
           e.preventDefault()
           $(e.target).closest('.dropbutton-wrapper').toggleClass('open')
@@ -88,11 +85,7 @@
    */
   Drupal.behaviors.sfgovTabledragHandle = {
     attach (context, settings) {
-      $(
-        '.form-item-custom-paragraph div.handle, .form-item-custom-autocomplete div.handle',
-        context
-      )
-        .once('tabledrag-handle-override')
+      $(once('tabledrag-handle-override', $(context).find('.form-item-custom-paragraph div.handle, .form-item-custom-autocomplete div.handle')))
         .each(function (index, el) {
           $(this).html(
             '<svg class="paragraphs-tabledrag-handle" width="32" height="32" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M14.752,4 L1.25,4 C0.56,4 0,4.37333333 0,4.83333333 L0,5.16666667 C0,5.626 0.56,6 1.25,6 L14.752,6 C15.441,6 16.002,5.626 16.002,5.16666667 L16.002,4.83333333 C16.002,4.37333333 15.441,4 14.752,4 L14.752,4 L14.752,4 Z M1.25,0 C0.56,0 0,0.373333333 0,0.833333333 L0,1.16666667 C0,1.62666667 0.56,2 1.25,2 L14.752,2 C15.441,2 16.002,1.62666667 16.002,1.16666667 L16.002,0.833333333 C16.002,0.373333333 15.441,0 14.752,0 L1.25,0 L1.25,0 Z M14.752,8 L1.25,8 C0.56,8 0,8.374 0,8.83333333 L0,9.16666667 C0,9.626 0.56,10 1.25,10 L14.752,10 C15.441,10 16.002,9.626 16.002,9.16666667 L16.002,8.83333333 C16.002,8.374 15.441,8 14.752,8 L14.752,8 L14.752,8 Z"></path></svg>'
@@ -128,8 +121,7 @@
   // Enforce telephone numbers have format XXX-XXX-XXXX
   Drupal.behaviors.sfgovFormatTelephone = {
     attach (context, settings) {
-      $('#edit-submit')
-        .once()
+      $(once('telformat', $(context).find('#edit-submit')))
         .on('click', e => {
           $('.form-tel').each(function () {
             const phoneField = $(this)
@@ -209,8 +201,7 @@
       const reqPublicRecords = function () {
         // a key value pair of radio buttons values and wrapper id's for show/hide
         $('#edit-field-req-public-records-none').parent().hide()
-        $('#edit-field-req-public-records input[type="radio"]')
-          .once()
+        $(once('deptrecords', $(context).find('#edit-field-req-public-records input[type="radio"]')))
           .on('click', function () {
             for (const key in associations) {
               $('#' + associations[key]).hide()
