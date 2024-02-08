@@ -24,12 +24,22 @@ class AgendaItem extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    // @todo make this a function (also used in otherinfodocument)
+    // This is a multivalue reference field so we have to jump through some
+    // hoops to make it work.
+    $file_ids = $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE);
+    $document_references = [];
+    foreach ($file_ids as $file_id) {
+      $document_references[] = [
+        'type' => 'document',
+        'value' => $file_id,
+      ];
+    }
     return [
-      // 'field_file' => $entity->get('field_file')->value,
-      'documents' => $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE, TRUE),
+      'documents' => $document_references,
       'title_and_text' => [
-        'title' => $entity->get('field_title')->value,
-        'text' => $entity->get('field_text_agenda_item')->value,
+        'title' => $entity->get('field_title')->value ?: '',
+        'text' => $entity->get('field_text_agenda_item')->value ?: '',
       ],
     ];
   }

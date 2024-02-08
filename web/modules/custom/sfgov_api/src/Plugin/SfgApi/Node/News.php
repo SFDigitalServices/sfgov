@@ -34,11 +34,6 @@ class News extends SfgApiNodeBase {
       'news_type' => $this->editFieldValue($entity->get('field_news_type')->value, ['press release' => 'press_release']),
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
       'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
-      // @todo not sure why these fields are here or why they're required on Wagtail.
-      'related_information' => [],
-      'part_of_locations' => [],
-      'related_locations' => [],
-      'related_transaction' => [],
     ];
   }
 

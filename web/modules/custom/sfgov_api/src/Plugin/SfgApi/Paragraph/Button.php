@@ -31,6 +31,7 @@ class Button extends SfgApiParagraphBase {
     $external = $link_data->isExternal();
     $page = NULL;
     $link_to = "url";
+    // @todo link function.
     $link_data = [
       'url' => $link_data->getUrl()->toString(),
       'page' => $page,
