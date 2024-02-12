@@ -23,23 +23,28 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
    * {@inheritDoc}
    */
   public function setBaseData($media) {
+    $base_data = [];
     $file_data = $this->getReferencedFile($media);
-    $base_data = [
-      'title' => $media->get('name')->value,
-      'file' => $file_data['path'],
-      'fid' => $file_data['fid'],
-      // @todo , remove once we have a better source for alt text.
-      'alt_text' => 'temp',
-    ];
-
-    if (!$file_data['path']) {
-      $message = $this->t('No base file found for media of type @bundle with id @entity_id in langcode @langcode', [
-        '@bundle' => $this->getBundle(),
-        '@entity_id' => $media->id(),
-        '@langcode' => $this->configuration['langcode'],
-      ]);
-      $this->addPluginError('No file', $message);
+    if ($file_data) {
+      if (!$file_data['path']) {
+        $message = $this->t('No base file found for media of type @bundle with id @entity_id in langcode @langcode', [
+          '@bundle' => $this->getBundle(),
+          '@entity_id' => $media->id(),
+          '@langcode' => $this->configuration['langcode'],
+        ]);
+        $this->addPluginError('No file', $message);
+      }
+      else {
+        $base_data = [
+          'title' => $media->get('name')->value,
+          'file' => $file_data['path'],
+          'fid' => $file_data['fid'],
+          // @todo , remove once we have a better source for alt text.
+          'alt_text' => 'temp',
+        ];
     }
+    }
+
     return $base_data;
   }
 
@@ -65,14 +70,17 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
         break;
     }
 
+    $file_data = [];
     $referenced_file = $media->get($file_field_name)->referencedEntities()[0];
-    $file_uri = $referenced_file->getFileUri();
+    if (isset($referenced_file)) {
+      $file_uri = $referenced_file->getFileUri();
 
-    $file_data = [
-      'name' => $referenced_file->getFilename(),
-      'path' => \Drupal::service('file_system')->realpath($file_uri),
-      'fid' => $referenced_file->id(),
-    ];
+      $file_data = [
+        'name' => $referenced_file->getFilename(),
+        'path' => \Drupal::service('file_system')->realpath($file_uri),
+        'fid' => $referenced_file->id(),
+      ];
+    }
 
     return $file_data;
   }

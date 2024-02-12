@@ -379,7 +379,7 @@ class SfgovApiCommands extends DrushCommands {
     }
 
     // Stub entities should really only be nodes.
-    if ($options['stub'] && $entity_type === 'node') {
+    if ($options['stub'] && !empty($payload->getStubData())) {
       $client_config['query']['stub'] = TRUE;
       $client_config['json'] = $payload->getStubData();
     }

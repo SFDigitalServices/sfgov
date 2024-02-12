@@ -41,7 +41,7 @@ class Event extends SfgApiNodeBase {
         'value' => NULL,
       ];
     }
-    // Blocked by address issue.
+    // Blocked by address issue. Use same logic as "meeting" plugin.
     if ($address_entity = $entity->get('field_address')->referencedEntities()) {
       $location[] = $this->getReferencedEntity($address_entity, TRUE);
     }
@@ -49,16 +49,14 @@ class Event extends SfgApiNodeBase {
       'description' => $entity->get('field_description')->value,
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
-      // Blocked by address issue.
-      // 'address' => $entity->get('field_address')->value,
       // blocked by optionality field issue.
-      // 'call_to_action' => $this->getReferencedData($entity->get('field_call_to_action')->referencedEntities()),
+      'call_to_action' => $this->getReferencedData($entity->get('field_call_to_action')->referencedEntities()),
       'image' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), FALSE, TRUE),
       'body' => $entity->get('body')->value,
       'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
       'contact' => $contact,
-      'location' => $location,
+      // 'location' => $location,
     ];
   }
 
