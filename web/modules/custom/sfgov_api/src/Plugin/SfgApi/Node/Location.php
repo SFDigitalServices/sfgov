@@ -31,7 +31,7 @@ class Location extends SfgApiNodeBase {
       // @todo finish stubbing out the fields.
       'description' => $entity->get('field_about_description')->value,
       // 'alert' => '',
-      'location_address' => $this->getReferencedData($entity->get('field_address')->referencedEntities(), TRUE),
+      'location_address' => $this->getReferencedData($entity->get('field_address')->referencedEntities()),
       // 'contact' => '',
       // 'body' => '',
       // 'intro' => '',
