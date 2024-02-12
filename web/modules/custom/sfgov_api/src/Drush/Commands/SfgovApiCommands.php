@@ -214,7 +214,14 @@ class SfgovApiCommands extends DrushCommands {
 
     $node_exists = $this->apiUtilities->getWagtailId($entity_id, $entity_type, $bundle, $langcode);
     if ($node_exists && !$options['update']) {
-      return $this->output()->writeln('Entity already exists, use the --update option to update it.');
+      $options['update'] = TRUE;
+        $message = $this->t('@entity_type of type @bundle with ID @entity_id in langcode @langcode already exists. Updating...', [
+          '@entity_type' => $entity_type,
+          '@bundle' => $bundle,
+          '@entity_id' => $entity_id,
+          '@langcode' => $langcode,
+        ]);
+      $this->output()->writeln($message);
     }
 
     $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id);

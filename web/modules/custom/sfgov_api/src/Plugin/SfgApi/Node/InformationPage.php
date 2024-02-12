@@ -24,15 +24,14 @@ class InformationPage extends SfgApiNodeBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    $data = [
+    return [
       'description' => $entity->get('field_description')->value ?: '',
       'part_of' => $this->getReferencedEntity($entity->get('field_transactions')->referencedEntities()),
       'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
       'related_pages' => $this->getReferencedEntity($entity->get('field_related_content')->referencedEntities(), FALSE, FALSE, TRUE),
+      'information_section' => $this->getReferencedData($entity->get('field_information_section')->referencedEntities()),
     ];
-    $data['information_section'] = $this->getReferencedData($entity->get('field_information_section')->referencedEntities(), TRUE);
-    return $data;
   }
 
 }

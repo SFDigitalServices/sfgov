@@ -14,8 +14,6 @@ trait ApiFieldHelperTrait {
    *
    * @param array $entities
    *   An array of entities.
-   * @param bool $type_reference
-   *   Whether to return the type of the referenced entity.
    *
    * @return array
    *   An array of entity data.
@@ -37,18 +35,18 @@ trait ApiFieldHelperTrait {
           'langcode' => $langcode,
           'entity_id' => $entity->id(),
         ]);
-        if ($type_reference) {
+        // if ($type_reference) {
           $entities_data[] = [
             'type' => $plugin->pluginDefinition['wag_bundle'],
             'value' => $plugin->getPayload()->getPayloadData(),
           ];
-          // Most of the time we need to wrap the data in an array. But if it
-          // is expecting a streamfield that can have multiple values then
-          // we need to return only the data.
-        }
-        else {
-          $entities_data[] = $plugin->getPayload()->getPayloadData();
-        }
+        //   // Most of the time we need to wrap the data in an array. But if it
+        //   // is expecting a streamfield that can have multiple values then
+        //   // we need to return only the data.
+        // }
+        // else {
+          // $entities_data[] = $plugin->getPayload()->getPayloadData();
+        // }
 
       }
       else {
@@ -62,21 +60,27 @@ trait ApiFieldHelperTrait {
     foreach ($entities_data as $key => $entity_data) {
       if (is_array($entity_data)) {
         // Flatten image paragraphs.
-        if ($plugin_label === 'paragraph_image') {
+        if ($entity_data['type'] === 'image') {
           $entities_data[$key] = [
             'type' => $entity_data['type'],
             'value' => $entity_data['value']['value'],
           ];
-        }
-        // Remove empty "section" paragraphs.
-        if ($entity_data['type'] == 'section') {
-          if ($entity_data["value"]["title"] === NULL && empty($entity_data["value"]["section_content"])) {
+          // Remove empty image paragraphs.
+          if (empty($entity_data['value']['value'])) {
             unset($entities_data[$key]);
           }
         }
+        // Remove empty "section" paragraphs.
+        if ($entity_data['type'] == 'section') {
+          if ($entity_data['value']['title'] === NULL && empty($entity_data['value']['section_content'])) {
+            unset($entities_data[$key]);
+          }
+        }
+
       }
     }
-
+    // re-index the array in case anything got removed.
+    $entities_data = array_values($entities_data);
     return $entities_data;
   }
 

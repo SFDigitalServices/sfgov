@@ -24,7 +24,6 @@ class Image extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    $derp = TRUE;
     return [
       'value' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), TRUE, TRUE),
     ];
