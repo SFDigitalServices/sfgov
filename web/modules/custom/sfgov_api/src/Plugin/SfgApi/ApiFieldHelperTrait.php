@@ -35,19 +35,10 @@ trait ApiFieldHelperTrait {
           'langcode' => $langcode,
           'entity_id' => $entity->id(),
         ]);
-        // if ($type_reference) {
-          $entities_data[] = [
-            'type' => $plugin->pluginDefinition['wag_bundle'],
-            'value' => $plugin->getPayload()->getPayloadData(),
-          ];
-        //   // Most of the time we need to wrap the data in an array. But if it
-        //   // is expecting a streamfield that can have multiple values then
-        //   // we need to return only the data.
-        // }
-        // else {
-          // $entities_data[] = $plugin->getPayload()->getPayloadData();
-        // }
-
+        $entities_data[] = [
+          'type' => $plugin->pluginDefinition['wag_bundle'],
+          'value' => $plugin->getPayload()->getPayloadData(),
+        ];
       }
       else {
         $entities_data[] = 'Error: no available plugins for this entity';
@@ -72,11 +63,10 @@ trait ApiFieldHelperTrait {
         }
         // Remove empty "section" paragraphs.
         if ($entity_data['type'] == 'section') {
-          if ($entity_data['value']['title'] === NULL && empty($entity_data['value']['section_content'])) {
+          if (empty($entity_data['value']['title']) && empty($entity_data['value']['section_content'])) {
             unset($entities_data[$key]);
           }
         }
-
       }
     }
     // re-index the array in case anything got removed.
