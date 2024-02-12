@@ -59,13 +59,14 @@ class Meeting extends SfgApiNodeBase {
       // expect.
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
       // Want to use $meeting_location, but that doesnt work for som reason.
-      'meeting_location' => $meeting_location,
+      'meeting_location' => [],
       'overview' => $entity->get('body')->value,
       'agenda' => $this->getReferencedData($entity->get('field_agenda')->referencedEntities()),
       // Blocked by needing to remove the "internal" option from video ui
-      // 'videos' => $this->getReferencedData($entity->get('field_videos')->referencedEntities()),
+      'videos' => $this->getReferencedData($entity->get('field_videos')->referencedEntities()),
       'notices' => $this->getReferencedData($entity->get('field_regulations_accordions')->referencedEntities()),
-      'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),
+      // 'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),
+      'primary_agency' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities(), FALSE, TRUE),
     ];
   }
 

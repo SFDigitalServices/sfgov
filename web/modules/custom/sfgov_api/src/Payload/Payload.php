@@ -203,6 +203,14 @@ class Payload {
           'wag_bundle' => $this->wagBundle,
         ];
       }
+      if ($entity->bundle() == 'physical' || $entity->bundle() == 'event_address') {
+        $stub = [
+          'line1' => $this->customData['line1'],
+          'city' => $this->customData['city'],
+          'state' => $this->customData['state'],
+          'zip' => $this->customData['zip'],
+        ];
+      }
     }
     return $this->stub = $stub;
   }

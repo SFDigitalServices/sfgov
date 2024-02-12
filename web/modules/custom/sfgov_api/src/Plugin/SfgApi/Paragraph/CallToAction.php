@@ -24,11 +24,13 @@ class CallToAction extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    // This is referencing a button paragraph which can only ever have one
+    // value so its safe to hardcode the 0 index. Call to action already
+    // adds the button label, so we're just returning the value from the
+    // plugin.
+    $button_paragraph = $this->getReferencedData($entity->get('field_button')->referencedEntities())[0];
     return [
-      // By default the getReferencedData method will return the data wrapped
-      // in an array. this works most of the time, but breaks when wagtail
-      // has a multivalue field. Remove the outer array to make it work.
-      'link' => $this->getReferencedData($entity->get('field_button')->referencedEntities())[0],
+      'link' => $button_paragraph['value'],
       'title' => $entity->get('field_title')->value,
     ];
   }

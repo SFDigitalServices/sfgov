@@ -29,38 +29,7 @@ trait ApiFieldHelperTrait {
       $entity_type = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
       $langcode = $this->configuration['langcode'];
-
-      switch ($entity_type) {
-        case 'paragraph':
-          $plugin_label = 'paragraph_' . $bundle;
-          break;
-
-        case 'node':
-          $plugin_label = 'node_' . $bundle;
-          break;
-
-        case 'media':
-          $plugin_label = 'media_' . $bundle;
-          break;
-
-        // @todo . refactor to default to entity_type + bundle to catch these
-        // These are all for ECK entities. see README for details.
-        case 'physical':
-          $plugin_label = 'location_physical';
-          break;
-
-        case 'event_address':
-          $plugin_label = 'location_event_address';
-          break;
-
-        case 'resource':
-          $plugin_label = 'resource_resource';
-          break;
-
-        default:
-          $entities_data[] = 'no data found';
-          break;
-      }
+      $plugin_label = $entity_type . '_' . $bundle;
 
       // Use the established plugin so that the field mappings are consistent.
       if (in_array($plugin_label, array_keys($available_plugins))) {
@@ -279,6 +248,9 @@ trait ApiFieldHelperTrait {
    *   The converted data.
    */
   public function convertSmartDate($data) {
+    if ($data['value'] === NULL) {
+      return [];
+    }
     // Same logic thats used in SfgovDateFormatterBase.
     $start_date = $this->convertTimestampToFormat($data['value'], 'Y-m-d');
     $start_time = $this->convertTimestampToFormat($data['value'], 'H:i:s');
