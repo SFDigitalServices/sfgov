@@ -140,6 +140,10 @@ trait ApiFieldHelperTrait {
             // type.
             $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . 'pages' . '/' . $wagtail_id;
             break;
+          case 'location':
+            // Location references are very similar to node references.
+            $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . 'cms.Address' . '/' . $wagtail_id;
+            break;
         }
       }
       $entities_data[] = $reference_data;
