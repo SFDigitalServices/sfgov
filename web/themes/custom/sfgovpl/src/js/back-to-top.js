@@ -19,7 +19,7 @@
       $(window, context).on('load', () => {
         let then = 0
         let now = 0
-        $(window, context).once('scroll').on('scroll', () => {
+        $(window, context).on('scroll', () => {
           now = $(window, context).scrollTop()
           if (then > now && now > 700) {
             $('#back-to-top').addClass('show')

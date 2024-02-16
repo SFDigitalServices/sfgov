@@ -40,6 +40,7 @@ class ModerationUtilService implements ModerationUtilServiceInterface {
 
     $query = $this->entityTypeManager->getStorage('user')
       ->getQuery()
+      ->accessCheck()
       ->condition('uid', 0, '>')
       ->condition('status', 1)
       ->sort('name', 'DESC');

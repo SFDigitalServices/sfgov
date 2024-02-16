@@ -13,7 +13,7 @@ use Drupal\filter\Plugin\FilterBase;
  *   id = "responsive_table",
  *   module = "sfgov_doc_html",
  *   title = @Translation("Responsive tables"),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_MARKUP_LANGUAGE
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
  * )
  */
 class ResponsiveTableFilter extends FilterBase {

@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
@@ -280,7 +281,7 @@ function sfgovpl_preprocess_paragraph__powerbi_embed(&$variables) {
   $variables['kbd_instructions'] = NULL;
 
   if ($kbd_instructions = \Drupal::config('sfgov_media.settings')->get('powerbi_kbd_instructions')) {
-    $variables['kbd_instructions'] = \Drupal\Core\Render\Markup::create($kbd_instructions);
+    $variables['kbd_instructions'] = Markup::create($kbd_instructions);
   }
 
 }
@@ -297,7 +298,7 @@ function sfgovpl_preprocess_paragraph__resource_node(&$variables) {
     $node = $node_storage->load($paragraph->get('field_node')[0]->target_id);
     $description = '';
     if(!empty($node) && $node->hasField('field_description')) {
-      $description = $node->get('field_description') ?? render($node->get('field_description')->value);
+      $description = $node->get('field_description') ?? \Drupal::service('renderer')->render($node->get('field_description')->value);
     }
     if(!empty($node) && $node->getTitle()) {
       $variables['title'] = $node->getTitle();

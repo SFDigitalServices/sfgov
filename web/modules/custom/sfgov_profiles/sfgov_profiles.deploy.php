@@ -4,7 +4,7 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 
 function sfgov_profiles_deploy_00_resave_public_bodies() {
-  $nids = \Drupal::entityQuery('node')->condition('type','public_body')->execute();
+  $nids = \Drupal::entityQuery('node')->accessCheck()->condition('type','public_body')->execute();
   $nodes = Node::loadMultiple($nids);
 
   foreach ($nodes as $node) {
@@ -20,7 +20,7 @@ function sfgov_profiles_deploy_00_resave_public_bodies() {
 }
 
 function sfgov_profiles_deploy_01_migrate_bio() {
-  $nids = \Drupal::entityQuery('node')->condition('type','person')->execute();
+  $nids = \Drupal::entityQuery('node')->accessCheck()->condition('type','person')->execute();
   $nodes = Node::loadMultiple($nids);
 
   foreach ($nodes as $node) {

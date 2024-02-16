@@ -203,12 +203,12 @@
         {% elseif info.bundle == 'other_info_document' %}
           {% for info_content in info.content %}
           {% if info_content.url %}
-          {% include "@theme/document.twig" with {
+          {% include "@theme/document-wrapper.twig" with {
             "url": info_content.url,
             "label": info_content.label,
           } %}
           {% elseif info_content.link %}
-          {% include "@theme/document.twig" with {
+          {% include "@theme/document-wrapper.twig" with {
             "url": info_content.link,
             "label": info_content.label,
           } %}
