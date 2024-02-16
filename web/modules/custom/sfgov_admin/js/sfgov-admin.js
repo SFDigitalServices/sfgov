@@ -3,7 +3,7 @@
  * General tweaks for the administrative user interface. This file is loaded on
  * all pages where the administrative theme is in use.
  */
-(function ($, Drupal, document, window) {
+(function ($, Drupal, once, document, window) {
   /**
    * Prevents the Administrative Toolbar from popping out as a sidebar when
    * screen width is reduced.
@@ -320,4 +320,4 @@
       $(meetingArchiveUrl).on('click input change', checkRequiredState)
     }
   }
-})(jQuery, Drupal, document, window)
+})(jQuery, Drupal, once, document, window)
