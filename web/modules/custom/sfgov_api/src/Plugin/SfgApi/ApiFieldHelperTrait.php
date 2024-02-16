@@ -3,6 +3,8 @@
 namespace Drupal\sfgov_api\Plugin\SfgApi;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Url;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Helper functions for converting field data to a form that wagtail can use.
@@ -283,6 +285,31 @@ trait ApiFieldHelperTrait {
       'include_end_date_time' => $include_end_date_time ? 'yes' : 'no',
     ];
     return $data;
+  }
+
+  public function generateLinks(array $links_data) {
+    $links = [];
+    foreach ($links_data as $link) {
+      $url = Url::fromUri($link['uri']);
+      $is_external = UrlHelper::isExternal($url->toString());
+      if (!$is_external) {
+        $entityTypeManager = \Drupal::entityTypeManager();
+        $nid = explode('/', $url->getInternalPath())[1];
+        $node = $entityTypeManager->getStorage('node')->load($nid);
+        $wagtail_id = $this->getReferencedEntity([$node], TRUE);
+      }
+
+      $links[] = [
+        'type' => 'page',
+        'value' => [
+          'url' => $is_external ? $link['uri'] : '',
+          'page' => $is_external ? NULL : (int) $wagtail_id[0],
+          'link_to' => $is_external ? 'url' : 'page',
+          'link_text' => $link['title'],
+        ],
+      ];
+    }
+    return $links;
   }
 
 }

@@ -3,6 +3,8 @@
 namespace Drupal\sfgov_api\Plugin\SfgApi\Node;
 
 use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
+use Drupal\taxonomy\Entity\Term;
+
 
 /**
  * Plugin implementation of the sfgov_api.
@@ -24,26 +26,34 @@ class Campaign extends SfgApiNodeBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    // Figure out theme.
+    $theme_term_id = $entity->get('field_campaign_theme')->target_id;
+    $theme_name = $this->editFieldValue(Term::load($theme_term_id)->get('name')->value, [
+      'Blue' => 'primary',
+      'Green' => 'secondary',
+      'Red' => 'accent',
+      'Black' => 'neutral',
+      'Yellow' => 'neutral',
+      'Purple' => 'neutral',
+    ]);
+
+    // Figure out facts.
+    $facts = $this->getReferencedData($entity->get('field_top_facts')->referencedEntities());
+    $facts_title = $facts ? $facts[0]['value']['title'] : '';
+    $fact_items = $facts ? $facts[0]['value']['facts'] : [];
+
     return [
-    // @todo this plugin is incomplete and only exists for entity referencing
-    // at the moment.
-    // Notes:
-    // - Fields below are just a starting point, refine these down to the fields you actually want.
-    // - The ->value function won't work for all fields and is just there to kickstart the process.
-    // - Make sure to manually double check and update the wag_bundle in the annotation above.
-    // - To small adjustments to the data only relevant to this entity, you add functions to this plugin.
-    // - Look at ApiFieldHelperTrait.php for broad functions that can be used across all entities (like entity references).
-      'field_campaign_about' => $entity->get('field_campaign_about')->value,
-      'field_campaign_theme' => $entity->get('field_campaign_theme')->value,
-      'field_contents' => $entity->get('field_contents')->value,
-      'field_departments' => $entity->get('field_departments')->value,
-      'field_dept' => $entity->get('field_dept')->value,
-      'field_header_spotlight' => $entity->get('field_header_spotlight')->value,
-      'field_links' => $entity->get('field_links')->value,
-      'field_logo' => $entity->get('field_logo')->value,
-      'field_social_media_embed' => $entity->get('field_social_media_embed')->value,
-      'field_spotlight' => $entity->get('field_spotlight')->value,
-      'field_top_facts' => $entity->get('field_top_facts')->value,
+      'theme' => $theme_name,
+      'header_spotlight' => $this->getReferencedData($entity->get('field_header_spotlight')->referencedEntities()),
+      'facts_title' => $facts_title,
+      // blocked by fact_item construction.
+      // 'fact_items' => $fact_items,
+      // This one is very complex.
+      // 'additional_content' => $this->getReferencedData($entity->get('field_contents')->referencedEntities()),
+      'spotlight' => $this->getReferencedData($entity->get('field_spotlight')->referencedEntities()),
+      'about_campaign' => $entity->get('field_campaign_about')->value,
+      // Blocked by link field issue.
+      // 'related_links' => $this->generateLinks($entity->get('field_links')->getvalue())
     ];
   }
 
