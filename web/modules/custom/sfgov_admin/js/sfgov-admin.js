@@ -320,4 +320,4 @@
       $(meetingArchiveUrl).on('click input change', checkRequiredState)
     }
   }
-})(jQuery, Drupal, once, document, window)
+})(jQuery, Drupal, document, window)
