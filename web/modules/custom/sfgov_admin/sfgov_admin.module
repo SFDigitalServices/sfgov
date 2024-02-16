@@ -59,6 +59,7 @@ function sfgov_admin_page_attachments(array &$page) {
  * Implements hook_form_alter().
  */
 function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  
   if ($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
     $selector_condition = [
       ':input[name^="field_location_in_person"]' => ['checked' => TRUE]
@@ -74,6 +75,13 @@ function sfgov_admin_form_alter(&$form, FormStateInterface $form_state, $form_id
   if ($form_id == 'node_meeting_form' || $form_id == 'node_meeting_edit_form') {
     $form['#validate'][] = '_sfgov_admin_meeting_validate';
   }
+}
+
+/**
+ * Implements hook_template_preprocess_form_element().
+ */
+function sfgov_admin_preprocess_form_element__redirect_redirect_form__redirect_redirect_0_uri(&$variables) {
+  $variables['description']['content'] = t('Use the node number to get the most secure link: /node/<node number>. If that doesn’t work, look up the page.');
 }
 
 // custom validation for meeting content type
