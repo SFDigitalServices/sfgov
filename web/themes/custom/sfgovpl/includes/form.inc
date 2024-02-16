@@ -51,3 +51,7 @@ function sfgovpl_preprocess_form_element(&$variables) {
     }
   }
 }
+
+function sfgovpl_preprocess_google_json_api_search_page_form(&$variables) {
+  $variables['form'] = \Drupal::formBuilder()->getForm('Drupal\sfgov_search\Form\GoogleSearchForm');
+}
