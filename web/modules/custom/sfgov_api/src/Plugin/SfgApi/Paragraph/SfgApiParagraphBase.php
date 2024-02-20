@@ -18,13 +18,8 @@ abstract class SfgApiParagraphBase extends SfgApiPluginBase {
    * {@inheritDoc}
    */
   public function setBaseData($paragraph) {
-    $this->checkNullFields();
     $base_data = [];
     return $base_data;
-  }
-
-  public function checkNullFields() {
-    $derp = true;
   }
 
 }

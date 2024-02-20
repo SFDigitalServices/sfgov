@@ -8,15 +8,15 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "paragraph_button",
- *   title = @Translation("Paragraph button"),
- *   bundle = "button",
- *   wag_bundle = "button",
+ *   id = "paragraph_list_item",
+ *   title = @Translation("Paragraph list_item"),
+ *   bundle = "list_item",
+ *   wag_bundle = "list_item",
  *   entity_id = {},
  *   langcode = {},
  * )
  */
-class Button extends SfgApiParagraphBase {
+class ListItem extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 

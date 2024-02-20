@@ -34,7 +34,7 @@ class VideoExternal extends SfgApiParagraphBase {
         ],
       ],
     ],
-      'description' => $entity->get('field_description')->value ?: 'derp',
+      'description' => $entity->get('field_description')->value ?: '',
       // @todo this plugin is incomplete and only exists for entity referencing
       // at the moment.
       // 'field_description' => $entity->get('field_description')->value,

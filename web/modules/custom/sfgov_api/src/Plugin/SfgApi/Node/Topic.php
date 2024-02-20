@@ -25,19 +25,23 @@ class Topic extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
-      'top_level_topic' => $entity->get('field_top_level_topic')->value,
       'description' => $entity->get('field_description')->value,
+      'top_level_topic' => $this->editFieldValue($entity->get('field_top_level_topic')->value, [1 => TRUE, 0 => FALSE]),
+      'content_top' => $this->getReferencedData($entity->get('field_content_top')->referencedEntities()),
+      'services' => $this->getReferencedData($entity->get('field_department_services')->referencedEntities()),
+      'spotlight' => $this->getReferencedData($entity->get('field_spotlight')->referencedEntities()),
+      'content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
+      'resources' => $this->getReferencedData($entity->get('field_resources')->referencedEntities()),
 
-      // 'field_content' => $entity->get('field_content')->value,
-      // 'field_content_top' => $entity->get('field_content_top')->value,
-      // 'field_departments' => $entity->get('field_departments')->value,
-      // 'field_department_services' => $entity->get('field_department_services')->value,
-      // 'field_description' => $entity->get('field_description')->value,
-      // 'field_page_design' => $entity->get('field_page_design')->value,
-      // 'field_resources' => $entity->get('field_resources')->value,
-      // 'field_spotlight' => $entity->get('field_spotlight')->value,
-      // 'field_topics' => $entity->get('field_topics')->value,
-      // 'field_top_level_topic' => $entity->get('field_top_level_topic')->value,
+      // Not sure what these are but wagtail needs them.
+      'events' => [],
+      'news' => [],
+      'information' => [],
+      'resource_collections' => [],
+      'step_by_steps' => [],
+      'topics' => [],
+      'transactions' => [],
+      'agencies' => []
     ];
   }
 
