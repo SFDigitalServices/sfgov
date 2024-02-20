@@ -8,15 +8,15 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "paragraph_button",
- *   title = @Translation("Paragraph button"),
- *   bundle = "button",
- *   wag_bundle = "button",
+ *   id = "paragraph_top_search_suggestion",
+ *   title = @Translation("Paragraph top_search_suggestion"),
+ *   bundle = "top_search_suggestion",
+ *   wag_bundle = "top_search_suggestion",
  *   entity_id = {},
  *   langcode = {},
  * )
  */
-class Button extends SfgApiParagraphBase {
+class TopSearchSuggestion extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 
@@ -25,7 +25,7 @@ class Button extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'link' => $this->generateLinks($entity->get('field_link')->getvalue())
+      'link' => $this->generateLinks($entity->get('field_top_search_suggestion_link')->getValue()),
     ];
   }
 

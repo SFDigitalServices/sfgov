@@ -65,8 +65,13 @@ trait ApiFieldHelperTrait {
         }
         // Remove empty "section" paragraphs.
         if ($entity_data['type'] == 'section') {
-          if (empty($entity_data['value']['title']) && empty($entity_data['value']['section_content'])) {
-            unset($entities_data[$key]);
+          if (empty($entity_data['value']['title'])) {
+            if (($entity_data['value']['section_content'] !== NULL && empty($entity_data['value']['section_content']))) {
+              unset($entities_data[$key]);
+            }
+            if (($entity_data['value']['content'] !== NULL && empty($entity_data['value']['content']))) {
+              unset($entities_data[$key]);
+            }
           }
         }
       }

@@ -157,14 +157,8 @@ class ApiUtilities {
    * Get the Wagtail bundle for a Drupal entity.
    */
   public function getWagBundle(EntityInterface $entity) {
-    // @todo this instantiates the whole plugin, which is not necessary.
-    // Find a less expensive way to do this.
     if ($plugin_label = $this->sfgovApiPluginManager->validatePlugin($entity->getEntityTypeId(), $entity->bundle())) {
-      $plugin = $this->sfgovApiPluginManager->createInstance($plugin_label, [
-        'langcode' => $entity->language()->getId(),
-        'entity_id' => $entity->id(),
-      ]);
-      return $plugin->getWagBundle();
+      return $this->sfgovApiPluginManager->getDefinition($plugin_label)['wag_bundle'];
     }
     else {
       return FALSE;

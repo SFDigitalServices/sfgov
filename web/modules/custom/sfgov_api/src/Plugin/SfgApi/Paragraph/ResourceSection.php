@@ -8,15 +8,15 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "paragraph_button",
- *   title = @Translation("Paragraph button"),
- *   bundle = "button",
- *   wag_bundle = "button",
+ *   id = "paragraph_resource_section",
+ *   title = @Translation("Paragraph resource_section"),
+ *   bundle = "resource_section",
+ *   wag_bundle = "resource_section",
  *   entity_id = {},
  *   langcode = {},
  * )
  */
-class Button extends SfgApiParagraphBase {
+class ResourceSection extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 
@@ -25,7 +25,7 @@ class Button extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'link' => $this->generateLinks($entity->get('field_link')->getvalue())
+      'content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
     ];
   }
 

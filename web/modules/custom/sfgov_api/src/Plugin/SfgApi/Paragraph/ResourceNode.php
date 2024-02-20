@@ -25,7 +25,7 @@ class ResourceNode extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'field_node' => $this->getReferencedEntity($entity->get('field_node')->value),
+      'field_node' => $this->getReferencedEntity($entity->get('field_node')->referencedEntities()),
     ];
   }
 

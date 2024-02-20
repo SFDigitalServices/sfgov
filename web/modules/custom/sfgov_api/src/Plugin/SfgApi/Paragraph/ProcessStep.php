@@ -31,7 +31,10 @@ class ProcessStep extends SfgApiParagraphBase {
       'time' => $entity->get('field_text_time')->value,
       'step_description' => $entity->get('field_process_step_description')->value,
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
-      'related_content_transactions' => $this->getReferencedEntity($entity->get('field_transaction')->referencedEntities()),
+      'related_content_transactions' => [
+        'type' => 'transaction',
+        'value' => $this->getReferencedEntity($entity->get('field_transaction')->referencedEntities(), TRUE, TRUE),
+      ],
     ];
   }
 
