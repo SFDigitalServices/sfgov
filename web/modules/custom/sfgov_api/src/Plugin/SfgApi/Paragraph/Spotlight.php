@@ -36,6 +36,7 @@ class Spotlight extends SfgApiParagraphBase {
   }
 
   public function collapseParagraph($paragraph_data) {
+    // @todo, this breaks if the link is internal. Add some way to collapse data on the button paragraph plugin?
     if ($paragraph_data) {
       return $paragraph_data[0]['value'][0]['value'];
     }

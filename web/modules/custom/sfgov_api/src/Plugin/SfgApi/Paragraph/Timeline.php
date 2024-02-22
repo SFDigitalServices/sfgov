@@ -26,6 +26,8 @@ class Timeline extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       'title' => $entity->get('field_timeline_title')->value,
+      //@todo remove the link from this paragraph because its usually a separate
+      // value in wagtail.
       'link' => $this->generateLinks($entity->get('field_link')->getvalue()),
       'timeline_items' => $this->getReferencedData($entity->get('field_timeline_item')->referencedEntities()),
     ];

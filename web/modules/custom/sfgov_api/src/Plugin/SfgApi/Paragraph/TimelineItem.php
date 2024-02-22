@@ -11,7 +11,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "paragraph_timeline_item",
  *   title = @Translation("Paragraph timeline_item"),
  *   bundle = "timeline_item",
- *   wag_bundle = "timeline_item",
+ *   wag_bundle = "item",
  *   entity_id = {},
  *   langcode = {},
  * )
