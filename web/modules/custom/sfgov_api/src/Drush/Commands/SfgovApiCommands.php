@@ -355,7 +355,7 @@ class SfgovApiCommands extends DrushCommands {
         $api_url_complete = $this->apiUtilities->getCredentials()['api_url_base'] . 'sf.' . $wag_bundle;
         $payload_data = $payload->getPayloadData();
 
-        // TEMPORARY fix to clear entity reference fields that aren't working.
+        // @todo, temporary fix to clear entity reference fields that aren't working.
         if (isset($payload_data['related_content_topics'])) {
           $payload_data['related_content_topics'] = [];
         }
@@ -385,7 +385,6 @@ class SfgovApiCommands extends DrushCommands {
       $client_config = $this->apiUtilities->printCurlCommand($client_config);
     }
 
-    // Stub entities should really only be nodes.
     if ($options['stub'] && !empty($payload->getStubData())) {
       $client_config['query']['stub'] = TRUE;
       $client_config['json'] = $payload->getStubData();

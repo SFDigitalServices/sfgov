@@ -25,8 +25,8 @@ class Section extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
-      'title' => $entity->get('field_title')->value,
+      'title' => $entity->get('field_title')->value ?? '',
+      'section_content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
     ];
   }
 
