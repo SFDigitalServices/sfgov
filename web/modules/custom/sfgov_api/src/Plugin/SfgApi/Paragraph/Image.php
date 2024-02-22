@@ -24,9 +24,20 @@ class Image extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    return [
-      'value' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), TRUE, TRUE),
-    ];
+    $data = [];
+    $image = $entity->get('field_image')->referencedEntities() ? $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), TRUE, TRUE) : [];
+    if (empty($image)) {
+      $data = [
+        'alter' => 'empty_data',
+      ];
+    }
+    else {
+      $data = [
+        'alter' => 'flatten',
+        'value' => $image,
+      ];
+    }
+    return $data;
   }
 
 }
