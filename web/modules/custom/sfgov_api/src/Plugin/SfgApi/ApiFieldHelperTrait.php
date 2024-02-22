@@ -20,7 +20,7 @@ trait ApiFieldHelperTrait {
    * @return array
    *   An array of entity data.
    */
-  public function getReferencedData(array $entities, $type_reference = TRUE) {
+  public function getReferencedData(array $entities) {
     $sfgov_api_plugin_manager = \Drupal::service('plugin.manager.sfgov_api');
     $available_plugins = $sfgov_api_plugin_manager->getDefinitions();
 
@@ -47,31 +47,22 @@ trait ApiFieldHelperTrait {
       }
     }
 
-    // There are some paragraphs that, if not filled out properly, will
-    // cause errors in wagtail. These are miscellaneous pieces of code
-    // to remove or edit certain paragraphs.
+    // Handle reference-specific errors and changes.
     foreach ($entities_data as $key => $entity_data) {
       if (is_array($entity_data)) {
-        // Flatten image paragraphs.
-        if ($entity_data['type'] === 'image') {
-          $entities_data[$key] = [
-            'type' => $entity_data['type'],
-            'value' => $entity_data['value']['value'],
-          ];
-          // Remove empty image paragraphs.
-          if (empty($entity_data['value']['value'])) {
-            unset($entities_data[$key]);
-          }
-        }
-        // Remove empty "section" paragraphs.
-        if ($entity_data['type'] == 'section') {
-          if (empty($entity_data['value']['title'])) {
-            if (($entity_data['value']['section_content'] !== NULL && empty($entity_data['value']['section_content']))) {
+        if (isset($entity_data['value']['alter'])) {
+          switch ($entity_data['value']['alter']) {
+            // Flatten the data.
+            case 'flatten':
+              $entities_data[$key] = [
+                'type' => $entity_data['type'],
+                'value' => $entity_data['value']['value'],
+              ];
+              break;
+            // Remove empty data.
+            case 'empty_data':
               unset($entities_data[$key]);
-            }
-            if (($entity_data['value']['content'] !== NULL && empty($entity_data['value']['content']))) {
-              unset($entities_data[$key]);
-            }
+              break;
           }
         }
       }
