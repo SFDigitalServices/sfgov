@@ -14,6 +14,10 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "DataStory",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "content" = "paragraph_data_story_section",
+ *     "partner_agencies" = "node_department",
+ *   }
  * )
  */
 class DataStory extends SfgApiNodeBase {

@@ -14,6 +14,14 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "section",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *    "section_content" = {
+ *       "paragraph_callout",
+ *       "paragraph_image",
+ *       "paragraph_powerbi_embed",
+ *       "paragraph_text",
+ *     },
+ *   }
  * )
  */
 class DataStorySection extends SfgApiParagraphBase {

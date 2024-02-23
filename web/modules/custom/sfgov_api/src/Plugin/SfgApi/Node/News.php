@@ -14,6 +14,11 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "News",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "image" = "media_image",
+ *     "topics" = "node_topic",
+ *     "partner_agencies" = "node_department",
+ *   }
  * )
  */
 class News extends SfgApiNodeBase {

@@ -14,6 +14,11 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "StepByStep",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "topics" = "node_topic",
+ *     "steps" = "paragraph_process_step",
+ *     "partner_agencies" = "node_department",
+ *   }
  * )
  */
 class StepByStep extends SfgApiNodeBase {
@@ -29,6 +34,7 @@ class StepByStep extends SfgApiNodeBase {
       'intro' => (string) $entity->get('field_intro_text')->value,
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
       'steps' => $this->getReferencedData($entity->get('field_process_steps')->referencedEntities()),
+      'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities(), FALSE),
     ];
   }
 
