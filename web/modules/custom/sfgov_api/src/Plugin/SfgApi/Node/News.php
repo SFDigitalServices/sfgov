@@ -15,9 +15,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   entity_id = {},
  *   langcode = {},
  *   referenced_plugins = {
- *     "image" = "media_image",
- *     "topics" = "node_topic",
- *     "partner_agencies" = "node_department",
+ *     "media_image",
+ *     "node_topic",
+ *     "node_department",
  *   }
  * )
  */

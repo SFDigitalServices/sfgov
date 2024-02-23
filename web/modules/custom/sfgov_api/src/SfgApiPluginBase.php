@@ -195,39 +195,28 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   /**
    * Get the reference chain.
    */
-  public function getReferenceChain($referenced_plugins, $wrapper_id = '',) {
+  public function getReferenceChain($plugin_list) {
     $sfgovApiPluginManager = \Drupal::service('plugin.manager.sfgov_api');
     $returned_plugins = [];
-    foreach ($referenced_plugins as $key => $value) {
-      // Loop through again if its an array and pass a wrapper value.
-      if (is_array($value)) {
-        $returned_plugins[$wrapper_id][$key] = $this->getReferenceChain($value, $this->pluginId);
-        break;
-      }
-      // If its a node reference, leave it as is since we don't want to go
-      // deeper.
-      if (str_starts_with($value, 'node')) {
-        $returned_plugins[$key] = $value;
-        break;
-      }
-      // If its not a node reference, loop through again.
-      if (!str_starts_with($value, 'node')) {
-        if (is_array($sfgovApiPluginManager->getDefinition($value)['referenced_plugins'])) {
-          if ($wrapper_id) {
-            $returned_plugins[$wrapper_id][$key] = $this->getReferenceChain($sfgovApiPluginManager->getDefinition($value)['referenced_plugins'], $value);
-          }
-          else {
-            $returned_plugins[$key] = $this->getReferenceChain($sfgovApiPluginManager->getDefinition($value)['referenced_plugins'], $value);
-          }
+    foreach ($plugin_list as $plugin_name) {
+      $plugin_definition = $sfgovApiPluginManager->getDefinition($plugin_name);
+      if (is_string($plugin_name)) {
+        // If its a node we don't need to continue
+        if (str_starts_with($plugin_name, 'node')) {
+          $returned_plugins[$plugin_name] = '';
+          continue;
         }
-        else {
-          $returned_plugins[$key] = $sfgovApiPluginManager->getDefinition($value)['referenced_plugins'] ?? $value;
-        }
+      }
+      if ($referenced_plugins = $plugin_definition['referenced_plugins']) {
+        $returned_plugins[$plugin_name] = $plugin_name;
+        $returned_plugins[$plugin_name] = $this->getReferenceChain($referenced_plugins);
+      }
+      else {
+        $returned_plugins[$plugin_name] = '';
       }
     }
-  return $returned_plugins;
-}
-
+    return $returned_plugins;
+  }
   /**
    * Add a plugin error.
    *

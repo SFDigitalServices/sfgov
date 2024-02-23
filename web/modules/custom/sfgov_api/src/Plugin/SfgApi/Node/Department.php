@@ -14,6 +14,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Agency",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *    "media_image",
+ *   }
  * )
  */
 class Department extends SfgApiNodeBase {
