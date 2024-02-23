@@ -15,8 +15,8 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   entity_id = {},
  *   langcode = {},
  *   referenced_plugins = {
- *     "cost" = "paragraph_cost",
- *     "related_content_transactions" = "node_transaction",
+ *     "paragraph_cost",
+ *     "node_transaction",
  *   }
  * )
  */

@@ -15,6 +15,10 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  *   wag_bundle = "resource",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "node_topic",
+ *     "node_department",
+ *   }
  * )
  */
 class Resource extends SfgApiPluginBase {
@@ -32,7 +36,9 @@ class Resource extends SfgApiPluginBase {
    * {@inheritDoc}
    */
   public function setBaseData($eck) {
-    $base_data = [];
+    $base_data = [
+      'reference_chain' => $this->getReferenceChain($this->pluginDefinition['referenced_plugins']),
+    ];
     return $base_data;
   }
 

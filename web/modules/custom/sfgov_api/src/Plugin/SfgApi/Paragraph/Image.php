@@ -14,6 +14,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "image",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "media_image",
+ *   }
  * )
  */
 class Image extends SfgApiParagraphBase {
