@@ -88,6 +88,13 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   }
 
   /**
+   * Get the wagtail bundle value.
+   */
+  public function getReferencedPlugins() {
+    return (string) $this->pluginDefinition['referenced_plugins'];
+  }
+
+  /**
    * Get the langcode value.
    */
   public function getLangcode() {
@@ -175,9 +182,51 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     $requested_langcode = $this->getLangcode();
     $wag_bundle = $this->getWagBundle();
     $plugin_errors = $this->pluginErrors;
-    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors);
+    if ($entity instanceof Node) {
+      $reference_chain = $this->getReferenceChain($this->pluginDefinition['referenced_plugins']);
+    }
+    else {
+      $reference_chain = [];
+    }
+    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors, $reference_chain);
     return $this->payload = $payload;
   }
+
+  /**
+   * Get the reference chain.
+   */
+  public function getReferenceChain($referenced_plugins, $wrapper_id = '',) {
+    $sfgovApiPluginManager = \Drupal::service('plugin.manager.sfgov_api');
+    $returned_plugins = [];
+    foreach ($referenced_plugins as $key => $value) {
+      // Loop through again if its an array and pass a wrapper value.
+      if (is_array($value)) {
+        $returned_plugins[$wrapper_id][$key] = $this->getReferenceChain($value, $this->pluginId);
+        break;
+      }
+      // If its a node reference, leave it as is since we don't want to go
+      // deeper.
+      if (str_starts_with($value, 'node')) {
+        $returned_plugins[$key] = $value;
+        break;
+      }
+      // If its not a node reference, loop through again.
+      if (!str_starts_with($value, 'node')) {
+        if (is_array($sfgovApiPluginManager->getDefinition($value)['referenced_plugins'])) {
+          if ($wrapper_id) {
+            $returned_plugins[$wrapper_id][$key] = $this->getReferenceChain($sfgovApiPluginManager->getDefinition($value)['referenced_plugins'], $value);
+          }
+          else {
+            $returned_plugins[$key] = $this->getReferenceChain($sfgovApiPluginManager->getDefinition($value)['referenced_plugins'], $value);
+          }
+        }
+        else {
+          $returned_plugins[$key] = $sfgovApiPluginManager->getDefinition($value)['referenced_plugins'] ?? $value;
+        }
+      }
+    }
+  return $returned_plugins;
+}
 
   /**
    * Add a plugin error.
