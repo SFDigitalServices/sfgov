@@ -14,6 +14,10 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "services",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "node_step_by_step",
+ *     "node_transaction",
+ * },
  * )
  */
 class DepartmentServiceSection extends SfgApiParagraphBase {

@@ -14,6 +14,13 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Topic",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "paragraph_department_service_section",
+ *     "paragraph_resource_section",
+ *     "paragraph_section",
+ *     "paragraph_timeline",
+ *     "paragraph_spotlight",
+ *   }
  * )
  */
 class Topic extends SfgApiNodeBase {
@@ -41,7 +48,7 @@ class Topic extends SfgApiNodeBase {
       'step_by_steps' => [],
       'topics' => [],
       'transactions' => [],
-      'agencies' => []
+      'agencies' => [],
     ];
   }
 

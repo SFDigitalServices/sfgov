@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "phone_number",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {},
  * )
  */
 class Phone extends SfgApiParagraphBase {

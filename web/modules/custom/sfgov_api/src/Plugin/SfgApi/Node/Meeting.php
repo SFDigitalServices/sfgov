@@ -14,6 +14,16 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Meeting",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "paragraph_resource_section",
+ *     "location_physical",
+ *     "paragraph_phone",
+ *     "paragraph_agenda_item",
+ *     "paragraph_video_external",
+ *     "paragraph_video",
+ *     "paragraph_accordion_item",
+ *     "node_department",
+ *   }
  * )
  */
 class Meeting extends SfgApiNodeBase {
@@ -62,7 +72,7 @@ class Meeting extends SfgApiNodeBase {
       'meeting_location' => [],
       'overview' => $entity->get('body')->value,
       'agenda' => $this->getReferencedData($entity->get('field_agenda')->referencedEntities()),
-      // Blocked by needing to remove the "internal" option from video ui
+      // Blocked by needing to remove the "internal" option from video ui.
       'videos' => $this->getReferencedData($entity->get('field_videos')->referencedEntities()),
       'notices' => $this->getReferencedData($entity->get('field_regulations_accordions')->referencedEntities()),
       // 'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),

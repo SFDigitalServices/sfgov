@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "video",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {},
  * )
  */
 class VideoExternal extends SfgApiParagraphBase {
@@ -33,7 +34,7 @@ class VideoExternal extends SfgApiParagraphBase {
           'link_text' => $entity->get('field_link')->title,
         ],
       ],
-    ],
+      ],
       'description' => $entity->get('field_description')->value ?: '',
       // @todo this plugin is incomplete and only exists for entity referencing
       // at the moment.

@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "item",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {},
  * )
  */
 class TimelineItem extends SfgApiParagraphBase {

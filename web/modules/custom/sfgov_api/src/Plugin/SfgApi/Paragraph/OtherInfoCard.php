@@ -14,6 +14,11 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "other_info_card",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "media_image",
+ *     "paragraph_video_external",
+ *     "paragraph_resource_node",
+ *   }
  * )
  */
 class OtherInfoCard extends SfgApiParagraphBase {

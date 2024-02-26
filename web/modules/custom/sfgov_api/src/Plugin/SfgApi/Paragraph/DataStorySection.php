@@ -15,10 +15,10 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   entity_id = {},
  *   langcode = {},
  *   referenced_plugins = {
-*      "paragraph_callout",
-*      "paragraph_image",
-*      "paragraph_powerbi_embed",
-*      "paragraph_text",
+ *      "paragraph_callout",
+ *      "paragraph_image",
+ *      "paragraph_powerbi_embed",
+ *      "paragraph_text",
  *   }
  * )
  */
@@ -32,7 +32,7 @@ class DataStorySection extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     $data = [];
     $title = $entity->get('field_title')->value ?: '';
-    $section_content = $entity->get('field_content')->referencedEntities() ? $this->getReferencedData($entity->get('field_content')->referencedEntities()): [];
+    $section_content = $entity->get('field_content')->referencedEntities() ? $this->getReferencedData($entity->get('field_content')->referencedEntities()) : [];
     if (empty($title) && empty($section_content)) {
       $data = [
         'alter' => 'empty_data',

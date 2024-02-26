@@ -14,6 +14,13 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "LocationPage",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "paragraph_accordion_item",
+ *     "paragraph_email",
+ *     "paragraph_phone",
+ *     "location_physical",
+ *     "paragraph_department_service_section",
+ *   }
  * )
  */
 class Location extends SfgApiNodeBase {
@@ -37,14 +44,16 @@ class Location extends SfgApiNodeBase {
         'value' => [
           'text' => $entity->get('field_alert_text')->value,
           'expiration_date' => $entity->get('field_alert_expiration_date')->value,
-        ]
-      ]],
-      // for some reason addresses get cited like a streamfield so we need
+        ],
+      ],
+      ],
+      // For some reason addresses get cited like a streamfield so we need
       // to wrap it in an extra array.
       'location_address' => [[
         'type' => 'address',
         'value' => $this->getReferencedEntity($entity->get('field_address')->referencedEntities(), TRUE, TRUE),
-      ]],
+      ],
+      ],
       'contact' => $contact,
       'body' => $entity->get('body')->value,
       'intro' => $entity->get('field_intro_text')->value,
@@ -53,10 +62,13 @@ class Location extends SfgApiNodeBase {
       'accessibility' => $sorted_accordion_items['accessibility'],
       'public_transportation' => $sorted_accordion_items['public_transportation'],
       'services' => $this->getReferencedData($entity->get('field_services')->referencedEntities()),
-      'about_location' =>  $entity->get('field_about_description')->value,
+      'about_location' => $entity->get('field_about_description')->value,
     ];
   }
 
+  /**
+   *
+   */
   private function sortAccordionItems($accordion_items) {
     $sorted_accordion = [];
     foreach ($accordion_items as $item) {
@@ -65,12 +77,15 @@ class Location extends SfgApiNodeBase {
         case 'parking':
           $sorted_accordion['parking'] = $item;
           break;
+
         case 'accessibility':
           $sorted_accordion['accessibility'] = $item;
           break;
+
         case 'public_transportation':
           $sorted_accordion['public_transportation'] = $item;
           break;
+
         default:
           $sorted_accordion['accordion'][] = $item;
           break;

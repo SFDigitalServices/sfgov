@@ -42,7 +42,7 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
           // @todo , remove once we have a better source for alt text.
           'alt_text' => 'temp',
         ];
-    }
+      }
     }
 
     return $base_data;

@@ -14,6 +14,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "downloadable_files",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "media_file",
+ *   }
  * )
  */
 class OtherInfoDocument extends SfgApiParagraphBase {

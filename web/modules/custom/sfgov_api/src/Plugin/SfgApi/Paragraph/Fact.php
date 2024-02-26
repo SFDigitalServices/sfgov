@@ -14,6 +14,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "title_and_text",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "media_image",
+ *   }
  * )
  */
 class Fact extends SfgApiParagraphBase {

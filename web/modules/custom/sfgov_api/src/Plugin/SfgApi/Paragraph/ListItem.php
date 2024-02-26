@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "list_item",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {},
  * )
  */
 class ListItem extends SfgApiParagraphBase {
@@ -25,7 +26,7 @@ class ListItem extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'link' => $this->generateLinks($entity->get('field_link')->getvalue())
+      'link' => $this->generateLinks($entity->get('field_link')->getvalue()),
     ];
   }
 

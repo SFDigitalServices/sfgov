@@ -201,7 +201,7 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     foreach ($plugin_list as $plugin_name) {
       $plugin_definition = $sfgovApiPluginManager->getDefinition($plugin_name);
       if (is_string($plugin_name)) {
-        // If its a node we don't need to continue
+        // If its a node we don't need to continue.
         if (str_starts_with($plugin_name, 'node')) {
           $returned_plugins[$plugin_name] = '';
           continue;
@@ -217,6 +217,7 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     }
     return $returned_plugins;
   }
+
   /**
    * Add a plugin error.
    *
