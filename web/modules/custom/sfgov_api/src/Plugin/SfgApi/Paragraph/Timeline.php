@@ -14,6 +14,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "timeline",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "paragraph_timeline_item",
+ *   }
  * )
  */
 class Timeline extends SfgApiParagraphBase {
@@ -26,7 +29,7 @@ class Timeline extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       'title' => $entity->get('field_timeline_title')->value,
-      //@todo remove the link from this paragraph because its usually a separate
+      // @todo remove the link from this paragraph because its usually a separate
       // value in wagtail.
       'link' => $this->generateLinks($entity->get('field_link')->getvalue()),
       'timeline_items' => $this->getReferencedData($entity->get('field_timeline_item')->referencedEntities()),

@@ -12,6 +12,7 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Paragraph;
  *   wag_bundle = "form_io",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {},
  * )
  */
 class FormIo extends SfgApiParagraphBase {
@@ -21,8 +22,8 @@ class FormIo extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'formio_data_source' => $entity->get('field_formio_data_source')->value,
       // @todo this plugin is incomplete
+      'formio_data_source' => $entity->get('field_formio_data_source')->value,
       // 'field_custom_form_strings' => $entity->get('field_custom_form_strings')->value,
       // 'field_form_strings' => $entity->get('field_form_strings')->value,
       // 'field_formio_confirmation_url' => $entity->get('field_formio_confirmation_url')->value,

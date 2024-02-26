@@ -14,6 +14,10 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "campaign_resources",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "media_file",
+ *     "paragraph_campaign_resource_section",
+ *   }
  * )
  */
 class CampaignResources extends SfgApiParagraphBase {

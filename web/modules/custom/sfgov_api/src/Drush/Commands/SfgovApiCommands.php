@@ -215,12 +215,12 @@ class SfgovApiCommands extends DrushCommands {
     $node_exists = $this->apiUtilities->getWagtailId($entity_id, $entity_type, $bundle, $langcode);
     if ($node_exists && !$options['update']) {
       $options['update'] = TRUE;
-        $message = $this->t('@entity_type of type @bundle with ID @entity_id in langcode @langcode already exists. Updating...', [
-          '@entity_type' => $entity_type,
-          '@bundle' => $bundle,
-          '@entity_id' => $entity_id,
-          '@langcode' => $langcode,
-        ]);
+      $message = $this->t('@entity_type of type @bundle with ID @entity_id in langcode @langcode already exists. Updating...', [
+        '@entity_type' => $entity_type,
+        '@bundle' => $bundle,
+        '@entity_id' => $entity_id,
+        '@langcode' => $langcode,
+      ]);
       $this->output()->writeln($message);
     }
 
@@ -355,7 +355,7 @@ class SfgovApiCommands extends DrushCommands {
         $api_url_complete = $this->apiUtilities->getCredentials()['api_url_base'] . 'sf.' . $wag_bundle;
         $payload_data = $payload->getPayloadData();
 
-        // @todo, temporary fix to clear entity reference fields that aren't working.
+        // @todo , temporary fix to clear entity reference fields that aren't working.
         if (isset($payload_data['related_content_topics'])) {
           $payload_data['related_content_topics'] = [];
         }

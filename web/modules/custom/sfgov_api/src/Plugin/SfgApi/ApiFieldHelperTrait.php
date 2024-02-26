@@ -2,9 +2,9 @@
 
 namespace Drupal\sfgov_api\Plugin\SfgApi;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Helper functions for converting field data to a form that wagtail can use.
@@ -59,6 +59,7 @@ trait ApiFieldHelperTrait {
                 'value' => $entity_data['value']['value'],
               ];
               break;
+
             // Remove empty data.
             case 'empty_data':
               unset($entities_data[$key]);
@@ -138,6 +139,7 @@ trait ApiFieldHelperTrait {
             // type.
             $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . 'pages' . '/' . $wagtail_id;
             break;
+
           case 'location':
             // Location references are very similar to node references.
             $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . 'cms.Address' . '/' . $wagtail_id;
@@ -283,6 +285,9 @@ trait ApiFieldHelperTrait {
     return $data;
   }
 
+  /**
+   *
+   */
   public function generateLinks(array $links_data) {
     $links = [];
     foreach ($links_data as $link) {

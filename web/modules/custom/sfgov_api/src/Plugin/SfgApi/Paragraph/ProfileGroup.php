@@ -8,20 +8,18 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "paragraph_accordion_item",
- *   title = @Translation("Paragraph accordion_item"),
- *   bundle = "accordion_item",
- *   wag_bundle = "title_and_text",
+ *   id = "paragraph_profile_group",
+ *   title = @Translation("Paragraph profile_group"),
+ *   bundle = "profile_group",
+ *   wag_bundle = "profile_group",
  *   entity_id = {},
  *   langcode = {},
  *   referenced_plugins = {
- *     "location_physical",
- *     "paragraph_phone",
- *     "paragraph_text",
- *   }
+ *     "paragraph_public_body_profiles",
+ *   },
  * )
  */
-class AccordionItem extends SfgApiParagraphBase {
+class ProfileGroup extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 
@@ -30,7 +28,9 @@ class AccordionItem extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'field_content' => $entity->get('field_content')->value,
+      // @todo incomplete.
+      'field_description' => $entity->get('field_description')->value,
+      'field_profiles' => $entity->get('field_profiles')->value,
       'field_title' => $entity->get('field_title')->value,
     ];
   }

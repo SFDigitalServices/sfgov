@@ -14,6 +14,17 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Event",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "paragraph_resource_section",
+ *     "paragraph_email",
+ *     "paragraph_phone",
+ *     "location_event_address",
+ *     "paragraph_cost",
+ *     "paragraph_call_to_action",
+ *     "media_image",
+ *     "node_department",
+ *     "node_topic",
+ *   }
  * )
  */
 class Event extends SfgApiNodeBase {
@@ -49,7 +60,7 @@ class Event extends SfgApiNodeBase {
       'description' => $entity->get('field_description')->value,
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
-      // blocked by optionality field issue.
+      // Blocked by optionality field issue.
       'call_to_action' => $this->getReferencedData($entity->get('field_call_to_action')->referencedEntities()),
       'image' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), FALSE, TRUE),
       'body' => $entity->get('body')->value,

@@ -5,7 +5,6 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Node;
 use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 use Drupal\taxonomy\Entity\Term;
 
-
 /**
  * Plugin implementation of the sfgov_api.
  *
@@ -16,6 +15,14 @@ use Drupal\taxonomy\Entity\Term;
  *   wag_bundle = "Campaign",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {
+ *     "paragraph_facts",
+ *     "paragraph_campaign_spotlight",
+ *     "paragraph_campaign_resources",
+ *     "paragraph_image_with_text",
+ *     "paragraph_accordion",
+ *     "paragraph_video",
+ *   }
  * )
  */
 class Campaign extends SfgApiNodeBase {
@@ -46,7 +53,7 @@ class Campaign extends SfgApiNodeBase {
       'theme' => $theme_name,
       'header_spotlight' => $this->getReferencedData($entity->get('field_header_spotlight')->referencedEntities()),
       'facts_title' => $facts_title,
-      // blocked by fact_item construction.
+      // Blocked by fact_item construction.
       // 'fact_items' => $fact_items,
       // This one is very complex.
       // 'additional_content' => $this->getReferencedData($entity->get('field_contents')->referencedEntities()),

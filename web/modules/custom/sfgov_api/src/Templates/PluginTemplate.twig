@@ -16,6 +16,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "{{ bundle }}",
  *   entity_id = {},
  *   langcode = {},
+ *   referenced_plugins = {},
  * )
  */
 class {{ bundle_camelize }} extends SfgApi{{ entity_type_ucfirst }}Base {
@@ -39,6 +40,7 @@ class {{ bundle_camelize }} extends SfgApi{{ entity_type_ucfirst }}Base {
     // - Make sure to manually double check and update the wag_bundle in the annotation above.
     // - To small adjustments to the data only relevant to this entity, you add functions to this plugin.
     // - Look at ApiFieldHelperTrait.php for broad functions that can be used across all entities (like entity references).
+    // - Make sure to manually updated the "referenced_plugins" value in the annotation.
     {% for entity_field in entity_fields %}
       '{{ entity_field }}' => $entity->get('{{ entity_field }}')->value,
     {% endfor %}
