@@ -61,7 +61,7 @@ class Transaction extends SfgApiNodeBase {
       'field_step_mail' => $this->getReferencedData($entity->get('field_step_mail')->referencedEntities()),
       'field_step_online' => $this->getReferencedData($entity->get('field_step_online')->referencedEntities()),
       'field_step_other' => $this->getReferencedData($entity->get('field_step_other')->referencedEntities()),
-      'field_step_other_title' => $this->getReferencedData($entity->get('field_step_other_title')->referencedEntities()),
+      'field_step_other_title' => $entity->get('field_step_other_title')->value,
       'field_step_phone' => $this->getReferencedData($entity->get('field_step_phone')->referencedEntities()),
       'field_things_to_know' => $entity->get('field_things_to_know')->value,
       'field_topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
