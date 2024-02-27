@@ -8,18 +8,16 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  * Plugin implementation of the sfgov_api.
  *
  * @SfgApi(
- *   id = "paragraph_document",
- *   title = @Translation("Paragraph document"),
- *   bundle = "document",
- *   wag_bundle = "document",
+ *   id = "paragraph_special_case",
+ *   title = @Translation("Paragraph special_case"),
+ *   bundle = "special_case",
+ *   wag_bundle = "special_case",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "media_file",
- *   }
+ *   referenced_plugins = {},
  * )
  */
-class Document extends SfgApiParagraphBase {
+class SpecialCase extends SfgApiParagraphBase {
 
   use ApiFieldHelperTrait;
 
@@ -28,7 +26,8 @@ class Document extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'file' => $this->getReferencedEntity($entity->get('field_file')->referencedEntities()),
+      'text' => $entity->get('field_text')->value,
+      'title' => $entity->get('field_title')->value,
     ];
   }
 

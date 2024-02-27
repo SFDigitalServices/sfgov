@@ -25,10 +25,11 @@ class ContentLink extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    $derp = true;
     return [
       'text' => $entity->get('field_button_text')->value,
       'content_type' => $entity->get('field_content_type')->value,
-      'link' => $this->generateLinks($entity->get('field_link')->value),
+      'link' => $this->generateLinks($entity->get('field_link')->getValue()),
     ];
   }
 
