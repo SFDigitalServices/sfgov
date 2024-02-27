@@ -14,7 +14,16 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "ResourceCollection",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {},
+ *   referenced_plugins = {
+ *     "paragraph_document",
+ *     "paragraph_section",
+ *     "paragraph_custom_section",
+ *     "paragraph_powerbi_embed",
+ *     "paragraph_document_section",
+ *     "paragraph_data_story_section",
+ *     "paragraph_resource_section",
+ *     "location_physical",
+ *   },
  * )
  */
 class ResourceCollection extends SfgApiNodeBase {
@@ -26,17 +35,16 @@ class ResourceCollection extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
-      // @todo this plugin is incomplete and only exists for entity referencing
-      // 'field_content' => $entity->get('field_content')->value,
-      // 'field_content_bottom' => $entity->get('field_content_bottom')->value,
-      // 'field_data_dashboard' => $entity->get('field_data_dashboard')->value,
-      // 'field_departments' => $entity->get('field_departments')->value,
-      // 'field_dept' => $entity->get('field_dept')->value,
-      // 'field_description' => $entity->get('field_description')->value,
-      // 'field_introductory_text' => $entity->get('field_introductory_text')->value,
-      // 'field_paragraphs' => $entity->get('field_paragraphs')->value,
-      // 'field_sidebar' => $entity->get('field_sidebar')->value,
-      // 'field_topics' => $entity->get('field_topics')->value,
+      // @todo this plugin is only fetching data. needs to be massaged.
+      'field_content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
+      'field_content_bottom' => $this->getReferencedData($entity->get('field_content_bottom')->referencedEntities()),
+      'field_data_dashboard' => $this->getReferencedData($entity->get('field_data_dashboard')->referencedEntities()),
+      'field_departments' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
+      'field_description' => $entity->get('field_description')->value,
+      'field_introductory_text' => $entity->get('field_introductory_text')->value,
+      'field_paragraphs' => $this->getReferencedData($entity->get('field_paragraphs')->referencedEntities()),
+      'field_sidebar' => $this->getReferencedData($entity->get('field_sidebar')->referencedEntities()),
+      'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
     ];
   }
 

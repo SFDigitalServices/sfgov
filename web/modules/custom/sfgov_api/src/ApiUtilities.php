@@ -94,6 +94,15 @@ class ApiUtilities {
    */
   public function buildTrackingTableSchema($plugin_id) {
     $languages = $this->languageManager->getLanguages();
+    $language_list = [];
+    foreach ($languages as $key => $language) {
+      // Drupal automatically converts hyphens to underscores in the db, so
+      // replace it so that the table name is valid (mainly for zh-hant).
+      $language_list[] = str_replace('-', '_', $key);
+    }
+    // Manually add other languages that are used on the site but not enabled.
+    array_push($language_list, 'zxx', 'und');
+
     $id_map_fields = [
       'fields' => [
         'drupal_id' => [
@@ -112,8 +121,8 @@ class ApiUtilities {
     $table_name = 'dw_migration_' . $plugin_id . '_id_map';
     $schema[$table_name]['description'] = 'Drupal to Wagtail ' . $plugin_id . ' Id map';
     $schema[$table_name] = $id_map_fields;
-    foreach ($languages as $language) {
-      $field_label = 'wagtail_id_' . $language->getId();
+    foreach ($language_list as $language) {
+      $field_label = 'wagtail_id_' . $language;
       $schema[$table_name]['fields'][$field_label] = [
         'type' => 'varchar',
         'length' => 255,
@@ -140,6 +149,10 @@ class ApiUtilities {
    *   The language code of the entity.
    */
   public function getWagtailId($drupal_id, $entity_type, $bundle, $langcode) {
+    // Drupal automatically converts hyphens to underscores in the db, so
+    // manually change zh-hant to zh_hant.
+    $langcode = str_replace('-', '_', $langcode);
+
     // Specify the column based on the provided language code.
     $column_name = 'wagtail_id_' . $langcode;
 
@@ -250,6 +263,10 @@ class ApiUtilities {
    *   The ID of the inserted row and error record.
    */
   public function updateWagErrorTable(string $entity_type, int $drupal_id, string $error_type, string $error_message, string $langcode) {
+    // Drupal automatically converts hyphens to underscores in the db, so
+    // manually change zh-hant to zh_hant.
+    $langcode = str_replace('-', '_', $langcode);
+
     $query = $this->connection->insert('dw_migration_errors')
       ->fields([
         'drupal_id' => $drupal_id,
@@ -279,6 +296,10 @@ class ApiUtilities {
    *   The ID of the corresponding Wagtail page.
    */
   public function updateWagIdTable(string $entity_type, string $bundle, int $drupal_id, string $wag_page_status, string $langcode, string $wag_page_id) {
+    // Drupal automatically converts hyphens to underscores in the db, so
+    // manually change zh-hant to zh_hant.
+    $langcode = str_replace('-', '_', $langcode);
+
     // If there is already a wag page ID, use that.
     if ($wag_page_id === 'none') {
       $wag_page_id = $this->getWagtailId($drupal_id, $entity_type, $bundle, $langcode);

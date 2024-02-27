@@ -125,6 +125,9 @@ type: "transaction",
 value: "2",
 ```
 
+Also, as part of base_data each node builds a reference_chain value which shows all of the plugins that it uses to build
+out the data.
+
 ### Translations
 Wagtail treats each language of a node as a separate entity while Drupal does not. To keep track
 of these ids there is one entry per language in the the individual node tables

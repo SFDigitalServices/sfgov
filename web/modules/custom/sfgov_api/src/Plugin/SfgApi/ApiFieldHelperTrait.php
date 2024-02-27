@@ -43,7 +43,7 @@ trait ApiFieldHelperTrait {
         ];
       }
       else {
-        $entities_data[] = 'Error: no available plugins for this entity';
+        $entities_data[] = 'Error: no available plugins for bundle ' . $bundle . ' of type ' . $entity_type;
       }
     }
 
