@@ -431,7 +431,7 @@ class SfgovApiCommands extends DrushCommands {
       }
       catch (GuzzleException $error) {
         $response = $error->getResponse();
-        $response_info = $response->getBody()->getContents();
+        $response_info = $response ? $response->getBody()->getContents() : $error->getMessage();
         $wag_page_status = 'error';
         $message = 'Something went wrong and its not an API error, pass the --print option to see the full response.';
 

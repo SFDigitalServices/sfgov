@@ -72,4 +72,50 @@ class SfgApiController extends ControllerBase {
     return new JsonResponse($display);
   }
 
+  /**
+   * Get the full reference chain for all plugins.
+   */
+  public function viewReferenceChainComplete() {
+    $display = $this->sfgApiPluginManager->referenceChainComplete();
+    return new JsonResponse($display);
+  }
+
+  /**
+   * Get the plugins that reference the inputted plugin.
+   *
+   * @param string $plugin_label
+   *   The plugin being searched for.
+   */
+  public function viewReferenceChainUp($plugin_label) {
+    $display = [];
+    if (empty($plugin_label)) {
+      $display[]['error'] = 'Please specify a plugin label.';
+    }
+
+    if (empty($display)) {
+      $display = $this->sfgApiPluginManager->referenceChainUp($plugin_label);
+    }
+
+    return new JsonResponse($display);
+  }
+
+  /**
+   * Get the plugins that this plugin references.
+   *
+   * @param string $plugin_label
+   *   The plugin being searched for.
+   */
+  public function viewReferenceChainDown($plugin_label) {
+    $display = [];
+    if (empty($plugin_label)) {
+      $display[]['error'] = 'Please specify a plugin label.';
+    }
+
+    if (empty($display)) {
+      $display = $this->sfgApiPluginManager->referenceChainDown($plugin_label);
+    }
+
+    return new JsonResponse($display);
+  }
+
 }
