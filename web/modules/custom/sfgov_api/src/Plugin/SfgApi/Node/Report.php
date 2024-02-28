@@ -30,6 +30,7 @@ class Report extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
+      // @todo this plugin is only fetching data. needs to be massaged.
       'body' => $entity->get('body')->value,
       'field_date_only' => $entity->get('field_date_only')->value,
       'field_departments' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),

@@ -14,7 +14,16 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "person",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {},
+ *   referenced_plugins = {
+ *     "location_physical",
+ *     "paragraph_email",
+ *     "paragraph_featured_item",
+ *     "paragraph_phone",
+ *     "media_image",
+ *     "paragraph_public_body_profiles",
+ *     "paragraph_social_media",
+ *     "paragraph_spotlight",
+ *   },
  * )
  */
 class Person extends SfgApiNodeBase {
@@ -26,28 +35,28 @@ class Person extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
-      // @todo finish stubbing out the fields.
-      // 'body' => $entity->get('body')->value,
-      // 'field_address' => $entity->get('field_address')->value,
-      // 'field_biography' => $entity->get('field_biography')->value,
-      // 'field_city_department' => $entity->get('field_city_department')->value,
-      // 'field_direct_external_url' => $entity->get('field_direct_external_url')->value,
-      // 'field_email' => $entity->get('field_email')->value,
-      // 'field_featured_items' => $entity->get('field_featured_items')->value,
-      // 'field_first_name' => $entity->get('field_first_name')->value,
-      // 'field_last_name' => $entity->get('field_last_name')->value,
-      // 'field_phone_numbers' => $entity->get('field_phone_numbers')->value,
-      // 'field_photo' => $entity->get('field_photo')->value,
-      // 'field_primary_email' => $entity->get('field_primary_email')->value,
-      // 'field_primary_phone_number' => $entity->get('field_primary_phone_number')->value,
-      // 'field_profile_photo' => $entity->get('field_profile_photo')->value,
-      // 'field_profile_positions_held' => $entity->get('field_profile_positions_held')->value,
-      // 'field_profile_type' => $entity->get('field_profile_type')->value,
-      // 'field_pronouns' => $entity->get('field_pronouns')->value,
-      // 'field_social_media' => $entity->get('field_social_media')->value,
-      // 'field_spotlight' => $entity->get('field_spotlight')->value,
-      // 'field_sub_title' => $entity->get('field_sub_title')->value,
-      // 'field_title' => $entity->get('field_title')->value,
+      // @todo this plugin is only fetching data. needs to be massaged.
+      'body' => $entity->get('body')->value,
+      'field_address' => $this->getReferencedEntity($entity->get('field_address')->referencedEntities()),
+      'field_biography' => $entity->get('field_biography')->value,
+      'field_city_department' => $this->getReferencedEntity($entity->get('field_city_department')->referencedEntities()),
+      'field_direct_external_url' => $this->generateLinks($entity->get('field_direct_external_url')->getvalue()),
+      'field_email' => $this->getReferencedData($entity->get('field_email')->referencedEntities()),
+      'field_featured_items' => $this->getReferencedData($entity->get('field_featured_items')->referencedEntities()),
+      'field_first_name' => $entity->get('field_first_name')->value,
+      'field_last_name' => $entity->get('field_last_name')->value,
+      'field_phone_numbers' => $this->getReferencedData($entity->get('field_phone_numbers')->referencedEntities()),
+      'field_photo' => $this->getReferencedEntity($entity->get('field_photo')->referencedEntities()),
+      'field_primary_email' => $entity->get('field_primary_email')->value,
+      'field_primary_phone_number' => $entity->get('field_primary_phone_number')->value,
+      'field_profile_photo' => $this->getReferencedEntity($entity->get('field_profile_photo')->referencedEntities()),
+      'field_profile_positions_held' => $entity->get('field_profile_positions_held')->value,
+      'field_profile_type' => $entity->get('field_profile_type')->value,
+      'field_pronouns' => $entity->get('field_pronouns')->value,
+      'field_social_media' => $this->getReferencedData($entity->get('field_social_media')->referencedEntities()),
+      'field_spotlight' => $this->getReferencedData($entity->get('field_spotlight')->referencedEntities()),
+      'field_sub_title' => $entity->get('field_sub_title')->value,
+      'field_title' => $entity->get('field_title')->value,
     ];
   }
 
