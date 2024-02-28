@@ -182,40 +182,8 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     $requested_langcode = $this->getLangcode();
     $wag_bundle = $this->getWagBundle();
     $plugin_errors = $this->pluginErrors;
-    if ($entity instanceof Node) {
-      $reference_chain = $this->getReferenceChain($this->pluginDefinition['referenced_plugins']);
-    }
-    else {
-      $reference_chain = [];
-    }
-    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors, $reference_chain);
+    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors);
     return $this->payload = $payload;
-  }
-
-  /**
-   * Get the reference chain.
-   */
-  public function getReferenceChain($plugin_list) {
-    $sfgovApiPluginManager = \Drupal::service('plugin.manager.sfgov_api');
-    $returned_plugins = [];
-    foreach ($plugin_list as $plugin_name) {
-      $plugin_definition = $sfgovApiPluginManager->getDefinition($plugin_name);
-      if (is_string($plugin_name)) {
-        // If its a node we don't need to continue.
-        if (str_starts_with($plugin_name, 'node')) {
-          $returned_plugins[$plugin_name] = '';
-          continue;
-        }
-      }
-      if ($referenced_plugins = $plugin_definition['referenced_plugins']) {
-        $returned_plugins[$plugin_name] = $plugin_name;
-        $returned_plugins[$plugin_name] = $this->getReferenceChain($referenced_plugins);
-      }
-      else {
-        $returned_plugins[$plugin_name] = '';
-      }
-    }
-    return $returned_plugins;
   }
 
   /**

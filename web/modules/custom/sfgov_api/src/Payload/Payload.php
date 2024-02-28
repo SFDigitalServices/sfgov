@@ -84,13 +84,6 @@ class Payload {
   protected $pluginErrors;
 
   /**
-   * The other plugins this payload uses.
-   *
-   * @var array
-   */
-  protected $referenceChain;
-
-  /**
    * The empty references.
    *
    * @var array
@@ -112,20 +105,17 @@ class Payload {
    *   The wagtail bundle.
    * @param array $pluginErrors
    *   The plugin errors.
-   * @param array $referenceChain
-   *   The other plugins this payload uses.
    *
    * @return \Drupal\sfgov_api\Payload\Payload
    * The Payload object.
    */
-  public function __construct(?EntityInterface $entity, $baseData, $customData, $requestedLangcode, $wagBundle, $pluginErrors, $referenceChain) {
+  public function __construct(?EntityInterface $entity, $baseData, $customData, $requestedLangcode, $wagBundle, $pluginErrors) {
     $this->entity = $entity;
     $this->baseData = $baseData;
     $this->customData = $customData;
     $this->requestedLangcode = $requestedLangcode;
     $this->wagBundle = $wagBundle;
     $this->pluginErrors = $pluginErrors;
-    $this->referenceChain = $referenceChain;
     $this->errors = $this->checkErrors();
     $this->metadata = $this->setMetadata();
     $this->stub = $this->setStub();
@@ -192,7 +182,6 @@ class Payload {
         'translations' => array_keys($entity->getTranslationLanguages()),
         'wag_bundle' => $this->wagBundle,
         'empty_references' => $this->emptyReferences ?: [],
-        'reference_chain' => $this->referenceChain ?: [],
       ];
     }
 

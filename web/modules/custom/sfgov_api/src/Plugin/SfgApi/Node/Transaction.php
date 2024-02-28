@@ -29,7 +29,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *     "node_topic",
  *     "node_transaction",
  *     "paragraph_special_case",
- *     "paragraph_step",
+ *     "paragraph_process_step",
  *     "paragraph_callout",
  *     "paragraph_thing_to_know",
  *     "paragraph_additional_info",
