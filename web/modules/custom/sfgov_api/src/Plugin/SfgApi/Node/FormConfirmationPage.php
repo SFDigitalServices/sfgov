@@ -14,7 +14,16 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "form_confirmation_page",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {}
+ *   referenced_plugins = {
+ *     "media_image",
+ *     "paragraph_email_addresses",
+ *     "paragraph_help",
+ *     "paragraph_in_person_location",
+ *     "paragraph_phone_numbers",
+ *     "node_form_page",
+ *     "paragraph_callout",
+ *     "paragraph_process_step",
+ *   },
  * )
  */
 class FormConfirmationPage extends SfgApiNodeBase {
@@ -26,17 +35,17 @@ class FormConfirmationPage extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
-      // @todo this plugin is incomplete
+      // @todo this plugin is only fetching data. needs to be massaged.
       'body' => $entity->get('body')->value,
       'field_bann' => $entity->get('field_bann')->value,
       'field_banner_color' => $entity->get('field_banner_color')->value,
-      'field_banner_image' => $entity->get('field_banner_image')->value,
-      'field_confirmation_sidebar' => $entity->get('field_confirmation_sidebar')->value,
-      'field_departments' => $entity->get('field_departments')->value,
+      'field_banner_image' => $this->getReferencedEntity($entity->get('field_banner_image')->referencedEntities()),
+      'field_confirmation_sidebar' => $this->getReferencedData($entity->get('field_confirmation_sidebar')->referencedEntities()),
+      'field_departments' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'field_description' => $entity->get('field_description')->value,
-      // 'field_form_confirm_page_slug' => $entity->get('field_form_confirm_page_slug')->value,
-      // 'field_related_content_single' => $entity->get('field_related_content_single')->value,
-      // 'field_step' => $entity->get('field_step')->value,
+      'field_form_confirm_page_slug' => $entity->get('field_form_confirm_page_slug')->value,
+      'field_related_content_single' => $this->getReferencedEntity($entity->get('field_related_content_single')->referencedEntities()),
+      'field_step' => $this->getReferencedData($entity->get('field_step')->referencedEntities()),
     ];
   }
 

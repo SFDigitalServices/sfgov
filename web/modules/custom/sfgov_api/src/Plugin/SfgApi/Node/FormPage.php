@@ -15,7 +15,9 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "form_page",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {},
+ *   referenced_plugins = {
+ *     "paragraph_form_io",
+ *   },
  * )
  */
 class FormPage extends SfgApiNodeBase {
@@ -28,12 +30,11 @@ class FormPage extends SfgApiNodeBase {
   public function setCustomData($entity) {
     $formio_data_source = $this->getReferencedData($entity->get('field_form_id')->referencedEntities());
     return [
-      // @todo this plugin is incomplete
-      // 'field_formio_json_content' => $entity->get('field_formio_json_content')->value,
-      // 'field_form_id' => $entity->get('field_form_id')->value,
-      // 'field_intro_text' => $entity->get('field_intro_text')->value,
+      // @todo this plugin is only fetching data. needs to be massaged.
+      'field_formio_json_content' => $entity->get('field_formio_json_content')->value,
+      'field_intro_text' => $entity->get('field_intro_text')->value,
       'data_source' => $formio_data_source[0]['value']['formio_data_source'],
-      'confirmation_page' => $this->getReferencedData([$this->getFormConfirmationPage($entity->id())]),
+      'confirmation_page' => $this->getReferencedEntity([$this->getFormConfirmationPage($entity->id())]),
     ];
   }
 
