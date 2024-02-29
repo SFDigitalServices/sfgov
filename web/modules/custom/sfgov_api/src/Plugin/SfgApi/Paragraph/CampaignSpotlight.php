@@ -30,7 +30,7 @@ class CampaignSpotlight extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       // @todo , blocked by image field issue.
-      // 'image' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
+      'image' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
       'title' => $entity->get('field_title')->value,
       'button' => $this->collapseParagraph($this->getReferencedData($entity->get('field_spotlight_button')->referencedEntities())),
       'description' => $entity->get('field_description')->value,
@@ -41,7 +41,7 @@ class CampaignSpotlight extends SfgApiParagraphBase {
   }
 
   /**
-   *
+   * Collapse paragraph data.
    */
   public function collapseParagraph($paragraph_data) {
     if ($paragraph_data) {

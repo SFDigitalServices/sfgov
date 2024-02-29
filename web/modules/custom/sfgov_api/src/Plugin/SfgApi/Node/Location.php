@@ -67,7 +67,7 @@ class Location extends SfgApiNodeBase {
   }
 
   /**
-   *
+   * Sort accordion items based on their title.
    */
   private function sortAccordionItems($accordion_items) {
     $sorted_accordion = [];

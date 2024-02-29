@@ -102,7 +102,7 @@ class SfgApiPluginManager extends DefaultPluginManager {
   public function referenceChainDown($plugin_label) {
     $referenced_plugins = $this->getDefinition($plugin_label)['referenced_plugins'];
     $plugin = $this->createInstance($plugin_label);
-    $reference_chain = $plugin->getReferenceChain($referenced_plugins);
+    $reference_chain = $this->getReferenceChain($referenced_plugins);
     return $reference_chain;
   }
 

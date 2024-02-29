@@ -28,10 +28,9 @@ class Accordion extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-    // @todo incomplete
-      // 'field_content' => $entity->get('field_content')->value,
-      // 'field_description' => $entity->get('field_description')->value,
-      // 'field_title' => $entity->get('field_title')->value,
+      'field_content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
+      'field_description' => $entity->get('field_description')->value,
+      'field_title' => $entity->get('field_title')->value,
     ];
   }
 
