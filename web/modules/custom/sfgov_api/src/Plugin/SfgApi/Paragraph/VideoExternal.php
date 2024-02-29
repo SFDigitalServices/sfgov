@@ -36,12 +36,6 @@ class VideoExternal extends SfgApiParagraphBase {
       ],
       ],
       'description' => $entity->get('field_description')->value ?: '',
-      // @todo this plugin is incomplete and only exists for entity referencing
-      // at the moment.
-      // 'field_description' => $entity->get('field_description')->value,
-      // 'field_link' => $entity->get('field_link')->value,
-      // 'field_text' => $entity->get('field_text')->value,
-      // 'field_title' => $entity->get('field_title')->value,
     ];
   }
 
