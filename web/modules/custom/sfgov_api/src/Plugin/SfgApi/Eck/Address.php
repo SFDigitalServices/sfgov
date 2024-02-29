@@ -64,7 +64,7 @@ class Address extends SfgApiPluginBase {
   }
 
   /**
-   *
+   * Format hours data for Wagtail.
    */
   public function formatHours($hours_data) {
     if (empty($hours_data)) {

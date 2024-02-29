@@ -286,7 +286,7 @@ trait ApiFieldHelperTrait {
   }
 
   /**
-   *
+   * Generate links in the shape wagtail expects.
    */
   public function generateLinks(array $links_data) {
     $links = [];

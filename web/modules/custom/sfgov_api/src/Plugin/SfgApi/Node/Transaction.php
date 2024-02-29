@@ -51,7 +51,10 @@ class Transaction extends SfgApiNodeBase {
       'field_departments' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'field_description' => $entity->get('field_description')->value,
       'field_direct_external_url' => $this->generateLinks($entity->get('field_direct_external_url')->getvalue()),
-      'field_do_not_show_on_topic_pages' => $this->editFieldValue($entity->get('field_do_not_show_on_topic_pages')->value, [1 => TRUE, 0 => FALSE]),
+      'field_do_not_show_on_topic_pages' => $this->editFieldValue($entity->get('field_do_not_show_on_topic_pages')->value, [
+        1 => TRUE,
+        0 => FALSE,
+      ]),
       'field_help' => $this->getReferencedData($entity->get('field_help')->referencedEntities()),
       'field_related_content' => $this->getReferencedEntity($entity->get('field_related_content')->referencedEntities(), FALSE, TRUE),
       'field_sort_title' => $entity->get('field_sort_title')->value,

@@ -42,7 +42,7 @@ class Meeting extends SfgApiNodeBase {
     $meeting_online = [];
 
     if ($entity->get('field_location_online')->value == 1) {
-      // @todo link function.
+      // @todo use existing link function.
       $meeting_online = [
         'type' => 'online',
         'value' => [
@@ -54,9 +54,9 @@ class Meeting extends SfgApiNodeBase {
             'link_to' => 'url',
             'link_text' => $entity->get('field_link')->title,
           ],
-          // Works, but blocked by needing to make decisions about phone numbers that
-          // weren't validated properly.
-          // 'phone' => $this->getReferencedData($entity->get('field_phone_numbers')->referencedEntities()),
+          // @todo Works, but blocked by needing to make decisions about phone
+          // numbers that weren't validated properly.
+          'phone' => $this->getReferencedData($entity->get('field_phone_numbers')->referencedEntities()),
           'phone' => [],
           'description' => $entity->get('field_abstract')->value ?: '',
         ],
@@ -68,14 +68,13 @@ class Meeting extends SfgApiNodeBase {
       // Extra array here is to force the data into a shape that streamfields
       // expect.
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
-      // Want to use $meeting_location, but that doesnt work for som reason.
-      'meeting_location' => [],
+      'meeting_location' => $meeting_location,
       'overview' => $entity->get('body')->value,
       'agenda' => $this->getReferencedData($entity->get('field_agenda')->referencedEntities()),
-      // Blocked by needing to remove the "internal" option from video ui.
+      // @todo Blocked by needing to remove the "internal" option from video ui.
       'videos' => $this->getReferencedData($entity->get('field_videos')->referencedEntities()),
       'notices' => $this->getReferencedData($entity->get('field_regulations_accordions')->referencedEntities()),
-      // 'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),
+      'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),
       'primary_agency' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities(), FALSE, TRUE),
     ];
   }
