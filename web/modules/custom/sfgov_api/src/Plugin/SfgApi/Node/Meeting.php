@@ -71,7 +71,6 @@ class Meeting extends SfgApiNodeBase {
       'meeting_location' => $meeting_location,
       'overview' => $entity->get('body')->value,
       'agenda' => $this->getReferencedData($entity->get('field_agenda')->referencedEntities()),
-      // @todo Blocked by needing to remove the "internal" option from video ui.
       'videos' => $this->getReferencedData($entity->get('field_videos')->referencedEntities()),
       'notices' => $this->getReferencedData($entity->get('field_regulations_accordions')->referencedEntities()),
       'meeting_documents' => $this->getReferencedData($entity->get('field_meeting_artifacts')->referencedEntities()),

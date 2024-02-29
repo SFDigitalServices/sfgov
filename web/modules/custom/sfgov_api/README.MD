@@ -59,7 +59,8 @@ Helper functions with broader applicability to more than one entity should be ad
 Note: The aforementioned `getReferencedData` function relies on there being a plugin for the entity type it is referencing. It
 uses said plugin to map out the fields and data.
 
-# Viewing API Data
+
+## Viewing API Data
 There is currently one route that shows entity data. You must provide the entity type, language, bundle, and entity id
 as arguments and it will display that entity in the format that will be pushed to Wagtail. This is very helpful for debugging
 the plugins.
@@ -86,6 +87,15 @@ to update these references before pushing the node
 
 **For an entity type to work it has to have a corresponding plugin in sfgov_api/src/Plugin/SfgApi**
 
+### Plugin chaining
+If bundle does any entity referencing, then it will call the plugin for the referenced entity to layout the corresponding data.
+Each plugin has a list in its annotation called `referenced_plugins` which lists out any plugins that it references within its
+fields. This list is created manually. It allows for the following features which help illustrate relationships between entities.
+- `/sfgov-api-viewer/reference-chain-complete` will show all of the plugins starting from the node level and how they connect to
+each other.
+- If you want to know what other plugins one plugin references you can use the `reference-chain-down` path (i. e `/sfgov-api-viewer/reference-chain-down/node_news` to see news)
+- If you want to know all of the plugins that reference the inputted plugin you can use the `reference-chain-up` path (i.e. `https://sfgov.lndo.site/sfgov-api-viewer/reference-chain-up/node_news` )
+
 ## ECK entities
 There are a handful of ECK entities that need to be migrated to wagtail. They are technically their own
 entity type with bundles. For instance, ECK 'address' is its own entity type, and physical/event_address are
@@ -110,13 +120,8 @@ actual content. It has to be done this way to make the entity relationships work
 ### Entity Relationships
 Wagtail does normal entity reference fields by connecting them to a secondary table entity to create the relationship
 (see `/api/cms/sf.RelatedContentAgency` in the Wagtail API for an example). This API will push normal entity reference
-fields as the following, and Wagtail will figure it out from there (feature in progress).
-```
-  'drupal_id' = $entity_id;
-  'wagtail_id' = $wagtail_id;
-  'entity_type' = $entity_type;
-  'bundle' = $bundle;
-```
+values as a link to a wagtail entity like `/api/cms/sf.Agency/11`.
+
 If the entity reference is in a streamfield (wagtail's answer to paragraphs) then Wagtail stores the relationship like
 so where "value" is the page id. This API will push data in the same shape minus the id (feature in progress).
 ```
@@ -124,9 +129,6 @@ id: "{long-random-string}",
 type: "transaction",
 value: "2",
 ```
-
-Also, as part of base_data each node builds a reference_chain value which shows all of the plugins that it uses to build
-out the data.
 
 ### Translations
 Wagtail treats each language of a node as a separate entity while Drupal does not. To keep track
