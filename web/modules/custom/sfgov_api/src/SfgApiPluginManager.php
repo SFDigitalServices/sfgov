@@ -5,6 +5,7 @@ namespace Drupal\sfgov_api;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * SfgApi plugin manager.
@@ -53,6 +54,59 @@ class SfgApiPluginManager extends DefaultPluginManager {
     return $payload;
   }
 
+  public function getRawReferenceChain($entity_type, $bundle) {
+    $reference_fields = $this->getReferenceFields($entity_type, $bundle);
+    $chain = [];
+    foreach ($reference_fields as $field_name => $field_definition) {
+      $targets = $field_definition->getSetting('handler_settings')['target_bundles'];
+      $target_type = $field_definition->getSetting('target_type');
+      foreach ($targets as $target) {
+        $key = $target_type . '_' . $target;
+        $final_enities = ['node', 'media', 'location'];
+        if (in_array($target_type, $final_enities)) {
+          $chain[$field_name][] = $key;
+        }
+        else {
+          $reference_fields = $this->getRawReferenceChain($target_type, $target);
+          if (!empty($reference_fields)) {
+            $chain[$field_name][$key] = $reference_fields;
+          }
+          else {
+            $chain[$field_name][] = $key;
+          }
+        }
+      }
+    }
+    return $chain;
+  }
+
+  public function getReferenceChainPluginList($raw_reference_chain) {
+    $plugin_list = [];
+    foreach ($raw_reference_chain as $value) {
+      if (is_array($value)) {
+        $plugin_list = array_merge($plugin_list, $this->getReferenceChainPluginList($value));
+      } else {
+        $plugin_list[] = $value;
+      }
+    }
+    return array_unique($plugin_list);
+  }
+
+
+  public function getReferenceFields($entity_type, $bundle) {
+    $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type, $bundle);
+    $reference_fields = [];
+    foreach ($fields as $field_name => $field_definition) {
+      if ($field_definition instanceof FieldConfig) {
+        $type = $field_definition->getType();
+        if ($type === 'entity_reference' || $type === 'entity_reference_revisions') {
+          $reference_fields[$field_name] = $field_definition;
+        }
+      }
+    }
+    return $reference_fields;
+  }
+
   /**
    * Get the full reference chain for all plugins.
    */
@@ -74,62 +128,17 @@ class SfgApiPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Get the plugins that reference the inputted plugin.
-   *
-   * @param string $plugin_label
-   *   The plugin being searched for.
-   */
-  public function referenceChainUp($plugin_label) {
-    $results = [];
-    $plugins = $this->getDefinitions();
-    foreach ($plugins as $plugin) {
-      if ($plugin['referenced_plugins']) {
-        if (in_array($plugin_label, $plugin['referenced_plugins'])) {
-          $results[] = $plugin['id'];
-        }
-      }
-    }
-
-    return $this->getReferenceChain($results, $plugin_label);
-  }
-
-  /**
    * Get the plugins that this plugin references.
    *
    * @param string $plugin_label
    *   The plugin being searched for.
    */
   public function referenceChainDown($plugin_label) {
-    $referenced_plugins = $this->getDefinition($plugin_label)['referenced_plugins'];
-    $plugin = $this->createInstance($plugin_label);
-    $reference_chain = $this->getReferenceChain($referenced_plugins);
+    $label_values = explode('_', $plugin_label, 2);
+    $reference_chain = $this->getRawReferenceChain($label_values[0], $label_values[1]);
     return $reference_chain;
   }
 
-  /**
-   * Get the reference chain.
-   */
-  public function getReferenceChain($plugin_list) {
-    $returned_plugins = [];
-    foreach ($plugin_list as $plugin_name) {
-      $plugin_definition = $this->getDefinition($plugin_name);
-      if (is_string($plugin_name)) {
-        // If its a node we don't need to continue.
-        if (str_starts_with($plugin_name, 'node')) {
-          $returned_plugins[$plugin_name] = '';
-          continue;
-        }
-      }
-      if ($referenced_plugins = $plugin_definition['referenced_plugins']) {
-        $returned_plugins[$plugin_name] = $plugin_name;
-        $returned_plugins[$plugin_name] = $this->getReferenceChain($referenced_plugins);
-      }
-      else {
-        $returned_plugins[$plugin_name] = '';
-      }
-    }
-    return $returned_plugins;
-  }
 
   /**
    * Validate that the plugin exists.

@@ -55,11 +55,4 @@ class SfgApi extends Plugin {
    */
   public $langcode;
 
-  /**
-   * The other plugins that this plugin references.
-   *
-   * @var string
-   */
-  public $referenced_plugins;
-
 }

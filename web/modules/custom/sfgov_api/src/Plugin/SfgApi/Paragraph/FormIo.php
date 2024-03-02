@@ -14,7 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "form_io",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {},
  * )
  */
 class FormIo extends SfgApiParagraphBase {

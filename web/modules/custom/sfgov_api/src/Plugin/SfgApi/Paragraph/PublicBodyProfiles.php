@@ -14,10 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "public_body_profiles",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "node_department",
- *     "node_person",
- * },
  * )
  */
 class PublicBodyProfiles extends SfgApiParagraphBase {

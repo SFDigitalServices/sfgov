@@ -14,16 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "form_confirmation_page",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "media_image",
- *     "paragraph_email_addresses",
- *     "paragraph_help",
- *     "paragraph_in_person_location",
- *     "paragraph_phone_numbers",
- *     "node_form_page",
- *     "paragraph_callout",
- *     "paragraph_process_step",
- *   },
  * )
  */
 class FormConfirmationPage extends SfgApiNodeBase {

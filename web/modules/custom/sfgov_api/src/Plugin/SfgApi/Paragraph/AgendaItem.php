@@ -14,9 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "agenda_item",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "media_file",
- *   }
  * )
  */
 class AgendaItem extends SfgApiParagraphBase {

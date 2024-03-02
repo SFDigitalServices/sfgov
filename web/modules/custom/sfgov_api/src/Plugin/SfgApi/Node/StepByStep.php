@@ -14,11 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "StepByStep",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "node_topic",
- *     "paragraph_process_step",
- *     "node_department",
- *   }
  * )
  */
 class StepByStep extends SfgApiNodeBase {

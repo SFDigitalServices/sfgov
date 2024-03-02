@@ -15,14 +15,6 @@ use Drupal\taxonomy\Entity\Term;
  *   wag_bundle = "Campaign",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_facts",
- *     "paragraph_campaign_spotlight",
- *     "paragraph_campaign_resources",
- *     "paragraph_image_with_text",
- *     "paragraph_accordion",
- *     "paragraph_video",
- *   }
  * )
  */
 class Campaign extends SfgApiNodeBase {

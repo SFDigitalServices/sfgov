@@ -14,10 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "step",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_cost",
- *     "node_transaction",
- *   }
  * )
  */
 class ProcessStep extends SfgApiParagraphBase {

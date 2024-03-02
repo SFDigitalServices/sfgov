@@ -14,11 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "report",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "node_department",
- *     "media_file",
- *     "paragraph_spotlight",
- *  },
  * )
  */
 class Report extends SfgApiNodeBase {

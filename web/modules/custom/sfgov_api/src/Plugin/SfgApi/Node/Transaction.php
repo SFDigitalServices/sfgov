@@ -14,26 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Transaction",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_cost",
- *     "paragraph_custom_section",
- *     "paragraph_help",
- *     "location_physical",
- *     "paragraph_phone_numbers",
- *     "paragraph_email",
- *     "node_campaign",
- *     "node_data_story",
- *     "node_information_page",
- *     "node_resource_collection",
- *     "node_step_by_step",
- *     "node_topic",
- *     "node_transaction",
- *     "paragraph_special_case",
- *     "paragraph_process_step",
- *     "paragraph_callout",
- *     "paragraph_thing_to_know",
- *     "paragraph_additional_info",
- *   },
  * )
  */
 class Transaction extends SfgApiNodeBase {
@@ -44,6 +24,7 @@ class Transaction extends SfgApiNodeBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+
     return [
       // @todo this plugin is only fetching data. needs to be massaged.
       'field_cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),

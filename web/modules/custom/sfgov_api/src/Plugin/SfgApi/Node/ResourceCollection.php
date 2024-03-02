@@ -14,16 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "ResourceCollection",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_document",
- *     "paragraph_section",
- *     "paragraph_custom_section",
- *     "paragraph_powerbi_embed",
- *     "paragraph_document_section",
- *     "paragraph_data_story_section",
- *     "paragraph_resource_section",
- *     "location_physical",
- *   },
  * )
  */
 class ResourceCollection extends SfgApiNodeBase {

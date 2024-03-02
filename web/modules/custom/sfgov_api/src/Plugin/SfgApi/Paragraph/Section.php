@@ -14,22 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "section",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_profile_group",
- *     "paragraph_resource_section",
- *     "paragraph_document_section",
- *     "paragraph_data_story_section",
- *     "paragraph_spotlight",
- *     "paragraph_content_link",
- *     "paragraph_text",
- *     "paragraph_timeline",
- *     "paragraph_phone",
- *     "paragraph_list",
- *     "paragraph_campaign",
- *     "paragraph_document",
- *     "paragraph_button",
- *     "paragraph_top_search_suggestion",
- *   }
  * )
  */
 class Section extends SfgApiParagraphBase {
