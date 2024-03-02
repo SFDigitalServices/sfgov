@@ -14,16 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "person",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "location_physical",
- *     "paragraph_email",
- *     "paragraph_featured_item",
- *     "paragraph_phone",
- *     "media_image",
- *     "paragraph_public_body_profiles",
- *     "paragraph_social_media",
- *     "paragraph_spotlight",
- *   },
  * )
  */
 class Person extends SfgApiNodeBase {

@@ -81,25 +81,6 @@ class SfgApiController extends ControllerBase {
   }
 
   /**
-   * Get the plugins that reference the inputted plugin.
-   *
-   * @param string $plugin_label
-   *   The plugin being searched for.
-   */
-  public function viewReferenceChainUp($plugin_label) {
-    $display = [];
-    if (empty($plugin_label)) {
-      $display[]['error'] = 'Please specify a plugin label.';
-    }
-
-    if (empty($display)) {
-      $display = $this->sfgApiPluginManager->referenceChainUp($plugin_label);
-    }
-
-    return new JsonResponse($display);
-  }
-
-  /**
    * Get the plugins that this plugin references.
    *
    * @param string $plugin_label

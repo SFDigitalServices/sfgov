@@ -15,10 +15,6 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  *   wag_bundle = "resource",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "node_topic",
- *     "node_department",
- *   }
  * )
  */
 class Resource extends SfgApiPluginBase {

@@ -14,23 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Agency",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *    "paragraph_agency_section",
- *    "paragraph_call_to_action",
- *    "node_department",
- *    "paragraph_email",
- *    "paragraph_featured_item",
- *    "media_image",
- *    "paragraph_profile_group",
- *    "paragraph_phone",
- *    "paragraph_in_person_location",
- *    "node_person",
- *    "paragraph_thing_to_know",
- *    "paragraph_resource_section",
- *    "paragraph_social_media",
- *    "paragraph_spotlight",
- *    "node_topic",
- *   }
  * )
  */
 class Department extends SfgApiNodeBase {

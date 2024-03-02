@@ -14,9 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "agency_section",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_department_content",
- *   },
  * )
  */
 class AgencySection extends SfgApiParagraphBase {

@@ -14,7 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "thing_to_know",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {},
  * )
  */
 class ThingToKnow extends SfgApiParagraphBase {

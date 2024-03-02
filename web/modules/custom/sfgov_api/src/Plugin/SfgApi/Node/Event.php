@@ -14,17 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Event",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_resource_section",
- *     "paragraph_email",
- *     "paragraph_phone",
- *     "location_event_address",
- *     "paragraph_cost",
- *     "paragraph_call_to_action",
- *     "media_image",
- *     "node_department",
- *     "node_topic",
- *   }
  * )
  */
 class Event extends SfgApiNodeBase {

@@ -14,11 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "title_and_text",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "location_physical",
- *     "paragraph_phone",
- *     "paragraph_text",
- *   }
  * )
  */
 class AccordionItem extends SfgApiParagraphBase {

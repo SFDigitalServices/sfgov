@@ -14,19 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Information",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "node_transaction",
- *     "node_department",
- *     "node_topic",
- *     "node_campaign",
- *     "node_data_story",
- *     "node_information_page",
- *     "node_resource_collection",
- *     "node_step_by_step",
- *     "paragraph_custom_section",
- *     "paragraph_callout",
- *     "paragraph_image",
- *   }
  * )
  */
 class InformationPage extends SfgApiNodeBase {

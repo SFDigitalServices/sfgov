@@ -14,16 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "Meeting",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_resource_section",
- *     "location_physical",
- *     "paragraph_phone",
- *     "paragraph_agenda_item",
- *     "paragraph_video_external",
- *     "paragraph_video",
- *     "paragraph_accordion_item",
- *     "node_department",
- *   }
  * )
  */
 class Meeting extends SfgApiNodeBase {

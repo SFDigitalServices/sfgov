@@ -14,10 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "spotlight",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "media_image",
- *     "paragraph_button",
- *   }
  * )
  */
 class Spotlight extends SfgApiParagraphBase {

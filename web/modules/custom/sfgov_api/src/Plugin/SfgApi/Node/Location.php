@@ -14,13 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "LocationPage",
  *   entity_id = {},
  *   langcode = {},
- *   referenced_plugins = {
- *     "paragraph_accordion_item",
- *     "paragraph_email",
- *     "paragraph_phone",
- *     "location_physical",
- *     "paragraph_department_service_section",
- *   }
  * )
  */
 class Location extends SfgApiNodeBase {
