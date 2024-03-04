@@ -28,9 +28,8 @@ class Spotlight extends SfgApiParagraphBase {
       'title' => $entity->get('field_title')->value,
       'description' => $entity->get('field_description')->value,
       'button' => $this->collapseParagraph($this->getReferencedData($entity->get('field_spotlight_button')->referencedEntities())),
-
+      // 'image' => $this->getReferencedEntity($entity->get('field_spotlight_image')->referencedEntities(), TRUE)[0],
       // @todo , blocked by image field issue.
-      'image' => $this->getReferencedEntity($entity->get('field_spotlight_image')->referencedEntities(), TRUE)[0],
       'img' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
     ];
   }
