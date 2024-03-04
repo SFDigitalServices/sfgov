@@ -295,9 +295,18 @@ trait ApiFieldHelperTrait {
       $is_external = UrlHelper::isExternal($url->toString());
       if (!$is_external) {
         $entityTypeManager = \Drupal::entityTypeManager();
-        $nid = explode('/', $url->getInternalPath())[1];
-        $node = $entityTypeManager->getStorage('node')->load($nid);
-        $wagtail_id = $this->getReferencedEntity([$node], TRUE);
+        // if ($url->isRouted()) {
+          $nid = explode('/', $url->getInternalPath())[1];
+          $node = $entityTypeManager->getStorage('node')->load($nid);
+          $wagtail_id = $this->getReferencedEntity([$node], TRUE);
+        // }
+        // else {
+        //   // @todo this is a temp fix. /department/3194 has a 'featured_item'
+        //   // that leads to the following path which is "internal" but not up
+        //   // to date and can't find the right path.
+        //   // https://sf.gov/departments/small-business-commission
+        //   $wagtail_id = NULL;
+        // }
       }
 
       $links[] = [
