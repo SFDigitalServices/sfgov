@@ -55,4 +55,11 @@ class SfgApi extends Plugin {
    */
   public $langcode;
 
+  /**
+   * Whether it is a stub of an entity.
+   *
+   * @var string
+   */
+  public $is_stub;
+
 }

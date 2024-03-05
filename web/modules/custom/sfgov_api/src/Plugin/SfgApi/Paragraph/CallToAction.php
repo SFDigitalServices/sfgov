@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "button",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class CallToAction extends SfgApiParagraphBase {

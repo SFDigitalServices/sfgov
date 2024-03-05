@@ -177,7 +177,8 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     $custom_data = [];
     if ($entity) {
       $base_data = $this->setBaseData($entity);
-      $custom_data = $this->setCustomData($entity);
+      // Only fetch custom data if it is not a stub.
+      $custom_data = $this->configuration['is_stub'] ? [] : $this->setCustomData($entity);
     }
     $requested_langcode = $this->getLangcode();
     $wag_bundle = $this->getWagBundle();

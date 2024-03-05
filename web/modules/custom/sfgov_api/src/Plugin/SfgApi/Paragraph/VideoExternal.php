@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "video",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class VideoExternal extends SfgApiParagraphBase {

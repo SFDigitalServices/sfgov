@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "email_addresses",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class EmailAddresses extends SfgApiParagraphBase {

@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "campaign_resources",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class CampaignResources extends SfgApiParagraphBase {

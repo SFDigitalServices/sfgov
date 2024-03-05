@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "in_person_location",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class InPersonLocation extends SfgApiParagraphBase {
