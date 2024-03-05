@@ -16,6 +16,7 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  *   wag_bundle = "Address",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class Address extends SfgApiPluginBase {

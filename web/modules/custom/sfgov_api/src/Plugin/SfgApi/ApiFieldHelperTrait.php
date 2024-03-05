@@ -295,25 +295,25 @@ trait ApiFieldHelperTrait {
       $is_external = UrlHelper::isExternal($url->toString());
       if (!$is_external) {
         $entityTypeManager = \Drupal::entityTypeManager();
-        // if ($url->isRouted()) {
+        if ($url->isRouted()) {
           $nid = explode('/', $url->getInternalPath())[1];
           $node = $entityTypeManager->getStorage('node')->load($nid);
           $wagtail_id = $this->getReferencedEntity([$node], TRUE);
-        // }
-        // else {
-        //   // @todo this is a temp fix. /department/3194 has a 'featured_item'
-        //   // that leads to the following path which is "internal" but not up
-        //   // to date and can't find the right path.
-        //   // https://sf.gov/departments/small-business-commission
-        //   $wagtail_id = NULL;
-        // }
+        }
+        else {
+          // @todo this is a temp fix. /department/3194 has a 'featured_item'
+          // that leads to the following path which is "internal" but not up
+          // to date and can't find the right path.
+          // https://sf.gov/departments/small-business-commission
+          $wagtail_id = "Error: no wagtail id found for unrouted link: " . $url->toString();
+        }
       }
 
       $links[] = [
         'type' => 'page',
         'value' => [
           'url' => $is_external ? $link['uri'] : '',
-          'page' => $is_external ? NULL : (int) $wagtail_id[0],
+          'page' => $wagtail_id,
           'link_to' => $is_external ? 'url' : 'page',
           'link_text' => $link['title'],
         ],

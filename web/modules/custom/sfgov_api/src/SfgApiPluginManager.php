@@ -45,10 +45,11 @@ class SfgApiPluginManager extends DefaultPluginManager {
    * @param int $entity_id
    *   The entity id.
    */
-  public function fetchPayload($plugin_label, $langcode, $entity_id) {
+  public function fetchPayload($plugin_label, $langcode, $entity_id, $is_stub = FALSE) {
     $plugin = $this->createInstance($plugin_label, [
       'langcode' => $langcode,
       'entity_id' => $entity_id,
+      'is_stub' => $is_stub,
     ]);
     $payload = $plugin->getPayload();
     return $payload;

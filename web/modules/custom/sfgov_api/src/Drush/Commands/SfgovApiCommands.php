@@ -224,7 +224,7 @@ class SfgovApiCommands extends DrushCommands {
       $this->output()->writeln($message);
     }
 
-    $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id);
+    $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id, $options['stub']);
 
     if (empty($payload->getPayloadData())) {
       // Try to send an error message from the payload since it will be more

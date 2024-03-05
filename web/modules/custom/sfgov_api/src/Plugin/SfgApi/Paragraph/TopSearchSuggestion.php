@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "top_search_suggestion",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class TopSearchSuggestion extends SfgApiParagraphBase {

@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "other_info_card",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class OtherInfoCard extends SfgApiParagraphBase {

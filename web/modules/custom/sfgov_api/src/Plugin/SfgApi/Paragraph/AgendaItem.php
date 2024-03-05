@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "agenda_item",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class AgendaItem extends SfgApiParagraphBase {

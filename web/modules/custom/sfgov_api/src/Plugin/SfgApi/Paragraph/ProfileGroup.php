@@ -14,6 +14,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "profile_group",
  *   entity_id = {},
  *   langcode = {},
+ *   is_stub = {},
  * )
  */
 class ProfileGroup extends SfgApiParagraphBase {
