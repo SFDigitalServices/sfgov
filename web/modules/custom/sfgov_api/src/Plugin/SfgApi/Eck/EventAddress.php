@@ -32,8 +32,14 @@ class EventAddress extends SfgApiPluginBase {
   /**
    * {@inheritDoc}
    */
-  public function setBaseData($eck) {
-    $base_data = [];
+  public function setBaseData($entity) {
+    $address_data = $entity->get('field_address');
+    $base_data = [
+      'line1' => $address_data->address_line1,
+      'city' => $address_data->locality,
+      'state' => $address_data->administrative_area,
+      'zip' => $address_data->postal_code,
+    ];
     return $base_data;
   }
 
@@ -44,11 +50,7 @@ class EventAddress extends SfgApiPluginBase {
     $address_data = $entity->get('field_address');
     $custom_data = [
       'location_name' => $entity->get('title')->value,
-      'line1' => $address_data->address_line1,
       'line2' => $address_data->address_line2,
-      'city' => $address_data->locality,
-      'state' => $address_data->administrative_area,
-      'zip' => $address_data->postal_code,
     ];
     return $custom_data;
   }

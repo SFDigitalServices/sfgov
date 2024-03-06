@@ -36,6 +36,7 @@ trait ApiFieldHelperTrait {
         $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
           'langcode' => $langcode,
           'entity_id' => $entity->id(),
+          'is_stub' => FALSE,
         ]);
         $entities_data[] = [
           'type' => $plugin->pluginDefinition['wag_bundle'],
@@ -313,7 +314,7 @@ trait ApiFieldHelperTrait {
         'type' => 'page',
         'value' => [
           'url' => $is_external ? $link['uri'] : '',
-          'page' => $wagtail_id,
+          'page' => $is_external ? NULL : (int) $wagtail_id[0],
           'link_to' => $is_external ? 'url' : 'page',
           'link_text' => $link['title'],
         ],

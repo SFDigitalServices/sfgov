@@ -42,18 +42,20 @@ class Event extends SfgApiNodeBase {
         'value' => NULL,
       ];
     }
-    // @todo Blocked by address issue. Use same logic as "meeting" plugin.
-    if ($address_entity = $entity->get('field_address')->referencedEntities()) {
-      $location[] = $this->getReferencedEntity($address_entity, TRUE);
+    if ($entity->get('field_address')->referencedEntities()) {
+      $location[] = [
+        'type' => 'address',
+        'value' => $this->getReferencedEntity($entity->get('field_address')->referencedEntities(), TRUE, TRUE),
+      ];
     }
     return [
-      'description' => $entity->get('field_description')->value,
+      'description' => $entity->get('field_description')->value ?: '',
       'date_time' => [$this->setToStreamField($date_data, 'date_time')],
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
       // @todo Blocked by optionality field issue.
       'call_to_action' => $this->getReferencedData($entity->get('field_call_to_action')->referencedEntities()),
       'image' => $this->getReferencedEntity($entity->get('field_image')->referencedEntities(), FALSE, TRUE),
-      'body' => $entity->get('body')->value,
+      'body' => $entity->get('body')->value ?: '',
       'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
       'contact' => $contact,

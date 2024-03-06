@@ -108,6 +108,10 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     return (string) $this->configuration['entity_id'] ?? $this->pluginDefinition['entity_id'];
   }
 
+  public function getStubStatus() {
+    return (bool) $this->configuration['is_stub'] ?? $this->pluginDefinition['is_stub'];
+  }
+
   /**
    * The emptyReference value.
    *
@@ -175,10 +179,11 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     $entity = $this->getEntity();
     $base_data = [];
     $custom_data = [];
+    $stub_status = $this->getStubStatus();
     if ($entity) {
       $base_data = $this->setBaseData($entity);
       // Only fetch custom data if it is not a stub.
-      $custom_data = $this->configuration['is_stub'] ? [] : $this->setCustomData($entity);
+      $custom_data = $stub_status ? [] : $this->setCustomData($entity);
     }
     $requested_langcode = $this->getLangcode();
     $wag_bundle = $this->getWagBundle();
