@@ -205,10 +205,10 @@ class Payload {
       }
       if ($entity->bundle() == 'physical' || $entity->bundle() == 'event_address') {
         $stub = [
-          'line1' => $this->customData['line1'],
-          'city' => $this->customData['city'],
-          'state' => $this->customData['state'],
-          'zip' => $this->customData['zip'],
+          'line1' => $this->baseData['line1'],
+          'city' => $this->baseData['city'],
+          'state' => $this->baseData['state'],
+          'zip' => $this->baseData['zip'],
         ];
       }
     }

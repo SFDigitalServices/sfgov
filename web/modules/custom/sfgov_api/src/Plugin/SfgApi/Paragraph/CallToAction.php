@@ -32,7 +32,7 @@ class CallToAction extends SfgApiParagraphBase {
     $button_paragraph = $this->getReferencedData($entity->get('field_button')->referencedEntities())[0];
     return [
       'link' => $button_paragraph['value'],
-      'title' => $entity->get('field_title')->value,
+      'title' => $entity->get('field_title')->value ?: '',
     ];
   }
 

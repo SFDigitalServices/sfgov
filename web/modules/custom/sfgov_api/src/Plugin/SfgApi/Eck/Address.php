@@ -33,9 +33,13 @@ class Address extends SfgApiPluginBase {
   /**
    * {@inheritDoc}
    */
-  public function setBaseData($eck) {
+  public function setBaseData($entity) {
+    $address_data = $entity->get('field_address');
     $base_data = [
-      'reference_chain' => $this->getReferenceChain($this->pluginDefinition['referenced_plugins']),
+      'line1' => $address_data->address_line1,
+      'city' => $address_data->locality,
+      'state' => $address_data->administrative_area,
+      'zip' => $address_data->postal_code,
     ];
     return $base_data;
   }
@@ -49,11 +53,7 @@ class Address extends SfgApiPluginBase {
       'organization' => $address_data->organization,
       'addressee' => $address_data->addressee ?: '',
       'location_name' => $address_data->location_name,
-      'line1' => $address_data->address_line1,
       'line2' => $address_data->address_line2,
-      'city' => $address_data->locality,
-      'state' => $address_data->administrative_area,
-      'zip' => $address_data->postal_code,
       'location_notes' => $entity->get('field_text')->value ?: '',
       'agency' => $this->getReferencedEntity($entity->get('field_department')->referencedEntities(), FALSE, TRUE, TRUE),
       'hours' => $this->formatHours($entity->get('field_operating_hours')->getValue()),
