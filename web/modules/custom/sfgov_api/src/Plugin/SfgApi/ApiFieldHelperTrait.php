@@ -60,6 +60,9 @@ trait ApiFieldHelperTrait {
                 'value' => $entity_data['value']['value'],
               ];
               break;
+            case 'flatten_link':
+              $entities_data[$key] = $entity_data['value']['link']['value'];
+              break;
 
             // Remove empty data.
             case 'empty_data':
