@@ -25,15 +25,23 @@ class CampaignSpotlight extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    $button_data = $this->getReferencedData($entity->get('field_spotlight_button')->referencedEntities());
+    $empty_button = [
+      'url' => '',
+      'page' => NULL,
+      'link_to' => '',
+      'link_text' => '',
+    ];
+    $button_value = $button_data ? $button_data[0] : $empty_button;
+
     return [
       // @todo , blocked by image field issue.
       'image' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
       'title' => $entity->get('field_title')->value,
-      'button' => $this->collapseParagraph($this->getReferencedData($entity->get('field_spotlight_button')->referencedEntities())),
+      'button' => $button_value,
+      'banner_size' => 'half',
       'description' => $entity->get('field_description')->value,
-      'orientation' => $this->editFieldValue($entity->get('field_is_reversed')->value, [0 => 'right', 1 => 'left']),
-      // @todo This doesn't have a corresponding field in drupal.
-      // 'banner_size' => '',
+      'orientation' => 'left',
     ];
   }
 
