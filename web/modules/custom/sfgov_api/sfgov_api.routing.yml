@@ -1,0 +1,36 @@
+sfgov_api.api_viewer:
+  path: '/sfgov-api-viewer/entity/{langcode}/{entity_type}/{bundle}/{entity_id}'
+  defaults:
+    _title: 'View entity data'
+    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewEntityData'
+    langcode: 'en'
+    entity_type: ''
+    bundle: ''
+    entity_id: ''
+  requirements:
+    _permission: 'administer site configuration'
+
+sfgov_api.reference_chain_complete:
+  path: '/sfgov-api-viewer/reference-chain-complete'
+  defaults:
+    _title: 'View an entity reference chain'
+    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewReferenceChainComplete'
+  requirements:
+    _permission: 'administer site configuration'
+
+sfgov_api.reference_chain_down:
+  path: '/sfgov-api-viewer/reference-chain-down/{plugin_label}'
+  defaults:
+    _title: 'View an entity reference chain'
+    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewReferenceChainDown'
+    plugin_label: ''
+  requirements:
+    _permission: 'administer site configuration'
+
+sfgov_api.wagtail_api_credentials:
+  path: '/admin/config/system/wagtail-api-credentials'
+  defaults:
+    _title: 'Wagtail api credentials'
+    _form: 'Drupal\sfgov_api\Form\WagtailApiCredentialsForm'
+  requirements:
+    _permission: 'administer site configuration'

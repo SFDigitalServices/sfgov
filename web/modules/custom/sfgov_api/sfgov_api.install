@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Sfgov API module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function sfgov_api_schema() {
+  $schemas = [];
+  $schemas['dw_migration_errors'] = [
+    'description' => 'Errors in the wagtail migration',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'drupal_id' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The Drupal ID.',
+      ],
+      'entity_type' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The type of entity.',
+      ],
+      'error_type' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The type of error.',
+      ],
+      'langcode' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The language code.',
+      ],
+      'message' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'The error message.',
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  $plugins = \Drupal::service('plugin.manager.sfgov_api')->getDefinitions();
+  foreach ($plugins as $plugin) {
+    // We need tables for everything except paragraphs.
+    if (!str_starts_with($plugin['id'], 'paragraph')) {
+      $table_data = \Drupal::service('sfgov_api.utilities')->buildTrackingTableSchema($plugin['id']);
+      $schemas[array_key_first($table_data)] = $table_data[array_key_first($table_data)];
+    }
+  }
+
+  return $schemas;
+}
+
+/**
+ * Implements hook_install().
+ */
+function sfgov_api_install() {
+  $schemas = sfgov_api_schema();
+  $connection = \Drupal::database();
+
+  foreach ($schemas as $table_name => $schema) {
+    if (!$connection->schema()->tableExists($table_name)) {
+      $connection->schema()->createTable($table_name, $schema);
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function sfgov_api_uninstall() {
+  $schemas = sfgov_api_schema();
+  $connection = \Drupal::database();
+
+  foreach (array_keys($schemas) as $table_name) {
+    $connection->schema()->dropTable($table_name);
+  }
+}

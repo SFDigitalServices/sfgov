@@ -1,0 +1,19 @@
+services:
+  plugin.manager.sfgov_api:
+    class: Drupal\sfgov_api\SfgApiPluginManager
+    parent: default_plugin_manager
+
+  sfgov_api.utilities:
+    class: Drupal\sfgov_api\ApiUtilities
+    arguments: ['@plugin.manager.sfgov_api', '@config.factory', '@database', '@module_handler', '@language_manager' ]
+
+  sfgov_api.commands:
+    class: Drupal\sfgov_api\Drush\Commands\SfgovApiCommands
+    tags:
+      - { name: drush.command }
+    arguments: ['@http_client', '@plugin.manager.sfgov_api', '@module_handler', '@config.factory', '@sfgov_api.utilities', '@entity_type.manager', '@database']
+
+  api_plugin.generator:
+    class: Drupal\sfgov_api\Generators\ApiPluginGenerator
+    tags:
+      - { name: drush.generator.v2 }
