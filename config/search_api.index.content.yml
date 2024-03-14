@@ -1,12 +1,9 @@
 uuid: 273f2c1c-dcca-4b14-888a-46fd57f81bcd
 langcode: en
-status: true
+status: false
 dependencies:
-  config:
-    - search_api.server.pantheon
   module:
     - node
-    - search_api_solr
     - search_api
 id: content
 name: Content
@@ -46,7 +43,7 @@ field_settings:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
-    type: solr_text_wstoken
+    type: text
     boost: 21.0
     dependencies:
       module:
@@ -78,13 +75,16 @@ processor_settings:
   content_access:
     weights:
       preprocess_query: -30
+  custom_value: {  }
   entity_status: {  }
+  entity_type: {  }
   highlight:
     weights:
       postprocess_query: 0
     prefix: '<strong>'
     suffix: '</strong>'
     excerpt: true
+    excerpt_always: false
     excerpt_length: 160
     exclude_fields:
       - location_title
@@ -124,4 +124,5 @@ tracker_settings:
 options:
   cron_limit: 50
   index_directly: true
-server: pantheon
+  track_changes_in_references: true
+server: null
