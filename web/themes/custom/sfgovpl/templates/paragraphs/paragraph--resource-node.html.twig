@@ -5,19 +5,13 @@
   not paragraph.isPublished() ? 'paragraph--unpublished'
 ] %}
 
-{% set text = {
-  '#type':   'processed_text',
-  '#text':    description.0.value,
-  '#format':  description.0.format,
-} %}
-
 {% block paragraph %}
   {% block content %}
   {% if title is not empty and text is not empty %}
     <div class="sfgov-container-item">
       <a class="sfgov-resource-card" href="{{ url }}">
         <div class="title">{{ title }}</div>
-        <div class="description">{{ text }}</div>
+        <div class="description">{{ description.0.value }}</div>
       </a>
     </div>
   {% endif %}
