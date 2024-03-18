@@ -11,7 +11,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   id = "paragraph_additional_info",
  *   title = @Translation("Paragraph additional_info"),
  *   bundle = "additional_info",
- *   wag_bundle = "additional_info",
+ *   wag_bundle = "title_and_text",
  *   entity_id = {},
  *   langcode = {},
  *   is_stub = {},
