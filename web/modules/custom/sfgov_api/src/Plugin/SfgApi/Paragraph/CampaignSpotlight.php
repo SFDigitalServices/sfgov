@@ -45,14 +45,4 @@ class CampaignSpotlight extends SfgApiParagraphBase {
     ];
   }
 
-  /**
-   * Collapse paragraph data.
-   */
-  public function collapseParagraph($paragraph_data) {
-    if ($paragraph_data) {
-      return $paragraph_data[0]['value'][0]['value'];
-    }
-    return NULL;
-  }
-
 }

@@ -27,7 +27,7 @@ class AgencySection extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       'field_agencies' => $this->getReferencedData($entity->get('field_agencies')->referencedEntities()),
-      'field_section_title_list' => $entity->get('field_section_title_list')->value,
+      'title' => $entity->get('field_section_title_list')->value,
     ];
   }
 

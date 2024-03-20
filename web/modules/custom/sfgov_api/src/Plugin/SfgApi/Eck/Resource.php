@@ -33,9 +33,7 @@ class Resource extends SfgApiPluginBase {
    * {@inheritDoc}
    */
   public function setBaseData($eck) {
-    $base_data = [
-      'reference_chain' => $this->getReferenceChain($this->pluginDefinition['referenced_plugins']),
-    ];
+    $base_data = [];
     return $base_data;
   }
 

@@ -25,11 +25,25 @@ class SocialMedia extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    $fields = [
+      'field_facebook',
+      'field_instagram',
+      'field_mastodon',
+      'field_twitter',
+    ];
+
+    $data = [];
+    foreach ($fields as $field) {
+      if ($entity->get($field)->getvalue()) {
+        $data[] = [
+          'type' => explode('field_', $field)[1],
+          'value' => $entity->get($field)->getvalue()[0]['uri'] ?: '',
+        ];
+      }
+    }
+
     return [
-      'field_facebook' => $this->generateLinks($entity->get('field_facebook')->getvalue()),
-      'field_instagram' => $this->generateLinks($entity->get('field_instagram')->getvalue()),
-      'field_mastodon' => $this->generateLinks($entity->get('field_mastodon')->getvalue()),
-      'field_twitter' => $this->generateLinks($entity->get('field_twitter')->getvalue()),
+      'social_media' => $data,
     ];
   }
 

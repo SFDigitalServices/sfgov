@@ -173,6 +173,7 @@ class SfgovApiCommands extends DrushCommands {
   ]) {
     $bundle_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('bundle');
     $query = $this->entityTypeManager->getStorage($entity_type)->getQuery()
+      ->accessCheck(FALSE)
       ->condition($bundle_key, $bundle);
     $entity_ids = $query->execute();
     foreach ($entity_ids as $entity_id) {

@@ -25,26 +25,22 @@ class Spotlight extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    return [
-      'title' => $entity->get('field_title')->value,
-      'description' => $entity->get('field_description')->value,
-      'button' => $this->collapseParagraph($this->getReferencedData($entity->get('field_spotlight_button')->referencedEntities())),
-      // 'image' => $this->getReferencedEntity($entity->get('field_spotlight_image')->referencedEntities(), TRUE)[0],
-      // @todo , blocked by image field issue.
-      'img' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
+    $button_data = $this->getReferencedData($entity->get('field_spotlight_button')->referencedEntities());
+    $empty_button = [
+      'url' => '',
+      'page' => NULL,
+      'link_to' => '',
+      'link_text' => '',
     ];
-  }
-
-  /**
-   * Collapse the paragraph data into a single value.
-   */
-  public function collapseParagraph($paragraph_data) {
-    // @todo , this breaks if the link is internal.
-    // Add some way to collapse data on the button paragraph plugin?
-    if ($paragraph_data) {
-      return $paragraph_data[0]['value'][0]['value'];
-    }
-    return NULL;
+    $button_value = $button_data ? $button_data[0] : $empty_button;
+    return [
+      'image' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
+      'title' => $entity->get('field_title')->value,
+      // 'button' => $button_value,
+      'banner_size' => 'half',
+      'description' => $entity->get('field_description')->value,
+      'orientation' => 'left',
+    ];
   }
 
 }
