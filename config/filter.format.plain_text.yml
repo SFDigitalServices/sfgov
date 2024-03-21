@@ -1,7 +1,9 @@
 uuid: 1dccac02-acab-46ff-bac2-8945eeb7b626
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - toc_filter
 _core:
   default_config_hash: NIKBt6kw_uPhNI0qtR2DnRf7mSOgAQdx7Q94SKMjXbQ
 name: 'Plain text'
@@ -20,10 +22,13 @@ filters:
     status: true
     weight: -10
     settings: {  }
-  filter_url:
-    id: filter_url
-    provider: filter
-    status: true
+  toc_filter:
+    id: toc_filter
+    provider: toc_filter
+    status: false
     weight: 0
     settings:
-      filter_url_length: 72
+      type: default
+      auto: ''
+      block: '0'
+      exclude_above: '0'
