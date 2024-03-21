@@ -20,7 +20,7 @@ trait ApiFieldHelperTrait {
    * @return array
    *   An array of entity data.
    */
-  public function getReferencedData(array $entities) {
+  public function getReferencedData(array $entities, $type = '') {
     $sfgov_api_plugin_manager = \Drupal::service('plugin.manager.sfgov_api');
     $available_plugins = $sfgov_api_plugin_manager->getDefinitions();
 
@@ -39,7 +39,7 @@ trait ApiFieldHelperTrait {
           'is_stub' => FALSE,
         ]);
         $entities_data[] = [
-          'type' => $plugin->pluginDefinition['wag_bundle'],
+          'type' => $type ?: $plugin->pluginDefinition['wag_bundle'],
           'value' => $plugin->getPayload()->getPayloadData(),
         ];
       }
@@ -56,7 +56,7 @@ trait ApiFieldHelperTrait {
             // Flatten the data.
             case 'flatten':
               $entities_data[$key] = [
-                'type' => $entity_data['type'],
+                'type' => $type ?: $entity_data['type'],
                 'value' => $entity_data['value']['value'],
               ];
               break;

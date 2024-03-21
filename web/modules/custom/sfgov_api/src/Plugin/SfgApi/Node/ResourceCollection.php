@@ -26,16 +26,13 @@ class ResourceCollection extends SfgApiNodeBase {
    */
   public function setCustomData($entity) {
     return [
-      // @todo this plugin is only fetching data. needs to be massaged.
-      'field_content' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
-      'field_content_bottom' => $this->getReferencedData($entity->get('field_content_bottom')->referencedEntities()),
-      'field_data_dashboard' => $this->getReferencedData($entity->get('field_data_dashboard')->referencedEntities()),
-      'field_departments' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
-      'field_description' => $entity->get('field_description')->value,
-      'field_introductory_text' => $entity->get('field_introductory_text')->value,
-      'field_paragraphs' => $this->getReferencedData($entity->get('field_paragraphs')->referencedEntities()),
-      'field_sidebar' => $this->getReferencedData($entity->get('field_sidebar')->referencedEntities()),
-      'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
+      'description' => $entity->get('field_description')->value,
+      'data_dashboard' => $this->getReferencedData($entity->get('field_data_dashboard')->referencedEntities()),
+      'introductory_text' => $this->getReferencedData($entity->get('field_introductory_text')->referencedEntities()),
+      // 'documents' => $this->getReferencedData($entity->get('field_paragraphs')->referencedEntities()), // needs to be created in wagtail
+      // 'custom_section' => $this->getReferencedData($entity->get('field_content_bottom')->referencedEntities()), // needs to be updated in wagtail
+      'related_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
+      'related_topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
     ];
   }
 
