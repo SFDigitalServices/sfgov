@@ -25,7 +25,6 @@ class Transaction extends SfgApiNodeBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    $derp = true;
     return [
       'description' => $entity->get('field_description')->value ?? '',
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
@@ -48,6 +47,15 @@ class Transaction extends SfgApiNodeBase {
     ];
   }
 
+  /**
+   * Get the values for the what to do section.
+   *
+   * @param object $entity
+   *   The entity object.
+   *
+   * @return array
+   *   The values for the what to do section.
+   */
   public function getWhatToDoValues($entity) {
     $step_fields = [
       'field_step_email',
@@ -59,14 +67,15 @@ class Transaction extends SfgApiNodeBase {
     ];
 
     $data = [];
-    foreach ($step_fields as $field_name => $value) {
-      if ($entity->get($value)->referencedEntities()) {
-        foreach ($this->getReferencedData($entity->get($value)->referencedEntities()) as $key => $value) {
+    foreach ($step_fields as $field_label) {
+      if ($entity->get($field_label)->referencedEntities()) {
+        foreach ($this->getReferencedData($entity->get($field_label)->referencedEntities()) as $value) {
           if ($value) {
             switch ($value['type']) {
               case 'step':
                 $data[] = $this->getSteps($value['value']);
                 break;
+
               case 'callout':
                 $data[] = [
                   'type' => 'callout',
@@ -82,38 +91,51 @@ class Transaction extends SfgApiNodeBase {
     return $data;
   }
 
+  /**
+   * Get the values for the get help section.
+   *
+   * @param object $entity
+   *   The entity object.
+   *
+   * @return array
+   *   The values for the get help section.
+   */
   public function getGetHelpValues($entity) {
     $values = $this->getReferencedData($entity->get('field_help')->referencedEntities());
     $data = [];
-    foreach ($values as $key => $value) {
+    foreach ($values as $value) {
       switch ($value['type']) {
         case 'email_addresses':
           foreach ($value['value']['emails'] as $value) {
             $data[] = $value;
           }
           break;
+
         case 'phone_numbers':
           foreach ($value['value']['phone_numbers'] as $value) {
             $data[] = $value;
           }
           break;
-
-        default:
-          # code...
-          break;
       }
     }
-    $derp = true;
-
     return $data;
   }
 
+  /**
+   * Get the steps for the what to do section.
+   *
+   * @param array $data
+   *   The data for the steps.
+   *
+   * @return array
+   *   The steps for the what to do section.
+   */
   public function getSteps($data) {
     $steps = [
       'section_title' => $data['title'] ?? 'temp',
       'section_specifics' => [],
     ];
-    foreach ($data['value'] as $key => $value) {
+    foreach ($data['value'] as $value) {
       // Button paragraphs are flattened by default because most cases do not
       // need the type value. Its different here, we need to manually add it
       // back in.
@@ -136,4 +158,5 @@ class Transaction extends SfgApiNodeBase {
     ];
     return $data;
   }
+
 }

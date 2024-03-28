@@ -87,14 +87,11 @@ to update these references before pushing the node
 
 **For an entity type to work it has to have a corresponding plugin in sfgov_api/src/Plugin/SfgApi**
 
-### Plugin chaining
-If bundle does any entity referencing, then it will call the plugin for the referenced entity to layout the corresponding data.
-Each plugin has a list in its annotation called `referenced_plugins` which lists out any plugins that it references within its
-fields. This list is created manually. It allows for the following features which help illustrate relationships between entities.
-- `/sfgov-api-viewer/reference-chain-complete` will show all of the plugins starting from the node level and how they connect to
-each other.
-- If you want to know what other plugins one plugin references you can use the `reference-chain-down` path (i. e `/sfgov-api-viewer/reference-chain-down/node_news` to see news)
-- If you want to know all of the plugins that reference the inputted plugin you can use the `reference-chain-up` path (i.e. `https://sfgov.lndo.site/sfgov-api-viewer/reference-chain-up/node_news` )
+### Reference chaining
+This module has some built in tools to help you track where and how entities are used within the broader site.
+- `/sfgov-api-viewer/reference-chain/complete`: shows a full reference chain of every referenced entity on the site (starting at the node level).
+- `/sfgov-api-viewer/reference-chain/up/{plugin_id}`: shows all of the entities that reference this plugin.
+- `/sfgov-api-viewer/reference-chain/down/{plugin_id}`: shows all of the entities that this plugin references.
 
 ## ECK entities
 There are a handful of ECK entities that need to be migrated to wagtail. They are technically their own

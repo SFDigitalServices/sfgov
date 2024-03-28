@@ -108,6 +108,9 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     return (string) $this->configuration['entity_id'] ?? $this->pluginDefinition['entity_id'];
   }
 
+  /**
+   * Get the stub status value.
+   */
   public function getStubStatus() {
     return (bool) $this->configuration['is_stub'] ?? $this->pluginDefinition['is_stub'];
   }

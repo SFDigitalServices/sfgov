@@ -10,19 +10,12 @@ sfgov_api.api_viewer:
   requirements:
     _permission: 'administer site configuration'
 
-sfgov_api.reference_chain_complete:
-  path: '/sfgov-api-viewer/reference-chain-complete'
+sfgov_api.reference_chain:
+  path: '/sfgov-api-viewer/reference-chain/{direction}/{plugin_label}'
   defaults:
     _title: 'View an entity reference chain'
-    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewReferenceChainComplete'
-  requirements:
-    _permission: 'administer site configuration'
-
-sfgov_api.reference_chain_down:
-  path: '/sfgov-api-viewer/reference-chain-down/{plugin_label}'
-  defaults:
-    _title: 'View an entity reference chain'
-    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewReferenceChainDown'
+    _controller: '\Drupal\sfgov_api\Controller\SfgApiController::viewReferenceChain'
+    direction: 'complete'
     plugin_label: ''
   requirements:
     _permission: 'administer site configuration'

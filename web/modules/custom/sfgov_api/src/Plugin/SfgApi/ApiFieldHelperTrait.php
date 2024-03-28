@@ -16,6 +16,8 @@ trait ApiFieldHelperTrait {
    *
    * @param array $entities
    *   An array of entities.
+   * @param string $type
+   *   The type of entity, only used for changing the plugin output for wagtail.
    *
    * @return array
    *   An array of entity data.
@@ -60,6 +62,7 @@ trait ApiFieldHelperTrait {
                 'value' => $entity_data['value']['value'],
               ];
               break;
+
             case 'flatten_link':
               $entities_data[$key] = $entity_data['value']['link']['value'];
               break;

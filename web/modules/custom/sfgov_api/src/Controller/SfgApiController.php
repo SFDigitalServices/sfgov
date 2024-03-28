@@ -36,7 +36,7 @@ class SfgApiController extends ControllerBase {
   }
 
   /**
-   * Builds the response.
+   * View the data that the API will send with the associated arguments.
    */
   public function viewEntityData($langcode, string $entity_type, string $bundle, $entity_id) {
     $plugin_label = $this->sfgApiPluginManager->validatePlugin($entity_type, $bundle);
@@ -73,27 +73,24 @@ class SfgApiController extends ControllerBase {
   }
 
   /**
-   * Get the full reference chain for all plugins.
+   * View the reference chain for the given plugin and direction.
    */
-  public function viewReferenceChainComplete() {
-    $display = $this->sfgApiPluginManager->referenceChainComplete();
-    return new JsonResponse($display);
-  }
-
-  /**
-   * Get the plugins that this plugin references.
-   *
-   * @param string $plugin_label
-   *   The plugin being searched for.
-   */
-  public function viewReferenceChainDown($plugin_label) {
+  public function viewReferenceChain($direction, $plugin_label = '') {
     $display = [];
-    if (empty($plugin_label)) {
+    if ($direction !== 'complete' && empty($plugin_label)) {
       $display[]['error'] = 'Please specify a plugin label.';
     }
 
     if (empty($display)) {
-      $display = $this->sfgApiPluginManager->referenceChainDown($plugin_label);
+      if ($direction == 'complete') {
+        $display = $this->sfgApiPluginManager->referenceChainComplete();
+      }
+      if ($direction == 'up') {
+        $display = $this->sfgApiPluginManager->referenceChainUp($plugin_label);
+      }
+      if ($direction == 'down') {
+        $display = $this->sfgApiPluginManager->referenceChainDown($plugin_label);
+      }
     }
 
     return new JsonResponse($display);

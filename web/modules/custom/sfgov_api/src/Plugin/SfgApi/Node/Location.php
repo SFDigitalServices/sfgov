@@ -37,8 +37,8 @@ class Location extends SfgApiNodeBase {
         'value' => [
           'text' => $entity->get('field_alert_text')->value ?: '',
           'expiration_date' => $entity->get('field_alert_expiration_date')->value ?: '',
-      ],
-    ];
+        ],
+      ];
     }
 
     return [
@@ -51,7 +51,7 @@ class Location extends SfgApiNodeBase {
         'value' => $this->getReferencedEntity($entity->get('field_address')->referencedEntities(), TRUE, TRUE),
       ],
       ],
-      'contact' => isset($contact) ? $contact : [],
+      'contact' => $contact ?? [],
       'body' => $entity->get('body')->value ?? '',
       'intro' => $entity->get('field_intro_text')->value ?? '',
       'accordions' => $sorted_accordion_items['accordion'] ?? [],

@@ -38,13 +38,13 @@ class Department extends SfgApiNodeBase {
       'quicklinks' => $this->getReferencedData($entity->get('field_featured_items')->referencedEntities()),
       'meeting_information' => $this->getReferencedData($entity->get('field_public_body_meetings')->referencedEntities()),
       'meeting_archive_date' => $entity->get('field_meeting_archive_date')->value,
-      'meeting_archive_url' =>  $entity->get('field_meeting_archive_url')->getValue() ? $entity->get('field_meeting_archive_url')->getValue()[0]['uri'] : '',
+      'meeting_archive_url' => $entity->get('field_meeting_archive_url')->getValue() ? $entity->get('field_meeting_archive_url')->getValue()[0]['uri'] : '',
       'services' => $this->getReferencedData($entity->get('field_department_services')->referencedEntities()),
       'spotlight_secondary' => $this->getReferencedData($entity->get('field_spotlight2')->referencedEntities()),
       'resources' => $this->getResourceFieldValue($entity),
       'about_description' => $entity->get('field_about_description')->value ?: '',
       'child_agency_section_title' => $entity->get('field_agency_sections')->referencedEntities() ? strtolower($this->getReferencedData($entity->get('field_agency_sections')->referencedEntities())[0]['value']['title']) : '',
-      'call_to_action' => $this->editCTA($this->getReferencedData($entity->get('field_call_to_action')->referencedEntities())),
+      'call_to_action' => $this->getReferencedData($entity->get('field_call_to_action')->referencedEntities(), 'call_to_action'),
       'social_media' => $this->getReferencedData($entity->get('field_social_media')->referencedEntities()),
       'contact' => $this->getContactFieldValue($entity),
       'public_records' => $this->getPublicRecordsFieldValue($entity),
@@ -81,26 +81,6 @@ class Department extends SfgApiNodeBase {
   }
 
   /**
-   * Edit the call to action.
-   *
-   * @param array $ctas
-   *   The call to action array.
-   *
-   * @return array
-   *   The edited call to action array.
-   */
-  public function editCTA($ctas) {
-    // In this situation, we need to change the type of the call_to_action vs
-    // button.
-    foreach ($ctas as $key => $cta) {
-      $cta['type'] = 'call_to_action';
-      $ctas[$key] = $cta;
-    }
-    $derp = true;
-    return $ctas;
-  }
-
-  /**
    * Get the contact field value.
    *
    * @param object $entity
@@ -117,21 +97,21 @@ class Department extends SfgApiNodeBase {
         'value' => $this->getReferencedEntity($address, TRUE)[0],
       ];
     }
-    // @todo, blocked until we figure out emails title required.
+    // @todo , blocked until we figure out emails title required.
     // $this->getReferencedData($entity->get('field_email')->referencedEntities())[0],
-    // @todo, blocked until we figure out phone numbers.
+    // @todo , blocked until we figure out phone numbers.
     // $this->getReferencedData($entity->get('field_phone_numbers')->referencedEntities())[0],
     return $contact;
   }
 
   /**
-    * Get the public records field value.
-    *
-    * @param object $entity
-    *   The entity object.
-    *
-    * @return string
-    *   The public records field value.
+   * Get the public records field value.
+   *
+   * @param object $entity
+   *   The entity object.
+   *
+   * @return string
+   *   The public records field value.
    */
   public function getPublicRecordsFieldValue($entity) {
     $public_record_field_value = '';
@@ -143,6 +123,7 @@ class Department extends SfgApiNodeBase {
 
     return $public_record_field_value;
   }
+
   /**
    * Get the resource field value.
    *
@@ -183,12 +164,12 @@ class Department extends SfgApiNodeBase {
             elseif ($link_data['value']['link_to'] === 'page') {
               $resource_field_values[] = [
                 'type' => 'page',
-                'value' => $link_data['value']['page']
+                'value' => $link_data['value']['page'],
               ];
             }
           }
         }
-        elseif ($resource->bundle() === 'resource_node'){
+        elseif ($resource->bundle() === 'resource_node') {
           $resource_field_values[] = [
             'type' => 'page',
             'value' => $this->getReferencedEntity($resource->get('field_node')->referencedEntities(), TRUE)[0],
@@ -203,16 +184,23 @@ class Department extends SfgApiNodeBase {
       'value' => [
         'title' => $entity->get('field_resources')->referencedEntities() ? $entity->get('field_resources')->referencedEntities()[0]->get('field_title')->value : '',
         'resources' => $resource_field_values,
-        ],
-      ];
-
+      ],
+    ];
 
     return [$data];
   }
 
-  // @todo remove this function completely once the data is properly updated and
-  // all public bodies are removed.
+  /**
+   * Get agency that is supposed to be referenced by the department field.
+   *
+   * @param object $entities
+   *   The entities object.
+   *
+   * @return array
+   *   The corresponding agency.
+   */
   public function getCorrespondingAgency($entities) {
+    // @todo remove this function completely once the data is properly updated and All public bodies are removed.
     $entities_data = [];
     foreach ($entities as $entity) {
       if ($entity->bundle() === 'department') {
