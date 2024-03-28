@@ -49,8 +49,8 @@ class Campaign extends SfgApiNodeBase {
       // @todo Blocked by fact_item construction.
       'fact_items' => $fact_items,
       // @todo This one is very complex.
-      'additional_content' => $this->getReferencedData($entity->get('field_contents')->referencedEntities()),
-      'spotlight' => $this->getReferencedData($entity->get('field_spotlight')->referencedEntities()),
+      // 'additional_content' => $this->getReferencedData($entity->get('field_contents')->referencedEntities()),
+      // 'spotlight' => $this->getReferencedData($entity->get('field_spotlight')->referencedEntities()),
       'about_campaign' => $entity->get('field_campaign_about')->value,
       // @todo Blocked by link field issue.
       'related_links' => $this->generateLinks($entity->get('field_links')->getvalue()),

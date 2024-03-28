@@ -26,7 +26,8 @@ class Document extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'file' => $this->getReferencedEntity($entity->get('field_file')->referencedEntities()),
+      'file' => $this->getReferencedEntity($entity->get('field_file')->referencedEntities(), TRUE, TRUE),
+      'alter' => 'empty_data',
     ];
   }
 

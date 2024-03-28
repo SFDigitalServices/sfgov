@@ -26,7 +26,7 @@ class EmailAddresses extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'field_email_addresses_email' => $this->getReferencedData($entity->get('field_email_addresses_email')->referencedEntities()),
+      'emails' => $this->getReferencedData($entity->get('field_email_addresses_email')->referencedEntities()),
     ];
   }
 

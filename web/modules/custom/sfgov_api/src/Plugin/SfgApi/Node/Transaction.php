@@ -25,40 +25,115 @@ class Transaction extends SfgApiNodeBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-
+    $derp = true;
     return [
-      // Not sure what this is but Wagtail needs it.
-      'information' => [],
-      // @todo this plugin is only fetching data. needs to be massaged.
-      'description' => $entity->get('field_description')->value,
+      'description' => $entity->get('field_description')->value ?? '',
       'cost' => $this->getReferencedData($entity->get('field_cost')->referencedEntities()),
       'things_to_know' => $this->getReferencedData($entity->get('field_things_to_know')->referencedEntities()),
-      // what_to_do => '', // weird combo field
-      // supporting_information => '', // unknown field
-      'custom_section' => $this->getReferencedData($entity->get('field_custom_section')->referencedEntities()),
+      'what_to_do' => $this->getWhatToDoValues($entity),
+      'supporting_information' => $this->getReferencedData($entity->get('field_special_cases')->referencedEntities(), 'title_and_text'),
+      'custom_section' => $this->getReferencedData($entity->get('field_custom_section')->referencedEntities(), 'title_and_text'),
       'good_for_community' => $this->getReferencedData($entity->get('field_transaction_purpose')->referencedEntities()),
-      // 'get_help' => $this->getReferencedData($entity->get('field_help')->referencedEntities()), // unclear
+      'get_help' => $this->getGetHelpValues($entity),
       'hide_on_topic_pages' => $this->editFieldValue($entity->get('field_do_not_show_on_topic_pages')->value, [
         1 => TRUE,
         0 => FALSE,
+        NULL => FALSE,
       ]),
       'partner_agencies' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'topics' => $this->getReferencedEntity($entity->get('field_topics')->referencedEntities()),
 
-
-      // 'field_direct_external_url' => $this->generateLinks($entity->get('field_direct_external_url')->getvalue()),
-      // 'field_related_content' => $this->getReferencedEntity($entity->get('field_related_content')->referencedEntities(), FALSE, TRUE),
-      // 'field_sort_title' => $entity->get('field_sort_title')->value,
-      // 'field_special_cases' => $this->getReferencedData($entity->get('field_special_cases')->referencedEntities()),
-      // 'field_step_email' => $this->getReferencedData($entity->get('field_step_email')->referencedEntities()),
-      // 'field_step_in_person' => $this->getReferencedData($entity->get('field_step_in_person')->referencedEntities()),
-      // 'field_step_mail' => $this->getReferencedData($entity->get('field_step_mail')->referencedEntities()),
-      // 'field_step_online' => $this->getReferencedData($entity->get('field_step_online')->referencedEntities()),
-      // 'field_step_other' => $this->getReferencedData($entity->get('field_step_other')->referencedEntities()),
-      // 'field_step_other_title' => $entity->get('field_step_other_title')->value,
-      // 'field_step_phone' => $this->getReferencedData($entity->get('field_step_phone')->referencedEntities()),
-      // 'field_transactions' => $this->getReferencedEntity($entity->get('field_transactions')->referencedEntities()),
+      // Not sure what this is but Wagtail needs it.
+      'information' => [],
     ];
   }
 
+  public function getWhatToDoValues($entity) {
+    $step_fields = [
+      'field_step_email',
+      'field_step_in_person',
+      'field_step_mail',
+      'field_step_online',
+      'field_step_other',
+      'field_step_phone',
+    ];
+
+    $data = [];
+    foreach ($step_fields as $field_name => $value) {
+      if ($entity->get($value)->referencedEntities()) {
+        foreach ($this->getReferencedData($entity->get($value)->referencedEntities()) as $key => $value) {
+          if ($value) {
+            switch ($value['type']) {
+              case 'step':
+                $data[] = $this->getSteps($value['value']);
+                break;
+              case 'callout':
+                $data[] = [
+                  'type' => 'callout',
+                  'value' => $value['value'],
+                ];
+                break;
+            }
+          }
+        }
+      }
+    }
+
+    return $data;
+  }
+
+  public function getGetHelpValues($entity) {
+    $values = $this->getReferencedData($entity->get('field_help')->referencedEntities());
+    $data = [];
+    foreach ($values as $key => $value) {
+      switch ($value['type']) {
+        case 'email_addresses':
+          foreach ($value['value']['emails'] as $value) {
+            $data[] = $value;
+          }
+          break;
+        case 'phone_numbers':
+          foreach ($value['value']['phone_numbers'] as $value) {
+            $data[] = $value;
+          }
+          break;
+
+        default:
+          # code...
+          break;
+      }
+    }
+    $derp = true;
+
+    return $data;
+  }
+
+  public function getSteps($data) {
+    $steps = [
+      'section_title' => $data['title'] ?? 'temp',
+      'section_specifics' => [],
+    ];
+    foreach ($data['value'] as $key => $value) {
+      // Button paragraphs are flattened by default because most cases do not
+      // need the type value. Its different here, we need to manually add it
+      // back in.
+      if (!isset($value['type'])) {
+        if (isset($value['link_to'])) {
+          $steps['section_specifics'][] = [
+            'type' => 'button_link',
+            'value' => $value,
+          ];
+        }
+      }
+      else {
+        $steps['section_specifics'][] = $value;
+      }
+    }
+
+    $data = [
+      'type' => 'what_to_do_step',
+      'value' => $steps,
+    ];
+    return $data;
+  }
 }

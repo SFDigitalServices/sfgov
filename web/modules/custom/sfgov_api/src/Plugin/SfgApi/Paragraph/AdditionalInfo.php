@@ -28,6 +28,7 @@ class AdditionalInfo extends SfgApiParagraphBase {
     return [
       'title' => $entity->get('field_additional_info_heading')->value,
       'text' => $entity->get('field_additional_info_text')->value,
+      'alter' => 'empty_data',
     ];
   }
 

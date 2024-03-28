@@ -25,7 +25,10 @@ class File extends SfgApiMediaBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-    $custom_data = [];
+    $custom_data = [
+      'description' => $entity->get('field_description')->value ?: '',
+      'published_date' => $entity->get('field_published_date')->value ?: NULL,
+    ];
     return $custom_data;
   }
 

@@ -66,7 +66,16 @@ trait ApiFieldHelperTrait {
 
             // Remove empty data.
             case 'empty_data':
-              unset($entities_data[$key]);
+              if (isset($entity_data['value']['value'])) {
+                if (empty($entity_data['value']['value'])) {
+                  unset($entities_data[$key]);
+                }
+              }
+              if (isset($entity_data['value']['file'])) {
+                if (empty($entity_data['value']['file'])) {
+                  unset($entities_data[$key]);
+                }
+              }
               break;
           }
         }
@@ -300,9 +309,12 @@ trait ApiFieldHelperTrait {
       if (!$is_external) {
         $entityTypeManager = \Drupal::entityTypeManager();
         if ($url->isRouted()) {
-          $nid = explode('/', $url->getInternalPath())[1];
-          $node = $entityTypeManager->getStorage('node')->load($nid);
-          $wagtail_id = $this->getReferencedEntity([$node], TRUE);
+          $url_elements = explode('/', $url->getInternalPath());
+          $nid = $url_elements[1];
+          if ($nid) {
+            $node = $entityTypeManager->getStorage('node')->load($nid);
+            $wagtail_id = $this->getReferencedEntity([$node], TRUE);
+          }
         }
         else {
           // @todo this is a temp fix. /department/3194 has a 'featured_item'
@@ -317,7 +329,7 @@ trait ApiFieldHelperTrait {
         'type' => 'page',
         'value' => [
           'url' => $is_external ? $link['uri'] : '',
-          'page' => $is_external ? NULL : (int) $wagtail_id[0],
+          'page' => $is_external ? NULL : $wagtail_id[0],
           'link_to' => $is_external ? 'url' : 'page',
           'link_text' => $link['title'],
         ],

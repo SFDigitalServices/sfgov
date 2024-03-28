@@ -26,8 +26,9 @@ class Phone extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'owner' => $entity->get('field_owner')->value,
-      'details' => $entity->get('field_text')->value,
+      'owner' => $entity->get('field_owner')->value ?? '',
+      'details' => $entity->get('field_text')->value ?? '',
+      'extension' => '',
       'phone_number' => $entity->get('field_tel')->value,
     ];
   }

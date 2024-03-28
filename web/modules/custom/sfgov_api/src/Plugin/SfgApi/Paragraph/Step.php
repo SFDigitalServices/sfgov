@@ -26,8 +26,8 @@ class Step extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'field_content' => $entity->get('field_content')->value,
-      'field_title' => $entity->get('field_title')->value,
+      'value' => $this->getReferencedData($entity->get('field_content')->referencedEntities()),
+      'title' => $entity->get('field_title')->value,
     ];
   }
 

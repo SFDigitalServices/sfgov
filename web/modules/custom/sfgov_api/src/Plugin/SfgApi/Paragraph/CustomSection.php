@@ -28,6 +28,7 @@ class CustomSection extends SfgApiParagraphBase {
     return [
       'text' => $entity->get('field_text')->value,
       'title' => $entity->get('field_title')->value,
+      'alter' => 'empty_data',
     ];
   }
 

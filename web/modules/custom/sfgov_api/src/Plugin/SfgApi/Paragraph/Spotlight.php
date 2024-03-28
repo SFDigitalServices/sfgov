@@ -34,9 +34,9 @@ class Spotlight extends SfgApiParagraphBase {
     ];
     $button_value = $button_data ? $button_data[0] : $empty_button;
     return [
-      'image' => $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0],
+      'image' => $entity->get('field_spotlight_img')->referencedEntities() ? $this->getReferencedEntity($entity->get('field_spotlight_img')->referencedEntities(), TRUE)[0] : NULL,
       'title' => $entity->get('field_title')->value,
-      // 'button' => $button_value,
+      'button' => $button_value,
       'banner_size' => 'half',
       'description' => $entity->get('field_description')->value,
       'orientation' => 'left',

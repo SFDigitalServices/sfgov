@@ -26,7 +26,7 @@ class PhoneNumbers extends SfgApiParagraphBase {
    */
   public function setCustomData($entity) {
     return [
-      'field_phone_numbers_phone' => $this->getReferencedData($entity->get('field_phone_numbers_phone')->referencedEntities()),
+      'phone_numbers' => $this->getReferencedData($entity->get('field_phone_numbers_phone')->referencedEntities()),
     ];
   }
 

@@ -27,7 +27,7 @@ class Email extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       'email' => $entity->get('field_email')->value,
-      'title' => $entity->get('field_title')->value ?: '',
+      'title' => $entity->get('field_title')->value ?: 'temp',
     ];
   }
 
