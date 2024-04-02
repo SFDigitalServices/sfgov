@@ -30,7 +30,6 @@ class FormConfirmationPage extends SfgApiNodeBase {
       'body' => $entity->get('body')->value,
       'field_bann' => $entity->get('field_bann')->value,
       'field_banner_color' => $entity->get('field_banner_color')->value,
-      'field_banner_image' => $this->getReferencedEntity($entity->get('field_banner_image')->referencedEntities()),
       'field_confirmation_sidebar' => $this->getReferencedData($entity->get('field_confirmation_sidebar')->referencedEntities()),
       'field_departments' => $this->getReferencedEntity($entity->get('field_departments')->referencedEntities()),
       'field_description' => $entity->get('field_description')->value,

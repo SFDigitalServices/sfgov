@@ -32,7 +32,7 @@ class FormPage extends SfgApiNodeBase {
       'field_formio_json_content' => $entity->get('field_formio_json_content')->value,
       'field_intro_text' => $entity->get('field_intro_text')->value,
       'data_source' => $formio_data_source[0]['value']['formio_data_source'],
-      'confirmation_page' => $this->getReferencedEntity([$this->getFormConfirmationPage($entity->id())]),
+      'confirmation_page' => $this->getReferencedEntity($this->getFormConfirmationPage($entity->id())),
     ];
   }
 
@@ -46,15 +46,17 @@ class FormPage extends SfgApiNodeBase {
    *   The form confirmation page.
    */
   public function getFormConfirmationPage($form_id) {
+    $node = [];
     $query = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
       ->condition('type', 'form_confirmation_page')
       ->condition('field_related_content_single', $form_id);
     $nids = $query->execute();
     if (count($nids) > 0) {
       $nid = array_shift($nids);
-      return Node::load($nid);
+      $node[] = Node::load($nid);
     }
-    return [];
+    return $node;
   }
 
 }
