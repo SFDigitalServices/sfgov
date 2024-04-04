@@ -16,7 +16,8 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
  */
 include __DIR__ . "/settings.pantheon.php";
 
-$settings['file_temp_path'] = "/app/web/sites/default/files/private/tmp";
+// Adding file_temp_path so bulk uploads go to temp location for pantheon advanced page cache.
+$settings['file_temp_path'] = "sites/default/files/private/tmp";
 
 /**
  * Trusted host configuration.
