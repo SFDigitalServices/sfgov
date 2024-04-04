@@ -16,6 +16,9 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
  */
 include __DIR__ . "/settings.pantheon.php";
 
+
+$settings['file_temp_path'] = "/app/web/sites/default/files/private/tmp";
+
 /**
  * Trusted host configuration.
  *
