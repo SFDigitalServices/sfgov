@@ -100,11 +100,13 @@ trait ApiFieldHelperTrait {
    *   Whether to flatten the array into a single entry.
    * @param bool $multitype
    *   Whether the referenced entity can be any type.
+   * @param array $extra
+   *   Extra data to include in the reference.
    *
    * @return array
    *   An array of entity references.
    */
-  public function getReferencedEntity(array $entities, $id_only = FALSE, $flatten = FALSE, $multitype = FALSE) {
+  public function getReferencedEntity(array $entities, $id_only = FALSE, $flatten = FALSE, $multitype = FALSE, $extra = []) {
     $wagtail_utilities = \Drupal::service('sfgov_api.utilities');
     $entities_data = [];
     foreach ($entities as $entity) {
@@ -160,6 +162,9 @@ trait ApiFieldHelperTrait {
             // Location references are very similar to node references.
             $reference_data = $wagtail_utilities->getCredentials()['api_url_base'] . 'cms.Address' . '/' . $wagtail_id;
             break;
+        }
+        if (!empty($extra)) {
+          $reference_data = array_merge($reference_data, $extra);
         }
       }
       $entities_data[] = $reference_data;
@@ -339,6 +344,28 @@ trait ApiFieldHelperTrait {
       ];
     }
     return $links;
+  }
+
+  public function getRawImage($image_field) {
+    if (empty($image_field)) {
+      return [];
+    }
+    $image_data = $image_field[0];
+    $file_path = $image_data->entity->getFileUri();
+    if (!$file_path) {
+      $message = $this->t('No base file found');
+      $this->addPluginError('No file', $message);
+    }
+    else {
+      $file_data = [
+        'title' => $image_data->entity->get('filename')->value,
+        'file' => $file_path,
+        'fid' => $image_data->entity->id(),
+        // @todo , remove once we have a better source for alt text.
+        'alt_text' => $image_data->get('field_logo')[0]->get('alt')->getValue() ?: 'temp',
+      ];
+    }
+    return $file_data;
   }
 
 }

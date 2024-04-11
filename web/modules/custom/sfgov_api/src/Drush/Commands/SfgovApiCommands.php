@@ -369,7 +369,7 @@ class SfgovApiCommands extends DrushCommands {
         $client_config['json'] = $payload_data;
         break;
 
-      case 'media':
+      case 'media' || 'file':
         $api_url_complete = $this->apiUtilities->getCredentials()['api_url_base'] . $wag_bundle;
         $client_config['multipart'] = $this->apiUtilities->prepMultipart($payload->getPayloadData());
         break;
