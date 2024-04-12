@@ -346,6 +346,9 @@ trait ApiFieldHelperTrait {
     return $links;
   }
 
+  /**
+   *
+   */
   public function getRawImage($image_field) {
     if (empty($image_field)) {
       return [];

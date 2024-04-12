@@ -30,6 +30,9 @@ class File extends SfgApiPluginBase {
    */
   protected $entityType = 'file';
 
+  /**
+   *
+   */
   public function setCustomData(EntityInterface $entity) {
     return [];
   }
@@ -56,4 +59,5 @@ class File extends SfgApiPluginBase {
     }
     return $file_data;
   }
+
 }
