@@ -5,12 +5,13 @@
  * Contains sfgov_video.install.
  */
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Extension\ExtensionPathResolver;
 
 /**
  * Programmatically import config field.field.paragraph.video.field_text.
  */
 function sfgov_video_update_8700() {
-  $config_path = drupal_get_path('module', 'sfgov_video') . '/config/optional';
+  $config_path = ExtensionPathResolver::getPath('module', 'sfgov_video') . '/config/optional';
   $config_source = new FileStorage($config_path);
   \Drupal::service('config.installer')->installOptionalConfig($config_source);
 }

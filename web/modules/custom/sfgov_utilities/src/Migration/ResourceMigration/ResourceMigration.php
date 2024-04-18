@@ -56,6 +56,7 @@ class ResourceMigration {
     ->currentRevision()
     // ->condition('status', FALSE) // drafts only
     ->condition('type', $type)
+    ->accessCheck()
     ->execute();
     return $nids;
   }

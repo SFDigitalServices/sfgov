@@ -302,21 +302,23 @@ function _sfgov_departments_dept_req_public_records_form_validate($form, FormSta
  */
 function _sfgov_departments_agency_sections_alter_submit(&$form, FormStateInterface $form_state) {
   $values = $form_state->getValues();
-  $label = $values['field_agency_sections'][0]['subform']['field_section_title_list'];
+  if (array_key_exists(0, $values['field_agency_sections'])) {
+    $label = $values['field_agency_sections'][0]['subform']['field_section_title_list'];
 
-  // If the section title is set to "None"
-  if (empty($label) || $label[0]['value'] == '_none') {
-
-    foreach ($values['field_agency_sections'][0]['subform']['field_agencies'] as $id => $item) {
-      // Remove each agency from the agency section.
-      if (is_numeric($id)) {
-        unset($values['field_agency_sections'][0]['subform']['field_agencies'][$id]);
+    // If the section title is set to "None"
+    if (empty($label) || $label[0]['value'] == '_none') {
+  
+      foreach ($values['field_agency_sections'][0]['subform']['field_agencies'] as $id => $item) {
+        // Remove each agency from the agency section.
+        if (is_numeric($id)) {
+          unset($values['field_agency_sections'][0]['subform']['field_agencies'][$id]);
+        }
       }
     }
+  
+    // Reset the form values with the removed agencies.
+    $form_state->setValues($values);
   }
-
-  // Reset the form values with the removed agencies.
-  $form_state->setValues($values);
 }
 
 /**

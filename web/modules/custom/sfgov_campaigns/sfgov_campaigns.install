@@ -14,7 +14,7 @@ function sfgov_campaigns_install() {
     $entity_type = $definition_update_manager->getEntityType('node');
 
     // Get fields definition from the scheduler module.
-    module_load_include('module', 'scheduler');
+    Drupal::moduleHandler()->loadInclude('scheduler', 'module');
     $fields = scheduler_entity_base_field_info($entity_type);
 
     foreach ($fields as $field_name => $field_definition) {

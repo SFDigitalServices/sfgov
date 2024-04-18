@@ -8,7 +8,7 @@ use Drupal\node\Entity\Node;
 use Drupal\sfgov_utilities\Utility;
 
 class UtilityTest extends EntityKernelTestBase {
-  public static $modules = array('node');
+  protected static $modules = array('node');
 
   public function setUp() {
     parent::setUp();

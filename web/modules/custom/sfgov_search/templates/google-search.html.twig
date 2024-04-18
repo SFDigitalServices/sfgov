@@ -1,0 +1,50 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the docsearch.
+ *
+ * variables - stuff available to template.
+ *
+ * @see template_preprocess_docsearch()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{%
+  set classes = [
+  'sfgov-full-bleed',
+  'responsive-container',
+  'white',
+]
+%}
+
+{% set title_attributes = create_attribute() %}
+
+{%
+  set title_classes = [
+  'sfgov-full-bleed',
+  'reponsive-container',
+  'light-blue',
+]
+%}
+
+<div class="sfgov-gsc">
+
+  <div{{ title_attributes.addClass(title_classes) }}>
+    <div class="sfgov-section-container">
+      <h1>{{ title }}</h1>
+      <div class="sfgov-gsc__search-form">
+        {{ form }}
+      </div>
+    </div>
+  </div>
+
+  <div{{ attributes.addClass(classes) }}>
+    <div class="sfgov-section-container">
+      <div class="gcse-searchresults-only"></div>
+    </div>
+  </div>
+
+</div>
+

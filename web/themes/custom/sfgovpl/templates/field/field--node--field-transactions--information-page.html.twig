@@ -38,5 +38,5 @@
 #}
 <span{{ title_attributes.addClass(title_classes) }}>{{ label | t }}</span>
 {% for item in items %}
-  {% spaceless %}{{ item.content }}{% endspaceless %}{% if not loop.last %},&nbsp;{% endif %} {# cannot make this more readable, would add whitespaces #}
+  {% apply spaceless %}{{ item.content }}{% endapply %}{% if not loop.last %},&nbsp;{% endif %} {# cannot make this more readable, would add whitespaces #}
 {% endfor %}

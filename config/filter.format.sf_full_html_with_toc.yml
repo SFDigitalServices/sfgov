@@ -17,15 +17,6 @@ filters:
     status: true
     weight: 11
     settings: {  }
-  filter_html:
-    id: filter_html
-    provider: filter
-    status: false
-    weight: -10
-    settings:
-      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <s> <sup> <sub> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title> <img src alt data-entity-type data-entity-uuid data-align data-caption> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <hr> <p> <h1> <pre>'
-      filter_html_help: true
-      filter_html_nofollow: false
   filter_align:
     id: filter_align
     provider: filter
@@ -38,11 +29,26 @@ filters:
     status: true
     weight: 9
     settings: {  }
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: false
+    weight: -10
+    settings:
+      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <s> <sup> <sub> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title> <img src alt data-entity-type data-entity-uuid data-align data-caption> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <hr> <p> <h1> <pre>'
+      filter_html_help: true
+      filter_html_nofollow: false
   filter_htmlcorrector:
     id: filter_htmlcorrector
     provider: filter
     status: true
     weight: 10
+    settings: {  }
+  filter_image_lazy_load:
+    id: filter_image_lazy_load
+    provider: filter
+    status: true
+    weight: 12
     settings: {  }
   linkit:
     id: linkit
@@ -51,6 +57,12 @@ filters:
     weight: 0
     settings:
       title: true
+  responsive_table:
+    id: responsive_table
+    provider: sfgov_doc_html
+    status: true
+    weight: 0
+    settings: {  }
   toc_filter:
     id: toc_filter
     provider: toc_filter
@@ -61,9 +73,3 @@ filters:
       auto: ''
       block: '0'
       exclude_above: '0'
-  responsive_table:
-    id: responsive_table
-    provider: sfgov_doc_html
-    status: true
-    weight: 0
-    settings: {  }

@@ -21,6 +21,7 @@ mkdir -pv $samlVendorMetadata
 
 # copy the common saml config and metadata from pantheon to respective vendor directory
 if [[ ! -z "$TERMINUS_SITE" ]]; then
+  # Log in via Terminus
   terminus -n auth:login --machine-token="$TERMINUS_TOKEN"
   terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteCommonConfigDir $samlVendorConfig
   terminus rsync $TERMINUS_SITE.$syncEnv:$samlRemoteCommonMetadataDir $samlVendorMetadata

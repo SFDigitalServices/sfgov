@@ -39,7 +39,6 @@ class SearchFormBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, LanguageManagerInterface $languageManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->languageManager = $languageManager;
   }
 
@@ -54,20 +53,23 @@ class SearchFormBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $container->get('language_manager')
     );
   }
+
   /**
    * {@inheritdoc}
    */
   public function build() {
     $languageManager = \Drupal::languageManager();
-    $form = \Drupal::formBuilder()->getForm('Drupal\sfgov_search\Form\SearchForm');
+    $id = '/' . $languageManager->getCurrentLanguage()->getId();
+    $prefix = $languageManager->getCurrentLanguage()->isDefault() ? '' : '/' . $id;
+
+    $form = \Drupal::formBuilder()->getForm('Drupal\sfgov_search\Form\GoogleSearchForm');
+
     return [
       'form' => $form,
       '#attached' => [
         'drupalSettings' => [
-          'sfgov_search_form_block' => [
-            'language_prefix' => $languageManager->getCurrentLanguage()->isDefault() ?
-              '' :
-              '/' . $languageManager->getCurrentLanguage()->getId(),
+          'search' => [
+            'language_prefix' => $prefix,
           ],
         ],
         'library' => [

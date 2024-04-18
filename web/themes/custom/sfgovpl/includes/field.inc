@@ -10,7 +10,7 @@ function sfgovpl_preprocess_field__paragraph__field_file__agenda_item(&$variable
     $variables['items'][$key]['label'] = $value['content']['#options']['entity']->label();
     $variables['items'][$key]['url'] =
       $value['content']['#options']['entity']->field_media_file->entity ?
-      file_create_url($value['content']['#options']['entity']->field_media_file->entity->getFileUri()) :
+      \Drupal::service('file_url_generator')->generateAbsoluteString($value['content']['#options']['entity']->field_media_file->entity->getFileUri()) :
       '';
   }
 }

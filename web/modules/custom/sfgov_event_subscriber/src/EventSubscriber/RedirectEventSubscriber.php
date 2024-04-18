@@ -9,7 +9,7 @@ use Drupal\redirect\RedirectRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\node\NodeInterface;
 use Drupal\file\Entity\File;
@@ -93,10 +93,10 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   /**
    * Method to negotiate custom redirects.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event object.
    */
-  public function sfgovRedirect(GetResponseEvent $event) {
+  public function sfgovRedirect(RequestEvent $event) {
     // Don't redirect authenticated users.
     $account = $this->account;
     if (!in_array('anonymous', $account->getRoles())) {
@@ -133,13 +133,13 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   /**
    * Add cache context to make sure the request isn't cached for auth users.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event object.
    *
    * @return \Drupal\node\NodeInterface|null
    *   The node object or null.
    */
-  public function addCacheContextsToNode(GetResponseEvent $event) {
+  public function addCacheContextsToNode(RequestEvent $event) {
     $node = $event->getRequest()->attributes->get('node');
     if ($node && $node instanceof NodeInterface) {
       $route_name = \Drupal::routeMatch()->getRouteName();
@@ -173,13 +173,13 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   /**
    * Follow redirects from aliases.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event object.
    *
    * @return string|null
    *   String to redirect to.
    */
-  public function redirectBasedOnField(GetResponseEvent $event) {
+  public function redirectBasedOnField(RequestEvent $event) {
 
     $media = $event->getRequest()->attributes->get('media');
 
@@ -221,13 +221,13 @@ class RedirectEventSubscriber implements EventSubscriberInterface {
   /**
    * Follow redirects from aliases.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event object.
    *
    * @return string|null
    *   String to redirect to.
    */
-  public function redirectBasedOnAlias(GetResponseEvent $event) {
+  public function redirectBasedOnAlias(RequestEvent $event) {
 
     $node = $event->getRequest()->attributes->get('node');
     $current_language = $this->languageManager

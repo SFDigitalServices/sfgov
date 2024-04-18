@@ -176,6 +176,7 @@ class UpdateMigratedPublicBodyToAgencyCommands extends DrushCommands {
    */
   public function unpub_public_bodies() {
     $nids = \Drupal::entityQuery('node')
+      ->accessCheck()
       ->condition('type', 'public_body')
       ->execute();
     $storage_handler = \Drupal::entityTypeManager()->getStorage('node');
