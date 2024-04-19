@@ -320,10 +320,12 @@ function sfgovpl_preprocess_paragraph__resource_entity(&$variables) {
     $resource_storage = \Drupal::entityTypeManager()->getStorage('resource');
     /** @var \Drupal\eck\Entity\EckEntity $resource */
     $resource = $resource_storage->load($paragraph->get('field_resource')[0]->target_id);
-    $uri = $resource->get('field_url')->uri ?? NULL;
-    $variables['title'] = $resource->get('title')->value;
-    $variables['description'] = $resource->get('field_description') ?? \Drupal::service('renderer')->render($resource->get('field_description')->value);
-    $variables['url'] = $uri ? Url::fromUri($uri)->setAbsolute()->toString() : '';
+    if (!empty($resource)) {
+      $uri = $resource->get('field_url')->uri ?? NULL;
+      $variables['title'] = $resource->get('title')->value . "-entity";
+      $variables['description'] = $resource->get('field_description') ?? \Drupal::service('renderer')->render($resource->get('field_description')->value);
+      $variables['url'] = $uri ? Url::fromUri($uri)->setAbsolute()->toString() : '';
+    }
   }
 }
 
