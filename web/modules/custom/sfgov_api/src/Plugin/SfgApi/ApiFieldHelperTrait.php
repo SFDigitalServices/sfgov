@@ -22,7 +22,7 @@ trait ApiFieldHelperTrait {
    * @return array
    *   An array of entity data.
    */
-  public function getReferencedData(array $entities, $type = '') {
+  public function getReferencedData(array $entities, $type = '', $shape = 'wag') {
     $sfgov_api_plugin_manager = \Drupal::service('plugin.manager.sfgov_api');
     $available_plugins = $sfgov_api_plugin_manager->getDefinitions();
 
@@ -39,11 +39,20 @@ trait ApiFieldHelperTrait {
           'langcode' => $langcode,
           'entity_id' => $entity->id(),
           'is_stub' => FALSE,
+          'shape' => $shape,
         ]);
-        $entities_data[] = [
-          'type' => $type ?: $plugin->pluginDefinition['wag_bundle'],
-          'value' => $plugin->getPayload()->getPayloadData(),
-        ];
+        if ($shape === 'wag') {
+          $entities_data[] = [
+            'type' => $type ?: $plugin->getWagBundle(),
+            'value' => $plugin->getPayload()->getPayloadData(),
+          ];
+        }
+        elseif ($shape === 'raw') {
+          $entities_data[] = [
+            'type' => $type ?:$plugin->getBundle(),
+            'value' => $plugin->getPayload()->getPayloadData(),
+          ];
+        }
       }
       else {
         $entities_data[] = 'Error: no available plugins for bundle ' . $bundle . ' of type ' . $entity_type;

@@ -16,6 +16,7 @@ use Drupal\taxonomy\Entity\Term;
  *   entity_id = {},
  *   langcode = {},
  *   is_stub = {},
+ *   shape = {},
  * )
  */
 class Campaign extends SfgApiNodeBase {

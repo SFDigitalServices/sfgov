@@ -16,6 +16,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   entity_id = {},
  *   langcode = {},
  *   is_stub = {},
+ *   shape = {},
  * )
  */
 class FormPage extends SfgApiNodeBase {

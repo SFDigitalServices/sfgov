@@ -62,4 +62,11 @@ class SfgApi extends Plugin {
    */
   public $is_stub;
 
+  /**
+   * The shape of the data.
+   *
+   * @var string
+   */
+  public $shape;
+
 }

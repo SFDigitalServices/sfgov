@@ -16,6 +16,7 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   langcode = {},
  *   referenced_plugins = {},
  *   is_stub = {},
+ *   shape = {},
  * )
  */
 class BasicHtmlSection extends SfgApiParagraphBase {

@@ -5,6 +5,8 @@ namespace Drupal\sfgov_api\Payload;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 
 /**
  * Class for Json Payloads to be sent to Wagtail.
@@ -12,6 +14,7 @@ use Drupal\node\Entity\Node;
 class Payload {
 
   use StringTranslationTrait;
+  use ApiFieldHelperTrait;
 
   /**
    * The metadata used to support the payload.
@@ -91,6 +94,20 @@ class Payload {
   protected $emptyReferences;
 
   /**
+   * The shape of the data.
+   *
+   * @var string
+   */
+  protected $shape;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Constructs a new Payload object.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -109,7 +126,9 @@ class Payload {
    * @return \Drupal\sfgov_api\Payload\Payload
    * The Payload object.
    */
-  public function __construct(?EntityInterface $entity, $baseData, $customData, $requestedLangcode, $wagBundle, $pluginErrors) {
+  public function __construct(?EntityInterface $entity, $baseData, $customData, $requestedLangcode, $wagBundle, $pluginErrors, $shape) {
+    $this->shape = $shape;
+    $this->entityFieldManager = \Drupal::service('entity_field.manager');
     $this->entity = $entity;
     $this->baseData = $baseData;
     $this->customData = $customData;
@@ -179,6 +198,7 @@ class Payload {
         'entity_type' => $entity->getEntityTypeId(),
         'bundle' => $entity->bundle(),
         'langcode' => $this->requestedLangcode,
+        'title' => $entity->label(),
         'translations' => array_keys($entity->getTranslationLanguages()),
         'wag_bundle' => $this->wagBundle,
         'empty_references' => $this->emptyReferences ?: [],
@@ -219,11 +239,16 @@ class Payload {
    * Set the payload data.
    */
   public function setPayloadData() {
-    if ($this->errors) {
-      $payload = [];
+    if ($this->shape == 'wag') {
+      if ($this->errors) {
+        $payload = [];
+      }
+      else {
+        $payload = array_merge($this->baseData, $this->customData);
+      }
     }
-    else {
-      $payload = array_merge($this->baseData, $this->customData);
+    elseif ($this->shape == 'raw') {
+      $payload = $this->getRawData();
     }
 
     return $this->payloadData = $payload;
@@ -245,6 +270,119 @@ class Payload {
         $this->emptyReferences[] = $custom_data;
       }
     }
+  }
+
+  public function getRawData() {
+    $raw_data = [];
+
+    $metadata = $this->metadata;
+    $fields = $this->entityFieldManager->getFieldDefinitions($metadata['entity_type'], $metadata['bundle']);
+    $raw_data = [];
+    foreach ($fields as $field_name => $field_definition) {
+      // check if field_name starts with field_
+      if (strpos($field_name, 'field_') !== 0) {
+        continue;
+      }
+      $field_type = $field_definition->getType();
+      $field_data = $this->entity->get($field_name);
+      $raw_data[$field_name] = $this->getFieldData($field_type, $field_data);
+    }
+    if ($metadata['entity_type'] === 'node') {
+      $raw_data['metadata'] = $metadata;
+    }
+    return $raw_data;
+  }
+
+  public function getFieldData($field_type, $field_data) {
+    $data = [];
+    // All of these fields can be fetched the same way.
+    $simple = [
+      'integer',
+      'decimal',
+      'text_long',
+      'boolean',
+      'string',
+      'string_long' ,'email',
+      'telephone',
+      'datetime',
+      'list_string'
+    ];
+
+    // data is stored differently depending on the field type.
+    switch ($field_type) {
+      case in_array($field_type, $simple):
+        $data = $field_data->value;
+        break;
+
+      case 'link':
+        $data = [
+          'uri' => $field_data->uri,
+          'title' => $field_data->title,
+          'options' => $field_data->options,
+        ];
+        break;
+
+      case 'entity_reference_revisions':
+        $data = $this->getReferencedData($field_data->referencedEntities(), '', 'raw');
+        break;
+
+      case 'entity_reference':
+        $data = $this->getReferencedEntitiesRaw($field_data->referencedEntities(), '', 'raw');
+        break;
+
+      case 'image':
+        $data = [
+          'alt' => $field_data->alt,
+          'title' => $field_data->title,
+          'width' => $field_data->width,
+          'height' => $field_data->height,
+        ];
+        $file = $field_data->entity;
+        if ($file) {
+          $data['target_id'] = $file->id();
+          $data['file'] = [
+            'filename' => $file->getFilename(),
+            'uri' => $file->getFileUri(),
+            'fid' => $file->id(),
+            'filesize' => $file->getSize(),
+            'filemime' => $file->getMimeType(),
+          ];
+        }
+        break;
+
+      case 'address':
+        $data = [
+          'address_line1' => $field_data->address_line1,
+          'address_line2' => $field_data->address_line2,
+          'locality' => $field_data->locality,
+          'administrative_area' => $field_data->administrative_area,
+          'postal_code' => $field_data->postal_code,
+          'country_code' => $field_data->country_code,
+        ];
+        break;
+
+      case 'smartdate':
+        // This is the one value that isn't being presented "Raw" since
+        // the logic of how it operates is built into the UI.
+        $data = $this->convertSmartDate($field_data->getValue()[0]);
+        break;
+
+    }
+    return $data;
+  }
+
+  public function getReferencedEntitiesRaw($entities) {
+    $data = [];
+    foreach ($entities as $entity) {
+      $data[] = [
+        'entity_type' => $entity->getEntityTypeId(),
+        'bundle' => $entity->bundle(),
+        'langcode' => $entity->language()->getId(),
+        'entity_id' => $entity->id(),
+      ];
+    }
+    return $data;
+
   }
 
 }

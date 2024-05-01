@@ -47,11 +47,12 @@ class SfgApiPluginManager extends DefaultPluginManager {
    * @param bool $is_stub
    *   Whether the entity is a stub.
    */
-  public function fetchPayload($plugin_label, $langcode, $entity_id, $is_stub = FALSE) {
+  public function fetchPayload($shape, $plugin_label, $langcode, $entity_id, $is_stub = FALSE) {
     $plugin = $this->createInstance($plugin_label, [
       'langcode' => $langcode,
       'entity_id' => $entity_id,
       'is_stub' => $is_stub,
+      'shape' => $shape,
     ]);
     $payload = $plugin->getPayload();
     return $payload;

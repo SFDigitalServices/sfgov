@@ -13,6 +13,7 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Media;
  *   entity_id = {},
  *   langcode = {},
  *   is_stub = {},
+ *   shape = {},
  * )
  */
 class Image extends SfgApiMediaBase {

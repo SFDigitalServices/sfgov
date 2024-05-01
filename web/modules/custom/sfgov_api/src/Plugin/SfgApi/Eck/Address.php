@@ -17,6 +17,7 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  *   entity_id = {},
  *   langcode = {},
  *   is_stub = {},
+ *   shape = {},
  * )
  */
 class Address extends SfgApiPluginBase {

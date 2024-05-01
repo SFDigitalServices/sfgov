@@ -116,6 +116,13 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   }
 
   /**
+   * Get the shape value.
+   */
+  public function getShape() {
+    return (string) $this->configuration['shape'] ?? $this->pluginDefinition['shape'];
+  }
+
+  /**
    * The emptyReference value.
    *
    * @var array
@@ -183,15 +190,20 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
     $base_data = [];
     $custom_data = [];
     $stub_status = $this->getStubStatus();
+    $shape = $this->getShape();
+
     if ($entity) {
       $base_data = $this->setBaseData($entity);
-      // Only fetch custom data if it is not a stub.
-      $custom_data = $stub_status ? [] : $this->setCustomData($entity);
+      // Only fetch custom data if it is not a stub and shape is "wagtail"{}
+      $custom_data = [];
+      if (!$stub_status && $shape === 'wag') {
+        $custom_data = $this->setCustomData($entity);
+      }
     }
     $requested_langcode = $this->getLangcode();
     $wag_bundle = $this->getWagBundle();
     $plugin_errors = $this->pluginErrors;
-    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors);
+    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors, $shape);
     return $this->payload = $payload;
   }
 

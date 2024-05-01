@@ -38,12 +38,16 @@ class SfgApiController extends ControllerBase {
   /**
    * View the data that the API will send with the associated arguments.
    */
-  public function viewEntityData($langcode, string $entity_type, string $bundle, $entity_id) {
+  public function viewEntityData(string $shape, $langcode, string $entity_type, string $bundle, $entity_id) {
     $plugin_label = $this->sfgApiPluginManager->validatePlugin($entity_type, $bundle);
 
     $display = [];
     if (empty($plugin_label)) {
       $display[]['error'] = 'No plugin found for bundle: ' . $bundle;
+    }
+
+    if (empty($shape)) {
+      $display[]['error'] = 'Please specify a shape (wag or raw).';
     }
 
     if (empty($bundle)) {
@@ -60,7 +64,7 @@ class SfgApiController extends ControllerBase {
     }
 
     if (empty($display)) {
-      $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id);
+      $payload = $this->sfgApiPluginManager->fetchPayload($shape, $plugin_label, $langcode, $entity_id);
       if ($errors = $payload->getErrors()) {
         $display = $errors;
       }
