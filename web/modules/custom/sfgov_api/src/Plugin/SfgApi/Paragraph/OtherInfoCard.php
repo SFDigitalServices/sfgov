@@ -14,7 +14,6 @@ use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
  *   wag_bundle = "resources",
  *   entity_id = {},
  *   langcode = {},
- *   is_stub = {},
  *   shape = {},
  * )
  */

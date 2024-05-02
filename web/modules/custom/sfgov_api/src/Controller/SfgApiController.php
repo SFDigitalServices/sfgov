@@ -47,7 +47,7 @@ class SfgApiController extends ControllerBase {
     }
 
     if (empty($shape)) {
-      $display[]['error'] = 'Please specify a shape (wag or raw).';
+      $display[]['error'] = 'Please specify a shape (wag, stub, or raw).';
     }
 
     if (empty($bundle)) {
@@ -70,30 +70,6 @@ class SfgApiController extends ControllerBase {
       }
       else {
         $display = $payload->getPayloadData();
-      }
-    }
-
-    return new JsonResponse($display);
-  }
-
-  /**
-   * View the reference chain for the given plugin and direction.
-   */
-  public function viewReferenceChain($direction, $plugin_label = '') {
-    $display = [];
-    if ($direction !== 'complete' && empty($plugin_label)) {
-      $display[]['error'] = 'Please specify a plugin label.';
-    }
-
-    if (empty($display)) {
-      if ($direction == 'complete') {
-        $display = $this->sfgApiPluginManager->referenceChainComplete();
-      }
-      if ($direction == 'up') {
-        $display = $this->sfgApiPluginManager->referenceChainUp($plugin_label);
-      }
-      if ($direction == 'down') {
-        $display = $this->sfgApiPluginManager->referenceChainDown($plugin_label);
       }
     }
 

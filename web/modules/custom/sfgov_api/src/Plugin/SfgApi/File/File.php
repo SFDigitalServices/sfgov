@@ -17,7 +17,6 @@ use Drupal\sfgov_api\SfgApiPluginBase;
  *   wag_bundle = "images",
  *   entity_id = {},
  *   langcode = {},
- *   is_stub = {},
  *   shape = {},
  * )
  */

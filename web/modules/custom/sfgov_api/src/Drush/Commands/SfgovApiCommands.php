@@ -225,7 +225,8 @@ class SfgovApiCommands extends DrushCommands {
       $this->output()->writeln($message);
     }
 
-    $payload = $this->sfgApiPluginManager->fetchPayload($plugin_label, $langcode, $entity_id, $options['stub']);
+    $shape = $options['stub'] ? 'stub' : 'wag';
+    $payload = $this->sfgApiPluginManager->fetchPayload($shape, $plugin_label, $langcode, $entity_id);
 
     if (empty($payload->getPayloadData())) {
       // Try to send an error message from the payload since it will be more
@@ -386,9 +387,9 @@ class SfgovApiCommands extends DrushCommands {
       $client_config = $this->apiUtilities->printCurlCommand($client_config);
     }
 
-    if ($options['stub'] && !empty($payload->getStubData())) {
+    if ($options['stub']) {
       $client_config['query']['stub'] = TRUE;
-      $client_config['json'] = $payload->getStubData();
+      // $client_config['json'] = $payload->getStubData();
     }
 
     if ($options['update']) {

@@ -15,7 +15,6 @@ use Drupal\taxonomy\Entity\Term;
  *   wag_bundle = "Campaign",
  *   entity_id = {},
  *   langcode = {},
- *   is_stub = {},
  *   shape = {},
  * )
  */

@@ -5,7 +5,9 @@ namespace Drupal\sfgov_api;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\sfgov_api\Payload\Payload;
+use Drupal\sfgov_api\Payload\FullPayload;
+use Drupal\sfgov_api\Payload\RawPayload;
+use Drupal\sfgov_api\Payload\StubPayload;
 
 /**
  * Base class for sfgov_api plugins.
@@ -109,13 +111,6 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
   }
 
   /**
-   * Get the stub status value.
-   */
-  public function getStubStatus() {
-    return (bool) $this->configuration['is_stub'] ?? $this->pluginDefinition['is_stub'];
-  }
-
-  /**
    * Get the shape value.
    */
   public function getShape() {
@@ -186,24 +181,31 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
    * Set the payload.
    */
   public function setPayload() {
-    $entity = $this->getEntity();
-    $base_data = [];
-    $custom_data = [];
-    $stub_status = $this->getStubStatus();
-    $shape = $this->getShape();
-
-    if ($entity) {
-      $base_data = $this->setBaseData($entity);
-      // Only fetch custom data if it is not a stub and shape is "wagtail"{}
-      $custom_data = [];
-      if (!$stub_status && $shape === 'wag') {
-        $custom_data = $this->setCustomData($entity);
-      }
-    }
     $requested_langcode = $this->getLangcode();
-    $wag_bundle = $this->getWagBundle();
     $plugin_errors = $this->pluginErrors;
-    $payload = new Payload($entity, $base_data, $custom_data, $requested_langcode, $wag_bundle, $plugin_errors, $shape);
+    $wag_bundle = $this->getWagBundle();
+    $entity = $this->getEntity();
+    if (!$entity) {
+      return $this->payload = [];
+    }
+
+    switch ($this->getShape()) {
+      case 'stub':
+        $base_data = $this->setBaseData($entity);
+        $payload = new StubPayload($entity, $requested_langcode, $plugin_errors, $wag_bundle, $base_data);
+        break;
+
+      case 'raw':
+        $payload = new RawPayload($entity, $requested_langcode, $plugin_errors, $wag_bundle);
+        break;
+
+      case 'wag':
+        $base_data = $this->setBaseData($entity);
+        $custom_data = $this->setCustomData($entity);
+        $payload = new FullPayload($entity, $requested_langcode, $plugin_errors, $wag_bundle, $base_data, $custom_data,);
+        break;
+    }
+
     return $this->payload = $payload;
   }
 

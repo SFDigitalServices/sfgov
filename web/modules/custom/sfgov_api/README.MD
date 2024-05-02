@@ -87,12 +87,6 @@ to update these references before pushing the node
 
 **For an entity type to work it has to have a corresponding plugin in sfgov_api/src/Plugin/SfgApi**
 
-### Reference chaining
-This module has some built in tools to help you track where and how entities are used within the broader site.
-- `/sfgov-api-viewer/reference-chain/complete`: shows a full reference chain of every referenced entity on the site (starting at the node level).
-- `/sfgov-api-viewer/reference-chain/up/{plugin_id}`: shows all of the entities that reference this plugin.
-- `/sfgov-api-viewer/reference-chain/down/{plugin_id}`: shows all of the entities that this plugin references.
-
 ## ECK entities
 There are a handful of ECK entities that need to be migrated to wagtail. They are technically their own
 entity type with bundles. For instance, ECK 'address' is its own entity type, and physical/event_address are

@@ -12,7 +12,6 @@ namespace Drupal\sfgov_api\Plugin\SfgApi\Media;
  *   wag_bundle = "images",
  *   entity_id = {},
  *   langcode = {},
- *   is_stub = {},
  *   shape = {},
  * )
  */

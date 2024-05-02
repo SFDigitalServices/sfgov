@@ -30,7 +30,12 @@ trait ApiFieldHelperTrait {
     foreach ($entities as $entity) {
       $entity_type = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
-      $langcode = $this->configuration['langcode'];
+      if ($shape === 'wag') {
+        $langcode = $this->configuration['langcode'];
+      }
+      elseif ($shape === 'raw') {
+        $langcode = $this->requestedLangcode;
+      }
       $plugin_label = $entity_type . '_' . $bundle;
 
       // Use the established plugin so that the field mappings are consistent.
@@ -38,7 +43,6 @@ trait ApiFieldHelperTrait {
         $plugin = $sfgov_api_plugin_manager->createInstance($plugin_label, [
           'langcode' => $langcode,
           'entity_id' => $entity->id(),
-          'is_stub' => FALSE,
           'shape' => $shape,
         ]);
         if ($shape === 'wag') {
@@ -49,7 +53,7 @@ trait ApiFieldHelperTrait {
         }
         elseif ($shape === 'raw') {
           $entities_data[] = [
-            'type' => $type ?:$plugin->getBundle(),
+            'type' => $type ?: $plugin->getBundle(),
             'value' => $plugin->getPayload()->getPayloadData(),
           ];
         }
