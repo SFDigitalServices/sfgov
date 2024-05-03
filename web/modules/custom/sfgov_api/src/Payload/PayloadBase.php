@@ -147,4 +147,8 @@ abstract class PayloadBase {
     return $this->metadata = $metadata;
   }
 
+  public function alterPayload($payload) {
+    return $this->payloadData = $payload;
+  }
+
 }

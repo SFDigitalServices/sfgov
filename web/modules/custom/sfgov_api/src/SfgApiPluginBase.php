@@ -204,6 +204,20 @@ abstract class SfgApiPluginBase extends PluginBase implements SfgApiInterface {
         $custom_data = $this->setCustomData($entity);
         $payload = new FullPayload($entity, $requested_langcode, $plugin_errors, $wag_bundle, $base_data, $custom_data,);
         break;
+
+      case 'mix':
+        $base_data = $this->setBaseData($entity);
+        $custom_data = $this->setCustomData($entity);
+        $wag_payload = new FullPayload($entity, $requested_langcode, $plugin_errors, $wag_bundle, $base_data, $custom_data);
+        $raw_payload = new RawPayload($entity, $requested_langcode, $plugin_errors, $wag_bundle);
+
+        $wag_payload->alterPayload([
+          'wag' => $wag_payload->getPayloadData(),
+          'raw' => $raw_payload->getPayloadData(),
+        ]);
+
+        $payload = $wag_payload;
+        break;
     }
 
     return $this->payload = $payload;
