@@ -66,14 +66,32 @@ as arguments and it will display that entity in the format that will be pushed t
 the plugins.
 
 Examples:
- - node step_by_step:610 in english: `/sfgov-api-viewer/entity/en/node/step_by_step/610`
- - node step_by_step:610 in spanish: `/sfgov-api-viewer/entity/es/node/step_by_step/610`
- - node step_by_step:611 in spanish: `/sfgov-api-viewer/entity/es/node/step_by_step/611`
+ - node step_by_step:610 in english: `/sfgov-api-viewer/entity/mix/en/node/step_by_step/610`
+ - node step_by_step:610 in spanish: `/sfgov-api-viewer/entity/mix/es/node/step_by_step/610`
+ - node step_by_step:611 in spanish: `/sfgov-api-viewer/entity/mix/es/node/step_by_step/611`
     - Gives an error because there is no spanish translation of this node.
- - media image:8825 in english `/sfgov-api-viewer/entity/en/media/image/8825`
- - paragraph process_step:1646 in english: `/sfgov-api-viewer/entity/en/paragraph/process_step/1646`
+ - media image:8825 in english `/sfgov-api-viewer/entity/mix/en/media/image/8825`
+ - paragraph process_step:1646 in english: `/sfgov-api-viewer/entity/mix/en/paragraph/process_step/1646`
 
-Note: If you see a field that looks like the following
+### Viewing different data styles
+The third argument in the viewer is used to display the drupal data in different formats. It accepts the
+following values
+
+ - `wag`: Data is formatted to specifically work with wagtail, this is fully using the existing plugin system and taking mappings from there (see `src/Payload/FullPayload`)
+ - `raw`: Data is assembled through an automated payload system the just gives the raw data in drupal (see `src/Payload/RawPayload`)
+ - `mix`: Returns data in both the previous formats in the following structure.
+
+ ```
+"wag": {
+  `wagtail shaped data`
+  }
+"raw": {
+  `raw data`
+}
+ ```
+
+### Empty References
+If you see a field that looks like the following
 ```
   "empty_reference": true,
   "entity_type": "node",
@@ -97,7 +115,7 @@ To solve this issue there are some workarounds at play:
 - The plugins themselves don't use a specialized base data plugin and instead
   go straight to SfgApiPluginBase.
 
-**note: To view eck entities in the API you need to use the Eck bundle like so `https://sfgov.lndo.site/sfgov-api-viewer/entity/en/location/physical/1`**
+**note: To view eck entities in the API you need to use the Eck bundle like so `https://sfgov.lndo.site/sfgov-api-viewer/entity/mix/en/location/physical/1`**
 
 # Pushing to Wagtail
 

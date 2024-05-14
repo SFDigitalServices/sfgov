@@ -42,6 +42,7 @@ class Campaign extends SfgApiNodeBase {
     $facts_title = $facts ? $facts[0]['value']['title'] : '';
     $fact_items = $facts ? $facts[0]['value']['facts'] : [];
 
+    $logo_image = $entity->get('field_logo')[0]->entity;
     $logo_alt_text = $entity->get('field_logo')[0]->alt;
 
     return [
@@ -50,7 +51,7 @@ class Campaign extends SfgApiNodeBase {
       'facts_title' => $facts_title,
       // @todo Blocked by fact_item construction.
       'fact_items' => $fact_items,
-      'logo' => $this->getReferencedEntity([$entity->get('field_logo')[0]->entity], FALSE, TRUE, FALSE, ['alt' => $logo_alt_text]),
+      'logo' => $logo_image ? $this->getReferencedEntity([$logo_image], FALSE, TRUE, FALSE, ['alt' => $logo_alt_text]) : [],
       // @todo This one is very complex.
       // 'additional_content' => $this->getReferencedData($entity->get('field_contents')->referencedEntities()),
       // 'spotlight' => $this->getReferencedData($entity->get('field_spotlight')->referencedEntities()),

@@ -122,6 +122,9 @@ trait ApiFieldHelperTrait {
   public function getReferencedEntity(array $entities, $id_only = FALSE, $flatten = FALSE, $multitype = FALSE, $extra = []) {
     $wagtail_utilities = \Drupal::service('sfgov_api.utilities');
     $entities_data = [];
+    if (empty($entities)) {
+      return $entities_data;
+    }
     foreach ($entities as $entity) {
       $entity_id = $entity->id();
       $entity_type = $entity->getEntityTypeId();
@@ -334,7 +337,7 @@ trait ApiFieldHelperTrait {
           $nid = $url_elements[1];
           if ($nid) {
             $node = $entityTypeManager->getStorage('node')->load($nid);
-            $wagtail_id = $this->getReferencedEntity([$node], TRUE);
+            $wagtail_id = $this->getReferencedEntity([$node], TRUE, TRUE);
           }
         }
         else {
@@ -350,7 +353,7 @@ trait ApiFieldHelperTrait {
         'type' => 'page',
         'value' => [
           'url' => $is_external ? $link['uri'] : '',
-          'page' => $is_external ? NULL : $wagtail_id[0],
+          'page' => $is_external ? NULL : $wagtail_id,
           'link_to' => $is_external ? 'url' : 'page',
           'link_text' => $link['title'],
         ],

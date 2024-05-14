@@ -70,21 +70,22 @@ class RawPayload extends PayloadBase {
     $metadata = $this->metadata;
     $fields = $this->entityFieldManager->getFieldDefinitions($metadata['entity_type'], $metadata['bundle']);
     foreach ($fields as $field_name => $field_definition) {
-      // Only proceed 'field_'. All of the relevant base field data is in the
-      // metadata.
-      if (strpos($field_name, 'field_') !== 0) {
-        continue;
-      }
-      $field_type = $field_definition->getType();
-      $field_data = $this->entity->get($field_name);
+      // Only proceed with data stored in added fields (starting with 'field_'
+      // generally, + default body field) All of the relevant base field data
+      // is in the metadata.
+      if (strpos($field_name, 'field_') === 0 || $field_name === 'body') {
 
-      if (isset($this->fieldTypeHandlers[$field_type])) {
-        $handler = $this->fieldTypeHandlers[$field_type];
-        $raw_data[$field_name] = call_user_func($handler, $field_data);
-      }
-      else {
-        // Use handleSimpleField as the default handler.
-        $raw_data[$field_name] = $this->handleSimpleField($field_data);
+        $field_type = $field_definition->getType();
+        $field_data = $this->entity->get($field_name);
+
+        if (isset($this->fieldTypeHandlers[$field_type])) {
+          $handler = $this->fieldTypeHandlers[$field_type];
+          $raw_data[$field_name] = call_user_func($handler, $field_data);
+        }
+        else {
+          // Use handleSimpleField as the default handler.
+          $raw_data[$field_name] = $this->handleSimpleField($field_data);
+        }
       }
     }
 

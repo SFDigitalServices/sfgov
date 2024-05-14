@@ -149,6 +149,11 @@ class ApiUtilities {
    *   The language code of the entity.
    */
   public function getWagtailId($drupal_id, $entity_type, $bundle, $langcode) {
+    // Ensure there is a corresponding plugin before proceeding.
+    if (!$this->sfgovApiPluginManager->validatePlugin($entity_type, $bundle)) {
+      return FALSE;
+    }
+
     // Drupal automatically converts hyphens to underscores in the db, so
     // manually change zh-hant to zh_hant.
     $langcode = str_replace('-', '_', $langcode);
