@@ -68,7 +68,8 @@ class RawPayload extends PayloadBase {
     $raw_data = [];
 
     $metadata = $this->metadata;
-    $fields = $this->entityFieldManager->getFieldDefinitions($metadata['entity_type'], $metadata['bundle']);
+    $entity_type = $metadata['entity_type'];
+    $fields = $this->entityFieldManager->getFieldDefinitions($entity_type, $metadata['bundle']);
     foreach ($fields as $field_name => $field_definition) {
       // Only proceed with data stored in added fields (starting with 'field_'
       // generally, + default body field) All of the relevant base field data
@@ -89,7 +90,7 @@ class RawPayload extends PayloadBase {
       }
     }
 
-    if ($metadata['entity_type'] === 'node') {
+    if ($entity_type === 'node' || $entity_type === 'media') {
       $raw_data['metadata'] = $metadata;
     }
 

@@ -141,6 +141,7 @@ abstract class PayloadBase {
         'title' => $entity->label(),
         'translations' => array_keys($entity->getTranslationLanguages()),
         'wag_bundle' => $this->wagBundle,
+        'published' => $entity->isPublished(),
       ];
     }
 
