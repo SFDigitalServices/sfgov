@@ -27,8 +27,8 @@ class Campaign extends SfgApiParagraphBase {
   public function setCustomData($entity) {
     return [
       'title' => $entity->get('field_title')->value,
-      'field_link' => $this->generateLinks($entity->get('field_link')->value),
-      'field_media' => $this->getReferencedEntity($entity->get('field_media')->value),
+      'field_link' => $this->generateLinks($entity->get('field_link')->getvalue()),
+      'field_media' => $this->getReferencedEntity($entity->get('field_media')->referencedEntities()),
     ];
   }
 

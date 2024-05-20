@@ -55,6 +55,7 @@ class RawPayload extends PayloadBase {
       'image' => [$this, 'handleImageField'],
       'address' => [$this, 'handleAddressField'],
       'smartdate' => [$this, 'handleSmartDateField'],
+      'office_hours' => [$this, 'handleOfficeHoursField'],
     ];
   }
 
@@ -120,11 +121,7 @@ class RawPayload extends PayloadBase {
    *   The processed data.
    */
   protected function handleLinkField($field_data) {
-    return [
-      'uri' => $field_data->uri,
-      'title' => $field_data->title,
-      'options' => $field_data->options,
-    ];
+    return $this->generateLinks($field_data->getValue());
   }
 
   /**
@@ -231,6 +228,19 @@ class RawPayload extends PayloadBase {
     // Note: This is the one value that isn't being presented "Raw" since the
     // logic of how it operates is built into the Drupal UI.
     return $this->convertSmartDate($field_data->getValue()[0]);
+  }
+
+  /**
+   * Handles office_hours fields.
+   *
+   * @param mixed $field_data
+   *   The field data.
+   *
+   * @return mixed
+   *   The processed data.
+   */
+  protected function handleOfficeHoursField($field_data) {
+    return $this->formatOfficeHours($field_data->getValue());
   }
 
 }
