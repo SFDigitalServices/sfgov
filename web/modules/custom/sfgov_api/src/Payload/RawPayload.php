@@ -91,7 +91,7 @@ class RawPayload extends PayloadBase {
       }
     }
 
-    if ($entity_type === 'node' || $entity_type === 'media') {
+    if ($entity_type === 'node' || $entity_type === 'media' || $entity_type === 'location') {
       $raw_data['metadata'] = $metadata;
     }
 
