@@ -385,7 +385,7 @@ trait ApiFieldHelperTrait {
         'file' => $file_path,
         'fid' => $image_data->entity->id(),
         // @todo , remove once we have a better source for alt text.
-        'alt_text' => $image_data->get('field_logo')[0]->get('alt')->getValue() ?: 'temp',
+        'alt_text' => $image_data->get('field_logo')[0]->get('alt')->getValue() ?: '',
       ];
     }
     return $file_data;

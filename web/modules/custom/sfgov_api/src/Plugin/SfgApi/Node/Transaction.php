@@ -132,7 +132,7 @@ class Transaction extends SfgApiNodeBase {
    */
   public function getSteps($data) {
     $steps = [
-      'section_title' => $data['title'] ?? 'temp',
+      'section_title' => $data['title'] ?? '',
       'section_specifics' => [],
     ];
     foreach ($data['value'] as $value) {

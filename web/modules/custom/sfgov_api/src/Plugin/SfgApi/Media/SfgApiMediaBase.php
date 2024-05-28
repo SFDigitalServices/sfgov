@@ -41,7 +41,7 @@ abstract class SfgApiMediaBase extends SfgApiPluginBase {
           'fid' => $file_data['fid'],
           'published' => $media->ispublished(),
           // @todo , remove once we have a better source for alt text.
-          'alt_text' => 'temp',
+          'alt_text' => '',
         ];
       }
     }
