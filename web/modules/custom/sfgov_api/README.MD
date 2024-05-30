@@ -186,6 +186,10 @@ an html page with the full error message (e.g. pushing a slug that already exist
 Every node that that is pushed registers data to its table. If it has an error then it will
 record the error id which can then be looked up in the `dw_migration_errors` table.
 
+## Listing nodes
+You can list all ids of a certain entity type and bundle by going to `/sfgov-api-info/entity/{entity_type}/{bundle}/id`
+(eg `/sfgov-api-info/entity/node/step_by_step/id`)
+
 # Wrangling Wagtail
 **Shape of Wagtail Data**
 If you need to see the shape of data in Wagtail, create that page, then go to its
