@@ -1,0 +1,52 @@
+<?php
+
+namespace Drupal\sfgov_api\Plugin\SfgApi\{{ entity_type_ucfirst }};
+
+{% if use_helper %}
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
+{% endif %}
+
+/**
+ * Plugin implementation of the sfgov_api.
+ *
+ * @SfgApi(
+ *   id = "{{entity_type}}_{{ bundle }}",
+ *   title = @Translation("{{ entity_type_ucfirst }} {{ bundle }}"),
+ *   bundle = "{{ bundle }}",
+ *   wag_bundle = "{{ bundle }}",
+ *   entity_id = {},
+ *   langcode = {},
+ *   referenced_plugins = {},
+ *   shape = {},
+ * )
+ */
+class {{ bundle_camelize }} extends SfgApi{{ entity_type_ucfirst }}Base {
+
+{% if use_helper %}
+  use ApiFieldHelperTrait;
+{% endif %}
+{% if not bundle_exists %}
+  // Not able to find a bundle with of this entity type. Please create one.
+{% endif %}
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setCustomData($entity) {
+    return [
+    {% if entity_fields %}
+    // Notes:
+    // - Fields below are just a starting point, refine these down to the fields you actually want.
+    // - The ->value function won't work for all fields and is just there to kickstart the process.
+    // - Make sure to manually double check and update the wag_bundle in the annotation above.
+    // - To small adjustments to the data only relevant to this entity, you add functions to this plugin.
+    // - Look at ApiFieldHelperTrait.php for broad functions that can be used across all entities (like entity references).
+    // - Make sure to manually updated the "referenced_plugins" value in the annotation.
+    {% for entity_field in entity_fields %}
+      '{{ entity_field }}' => $entity->get('{{ entity_field }}')->value,
+    {% endfor %}
+    {% endif %}
+    ];
+  }
+
+}
