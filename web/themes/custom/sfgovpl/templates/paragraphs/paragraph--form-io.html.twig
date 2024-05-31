@@ -83,6 +83,17 @@
     }
     Formio.createForm(el, dataSource, options)
       .then(function(form) {
+
+        /**
+         * form.form is the schema object fetched from the dataSource URL.
+         * If this schema came from the platform it should include a "formio"
+         * object that we can merge into the form's Formio instance, which
+         * defines the URLs for submissions and file uploads.
+         */
+        if (form.form.formio instanceof Object) {
+          Object.assign(form.formio, form.form.formio)
+        }
+
         var sfoptions = options.sfoptions || {}
         // perform sfoptions, hide certain elements
         if (sfoptions.hide instanceof Object) {
