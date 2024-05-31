@@ -68,10 +68,12 @@ function _sfgov_departments_validate(&$form, FormStateInterface $form_state) {
   // TODO: remove this check after existing public bodies have been migrated to department/agency content type
   // $form['field_public_body_meetings']['widget']['#cardinality'] = 2; // this property assignment effectively prevents adding more things to know past 2, but there is no feedback regarding the restriction
   $thingCount = 0;
-  foreach ($meetingThingToKnow as $meetingThing) {
-    if (is_array($meetingThing)) {
-      if (!empty($meetingThing['subform'])) {
-        $thingCount++;
+  if (!empty($meetingThingToKnow)) {
+    foreach ($meetingThingToKnow as $meetingThing) {
+      if (is_array($meetingThing)) {
+        if (!empty($meetingThing['subform'])) {
+          $thingCount++;
+        }
       }
     }
   }
