@@ -2,10 +2,13 @@
 
 {% if style == 'informational' %}
   {% set bgClass = 'bg-blue-2' %}
+  {% set icon = 'info' %}
 {% elseif style == 'critical' %}
   {% set bgClass = 'bg-red-3 text-white' %}
+  {% set icon = 'alert' %}
 {% elseif style == 'warning' %}
   {% set bgClass = 'bg-yellow-3' %}
+  {% set icon = 'warning' %}
 {% endif %}
 
 {% set dsClasses = [
@@ -26,7 +29,7 @@
   <div class="{{ bgClass }}">
     <div{{ attributes.addClass(dsClasses).setAttribute('data-exp', date_exp).setAttribute('data-style', style) }}>
       <div class="flex items-center">
-        <sfgov-icon class="mr-20" symbol="alert"></sfgov-icon>
+        <sfgov-icon class="mr-20" symbol="{{ icon }}"></sfgov-icon>
         <div>
           {{ title_prefix }}
           {{ title_suffix }}
