@@ -56,6 +56,7 @@ class RawPayload extends PayloadBase {
       'address' => [$this, 'handleAddressField'],
       'smartdate' => [$this, 'handleSmartDateField'],
       'office_hours' => [$this, 'handleOfficeHoursField'],
+      'file' => [$this, 'handleFileField'],
     ];
   }
 
@@ -243,4 +244,31 @@ class RawPayload extends PayloadBase {
     return $this->formatOfficeHours($field_data->getValue());
   }
 
+  /**
+   * Handles file fields.
+   *
+   * @param mixed $field_data
+   *   The field data.
+   *
+   * @return array
+   *   The processed data.
+   */
+  protected function handleFileField($field_data) {
+    $referenced_file = $field_data->referencedEntities()[0];
+    if (isset($referenced_file)) {
+      $file_uri = $referenced_file->getFileUri();
+
+      $data['target_id'] = $referenced_file->id();
+      $data['file'] = [
+        'filename' => $referenced_file->getFilename(),
+        'path' => \Drupal::service('file_system')->realpath($file_uri),
+        'uri' => $referenced_file->getFileUri(),
+        'fid' => $referenced_file->id(),
+        'filesize' => $referenced_file->getSize(),
+        'filemime' => $referenced_file->getMimeType(),
+      ];
+
+    }
+    return $data;
+  }
 }

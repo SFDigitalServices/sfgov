@@ -4,6 +4,7 @@ namespace Drupal\sfgov_api\Payload;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\sfgov_api\Plugin\SfgApi\ApiFieldHelperTrait;
 
 /**
  * Class for Json Payloads to be sent to Wagtail.
@@ -11,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 abstract class PayloadBase {
 
   use StringTranslationTrait;
+  use ApiFieldHelperTrait;
 
   /**
    * The metadata used to support the payload.
@@ -142,6 +144,8 @@ abstract class PayloadBase {
         'translations' => array_keys($entity->getTranslationLanguages()),
         'wag_bundle' => $this->wagBundle,
         'published' => $entity->isPublished(),
+        'created' => $this->convertTimestampToFormat($entity->getCreatedTime(), 'Y-m-d\TH:i:s'),
+        'changed' => $this->convertTimestampToFormat($entity->getChangedTime(), 'Y-m-d\TH:i:s')
       ];
     }
 
