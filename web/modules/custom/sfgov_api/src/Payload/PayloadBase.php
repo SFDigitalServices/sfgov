@@ -145,8 +145,12 @@ abstract class PayloadBase {
         'wag_bundle' => $this->wagBundle,
         'published' => $entity->isPublished(),
         'created' => $this->convertTimestampToFormat($entity->getCreatedTime(), 'Y-m-d\TH:i:s'),
-        'changed' => $this->convertTimestampToFormat($entity->getChangedTime(), 'Y-m-d\TH:i:s')
       ];
+    }
+
+    // All other entity types have a getChangedTime method except paragraphs.
+    if ($entity->getEntityTypeId() != 'paragraph') {
+      $metadata['changed'] = $this->convertTimestampToFormat($entity->getChangedTime(), 'Y-m-d\TH:i:s');
     }
 
     return $this->metadata = $metadata;
