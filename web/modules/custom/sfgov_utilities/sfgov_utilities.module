@@ -423,6 +423,7 @@ function sfgov_utilities_cron() {
 
   // Find all tmgmt jobs from the xtm provider and save them with a valid provider.
   $ids = \Drupal::entityQuery('tmgmt_job')
+    ->accessCheck(FALSE)
     ->condition('translator', ['xtm', 'xtm_test'], 'IN')
     ->execute();
   if (!empty($ids)) {
