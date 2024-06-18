@@ -179,6 +179,21 @@ jobs:
             fi
             ./scripts/custom/create-amplitude-release.sh
 
+  deploy_to_aws:
+    docker:
+      - image: continuumio/miniconda3
+    steps:
+      - run:
+          command: |
+            # TODO: I don't think we need to do apt-get etc and cna just run 51-55
+            apt-get update && apt-get install -y vim
+            pip install --root-user-action=ignore ansible-tower-cli
+            # TODO: Set this correctly in circle ci and we want need to rename them here
+            export TOWER_HOST=$AWX_HOST
+            export TOWER_OAUTH_TOKEN=$AWX_ACCESS_TOKEN
+            # TODO: Split these into two tasks or also just remove production since its really prod now
+            tower-cli job launch --job-template=$STAGING_JOB_ID --extra-vars=""  --wait --monitor
+
 workflows:
   version: 2
   build_and_test:
@@ -201,6 +216,12 @@ workflows:
               only: /v.*/
             branches:
               ignore: /.*/
+  on_commit:
+    jobs:
+      - deploy_to_aws:
+          filters:
+            branches:
+              only: aws-deploy
 
 experimental:
   notify:
