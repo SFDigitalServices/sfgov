@@ -8,6 +8,11 @@ function sfgovpl_theme_suggestions_block_alter(array &$suggestions, array $varia
     $clean_path = str_replace("-", "_", $clean_path);
     $suggestions []= 'block__sfgovpl_local_tasks_' . $clean_path;
   }
+
+  // Block suggestions for custom block bundles.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    array_splice($suggestions, 1, 0, 'block__type__' . $variables['elements']['content']['#block_content']->bundle());
+  }
 }
 
 /**
