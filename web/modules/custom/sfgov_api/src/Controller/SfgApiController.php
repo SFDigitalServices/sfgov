@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\sfgov_api\SfgApiPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Returns responses for sfgov_api routes.
@@ -20,10 +21,18 @@ class SfgApiController extends ControllerBase {
   protected $sfgApiPluginManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new SfgApiController.
    */
-  public function __construct(SfgApiPluginManager $sfgApiPluginManager) {
+  public function __construct(SfgApiPluginManager $sfgApiPluginManager, EntityTypeManagerInterface $entityTypeManager) {
     $this->sfgApiPluginManager = $sfgApiPluginManager;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -32,6 +41,7 @@ class SfgApiController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.sfgov_api'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -70,6 +80,35 @@ class SfgApiController extends ControllerBase {
       }
       else {
         $display = $payload->getPayloadData();
+      }
+    }
+
+    return new JsonResponse($display);
+  }
+
+  /**
+   * View the entity info for the associated arguments.
+   */
+  public function viewEntityInfo($entity_type, $bundle, $filter) {
+    $display = [];
+    if (empty($entity_type)) {
+      $display[]['error'] = 'Please specify an entity type.';
+    }
+    if (empty($bundle)) {
+      $display[]['error'] = 'Please specify a bundle.';
+    }
+    if (empty($filter)) {
+      $display[]['error'] = 'Please specify a filter.';
+    }
+
+    if (empty($display)) {
+      if ($filter === 'id') {
+        $bundle_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('bundle');
+        $query = $this->entityTypeManager->getStorage($entity_type)->getQuery()
+          ->accessCheck(FALSE)
+          ->condition($bundle_key, $bundle);
+        $entity_ids = $query->execute();
+        $display = array_values($entity_ids);
       }
     }
 
