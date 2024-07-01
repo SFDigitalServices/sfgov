@@ -58,12 +58,12 @@ class Transaction extends SfgApiNodeBase {
    */
   public function getWhatToDoValues($entity) {
     $step_fields = [
-      'field_step_email',
-      'field_step_in_person',
-      'field_step_mail',
       'field_step_online',
-      'field_step_other',
       'field_step_phone',
+      'field_step_in_person',
+      'field_step_email',
+      'field_step_mail',
+      'field_step_other',
     ];
 
     $data = [];
