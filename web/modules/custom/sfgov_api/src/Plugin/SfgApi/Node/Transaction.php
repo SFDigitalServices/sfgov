@@ -73,6 +73,9 @@ class Transaction extends SfgApiNodeBase {
           if ($value) {
             switch ($value['type']) {
               case 'step':
+                if ($field_label == 'field_step_other') {
+                  $value['value']['title'] = $entity->get('field_step_other_title')[0]->value;
+                }
                 $data[] = $this->getSteps($value['value']);
                 break;
 
