@@ -58,12 +58,12 @@ class Transaction extends SfgApiNodeBase {
    */
   public function getWhatToDoValues($entity) {
     $step_fields = [
-      'field_step_email',
-      'field_step_in_person',
-      'field_step_mail',
       'field_step_online',
-      'field_step_other',
       'field_step_phone',
+      'field_step_in_person',
+      'field_step_email',
+      'field_step_mail',
+      'field_step_other',
     ];
 
     $data = [];
@@ -73,6 +73,9 @@ class Transaction extends SfgApiNodeBase {
           if ($value) {
             switch ($value['type']) {
               case 'step':
+                if ($field_label == 'field_step_other') {
+                  $value['value']['title'] = $entity->get('field_step_other_title')[0]->value;
+                }
                 $data[] = $this->getSteps($value['value']);
                 break;
 
