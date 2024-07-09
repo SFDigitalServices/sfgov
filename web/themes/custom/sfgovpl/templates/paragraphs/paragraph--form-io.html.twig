@@ -51,18 +51,15 @@
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     <div id="formio-{{ form_id }}"
-      data-source="{{- endpoint -}}" data-options="{{ options|escape }}" data-translations="{{ content.formio_json_data }}">
-    </div>
+      data-source="{{- endpoint -}}"
+      data-options="{{ options|escape }}"
+      data-translations="{{ content.formio_json_data }}"
+      data-confirmation-url="{{ paragraph.field_formio_confirmation_url.value|trim }}"
+    ></div>
 
 {% block content %}
 <script>
 (function() {
-
-  var confirmationURL = {{
-    paragraph.field_formio_confirmation_url.value is empty
-      ? "null"
-      : paragraph.field_formio_confirmation_url.value|json_encode(constant('JSON_PRETTY_PRINT'))|raw
-  }}
 
   var formLanguageMap = {
     zh:       'zh-hant',
@@ -72,6 +69,7 @@
   window.addEventListener('load', function() {
     // keeping this as a DOM for patch.js
     var el = document.getElementById('formio-{{ form_id }}')
+    var confirmationURL = el.getAttribute('data-confirmation-url')
     var options = safeJSONParse(el.getAttribute('data-options'))
     options.i18n = safeJSONParse(el.getAttribute('data-translations'))
 
