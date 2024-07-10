@@ -1,6 +1,6 @@
 /* eslint brace-style: ['error', '1tbs'] */
 ;(function () { // eslint-disable-line no-extra-semi
-  const el = document.querySelector('[id^="formio-"]')
+  const el = document.getElementById('formio-form')
   const confirmationURL = el.getAttribute('data-confirmation-url')
   const options = safeJSONParse(el.getAttribute('data-options')) || {}
   options.i18n = safeJSONParse(el.getAttribute('data-translations')) || {}

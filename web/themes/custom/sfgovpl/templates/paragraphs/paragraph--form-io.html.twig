@@ -39,7 +39,6 @@
  */
 #}
 {{ attach_library('sfgovpl/formio-form-page') }}
-{% set form_id = content.field_formio_data_source['#formio_id']|clean_id %}
 {% set classes = [
   'paragraph--formio',
   'paragraph--formio--view-mode--' ~ view_mode|clean_class,
@@ -48,7 +47,7 @@
 
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
-    <div id="formio-{{ form_id }}"
+    <div id="formio-form"
       data-source="{{ paragraph.field_formio_data_source.value|trim }}"
       data-options="{{ paragraph.field_formio_render_options.value|default('{}')|escape }}"
       data-translations="{{ content.formio_json_data }}"
