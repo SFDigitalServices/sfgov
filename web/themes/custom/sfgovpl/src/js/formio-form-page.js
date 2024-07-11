@@ -146,6 +146,9 @@
         : error instanceof Object ? error.message : null
   }
 
+  /**
+   * @param {Map<string, string>} classes
+   */
   function customAddCssClassById (classes) {
     for (const key in classes) {
       const el = document.getElementById(key)
@@ -155,15 +158,22 @@
     }
   }
 
-  function customHideElements (elements) {
-    elements.forEach((klass, index) => {
+  /**
+   * @param {string[]} klasses
+   */
+  function customHideElements (klasses) {
+    for (const klass of klasses) {
       const hide = document.getElementsByClassName(klass)
       for (let i = 0; i < hide.length; i++) {
         hide[i].style.display = 'none'
       }
-    })
+    }
   }
 
+  /**
+   * @param {string} name
+   * @param {string} value
+   */
   function setCookie (name, value) {
     // now + plus 90 days
     // eslint-disable-next-line no-magic-numbers
@@ -175,13 +185,17 @@
     ].join('; ')
   }
 
+  /**
+   * @param {string} name
+   * @returns {string?}
+   */
   function getCookie (name) {
     const match = document.cookie.match(new RegExp(name + '=([^;]+)'))
     return match ? decodeURIComponent(match[1]) : null
   }
 
   function manageFormCookies (cookies, form, populateAll) {
-    cookies.forEach((item, index) => {
+    for (const item of cookies) {
       let field = document.querySelector(`input[name*="${item}"]`)
       if (!field) {
         return
@@ -202,14 +216,12 @@
 
         if (field) { // populate fields with cookie values
           if (fieldtype === 'radio' || fieldtype === 'checkbox') {
-            if (cookieval?.includes(field.value)) {
-              field.checked = true
-            }
+            field.checked = cookieval?.includes(field.value)
           } else {
             field.value = cookieval
           }
         }
-        // XXX: this condition never hits
+        /* XXX: this condition never hits */
         // else if (field) {
         //   // set cookie for first time
         //   if (fieldtype === 'radio' || fieldtype === 'checkbox') {
@@ -219,13 +231,14 @@
         //     setCookie(item, field.value)
         //   }
         // }
+
         // updates cookie if value changed
         field.addEventListener('change', function () {
           // console.log(`setting cookie for ${item} with value ${this.value}`)
           setCookie(item, this.value)
         })
       }
-    })
+    }
   }
 
   function safeJSONParse (str) {
