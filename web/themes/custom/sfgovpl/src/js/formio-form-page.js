@@ -108,13 +108,36 @@
         }
       })
 
-      form.onAny((type, error) => {
-        if (type.match(/error/i)) {
+      // measure file uploads
+      form.on('fileUploadingStart', () => measure('fileUploadStart'))
+      form.on('fileUploadingEnd', () => measure('fileUploadEnd'))
+
+      const IGNORE_ERROR_TYPES = [
+        // these are component-level validation errors that fire every time a
+        // component is marked as invalid, dispatched for each component
+        // individually, and for text inputs on each keystroke
+        'componentError',
+        'componentChange'
+      ]
+
+      form.onAny((type, event, ...rest) => {
+        // remove the 'formio.' prefix
+        const subtype = type.replace('formio.', '')
+        if (IGNORE_ERROR_TYPES.includes(subtype)) {
+          // do nothing
+        } else if (subtype.match(/error/i)) {
           measure('error', {
             errorType: type,
-            message: getErrorMessage(error)
+            message: getErrorMessage(event)
           })
         }
+        /**
+         * Uncomment this for local development to see messages for events that
+         * haven't been handled explicitly
+         */
+        // if (![type, subtype].some(t => form.events.listeners(t).length)) {
+        //   console.debug('ignoring event', type, ...rest)
+        // }
       })
     })
     .catch(error => {
@@ -142,7 +165,7 @@
     return typeof error === 'string'
       ? error
       : Array.isArray(error)
-        ? `${error.length} error${(error.length === 1 ? '' : 's')}`
+        ? `${error.length} validation error${(error.length === 1 ? '' : 's')}`
         : error instanceof Object ? error.message : null
   }
 
