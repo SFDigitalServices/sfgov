@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint brace-style: ['error', '1tbs'] */
 ;(function () { // eslint-disable-line no-extra-semi
   const { Formio } = window
@@ -12,7 +13,10 @@
     // requests made once the form is loaded, except file uploads
     wrapRequestPromise: wrapRequest,
     // file upload (and download) requests
-    wrapFileRequestPromise: wrapFileRequest
+    wrapFileRequestPromise: wrapFileRequest,
+    // finally, hook into every fetch response so that we can raise more
+    // meaningful errors when they fail
+    requestResponse: wrapResponseError
   }, 'sfgov.measurement')
 
   const el = document.getElementById('formio-form')
@@ -152,19 +156,7 @@
       // })
     })
     .catch(error => {
-      console.error('form load error:', error)
-      /**
-       * Errors initializing the form (either in our code or in formio-sfds)
-       * should throw an Error object that we can do something with. formio.js
-       */
-      measure('error', error instanceof Error
-        ? {
-            message: error.message || error,
-            stack: error.stack
-          }
-        : {
-            error
-          })
+      measure('error', getFormErrorVars(error))
     })
 
   // add an event and/or measurement variables to the GA data layer
@@ -183,6 +175,53 @@
     } catch (error) {
       console.error('unable to measure(', vars, '):', error)
     }
+  }
+
+  /**
+   * Attempt to turn a formio.js error or error message into useful measurement
+   * variables.
+   *
+   * @param {any} error
+   * @returns {Map<string, any>}
+   */
+  function getFormErrorVars (error) {
+    if (error instanceof Error) {
+      return {
+        message: error.message,
+        stack: error.stack
+      }
+    } else if (!error || error === 'Invalid alias') {
+      return {
+        error: `Form schema failed to load ("${error}")`
+      }
+    }
+    return { error }
+  }
+
+  /**
+   * formio.js does some funky stuff with failed responses that obfuscate the
+   * cause of the request failing. Throwing an error with a meaningful message
+   * here causes the request promise to reject, in which case Formio.request()
+   * includes the thrown error's message in the following:
+   *
+   * `Could not connect to API server (${err.message}): ${url}`
+   * https://github.com/formio/formio.js/blob/4.20.x/src/Formio.js#L1064
+   *
+   * This text is then displayed as-is on the page, rather than the text of the
+   * response, which is not typically useful ("Invalid alias" for forms that
+   * have moved, or perhaps even an empty string if the request was blocked at
+   * the network level).
+   *
+   * @param {Response} response
+   * @param {any} _Formio
+   * @param {Map<string, any>} data
+   * @returns {void}
+   */
+  function wrapResponseError (response) {
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    return response
   }
 
   /**
@@ -206,8 +245,11 @@
         measure('requestEnd', { ...vars, 'request.time': Date.now() - t })
         return value
       }, error => {
-        measure('requestError', { ...vars, 'request.time': Date.now() - t })
-        throw error
+        measure('requestError', {
+          ...vars,
+          'request.time': Date.now() - t
+        })
+        throw error || `Unable to load URL: ${url}`
       })
   }
 
@@ -230,7 +272,7 @@
     measure('fileUploadStart', vars)
     return promise
       .then(value => {
-        measure('fileUploadStart', { ...vars, 'request.time': Date.now() - t })
+        measure('fileUploadEnd', { ...vars, 'request.time': Date.now() - t })
         return value
       }, error => {
         measure('fileUploadError', {
