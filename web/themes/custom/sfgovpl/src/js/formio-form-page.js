@@ -1,11 +1,27 @@
 /* eslint brace-style: ['error', '1tbs'] */
 ;(function () { // eslint-disable-line no-extra-semi
+  const { Formio } = window
+
+  /**
+   * Create a formio.js plugin with hooks for different types of requests:
+   * (see: https://help.form.io/developers/fetch-plugin-api)
+   */
+  Formio.registerPlugin({
+    // requests made before the form is loaded, including the form schema
+    wrapStaticRequestPromise: wrapRequest,
+    // requests made once the form is loaded, except file uploads
+    wrapRequestPromise: wrapRequest,
+    // file upload (and download) requests
+    wrapFileRequestPromise: wrapFileRequest
+  }, 'sfgov.measurement')
+
   const el = document.getElementById('formio-form')
   const confirmationURL = el.getAttribute('data-confirmation-url')
   const options = safeJSONParse(el.getAttribute('data-options')) || {}
   options.i18n = safeJSONParse(el.getAttribute('data-translations')) || {}
 
-  let url = el.getAttribute('data-source')
+  const formURL = el.getAttribute('data-source')
+  let url = formURL
   const params = new URL(location).searchParams
   const submissionId = params.get('submission')
   if (submissionId) {
@@ -41,132 +57,189 @@
         manageFormCookies(sfoptions.cookies, form, true)
       }
 
-      // perform custom action on nextPage event
-      form.on('nextPage', event => {
-        measure('nextPage', { page: event.page })
-        // set form cookies, if there are any
-        if (sfoptions.cookies) {
-          manageFormCookies(sfoptions.cookies, form, false)
-        }
-      })
-
-      form.on('prevPage', event => {
-        measure('prevPage', { page: event.page })
-      })
-
-      form.on('submit', (submission, saved) => {
-        measure('submit', {
-          'submission.state': submission.state
-        })
-      })
-
-      form.on('saveDraft', submission => {
-        measure('saveDraft')
-      })
-
-      // What to do when the submit begins.
-      form.on('submitDone', submission => {
-        measure('submitDone')
-        // custom options defined in Form.io render options field
-        if (options.redirects instanceof Object) {
-          if (sfoptions.hide instanceof Object) {
-            customHideElements(sfoptions.hide)
+      /**
+       * Define form event handlers in a mapping so that we don't have to call
+       * form.on('event', handler) for each one, and so that we can check in the
+       * onAny() callback for whether there's an explicit handler for the event
+       */
+      const handlers = {
+        nextPage (event) {
+          measure('nextPage', { page: event.page })
+          // set form cookies, if there are any
+          if (sfoptions.cookies) {
+            manageFormCookies(sfoptions.cookies, form, false)
           }
-          for (const key in options.redirects) {
-            const value = options.redirects[key]
-            // only one "redirect" should be "yes", this is set in the form.io form
-            if (submission.data[key] === 'yes') {
-              measure('redirect', {
-                reason: 'sfoptions.redirects',
-                url: value
-              })
-              window.location = value
-              break
+        },
+
+        prevPage (event) {
+          measure('prevPage', { page: event.page })
+        },
+
+        submit (submission) {
+          measure('submit', {
+            'submission.state': submission.state
+          })
+        },
+
+        saveDraft () {
+          measure('saveDraft')
+        },
+
+        submitDone (submission) {
+          measure('submitDone')
+          // custom options defined in Form.io render options field
+          if (options.redirects instanceof Object) {
+            if (sfoptions.hide instanceof Object) {
+              customHideElements(sfoptions.hide)
+            }
+            for (const key in options.redirects) {
+              const value = options.redirects[key]
+              // only one "redirect" should be "yes", this is set in the form.io form
+              if (submission.data[key] === 'yes') {
+                measure('redirect', {
+                  reason: 'sfoptions.redirects',
+                  url: value
+                })
+                window.location = value
+                break
+              }
             }
           }
-        }
 
-        // we want to navigate to the confirmation page only on final submission.
-        // saving a draft also triggers the submitDone event, but we want to keep
-        // the user on the current page in that case.
-        if (confirmationURL && submission.state !== 'draft') {
-          const formLanguageMap = {
-            zh: 'zh-hant',
-            'zh-TW': 'zh-hant'
+          // we want to navigate to the confirmation page only on final submission.
+          // saving a draft also triggers the submitDone event, but we want to keep
+          // the user on the current page in that case.
+          if (confirmationURL && submission.state !== 'draft') {
+            const formLanguageMap = {
+              zh: 'zh-hant',
+              'zh-TW': 'zh-hant'
+            }
+            // see: <https://github.com/formio/formio.js/pull/3592> for more details
+            let lang = form.language
+            lang = formLanguageMap[lang] || lang
+            const actualUrl = lang && lang !== 'en'
+              ? confirmationURL.replace('{lang}', lang)
+              : confirmationURL.replace('{lang}/', '')
+            measure('redirect', {
+              reason: 'confirmation',
+              url: actualUrl
+            })
+            window.location = actualUrl
           }
-          // see: <https://github.com/formio/formio.js/pull/3592> for more details
-          let lang = form.language
-          lang = formLanguageMap[lang] || lang
-          const actualUrl = lang && lang !== 'en'
-            ? confirmationURL.replace('{lang}', lang)
-            : confirmationURL.replace('{lang}/', '')
-          measure('redirect', {
-            reason: 'confirmation',
-            url: actualUrl
-          })
-          window.location = actualUrl
-        }
-      })
+        },
 
-      // measure file uploads
-      form.on('fileUploadingStart', () => measure('fileUploadStart'))
-      form.on('fileUploadingEnd', () => measure('fileUploadEnd'))
-
-      const IGNORE_ERROR_TYPES = [
-        // these are component-level validation errors that fire every time a
-        // component is marked as invalid, dispatched for each component
-        // individually, and for text inputs on each keystroke
-        'componentError',
-        'componentChange'
-      ]
-
-      form.onAny((type, event, ...rest) => {
-        // remove the 'formio.' prefix
-        const subtype = type.replace('formio.', '')
-        if (IGNORE_ERROR_TYPES.includes(subtype)) {
-          // do nothing
-        } else if (subtype.match(/error/i)) {
-          measure('error', {
-            errorType: type,
-            message: getErrorMessage(event)
+        // 'error' events are validation errors
+        error (event) {
+          measure('validationError', {
+            count: Array.isArray(event) ? event.length : 1,
+            message: event?.message || null
           })
         }
-        /**
-         * Uncomment this for local development to see messages for events that
-         * haven't been handled explicitly
-         */
-        // if (![type, subtype].some(t => form.events.listeners(t).length)) {
-        //   console.debug('ignoring event', type, ...rest)
-        // }
-      })
+      }
+
+      for (const [type, handler] of Object.entries(handlers)) {
+        form.on(type, handler)
+      }
+
+      /**
+       * Uncomment this for local development to see messages for events that
+       * haven't been handled explicitly
+       */
+      // form.onAny((type, event, ...rest) => {
+      //   if (!handlers[type.replace(/^formio\./, '')]) {
+      //     console.debug('unhandled event: "%s":', type, event, ...rest)
+      //   }
+      // })
     })
     .catch(error => {
-      measure('error', {
-        message: error.message,
-        stack: error.stack
-      })
+      console.error('form load error:', error)
+      /**
+       * Errors initializing the form (either in our code or in formio-sfds)
+       * should throw an Error object that we can do something with. formio.js
+       */
+      measure('error', error instanceof Error
+        ? {
+            message: error.message || error,
+            stack: error.stack
+          }
+        : {
+            error
+          })
     })
 
   // add an event and/or measurement variables to the GA data layer
   function measure (event, vars) {
-    if (typeof event === 'object') {
-      vars = event
-    } else if (typeof event === 'string') {
-      vars = Object.assign(
-        { event: `form.${event}` },
-        vars
-      )
+    try {
+      if (typeof event === 'object') {
+        vars = event
+      } else if (typeof event === 'string') {
+        vars = Object.assign(
+          { event: `form.${event}` },
+          vars
+        )
+      }
+      console.debug('measure', vars)
+      window.dataLayer.push(vars)
+    } catch (error) {
+      console.error('unable to measure(', vars, '):', error)
     }
-    console.debug('measure', vars)
-    window.dataLayer.push(vars)
   }
 
-  function getErrorMessage (error) {
-    return typeof error === 'string'
-      ? error
-      : Array.isArray(error)
-        ? `${error.length} validation error${(error.length === 1 ? '' : 's')}`
-        : error instanceof Object ? error.message : null
+  /**
+   * @typedef {function} RequestWrapper
+   * @param {Promise<any>} promise
+   * @param {Map<string, string>} requestArgs
+   * @returns {Promise<any>}
+   */
+
+  /** @type {RequestWrapper} */
+  function wrapRequest (promise, { url, method, type }) {
+    const t = Date.now()
+    const vars = {
+      'request.url': url,
+      'request.method': method,
+      'request.type': type
+    }
+    measure('requestStart', vars)
+    return promise
+      .then(value => {
+        measure('requestEnd', { ...vars, 'request.time': Date.now() - t })
+        return value
+      }, error => {
+        measure('requestError', { ...vars, 'request.time': Date.now() - t })
+        throw error
+      })
+  }
+
+  /**
+   * File requests have different data in their requestArgs object,
+   * and we want to dispatch different events for these.
+   *
+   * @type {RequestWrapper}
+   */
+  function wrapFileRequest (promise, { file, fileName, provider }) {
+    const t = Date.now()
+    const { size, type } = file || {}
+    const vars = {
+      'upload.url': `${formURL}/storage/${provider}`,
+      'upload.provider': provider,
+      'file.size': size,
+      'file.type': type,
+      'file.name': fileName
+    }
+    measure('fileUploadStart', vars)
+    return promise
+      .then(value => {
+        measure('fileUploadStart', { ...vars, 'request.time': Date.now() - t })
+        return value
+      }, error => {
+        measure('fileUploadError', {
+          ...vars,
+          error: error.message,
+          'request.time': Date.now() - t
+        })
+        throw error
+      })
   }
 
   /**
