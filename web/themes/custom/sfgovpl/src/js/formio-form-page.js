@@ -23,27 +23,28 @@
     .then(form => {
       // include form language in future measurements
       measure({
-        'form.language': form.language
+        'form.language': form.language,
+        'form.page': 0
       })
       measure('load')
 
-      // perform custom action on nextPage event
       form.on('nextPage', event => {
-        measure('nextPage', { page: event.page })
+        measure('nextPage')
+        measure({ 'form.page': event.page })
+      })
+      form.on('prevPage', event => {
+        measure('prevPage')
+        measure({ 'form.page': event.page })
       })
 
-      form.on('prevPage', event => {
-        measure('prevPage', { page: event.page })
+      form.on('saveDraft', submission => {
+        measure('saveDraft')
       })
 
       form.on('submit', (submission, saved) => {
         measure('submit', {
           'submission.state': submission.state
         })
-      })
-
-      form.on('saveDraft', submission => {
-        measure('saveDraft')
       })
 
       // What to do when the submit begins.
