@@ -90,10 +90,14 @@
         if (IGNORE_ERROR_TYPES.includes(subtype)) {
           // do nothing
         } else if (subtype.match(/error/i)) {
-          measure('error', {
-            errorType: type,
-            message: getErrorMessage(event)
-          })
+          if (Array.isArray(event)) {
+            // console.debug('validation errors', event)
+          } else {
+            measure('error', {
+              errorType: type,
+              message: getErrorMessage(event)
+            })
+          }
         }
         /**
          * Uncomment this for local development to see messages for events that
