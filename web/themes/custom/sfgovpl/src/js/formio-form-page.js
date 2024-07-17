@@ -47,20 +47,6 @@
       })
       measure('load')
 
-      const sfoptions = options.sfoptions || {}
-      // perform sfoptions, hide certain elements
-      if (sfoptions.hide instanceof Object) {
-        customHideElements(sfoptions.hide)
-      }
-      // add css class to element(by id)
-      if (sfoptions.addClass) {
-        customAddCssClassById(sfoptions.addClass)
-      }
-      // if cookies are defined, populate the form field with cookie value.
-      if (sfoptions.cookies) {
-        manageFormCookies(sfoptions.cookies, form, true)
-      }
-
       /**
        * Define form event handlers in a mapping so that we don't have to call
        * form.on('event', handler) for each one, and so that we can check in the
@@ -69,10 +55,6 @@
       const handlers = {
         nextPage (event) {
           measure('nextPage', { page: event.page })
-          // set form cookies, if there are any
-          if (sfoptions.cookies) {
-            manageFormCookies(sfoptions.cookies, form, false)
-          }
         },
 
         prevPage (event) {
@@ -91,24 +73,6 @@
 
         submitDone (submission) {
           measure('submitDone')
-          // custom options defined in Form.io render options field
-          if (options.redirects instanceof Object) {
-            if (sfoptions.hide instanceof Object) {
-              customHideElements(sfoptions.hide)
-            }
-            for (const key in options.redirects) {
-              const value = options.redirects[key]
-              // only one "redirect" should be "yes", this is set in the form.io form
-              if (submission.data[key] === 'yes') {
-                measure('redirect', {
-                  reason: 'sfoptions.redirects',
-                  url: value
-                })
-                window.location = value
-                break
-              }
-            }
-          }
 
           // we want to navigate to the confirmation page only on final submission.
           // saving a draft also triggers the submitDone event, but we want to keep
@@ -282,101 +246,6 @@
         })
         throw error
       })
-  }
-
-  /**
-   * @param {Map<string, string>} classes
-   */
-  function customAddCssClassById (classes) {
-    for (const key in classes) {
-      const el = document.getElementById(key)
-      if (el) {
-        el.classList.add(classes[key])
-      }
-    }
-  }
-
-  /**
-   * @param {string[]} klasses
-   */
-  function customHideElements (klasses) {
-    for (const klass of klasses) {
-      const hide = document.getElementsByClassName(klass)
-      for (let i = 0; i < hide.length; i++) {
-        hide[i].style.display = 'none'
-      }
-    }
-  }
-
-  /**
-   * @param {string} name
-   * @param {string} value
-   */
-  function setCookie (name, value) {
-    // now + plus 90 days
-    // eslint-disable-next-line no-magic-numbers
-    const expires = 90 * 24 * 3600 * 1000
-    document.cookie = [
-      `${name}=${encodeURIComponent(value)}`,
-      'path=/',
-      `expires=${new Date(Date.now() + expires).toGMTString()}`
-    ].join('; ')
-  }
-
-  /**
-   * @param {string} name
-   * @returns {string?}
-   */
-  function getCookie (name) {
-    const match = document.cookie.match(new RegExp(name + '=([^;]+)'))
-    return match ? decodeURIComponent(match[1]) : null
-  }
-
-  function manageFormCookies (cookies, form, populateAll) {
-    for (const item of cookies) {
-      let field = document.querySelector(`input[name*="${item}"]`)
-      if (!field) {
-        return
-      }
-      const fieldtype = field.type
-
-      // special type: select, because formio renders select as divs
-      const selectField = document.querySelector(`select[name*="${item}"]`)
-      if (selectField) {
-        field = selectField
-      }
-      if (field || populateAll) {
-        const cookieval = getCookie(item)
-        if (cookieval) {
-          // set submission data, form validation needs this
-          form._submission.data[item] = cookieval
-        }
-
-        if (field) { // populate fields with cookie values
-          if (fieldtype === 'radio' || fieldtype === 'checkbox') {
-            field.checked = cookieval?.includes(field.value)
-          } else {
-            field.value = cookieval
-          }
-        }
-        /* XXX: this condition never hits */
-        // else if (field) {
-        //   // set cookie for first time
-        //   if (fieldtype === 'radio' || fieldtype === 'checkbox') {
-        //     setCookie(item, field.checked)
-        //   }
-        //   else {
-        //     setCookie(item, field.value)
-        //   }
-        // }
-
-        // updates cookie if value changed
-        field.addEventListener('change', function () {
-          // console.log(`setting cookie for ${item} with value ${this.value}`)
-          setCookie(item, this.value)
-        })
-      }
-    }
   }
 
   function safeJSONParse (str) {
