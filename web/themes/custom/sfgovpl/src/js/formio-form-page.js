@@ -164,17 +164,17 @@
 
   /**
    * formio.js does some funky stuff with failed responses that obfuscate the
-   * cause of the request failing. Throwing an error with a meaningful message
-   * here causes the request promise to reject, in which case Formio.request()
+   * cause of the failure. Throwing an error with a meaningful message here
+   * causes the request promise to reject, in which case Formio.request()
    * includes the thrown error's message in the following:
    *
    * `Could not connect to API server (${err.message}): ${url}`
    * https://github.com/formio/formio.js/blob/4.20.x/src/Formio.js#L1064
    *
    * This text is then displayed as-is on the page, rather than the text of the
-   * response, which is not typically useful ("Invalid alias" for forms that
-   * have moved, or perhaps even an empty string if the request was blocked at
-   * the network level).
+   * response, which is not typically useful: "Invalid alias" for forms that
+   * have moved, or possibly an empty string if the request was blocked at the
+   * network level.
    *
    * @param {Response} response
    * @param {any} _Formio
