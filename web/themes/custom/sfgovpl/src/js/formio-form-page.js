@@ -102,8 +102,8 @@
           measure('validation_error', {
             validation_count: Array.isArray(event) ? event.length : 1,
             validation_message: Array.isArray(event)
-              ? event.map(e => JSON.stringify(e)).join('; ')
-              : event?.message || JSON.stringify(event)
+              ? event.map(err => err.message).join('; ')
+              : event.message
           })
         }
       }
@@ -155,7 +155,7 @@
         error_message: `Form schema failed to load (${JSON.stringify(error)})`
       }
     }
-    return { error_message: JSON.stringify(error) }
+    return { error_message: error.message || error }
   }
 
   /**
