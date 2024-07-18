@@ -68,9 +68,7 @@
         },
 
         submit (submission) {
-          measure('submit', {
-            'submission.state': submission.state
-          })
+          measure('submit')
         },
 
         saveDraft () {
@@ -108,6 +106,7 @@
             'error.count': Array.isArray(event) ? event.length : 1,
             'error.message': event?.message
           })
+          measure({ error: null })
         }
       }
 
@@ -127,6 +126,7 @@
     })
     .catch(error => {
       measure('error', getFormErrorVars(error))
+      measure({ error: null })
     })
 
   // add an event and/or measurement variables to the GA data layer
@@ -221,6 +221,7 @@
         })
         throw error || `Unable to load URL: ${url}`
       })
+      .finally(() => measure({ request: null }))
   }
 
   /**
@@ -251,6 +252,7 @@
         })
         throw error
       })
+      .finally(() => measure({ file: null }))
   }
 
   function safeJSONParse (str) {
