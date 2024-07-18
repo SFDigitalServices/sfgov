@@ -54,11 +54,11 @@
        */
       const handlers = {
         nextPage (event) {
-          measure('nextPage', { page: event.page })
+          measure('nextPage', { 'form.page': event.page })
         },
 
         prevPage (event) {
-          measure('prevPage', { page: event.page })
+          measure('prevPage', { 'form.page': event.page })
         },
 
         submit (submission) {
@@ -89,8 +89,8 @@
               ? confirmationURL.replace('{lang}', lang)
               : confirmationURL.replace('{lang}/', '')
             measure('redirect', {
-              reason: 'confirmation',
-              url: actualUrl
+              'redirect.reason': 'confirmation',
+              'redirect.url': actualUrl
             })
             window.location = actualUrl
           }
@@ -99,8 +99,8 @@
         // 'error' events are validation errors
         error (event) {
           measure('validationError', {
-            count: Array.isArray(event) ? event.length : 1,
-            message: event?.message || null
+            'error.count': Array.isArray(event) ? event.length : 1,
+            'error.message': event?.message
           })
         }
       }
@@ -151,15 +151,15 @@
   function getFormErrorVars (error) {
     if (error instanceof Error) {
       return {
-        message: error.message,
-        stack: error.stack
+        'error.message': error.message,
+        'error.stack': error.stack
       }
     } else if (!error || error === 'Invalid alias') {
       return {
-        error: `Form schema failed to load ("${error}")`
+        'error.message': `Form schema failed to load (${JSON.stringify(error)})`
       }
     }
-    return { error }
+    return { 'error.message': JSON.stringify(error) }
   }
 
   /**
@@ -227,11 +227,10 @@
     const t = Date.now()
     const { size, type } = file || {}
     const vars = {
-      'upload.url': `${formURL}/storage/${provider}`,
-      'upload.provider': provider,
       'file.size': size,
       'file.type': type,
-      'file.name': fileName
+      'file.name': fileName,
+      'file.provider': provider
     }
     measure('fileUploadStart', vars)
     return promise
