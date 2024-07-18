@@ -3,6 +3,7 @@
 ;(function () { // eslint-disable-line no-extra-semi
   const { Formio, gtag } = window
   const MEASURE_PARAMS = {}
+  const USE_GA = false
 
   /**
    * Create a formio.js plugin with hooks for different types of requests:
@@ -129,8 +130,13 @@
   // add an event and/or measurement variables to the GA data layer
   function measure (event, params) {
     event = `form_${event}`
+    params = Object.assign({}, MEASURE_PARAMS, params)
     console.debug('measure', event, params)
-    gtag('event', event, Object.assign({}, MEASURE_PARAMS, params))
+    if (USE_GA) {
+      gtag('event', event, params)
+    } else {
+      window.dataLayer.push({ event, ...params })
+    }
   }
 
   function measureParams (params) {
