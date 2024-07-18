@@ -61,6 +61,12 @@
           measure('prevPage', { 'form.page': event.page })
         },
 
+        // the signature of this event is different from nextPage + prevPage:
+        // https://github.com/formio/formio.js/blob/4.19.x/src/Wizard.js#L406
+        wizardPageSelected (page, index) {
+          measure('selectPage', { 'form.page': index })
+        },
+
         submit (submission) {
           measure('submit', {
             'submission.state': submission.state
