@@ -4,10 +4,6 @@
   const { Formio, gtag } = window
   const MEASURE_PARAMS = {}
 
-  // FIXME: remove these before merging!
-  gtag('config', 'G-63SCS846YP', { debug_mode: true })
-  gtag('config', 'G-BT9NDE0NFC', { debug_mode: true })
-
   /**
    * Create a formio.js plugin with hooks for different types of requests:
    * (see: https://help.form.io/developers/fetch-plugin-api)
