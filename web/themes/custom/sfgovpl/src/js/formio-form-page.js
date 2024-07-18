@@ -1,7 +1,10 @@
 /* eslint-disable no-console */
 /* eslint brace-style: ['error', '1tbs'] */
 ;(function () { // eslint-disable-line no-extra-semi
-  const { Formio } = window
+  const { Formio, gtag } = window
+  const MEASURE_PARAMS = {}
+
+  gtag('config', 'G-63SCS846YP', { debug_mode: true })
 
   /**
    * Create a formio.js plugin with hooks for different types of requests:
@@ -32,19 +35,15 @@
     url += `/submission/${submissionId}`
   }
 
-  // set these vars for all future measurements
-  measure({
-    'form.url': url
-  })
+  // set these parameters for all future measurements
+  measureParams({ form_url: url })
   measure('create')
 
   // eslint-disable-next-line no-undef
   Formio.createForm(el, url, options)
     .then(form => {
       // include form language in future measurements
-      measure({
-        'form.language': form.language
-      })
+      measureParams({ form_language: form.language })
       measure('load')
 
       /**
@@ -54,17 +53,17 @@
        */
       const handlers = {
         nextPage (event) {
-          measure('nextPage', { 'form.page': event.page })
+          measure('next_page', { form_page: event.page })
         },
 
         prevPage (event) {
-          measure('prevPage', { 'form.page': event.page })
+          measure('prev_page', { form_page: event.page })
         },
 
         // the signature of this event is different from nextPage + prevPage:
         // https://github.com/formio/formio.js/blob/4.19.x/src/Wizard.js#L406
         wizardPageSelected (page, index) {
-          measure('selectPage', { 'form.page': index })
+          measure('select_page', { form_page: index })
         },
 
         submit (submission) {
@@ -72,11 +71,11 @@
         },
 
         saveDraft () {
-          measure('saveDraft')
+          measure('save_draft')
         },
 
         submitDone (submission) {
-          measure('submitDone')
+          measure('submit_done')
 
           // we want to navigate to the confirmation page only on final submission.
           // saving a draft also triggers the submitDone event, but we want to keep
@@ -93,8 +92,8 @@
               ? confirmationURL.replace('{lang}', lang)
               : confirmationURL.replace('{lang}/', '')
             measure('redirect', {
-              'redirect.reason': 'confirmation',
-              'redirect.url': actualUrl
+              redirect_reason: 'confirmation',
+              redirect_url: actualUrl
             })
             window.location = actualUrl
           }
@@ -102,14 +101,12 @@
 
         // 'error' events are validation errors
         error (event) {
-          measure('validationError', {
-            'validation.count': Array.isArray(event) ? event.length : 1,
-            'validation.message': Array.isArray(event)
+          measure('validation_error', {
+            validation_count: Array.isArray(event) ? event.length : 1,
+            validation_message: Array.isArray(event)
               ? event.map(e => JSON.stringify(e)).join('; ')
               : event?.message || JSON.stringify(event)
           })
-          // clear validation data from future measurements
-          measure({ validation: null })
         }
       }
 
@@ -129,26 +126,17 @@
     })
     .catch(error => {
       measure('error', getFormErrorVars(error))
-      // clear error data from future measurements
-      measure({ error: null })
     })
 
   // add an event and/or measurement variables to the GA data layer
-  function measure (event, vars) {
-    try {
-      if (typeof event === 'object') {
-        vars = event
-      } else if (typeof event === 'string') {
-        vars = Object.assign(
-          { event: `form.${event}` },
-          vars
-        )
-      }
-      console.debug('measure', vars)
-      window.dataLayer.push(vars)
-    } catch (error) {
-      console.error('unable to measure(', vars, '):', error)
-    }
+  function measure (event, params) {
+    event = `form_${event}`
+    console.debug('measure', event, params)
+    gtag('event', event, Object.assign({}, MEASURE_PARAMS, params))
+  }
+
+  function measureParams (params) {
+    Object.assign(MEASURE_PARAMS, params)
   }
 
   /**
@@ -161,15 +149,15 @@
   function getFormErrorVars (error) {
     if (error instanceof Error) {
       return {
-        'error.message': error.message,
-        'error.stack': error.stack
+        error_message: error.message,
+        error_stack: error.stack
       }
     } else if (!error || error === 'Invalid alias') {
       return {
-        'error.message': `Form schema failed to load (${JSON.stringify(error)})`
+        error_message: `Form schema failed to load (${JSON.stringify(error)})`
       }
     }
-    return { 'error.message': JSON.stringify(error) }
+    return { error_message: JSON.stringify(error) }
   }
 
   /**
@@ -209,25 +197,21 @@
   function wrapRequest (promise, { url, method, type }) {
     const t = Date.now()
     const vars = {
-      'request.url': url,
-      'request.method': method,
-      'request.type': type
+      request_url: url,
+      request_method: method,
+      request_type: type
     }
-    measure('requestStart', vars)
+    measure('request_start', vars)
     return promise
       .then(value => {
-        measure('requestEnd', { ...vars, 'request.time': Date.now() - t })
+        measure('request_end', { ...vars, request_time: Date.now() - t })
         return value
       }, error => {
-        measure('requestError', {
+        measure('request_error', {
           ...vars,
-          'request.time': Date.now() - t
+          request_time: Date.now() - t
         })
         throw error || `Unable to load URL: ${url}`
-      })
-      .finally(() => {
-        // clear request data from future measurements
-        measure({ request: null })
       })
   }
 
@@ -241,27 +225,23 @@
     const t = Date.now()
     const { size, type } = file || {}
     const vars = {
-      'file.size': size,
-      'file.type': type,
-      'file.name': fileName,
-      'file.provider': provider
+      file_size: size,
+      file_type: type,
+      file_name: fileName,
+      file_provider: provider
     }
-    measure('fileUploadStart', vars)
+    measure('file_upload_start', vars)
     return promise
       .then(value => {
-        measure('fileUploadEnd', { ...vars, 'request.time': Date.now() - t })
+        measure('file_upload_end', { ...vars, request_time: Date.now() - t })
         return value
       }, error => {
-        measure('fileUploadError', {
+        measure('file_upload_error', {
           ...vars,
           error: error.message,
-          'request.time': Date.now() - t
+          request_time: Date.now() - t
         })
         throw error
-      })
-      .finally(() => {
-        // clear file data from future measurements
-        measure({ file: null })
       })
   }
 
