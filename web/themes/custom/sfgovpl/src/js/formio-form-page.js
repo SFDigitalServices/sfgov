@@ -103,10 +103,13 @@
         // 'error' events are validation errors
         error (event) {
           measure('validationError', {
-            'error.count': Array.isArray(event) ? event.length : 1,
-            'error.message': event?.message
+            'validation.count': Array.isArray(event) ? event.length : 1,
+            'validation.message': Array.isArray(event)
+              ? event.map(e => JSON.stringify(e)).join('; ')
+              : event?.message || JSON.stringify(event)
           })
-          measure({ error: null })
+          // clear validation data from future measurements
+          measure({ validation: null })
         }
       }
 
@@ -126,6 +129,7 @@
     })
     .catch(error => {
       measure('error', getFormErrorVars(error))
+      // clear error data from future measurements
       measure({ error: null })
     })
 
@@ -221,7 +225,10 @@
         })
         throw error || `Unable to load URL: ${url}`
       })
-      .finally(() => measure({ request: null }))
+      .finally(() => {
+        // clear request data from future measurements
+        measure({ request: null })
+      })
   }
 
   /**
@@ -252,7 +259,10 @@
         })
         throw error
       })
-      .finally(() => measure({ file: null }))
+      .finally(() => {
+        // clear file data from future measurements
+        measure({ file: null })
+      })
   }
 
   function safeJSONParse (str) {
