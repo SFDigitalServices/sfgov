@@ -187,12 +187,6 @@ workflows:
       - build
       # Build deploy and test on target platform
       - build_deploy_and_test
-      - create_amplitude_release:
-          requires:
-            - build_deploy_and_test
-          filters:
-            branches:
-              only: /^(main|develop|amplitude-release.*)$/
   create_gh_release_from_tag:
     jobs:
       - create_gh_release:
