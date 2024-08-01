@@ -125,13 +125,14 @@ function sfgovpl_preprocess_field__node__field_profile_positions_held(&$variable
       $value = $paragraph->get('field_department')->getValue();
       $nid = $value[0]['target_id'];
       $node = $entity_manager->getStorage('node')->load($nid);
-      $bundle = $node->bundle();
-
-      // If the type of the referenced node is of department or public body,
-      // then we keep the reference. If not, then we remove it from display.
-      $keep_value = ($bundle == 'department' || $bundle == 'public_body');
-      if (!$keep_value) {
-        unset($variables['items'][$delta]);
+      if (!empty($node)) {
+        $bundle = $node->bundle();
+        // If the type of the referenced node is of department or public body,
+        // then we keep the reference. If not, then we remove it from display.
+        $keep_value = ($bundle == 'department' || $bundle == 'public_body');
+        if (!$keep_value) {
+          unset($variables['items'][$delta]);
+        }
       }
     }
   }
