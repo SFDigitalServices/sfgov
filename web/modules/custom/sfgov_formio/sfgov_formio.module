@@ -7,6 +7,8 @@
 
 use Drupal\Core\Form\FormStateInterface;
 
+const JS_CDN_BASE_URL = 'https://cdn.jsdelivr.net/npm/';
+
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
@@ -94,25 +96,20 @@ function sfgov_formio_page_attachments(array &$attachments) {
  */
 function _sfgov_formiojs_source() {
   // Fallback (latest version).
-  $source = 'https://unpkg.com/formiojs/dist/formio.full.min.js';
+  $version = \Drupal::config('sfgov_formio.settings')->get('formio_version');
+  if (empty($version)) {
+    $version = 'latest';
+  }
 
   // Check for query parameters first.
   if (\Drupal::request()->query) {
-    $query = \Drupal::request()->query->get('formiojsVersion');
-    $query = !empty($query) ? strip_tags($query) : $query;
+    $query_version = \Drupal::request()->query->get('formiojsVersion');
+    if (!empty($query_version)) {
+      $version = strip_tags($query_version);
+    }
   }
 
-  // Prefer source from query params.
-  if (!empty($query)) {
-    $source = 'https://unpkg.com/formiojs@' . $query . '/dist/formio.full.min.js';
-  }
-
-  // Use settings configured at 'admin/config/services/sfgov_formio'.
-  elseif ($config = \Drupal::config('sfgov_formio.settings')->get('formio_version')) {
-    $source = 'https://unpkg.com/formiojs@' . $config . '/dist/formio.full.min.js';
-  }
-
-  return $source;
+  return JS_CDN_BASE_URL . 'formiojs@' . $version . '/dist/formio.full.min.js';
 }
 
 /**
@@ -123,25 +120,20 @@ function _sfgov_formiojs_source() {
  */
 function _sfgov_formio_sfds_source() {
   // Fallback (latest version).
-  $source = 'https://unpkg.com/formio-sfds/dist/formio-sfds.standalone.js';
+  $version = \Drupal::config('sfgov_formio.settings')->get('formio_sfds_version');
+  if (empty($version)) {
+    $version = 'latest';
+  }
 
   // Check for query parameters.
   if (\Drupal::request()->query) {
-    $query = \Drupal::request()->query->get('formio-sfdsVersion');
-    $query = !empty($query) ? strip_tags($query) : $query;
+    $query_version = \Drupal::request()->query->get('formio-sfdsVersion');
+    if (!empty($query_version)) {
+      $version = strip_tags($query_version);
+    }
   }
 
-  // Prefer version from query params, if available.
-  if (!empty($query)) {
-    $source = 'https://unpkg.com/formio-sfds@' . $query . '/dist/formio-sfds.standalone.js';
-  }
-
-  // Use settings configured at 'admin/config/services/sfgov_formio'.
-  elseif ($config = \Drupal::config('sfgov_formio.settings')->get('formio_sfds_version')) {
-    $source = 'https://unpkg.com/formio-sfds@' . $config . '/dist/formio-sfds.standalone.js';
-  }
-
-  return $source;
+  return JS_CDN_BASE_URL . 'formio-sfds@' . $version . '/dist/formio-sfds.standalone.js';
 }
 
 /**
