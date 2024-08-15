@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "run-p optimize-images build-css build-js",
-    "optimize-images": "tinypng-go images -o dist/images",
+    "optimize-images": "imagemin images --out-dir=dist/images",
     "build-css": "postcss --verbose -d dist/css 'css/*.css'",
     "build-js": "babel -d dist/js 'js/*.js'",
     "lint-js": "eslint .",
@@ -19,5 +19,8 @@
     "prettier": "^2.5.1",
     "prettier-plugin-twig-melody": "^0.4.6",
     "tinypng-go": "^0.0.9"
+  },
+  "dependencies": {
+    "imagemin-cli": "^8.0.0"
   }
 }
