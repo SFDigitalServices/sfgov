@@ -28,14 +28,13 @@ class Campaign extends SfgApiNodeBase {
   public function setCustomData($entity) {
     // Figure out theme.
     $theme_term_id = $entity->get('field_campaign_theme')->target_id;
-    $theme_name = $this->editFieldValue(Term::load($theme_term_id)->get('name')->value, [
-      'Blue' => 'primary',
-      'Green' => 'secondary',
-      'Red' => 'accent',
-      'Black' => 'neutral',
-      'Yellow' => 'neutral',
-      'Purple' => 'neutral',
-    ]);
+    $theme_name = strtolower($this->editFieldValue(Term::load($theme_term_id)->get('name')->value,
+    [
+      'Red' => 'orange',
+      'Yellow' => 'orange',
+      'Purple' => 'blue',
+    ]
+  ));
 
     // Figure out facts.
     $facts = $this->getReferencedData($entity->get('field_top_facts')->referencedEntities());
