@@ -6,7 +6,22 @@ dependencies:
     - field.storage.node.field_req_public_records_phone
     - node.type.department
   module:
+    - disable_field
     - telephone
+    - telephone_validation
+    - tmgmt_content
+third_party_settings:
+  disable_field:
+    add_disable: none
+    edit_disable: none
+  tmgmt_content:
+    excluded: false
+  telephone_validation:
+    format: 2
+    country:
+      - US
+    allow_emergency: false
+    allow_short: false
 id: node.department.field_req_public_records_phone
 field_name: field_req_public_records_phone
 entity_type: node
