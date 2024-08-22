@@ -155,9 +155,8 @@ function sfgov_utilities_entity_type_alter(array &$entity_types) {
  * Implements hook_page_attachments
  */
 function sfgov_utilities_page_attachments(array &$page) {
-  $host = \Drupal::request()->getSchemeAndHttpHost();
-  // Sandbox alert
-  if ($host == 'https://sfgov-staging.sfgov.dev.sf.gov/' || $host == 'https://training.api.sf.gov/') {
+  $host = \Drupal::request()->getHttpHost();
+  if ($host !== "sf.gov" || $host !== "www.sf.gov") {
     $page['#attached']['library'][] = 'sfgov_utilities/sandbox';
 
     /* sandbox user login */
