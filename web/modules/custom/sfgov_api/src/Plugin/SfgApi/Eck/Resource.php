@@ -46,6 +46,7 @@ class Resource extends SfgApiPluginBase {
       'body' => $entity->get('field_description')->value ?: '',
       'topics' => $this->getReferencedEntity($entity->get('field_topic')->referencedEntities()),
       'url' => $entity->get('field_url')->getValue(),
+      'title' => $entity->get('title')->getValue(),
     ];
     return $custom_data;
   }
