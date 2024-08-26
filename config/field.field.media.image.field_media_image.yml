@@ -7,7 +7,9 @@ dependencies:
     - media.type.image
   module:
     - content_translation
+    - disable_field
     - image
+    - tmgmt_content
   enforced:
     module:
       - media
@@ -17,6 +19,11 @@ third_party_settings:
       alt: alt
       title: title
       file: '0'
+  disable_field:
+    add_disable: none
+    edit_disable: none
+  tmgmt_content:
+    excluded: false
 _core:
   default_config_hash: pzPA-2JwyxlJ3qMb4L9viAnhNhbEhl2couH8A3FO020
 id: media.image.field_media_image
@@ -34,7 +41,7 @@ settings:
   handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'png gif jpg jpeg'
-  max_filesize: ''
+  max_filesize: '100 MB'
   max_resolution: ''
   min_resolution: ''
   alt_field: true

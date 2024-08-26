@@ -31,8 +31,6 @@ dependencies:
     - link
     - paragraphs
     - path
-    - scheduler
-    - scheduler_content_moderation_integration
     - sfgov_dates
     - text
 third_party_settings:
@@ -309,15 +307,8 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 18
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  publish_state:
-    type: scheduler_moderation
-    weight: 16
+  scheduler_settings:
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -356,18 +347,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 15
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  unpublish_state:
-    type: scheduler_moderation
-    weight: 17
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 10
     region: content
@@ -381,5 +360,9 @@ hidden:
   field_title: true
   langcode: true
   promote: true
+  publish_on: true
+  publish_state: true
   sticky: true
   uid: true
+  unpublish_on: true
+  unpublish_state: true

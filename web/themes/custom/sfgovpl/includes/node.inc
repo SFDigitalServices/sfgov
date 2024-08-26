@@ -394,7 +394,8 @@ function sfgovpl_preprocess_node__person__full(&$variables) {
 
   // [SG-1813]
   // Current position information.
-  $current_job_title = $node->hasField('field_title') ? $node->get('field_title')->getValue()[0]['value'] : NULL;
+  $current_job_title = !empty($node->get('field_title')) ? $node->get('field_title')->getValue()[0]['value'] : NULL;
+
   $current_department = $node->get('field_city_department')->getValue();
   $current_ids = [];
   foreach ($current_department as $item) {
