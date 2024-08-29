@@ -89,7 +89,7 @@ class MeetingListFiltersForm extends FormBase {
 
 
     if ($this->getSubcommittees()) {
-      $query_subcommittees = \Drupal::request()->query->get('subcommittees');
+      $query_subcommittees = \Drupal::request()->query->all('subcommittees');
       $form['container']['toggle']['items']['subcommittees'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Committees'),
