@@ -50,7 +50,7 @@ function sfgov_public_bodies_views_query_alter(\Drupal\views\ViewExecutable $vie
     $public_body = \Drupal::entityTypeManager()->getStorage('node')->load($view->args[0]);
     $query_month = \Drupal::request()->query->get('month');
     $query_year = \Drupal::request()->query->get('year');
-    $query_subcommittees = \Drupal::request()->query->get('subcommittees');
+    $query_subcommittees = \Drupal::request()->query->all('subcommittees');
 
     foreach ($query->where as $group => $where) {
       // If it's a contextual filter group.
