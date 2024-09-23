@@ -25,15 +25,24 @@ class Button extends SfgApiParagraphBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
+    $link_data = $entity->get('field_link')->getvalue();
+    $link_label = $link_data ? $link_data[0]['options']['attributes']['aria-label'] : '';
+
     // This is the shape wagtail expects when the button is empty.
-    $empty_button = [
+    $button_value = [
       'url' => '',
       'page' => NULL,
       'link_to' => '',
       'link_text' => '',
+      'screenreader_label' => '',
     ];
-    $button_data = $this->generateLinks($entity->get('field_link')->getvalue());
-    $button_value = $button_data ? $button_data[0] : $empty_button;
+    $button_data = $this->generateLinks($link_data);
+
+    if ($button_data) {
+      $button_value = $button_data[0];
+      $button_value['value']['screenreader_label'] = $link_label;
+    }
+
     return [
       'alter' => 'flatten_link',
       'link' => $button_value,

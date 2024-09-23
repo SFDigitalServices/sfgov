@@ -143,7 +143,7 @@ abstract class PayloadBase {
         'title' => $entity->label(),
         'translations' => array_keys($entity->getTranslationLanguages()),
         'wag_bundle' => $this->wagBundle,
-        'published' => $entity->isPublished(),
+        'published' => method_exists($entity, 'isPublished') ? $entity->isPublished() : null,
         'created' => $this->convertTimestampToFormat($entity->getCreatedTime(), 'Y-m-d\TH:i:s'),
       ];
     }
