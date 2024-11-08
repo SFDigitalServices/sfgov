@@ -166,7 +166,7 @@ function sfgovpl_preprocess_paragraph__video(&$variables) {
  */
 function sfgovpl_preprocess_paragraph__document(&$variables) {
   // Don't translate document paragraphs by gtranslate.
-  $variables['attributes']['class'][] = 'notranslate';
+  // $variables['attributes']['class'][] = 'notranslate'; // undo?
 
   // Our variables to start our document information list variable.
   $paragraph = $variables['paragraph'];
