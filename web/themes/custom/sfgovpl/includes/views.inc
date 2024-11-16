@@ -199,6 +199,7 @@ function sfgovpl_preprocess_views_view__events__page_2(&$variables) {
  */
 function sfgovpl_preprocess_views_view__events__block_1(&$variables) {
   $variables['empty']['display_link']['#options']['attributes']['class'][] = 'btn';
+  $variables['more']['#title'] = t('See more events', [], ['context' => 'Events Block - Dept']);
 }
 
 /**
