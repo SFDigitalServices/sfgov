@@ -206,12 +206,13 @@
   {% set has_events = drupal_view_result('events', 'block_1', node.id) %}
   {% set has_past_events = drupal_view_result('events', 'page_6', node.id) %}
   {% set event_heading = 'Events'|t({}, {'context' : 'Agency event section heading'})  %}
+  {% set no_result = 'There are no upcoming events right now.'|t({}, {'context' : 'Agency event no result'})  %}
   {% if has_events is empty and has_past_events is empty%}
   {% elseif has_events is empty and has_past_events is not empty%}
     <div class="odd:bg-grey-1 py-40 lg:py-60">
       <div class="responsive-container">
         <h2 class="text-title-xl m-0 mb-40 lg:text-title-xl-desktop">{{ event_heading }}</h2>
-        <p>There are no upcoming events right now.</p>
+        <p>{{ no_result }}</p>
         <br>
         {{ events_view }}
       </div>
@@ -298,7 +299,7 @@
                 {# related agencies #}
                 {% if content.field_departments|render|striptags|trim %}
                   <div>
-                    <p class="text-title-xs font-medium m-0 mb-24">{{ content.field_departments['#title'] }}</p>
+                    <p class="text-title-xs font-medium m-0 mb-24">{{ content.field_departments['#title']|t }}</p>
                     <ul class="responsive-grid gap-y-20 list-none p-0 m-0 grid-cols-1 lg:grid-cols-2">
                     {% for key, item in content.field_departments %}
                       {% if key|first != '#' %}
