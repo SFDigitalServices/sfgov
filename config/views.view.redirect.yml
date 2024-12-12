@@ -682,9 +682,71 @@ display:
           id: redirect_redirect__uri
           table: redirect
           field: redirect_redirect__uri
+          relationship: none
+          group_type: group
+          admin_label: ''
           entity_type: redirect
           entity_field: redirect_redirect
           plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: uri
+          type: link
+          settings:
+            trim_length: 80
+            url_only: false
+            url_plain: false
+            rel: '0'
+            target: '0'
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         status_code:
           id: status_code
           table: redirect
@@ -753,6 +815,30 @@ display:
           date_format: fallback
           custom_date_format: ''
           timezone: ''
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: true
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50, 1000'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: true
+            offset_label: Offset
+          quantity: 9
+      access:
+        type: none
+        options: {  }
       style:
         type: serializer
         options:
@@ -763,14 +849,11 @@ display:
         type: data_field
         options:
           field_options:
-            redirect_bulk_form:
-              alias: ''
-              raw_output: false
             redirect_source__path:
-              alias: ''
+              alias: redirect_from
               raw_output: false
             redirect_redirect__uri:
-              alias: ''
+              alias: redirect_to
               raw_output: false
             status_code:
               alias: ''
@@ -781,10 +864,8 @@ display:
             created:
               alias: ''
               raw_output: false
-            operations:
-              alias: ''
-              raw_output: false
       defaults:
+        access: false
         fields: false
       display_extenders: {  }
       path: admin/config/search/redirect/json
@@ -795,6 +876,6 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
-        - user.permissions
+        - url.query_args
       tags: {  }
       cacheable: false
