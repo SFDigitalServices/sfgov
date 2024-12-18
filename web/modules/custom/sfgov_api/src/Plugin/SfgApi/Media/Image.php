@@ -21,8 +21,12 @@ class Image extends SfgApiMediaBase {
    * {@inheritDoc}
    */
   public function setCustomData($entity) {
-
-    $custom_data = [];
+    $referenced_file = $entity->get('field_media_image')->referencedEntities()[0];
+    $drupal_direct_path = isset($referenced_file) ? $referenced_file->createFileUrl() : NULL;
+    $custom_data = [
+      'drupal_indirect_path' => $entity->toUrl()->toString(),
+      'drupal_direct_path' => $drupal_direct_path,
+    ];
     return $custom_data;
   }
 

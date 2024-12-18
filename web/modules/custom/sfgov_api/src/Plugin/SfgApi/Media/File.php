@@ -30,8 +30,8 @@ class File extends SfgApiMediaBase {
     $custom_data = [
       'description' => $entity->get('field_description')->value ?: '',
       'published_date' => $entity->get('field_published_date')->value ?: NULL,
-      'drupal_indirect_url' => $entity->toUrl()->toString(),
-      'drupal_direct_url' => $drupal_direct_url,
+      'drupal_indirect_path' => $entity->toUrl()->toString(),
+      'drupal_direct_path' => $drupal_direct_url,
     ];
     return $custom_data;
   }
