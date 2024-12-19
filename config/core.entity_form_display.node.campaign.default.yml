@@ -25,8 +25,6 @@ dependencies:
     - maxlength
     - paragraphs
     - path
-    - scheduler
-    - scheduler_content_moderation_integration
     - text
 third_party_settings:
   field_group:
@@ -225,20 +223,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 19
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  publish_state:
-    type: scheduler_moderation
-    weight: 21
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   scheduler_settings:
     weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -290,18 +281,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 20
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  unpublish_state:
-    type: scheduler_moderation
-    weight: 18
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 13
     region: content
@@ -310,4 +289,8 @@ content:
 hidden:
   field_dept: true
   promote: true
+  publish_on: true
+  publish_state: true
   sticky: true
+  unpublish_on: true
+  unpublish_state: true
