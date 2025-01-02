@@ -177,40 +177,43 @@ class MeetingListFiltersForm extends FormBase {
   public static function getSubcommittees($route = null) {
     $route = \Drupal::routeMatch();
     $agency = \Drupal::entityTypeManager()->getStorage('node')->load($route->getParameter('arg_0'));
-    $subcommittees = [$agency->id() => $agency->label()];
-    $divisionsAndSubcommittees = [];
-
-    // for the moment we still have departments/agencies and public bodies
-    // now that agencies can have meetings and divisions/subcommittees we will need to consider them in these meeting queries
-    // TODO: when migration from public body to agency is complete, remove unnecessary collection of field values for query conditions
-
-    // public body subcommittees
-    if ($agency->hasField('field_subcommittees')) {
-      $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $agency->field_subcommittees->getValue());
-    }
-
-    // agency divisions
-    if ($agency->hasField('field_agency_sections')) {
-      $agencySections = $agency->field_agency_sections->getValue();
-      foreach ($agencySections as $agencySection) {
-        $agencySection = Paragraph::load($agencySection['target_id']);
-        $agencyContents = $agencySection->field_agencies->getValue();
-
-        foreach($agencyContents as $ac) {
-          $agencyContent = Paragraph::load($ac['target_id']);
-          $divisionsAndSubcommittees[] = $agencyContent->field_department->getValue()[0];
-        }        
+    $subcommittees = [];
+    if (!empty($agency)) {
+      $subcommittees = [$agency->id() => $agency->label()];
+      $divisionsAndSubcommittees = [];
+  
+      // for the moment we still have departments/agencies and public bodies
+      // now that agencies can have meetings and divisions/subcommittees we will need to consider them in these meeting queries
+      // TODO: when migration from public body to agency is complete, remove unnecessary collection of field values for query conditions
+  
+      // public body subcommittees
+      if ($agency->hasField('field_subcommittees')) {
+        $divisionsAndSubcommittees = array_merge($divisionsAndSubcommittees, $agency->field_subcommittees->getValue());
+      }
+  
+      // agency divisions
+      if ($agency->hasField('field_agency_sections')) {
+        $agencySections = $agency->field_agency_sections->getValue();
+        foreach ($agencySections as $agencySection) {
+          $agencySection = Paragraph::load($agencySection['target_id']);
+          $agencyContents = $agencySection->field_agencies->getValue();
+  
+          foreach($agencyContents as $ac) {
+            $agencyContent = Paragraph::load($ac['target_id']);
+            $divisionsAndSubcommittees[] = $agencyContent->field_department->getValue()[0];
+          }        
+        }
+      }
+  
+  
+      foreach ($divisionsAndSubcommittees as $value) {
+        $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
+        if (!empty($subcommittee)) {
+            $subcommittees[$subcommittee->id()] = $subcommittee->label();
+        }
       }
     }
-
-
-    foreach ($divisionsAndSubcommittees as $value) {
-      $subcommittee = \Drupal::entityTypeManager()->getStorage('node')->load($value['target_id']);
-      if (!empty($subcommittee)) {
-          $subcommittees[$subcommittee->id()] = $subcommittee->label();
-      }
-    }
-
+  
     return $subcommittees;
   }
 

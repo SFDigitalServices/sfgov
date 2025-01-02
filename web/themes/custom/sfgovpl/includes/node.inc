@@ -823,7 +823,7 @@ function profile_page_fields($node) {
 
         // If the full text is longer than the trimmed text, it means we need to
         // output as the biotrim "See More"/"See Less" expanding style.
-        if (!empty($output_full['#text']) && (strlen($output_full['#text']) > strlen($output_trim['#text']))) {
+        if (!empty($output_full['#text']) && (strlen($output_full['#text']) > strlen($output_trim['#output']['#text']))) {
           $output_trim['#cache']['tags'] = $source->getCacheTags();
           $theFields['biotrim'] = !empty($output_trim) ? $output_trim : [];
         }
