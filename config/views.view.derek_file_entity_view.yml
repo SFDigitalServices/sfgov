@@ -1873,8 +1873,8 @@ display:
           click_sort_column: uri
           type: link
           settings:
-            trim_length: 80
-            url_only: false
+            trim_length: null
+            url_only: true
             url_plain: false
             rel: '0'
             target: '0'
@@ -4260,7 +4260,100 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-      filters: {  }
+      filters:
+        field_document_url_uri:
+          id: field_document_url_uri
+          table: media__field_document_url
+          field: field_document_url_uri
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: regular_expression
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_document_url_uri_op
+            label: 'Document URL (field_document_url:uri)'
+            description: ''
+            use_operator: false
+            operator: field_document_url_uri_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_document_url_uri
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              digital_services: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_media_file_target_id:
+          id: field_media_file_target_id
+          table: media__field_media_file
+          field: field_media_file_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric
+          operator: regular_expression
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_media_file_target_id_op
+            label: 'File (field_media_file:target_id)'
+            description: ''
+            use_operator: false
+            operator: field_media_file_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_media_file_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              writer: '0'
+              publisher: '0'
+              digital_services: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -4277,6 +4370,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - user.permissions
       tags:
