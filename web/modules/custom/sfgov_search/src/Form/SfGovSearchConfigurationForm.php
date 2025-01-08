@@ -49,6 +49,7 @@ class SfGovSearchConfigurationForm extends ConfigFormBase {
       '#title' => $this->t('Funnelback collection name'),
       '#options' => $options,
       '#default_value' => $config->get('search_collection'),
+      '#disabled' => true,
     ];
     $form['qie_influence'] = [
       '#type' => 'textfield',
@@ -56,6 +57,12 @@ class SfGovSearchConfigurationForm extends ConfigFormBase {
       '#maxlength' => '3',
       '#title' => $this->t('QIE influence (between 0 - 1, eg: 0.7)'),
       '#default_value' => $config->get('qie_influence'),
+      '#disabled' => true,
+    ];
+    $form['redirect_google'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Redirect search form submission to google',
+      '#default_value' => $config->get('redirect_google'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -64,6 +71,7 @@ class SfGovSearchConfigurationForm extends ConfigFormBase {
     $this->config(self::SETTINGS)
       ->set('search_collection', $form_state->getValue('search_collection_name'))
       ->set('qie_influence', $form_state->getValue('qie_influence'))
+      ->set('redirect_google', $form_state->getValue('redirect_google'))
       ->save();
     parent::submitForm($form, $form_state);
   }

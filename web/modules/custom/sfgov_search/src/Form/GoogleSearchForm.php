@@ -92,11 +92,21 @@ class GoogleSearchForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $config = \Drupal::config('sfgov_search.settings');
+    $redirect_google = $config->get('redirect_google');
     $search = $form_state->getValues()['keys'];
-    $google_search_url = \Drupal\Core\Url::fromUri('https://www.google.com/search', [
-      'query' => ['q' => $search . ' site:sf.gov OR site:sfgov.org'],
-    ])->toString();
-    $response = new RedirectResponse($google_search_url);
-    $response->send();
+
+    if ($redirect_google) {
+      $google_search_url = \Drupal\Core\Url::fromUri('https://www.google.com/search', [
+        'query' => ['q' => $search . ' site:sf.gov OR site:sfgov.org'],
+      ])->toString();
+      $response = new RedirectResponse($google_search_url);
+      $response->send();      
+    } else {
+      $form_state->setRedirect('search.view_google_json_api_search', ['keys' => $search], [
+        'language' => $this->languageManager->getCurrentLanguage(),
+      ]);
+    }
+
   }
 }
