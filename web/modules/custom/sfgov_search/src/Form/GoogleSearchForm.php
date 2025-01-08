@@ -98,8 +98,5 @@ class GoogleSearchForm extends FormBase {
     ])->toString();
     $response = new RedirectResponse($google_search_url);
     $response->send();
-    // $form_state->setRedirect('search.view_google_json_api_search', ['keys' => $search], [
-    //   'language' => $this->languageManager->getCurrentLanguage(),
-    // ]);
   }
 }
