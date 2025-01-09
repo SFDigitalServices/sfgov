@@ -7,13 +7,19 @@ dependencies:
     - node.type.person
     - paragraphs.paragraphs_type.public_body_profiles
   module:
-    - datalayer
+    - disable_field
     - entity_reference_revisions
     - tmgmt_content
 third_party_settings:
-  datalayer:
-    expose: 0
-    label: field_profile_positions_held
+  disable_field:
+    add_disable: roles_enable
+    add_roles:
+      - digital_services
+      - administrator
+    edit_disable: roles_enable
+    edit_roles:
+      - digital_services
+      - administrator
   tmgmt_content:
     excluded: false
 id: node.person.field_profile_positions_held
@@ -47,6 +53,9 @@ settings:
         enabled: false
       additional_info:
         weight: 78
+        enabled: false
+      agency_section:
+        weight: 80
         enabled: false
       agenda_item:
         weight: 79
